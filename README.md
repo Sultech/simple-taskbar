@@ -1,6 +1,6 @@
 # Simple Taskbar
 
-A focused GNOME Shell 50 extension that turns the native panel into a
+A focused GNOME Shell extension that turns the native panel into a
 configurable application taskbar.
 
 ## Features
