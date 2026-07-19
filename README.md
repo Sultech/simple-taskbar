@@ -1,187 +1,260 @@
 # Simple Taskbar
 
-A focused GNOME Shell extension that turns the native panel into a
-configurable application taskbar.
+Simple Taskbar turns GNOME Shell's native panel into a configurable desktop
+taskbar. It combines pinned and running applications with GNOME's Activities,
+clock, calendar, Quick Settings and extension indicators, without replacing
+those Shell components.
 
-## Features
+> Simple Taskbar currently supports GNOME Shell 50.
 
-- Uses GNOME's native panel as a taskbar at the top or bottom of the primary
-  monitor, with matching secondary panels enabled by default.
-- Automatically disables Dash to Panel when Simple Taskbar is enabled.
-- Optional Default GNOME Panel mode starts at the top at 32px, hides taskbar
-  applications, restores GNOME's original Overview Dash and keeps a native-style
-  panel on every monitor. Normal taskbar mode starts on the desktop after login.
-  Default GNOME Panel mode keeps GNOME's startup Overview unless Ubuntu Dock or
-  Dash to Dock is active. The other panel options remain customizable.
-- Keeps Activities, the workspace indicator, clock, calendar, notifications,
-  Quick Settings and extension-provided panel indicators.
-- Activities can be hidden independently. The clock and Quick Settings can each
-  be placed at the left, center or right.
-- Shows GNOME favourites and running applications without duplicates. Favourite
-  order is shared with GNOME's original Dash.
-- Supports drag reordering, dragging a running application into the favourite
-  section to pin it, and an optional taskbar lock.
-- Optional settings hide stopped favourite applications or show running
-  applications from the current workspace only.
-- Left click launches, focuses or minimizes an application. Middle click opens
-  a new window, and right click opens GNOME's application menu.
-- Running, multi-window and focused states use dedicated indicators and a glass
-  highlight. Minimize animations target the matching taskbar icon.
-- Hovering a running application shows live window previews. Each preview can
-  activate or close its exact window; stopped applications show a native-style
-  tooltip.
-- Clicking an application with multiple windows opens an Overview window spread
-  by default. This can be disabled to use the multi-preview flyout instead.
-- Includes a Show Desktop button at the panel edge.
-- Application icons can be 16–48px with 0–16px spacing. Panel height can be
-  32–80px, and incompatible icon/panel sizes are corrected automatically.
-- Application icons and the Start button can be left-aligned or centered. Start
-  padding is adjustable from 0–20px, and a custom Start icon can be selected.
-- The Eleven-style Start Menu is enabled by default and provides search,
-  separately pinned Start applications, recommendations, All Apps and a user
-  shortcut. It can use the GNOME Shell, dark or light theme.
-- The Start menu is monitor-centered by default. The original GNOME Applications
-  button can be shown when the Eleven-style Start Menu is disabled.
-- Optional Super+Tab or custom shortcuts can open the Eleven-style Start Menu.
-  Neither shortcut is enabled by default, and Super+Tab is restored to GNOME
-  when turned off.
-- Right clicking the Eleven-style Start button opens the Start Menu settings
-  page.
-- Optional animated auto-hide works on every panel with screen-edge reveal.
-- Transparency is enabled by default at 10% and can be adjusted from 0–100%.
-  The taskbar follows the GNOME Shell theme by default, or can be forced to a
-  light or dark theme.
-- Blur My Shell panel styles are supported on the primary panel. Secondary
-  panels intentionally use Simple Taskbar's own background and transparency.
-- Scrolling over empty panel space switches workspaces. It is enabled by default
-  with an adjustable 5–250ms delay.
-- Panel menus require a click before switching to another panel menu by default,
-  preventing accidental menu changes while moving the pointer.
-- Notification banners follow the panel edge and clock alignment by default.
-- The empty-panel context menu opens Task Manager, locks the taskbar or opens
-  Taskbar Settings. The Task Manager application is configurable and defaults
-  to Resources.
-- An optional folder button lists a selected folder and opens its files with
-  their default applications.
-- Reset All Settings restores extension defaults without changing GNOME's
-  favourite applications.
+## Preview
 
-Open the settings from Extension Manager, or run:
+<p align="center">
+  <img src="docs/images/taskbar-dark.png" alt="Simple Taskbar on a desktop using its dark theme" width="49%">
+  <img src="docs/images/taskbar-light.png" alt="Simple Taskbar on a desktop using its light theme" width="49%">
+</p>
+
+<p align="center"><sub>Taskbar mode using the dark and light themes.</sub></p>
+
+## At a glance
+
+- See pinned and running applications together on the panel.
+- Launch, focus, minimize and open new application windows from their icons.
+- Preview open windows by hovering over an application.
+- Use the taskbar on every monitor.
+- Place the panel at the top or bottom of the screen.
+- Align applications and the Start button to the left or center.
+- Move the clock and Quick Settings between the left, center and right.
+- Adjust panel height, icon size, spacing, transparency and colour scheme.
+- Use auto-hide, workspace scrolling and current-workspace isolation.
+- Open an Eleven-style Start Menu with pinned apps, search and recommendations.
+- Switch to a native GNOME-style panel whenever taskbar applications are not
+  wanted.
+
+## Choose your panel style
+
+| Mode | Behaviour |
+| --- | --- |
+| Taskbar | Shows GNOME favourites and running applications, starts on the desktop and hides the original Overview Dash. |
+| Default GNOME Panel | Hides taskbar applications, restores the original Overview Dash and places a native-style panel on every monitor. |
+
+Default GNOME Panel mode normally keeps GNOME's startup Overview. When Ubuntu
+Dock or Dash to Dock is active, it starts on the desktop instead.
+
+Both modes remain customizable after being enabled. Panel position, height,
+theme, item placement, multi-monitor support and other appearance settings
+continue to work.
+
+<p align="center">
+  <img src="docs/images/gnome-panel-dark.png" alt="Default GNOME Panel mode using a dark theme" width="49%">
+  <img src="docs/images/gnome-panel-light.png" alt="Default GNOME Panel mode using a light theme" width="49%">
+</p>
+
+<p align="center"><sub>Default GNOME Panel mode using dark and light themes.</sub></p>
+
+## Application taskbar
+
+Simple Taskbar uses the same favourites and ordering as GNOME's original Dash.
+Pinning, unpinning or rearranging a favourite updates the Dash as well.
+
+Application buttons support:
+
+- **Left click:** launch, focus or minimize the application.
+- **Middle click:** open a new window.
+- **Right click:** open GNOME's application menu.
+- **Drag:** rearrange favourites or drag a running application into the
+  favourite section to pin it.
+- **Hover:** show live previews for open windows. A preview can activate or
+  close its exact window.
+
+Running, focused and multi-window applications have dedicated indicators.
+Clicking an application with multiple windows can spread only that
+application's windows across the Overview, including windows on other
+workspaces. The preview flyout remains available as an alternative.
+
+Optional controls can:
+
+- Show running applications from only the current workspace.
+- Hide favourite applications that are not running.
+- Lock the taskbar against accidental rearrangement.
+- Show the desktop from a narrow button at the panel edge.
+
+## Panel customization
+
+The settings provide control over:
+
+- Top or bottom panel placement.
+- Panels on secondary monitors.
+- 32–80px panel height.
+- 16–48px application icons with 0–16px spacing.
+- Left or centered application alignment.
+- Left or centered Start button placement and adjustable padding.
+- Left, center or right placement for the clock and Quick Settings.
+- Light, dark or Shell-following themes.
+- Adjustable transparency and Blur My Shell integration on the primary panel.
+- Animated auto-hide on every panel.
+- Workspace switching by scrolling over empty panel space.
+- Notification banners that follow the panel edge and clock alignment.
+- Click-only switching between open panel menus.
+- An optional folder button for quickly opening files from a chosen directory.
+- A configurable Task Manager entry in the empty-panel context menu.
+
+[▶ Watch the folder menu in action (WebM, 4 seconds)](docs/videos/folder-menu-demo.webm)
+
+Activities can be shown or hidden independently. A custom Start button icon can
+also be selected.
+
+<p align="center">
+  <img src="docs/images/settings-appearance.png" alt="Application icon and panel appearance settings" width="100%">
+</p>
+
+<p align="center"><sub>Application icon, panel mode and appearance controls.</sub></p>
+
+<p align="center">
+  <img src="docs/images/settings-behaviour.png" alt="Taskbar behaviour and panel item settings" width="100%">
+</p>
+
+<p align="center"><sub>Behaviour, panel item and reset controls.</sub></p>
+
+## Eleven-style Start Menu
+
+The Eleven-style Start Menu is enabled by default and includes:
+
+- A separately configurable pinned-app grid.
+- Application search.
+- An All Apps view.
+- Recommended applications.
+- Application context menus with Pin to Start and Pin to Taskbar actions.
+- Dark, light and GNOME Shell theme options.
+- Optional true monitor centering.
+- Optional Super+Tab or custom keyboard shortcuts.
+
+The original GNOME Applications button can be restored instead. Right-clicking
+the Eleven-style Start button opens its settings page.
+
+<p align="center">
+  <img src="docs/images/start-menu-dark.png" alt="Eleven-style Start Menu using its dark theme" width="49%">
+  <img src="docs/images/start-menu-light.png" alt="Eleven-style Start Menu using its light theme" width="49%">
+</p>
+
+<p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
+
+<p align="center">
+  <img src="docs/images/settings-start-menu.png" alt="Start button and Eleven-style Start Menu settings" width="100%">
+</p>
+
+<p align="center"><sub>Start button and Eleven-style Start Menu controls.</sub></p>
+
+## Install
+
+Once Simple Taskbar is published on GNOME Extensions, it can be installed from
+the website or Extension Manager.
+
+To install the current source version:
+
+```sh
+git clone https://github.com/Sultech/simple-taskbar.git
+cd simple-taskbar
+./package.sh
+gnome-extensions install --force \
+    dist/simple-taskbar@sultech.shell-extension.zip
+gnome-extensions enable simple-taskbar@sultech
+```
+
+Log out and back in if the running Shell does not discover a newly installed
+extension immediately.
+
+## Open the settings
+
+Use Extension Manager, right-click empty taskbar space and choose **Taskbar
+Settings**, or run:
 
 ```sh
 gnome-extensions prefs simple-taskbar@sultech
 ```
 
-You can also right click empty taskbar space and choose **Taskbar Settings**.
+**Reset All Settings** restores the extension defaults without changing GNOME's
+taskbar favourites or their order.
 
-## Install for development
+## Compatibility
 
-### Recommended workflow
+Simple Taskbar supports GNOME Shell 50. Other GNOME versions are deliberately
+not declared until they have been tested.
 
-GNOME Shell caches imported extension modules for the lifetime of its process.
-Extension Manager can install and enable an extension, but disabling and
-re-enabling it cannot load edited JavaScript into the same Shell process.
+Because Simple Taskbar and Dash to Panel both restructure GNOME's main panel,
+enabling Simple Taskbar automatically disables Dash to Panel. Dash to Dock and
+Ubuntu Dock are not disabled.
 
-From the project root, run the included development helper:
+Blur My Shell styles are supported on the primary panel. Secondary panels use
+Simple Taskbar's own background and transparency.
 
-```sh
-./dev.sh
-```
+## Development
 
-On Ubuntu, GNOME 50's development window requires Mutter's development kit:
+GNOME Shell caches imported extension modules for the lifetime of the Shell
+process. Disabling and re-enabling an extension cannot load edited JavaScript
+into that same process.
+
+On Ubuntu, install Mutter's development helper:
 
 ```sh
 sudo apt install mutter-dev-bin
 ```
 
-On its first run, the helper creates this symlink:
+Then run:
+
+```sh
+./dev.sh
+```
+
+The helper compiles the GSettings schema, creates this development symlink and
+starts a fresh GNOME Shell 50 session in a window:
 
 ```text
 ~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
     -> /path/to/simple-taskbar
 ```
 
-This removes the copy step. It then starts a fresh GNOME 50 development Shell
-in a window and compiles the extension's GSettings schema. After changing the
-extension, close that window and run `./dev.sh` again. Your real desktop
-session remains running. Once this version is loaded, changes made in the
-preferences window are applied to the taskbar immediately.
+Close the nested Shell and run `./dev.sh` again after changing JavaScript. The
+real desktop session remains running.
 
-If the extension was previously copied into the extensions directory, the
-helper will refuse to overwrite it. Disable the extension and remove that old
-copied directory once, or move it somewhere outside the extensions directory,
-then rerun the helper. Backup directories left inside the extensions directory
-are still scanned by GNOME Shell and cause UUID mismatch warnings. You may need
-to enable Simple Taskbar once from a terminal inside the nested session.
+If a copied installation already occupies the destination, disable it and move
+or remove that directory before running the helper. Backup extension
+directories should not be kept under
+`~/.local/share/gnome-shell/extensions`, because GNOME Shell still scans
+them.
 
-### Manual installation
-
-From the project root, build and install the extension archive:
-
-```sh
-./package.sh
-gnome-extensions install --force \
-    dist/simple-taskbar@sultech.shell-extension.zip
-```
-
-On GNOME 50, log out and back in so the real Shell discovers the extension,
-then enable it with Extension Manager or:
-
-```sh
-gnome-extensions enable simple-taskbar@sultech
-```
-
-You can test it in a separate Shell instead with:
-
-```sh
-dbus-run-session gnome-shell --devkit --wayland
-```
-
-Open a terminal inside that session and enable the extension there. Use
-Looking Glass (`Alt`+`F2`, then `lg`) or the journal to inspect errors:
+Use Looking Glass or the journal when diagnosing runtime problems:
 
 ```sh
 journalctl -f -o cat /usr/bin/gnome-shell
 ```
 
-GNOME 50 also provides `gnome-shell-test-tool` for automated extension tests.
+## Build a package
 
-## Package
-
-Build the complete installable archive from the project root:
+Create the complete installable archive with:
 
 ```sh
 ./package.sh
 ```
 
-The helper compiles the settings schema and includes `COPYING`, every imported
-JavaScript module and the bundled Start icon. The archive is written to:
+The resulting archive is:
 
 ```text
 dist/simple-taskbar@sultech.shell-extension.zip
 ```
 
-Passing a directory changes the output location:
+The package contains the runtime modules, preferences, schema, licence and
+bundled Start icon. Development scripts and generated schema binaries are not
+included. An alternative output directory can be supplied:
 
 ```sh
 ./package.sh /tmp/simple-taskbar-package
 ```
 
-## Compatibility
+## Privacy
 
-The extension uses the current ES module format and supports GNOME Shell 50.
-Other GNOME versions are deliberately not declared until they have been
-tested.
-
-All runtime objects, signal handlers, popup menus, and Shell changes are
-created in `enable()` and removed or restored in `disable()`. The extension
-does not load GTK libraries, spawn subprocesses, access the network, or collect
-telemetry. `dev.sh` is a project-only development helper and is not included in
-the extension package.
-
-The permanent extension UUID is `simple-taskbar@sultech`, and the installation
-directory must use the same name. Source code and issue tracking are available
-on [GitHub](https://github.com/Sultech/simple-taskbar).
+Simple Taskbar does not collect telemetry, access the network or run bundled
+external programs.
 
 ## Uninstall
 
@@ -192,4 +265,5 @@ rm -rf ~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
 
 ## Licence
 
-Simple Taskbar is distributed under `GPL-2.0-or-later`. See `COPYING`.
+Simple Taskbar is distributed under
+[GPL-2.0-or-later](COPYING).
