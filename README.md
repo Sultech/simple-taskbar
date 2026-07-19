@@ -88,7 +88,8 @@ The settings provide control over:
 - 32–80px panel height.
 - 16–48px application icons with 0–16px spacing.
 - Left or centered application alignment.
-- Left or centered Start button placement and adjustable padding.
+- Left or centered Start button placement, adjustable padding and a custom icon.
+- Show or hide the Activities button independently.
 - Left, center or right placement for the clock and Quick Settings.
 - Light, dark or Shell-following themes.
 - Adjustable transparency and Blur My Shell integration on the primary panel.
@@ -97,9 +98,6 @@ The settings provide control over:
 - Notification banners that follow the panel edge and clock alignment.
 - Click-only switching between open panel menus.
 - A configurable Task Manager entry in the empty-panel context menu.
-
-Activities can be shown or hidden independently. A custom Start button icon can
-also be selected.
 
 <p align="center">
   <img src="docs/images/settings-appearance.png" alt="Application icon and panel appearance settings" width="100%">
