@@ -1,0 +1,9 @@
+{
+  "uuid": "simple-taskbar@sultech",
+  "name": "Simple Taskbar",
+  "description": "Moves the native GNOME panel to the bottom and adds an application taskbar.",
+  "gettext-domain": "simple-taskbar@sultech",
+  "settings-schema": "org.gnome.shell.extensions.simple-taskbar",
+  "shell-version": ["50"],
+  "url": "https://github.com/Sultech/simple-taskbar"
+}

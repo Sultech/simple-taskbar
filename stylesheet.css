@@ -1,0 +1,736 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+/* Copyright (C) 2026 sultech */
+
+.simple-taskbar-panel {
+    background-color: rgba(24, 24, 27, 0.96);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.simple-taskbar-panel.simple-taskbar-panel-top {
+    border-top: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+#panel.simple-taskbar-panel.transparent-panel {
+    background-color: transparent;
+    border-top-color: transparent;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.transparent-panel {
+    border-bottom-color: transparent;
+}
+
+#panel.simple-taskbar-panel.light-panel,
+#panel.simple-taskbar-panel.dark-panel,
+#panel.simple-taskbar-panel.contrasted-panel {
+    border-top-color: transparent;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.light-panel,
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.dark-panel,
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.contrasted-panel {
+    border-bottom-color: transparent;
+}
+
+/* Preserve the light tint when external blur styles change in Overview. */
+#panel.simple-taskbar-panel.simple-taskbar-light-blur-overlay,
+#panel.simple-taskbar-panel.simple-taskbar-light-blur-overlay:overview {
+    background-color: rgba(235, 235, 238, 0.6) !important;
+}
+
+.simple-taskbar-panel.simple-taskbar-theme-light {
+    background-color: rgba(235, 235, 238, 0.96);
+    border-top-color: rgba(0, 0, 0, 0.14);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-theme-light {
+    border-bottom-color: rgba(0, 0, 0, 0.14);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start {
+    color: #242427;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button .system-status-icon,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button .panel-status-indicators-box,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button .panel-status-indicators-box StIcon {
+    color: #242427;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button:focus,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button:hover {
+    box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.11);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button:active,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button:checked {
+    box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.18);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button:active:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button:checked:hover {
+    box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.22);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .clock-display:focus .clock,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .clock-display:hover .clock {
+    box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.11);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display:focus,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display:active,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display:checked {
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .clock-display:active .clock,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .clock-display:checked .clock {
+    box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.18);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light #panelActivities .workspace-dot {
+    background-color: #242427;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:focus,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:active,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:active:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked:hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:focus .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:hover .simple-taskbar-start-hover {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.10);
+    background-gradient-end: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.10);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:active .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:active:hover .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked:hover .simple-taskbar-start-hover {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.15);
+    background-gradient-end: rgba(0, 0, 0, 0.07);
+    border-color: rgba(0, 0, 0, 0.14);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item:hover .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.10);
+    background-gradient-end: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.10);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.15);
+    background-gradient-end: rgba(0, 0, 0, 0.07);
+    border-color: rgba(0, 0, 0, 0.14);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop {
+    border-left-color: rgba(0, 0, 0, 0.26);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop:hover {
+    background-color: rgba(0, 0, 0, 0.11);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop:checked {
+    background-color: rgba(46, 118, 191, 0.20);
+}
+
+/* Preserve GNOME's attention colours instead of applying the neutral light
+ * hover treatment to recording and screen-sharing indicators. */
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-recording-indicator {
+    color: white;
+    box-shadow: inset 0 0 0 100px #c7162b;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-recording-indicator:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-recording-indicator:focus {
+    box-shadow: inset 0 0 0 100px #b01326;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-sharing-indicator {
+    color: white;
+    box-shadow: inset 0 0 0 100px #da4816;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-sharing-indicator:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-sharing-indicator:focus {
+    box-shadow: inset 0 0 0 100px #c34113;
+}
+
+/* When these actors are collapsed to 0x0, remove the attention fill and
+ * full-height button border so the inset shadow cannot remain visible as a
+ * narrow orange or red strip. */
+.just-perfection-api-no-screen-sharing-indicator #panel.simple-taskbar-panel .panel-button.screen-sharing-indicator,
+.just-perfection-api-no-screen-sharing-indicator #panel.simple-taskbar-panel .panel-button.screen-sharing-indicator:hover,
+.just-perfection-api-no-screen-sharing-indicator #panel.simple-taskbar-panel .panel-button.screen-sharing-indicator:focus,
+.just-perfection-api-no-screen-recording-indicator #panel.simple-taskbar-panel .panel-button.screen-recording-indicator,
+.just-perfection-api-no-screen-recording-indicator #panel.simple-taskbar-panel .panel-button.screen-recording-indicator:hover,
+.just-perfection-api-no-screen-recording-indicator #panel.simple-taskbar-panel .panel-button.screen-recording-indicator:focus {
+    width: 0;
+    height: 0;
+    -natural-hpadding: 0;
+    -minimum-hpadding: 0;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* Keep panel-item hit targets full height while making their themed hover
+ * backgrounds more compact vertically. The clock paints its state on an
+ * inner actor, so it needs the same transparent inset there. */
+#panel.simple-taskbar-panel.simple-taskbar-default-panel-button-padding .panel-button {
+    -natural-hpadding: 2px;
+    -minimum-hpadding: 2px;
+}
+
+#panel.simple-taskbar-panel .panel-button {
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+}
+
+#panel.simple-taskbar-panel .panel-button.clock-display .clock {
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+}
+
+#panel.simple-taskbar-panel .simple-taskbar-show-desktop {
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.simple-taskbar-start {
+    min-width: 0;
+    padding: 0;
+    color: #f3f3f3;
+}
+
+#panel.simple-taskbar-panel .simple-taskbar-start:focus,
+#panel.simple-taskbar-panel .simple-taskbar-start:hover,
+#panel.simple-taskbar-panel .simple-taskbar-start:active,
+#panel.simple-taskbar-panel .simple-taskbar-start:checked,
+#panel.simple-taskbar-panel .simple-taskbar-start:active:hover,
+#panel.simple-taskbar-panel .simple-taskbar-start:checked:hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel .simple-taskbar-start:focus .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel .simple-taskbar-start:hover .simple-taskbar-start-hover {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(255, 255, 255, 0.13);
+    background-gradient-end: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+#panel.simple-taskbar-panel .simple-taskbar-start:active .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel .simple-taskbar-start:checked .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel .simple-taskbar-start:active:hover .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel .simple-taskbar-start:checked:hover .simple-taskbar-start-hover {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(255, 255, 255, 0.22);
+    background-gradient-end: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.simple-taskbar-start-hover {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: transparent;
+}
+
+.simple-taskbar-bin {
+    padding: 0;
+}
+
+.simple-taskbar-app-item {
+    min-width: 0;
+}
+
+.simple-taskbar-app-glass {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background-color: transparent;
+}
+
+.simple-taskbar-app-item:hover .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(255, 255, 255, 0.13);
+    background-gradient-end: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+.simple-taskbar-app-item.focused .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(255, 255, 255, 0.22);
+    background-gradient-end: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.simple-taskbar-app-button {
+    min-width: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.simple-taskbar-running-indicator {
+    height: 3px;
+    min-width: 7px;
+    margin-bottom: 4px;
+    spacing: 2px;
+    background-color: transparent;
+}
+
+.simple-taskbar-running-indicator-segment {
+    height: 3px;
+    min-width: 7px;
+    border-radius: 3px;
+    background-color: transparent;
+}
+
+.simple-taskbar-app-item.running .simple-taskbar-running-indicator-segment {
+    background-color: #8d8d8d;
+}
+
+.simple-taskbar-app-item.multiple-windows .simple-taskbar-running-indicator {
+    min-width: 17px;
+}
+
+.simple-taskbar-app-item.running.focused .simple-taskbar-running-indicator {
+    min-width: 21px;
+}
+
+.simple-taskbar-app-item.running.focused .simple-taskbar-running-indicator-segment {
+    background-color: #60aef7;
+}
+
+.simple-taskbar-preview-menu {
+    min-width: 0;
+}
+
+.simple-taskbar-preview-menu .popup-menu-content {
+    padding: 0;
+    border-width: 0;
+    border-radius: 10px;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.simple-taskbar-preview-scroll {
+    max-height: 220px;
+}
+
+.simple-taskbar-preview-list {
+    spacing: 8px;
+}
+
+.simple-taskbar-preview-item {
+    border-radius: 10px;
+    background-color: rgba(47, 47, 51, 0.98);
+}
+
+.simple-taskbar-preview-item:hover {
+    background-color: rgba(72, 72, 77, 0.98);
+}
+
+.simple-taskbar-preview-button {
+    padding: 3px;
+    border-radius: 9px;
+    background-color: transparent;
+}
+
+.simple-taskbar-preview-button:hover {
+    background-color: transparent;
+}
+
+.simple-taskbar-preview-button:focus {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.simple-taskbar-preview-content {
+    spacing: 6px;
+}
+
+.simple-taskbar-preview-thumbnail {
+    border-width: 0;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+.simple-taskbar-preview-title {
+    max-width: 260px;
+    padding: 2px 22px 0 6px;
+    color: #f4f4f4;
+    font-size: 11pt;
+    text-align: left;
+}
+
+.simple-taskbar-preview-close {
+    width: 14px;
+    height: 14px;
+    margin: 5px 2px 0 1px;
+    padding: 2px;
+    border-radius: 9px;
+    color: #f4f4f4;
+    background-color: rgba(20, 20, 22, 0.72);
+}
+
+.simple-taskbar-preview-close:hover,
+.simple-taskbar-preview-close:focus {
+    color: #ffffff;
+    background-color: rgba(225, 56, 62, 0.92);
+}
+
+.simple-taskbar-preview-close-icon {
+    icon-size: 12px;
+}
+
+.simple-taskbar-show-desktop {
+    min-width: 12px;
+    padding: 0;
+    margin-left: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    border: 0 solid rgba(255, 255, 255, 0.28);
+    border-left-width: 1px;
+    border-radius: 0;
+}
+
+.simple-taskbar-show-desktop:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.simple-taskbar-show-desktop:checked {
+    background-color: rgba(96, 174, 247, 0.25);
+}
+
+.simple-taskbar-windows-start-menu .popup-menu-content {
+    padding: 0;
+}
+
+.simple-taskbar-windows-start-menu.simple-taskbar-windows-start-dark .popup-menu-content {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.98);
+    background-gradient-end: rgba(30, 30, 34, 0.98);
+    box-shadow: none;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start {
+    color: #f4f4f4;
+}
+
+.simple-taskbar-windows-start-search {
+    height: 36px;
+    margin: 22px 28px 10px;
+    padding: 0 12px;
+    border-radius: 7px;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 2px solid #60aef7;
+    background-color: rgba(18, 18, 21, 0.76);
+    color: #f6f6f6;
+    selection-background-color: #3479b9;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search:focus {
+    border-color: rgba(96, 174, 247, 0.78);
+}
+
+.simple-taskbar-windows-start-search-icon {
+    icon-size: 16px;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search-icon {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search StLabel.hint-text {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.simple-taskbar-windows-start-header {
+    padding: 8px 34px 10px;
+}
+
+.simple-taskbar-windows-start-heading,
+.simple-taskbar-windows-start-section-heading {
+    font-weight: 700;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-heading,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-section-heading {
+    color: #ffffff;
+}
+
+.simple-taskbar-windows-start-section-heading {
+    margin: 18px 7px 6px;
+}
+
+.simple-taskbar-windows-start-nav {
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-nav {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-nav:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-nav:focus {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.simple-taskbar-windows-start-nav-content {
+    spacing: 7px;
+}
+
+.simple-taskbar-windows-start-scroll {
+    padding: 0 28px 10px;
+}
+
+.simple-taskbar-windows-start-content {
+    spacing: 4px;
+}
+
+.simple-taskbar-windows-start-app-grid,
+.simple-taskbar-windows-start-recommended-grid,
+.simple-taskbar-windows-start-app-list {
+    spacing: 4px;
+}
+
+.simple-taskbar-windows-start-app-row,
+.simple-taskbar-windows-start-recommended-row {
+    spacing: 5px;
+}
+
+.simple-taskbar-windows-start-app-tile {
+    min-width: 82px;
+    height: 70px;
+    padding: 7px 3px;
+    border-radius: 7px;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-tile:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-tile:focus,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-recommended:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-recommended:focus,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.simple-taskbar-windows-start-app-tile-content {
+    spacing: 7px;
+}
+
+.simple-taskbar-windows-start-app-tile-label {
+    text-align: center;
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-content {
+    box-shadow: none;
+}
+
+.simple-taskbar-windows-start-recommended {
+    min-width: 260px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-app-list-button {
+    padding: 7px 12px;
+    border-radius: 7px;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-app-list-content,
+.simple-taskbar-windows-start-user-content {
+    spacing: 11px;
+}
+
+.simple-taskbar-windows-start-empty {
+    padding: 60px 0;
+}
+
+.simple-taskbar-windows-start-empty-pinned {
+    padding: 28px 0 20px;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-empty {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-empty-pinned {
+    color: rgba(255, 255, 255, 0.58);
+}
+
+.simple-taskbar-windows-start-footer {
+    padding: 11px 30px;
+    border-top: 1px solid rgba(128, 128, 128, 0.32);
+    border-radius: 0 0 11px 11px;
+    spacing: 7px;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: rgba(13, 13, 16, 0.38);
+}
+
+.simple-taskbar-windows-start-footer-button,
+.simple-taskbar-windows-start-icon-button {
+    padding: 7px 10px;
+    border-radius: 7px;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-footer-button:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-footer-button:focus,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-icon-button:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-icon-button:focus {
+    background-color: rgba(255, 255, 255, 0.13);
+}
+
+.simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light .popup-menu-content {
+    border: 1px solid rgba(20, 28, 42, 0.18);
+    border-radius: 12px;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.98);
+    background-gradient-end: rgba(230, 234, 242, 0.98);
+    box-shadow: none;
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start {
+    color: #202124;
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-search {
+    border: 1px solid rgba(30, 40, 56, 0.18);
+    border-bottom: 2px solid #1877c9;
+    background-color: rgba(255, 255, 255, 0.82);
+    color: #18191b;
+    selection-background-color: #8bc5f5;
+    selected-color: #101113;
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-search:focus {
+    border-color: rgba(24, 119, 201, 0.72);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-search-icon {
+    color: rgba(24, 28, 34, 0.68);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-search StLabel.hint-text {
+    color: rgba(30, 34, 40, 0.58);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-heading,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-section-heading {
+    color: #17191c;
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-nav {
+    background-color: rgba(255, 255, 255, 0.62);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-nav:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-nav:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-recommended:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-recommended:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-list-button:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-list-button:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer-button:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer-button:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-icon-button:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-icon-button:focus {
+    background-color: rgba(26, 36, 52, 0.09);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-empty,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-empty-pinned {
+    color: rgba(30, 34, 40, 0.62);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer {
+    border-top: 1px solid rgba(30, 40, 56, 0.14);
+    background-color: rgba(218, 224, 234, 0.58);
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-content {
+    border: 1px solid rgba(20, 28, 42, 0.18);
+    background-color: rgba(245, 247, 251, 0.98);
+    color: #202124;
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:hover,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:focus {
+    background-color: rgba(26, 36, 52, 0.09);
+}
+
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-footer-button,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-icon-button {
+    transition-duration: 0ms !important;
+}
+
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-footer-button:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-footer-button:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-icon-button:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-icon-button:focus {
+    background-color: rgba(128, 128, 128, 0.18);
+}
+
+/* GNOME's top-panel popup spacing becomes a large gap above a bottom panel. */
+.popup-menu.panel-menu.simple-taskbar-bottom-panel-menu {
+    margin-bottom: 0;
+}
+
+/* Keep symbolic file-type icons legible against the selected panel theme. */
+.simple-taskbar-folder-menu-dark .popup-menu-icon {
+    -st-icon-style: symbolic;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.simple-taskbar-folder-menu-light .popup-menu-icon {
+    -st-icon-style: symbolic;
+    color: rgba(36, 36, 39, 0.92);
+}

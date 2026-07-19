@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.simple-taskbar"
+          path="/org/gnome/shell/extensions/simple-taskbar/">
+    <key name="panel-height" type="i">
+      <range min="32" max="80"/>
+      <default>44</default>
+      <summary>Taskbar height</summary>
+    </key>
+    <key name="panel-position" type="s">
+      <choices>
+        <choice value="top"/>
+        <choice value="bottom"/>
+      </choices>
+      <default>'bottom'</default>
+      <summary>Taskbar screen edge</summary>
+    </key>
+    <key name="panel-autohide-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the panel until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="icon-size" type="i">
+      <range min="16" max="48"/>
+      <default>28</default>
+      <summary>Application icon size</summary>
+    </key>
+    <key name="icon-spacing" type="i">
+      <range min="0" max="16"/>
+      <default>5</default>
+      <summary>Space between application buttons</summary>
+    </key>
+    <key name="transparency-enabled" type="b">
+      <default>true</default>
+      <summary>Enable taskbar transparency</summary>
+    </key>
+    <key name="transparency-level" type="i">
+      <range min="0" max="100"/>
+      <default>10</default>
+      <summary>Taskbar background transparency percentage</summary>
+    </key>
+    <key name="panel-theme-follow-system" type="b">
+      <default>true</default>
+      <summary>Follow the active GNOME Shell theme</summary>
+    </key>
+    <key name="panel-theme" type="s">
+      <choices>
+        <choice value="light"/>
+        <choice value="dark"/>
+      </choices>
+      <default>'dark'</default>
+      <summary>Taskbar colour scheme when not following the system</summary>
+    </key>
+    <key name="workspace-scroll-enabled" type="b">
+      <default>true</default>
+      <summary>Switch workspaces by scrolling over empty taskbar space</summary>
+    </key>
+    <key name="workspace-scroll-delay" type="i">
+      <range min="5" max="250"/>
+      <default>5</default>
+      <summary>Minimum delay between scroll workspace changes in milliseconds</summary>
+    </key>
+    <key name="panel-menu-click-only" type="b">
+      <default>true</default>
+      <summary>Require a click to switch between panel menus</summary>
+    </key>
+    <key name="taskbar-locked" type="b">
+      <default>false</default>
+      <summary>Prevent application icons from being rearranged by dragging</summary>
+    </key>
+    <key name="notification-banner-bottom-end" type="b">
+      <default>true</default>
+      <summary>Align notification banners with the taskbar edge and clock</summary>
+    </key>
+    <key name="task-manager-app" type="s">
+      <default>'net.nokyan.Resources.desktop'</default>
+      <summary>Application opened by the taskbar Task Manager action</summary>
+    </key>
+    <key name="activities-button-visible" type="b">
+      <default>true</default>
+      <summary>Show the Activities button on the taskbar</summary>
+    </key>
+    <key name="folder-menu-enabled" type="b">
+      <default>false</default>
+      <summary>Show a selected folder menu on the taskbar</summary>
+    </key>
+    <key name="folder-menu-uri" type="s">
+      <default>''</default>
+      <summary>Folder displayed by the taskbar folder menu</summary>
+    </key>
+    <key name="multi-monitor-panels" type="b">
+      <default>true</default>
+      <summary>Show taskbar panels on every connected monitor</summary>
+    </key>
+    <key name="default-gnome-panel" type="b">
+      <default>false</default>
+      <summary>Use a GNOME-style panel without taskbar applications</summary>
+    </key>
+    <key name="hide-pinned-taskbar-apps" type="b">
+      <default>false</default>
+      <summary>Hide pinned taskbar applications while they are not running</summary>
+    </key>
+    <key name="isolate-workspaces" type="b">
+      <default>false</default>
+      <summary>Show running applications from the active workspace only</summary>
+    </key>
+    <key name="multi-window-click-spread" type="b">
+      <default>true</default>
+      <summary>Show an application window spread when its taskbar icon is clicked</summary>
+    </key>
+    <key name="app-alignment" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+      </choices>
+      <default>'center'</default>
+      <summary>Application button alignment</summary>
+    </key>
+    <key name="start-button-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+      </choices>
+      <default>'center'</default>
+      <summary>Start button position</summary>
+    </key>
+    <key name="start-button-padding" type="i">
+      <range min="0" max="20"/>
+      <default>4</default>
+      <summary>Horizontal padding around the Start button icon</summary>
+    </key>
+    <key name="start-button-custom-icon" type="s">
+      <default>''</default>
+      <summary>URI or path of a custom Start button icon</summary>
+    </key>
+    <key name="gnome-start-button-visible" type="b">
+      <default>true</default>
+      <summary>Show the original GNOME Applications button</summary>
+    </key>
+    <key name="windows-start-menu-enabled" type="b">
+      <default>true</default>
+      <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>
+    </key>
+    <key name="start-menu-theme" type="s">
+      <choices>
+        <choice value="dark"/>
+        <choice value="light"/>
+        <choice value="shell"/>
+      </choices>
+      <default>'shell'</default>
+      <summary>Eleven-style Start Menu colour theme</summary>
+    </key>
+    <key name="start-menu-monitor-centered" type="b">
+      <default>true</default>
+      <summary>Center the Eleven-style Start Menu on the monitor</summary>
+    </key>
+    <key name="start-menu-super-tab" type="b">
+      <default>false</default>
+      <summary>Open the Eleven-style Start Menu with Super+Tab</summary>
+    </key>
+    <key name="start-menu-super-tab-hotkey" type="as">
+      <default>['&lt;Super&gt;Tab']</default>
+      <summary>Internal Super+Tab shortcut for the Eleven-style Start Menu</summary>
+    </key>
+    <key name="start-menu-displaced-switch-applications" type="as">
+      <default>[]</default>
+      <summary>Internal recovery state for the displaced GNOME shortcut</summary>
+    </key>
+    <key name="start-menu-custom-hotkey" type="as">
+      <default>[]</default>
+      <summary>Custom shortcut for the Eleven-style Start Menu</summary>
+    </key>
+    <key name="start-menu-pinned-apps" type="as">
+      <default>[]</default>
+      <summary>Applications pinned to the Eleven-style Start Menu</summary>
+    </key>
+    <key name="target-prefs-page" type="s">
+      <default>''</default>
+      <summary>Preferences page to display when opening settings</summary>
+    </key>
+    <key name="clock-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'right'</default>
+      <summary>Clock position</summary>
+    </key>
+    <key name="system-menu-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'right'</default>
+      <summary>Quick Settings position</summary>
+    </key>
+  </schema>
+</schemalist>
