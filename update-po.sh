@@ -1,11 +1,10 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0-or-later
-# Update translation template and compile all .po files
+# Update translation template and merge into existing .po files
 
 set -eu
 
 PROJECT_DIR=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
-UUID='simple-taskbar@sultech'
 
 cd "$PROJECT_DIR"
 
@@ -22,13 +21,12 @@ xgettext \
 
 echo "Template: po/simple-taskbar.pot"
 
-# Compile each .po file
+# Merge new strings into each .po file
 for po_file in po/*.po; do
     [ -f "$po_file" ] || continue
     lang=$(basename "$po_file" .po)
-    mkdir -p "locale/$lang/LC_MESSAGES"
-    msgfmt -o "locale/$lang/LC_MESSAGES/$UUID.mo" "$po_file"
-    echo "Compiled: locale/$lang/LC_MESSAGES/$UUID.mo"
+    msgmerge --update "$po_file" po/simple-taskbar.pot
+    echo "Updated: $po_file"
 done
 
 echo "Done."

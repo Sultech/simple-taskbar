@@ -10,16 +10,6 @@ OUT_DIR=${1:-"$PROJECT_DIR/dist"}
 
 glib-compile-schemas --strict "$SOURCE_DIR/schemas"
 
-# Compile translations
-if [ -d "$SOURCE_DIR/po" ]; then
-    for po_file in "$SOURCE_DIR"/po/*.po; do
-        [ -f "$po_file" ] || continue
-        lang=$(basename "$po_file" .po)
-        mkdir -p "$SOURCE_DIR/locale/$lang/LC_MESSAGES"
-        msgfmt -o "$SOURCE_DIR/locale/$lang/LC_MESSAGES/$UUID.mo" "$po_file"
-    done
-fi
-
 mkdir -p "$OUT_DIR"
 
 gnome-extensions pack \
@@ -46,7 +36,7 @@ gnome-extensions pack \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
     --extra-source=eleven-start-symbolic.svg \
-    --extra-source=locale \
+    --podir=po \
     --out-dir "$OUT_DIR" \
     "$SOURCE_DIR"
 
