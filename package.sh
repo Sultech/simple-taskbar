@@ -9,6 +9,7 @@ SOURCE_DIR="$PROJECT_DIR"
 OUT_DIR=${1:-"$PROJECT_DIR/dist"}
 
 glib-compile-schemas --strict "$SOURCE_DIR/schemas"
+
 mkdir -p "$OUT_DIR"
 
 gnome-extensions pack \
@@ -35,6 +36,7 @@ gnome-extensions pack \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
     --extra-source=eleven-start-symbolic.svg \
+    --podir=po \
     --out-dir "$OUT_DIR" \
     "$SOURCE_DIR"
 

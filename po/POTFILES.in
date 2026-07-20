@@ -1,0 +1,10 @@
+extension.js
+prefs.js
+windowsStartMenu.js
+folderMenuController.js
+taskbarAppMenu.js
+startButtonController.js
+panelInteractionController.js
+taskbarController.js
+windowPreviewController.js
+favoritesIntegration.js
