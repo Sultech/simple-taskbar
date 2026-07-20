@@ -1,4 +1,4 @@
-# <img src="docs/images/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="middle"> Simple Taskbar
+# <img src="docs/images/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
 
 Simple Taskbar turns GNOME Shell's native panel into a configurable desktop
 taskbar. It combines pinned and running applications with GNOME's Activities,
