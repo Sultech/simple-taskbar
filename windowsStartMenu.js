@@ -230,7 +230,7 @@ export class WindowsStartMenu {
     }
 
     _applyThemeClass(actor) {
-        const theme = this._settings.get_string('start-menu-theme');
+        const theme = this._effectiveTheme();
         actor.remove_style_class_name('simple-taskbar-windows-start-dark');
         actor.remove_style_class_name('simple-taskbar-windows-start-light');
         actor.remove_style_class_name('simple-taskbar-windows-start-shell');
@@ -262,13 +262,22 @@ export class WindowsStartMenu {
         if (!actor)
             return;
         if (actor instanceof St.Button) {
-            if (this._settings.get_string('start-menu-theme') === 'shell')
+            if (this._effectiveTheme() === 'shell')
                 actor.add_style_class_name('popup-menu-item');
             else
                 actor.remove_style_class_name('popup-menu-item');
         }
         for (const child of actor.get_children?.() ?? [])
             this._syncShellButtonClasses(child);
+    }
+
+    _effectiveTheme() {
+        if (!this._settings.get_boolean('start-menu-follow-panel-theme'))
+            return this._settings.get_string('start-menu-theme');
+
+        return Main.panel.has_style_class_name('simple-taskbar-theme-light')
+            ? 'light'
+            : 'dark';
     }
 
     _getSourceMonitor() {

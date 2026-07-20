@@ -62,7 +62,9 @@ export class PanelController {
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
         this._layoutRepairId = 0;
+        this._transparencyRepairId = 0;
         this._applyingLayout = false;
+        this._applyingTransparency = false;
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
         this._stSettings = St.Settings.get();
         this._injectionManager = new InjectionManager();
@@ -242,6 +244,10 @@ export class PanelController {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
         }
+        if (this._transparencyRepairId) {
+            GLib.Source.remove(this._transparencyRepairId);
+            this._transparencyRepairId = 0;
+        }
         for (const [object, id] of this._signals) {
             if (id)
                 object.disconnect(id);
@@ -310,6 +316,7 @@ export class PanelController {
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = null;
         this._applyingLayout = false;
+        this._applyingTransparency = false;
         this._panelWasModified = false;
     }
 
@@ -376,6 +383,10 @@ export class PanelController {
         });
         this._connect(Main.panel, 'notify::style-class', () => {
             this._applyTransparency();
+        });
+        this._connect(Main.panel, 'notify::style', () => {
+            if (!this._applyingTransparency)
+                this._queueTransparencyRepair();
         });
         this._connect(
             Main.layoutManager.uiGroup,
@@ -494,6 +505,22 @@ export class PanelController {
                 this._applyTheme();
                 this.position();
                 this._menuPositioner?.refresh();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _queueTransparencyRepair() {
+        if (!this._settings || this._applyingTransparency ||
+            this._transparencyRepairId) {
+            return;
+        }
+
+        this._transparencyRepairId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._transparencyRepairId = 0;
+                this._applyTransparency();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -681,8 +708,10 @@ export class PanelController {
     }
 
     _applyTransparency() {
-        if (!this._settings || !this._panelWasModified)
+        if (!this._settings || !this._panelWasModified ||
+            this._applyingTransparency) {
             return;
+        }
 
         const originalStyle = this._oldPanelStyle?.trim() ?? '';
         const externalPanelStyle = EXTERNAL_PANEL_STYLES.some(style =>
@@ -694,8 +723,7 @@ export class PanelController {
         else
             Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
         if (externalPanelStyle && !light) {
-            // External blur actors render their background behind Main.panel.
-            Main.panel.set_style(originalStyle);
+            this._setPanelStyle(originalStyle);
             return;
         }
 
@@ -726,10 +754,19 @@ export class PanelController {
             borderStyle +
             `box-shadow: 0 ${shadowY}px 8px ` +
             `rgba(0, 0, 0, ${shadowOpacity.toFixed(3)});`;
-        Main.panel.set_style(
+        this._setPanelStyle(
             originalStyle
                 ? `${originalStyle}; ${transparencyStyle}`
                 : transparencyStyle
         );
+    }
+
+    _setPanelStyle(style) {
+        this._applyingTransparency = true;
+        try {
+            Main.panel.set_style(style);
+        } finally {
+            this._applyingTransparency = false;
+        }
     }
 }

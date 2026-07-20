@@ -241,6 +241,18 @@ export class StartButtonController {
         this._connect(this._settings, 'changed::start-menu-theme', () => {
             this._windowsStartMenu?.syncTheme();
         });
+        this._connect(
+            this._settings,
+            'changed::start-menu-follow-panel-theme',
+            () => this._windowsStartMenu?.syncTheme()
+        );
+        this._connect(Main.panel, 'notify::style-class', () => {
+            if (this._settings.get_boolean(
+                'start-menu-follow-panel-theme'
+            )) {
+                this._windowsStartMenu?.syncTheme();
+            }
+        });
     }
 
     _openContextMenu() {

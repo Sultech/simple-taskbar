@@ -542,6 +542,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updateGnomeStartButtonVisibleSwitch();
 
+        const followPanelThemeSwitch = new Adw.SwitchRow({
+            title: _('Follow Panel Theme'),
+            subtitle: _('Use the panel’s effective light or dark appearance'),
+            active: window._settings.get_boolean(
+                'start-menu-follow-panel-theme'
+            ),
+        });
+        startMenuGroup.add(followPanelThemeSwitch);
+        window._settings.bind(
+            'start-menu-follow-panel-theme',
+            followPanelThemeSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const startMenuThemeRow = this._addComboRow(
             startMenuGroup,
             window._settings,
@@ -556,10 +571,20 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 ],
             }
         );
-        startMenuThemeRow.sensitive = windowsStartMenuSwitch.active;
-        windowsStartMenuSwitch.connect('notify::active', widget => {
-            startMenuThemeRow.sensitive = widget.active;
-        });
+        const updateStartMenuThemeRows = () => {
+            followPanelThemeSwitch.sensitive = windowsStartMenuSwitch.active;
+            startMenuThemeRow.sensitive = windowsStartMenuSwitch.active &&
+                !followPanelThemeSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateStartMenuThemeRows
+        );
+        followPanelThemeSwitch.connect(
+            'notify::active',
+            updateStartMenuThemeRows
+        );
+        updateStartMenuThemeRows();
 
         const centerStartMenuRow = new Adw.SwitchRow({
             title: _('Center Start Menu on Monitor'),

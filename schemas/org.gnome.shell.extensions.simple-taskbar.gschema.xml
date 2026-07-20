@@ -149,6 +149,10 @@
       <default>'shell'</default>
       <summary>Eleven-style Start Menu colour theme</summary>
     </key>
+    <key name="start-menu-follow-panel-theme" type="b">
+      <default>true</default>
+      <summary>Use the panel's effective light or dark theme for the Eleven-style Start Menu</summary>
+    </key>
     <key name="start-menu-monitor-centered" type="b">
       <default>true</default>
       <summary>Center the Eleven-style Start Menu on the monitor</summary>
