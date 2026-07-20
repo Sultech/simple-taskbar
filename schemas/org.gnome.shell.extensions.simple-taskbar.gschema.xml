@@ -99,6 +99,19 @@
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>
     </key>
+    <key name="combine-app-buttons-mode" type="s">
+      <choices>
+        <choice value="always"/>
+        <choice value="when-full"/>
+        <choice value="never"/>
+      </choices>
+      <default>'always'</default>
+      <summary>Choose when windows from the same application are combined</summary>
+    </key>
+    <key name="hide-app-labels" type="b">
+      <default>true</default>
+      <summary>Hide window title labels when application buttons are not combined</summary>
+    </key>
     <key name="isolate-workspaces" type="b">
       <default>false</default>
       <summary>Show running applications from the active workspace only</summary>

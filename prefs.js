@@ -116,6 +116,43 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const combineAppButtonsRow = this._addComboRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'combine-app-buttons-mode',
+                title: _('Combine Application Buttons'),
+                subtitle: _('Choose when windows share one taskbar button'),
+                choices: [
+                    {value: 'always', label: _('Always')},
+                    {value: 'when-full', label: _('Only When Full')},
+                    {value: 'never', label: _('Never')},
+                ],
+            }
+        );
+
+        const hideAppLabelsSwitch = new Adw.SwitchRow({
+            title: _('Hide App Labels'),
+            subtitle: _('Show only icons on separate window buttons'),
+            active: window._settings.get_boolean('hide-app-labels'),
+        });
+        appearanceGroup.add(hideAppLabelsSwitch);
+        window._settings.bind(
+            'hide-app-labels',
+            hideAppLabelsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const syncLabelSensitivity = () => {
+            hideAppLabelsSwitch.sensitive = window._settings.get_string(
+                'combine-app-buttons-mode'
+            ) !== 'always';
+        };
+        combineAppButtonsRow.connect('notify::selected', () => {
+            syncLabelSensitivity();
+        });
+        syncLabelSensitivity();
+
         const isolateWorkspacesSwitch = new Adw.SwitchRow({
             title: _('Isolate Workspaces'),
             subtitle: _('Show running applications from the current workspace only'),

@@ -5,6 +5,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Mtk from 'gi://Mtk';
+import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -21,6 +22,9 @@ import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
 const ITEM_ANIMATION_TIME = 200;
 const STARTUP_SETTLE_DELAY = 750;
+const APP_LABEL_WIDTH = 140;
+const APP_LABEL_MIN_WIDTH = 40;
+const APP_LABEL_SPACING = 8;
 
 // Retain DashItemContainer's scale-and-fade animation.
 const TaskbarItemContainer = GObject.registerClass(
@@ -69,6 +73,7 @@ export class TaskbarController {
         panelHeight,
         getInterestingWindows,
         onAppClicked,
+        onWindowClicked,
         openNewWindow,
     }) {
         this._settings = settings;
@@ -79,6 +84,7 @@ export class TaskbarController {
         this._panelHeight = panelHeight;
         this._getInterestingWindows = getInterestingWindows;
         this._onAppClicked = onAppClicked;
+        this._onWindowClicked = onWindowClicked;
         this._openNewWindow = openNewWindow;
         this._windowPreviews = null;
         this._alignmentActor = null;
@@ -93,6 +99,9 @@ export class TaskbarController {
         this._activeWorkspaceSignalIds = [];
         this._shownInitially = false;
         this._centered = false;
+        this._availableWidth = 0;
+        this._combineWhenFull = false;
+        this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = Main.layoutManager._startingUp;
         this._startupSettleId = 0;
 
@@ -147,8 +156,9 @@ export class TaskbarController {
             });
         }
         this._connect(this._appSystem, 'app-state-changed', (_system, app) => {
-            if (this._isPersistentPinned(app) &&
-                this._appButtons.has(app.get_id())) {
+            if (this._combineMode() === 'always' &&
+                this._isPersistentPinned(app) &&
+                this._hasItemsForApp(app.get_id())) {
                 this.syncButtonStates();
                 return;
             }
@@ -179,6 +189,26 @@ export class TaskbarController {
         );
         this._connect(this._settings, 'changed::isolate-workspaces', () => {
             this._refreshWorkspaceIsolation(true);
+        });
+        this._connect(
+            this._settings,
+            'changed::combine-app-buttons-mode',
+            () => {
+                this._windowPreviews?.hideTooltip(false);
+                this._windowPreviews?.hide();
+                this._combineWhenFull = false;
+                this._syncCombineWhenFull();
+                this._shownInitially = false;
+                this._queueRedisplay();
+                this._syncDragEnabled();
+            }
+        );
+        this._connect(this._settings, 'changed::hide-app-labels', () => {
+            for (const item of this._appButtons.values()) {
+                this._syncItemLabel(item);
+                this._updateGlassGeometry(item);
+            }
+            this.queueIconGeometryUpdate();
         });
         this._connect(this._settings, 'changed::taskbar-locked', () => {
             this._syncDragEnabled();
@@ -228,13 +258,28 @@ export class TaskbarController {
         this._favorites = null;
         this._getInterestingWindows = null;
         this._onAppClicked = null;
+        this._onWindowClicked = null;
         this._openNewWindow = null;
         this._sessionOrder = null;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = null;
         this._shownInitially = false;
         this._centered = false;
+        this._availableWidth = 0;
+        this._combineWhenFull = false;
+        this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = false;
+    }
+
+    setAvailableWidth(width) {
+        this._availableWidth = Math.max(0, Math.floor(width));
+        if (this._syncCombineWhenFull()) {
+            this._shownInitially = false;
+            this._windowPreviews?.hideTooltip(false);
+            this._windowPreviews?.hide();
+            this._queueRedisplay();
+            this._syncDragEnabled();
+        }
     }
 
     setIconSize(iconSize) {
@@ -273,18 +318,28 @@ export class TaskbarController {
             return;
         }
 
-        const apps = this._orderedApps(this._startupSettling);
+        if (this._syncCombineWhenFull()) {
+            this._shownInitially = false;
+            this._windowPreviews?.hideTooltip(false);
+            this._windowPreviews?.hide();
+            this._syncDragEnabled();
+        }
+        const entries = this._orderedEntries(this._startupSettling);
         const animateMembershipChanges = this._shownInitially &&
             !this._startupSettling;
-        const wantedIds = new Set(apps.map(app => app.get_id()));
+        const wantedKeys = new Set(entries.map(entry => entry.key));
+        const wantedAppIds = new Set(
+            entries.map(entry => entry.app.get_id())
+        );
 
-        for (const [id, item] of this._appButtons) {
-            if (!wantedIds.has(id)) {
+        for (const [key, item] of this._appButtons) {
+            if (!wantedKeys.has(key)) {
                 this._windowPreviews.removeItem(item);
-                this._untrackApp(item._taskbarApp);
                 this._destroyAppMenu(item._taskbarButton);
-                this._appButtons.delete(id);
-                if (this._favorites.isFavorite(id) ||
+                this._appButtons.delete(key);
+                if (this._favorites.isFavorite(
+                    item._taskbarApp.get_id()
+                ) ||
                     !animateMembershipChanges) {
                     item.destroy();
                 } else {
@@ -294,13 +349,13 @@ export class TaskbarController {
             }
         }
 
-        for (let index = 0; index < apps.length; index++) {
-            const app = apps[index];
-            let item = this._appButtons.get(app.get_id());
+        for (let index = 0; index < entries.length; index++) {
+            const {key, app, window} = entries[index];
+            let item = this._appButtons.get(key);
             if (!item) {
-                item = this._createAppButton(app);
+                item = this._createAppButton(app, window);
                 this._trackApp(app);
-                this._appButtons.set(app.get_id(), item);
+                this._appButtons.set(key, item);
                 this._placeItemAtActiveIndex(item, index);
                 this._animateItemIn(
                     item,
@@ -310,6 +365,11 @@ export class TaskbarController {
             } else {
                 this._placeItemAtActiveIndex(item, index);
             }
+        }
+
+        for (const app of [...this._appSignals.keys()]) {
+            if (!wantedAppIds.has(app.get_id()))
+                this._untrackApp(app);
         }
 
         this._shownInitially = true;
@@ -350,22 +410,30 @@ export class TaskbarController {
 
     syncButtonStates() {
         const focusedApp = this._tracker?.focus_app;
+        const focusedWindow = global.display.focus_window;
         for (const item of this._appButtons.values()) {
             const app = item._taskbarApp;
+            const window = item._taskbarWindow;
             const button = item._taskbarButton;
-            const windowCount = this._interestingWindows(app).length;
-            const running = app.state === Shell.AppState.RUNNING &&
-                windowCount > 0;
-            const focused = app === focusedApp;
+            const windowCount = this._windowsForItem(item).length;
+            const running = window
+                ? windowCount > 0
+                : app.state === Shell.AppState.RUNNING && windowCount > 0;
+            const focused = window
+                ? window === focusedWindow
+                : app === focusedApp;
             item.set_style_class_name(
                 `dash-item-container simple-taskbar-app-item` +
                 `${running ? ' running' : ''}` +
-                `${windowCount > 1 ? ' multiple-windows' : ''}` +
+                `${!window && windowCount > 1 ? ' multiple-windows' : ''}` +
                 `${focused ? ' focused' : ''}`
             );
-            button.accessible_name = running
-                ? `${app.get_name()}, ${_('running')}`
-                : app.get_name();
+            button.accessible_name = window
+                ? `${window.get_title() || app.get_name()}, ${_('running')}`
+                : running
+                    ? `${app.get_name()}, ${_('running')}`
+                    : app.get_name();
+            this._syncItemLabel(item);
 
             if (focused)
                 button.add_style_pseudo_class('selected');
@@ -373,7 +441,7 @@ export class TaskbarController {
                 button.remove_style_pseudo_class('selected');
 
             item._taskbarIndicatorSecondary.visible =
-                focused && windowCount > 1;
+                !window && focused && windowCount > 1;
         }
     }
 
@@ -393,14 +461,20 @@ export class TaskbarController {
 
     updateWindowIconGeometries() {
         for (const item of this._appButtons.values())
-            this.updateAppIconGeometry(item._taskbarApp);
+            this._updateItemIconGeometry(item);
     }
 
     updateAppIconGeometry(app) {
         if (!app)
             return;
 
-        const item = this._appButtons.get(app.get_id());
+        for (const item of this._appButtons.values()) {
+            if (item._taskbarApp === app)
+                this._updateItemIconGeometry(item);
+        }
+    }
+
+    _updateItemIconGeometry(item) {
         const icon = item?._taskbarIcon;
         if (!icon?.get_stage() || !icon.has_allocation())
             return;
@@ -419,7 +493,7 @@ export class TaskbarController {
         const monitorScoped =
             this._settings.get_boolean('multi-monitor-panels') &&
             Main.layoutManager.monitors.length > 1;
-        for (const window of this._interestingWindows(app)) {
+        for (const window of this._windowsForItem(item)) {
             if (monitorScoped && monitor &&
                 window.get_monitor() !== monitor.index)
                 continue;
@@ -428,8 +502,10 @@ export class TaskbarController {
     }
 
     handleDragOver(source, _actor, x, _y, _time) {
-        if (this._settings.get_boolean('taskbar-locked'))
+        if (this._settings.get_boolean('taskbar-locked') ||
+            !this._combineAppButtons()) {
             return DND.DragMotionResult.NO_DROP;
+        }
 
         const item = source?._taskbarItem;
         if (!item || item.get_parent() !== this.actor)
@@ -455,8 +531,10 @@ export class TaskbarController {
     }
 
     acceptDrop(source, _actor, _x, _y, _time) {
-        if (this._settings.get_boolean('taskbar-locked'))
+        if (this._settings.get_boolean('taskbar-locked') ||
+            !this._combineAppButtons()) {
             return false;
+        }
 
         const item = source?._taskbarItem;
         if (!item || item.get_parent() !== this.actor)
@@ -562,6 +640,16 @@ export class TaskbarController {
         return this._getInterestingWindows(app);
     }
 
+    _windowsForItem(item) {
+        const window = item?._taskbarWindow;
+        if (!window)
+            return this._interestingWindows(item._taskbarApp);
+
+        return this._interestingWindows(item._taskbarApp).includes(window)
+            ? [window]
+            : [];
+    }
+
     _isPersistentPinned(app) {
         const appId = app?.get_id();
         return Boolean(appId) && this._favorites.isFavorite(appId) &&
@@ -620,6 +708,128 @@ export class TaskbarController {
         return [...pinnedApps, ...orderedRunningApps];
     }
 
+    _orderedEntries(pinnedOnly = false) {
+        const apps = this._orderedApps(pinnedOnly);
+        if (this._combineAppButtons()) {
+            return apps.map(app => ({
+                key: app.get_id(),
+                app,
+                window: null,
+            }));
+        }
+
+        return this._uncombinedEntries(apps);
+    }
+
+    _uncombinedEntries(apps) {
+        const entries = [];
+        for (const app of apps) {
+            const windows = this._interestingWindows(app).sort((a, b) =>
+                a.get_stable_sequence() - b.get_stable_sequence()
+            );
+            if (windows.length === 0) {
+                entries.push({key: app.get_id(), app, window: null});
+                continue;
+            }
+
+            for (const window of windows) {
+                entries.push({
+                    key: `window:${window.get_stable_sequence()}`,
+                    app,
+                    window,
+                });
+            }
+        }
+        return entries;
+    }
+
+    _combineMode() {
+        return this._settings.get_string('combine-app-buttons-mode');
+    }
+
+    _combineAppButtons() {
+        return this._combineMode() === 'always' || this._combineWhenFull;
+    }
+
+    _syncCombineWhenFull() {
+        let shouldCombine = false;
+        let labelWidth = APP_LABEL_WIDTH;
+        if (this._combineMode() === 'when-full' &&
+            this._availableWidth > 0) {
+            const layout = this._calculateWhenFullLayout();
+            shouldCombine = layout.combine;
+            labelWidth = layout.labelWidth;
+        }
+
+        const combinationChanged =
+            shouldCombine !== this._combineWhenFull;
+        const labelWidthChanged = labelWidth !== this._appLabelWidth;
+        if (!combinationChanged && !labelWidthChanged)
+            return false;
+
+        this._combineWhenFull = shouldCombine;
+        this._appLabelWidth = labelWidth;
+        if (labelWidthChanged)
+            this._applyCurrentButtonWidths();
+        return true;
+    }
+
+    _calculateWhenFullLayout() {
+        const entries = this._uncombinedEntries(
+            this._orderedApps(this._startupSettling)
+        );
+        const showLabels = !this._settings.get_boolean('hide-app-labels');
+        const spacing = Math.max(this._settings.get_int('icon-spacing'), 0);
+        const spacingWidth = Math.max(0, entries.length - 1) * spacing;
+        const fixedButtonsWidth = entries.reduce((width, entry) =>
+            width + this._buttonWidth(entry.window, false), 0);
+        const labelCount = showLabels
+            ? entries.filter(entry => Boolean(entry.window)).length
+            : 0;
+        const fixedWidth = fixedButtonsWidth + spacingWidth +
+            labelCount * APP_LABEL_SPACING;
+
+        if (labelCount === 0) {
+            return {
+                combine: fixedWidth > this._availableWidth,
+                labelWidth: APP_LABEL_WIDTH,
+            };
+        }
+
+        const minimumWidth = fixedWidth +
+            labelCount * APP_LABEL_MIN_WIDTH;
+        if (minimumWidth > this._availableWidth) {
+            return {
+                combine: true,
+                labelWidth: APP_LABEL_MIN_WIDTH,
+            };
+        }
+
+        return {
+            combine: false,
+            labelWidth: Math.min(
+                APP_LABEL_WIDTH,
+                Math.max(
+                    APP_LABEL_MIN_WIDTH,
+                    Math.floor(
+                        (this._availableWidth - fixedWidth) / labelCount
+                    )
+                )
+            ),
+        };
+    }
+
+    _showAppLabels() {
+        return !this._combineAppButtons() &&
+            !this._settings.get_boolean('hide-app-labels');
+    }
+
+    _hasItemsForApp(appId) {
+        return [...this._appButtons.values()].some(item =>
+            item._taskbarApp.get_id() === appId
+        );
+    }
+
     _getRunningApps() {
         const apps = [];
         const seen = new Set();
@@ -647,8 +857,8 @@ export class TaskbarController {
         return apps;
     }
 
-    _createAppButton(app) {
-        const glassWidth = Math.max(this._iconSize, 21) + 8;
+    _createAppButton(app, window = null) {
+        const glassWidth = this._buttonWidth(window);
         const item = new TaskbarItemContainer();
         item.add_style_class_name('simple-taskbar-app-item');
         item.reactive = true;
@@ -717,7 +927,22 @@ export class TaskbarController {
         const icon = app.create_icon_texture(this._iconSize);
         icon.x_align = Clutter.ActorAlign.CENTER;
         icon.y_align = Clutter.ActorAlign.CENTER;
-        content.add_child(icon);
+        const buttonContent = new St.BoxLayout({
+            style_class: 'simple-taskbar-app-button-content',
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        buttonContent.add_child(icon);
+        const label = new St.Label({
+            style_class: 'simple-taskbar-app-label',
+            text: window?.get_title() || app.get_name(),
+            width: this._appLabelWidth,
+            y_align: Clutter.ActorAlign.CENTER,
+            visible: Boolean(window) && this._showAppLabels(),
+        });
+        label.clutter_text.ellipsize = Pango.EllipsizeMode.END;
+        buttonContent.add_child(label);
+        content.add_child(buttonContent);
 
         const button = new St.Button({
             style_class: 'simple-taskbar-app-button',
@@ -756,20 +981,29 @@ export class TaskbarController {
         item.setChild(slot);
 
         item._taskbarApp = app;
+        item._taskbarWindow = window;
         item._taskbarButton = button;
         item._taskbarIcon = icon;
+        item._taskbarLabel = label;
         item._taskbarSlot = slot;
         item._taskbarVisual = visual;
         item._taskbarGlassHost = glassHost;
         item._taskbarGlass = glass;
         item._taskbarIndicatorSecondary = indicatorSecondary;
+        if (window) {
+            window.connectObject(
+                'notify::title',
+                () => this._syncItemLabel(item),
+                item
+            );
+        }
 
         item.connect('notify::hover', () => {
             if (this._dragging)
                 return;
             if (item.hover) {
                 item.add_style_pseudo_class('hover');
-                const windowCount = this._interestingWindows(app).length;
+                const windowCount = this._windowsForItem(item).length;
                 if (this._windowPreviews.currentItem &&
                     this._windowPreviews.currentItem !== item) {
                     if (windowCount > 0)
@@ -797,11 +1031,17 @@ export class TaskbarController {
         this._createAppMenu(button, app, item);
         button.connect('clicked', () => {
             this._windowPreviews.hideTooltip();
-            if (this._favorites.isFavorite(app.get_id()) &&
+            const targetWindow = item._taskbarWindow;
+            if (!targetWindow && this._favorites.isFavorite(app.get_id()) &&
                 this._interestingWindows(app).length === 0) {
                 this._animatePinnedLaunch(item);
             }
-            this._onAppClicked(item, app);
+            if (targetWindow) {
+                this._windowPreviews.hide();
+                this._onWindowClicked(targetWindow);
+            } else {
+                this._onAppClicked(item, app);
+            }
         });
         button.connect('button-press-event', (_actor, event) => {
             const mouseButton = event.get_button();
@@ -844,7 +1084,8 @@ export class TaskbarController {
         });
         item._taskbarDraggable = draggable;
         draggable._dndGesture.enabled =
-            !this._settings.get_boolean('taskbar-locked');
+            !this._settings.get_boolean('taskbar-locked') &&
+            this._combineAppButtons();
         draggable.connect('drag-begin', () => {
             this._dragging = true;
             item.opacity = 96;
@@ -860,7 +1101,8 @@ export class TaskbarController {
     }
 
     _syncDragEnabled() {
-        const enabled = !this._settings.get_boolean('taskbar-locked');
+        const enabled = !this._settings.get_boolean('taskbar-locked') &&
+            this._combineAppButtons();
         for (const item of this._appButtons.values()) {
             const gesture = item._taskbarDraggable?._dndGesture;
             if (gesture)
@@ -917,7 +1159,8 @@ export class TaskbarController {
 
         const id = app.connect('windows-changed', () => {
             this._windowPreviews.windowsChanged(app);
-            if (this._isPersistentPinned(app)) {
+            if (this._combineMode() === 'always' &&
+                this._isPersistentPinned(app)) {
                 this.syncButtonStates();
                 this.queueIconGeometryUpdate();
                 return;
@@ -1051,7 +1294,7 @@ export class TaskbarController {
     }
 
     _updateGlassGeometry(item) {
-        const glassWidth = Math.max(this._iconSize, 21) + 8;
+        const glassWidth = this._buttonWidth(item._taskbarWindow);
         const glassHeight = Math.max(1, this._panelHeight - 8);
 
         item._taskbarButton.set_width(glassWidth);
@@ -1060,6 +1303,42 @@ export class TaskbarController {
         item._taskbarGlassHost.set_size(glassWidth, this._panelHeight);
         item._taskbarGlass.set_position(0, 4);
         item._taskbarGlass.set_size(glassWidth, glassHeight);
+        item._taskbarLabel.set_width(this._appLabelWidth);
+    }
+
+    _buttonWidth(
+        window,
+        showLabels = this._showAppLabels(),
+        labelWidth = this._appLabelWidth
+    ) {
+        const iconWidth = Math.max(this._iconSize, 21) + 8;
+        return window && showLabels
+            ? iconWidth + APP_LABEL_SPACING + labelWidth
+            : iconWidth;
+    }
+
+    _applyCurrentButtonWidths() {
+        let width = 0;
+        for (const item of this._appButtons.values()) {
+            this._updateGlassGeometry(item);
+            width += item._taskbarSlot.width;
+        }
+        const spacing = Math.max(this._settings.get_int('icon-spacing'), 0);
+        width += Math.max(0, this._appButtons.size - 1) * spacing;
+        this.actor.set_width(width > 0 ? Math.ceil(width) : -1);
+    }
+
+    _syncItemLabel(item) {
+        const label = item?._taskbarLabel;
+        if (!label)
+            return;
+
+        const window = item._taskbarWindow;
+        const text = window?.get_title() || item._taskbarApp.get_name();
+        label.text = text;
+        label.visible = Boolean(window) && this._showAppLabels();
+        if (window)
+            item._taskbarButton.accessible_name = `${text}, ${_('running')}`;
     }
 
     _applyButtonSpacing(button) {

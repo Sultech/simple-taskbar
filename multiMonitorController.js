@@ -15,6 +15,7 @@ import {PanelInteractionController} from './panelInteractionController.js';
 import {panelArrowSide, panelIsTop} from './panelPosition.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
+import {constrainTaskbarWidth} from './taskbarLayout.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
 
@@ -251,6 +252,8 @@ class SecondaryTaskbarPanel {
                 this._windowController.getInterestingWindows(app),
             onAppClicked: (item, app) =>
                 this._windowController.handleAppClicked(item, app),
+            onWindowClicked: window =>
+                this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),
         });
         this._windowPreviews = new WindowPreviewController(
@@ -273,7 +276,7 @@ class SecondaryTaskbarPanel {
 
         this._taskbarBin = new St.ScrollView({
             style_class: 'simple-taskbar-bin',
-            hscrollbar_policy: St.PolicyType.EXTERNAL,
+            hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
             enable_mouse_scrolling: true,
             clip_to_allocation: true,
@@ -392,6 +395,7 @@ class SecondaryTaskbarPanel {
         });
         this._connect(this._settings, 'changed::icon-spacing', () => {
             this._applyAppearance();
+            this._updateTaskbarWidth();
         });
         this._connect(this._settings, 'changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
@@ -421,6 +425,14 @@ class SecondaryTaskbarPanel {
                 this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
+            this._updateTaskbarWidth();
+        });
+        for (const signal of ['child-added', 'child-removed']) {
+            this._connect(this._taskbarController.actor, signal, () => {
+                this._updateTaskbarWidth();
+            });
+        }
+        this._connect(this._settings, 'changed::hide-app-labels', () => {
             this._updateTaskbarWidth();
         });
     }
@@ -524,29 +536,19 @@ class SecondaryTaskbarPanel {
     }
 
     _updateTaskbarWidth() {
-        if (this._appsAreCentered()) {
-            this._taskbarBin.set_width(-1);
-            return;
-        }
-
-        const [, centerWidth] = this._centerBox.get_preferred_width(
-            this._panelHeight
-        );
-        let occupiedWidth = 0;
-        for (const actor of this._leftBox.get_children()) {
-            if (actor === this._taskbarBin || !actor.visible)
-                continue;
-            const [, naturalWidth] = actor.get_preferred_width(
-                this._panelHeight
-            );
-            occupiedWidth += naturalWidth;
-        }
-        const centerStart = Math.floor(
-            (this._monitor.width - centerWidth) / 2
-        );
-        this._taskbarBin.set_width(
-            Math.max(1, centerStart - occupiedWidth - 8)
-        );
+        const availableWidth = constrainTaskbarWidth({
+            taskbarBin: this._taskbarBin,
+            taskbarActor: this._taskbarController.actor,
+            leftBox: this._leftBox,
+            centerBox: this._centerBox,
+            rightBox: this._rightBox,
+            panelWidth: this._monitor.width,
+            panelHeight: this._panelHeight,
+            spacing: this._settings.get_int('icon-spacing'),
+            centered: this._appsAreCentered(),
+        });
+        if (availableWidth !== undefined)
+            this._taskbarController.setAvailableWidth(availableWidth);
     }
 
     _syncTheme() {

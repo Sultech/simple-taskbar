@@ -101,7 +101,9 @@ export class StartButtonController {
 
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
-        this._content.set_width(iconSize + padding * 2);
+        const width = iconSize + padding * 2;
+        this._content.set_width(width);
+        this.actor.set_width(width);
         this.actor.set_style('min-width: 0; padding: 0;');
     }
 

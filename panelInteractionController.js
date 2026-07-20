@@ -168,6 +168,12 @@ export class PanelInteractionController {
             return Clutter.EVENT_STOP;
         }
 
+        if (target && eventType === Clutter.EventType.SCROLL &&
+            this._taskbarBin.contains(target) &&
+            this._scrollTaskbar(event)) {
+            return Clutter.EVENT_STOP;
+        }
+
         if (!this._settings.get_boolean('workspace-scroll-enabled') ||
             eventType !== Clutter.EventType.SCROLL)
             return Clutter.EVENT_PROPAGATE;
@@ -209,6 +215,38 @@ export class PanelInteractionController {
         }
         Main.wm.actionMoveWorkspace(targetWorkspace);
         return Clutter.EVENT_STOP;
+    }
+
+    _scrollTaskbar(event) {
+        const adjustment = this._taskbarBin.hadjustment;
+        const [value, , upper, stepIncrement, , pageSize] =
+            adjustment.get_values();
+        if (upper <= pageSize + 1)
+            return false;
+
+        const increment = Math.max(stepIncrement, 48);
+        let delta = 0;
+        switch (event.get_scroll_direction()) {
+        case Clutter.ScrollDirection.UP:
+        case Clutter.ScrollDirection.LEFT:
+            delta = -increment;
+            break;
+        case Clutter.ScrollDirection.DOWN:
+        case Clutter.ScrollDirection.RIGHT:
+            delta = increment;
+            break;
+        case Clutter.ScrollDirection.SMOOTH: {
+            const [dx, dy] = event.get_scroll_delta();
+            delta = (Math.abs(dx) > Math.abs(dy) ? dx : dy) * increment;
+            break;
+        }
+        }
+
+        if (delta === 0)
+            return false;
+
+        adjustment.set_value(value + delta);
+        return true;
     }
 
     _getScrollDirection(event, previousDirection, nextDirection) {

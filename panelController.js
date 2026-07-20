@@ -13,6 +13,7 @@ import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelIsTop} from './panelPosition.js';
+import {constrainTaskbarWidth} from './taskbarLayout.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 
 const EXTERNAL_PANEL_STYLES = [
@@ -37,9 +38,11 @@ export class PanelController {
         panelHeight,
         startButton,
         taskbarBin,
+        taskbarActor,
         showDesktopButton,
         folderMenuButton,
         onAppAlignmentChanged,
+        onTaskbarAvailableWidthChanged,
         queueOverviewRelayout,
         isAutoHideBlocked,
     }) {
@@ -47,9 +50,12 @@ export class PanelController {
         this._panelHeight = panelHeight;
         this._startButton = startButton;
         this._taskbarBin = taskbarBin;
+        this._taskbarActor = taskbarActor;
         this._showDesktopButton = showDesktopButton;
         this._folderMenuButton = folderMenuButton;
         this._onAppAlignmentChanged = onAppAlignmentChanged;
+        this._onTaskbarAvailableWidthChanged =
+            onTaskbarAvailableWidthChanged;
         this._queueOverviewRelayout = queueOverviewRelayout;
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signals = [];
@@ -207,30 +213,26 @@ export class PanelController {
         if (!this._taskbarBin || !this._settings)
             return;
 
-        if (this.appsAreCentered()) {
-            this._taskbarBin.set_width(-1);
-            return;
-        }
-
         const monitor = Main.layoutManager.primaryMonitor;
         const leftBox = Main.panel._leftBox;
         const centerBox = Main.panel._centerBox;
-        if (!monitor || centerBox.get_n_children() === 0) {
-            this._taskbarBin.set_width(-1);
+        const rightBox = Main.panel._rightBox;
+        if (!monitor)
             return;
-        }
 
-        const [, centerWidth] = centerBox.get_preferred_width(this._panelHeight);
-        let occupiedWidth = 0;
-        for (const actor of leftBox.get_children()) {
-            if (actor === this._taskbarBin || !actor.visible)
-                continue;
-            const [, naturalWidth] = actor.get_preferred_width(this._panelHeight);
-            occupiedWidth += naturalWidth;
-        }
-
-        const centerStart = Math.floor((monitor.width - centerWidth) / 2);
-        this._taskbarBin.set_width(Math.max(1, centerStart - occupiedWidth - 8));
+        const availableWidth = constrainTaskbarWidth({
+            taskbarBin: this._taskbarBin,
+            taskbarActor: this._taskbarActor,
+            leftBox,
+            centerBox,
+            rightBox,
+            panelWidth: monitor.width,
+            panelHeight: this._panelHeight,
+            spacing: this._settings.get_int('icon-spacing'),
+            centered: this.appsAreCentered(),
+        });
+        if (availableWidth !== undefined)
+            this._onTaskbarAvailableWidthChanged?.(availableWidth);
     }
 
     appsAreCentered() {
@@ -301,9 +303,11 @@ export class PanelController {
         this._panelItemState = null;
         this._startButton = null;
         this._taskbarBin = null;
+        this._taskbarActor = null;
         this._showDesktopButton = null;
         this._folderMenuButton = null;
         this._onAppAlignmentChanged = null;
+        this._onTaskbarAvailableWidthChanged = null;
         this._queueOverviewRelayout = null;
         this._isAutoHideBlocked = null;
         this._themeContext = null;
@@ -376,6 +380,14 @@ export class PanelController {
             this.position();
         });
         this._connect(Main.panel._centerBox, 'notify::width', () => {
+            this.updateTaskbarWidth();
+        });
+        for (const signal of ['child-added', 'child-removed']) {
+            this._connect(this._taskbarActor, signal, () => {
+                this.updateTaskbarWidth();
+            });
+        }
+        this._connect(this._settings, 'changed::hide-app-labels', () => {
             this.updateTaskbarWidth();
         });
         this._connect(this._startButton, 'notify::visible', () => {

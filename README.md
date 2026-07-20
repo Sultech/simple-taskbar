@@ -19,6 +19,7 @@ those Shell components.
 ## At a glance
 
 - See pinned and running applications together on the panel.
+- Combine application windows always, only when the taskbar is full, or never; automatic mode shrinks optional labels from 140 px to 40 px before combining.
 - Launch, focus, minimize and open new application windows from their icons.
 - Preview open windows by hovering over an application.
 - Use the taskbar on every monitor.

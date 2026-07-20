@@ -109,7 +109,7 @@ export class WindowPreviewController {
     schedule(item) {
         this._clearTimeout('_previewCloseId');
         this._clearTimeout('_previewOpenId');
-        if (this._interestingWindows(item._taskbarApp).length === 0)
+        if (this._windowsForItem(item).length === 0)
             return;
         if (this._previewItem === item)
             return;
@@ -146,7 +146,7 @@ export class WindowPreviewController {
     }
 
     scheduleTooltip(item) {
-        if (this._interestingWindows(item._taskbarApp).length > 0)
+        if (this._windowsForItem(item).length > 0)
             return;
         if (this._tooltipItem === item &&
             (this._tooltipTimeoutId || this._appTooltip?.visible))
@@ -216,7 +216,7 @@ export class WindowPreviewController {
     show(item) {
         this._clearTimeouts();
         this.hideTooltip();
-        const windows = this._interestingWindows(item._taskbarApp)
+        const windows = this._windowsForItem(item)
             .sort((a, b) => b.get_user_time() - a.get_user_time());
         if (windows.length === 0)
             return;
@@ -320,7 +320,7 @@ export class WindowPreviewController {
                 this._setHoverItem(null);
 
             if (hoveredItem && hoveredItem !== item &&
-                this._interestingWindows(hoveredItem._taskbarApp).length > 0) {
+                this._windowsForItem(hoveredItem).length > 0) {
                 this.scheduleSwitch(hoveredItem);
                 return Clutter.EVENT_PROPAGATE;
             }
@@ -372,6 +372,16 @@ export class WindowPreviewController {
 
     _interestingWindows(app) {
         return this._getInterestingWindows(app);
+    }
+
+    _windowsForItem(item) {
+        const window = item?._taskbarWindow;
+        if (!window)
+            return this._interestingWindows(item._taskbarApp);
+
+        return this._interestingWindows(item._taskbarApp).includes(window)
+            ? [window]
+            : [];
     }
 
     _clearTimeout(name) {
@@ -429,7 +439,7 @@ export class WindowPreviewController {
         this._previewHoverItem = item;
         item?.add_style_pseudo_class('hover');
 
-        if (item && this._interestingWindows(item._taskbarApp).length === 0)
+        if (item && this._windowsForItem(item).length === 0)
             this.scheduleTooltip(item);
         else
             this.hideTooltip();
@@ -497,7 +507,7 @@ export class WindowPreviewController {
     _refresh(item) {
         const button = item._taskbarButton;
         const previewBox = button?._taskbarPreviewBox;
-        const windows = this._interestingWindows(item._taskbarApp)
+        const windows = this._windowsForItem(item)
             .sort((a, b) => b.get_user_time() - a.get_user_time());
         if (!previewBox || windows.length === 0) {
             this.hide(true);

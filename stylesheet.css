@@ -141,6 +141,10 @@
     border-color: rgba(0, 0, 0, 0.14);
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-label {
+    color: rgba(0, 0, 0, 0.86);
+}
+
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop {
     border-left-color: rgba(0, 0, 0, 0.26);
 }
@@ -262,10 +266,6 @@
     padding: 0;
 }
 
-.simple-taskbar-app-item {
-    min-width: 0;
-}
-
 .simple-taskbar-app-glass {
     border-radius: 8px;
     border: 1px solid transparent;
@@ -291,6 +291,14 @@
     padding: 0;
     border-radius: 0;
     background-color: transparent;
+}
+
+.simple-taskbar-app-button-content {
+    spacing: 8px;
+}
+
+.simple-taskbar-app-label {
+    color: rgba(255, 255, 255, 0.92);
 }
 
 .simple-taskbar-running-indicator {

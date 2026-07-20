@@ -101,6 +101,27 @@ export class WindowController {
         this.activateApp(app);
     }
 
+    handleWindowClicked(window) {
+        if (!window || window.skip_taskbar)
+            return;
+
+        const overviewShown = Main.overview._shown ?? Main.overview.visible;
+        if (overviewShown) {
+            Main.activateWindow(window);
+            Main.overview.hide();
+            return;
+        }
+
+        if (global.display.focus_window === window) {
+            const app = this._tracker.get_window_app(window);
+            this._taskbar?.updateAppIconGeometry(app);
+            window.minimize();
+            return;
+        }
+
+        Main.activateWindow(window);
+    }
+
     openNewWindow(app) {
         if (app.can_open_new_window())
             app.open_new_window(-1);

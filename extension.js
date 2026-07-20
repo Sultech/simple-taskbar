@@ -104,6 +104,8 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._windowController.getInterestingWindows(app),
             onAppClicked: (item, app) =>
                 this._windowController.handleAppClicked(item, app),
+            onWindowClicked: window =>
+                this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),
         });
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);
@@ -131,9 +133,12 @@ export default class SimpleTaskbarExtension extends Extension {
             panelHeight: this._panelHeight,
             startButton: this._startButtonController.actor,
             taskbarBin: this._taskbarBin,
+            taskbarActor: this._taskbarController.actor,
             showDesktopButton: this._showDesktopButton,
             folderMenuButton: this._folderMenuController.actor,
             onAppAlignmentChanged: () => this._applyTaskbarAppearance(),
+            onTaskbarAvailableWidthChanged: width =>
+                this._taskbarController.setAvailableWidth(width),
             queueOverviewRelayout: () =>
                 this._overviewIntegration.queueRelayout(),
             isAutoHideBlocked: () => this._panelAutoHideIsBlocked(),
@@ -218,7 +223,7 @@ export default class SimpleTaskbarExtension extends Extension {
     _createTaskbarActors() {
         this._taskbarBin = new St.ScrollView({
             style_class: 'simple-taskbar-bin',
-            hscrollbar_policy: St.PolicyType.EXTERNAL,
+            hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
             enable_mouse_scrolling: true,
             clip_to_allocation: true,
@@ -311,6 +316,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings.get_int('start-button-padding')
         );
         this._taskbarController.applyAppearance(spacing, centered);
+        this._panelController.updateTaskbarWidth();
     }
 
     _syncTaskbarVisibility() {
