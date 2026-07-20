@@ -152,6 +152,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             syncingDefaultGnomePanel = true;
             defaultGnomePanelSwitch.active = enabled;
             appearanceGroup.sensitive = !enabled;
+            startMenuPage.sensitive = !enabled;
             appearanceGroup.description = enabled
                 ? _('Application icons are unavailable in Default GNOME Panel mode.')
                 : _('Change the size, spacing, and placement of taskbar icons.');
