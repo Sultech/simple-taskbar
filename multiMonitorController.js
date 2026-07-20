@@ -412,6 +412,14 @@ class SecondaryTaskbarPanel {
             'changed::start-button-follow-app-alignment',
             () => this._applyLayout()
         );
+        for (const key of [
+            'windows-start-menu-enabled',
+            'gnome-start-button-visible',
+        ]) {
+            this._connect(this._settings, `changed::${key}`, () => {
+                this._applyLayout();
+            });
+        }
         this._connect(this._settings, 'changed::activities-button-visible', () => {
             this._syncActivitiesVisibility();
             this._updateTaskbarWidth();
@@ -485,7 +493,7 @@ class SecondaryTaskbarPanel {
         const taskbarBox = this._appsAreCentered()
             ? this._centerBox
             : this._leftBox;
-        if (!this._settings.get_boolean('default-gnome-panel'))
+        if (this._startButtonShouldBeVisible())
             startBox.add_child(startButton);
         if (activities)
             this._leftBox.add_child(activities);
@@ -521,6 +529,12 @@ class SecondaryTaskbarPanel {
         )
             ? this._appsAreCentered()
             : this._settings.get_string('start-button-position') === 'center';
+    }
+
+    _startButtonShouldBeVisible() {
+        return !this._settings.get_boolean('default-gnome-panel') &&
+            (this._settings.get_boolean('windows-start-menu-enabled') ||
+                this._settings.get_boolean('gnome-start-button-visible'));
     }
 
     _position() {

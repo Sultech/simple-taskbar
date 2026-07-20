@@ -162,7 +162,7 @@ export class PanelController {
         const startButtonBox = this._startButtonIsCentered()
             ? centerBox
             : leftBox;
-        if (!this._settings.get_boolean('default-gnome-panel')) {
+        if (this._startButtonShouldBeVisible()) {
             if (startButtonBox === leftBox)
                 leftBox.insert_child_at_index(this._startButton, 0);
             else
@@ -244,6 +244,12 @@ export class PanelController {
         )
             ? this.appsAreCentered()
             : this._settings.get_string('start-button-position') === 'center';
+    }
+
+    _startButtonShouldBeVisible() {
+        return !this._settings.get_boolean('default-gnome-panel') &&
+            (this._settings.get_boolean('windows-start-menu-enabled') ||
+                this._settings.get_boolean('gnome-start-button-visible'));
     }
 
     destroy() {
@@ -480,6 +486,14 @@ export class PanelController {
             'changed::start-button-follow-app-alignment',
             () => this.applyLayout()
         );
+        for (const key of [
+            'windows-start-menu-enabled',
+            'gnome-start-button-visible',
+        ]) {
+            this._connect(this._settings, `changed::${key}`, () => {
+                this.applyLayout();
+            });
+        }
         this._connect(this._settings, 'changed::activities-button-visible', () => {
             this._syncActivitiesVisibility();
             this.updateTaskbarWidth();
