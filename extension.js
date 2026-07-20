@@ -5,13 +5,13 @@ import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {
     Extension,
     gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {ExtensionConflictController} from './extensionConflictController.js';
 import {FolderMenuController} from './folderMenuController.js';
 import {FavoritesIntegration} from './favoritesIntegration.js';
 import {PanelController} from './panelController.js';
@@ -25,14 +25,12 @@ import {WindowPreviewController} from './windowPreviewController.js';
 import {OverviewIntegration} from './overviewIntegration.js';
 
 const ICON_VERTICAL_RESERVE = 14;
-const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
         this._initializeState();
 
         try {
-            this._disableDashToPanel();
             this._enable();
         } catch (error) {
             this._teardown();
@@ -44,18 +42,9 @@ export default class SimpleTaskbarExtension extends Extension {
         this._teardown();
     }
 
-    _disableDashToPanel() {
-        const extension = Main.extensionManager.lookup(DASH_TO_PANEL_UUID);
-        const active = extension?.state ===
-            ExtensionUtils.ExtensionState.ACTIVE;
-        if (!extension?.enabled && !active)
-            return;
-
-        Main.extensionManager.disableExtension(DASH_TO_PANEL_UUID);
-    }
-
     _initializeState() {
         this._signals = [];
+        this._extensionConflictController = null;
         this._folderMenuController = null;
         this._favoritesIntegration = null;
         this._panelController = null;
@@ -80,6 +69,9 @@ export default class SimpleTaskbarExtension extends Extension {
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
         this._settings = this.getSettings();
+        this._extensionConflictController =
+            new ExtensionConflictController(this._settings);
+        this._extensionConflictController.enable();
         this._favoritesIntegration = new FavoritesIntegration(this._settings);
         this._favoritesIntegration.enable();
         this._notificationBannerController =
@@ -176,6 +168,8 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _teardown() {
+        this._extensionConflictController?.destroy();
+        this._extensionConflictController = null;
         this._notificationBannerController?.destroy();
         this._notificationBannerController = null;
         this._multiMonitorController?.destroy();

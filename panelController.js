@@ -22,6 +22,7 @@ const EXTERNAL_PANEL_STYLES = [
     'contrasted-panel',
 ];
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
+const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
     'just-perfection-api-panel-button-padding-size';
 const DEFAULT_BUTTON_PADDING_CLASS =
@@ -385,8 +386,10 @@ export class PanelController {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                if (extension?.uuid === JUST_PERFECTION_UUID)
+                if (extension?.uuid === JUST_PERFECTION_UUID ||
+                    extension?.uuid === DASH_TO_PANEL_UUID) {
                     this._queueLayoutRepair();
+                }
             }
         );
         for (const box of [

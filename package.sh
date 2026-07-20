@@ -14,6 +14,7 @@ mkdir -p "$OUT_DIR"
 gnome-extensions pack \
     --force \
     --extra-source=COPYING \
+    --extra-source=extensionConflictController.js \
     --extra-source=panelMenuPositioner.js \
     --extra-source=panelPosition.js \
     --extra-source=folderMenuController.js \

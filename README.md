@@ -196,8 +196,10 @@ Simple Taskbar supports GNOME Shell 50. Other GNOME versions are deliberately
 not declared until they have been tested.
 
 Because Simple Taskbar and Dash to Panel both restructure GNOME's main panel,
-enabling Simple Taskbar automatically disables Dash to Panel. Dash to Dock and
-Ubuntu Dock are not disabled.
+Dash to Panel remains disabled while Simple Taskbar is active. Dash to Dock and
+Ubuntu Dock are disabled only while Taskbar mode is active so that two docks do
+not compete for the same screen edge. Both docks remain available in Default
+GNOME Panel mode.
 
 Blur My Shell styles are supported on the primary panel. Secondary panels use
 Simple Taskbar's own background and transparency.

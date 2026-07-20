@@ -25,6 +25,7 @@ export class OverviewIntegration {
         this._panelHeight = panelHeight;
         this._settings = settings;
         this._dashState = null;
+        this._dashVisibilityRepairId = 0;
         this._injectionManager = new InjectionManager();
         this._spreadInjectionManager = new InjectionManager();
         this._spreadApp = null;
@@ -77,6 +78,7 @@ export class OverviewIntegration {
         }
         this._syncStartupOverview();
         this._syncDashVisibility();
+        this._watchDashVisibility();
         this._adaptAllocation();
     }
 
@@ -127,6 +129,7 @@ export class OverviewIntegration {
 
     destroy() {
         this._cancelStartupOverview();
+        this._cancelDashVisibilityRepair();
         // If the extension is disabled while the spread is visible, rebuild
         // the live Overview after restoring GNOME's normal window filter.
         this._restoreAppSpread(true);
@@ -215,11 +218,61 @@ export class OverviewIntegration {
     }
 
     _syncDashVisibility() {
-        if (this._settings.get_boolean('default-gnome-panel'))
+        if (this._settings.get_boolean('default-gnome-panel')) {
+            this._cancelDashVisibilityRepair();
             this._restoreDash();
-        else
+        } else {
             this._hideDash();
+        }
         this.queueRelayout();
+    }
+
+    _watchDashVisibility() {
+        const dash = Main.overview._overview?._controls?.dash ??
+            Main.overview.dash;
+        if (!dash)
+            return;
+
+        this._connect(dash, 'notify::visible', () => {
+            if (dash.visible)
+                this._queueDashVisibilityRepair();
+        });
+    }
+
+    _queueDashVisibilityRepair() {
+        if (this._dashVisibilityRepairId ||
+            !this._settings ||
+            this._settings.get_boolean('default-gnome-panel')) {
+            return;
+        }
+
+        this._dashVisibilityRepairId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._dashVisibilityRepairId = 0;
+                if (!this._settings ||
+                    this._settings.get_boolean('default-gnome-panel')) {
+                    return GLib.SOURCE_REMOVE;
+                }
+
+                const dash = Main.overview._overview?._controls?.dash ??
+                    Main.overview.dash;
+                if (dash) {
+                    dash.hide();
+                    dash.set_height(this._getDashHeight());
+                    this.queueRelayout();
+                }
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _cancelDashVisibilityRepair() {
+        if (!this._dashVisibilityRepairId)
+            return;
+
+        GLib.Source.remove(this._dashVisibilityRepairId);
+        this._dashVisibilityRepairId = 0;
     }
 
     _hideDash() {
