@@ -19,7 +19,7 @@ those Shell components.
 ## At a glance
 
 - See pinned and running applications together on the panel.
-- Combine application windows always, only when the taskbar is full, or never; automatic mode shrinks optional labels from 140 px to 40 px before combining.
+- Combine application windows always, only when the taskbar is full, or never; buttons are always combined by default.
 - Launch, focus, minimize and open new application windows from their icons.
 - Preview open windows by hovering over an application.
 - Use the taskbar on every monitor.
@@ -63,8 +63,8 @@ Application buttons support:
 - **Left click:** launch, focus or minimize the application.
 - **Middle click:** open a new window.
 - **Right click:** open GNOME's application menu.
-- **Drag:** rearrange favourites or drag a running application into the
-  favourite section to pin it.
+- **Drag:** while buttons are combined, rearrange favourites or drag a running
+  application into the favourite section to pin it.
 - **Hover:** show live previews for open windows. A preview can activate or
   close its exact window.
 
@@ -72,6 +72,21 @@ Running, focused and multi-window applications have dedicated indicators.
 Clicking an application with multiple windows can spread only that
 application's windows across the Overview, including windows on other
 workspaces. The preview flyout remains available as an alternative.
+
+The **Combine Application Buttons** setting provides three modes:
+
+- **Always:** use one button for every application. This is the default.
+- **Only When Full:** show a separate button for every window until they no
+  longer fit. Visible window labels shrink evenly from 140px to a minimum of
+  40px before buttons are combined.
+- **Never:** keep every window in a separate button regardless of available
+  space.
+
+Window labels are shown by default in **Only When Full** and **Never** modes
+and can be hidden to use separate icon-only buttons. If the resulting button
+list is wider than the available panel area, scroll over the applications with
+a mouse wheel or touchpad to reach buttons outside the visible area. Scrolling
+over applications does not trigger workspace switching.
 
 Optional controls can:
 
@@ -89,7 +104,9 @@ The settings provide control over:
 - 32–80px panel height.
 - 16–48px application icons with 0–16px spacing.
 - Left or centered application alignment.
-- Left or centered Start button placement, adjustable padding and a custom icon.
+- Left or centered Start button placement, adjustable padding and a custom
+  icon. By default, the Start button follows the application alignment and
+  appears immediately before centered applications.
 - Show or hide the Activities button independently.
 - Left, center or right placement for the clock and Quick Settings.
 - Light, dark or Shell-following themes.
@@ -144,8 +161,9 @@ The Eleven-style Start Menu is enabled by default and includes:
 - Optional true monitor centering.
 - Optional Super+Tab or custom keyboard shortcuts.
 
-The original GNOME Applications button can be restored instead. Right-clicking
-the Eleven-style Start button opens its settings page.
+The original GNOME Applications button can be restored instead, or both Start
+buttons can be hidden. Right-clicking the Eleven-style Start button opens its
+settings page.
 
 <p align="center">
   <img src="docs/images/start-menu-dark.png" alt="Eleven-style Start Menu using its dark theme" width="49%">
