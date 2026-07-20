@@ -1,7 +1,7 @@
 {
   "uuid": "simple-taskbar@sultech",
   "name": "Simple Taskbar",
-  "description": "Moves the native GNOME panel to the bottom and adds an application taskbar.",
+  "description": "Turns GNOME Shell's native panel into a configurable taskbar with pinned and running apps, live window previews, multi-monitor support, auto-hide, workspace isolation, and an optional Eleven-style Start Menu. Place the panel at the top or bottom, customize its size, spacing, transparency and theme, arrange Shell items, or switch to a clean native-style GNOME panel and retain all customization options offered by the extension.",
   "gettext-domain": "simple-taskbar@sultech",
   "settings-schema": "org.gnome.shell.extensions.simple-taskbar",
   "shell-version": ["50"],
