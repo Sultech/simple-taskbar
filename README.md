@@ -99,6 +99,14 @@ The settings provide control over:
 - Click-only switching between open panel menus.
 - A configurable Task Manager entry in the empty-panel context menu.
 
+**Theme note:** **Follow system theme** follows the GNOME Shell theme rather
+than the application colour preference alone. It switches to the light taskbar
+only when GNOME Shell itself uses a light theme after dark mode is disabled in
+Control Center. Ubuntu supports this through its light Yaru Shell theme. Stock
+GNOME installations, including Fedora's default configuration, keep the Shell
+dark when applications use light mode; select **Light** manually in the
+extension settings to use a light taskbar in that situation.
+
 <p align="center">
   <img src="docs/images/settings-appearance.png" alt="Application icon and panel appearance settings" width="100%">
 </p>
