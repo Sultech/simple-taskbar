@@ -29,7 +29,7 @@ const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
-const LIGHT_BLUR_TRANSPARENCY = 40;
+const LIGHT_BLUR_TRANSPARENCY = 30;
 
 export class PanelController {
     constructor({

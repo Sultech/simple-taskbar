@@ -35,7 +35,7 @@
     </key>
     <key name="transparency-level" type="i">
       <range min="0" max="100"/>
-      <default>10</default>
+      <default>20</default>
       <summary>Taskbar background transparency percentage</summary>
     </key>
     <key name="panel-theme-follow-system" type="b">
