@@ -1,0 +1,607 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR sultech
+# This file is distributed under the same license as the simple-taskbar package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: simple-taskbar 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-20 08:19+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: extension.js:237
+msgid "Show desktop"
+msgstr ""
+
+#: prefs.js:22
+msgid "Left"
+msgstr ""
+
+#: prefs.js:23
+msgid "Center"
+msgstr ""
+
+#: prefs.js:24
+msgid "Right"
+msgstr ""
+
+#: prefs.js:28
+msgid "Taskbar"
+msgstr ""
+
+#: prefs.js:34
+msgid "Start Menu"
+msgstr ""
+
+#: prefs.js:40 prefs.js:454
+msgid "Start Button"
+msgstr ""
+
+#: prefs.js:41
+msgid "Configure the Start button position and spacing."
+msgstr ""
+
+#: prefs.js:46 prefs.js:511
+msgid "Eleven-style Start Menu"
+msgstr ""
+
+#: prefs.js:47
+msgid "Configure the optional Eleven-style application menu."
+msgstr ""
+
+#: prefs.js:66
+msgid "Panel Mode"
+msgstr ""
+
+#: prefs.js:71
+msgid "Default GNOME Panel"
+msgstr ""
+
+#: prefs.js:72
+msgid "Hide taskbar applications and use the original Dash in Overview"
+msgstr ""
+
+#: prefs.js:78
+msgid "Application Icons"
+msgstr ""
+
+#: prefs.js:79 prefs.js:158
+msgid "Change the size, spacing, and placement of taskbar icons."
+msgstr ""
+
+#: prefs.js:85
+msgid "Icon Size"
+msgstr ""
+
+#: prefs.js:86
+msgid "The panel grows automatically when larger icons need more room"
+msgstr ""
+
+#: prefs.js:92
+msgid "Icon Spacing"
+msgstr ""
+
+#: prefs.js:93
+msgid "Space between application buttons"
+msgstr ""
+
+#: prefs.js:99
+msgid "Icon Alignment"
+msgstr ""
+
+#: prefs.js:100
+msgid "Place application icons at the left or center"
+msgstr ""
+
+#: prefs.js:105
+msgid "Hide Pinned Applications"
+msgstr ""
+
+#: prefs.js:106
+msgid "Show pinned taskbar applications only while they are running"
+msgstr ""
+
+#: prefs.js:120
+msgid "Isolate Workspaces"
+msgstr ""
+
+#: prefs.js:121
+msgid "Show running applications from the current workspace only"
+msgstr ""
+
+#: prefs.js:133
+msgid "Spread Multiple Windows"
+msgstr ""
+
+#: prefs.js:134
+msgid ""
+"Click an app with multiple windows to show only its windows in Overview, "
+"across all workspaces"
+msgstr ""
+
+#: prefs.js:157
+msgid "Application icons are unavailable in Default GNOME Panel mode."
+msgstr ""
+
+#: prefs.js:217
+msgid "Panel Appearance"
+msgstr ""
+
+#: prefs.js:218
+msgid "Change the taskbar height, colour scheme, and transparency."
+msgstr ""
+
+#: prefs.js:224
+msgid "Panel Height"
+msgstr ""
+
+#: prefs.js:225
+msgid "Oversized icons shrink automatically when the panel is reduced"
+msgstr ""
+
+#: prefs.js:231
+msgid "Panel Position"
+msgstr ""
+
+#: prefs.js:232
+msgid "Place the taskbar at the top or bottom of the screen"
+msgstr ""
+
+#: prefs.js:234
+msgid "Top"
+msgstr ""
+
+#: prefs.js:235
+msgid "Bottom"
+msgstr ""
+
+#: prefs.js:266
+msgid "Follow System Theme"
+msgstr ""
+
+#: prefs.js:267
+msgid ""
+"Match the active GNOME Shell theme, independently of application colours"
+msgstr ""
+
+#: prefs.js:283
+msgid "Taskbar Theme"
+msgstr ""
+
+#: prefs.js:284
+msgid "Choose the colour scheme when system matching is off"
+msgstr ""
+
+#: prefs.js:286 prefs.js:569
+msgid "Light"
+msgstr ""
+
+#: prefs.js:287 prefs.js:568
+msgid "Dark"
+msgstr ""
+
+#: prefs.js:297
+msgid "Enable Transparency"
+msgstr ""
+
+#: prefs.js:298
+msgid "Make the taskbar background transparent"
+msgstr ""
+
+#: prefs.js:314
+msgid "Transparency"
+msgstr ""
+
+#: prefs.js:315
+msgid "0% is opaque and 100% is fully transparent"
+msgstr ""
+
+#: prefs.js:326
+msgid "Taskbar Behavior"
+msgstr ""
+
+#: prefs.js:331
+msgid "Auto-hide Panel"
+msgstr ""
+
+#: prefs.js:332
+msgid "Reveal the taskbar when the pointer reaches its screen edge"
+msgstr ""
+
+#: prefs.js:344
+msgid "Workspace Scroll"
+msgstr ""
+
+#: prefs.js:345
+msgid "Scroll over empty taskbar space to switch workspaces"
+msgstr ""
+
+#: prefs.js:361
+msgid "Workspace Scroll Delay"
+msgstr ""
+
+#: prefs.js:362
+msgid "Minimum delay between workspace changes in milliseconds"
+msgstr ""
+
+#: prefs.js:374
+msgid "Panel Menus Require Click"
+msgstr ""
+
+#: prefs.js:375
+msgid "Switch between clock, system, and tray menus only when clicked"
+msgstr ""
+
+#: prefs.js:387
+msgid "Taskbar-aligned Notification Banners"
+msgstr ""
+
+#: prefs.js:388
+msgid "Follow the taskbar edge and the clock’s horizontal position"
+msgstr ""
+
+#: prefs.js:415
+#, javascript-format
+msgid "%s (Unavailable)"
+msgstr ""
+
+#: prefs.js:426
+msgid "Task Manager Application"
+msgstr ""
+
+#: prefs.js:427
+msgid "Application opened from the taskbar context menu"
+msgstr ""
+
+#: prefs.js:434
+msgid "Show Taskbar on All Monitors"
+msgstr ""
+
+#: prefs.js:435
+msgid "Show Activities, applications, clock, and system menu on every monitor"
+msgstr ""
+
+#: prefs.js:447
+msgid "Panel Items"
+msgstr ""
+
+#: prefs.js:448
+msgid "Choose where taskbar and system items appear."
+msgstr ""
+
+#: prefs.js:455
+msgid "Place the Start button at the left edge or in the center"
+msgstr ""
+
+#: prefs.js:461
+msgid "Start Button Padding"
+msgstr ""
+
+#: prefs.js:462
+msgid "Horizontal space around the Start icon in pixels"
+msgstr ""
+
+#: prefs.js:468
+msgid "Custom Start Button Icon"
+msgstr ""
+
+#: prefs.js:472
+msgid "Use the built-in icon"
+msgstr ""
+
+#: prefs.js:476 prefs.js:731
+msgid "Choose…"
+msgstr ""
+
+#: prefs.js:494
+msgid "Using the built-in icon"
+msgstr ""
+
+#: prefs.js:512
+msgid "Replace the GNOME app grid with an Eleven-style menu"
+msgstr ""
+
+#: prefs.js:524
+msgid "Show Original GNOME Button"
+msgstr ""
+
+#: prefs.js:525
+msgid ""
+"Show the Applications button when the Eleven-style Start Menu is disabled"
+msgstr ""
+
+#: prefs.js:546
+msgid "Follow Panel Theme"
+msgstr ""
+
+#: prefs.js:547
+msgid "Use the panel’s effective light or dark appearance"
+msgstr ""
+
+#: prefs.js:565
+msgid "Start Menu Theme"
+msgstr ""
+
+#: prefs.js:566
+msgid "Use a custom appearance or follow the GNOME Shell theme"
+msgstr ""
+
+#: prefs.js:570
+msgid "GNOME Shell"
+msgstr ""
+
+#: prefs.js:590
+msgid "Center Start Menu on Monitor"
+msgstr ""
+
+#: prefs.js:591
+msgid ""
+"Place the menu at the true horizontal center instead of over the Start button"
+msgstr ""
+
+#: prefs.js:616
+msgid "Super+Tab Opens Start Menu"
+msgstr ""
+
+#: prefs.js:617
+msgid ""
+"Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
+"while it is enabled"
+msgstr ""
+
+#: prefs.js:637
+msgid "Not set"
+msgstr ""
+
+#: prefs.js:642
+msgid "Set custom shortcut"
+msgstr ""
+
+#: prefs.js:647
+msgid "Clear custom shortcut"
+msgstr ""
+
+#: prefs.js:651
+msgid "Custom Start Menu Shortcut"
+msgstr ""
+
+#: prefs.js:668
+msgid "Turn off Super+Tab to use a custom shortcut"
+msgstr ""
+
+#: prefs.js:669
+msgid "Choose any unused keyboard shortcut; none is assigned by default"
+msgstr ""
+
+#: prefs.js:690
+msgid "Show Activities Button"
+msgstr ""
+
+#: prefs.js:691
+msgid "Display GNOME’s workspace overview button on the taskbar"
+msgstr ""
+
+#: prefs.js:704
+msgid "Clock"
+msgstr ""
+
+#: prefs.js:709
+msgid "System Menu"
+msgstr ""
+
+#: prefs.js:710
+msgid "Quick Settings, volume, network, and power"
+msgstr ""
+
+#: prefs.js:715
+msgid "Show Folder Menu"
+msgstr ""
+
+#: prefs.js:716
+msgid "Place a selected folder on the right of the taskbar"
+msgstr ""
+
+#: prefs.js:728
+msgid "Folder Menu Location"
+msgstr ""
+
+#: prefs.js:746
+msgid "No folder selected"
+msgstr ""
+
+#: prefs.js:761 prefs.js:788
+msgid "Reset"
+msgstr ""
+
+#: prefs.js:766
+msgid "Reset All Settings"
+msgstr ""
+
+#: prefs.js:767
+msgid "Restore defaults without changing pinned taskbar apps"
+msgstr ""
+
+#: prefs.js:770
+msgid "Reset…"
+msgstr ""
+
+#: prefs.js:784
+msgid "Reset all settings?"
+msgstr ""
+
+#: prefs.js:785
+msgid ""
+"This will restore taskbar and Start menu settings, including pinned Start "
+"apps. Pinned taskbar apps and their order will be kept."
+msgstr ""
+
+#: prefs.js:787
+msgid "Cancel"
+msgstr ""
+
+#: prefs.js:822
+msgid "Set Custom Shortcut"
+msgstr ""
+
+#: prefs.js:835
+msgid "Press a keyboard shortcut"
+msgstr ""
+
+#: prefs.js:836
+msgid "Press Backspace to clear it, or Escape to cancel."
+msgstr ""
+
+#: prefs.js:880
+msgid "That shortcut needs a modifier key. Try another shortcut."
+msgstr ""
+
+#: prefs.js:891
+msgid "That shortcut is already in use. Press a different shortcut."
+msgstr ""
+
+#: prefs.js:909
+msgid "Image Files"
+msgstr ""
+
+#: prefs.js:925
+msgid "Choose a Start Button Icon"
+msgstr ""
+
+#: prefs.js:945
+msgid "Choose a Folder"
+msgstr ""
+
+#: windowsStartMenu.js:319
+msgid "Type here to search"
+msgstr ""
+
+#: windowsStartMenu.js:369 windowsStartMenu.js:526
+msgid "Pinned"
+msgstr ""
+
+#: windowsStartMenu.js:374 windowsStartMenu.js:558
+msgid "All apps"
+msgstr ""
+
+#: windowsStartMenu.js:383
+msgid "Back"
+msgstr ""
+
+#: windowsStartMenu.js:458
+msgid "Settings"
+msgstr ""
+
+#: windowsStartMenu.js:541
+msgid "Choose All, then right-click an app to pin it"
+msgstr ""
+
+#: windowsStartMenu.js:550
+msgid "Recommended"
+msgstr ""
+
+#: windowsStartMenu.js:566
+msgid "Search results"
+msgstr ""
+
+#: windowsStartMenu.js:584
+msgid "No apps found"
+msgstr ""
+
+#: windowsStartMenu.js:741 taskbarAppMenu.js:15
+msgid "Unpin from Taskbar"
+msgstr ""
+
+#: windowsStartMenu.js:742 taskbarAppMenu.js:16
+msgid "Pin to Taskbar"
+msgstr ""
+
+#: windowsStartMenu.js:751
+msgid "Unpin from Start"
+msgstr ""
+
+#: windowsStartMenu.js:751
+msgid "Pin to Start"
+msgstr ""
+
+#: folderMenuController.js:46 folderMenuController.js:188
+msgid "Folder menu"
+msgstr ""
+
+#: folderMenuController.js:65
+msgid "Open to view folder contents"
+msgstr ""
+
+#: folderMenuController.js:189
+msgid "Choose a folder in Taskbar Settings"
+msgstr ""
+
+#: folderMenuController.js:196
+#, javascript-format
+msgid "%s folder"
+msgstr ""
+
+#: folderMenuController.js:198
+msgid "Selected"
+msgstr ""
+
+#: folderMenuController.js:200
+msgid "Loading…"
+msgstr ""
+
+#: folderMenuController.js:298
+msgid "This folder is empty"
+msgstr ""
+
+#: startButtonController.js:168
+msgid "Start Menu Settings"
+msgstr ""
+
+#: startButtonController.js:356
+msgid "Start"
+msgstr ""
+
+#: startButtonController.js:356
+msgid "Applications"
+msgstr ""
+
+#: panelInteractionController.js:95
+msgid "Task Manager"
+msgstr ""
+
+#: panelInteractionController.js:97
+msgid "Lock the Taskbar"
+msgstr ""
+
+#: panelInteractionController.js:127
+msgid "Taskbar Settings"
+msgstr ""
+
+#: taskbarController.js:367
+msgid "running"
+msgstr ""
+
+#: windowPreviewController.js:550
+msgid "Untitled Window"
+msgstr ""
+
+#: windowPreviewController.js:593
+msgid "Close Window"
+msgstr ""
+
+#: favoritesIntegration.js:36
+#, javascript-format
+msgid "%s has been pinned to the taskbar."
+msgstr ""
+
+#: favoritesIntegration.js:59
+#, javascript-format
+msgid "%s has been unpinned from the taskbar."
+msgstr ""
