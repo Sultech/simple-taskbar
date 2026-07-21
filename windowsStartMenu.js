@@ -18,6 +18,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
+import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 
 const GRID_COLUMNS = 6;
@@ -33,6 +34,20 @@ export class WindowsStartMenu {
         this._onSourceContextMenu = params.onSourceContextMenu ?? null;
         this._appSystem = Shell.AppSystem.get_default();
         this._searchController = new StartMenuSearchController();
+        this._pinnedDragController = new StartMenuPinnedDragController(
+            settings,
+            {
+                columns: GRID_COLUMNS,
+                tileWidth: APP_TILE_WIDTH,
+                closeContextMenu: () => this._destroyAppContextMenu(),
+                onOrderChanged: appIds => {
+                    this._pinnedApps = appIds
+                        .map(appId => this._appSystem.lookup_app(appId))
+                        .filter(Boolean);
+                    this._firstVisibleApp = this._pinnedApps[0] ?? null;
+                },
+            }
+        );
         this._firstSearchResult = null;
         this._view = 'pinned';
         this._firstVisibleApp = null;
@@ -330,6 +345,8 @@ export class WindowsStartMenu {
         this._searchClearIcon = null;
         this._pinnedView?.destroy();
         this._pinnedView = null;
+        this._pinnedDragController?.destroy();
+        this._pinnedDragController = null;
         this._pinnedApps = null;
         this._pinnedSignature = null;
         this._searchController?.destroy();
@@ -725,6 +742,7 @@ export class WindowsStartMenu {
             style_class: 'simple-taskbar-windows-start-app-grid',
             orientation: Clutter.Orientation.VERTICAL,
         });
+        this._pinnedDragController.attachGrid(grid);
         for (let index = 0; index < apps.length; index += GRID_COLUMNS) {
             const row = new St.BoxLayout({
                 style_class: 'simple-taskbar-windows-start-app-row',
@@ -732,7 +750,7 @@ export class WindowsStartMenu {
             });
             const rowApps = apps.slice(index, index + GRID_COLUMNS);
             for (const app of rowApps)
-                row.add_child(this._createAppTile(app));
+                row.add_child(this._createAppTile(app, grid));
             for (let empty = rowApps.length; empty < GRID_COLUMNS; empty++)
                 row.add_child(new St.Widget({width: APP_TILE_WIDTH}));
             grid.add_child(row);
@@ -740,13 +758,14 @@ export class WindowsStartMenu {
         return grid;
     }
 
-    _createAppTile(app) {
+    _createAppTile(app, pinnedGrid = null) {
         const content = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start-app-tile-content',
             orientation: Clutter.Orientation.VERTICAL,
             x_align: Clutter.ActorAlign.CENTER,
         });
-        content.add_child(app.create_icon_texture(32));
+        const icon = app.create_icon_texture(32);
+        content.add_child(icon);
         const label = this._createAppLabel(app.get_name(), 78);
         label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
         label.x_align = Clutter.ActorAlign.CENTER;
@@ -762,6 +781,14 @@ export class WindowsStartMenu {
         });
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
+        if (pinnedGrid) {
+            this._pinnedDragController.makeDraggable(
+                button,
+                icon,
+                app,
+                pinnedGrid
+            );
+        }
         this._syncShellButtonClasses(button);
         return button;
     }

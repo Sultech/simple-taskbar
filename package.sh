@@ -29,6 +29,7 @@ gnome-extensions pack \
     --extra-source=startButtonController.js \
     --extra-source=startMenuAppMenu.js \
     --extra-source=startMenuKeybindings.js \
+    --extra-source=startMenuPinnedDragController.js \
     --extra-source=startMenuSearchController.js \
     --extra-source=taskbarAppMenu.js \
     --extra-source=taskbarController.js \
