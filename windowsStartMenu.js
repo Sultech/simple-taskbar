@@ -35,7 +35,14 @@ export class WindowsStartMenu {
         this._firstVisibleApp = null;
         this._sourcePressWasOpen = false;
         this._sourcePressResetId = 0;
-        this._focusIdleId = 0;
+        this._prepareIdleId = 0;
+        this._ignoreSearchChanged = false;
+        this._appliedTheme = null;
+        this._pinnedView = null;
+        this._pinnedSignature = null;
+        this._pinnedApps = [];
+        this._menuWidth = 0;
+        this._menuHeight = 0;
         this._appContextMenu = null;
         this._appContextMenuManager = null;
         this._centerAnchor = new St.Widget({
@@ -110,6 +117,10 @@ export class WindowsStartMenu {
         this._root.add_child(this._scrollView);
 
         this._createFooter();
+        this._showPinnedApps();
+        this._updateSize();
+        this.syncTheme(true);
+        this._prepareHiddenMenu();
 
         this._menu.connect('open-state-changed', (_menu, open) => {
             if (!open) {
@@ -175,7 +186,7 @@ export class WindowsStartMenu {
     open() {
         this._sourcePressWasOpen = false;
         this._view = 'pinned';
-        this._searchEntry.set_text('');
+        this._setSearchText('');
         this._showPinnedApps();
         this._updateSize();
         syncMenuArrowSide(this._menu, this._settings);
@@ -186,22 +197,12 @@ export class WindowsStartMenu {
         } finally {
             this._menu.sourceActor = originalSource;
         }
-        if (this._focusIdleId)
-            GLib.Source.remove(this._focusIdleId);
-        this._focusIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-            this._focusIdleId = 0;
-            if (this.isOpen)
-                this._searchEntry.grab_key_focus();
-            return GLib.SOURCE_REMOVE;
-        });
+        if (this.isOpen)
+            this._searchEntry.grab_key_focus();
     }
 
     close() {
         this._sourcePressWasOpen = false;
-        if (this._focusIdleId) {
-            GLib.Source.remove(this._focusIdleId);
-            this._focusIdleId = 0;
-        }
         this._destroyAppContextMenu();
         this._menu?.close(BoxPointer.PopupAnimation.FULL);
     }
@@ -219,18 +220,21 @@ export class WindowsStartMenu {
             this._showPinnedApps();
     }
 
-    syncTheme() {
-        const actors = [this._menu?.actor, this._appContextMenu?.actor];
-        for (const actor of actors) {
-            if (!actor)
-                continue;
-            this._applyThemeClass(actor);
+    syncTheme(force = false) {
+        const theme = this._effectiveTheme();
+        const changed = force || theme !== this._appliedTheme;
+        if (changed) {
+            this._applyThemeClass(this._menu?.actor, theme);
+            this._syncShellButtonClasses(this._root);
+            this._appliedTheme = theme;
+            this._queuePrepare();
         }
-        this._syncShellButtonClasses(this._root);
+        this._applyThemeClass(this._appContextMenu?.actor, theme);
     }
 
-    _applyThemeClass(actor) {
-        const theme = this._effectiveTheme();
+    _applyThemeClass(actor, theme = this._effectiveTheme()) {
+        if (!actor)
+            return;
         actor.remove_style_class_name('simple-taskbar-windows-start-dark');
         actor.remove_style_class_name('simple-taskbar-windows-start-light');
         actor.remove_style_class_name('simple-taskbar-windows-start-shell');
@@ -298,9 +302,9 @@ export class WindowsStartMenu {
             GLib.Source.remove(this._sourcePressResetId);
             this._sourcePressResetId = 0;
         }
-        if (this._focusIdleId) {
-            GLib.Source.remove(this._focusIdleId);
-            this._focusIdleId = 0;
+        if (this._prepareIdleId) {
+            GLib.Source.remove(this._prepareIdleId);
+            this._prepareIdleId = 0;
         }
         if (this._stageCapturedEventId) {
             global.stage.disconnect(this._stageCapturedEventId);
@@ -308,6 +312,10 @@ export class WindowsStartMenu {
         }
         this._searchClearIcon?.destroy();
         this._searchClearIcon = null;
+        this._pinnedView?.destroy();
+        this._pinnedView = null;
+        this._pinnedApps = null;
+        this._pinnedSignature = null;
         this._menu?.destroy();
         this._menu = null;
         this._appContextMenu = null;
@@ -319,6 +327,7 @@ export class WindowsStartMenu {
         this._onSourceContextMenu = null;
         this._appSystem = null;
         this._favorites = null;
+        this._appliedTheme = null;
     }
 
     _createSearchEntry() {
@@ -348,6 +357,8 @@ export class WindowsStartMenu {
             this._searchEntry.set_secondary_icon(
                 query ? this._searchClearIcon : null
             );
+            if (this._ignoreSearchChanged)
+                return;
             if (query)
                 this._showSearchResults(query);
             else if (this._view === 'all')
@@ -383,7 +394,7 @@ export class WindowsStartMenu {
             'go-next-symbolic',
             () => {
                 this._view = 'all';
-                this._searchEntry.set_text('');
+                this._setSearchText('');
                 this._showAllApps();
             }
         );
@@ -392,7 +403,7 @@ export class WindowsStartMenu {
             'go-previous-symbolic',
             () => {
                 this._view = 'pinned';
-                this._searchEntry.set_text('');
+                this._setSearchText('');
                 this._showPinnedApps();
             }
         );
@@ -534,31 +545,57 @@ export class WindowsStartMenu {
         this._headerTitle.text = _('Pinned');
         this._allAppsButton.show();
         this._backButton.hide();
-        this._content.destroy_all_children();
-        this._firstVisibleApp = null;
+        this._ensurePinnedView();
+        this._firstVisibleApp = this._pinnedApps[0] ?? null;
 
+        const children = this._content.get_children();
+        if (children.length === 1 && children[0] === this._pinnedView)
+            return;
+
+        this._clearContent();
+        this._content.add_child(this._pinnedView);
+    }
+
+    _ensurePinnedView() {
         const pinnedApps = this._settings.get_strv('start-menu-pinned-apps')
             .map(id => this._appSystem.lookup_app(id))
             .filter(app => this._appShouldShow(app));
-        this._firstVisibleApp = pinnedApps[0] ?? null;
+        const recommended = this._recommendedApps(pinnedApps);
+        const signature = JSON.stringify({
+            pinned: pinnedApps.map(app => [app.get_id(), app.get_name()]),
+            recommended: recommended.map(app => [app.get_id(), app.get_name()]),
+        });
+        if (this._pinnedView && signature === this._pinnedSignature)
+            return;
+
+        const view = new St.BoxLayout({
+            style_class: 'simple-taskbar-windows-start-pinned-view',
+            orientation: Clutter.Orientation.VERTICAL,
+            x_expand: true,
+        });
         if (pinnedApps.length > 0) {
-            this._content.add_child(this._createAppGrid(pinnedApps));
+            view.add_child(this._createAppGrid(pinnedApps));
         } else {
-            this._content.add_child(new St.Label({
+            view.add_child(new St.Label({
                 style_class: 'simple-taskbar-windows-start-empty-pinned',
                 text: _('Choose All, then right-click an app to pin it'),
                 x_align: Clutter.ActorAlign.CENTER,
             }));
         }
 
-        const recommended = this._recommendedApps(pinnedApps);
         if (recommended.length > 0) {
-            this._content.add_child(new St.Label({
+            view.add_child(new St.Label({
                 style_class: 'simple-taskbar-windows-start-section-heading',
                 text: _('Recommended'),
             }));
-            this._content.add_child(this._createRecommendedGrid(recommended));
+            view.add_child(this._createRecommendedGrid(recommended));
         }
+
+        this._pinnedView?.destroy();
+        this._pinnedView = view;
+        this._pinnedApps = pinnedApps;
+        this._pinnedSignature = signature;
+        this._queuePrepare();
     }
 
     _showAllApps() {
@@ -584,7 +621,7 @@ export class WindowsStartMenu {
     }
 
     _displayAppList(apps) {
-        this._content.destroy_all_children();
+        this._clearContent();
         this._firstVisibleApp = apps[0] ?? null;
         if (apps.length === 0) {
             this._content.add_child(new St.Label({
@@ -602,6 +639,15 @@ export class WindowsStartMenu {
         for (const app of apps)
             list.add_child(this._createAppListButton(app));
         this._content.add_child(list);
+    }
+
+    _clearContent() {
+        for (const child of this._content.get_children()) {
+            if (child === this._pinnedView)
+                this._content.remove_child(child);
+            else
+                child.destroy();
+        }
     }
 
     _createAppGrid(apps) {
@@ -842,12 +888,65 @@ export class WindowsStartMenu {
         app.activate();
     }
 
+    _setSearchText(text) {
+        if (this._searchEntry.get_text() === text)
+            return;
+
+        this._ignoreSearchChanged = true;
+        try {
+            this._searchEntry.set_text(text);
+        } finally {
+            this._ignoreSearchChanged = false;
+        }
+    }
+
+    _queuePrepare() {
+        if (this._prepareIdleId)
+            GLib.Source.remove(this._prepareIdleId);
+        this._prepareIdleId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._prepareIdleId = 0;
+                this._prepareHiddenMenu();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _prepareHiddenMenu() {
+        if (!this._menu || this.isOpen)
+            return;
+
+        this._updateSize();
+        syncMenuArrowSide(this._menu, this._settings);
+        const sourceActor = this._getPositionSource();
+        this._resolveThemeNodes(this._menu.actor);
+        this._menu.actor.get_preferred_size();
+        this._root.get_preferred_size();
+        this._menu._boxPointer.setPosition(
+            sourceActor,
+            this._menu._arrowAlignment
+        );
+    }
+
+    _resolveThemeNodes(actor) {
+        if (actor instanceof St.Widget)
+            actor.get_theme_node();
+        for (const child of actor.get_children?.() ?? [])
+            this._resolveThemeNodes(child);
+    }
+
     _updateSize() {
         const monitor = this._getSourceMonitor();
         if (!monitor)
             return;
         const width = Math.min(640, Math.max(420, monitor.width - 32));
         const height = Math.min(610, Math.max(420, monitor.height - 96));
+        if (width === this._menuWidth && height === this._menuHeight)
+            return;
+
+        this._menuWidth = width;
+        this._menuHeight = height;
         this._root.set_style(`width: ${width}px; height: ${height}px;`);
     }
 }
