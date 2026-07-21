@@ -172,8 +172,8 @@ buttons can be hidden. Right-clicking the Eleven-style Start button opens its
 settings page.
 
 <p align="center">
-  <img src="docs/images/start-menu-dark.png" alt="Eleven-style Start Menu using its dark theme" width="49%">
-  <img src="docs/images/start-menu-light.png" alt="Eleven-style Start Menu using its light theme" width="49%">
+  <img src="docs/images/start-menu-dark.png?v=2a9edae" alt="Eleven-style Start Menu using its dark theme" width="49%">
+  <img src="docs/images/start-menu-light.png?v=2a9edae" alt="Eleven-style Start Menu using its light theme" width="49%">
 </p>
 
 <p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
