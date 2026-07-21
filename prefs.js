@@ -682,6 +682,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updateCenterStartMenuRow();
 
+        const superKeyRow = new Adw.SwitchRow({
+            title: _('Super Opens Start Menu'),
+            subtitle: _('Use Super for the Start Menu and move Overview to Super+Tab'),
+            active: window._settings.get_boolean('start-menu-super-key'),
+        });
+        startMenuGroup.add(superKeyRow);
+        window._settings.bind(
+            'start-menu-super-key',
+            superKeyRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const superTabRow = new Adw.SwitchRow({
             title: _('Super+Tab Opens Start Menu'),
             subtitle: _('Use GNOME’s application-switch shortcut for the Eleven-style Start Menu while it is enabled'),
@@ -695,8 +708,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const updateSuperTabRow = () => {
-            superTabRow.sensitive = windowsStartMenuSwitch.active;
+            superKeyRow.sensitive = windowsStartMenuSwitch.active;
+            superTabRow.sensitive = windowsStartMenuSwitch.active &&
+                !superKeyRow.active;
         };
+        superKeyRow.connect('notify::active', () => {
+            if (superKeyRow.active && superTabRow.active)
+                window._settings.set_boolean('start-menu-super-tab', false);
+            updateSuperTabRow();
+        });
         windowsStartMenuSwitch.connect(
             'notify::active',
             updateSuperTabRow
@@ -733,10 +753,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             customShortcutLabel.accelerator = accelerator ?? '';
             clearCustomShortcutButton.visible = Boolean(accelerator);
             customShortcutRow.sensitive =
-                windowsStartMenuSwitch.active && !superTabRow.active;
-            customShortcutRow.subtitle = superTabRow.active
-                ? _('Turn off Super+Tab to use a custom shortcut')
-                : _('Choose any unused keyboard shortcut; none is assigned by default');
+                windowsStartMenuSwitch.active && !superTabRow.active &&
+                !superKeyRow.active;
+            if (superKeyRow.active) {
+                customShortcutRow.subtitle =
+                    _('Turn off the Super shortcut to use a custom shortcut');
+            } else if (superTabRow.active) {
+                customShortcutRow.subtitle =
+                    _('Turn off Super+Tab to use a custom shortcut');
+            } else {
+                customShortcutRow.subtitle =
+                    _('Choose any unused keyboard shortcut; none is assigned by default');
+            }
         };
 
         editCustomShortcutButton.connect('clicked', () => {
@@ -749,6 +777,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'changed::start-menu-custom-hotkey',
             updateCustomShortcutRow
         );
+        superKeyRow.connect('notify::active', updateCustomShortcutRow);
         superTabRow.connect('notify::active', updateCustomShortcutRow);
         windowsStartMenuSwitch.connect(
             'notify::active',
@@ -879,8 +908,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const resetSettings = this.getSettings();
             resetSettings.delay();
             for (const key of resetSettings.settings_schema.list_keys()) {
-                if (key === 'start-menu-displaced-switch-applications')
+                if (key === 'start-menu-displaced-switch-applications' ||
+                    key === 'start-menu-displaced-overlay-key') {
                     continue;
+                }
                 resetSettings.reset(key);
             }
             resetSettings.apply();

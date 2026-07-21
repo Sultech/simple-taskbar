@@ -174,13 +174,21 @@
       <default>true</default>
       <summary>Center the Eleven-style Start Menu on the monitor</summary>
     </key>
+    <key name="start-menu-super-key" type="b">
+      <default>false</default>
+      <summary>Open the Eleven-style Start Menu with Super and move Overview to Super+Tab</summary>
+    </key>
+    <key name="start-menu-displaced-overlay-key" type="as">
+      <default>[]</default>
+      <summary>Internal recovery state for the displaced Mutter overlay key</summary>
+    </key>
     <key name="start-menu-super-tab" type="b">
       <default>false</default>
       <summary>Open the Eleven-style Start Menu with Super+Tab</summary>
     </key>
     <key name="start-menu-super-tab-hotkey" type="as">
       <default>['&lt;Super&gt;Tab']</default>
-      <summary>Internal Super+Tab shortcut for the Eleven-style Start Menu</summary>
+      <summary>Internal Super+Tab shortcut for the Start Menu or Overview</summary>
     </key>
     <key name="start-menu-displaced-switch-applications" type="as">
       <default>[]</default>

@@ -76,7 +76,8 @@ export class StartButtonController {
         this._keybindings = manageKeybindings
             ? new StartMenuKeybindings(
                 settings,
-                () => this._toggleApplications()
+                () => this._toggleApplications(),
+                () => this._toggleOverviewFromShortcut()
             )
             : null;
         this.applyAppearance(iconSize, settings.get_int('start-button-padding'));
@@ -233,6 +234,10 @@ export class StartButtonController {
             this._windowsStartMenu?.close();
             this._contextMenu?.close();
             this._syncVisibility();
+            this._keybindings?.sync();
+        });
+        this._connect(this._settings, 'changed::start-menu-super-key', () => {
+            this._keybindings?.sync();
         });
         this._connect(this._settings, 'changed::start-menu-super-tab', () => {
             this._keybindings?.sync();
@@ -291,6 +296,14 @@ export class StartButtonController {
             else
                 Main.overview.show(OverviewControls.ControlsState.WINDOW_PICKER);
         }
+    }
+
+    _toggleOverviewFromShortcut() {
+        this._windowsStartMenu?.close();
+        this._contextMenu?.close();
+        this._previews.hideTooltip(false);
+        this._previews.hide();
+        Main.overview.toggle();
     }
 
     _syncState() {

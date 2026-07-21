@@ -169,7 +169,8 @@ The Eleven-style Start Menu is enabled by default and includes:
   desktop shortcut.
 - Dark, light and GNOME Shell theme options.
 - Optional true monitor centering.
-- Optional Super+Tab or custom keyboard shortcuts.
+- Optional Super, Super+Tab or custom keyboard shortcuts. Assigning Super to
+  the Start Menu moves the Overview shortcut to Super+Tab.
 
 The original GNOME Applications button can be restored instead, or both Start
 buttons can be hidden. Right-clicking the Eleven-style Start button opens its

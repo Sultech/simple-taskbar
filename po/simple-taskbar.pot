@@ -384,44 +384,56 @@ msgid ""
 msgstr ""
 
 #: prefs.js:686
-msgid "Super+Tab Opens Start Menu"
+msgid "Super Opens Start Menu"
 msgstr ""
 
 #: prefs.js:687
+msgid "Use Super for the Start Menu and move Overview to Super+Tab"
+msgstr ""
+
+#: prefs.js:699
+msgid "Super+Tab Opens Start Menu"
+msgstr ""
+
+#: prefs.js:700
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
 msgstr ""
 
-#: prefs.js:707
+#: prefs.js:727
 msgid "Not set"
 msgstr ""
 
-#: prefs.js:712
+#: prefs.js:732
 msgid "Set custom shortcut"
 msgstr ""
 
-#: prefs.js:717
+#: prefs.js:737
 msgid "Clear custom shortcut"
 msgstr ""
 
-#: prefs.js:721
+#: prefs.js:741
 msgid "Custom Start Menu Shortcut"
 msgstr ""
 
-#: prefs.js:738
+#: prefs.js:760
+msgid "Turn off the Super shortcut to use a custom shortcut"
+msgstr ""
+
+#: prefs.js:763
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 
-#: prefs.js:739
+#: prefs.js:766
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 
-#: prefs.js:760
+#: prefs.js:789
 msgid "Show Activities Button"
 msgstr ""
 
-#: prefs.js:761
+#: prefs.js:790
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr ""
 
