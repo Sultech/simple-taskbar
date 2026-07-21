@@ -112,6 +112,13 @@ export class WindowsStartMenu {
             x_expand: true,
             y_expand: true,
         });
+        for (const child of this._scrollView.get_children()) {
+            if (!(child instanceof St.ScrollBar))
+                continue;
+            child.add_style_class_name(
+                'simple-taskbar-windows-start-scrollbar'
+            );
+        }
         this._content = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start-content',
             orientation: Clutter.Orientation.VERTICAL,
@@ -556,6 +563,7 @@ export class WindowsStartMenu {
 
     _showPinnedApps() {
         this._searchController.cancel();
+        this._setAllAppsScrollbar(false);
         this._view = 'pinned';
         this._headerTitle.text = _('Pinned');
         this._allAppsButton.show();
@@ -616,6 +624,7 @@ export class WindowsStartMenu {
 
     _showAllApps() {
         this._searchController.cancel();
+        this._setAllAppsScrollbar(true);
         this._view = 'all';
         this._headerTitle.text = _('All apps');
         this._allAppsButton.hide();
@@ -624,6 +633,7 @@ export class WindowsStartMenu {
     }
 
     _showSearchResults(query) {
+        this._setAllAppsScrollbar(false);
         this._headerTitle.text = _('Search results');
         this._allAppsButton.hide();
         this._backButton.show();
@@ -634,6 +644,16 @@ export class WindowsStartMenu {
         this._searchController.search(query, (groups, complete) => {
             this._displaySearchResults(groups, complete);
         });
+    }
+
+    _setAllAppsScrollbar(visible) {
+        this._scrollView.set_overlay_scrollbars(!visible);
+        this._scrollView.set_policy(
+            St.PolicyType.NEVER,
+            visible ? St.PolicyType.AUTOMATIC : St.PolicyType.EXTERNAL
+        );
+        if (visible)
+            this._scrollView.vadjustment.value = 0;
     }
 
     _displaySearchResults(groups, complete) {

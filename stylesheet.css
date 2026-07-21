@@ -520,6 +520,24 @@
     padding: 0 28px 10px;
 }
 
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-scrollbar > .vhandle {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-scrollbar > .vhandle:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-scrollbar > .vhandle:focus {
+    background-color: rgba(255, 255, 255, 0.44);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-scrollbar > .vhandle {
+    background-color: rgba(24, 28, 34, 0.25);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-scrollbar > .vhandle:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-scrollbar > .vhandle:focus {
+    background-color: rgba(24, 28, 34, 0.40);
+}
+
 .simple-taskbar-windows-start-content {
     spacing: 4px;
 }
