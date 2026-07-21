@@ -162,7 +162,10 @@ The Eleven-style Start Menu is enabled by default and includes:
 - Application search.
 - An All Apps view.
 - Recommended applications.
-- Application context menus with Pin to Start and Pin to Taskbar actions.
+- GNOME application context menus with open-window, launcher-action, App
+  Details, Quit, Pin to Start and Pin to Taskbar actions. When a supported
+  desktop-icons extension is active, applications can also add or remove a
+  desktop shortcut.
 - Dark, light and GNOME Shell theme options.
 - Optional true monitor centering.
 - Optional Super+Tab or custom keyboard shortcuts.

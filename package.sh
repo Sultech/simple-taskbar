@@ -27,6 +27,7 @@ gnome-extensions pack \
     --extra-source=panelAutoHideController.js \
     --extra-source=panelInteractionController.js \
     --extra-source=startButtonController.js \
+    --extra-source=startMenuAppMenu.js \
     --extra-source=startMenuKeybindings.js \
     --extra-source=startMenuSearchController.js \
     --extra-source=taskbarAppMenu.js \

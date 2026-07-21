@@ -551,20 +551,28 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: windowsStartMenu.js:749 taskbarAppMenu.js:15
+#: taskbarAppMenu.js:15
 msgid "Unpin from Taskbar"
 msgstr ""
 
-#: windowsStartMenu.js:750 taskbarAppMenu.js:16
+#: taskbarAppMenu.js:16
 msgid "Pin to Taskbar"
 msgstr ""
 
-#: windowsStartMenu.js:759
+#: startMenuAppMenu.js:201
 msgid "Unpin from Start"
 msgstr ""
 
-#: windowsStartMenu.js:759
+#: startMenuAppMenu.js:202
 msgid "Pin to Start"
+msgstr ""
+
+#: startMenuAppMenu.js:111 startMenuAppMenu.js:268
+msgid "Create Desktop Shortcut"
+msgstr ""
+
+#: startMenuAppMenu.js:267
+msgid "Delete Desktop Shortcut"
 msgstr ""
 
 #: folderMenuController.js:46 folderMenuController.js:188

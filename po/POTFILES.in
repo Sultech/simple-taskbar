@@ -1,6 +1,7 @@
 extension.js
 prefs.js
 windowsStartMenu.js
+startMenuAppMenu.js
 folderMenuController.js
 taskbarAppMenu.js
 startButtonController.js

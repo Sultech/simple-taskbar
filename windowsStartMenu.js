@@ -8,7 +8,6 @@ import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
-import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -18,6 +17,7 @@ import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 
 const GRID_COLUMNS = 6;
@@ -32,7 +32,6 @@ export class WindowsStartMenu {
         this._openPreferences = params.openPreferences ?? null;
         this._onSourceContextMenu = params.onSourceContextMenu ?? null;
         this._appSystem = Shell.AppSystem.get_default();
-        this._favorites = AppFavorites.getAppFavorites();
         this._searchController = new StartMenuSearchController();
         this._firstSearchResult = null;
         this._view = 'pinned';
@@ -49,6 +48,7 @@ export class WindowsStartMenu {
         this._menuHeight = 0;
         this._appContextMenu = null;
         this._appContextMenuManager = null;
+        this._appActionCloseIdleId = 0;
         this._centerAnchor = new St.Widget({
             reactive: false,
             opacity: 0,
@@ -318,6 +318,10 @@ export class WindowsStartMenu {
             GLib.Source.remove(this._prepareIdleId);
             this._prepareIdleId = 0;
         }
+        if (this._appActionCloseIdleId) {
+            GLib.Source.remove(this._appActionCloseIdleId);
+            this._appActionCloseIdleId = 0;
+        }
         if (this._stageCapturedEventId) {
             global.stage.disconnect(this._stageCapturedEventId);
             this._stageCapturedEventId = 0;
@@ -330,10 +334,9 @@ export class WindowsStartMenu {
         this._pinnedSignature = null;
         this._searchController?.destroy();
         this._searchController = null;
+        this._destroyAppContextMenu();
         this._menu?.destroy();
         this._menu = null;
-        this._appContextMenu = null;
-        this._appContextMenuManager = null;
         this._centerAnchor?.destroy();
         this._centerAnchor = null;
         this._sourceActor = null;
@@ -341,7 +344,6 @@ export class WindowsStartMenu {
         this._onSourceContextMenu = null;
         this._firstSearchResult = null;
         this._appSystem = null;
-        this._favorites = null;
         this._appliedTheme = null;
     }
 
@@ -894,47 +896,26 @@ export class WindowsStartMenu {
             0
         );
 
-        const menu = new PopupMenu.PopupMenu(
+        const menu = new StartMenuAppMenu(
             Main.layoutManager.dummyCursor,
-            0,
-            St.Side.TOP
+            panelArrowSide(this._settings),
+            this._settings,
+            {
+                onStartPinsChanged: () => {
+                    refreshAfterClose = true;
+                },
+                onAppAction: () => this._queueCloseAfterAppAction(),
+            }
         );
         const menuManager = new PopupMenu.PopupMenuManager(sourceButton);
-        const appId = app.get_id();
-        const pinnedApps = this._settings.get_strv('start-menu-pinned-apps');
-        const isPinned = pinnedApps.includes(appId);
-        const isTaskbarPinned = this._favorites.isFavorite(appId);
         let refreshAfterClose = false;
 
         menu.actor.add_style_class_name('simple-taskbar-windows-start-context');
         this._applyThemeClass(menu.actor);
-        menu.addAction(
-            isTaskbarPinned
-                ? _('Unpin from Taskbar')
-                : _('Pin to Taskbar'),
-            () => {
-                if (isTaskbarPinned)
-                    this._favorites.removeFavorite(appId);
-                else
-                    this._favorites.addFavorite(appId);
-            }
-        );
-        menu.addAction(
-            isPinned ? _('Unpin from Start') : _('Pin to Start'),
-            () => {
-                const currentPins = this._settings.get_strv('start-menu-pinned-apps');
-                const index = currentPins.indexOf(appId);
-                if (index >= 0)
-                    currentPins.splice(index, 1);
-                else
-                    currentPins.push(appId);
-                this._settings.set_strv('start-menu-pinned-apps', currentPins);
-                refreshAfterClose = true;
-            }
-        );
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);
         menuManager.addMenu(menu);
+        menu.setApp(app);
         this._appContextMenu = menu;
         this._appContextMenuManager = menuManager;
 
@@ -949,6 +930,20 @@ export class WindowsStartMenu {
         });
         menu.open(BoxPointer.PopupAnimation.FULL);
         menuManager.ignoreRelease?.();
+    }
+
+    _queueCloseAfterAppAction() {
+        if (this._appActionCloseIdleId)
+            return;
+
+        this._appActionCloseIdleId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._appActionCloseIdleId = 0;
+                this.close();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     _destroyAppContextMenu() {

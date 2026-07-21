@@ -550,21 +550,29 @@ msgstr "Результаты поиска"
 msgid "No results found"
 msgstr "Результаты не найдены"
 
-#: windowsStartMenu.js:749 taskbarAppMenu.js:15
+#: taskbarAppMenu.js:15
 msgid "Unpin from Taskbar"
 msgstr "Открепить от панели задач"
 
-#: windowsStartMenu.js:750 taskbarAppMenu.js:16
+#: taskbarAppMenu.js:16
 msgid "Pin to Taskbar"
 msgstr "Закрепить на панели задач"
 
-#: windowsStartMenu.js:759
+#: startMenuAppMenu.js:201
 msgid "Unpin from Start"
 msgstr "Открепить от «Пуск»"
 
-#: windowsStartMenu.js:759
+#: startMenuAppMenu.js:202
 msgid "Pin to Start"
 msgstr "Закрепить в «Пуск»"
+
+#: startMenuAppMenu.js:111 startMenuAppMenu.js:268
+msgid "Create Desktop Shortcut"
+msgstr "Создать ярлык на рабочем столе"
+
+#: startMenuAppMenu.js:267
+msgid "Delete Desktop Shortcut"
+msgstr "Удалить ярлык с рабочего стола"
 
 #: folderMenuController.js:46 folderMenuController.js:188
 msgid "Folder menu"
