@@ -547,8 +547,8 @@ msgid "Search results"
 msgstr "Результаты поиска"
 
 #: windowsStartMenu.js:592
-msgid "No apps found"
-msgstr "Приложения не найдены"
+msgid "No results found"
+msgstr "Результаты не найдены"
 
 #: windowsStartMenu.js:749 taskbarAppMenu.js:15
 msgid "Unpin from Taskbar"

@@ -548,7 +548,7 @@ msgid "Search results"
 msgstr ""
 
 #: windowsStartMenu.js:592
-msgid "No apps found"
+msgid "No results found"
 msgstr ""
 
 #: windowsStartMenu.js:749 taskbarAppMenu.js:15

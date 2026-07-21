@@ -12,11 +12,13 @@ import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+import {StartMenuSearchController} from './startMenuSearchController.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
@@ -31,6 +33,8 @@ export class WindowsStartMenu {
         this._onSourceContextMenu = params.onSourceContextMenu ?? null;
         this._appSystem = Shell.AppSystem.get_default();
         this._favorites = AppFavorites.getAppFavorites();
+        this._searchController = new StartMenuSearchController();
+        this._firstSearchResult = null;
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePressWasOpen = false;
@@ -201,10 +205,11 @@ export class WindowsStartMenu {
             this._searchEntry.grab_key_focus();
     }
 
-    close() {
+    close(animation = BoxPointer.PopupAnimation.FULL) {
         this._sourcePressWasOpen = false;
+        this._searchController?.cancel();
         this._destroyAppContextMenu();
-        this._menu?.close(BoxPointer.PopupAnimation.FULL);
+        this._menu?.close(animation);
     }
 
     refresh() {
@@ -316,6 +321,8 @@ export class WindowsStartMenu {
         this._pinnedView = null;
         this._pinnedApps = null;
         this._pinnedSignature = null;
+        this._searchController?.destroy();
+        this._searchController = null;
         this._menu?.destroy();
         this._menu = null;
         this._appContextMenu = null;
@@ -325,6 +332,7 @@ export class WindowsStartMenu {
         this._sourceActor = null;
         this._settings = null;
         this._onSourceContextMenu = null;
+        this._firstSearchResult = null;
         this._appSystem = null;
         this._favorites = null;
         this._appliedTheme = null;
@@ -368,8 +376,14 @@ export class WindowsStartMenu {
         });
         this._searchEntry.clutter_text.connect('key-press-event', (_actor, event) => {
             const symbol = event.get_key_symbol();
-            if ((symbol === Clutter.KEY_Return || symbol === Clutter.KEY_KP_Enter) &&
-                this._firstVisibleApp) {
+            if (symbol !== Clutter.KEY_Return && symbol !== Clutter.KEY_KP_Enter)
+                return Clutter.EVENT_PROPAGATE;
+
+            if (this._firstSearchResult) {
+                this._activateSearchResult(this._firstSearchResult);
+                return Clutter.EVENT_STOP;
+            }
+            if (this._firstVisibleApp) {
                 this._launchApp(this._firstVisibleApp);
                 return Clutter.EVENT_STOP;
             }
@@ -541,12 +555,14 @@ export class WindowsStartMenu {
     }
 
     _showPinnedApps() {
+        this._searchController.cancel();
         this._view = 'pinned';
         this._headerTitle.text = _('Pinned');
         this._allAppsButton.show();
         this._backButton.hide();
         this._ensurePinnedView();
         this._firstVisibleApp = this._pinnedApps[0] ?? null;
+        this._firstSearchResult = null;
 
         const children = this._content.get_children();
         if (children.length === 1 && children[0] === this._pinnedView)
@@ -599,6 +615,7 @@ export class WindowsStartMenu {
     }
 
     _showAllApps() {
+        this._searchController.cancel();
         this._view = 'all';
         this._headerTitle.text = _('All apps');
         this._allAppsButton.hide();
@@ -607,26 +624,57 @@ export class WindowsStartMenu {
     }
 
     _showSearchResults(query) {
-        const normalizedQuery = query.toLocaleLowerCase();
         this._headerTitle.text = _('Search results');
         this._allAppsButton.hide();
         this._backButton.show();
-        const results = this._allApps().filter(app => {
-            const name = app.get_name()?.toLocaleLowerCase() ?? '';
-            const description = app.get_description()?.toLocaleLowerCase() ?? '';
-            return name.includes(normalizedQuery) ||
-                description.includes(normalizedQuery);
+        this._firstVisibleApp = null;
+        this._firstSearchResult = null;
+        this._clearContent();
+
+        this._searchController.search(query, (groups, complete) => {
+            this._displaySearchResults(groups, complete);
         });
-        this._displayAppList(results);
+    }
+
+    _displaySearchResults(groups, complete) {
+        this._clearContent();
+        this._firstSearchResult = groups[0]?.results[0] ?? null;
+        if (groups.length === 0) {
+            if (!complete)
+                return;
+            this._content.add_child(new St.Label({
+                style_class: 'simple-taskbar-windows-start-empty',
+                text: _('No results found'),
+                x_align: Clutter.ActorAlign.CENTER,
+            }));
+            return;
+        }
+
+        for (const group of groups) {
+            if (group.name) {
+                this._content.add_child(new St.Label({
+                    style_class: 'simple-taskbar-windows-start-section-heading',
+                    text: group.name,
+                }));
+            }
+            const list = new St.BoxLayout({
+                style_class: 'simple-taskbar-windows-start-app-list',
+                orientation: Clutter.Orientation.VERTICAL,
+            });
+            for (const result of group.results)
+                list.add_child(this._createSearchResultButton(result));
+            this._content.add_child(list);
+        }
     }
 
     _displayAppList(apps) {
         this._clearContent();
         this._firstVisibleApp = apps[0] ?? null;
+        this._firstSearchResult = null;
         if (apps.length === 0) {
             this._content.add_child(new St.Label({
                 style_class: 'simple-taskbar-windows-start-empty',
-                text: _('No apps found'),
+                text: _('No results found'),
                 x_align: Clutter.ActorAlign.CENTER,
             }));
             return;
@@ -739,6 +787,56 @@ export class WindowsStartMenu {
         this._addAppContextMenuHandler(button, app);
         this._syncShellButtonClasses(button);
         return button;
+    }
+
+    _createSearchResultButton(result) {
+        const content = new St.BoxLayout({
+            style_class: 'simple-taskbar-windows-start-app-list-content',
+            x_expand: true,
+        });
+        const icon = this._createSearchResultIcon(result);
+        content.add_child(icon);
+        content.add_child(this._createAppLabel(result.name, 480));
+        const button = new St.Button({
+            style_class: 'simple-taskbar-windows-start-app-list-button',
+            reactive: true,
+            can_focus: true,
+            track_hover: true,
+            x_expand: true,
+            x_align: Clutter.ActorAlign.FILL,
+            accessible_name: result.name,
+            child: content,
+        });
+        button.connect('clicked', () => this._activateSearchResult(result));
+        if (result.app)
+            this._addAppContextMenuHandler(button, result.app);
+        this._syncShellButtonClasses(button);
+        return button;
+    }
+
+    _createSearchResultIcon(result) {
+        if (result.provider.id === 'org.gnome.Characters.desktop') {
+            return new St.Label({
+                style_class: 'simple-taskbar-windows-start-character-icon',
+                text: result.id,
+                width: 30,
+                y_align: Clutter.ActorAlign.CENTER,
+                x_align: Clutter.ActorAlign.CENTER,
+            });
+        }
+
+        let icon;
+        try {
+            icon = result.meta.createIcon?.(30);
+        } catch (error) {
+            console.error(`Failed to create search result icon: ${error}`);
+        }
+        icon ??= new St.Icon({
+            icon_name: 'system-search-symbolic',
+            icon_size: 30,
+        });
+        icon.style_class = 'popup-menu-icon';
+        return icon;
     }
 
     _addAppContextMenuHandler(button, app) {
@@ -886,6 +984,39 @@ export class WindowsStartMenu {
     _launchApp(app) {
         this.close();
         app.activate();
+    }
+
+    _activateSearchResult(result) {
+        const isScreenshot = result.id === 'open-screenshot-ui';
+        this.close(isScreenshot
+            ? BoxPointer.PopupAnimation.NONE
+            : BoxPointer.PopupAnimation.FULL);
+        if (isScreenshot) {
+            showScreenshotUI();
+            return;
+        }
+        try {
+            if (typeof result.provider.activateResult === 'function') {
+                const activation = result.provider.activateResult(
+                    result.id,
+                    result.terms
+                );
+                activation?.catch?.(error =>
+                    console.error(`Failed to activate search result: ${error}`)
+                );
+            } else {
+                result.app?.activate();
+            }
+            if (result.meta.clipboardText) {
+                St.Clipboard.get_default().set_text(
+                    St.ClipboardType.CLIPBOARD,
+                    result.meta.clipboardText
+                );
+            }
+        } catch (error) {
+            console.error(`Failed to activate search result: ${error}`);
+            result.app?.activate();
+        }
     }
 
     _setSearchText(text) {

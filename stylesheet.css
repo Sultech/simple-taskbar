@@ -582,6 +582,14 @@
     spacing: 11px;
 }
 
+.simple-taskbar-windows-start-character-icon {
+    font-size: 24px;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-character-icon {
+    color: rgba(255, 255, 255, 0.92);
+}
+
 .simple-taskbar-windows-start-empty {
     padding: 60px 0;
 }
@@ -685,6 +693,10 @@
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-empty,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-empty-pinned {
     color: rgba(30, 34, 40, 0.62);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-character-icon {
+    color: #17191c;
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer {
