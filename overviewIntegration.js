@@ -442,18 +442,19 @@ export class OverviewIntegration {
         if (!this._dashState)
             return;
 
-        const {dash, visible} = this._dashState;
+        const {dash: hiddenDash, visible} = this._dashState;
+        const dash = Main.overview._overview?._controls?.dash ?? hiddenDash;
         // `dash.height` is its current allocation, not its preferred-height
         // setting. Restoring that value would force a fixed-size dash and can
         // leave it partly outside the overview. GNOME's stock dash uses its
         // natural height, represented by -1.
-        dash.set_height(-1);
+        hiddenDash.set_height(-1);
+        if (dash !== hiddenDash)
+            dash.set_height(-1);
         if (visible) {
             dash.show();
-            // The Dash may have been hidden before its deferred initial
-            // redisplay ran. Showing the container alone then leaves its app
-            // box empty until another favourites or app-state change occurs.
-            dash._queueRedisplay();
+            dash._redisplay?.();
+            dash._queueRedisplay?.();
         } else {
             dash.hide();
         }
