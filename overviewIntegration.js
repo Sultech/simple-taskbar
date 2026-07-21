@@ -453,7 +453,7 @@ export class OverviewIntegration {
             dash.set_height(-1);
         if (visible) {
             dash.show();
-            dash._redisplay?.();
+            dash.queue_relayout();
             dash._queueRedisplay?.();
         } else {
             dash.hide();
