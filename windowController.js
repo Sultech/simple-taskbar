@@ -15,6 +15,7 @@ export class WindowController {
         this._previews = null;
         this._showDesktopButton = null;
         this._minimizedWindows = [];
+        this._desktopFocusWindow = null;
     }
 
     setTaskbarController(controller) {
@@ -138,13 +139,15 @@ export class WindowController {
         }
 
         const activeWorkspace = global.workspace_manager.get_active_workspace();
-        this._minimizedWindows = global.get_window_actors()
-            .map(actor => actor.meta_window)
-            .filter(window =>
-                !window.skip_taskbar &&
-                !window.minimized &&
-                window.located_on_workspace(activeWorkspace)
-            );
+        const visibleWindows = activeWorkspace.list_windows().filter(window =>
+            !window.skip_taskbar && window.showing_on_its_workspace()
+        );
+        this._minimizedWindows =
+            global.display.sort_windows_by_stacking(visibleWindows);
+        const focusWindow = global.display.focus_window;
+        this._desktopFocusWindow = this._minimizedWindows.includes(focusWindow)
+            ? focusWindow
+            : this._minimizedWindows.at(-1) ?? null;
         this._taskbar?.updateWindowIconGeometries();
         for (const window of this._minimizedWindows)
             window.minimize();
@@ -156,13 +159,17 @@ export class WindowController {
         const windows = this._minimizedWindows.filter(
             window => window.get_compositor_private() !== null
         );
+        const focusWindow = windows.includes(this._desktopFocusWindow)
+            ? this._desktopFocusWindow
+            : windows.at(-1) ?? null;
         this._minimizedWindows = [];
+        this._desktopFocusWindow = null;
         if (this._showDesktopButton)
             this._showDesktopButton.checked = false;
         for (const window of windows)
             window.unminimize();
-        if (activateWindow && windows.length > 0)
-            Main.activateWindow(windows[0]);
+        if (activateWindow && focusWindow)
+            Main.activateWindow(focusWindow);
     }
 
     destroy() {
