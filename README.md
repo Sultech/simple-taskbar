@@ -159,7 +159,8 @@ directory with their default applications.
 The Eleven-style Start Menu is enabled by default and includes:
 
 - A separately configurable pinned-app grid with drag-and-drop reordering.
-- Application search.
+- GNOME global search, including system providers and results contributed by
+  compatible extensions.
 - An All Apps view.
 - Recommended applications.
 - GNOME application context menus with open-window, launcher-action, App
