@@ -108,6 +108,7 @@ export class StartMenuKeybindings {
         this._disableSuperTab();
         this._displaceSwitchApplicationsSuperTab();
         let action = Meta.KeyBindingAction.NONE;
+        let registrationError = null;
         try {
             action = Main.wm.addKeybinding(
                 SUPER_TAB_KEYBINDING,
@@ -122,13 +123,14 @@ export class StartMenuKeybindings {
                 }
             );
         } catch (error) {
-            console.error(`Failed to register Super+Tab: ${error}`);
+            registrationError = error;
         }
 
         if (action === Meta.KeyBindingAction.NONE) {
             this._restoreSwitchApplicationsSuperTab();
-            console.warn(
-                `Simple Taskbar: Super+Tab ${mode} shortcut could not be registered`
+            this._reportFailure(
+                `Super+Tab ${mode} shortcut could not be registered`,
+                registrationError
             );
             return false;
         }
@@ -153,7 +155,7 @@ export class StartMenuKeybindings {
             this._mutterSettings.set_string(OVERLAY_KEY, 'Super');
             Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
         } catch (error) {
-            console.error(`Failed to configure the Super key: ${error}`);
+            this._reportFailure('Failed to configure the Super key', error);
             this._restoreOverlayKey();
             return false;
         }
@@ -188,9 +190,7 @@ export class StartMenuKeybindings {
             signalId: OVERLAY_KEY,
         });
         if (!handlerId) {
-            console.warn(
-                'Simple Taskbar: GNOME overlay-key handler was not found'
-            );
+            this._reportFailure('GNOME overlay-key handler was not found');
             return false;
         }
 
@@ -205,7 +205,10 @@ export class StartMenuKeybindings {
                 }
             );
         } catch (error) {
-            console.error(`Failed to replace the Super key handler: ${error}`);
+            this._reportFailure(
+                'Failed to replace the Super key handler',
+                error
+            );
             this._unblockDefaultOverlayHandler();
             return false;
         }
@@ -256,7 +259,10 @@ export class StartMenuKeybindings {
             this._mutterSettings.set_string(OVERLAY_KEY, overlayKey);
             this._settings.set_strv(DISPLACED_OVERLAY_KEY, []);
         } catch (error) {
-            console.error(`Failed to restore the original Super key: ${error}`);
+            this._reportFailure(
+                'Failed to restore the original Super key',
+                error
+            );
         }
     }
 
@@ -275,8 +281,9 @@ export class StartMenuKeybindings {
                 );
             }
         } catch (error) {
-            console.warn(
-                `Failed to restore GNOME's Super key handler: ${error}`
+            this._reportFailure(
+                "Failed to restore GNOME's Super key handler",
+                error
             );
         }
         this._defaultOverlayHandlerId = 0;
@@ -346,7 +353,9 @@ export class StartMenuKeybindings {
         );
         this._customEnabled = action !== Meta.KeyBindingAction.NONE;
         if (!this._customEnabled)
-            console.warn('Simple Taskbar: custom Start menu shortcut could not be registered');
+            this._reportFailure(
+                'Custom Start menu shortcut could not be registered'
+            );
     }
 
     _disableCustom() {
@@ -355,5 +364,10 @@ export class StartMenuKeybindings {
 
         Main.wm.removeKeybinding(CUSTOM_KEYBINDING);
         this._customEnabled = false;
+    }
+
+    _reportFailure(message, error = null) {
+        const detail = error ? `: ${error}` : '';
+        console.warn(`Simple Taskbar: ${message}${detail}`);
     }
 }

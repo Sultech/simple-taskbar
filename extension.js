@@ -251,7 +251,7 @@ export default class SimpleTaskbarExtension extends Extension {
             accessible_name: _('Show desktop'),
         });
         this._windowController.setShowDesktopButton(this._showDesktopButton);
-        this._showDesktopButton.connect('clicked', () =>
+        this._connect(this._showDesktopButton, 'clicked', () =>
             this._windowController.toggleDesktop()
         );
     }
