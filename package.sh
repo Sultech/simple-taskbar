@@ -20,6 +20,7 @@ gnome-extensions pack \
     --extra-source=panelPosition.js \
     --extra-source=folderMenuController.js \
     --extra-source=favoritesIntegration.js \
+    --extra-source=hotEdgeController.js \
     --extra-source=overviewIntegration.js \
     --extra-source=multiMonitorController.js \
     --extra-source=notificationBannerController.js \

@@ -377,6 +377,44 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const hotEdgeOverviewSwitch = new Adw.SwitchRow({
+            title: _('Bottom Hot Edge'),
+            subtitle: _('Push the pointer against the bottom screen edge to toggle Overview'),
+            active: window._settings.get_boolean(
+                'hot-edge-overview-enabled'
+            ),
+        });
+        behaviorGroup.add(hotEdgeOverviewSwitch);
+        window._settings.bind(
+            'hot-edge-overview-enabled',
+            hotEdgeOverviewSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
+        const hotEdgeAnimationSwitch = new Adw.SwitchRow({
+            title: _('Hot Edge Animation'),
+            subtitle: _('Show a ripple when the bottom hot edge activates'),
+            active: window._settings.get_boolean(
+                'hot-edge-animation-enabled'
+            ),
+        });
+        behaviorGroup.add(hotEdgeAnimationSwitch);
+        window._settings.bind(
+            'hot-edge-animation-enabled',
+            hotEdgeAnimationSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateHotEdgeAnimationSwitch = () => {
+            hotEdgeAnimationSwitch.sensitive = hotEdgeOverviewSwitch.active;
+        };
+        hotEdgeOverviewSwitch.connect(
+            'notify::active',
+            updateHotEdgeAnimationSwitch
+        );
+        updateHotEdgeAnimationSwitch();
+
         const workspaceScrollSwitch = new Adw.SwitchRow({
             title: _('Workspace Scroll'),
             subtitle: _('Scroll over empty taskbar space to switch workspaces'),

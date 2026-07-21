@@ -772,3 +772,11 @@
     -st-icon-style: symbolic;
     color: rgba(36, 36, 39, 0.92);
 }
+
+.simple-taskbar-hot-edge-ripple {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.2);
+    width: 104px;
+    height: 104px;
+    border-radius: 52px;
+}

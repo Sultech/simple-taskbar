@@ -19,6 +19,14 @@
       <default>false</default>
       <summary>Hide the panel until the pointer reaches its screen edge</summary>
     </key>
+    <key name="hot-edge-overview-enabled" type="b">
+      <default>true</default>
+      <summary>Push against the bottom screen edge to toggle Overview</summary>
+    </key>
+    <key name="hot-edge-animation-enabled" type="b">
+      <default>false</default>
+      <summary>Show a ripple when the bottom hot edge activates</summary>
+    </key>
     <key name="icon-size" type="i">
       <range min="16" max="48"/>
       <default>28</default>
@@ -175,7 +183,7 @@
       <summary>Center the Eleven-style Start Menu on the monitor</summary>
     </key>
     <key name="start-menu-super-key" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Open the Eleven-style Start Menu with Super and move Overview to Super+Tab</summary>
     </key>
     <key name="start-menu-displaced-overlay-key" type="as">

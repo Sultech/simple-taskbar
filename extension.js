@@ -14,6 +14,7 @@ import {
 import {ExtensionConflictController} from './extensionConflictController.js';
 import {FolderMenuController} from './folderMenuController.js';
 import {FavoritesIntegration} from './favoritesIntegration.js';
+import {HotEdgeController} from './hotEdgeController.js';
 import {PanelController} from './panelController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
 import {MultiMonitorController} from './multiMonitorController.js';
@@ -47,6 +48,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._extensionConflictController = null;
         this._folderMenuController = null;
         this._favoritesIntegration = null;
+        this._hotEdgeController = null;
         this._panelController = null;
         this._panelInteractionController = null;
         this._multiMonitorController = null;
@@ -164,6 +166,10 @@ export default class SimpleTaskbarExtension extends Extension {
             openPreferences: () => this.openPreferences(),
         });
         this._multiMonitorController.enable();
+        this._hotEdgeController = new HotEdgeController(this._settings, {
+            isBlocked: () => this._panelAutoHideIsBlocked(),
+        });
+        this._hotEdgeController.enable();
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
         this._connectSignals();
@@ -173,6 +179,8 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _teardown() {
+        this._hotEdgeController?.destroy();
+        this._hotEdgeController = null;
         this._extensionConflictController?.destroy();
         this._extensionConflictController = null;
         this._notificationBannerController?.destroy();
@@ -217,6 +225,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._multiMonitorController = null;
         this._panelController = null;
         this._folderMenuController = null;
+        this._hotEdgeController = null;
         this._startButtonController = null;
     }
 
