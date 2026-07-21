@@ -10,8 +10,11 @@ those Shell components.
 ## Preview
 
 <p align="center">
-  <img src="docs/images/taskbar-dark.png" alt="Simple Taskbar on a desktop using its dark theme" width="49%">
-  <img src="docs/images/taskbar-light.png" alt="Simple Taskbar on a desktop using its light theme" width="49%">
+  <img src="docs/images/taskbar-dark.png" alt="Simple Taskbar using its dark theme" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/images/taskbar-light.png" alt="Simple Taskbar using its light theme" width="100%">
 </p>
 
 <p align="center"><sub>Taskbar mode using the dark and light themes.</sub></p>
@@ -47,8 +50,11 @@ theme, item placement, multi-monitor support and other appearance settings
 continue to work.
 
 <p align="center">
-  <img src="docs/images/gnome-panel-dark.png" alt="Default GNOME Panel mode using a dark theme" width="49%">
-  <img src="docs/images/gnome-panel-light.png" alt="Default GNOME Panel mode using a light theme" width="49%">
+  <img src="docs/images/gnome-panel-dark.png" alt="Default GNOME Panel mode using its dark theme" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/images/gnome-panel-light.png" alt="Default GNOME Panel mode using its light theme" width="100%">
 </p>
 
 <p align="center"><sub>Default GNOME Panel mode using dark and light themes.</sub></p>
