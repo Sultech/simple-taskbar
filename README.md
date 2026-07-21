@@ -31,6 +31,7 @@ those Shell components.
 - Move the clock and Quick Settings between the left, center and right.
 - Adjust panel height, icon size, spacing, transparency and colour scheme.
 - Use auto-hide, workspace scrolling and current-workspace isolation.
+- Push against the bottom screen edge to toggle Overview.
 - Open an Eleven-style Start Menu with pinned apps, search and recommendations.
 - Switch to a native GNOME-style panel whenever taskbar applications are not
   wanted.
@@ -118,6 +119,7 @@ The settings provide control over:
 - Light, dark or Shell-following themes.
 - Adjustable transparency and Blur My Shell integration on the primary panel.
 - Animated auto-hide on every panel.
+- A bottom hot edge that toggles Overview, with an optional ripple animation.
 - Workspace switching by scrolling over empty panel space.
 - Notification banners that follow the panel edge and clock alignment.
 - Click-only switching between open panel menus.
@@ -169,8 +171,12 @@ The Eleven-style Start Menu is enabled by default and includes:
   desktop shortcut.
 - Dark, light and GNOME Shell theme options.
 - Optional true monitor centering.
-- Optional Super, Super+Tab or custom keyboard shortcuts. Assigning Super to
-  the Start Menu moves the Overview shortcut to Super+Tab.
+- Super opens the Start Menu by default and moves Overview to Super+Tab. The
+  shortcut can instead use Super+Tab, a custom binding or be disabled.
+
+The bottom hot edge is enabled by default, providing another quick way to use
+Overview after its Super shortcut has moved. Its ripple animation is optional
+and disabled by default.
 
 The original GNOME Applications button can be restored instead, or both Start
 buttons can be hidden. Right-clicking the Eleven-style Start button opens its
