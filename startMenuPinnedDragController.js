@@ -46,7 +46,7 @@ export class StartMenuPinnedDragController {
                 .map(tile => tile._startMenuPinnedAppId);
             dragSource._dropAccepted = false;
             button.opacity = 96;
-            this._closeContextMenu?.();
+            this._closeContextMenu();
         });
         draggable.connect('drag-end', () => {
             button.opacity = 255;
@@ -87,7 +87,7 @@ export class StartMenuPinnedDragController {
                 : appId);
 
         this._settings.set_strv('start-menu-pinned-apps', pinnedApps);
-        this._onOrderChanged?.(visibleOrder);
+        this._onOrderChanged(visibleOrder);
         source._dropAccepted = true;
         return true;
     }

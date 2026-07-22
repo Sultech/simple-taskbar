@@ -6,11 +6,7 @@ import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 export class WindowController {
-    constructor(tracker, {
-        settings = null,
-        spreadAppWindows = null,
-        getMonitor = null,
-    } = {}) {
+    constructor(tracker, {settings, spreadAppWindows, getMonitor}) {
         this._tracker = tracker;
         this._settings = settings;
         this._spreadAppWindows = spreadAppWindows;
@@ -46,7 +42,7 @@ export class WindowController {
 
         const activeWorkspace =
             global.workspace_manager.get_active_workspace();
-        const monitor = isolateMonitors ? this._getMonitor?.() : null;
+        const monitor = isolateMonitors ? this._getMonitor() : null;
         return windows.filter(window =>
             (!isolateWorkspaces ||
                 window.located_on_workspace(activeWorkspace)) &&
@@ -106,7 +102,7 @@ export class WindowController {
             this._settings?.get_boolean('multi-window-click-spread')) {
             this._previews?.hideTooltip(false);
             this._previews?.hide();
-            this._spreadAppWindows?.(app);
+            this._spreadAppWindows(app);
             return;
         }
 

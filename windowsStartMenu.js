@@ -29,9 +29,8 @@ export class WindowsStartMenu {
     constructor(sourceActor, settings, params = {}) {
         this._sourceActor = sourceActor;
         this._settings = settings;
-        this._onOpenStateChanged = params.onOpenStateChanged ?? null;
-        this._openPreferences = params.openPreferences ?? null;
-        this._onSourceContextMenu = params.onSourceContextMenu ?? null;
+        this._onOpenStateChanged = params.onOpenStateChanged;
+        this._onSourceContextMenu = params.onSourceContextMenu;
         this._appSystem = Shell.AppSystem.get_default();
         this._searchController = new StartMenuSearchController();
         this._pinnedDragController = new StartMenuPinnedDragController(
@@ -91,8 +90,7 @@ export class WindowsStartMenu {
         // the Start settings menu.
         this._menu.actor.connect('captured-event', (_actor, event) => {
             if (event.type() !== Clutter.EventType.BUTTON_PRESS ||
-                event.get_button() !== Clutter.BUTTON_SECONDARY ||
-                !this._onSourceContextMenu)
+                event.get_button() !== Clutter.BUTTON_SECONDARY)
                 return Clutter.EVENT_PROPAGATE;
 
             const target = global.stage.get_event_actor(event);
@@ -152,7 +150,7 @@ export class WindowsStartMenu {
             if (!open) {
                 this._destroyAppContextMenu();
             }
-            this._onOpenStateChanged?.(open);
+            this._onOpenStateChanged(open);
         });
 
         this._stageCapturedEventId = global.stage.connect(
@@ -218,11 +216,8 @@ export class WindowsStartMenu {
         syncMenuArrowSide(this._menu, this._settings);
         const originalSource = this._menu.sourceActor;
         this._menu.sourceActor = this._getPositionSource();
-        try {
-            this._menu.open(BoxPointer.PopupAnimation.FULL);
-        } finally {
-            this._menu.sourceActor = originalSource;
-        }
+        this._menu.open(BoxPointer.PopupAnimation.FULL);
+        this._menu.sourceActor = originalSource;
         if (this.isOpen)
             this._searchEntry.grab_key_focus();
     }
@@ -306,7 +301,7 @@ export class WindowsStartMenu {
             else
                 actor.remove_style_class_name('popup-menu-item');
         }
-        for (const child of actor.get_children?.() ?? [])
+        for (const child of actor.get_children())
             this._syncShellButtonClasses(child);
     }
 
@@ -874,12 +869,7 @@ export class WindowsStartMenu {
             });
         }
 
-        let icon;
-        try {
-            icon = result.meta.createIcon?.(30);
-        } catch (error) {
-            console.error(`Failed to create search result icon: ${error}`);
-        }
+        let icon = result.meta.createIcon(30);
         icon ??= new St.Icon({
             icon_name: 'system-search-symbolic',
             icon_size: 30,
@@ -956,7 +946,6 @@ export class WindowsStartMenu {
                 this.refresh();
         });
         menu.open(BoxPointer.PopupAnimation.FULL);
-        menuManager.ignoreRelease?.();
     }
 
     _queueCloseAfterAppAction() {
@@ -994,12 +983,7 @@ export class WindowsStartMenu {
         const apps = [];
         const seen = new Set();
         for (const appInfo of this._appSystem.get_installed()) {
-            let id;
-            try {
-                id = appInfo.get_id();
-            } catch {
-                continue;
-            }
+            const id = appInfo.get_id();
             if (!id || seen.has(id) || !appInfo.should_show())
                 continue;
             const app = this._appSystem.lookup_app(id);
@@ -1037,27 +1021,16 @@ export class WindowsStartMenu {
             showScreenshotUI();
             return;
         }
-        try {
-            if (typeof result.provider.activateResult === 'function') {
-                const activation = result.provider.activateResult(
-                    result.id,
-                    result.terms
-                );
-                activation?.catch?.(error =>
-                    console.error(`Failed to activate search result: ${error}`)
-                );
-            } else {
-                result.app?.activate();
-            }
-            if (result.meta.clipboardText) {
-                St.Clipboard.get_default().set_text(
-                    St.ClipboardType.CLIPBOARD,
-                    result.meta.clipboardText
-                );
-            }
-        } catch (error) {
-            console.error(`Failed to activate search result: ${error}`);
-            result.app?.activate();
+        if (result.provider.appInfo) {
+            result.provider.activateResult(result.id, result.terms);
+        } else if (result.app) {
+            result.app.activate();
+        }
+        if (result.meta.clipboardText) {
+            St.Clipboard.get_default().set_text(
+                St.ClipboardType.CLIPBOARD,
+                result.meta.clipboardText
+            );
         }
     }
 
@@ -1066,11 +1039,8 @@ export class WindowsStartMenu {
             return;
 
         this._ignoreSearchChanged = true;
-        try {
-            this._searchEntry.set_text(text);
-        } finally {
-            this._ignoreSearchChanged = false;
-        }
+        this._searchEntry.set_text(text);
+        this._ignoreSearchChanged = false;
     }
 
     _queuePrepare() {
@@ -1105,7 +1075,7 @@ export class WindowsStartMenu {
     _resolveThemeNodes(actor) {
         if (actor instanceof St.Widget)
             actor.get_theme_node();
-        for (const child of actor.get_children?.() ?? [])
+        for (const child of actor.get_children())
             this._resolveThemeNodes(child);
     }
 

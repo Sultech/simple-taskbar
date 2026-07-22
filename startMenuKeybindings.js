@@ -107,30 +107,23 @@ export class StartMenuKeybindings {
 
         this._disableSuperTab();
         this._displaceSwitchApplicationsSuperTab();
-        let action = Meta.KeyBindingAction.NONE;
-        let registrationError = null;
-        try {
-            action = Main.wm.addKeybinding(
-                SUPER_TAB_KEYBINDING,
-                this._settings,
-                Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
-                ACTION_MODES,
-                () => {
-                    if (mode === 'overview')
-                        this._toggleOverview?.();
-                    else
-                        this._toggleMenu?.();
-                }
-            );
-        } catch (error) {
-            registrationError = error;
-        }
+        const action = Main.wm.addKeybinding(
+            SUPER_TAB_KEYBINDING,
+            this._settings,
+            Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+            ACTION_MODES,
+            () => {
+                if (mode === 'overview')
+                    this._toggleOverview();
+                else
+                    this._toggleMenu();
+            }
+        );
 
         if (action === Meta.KeyBindingAction.NONE) {
             this._restoreSwitchApplicationsSuperTab();
             this._reportFailure(
-                `Super+Tab ${mode} shortcut could not be registered`,
-                registrationError
+                `Super+Tab ${mode} shortcut could not be registered`
             );
             return false;
         }
@@ -151,14 +144,8 @@ export class StartMenuKeybindings {
             return true;
 
         this._saveOverlayKey();
-        try {
-            this._mutterSettings.set_string(OVERLAY_KEY, 'Super');
-            Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
-        } catch (error) {
-            this._reportFailure('Failed to configure the Super key', error);
-            this._restoreOverlayKey();
-            return false;
-        }
+        this._mutterSettings.set_string(OVERLAY_KEY, 'Super');
+        Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
 
         this._overlayEnabled = true;
         if (Main.layoutManager._startingUp) {
@@ -194,24 +181,15 @@ export class StartMenuKeybindings {
             return false;
         }
 
-        try {
-            GObject.signal_handler_block(global.display, handlerId);
-            this._defaultOverlayHandlerId = handlerId;
-            this._overlayHandlerId = global.display.connect(
-                OVERLAY_KEY,
-                () => {
-                    this._toggleMenu?.();
-                    Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
-                }
-            );
-        } catch (error) {
-            this._reportFailure(
-                'Failed to replace the Super key handler',
-                error
-            );
-            this._unblockDefaultOverlayHandler();
-            return false;
-        }
+        GObject.signal_handler_block(global.display, handlerId);
+        this._defaultOverlayHandlerId = handlerId;
+        this._overlayHandlerId = global.display.connect(
+            OVERLAY_KEY,
+            () => {
+                this._toggleMenu();
+                Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
+            }
+        );
 
         return true;
     }
@@ -255,35 +233,21 @@ export class StartMenuKeybindings {
         if (overlayKey === undefined)
             return;
 
-        try {
-            this._mutterSettings.set_string(OVERLAY_KEY, overlayKey);
-            this._settings.set_strv(DISPLACED_OVERLAY_KEY, []);
-        } catch (error) {
-            this._reportFailure(
-                'Failed to restore the original Super key',
-                error
-            );
-        }
+        this._mutterSettings.set_string(OVERLAY_KEY, overlayKey);
+        this._settings.set_strv(DISPLACED_OVERLAY_KEY, []);
     }
 
     _unblockDefaultOverlayHandler() {
         if (!this._defaultOverlayHandlerId)
             return;
 
-        try {
-            if (GObject.signal_handler_is_connected(
+        if (GObject.signal_handler_is_connected(
+            global.display,
+            this._defaultOverlayHandlerId
+        )) {
+            GObject.signal_handler_unblock(
                 global.display,
                 this._defaultOverlayHandlerId
-            )) {
-                GObject.signal_handler_unblock(
-                    global.display,
-                    this._defaultOverlayHandlerId
-                );
-            }
-        } catch (error) {
-            this._reportFailure(
-                "Failed to restore GNOME's Super key handler",
-                error
             );
         }
         this._defaultOverlayHandlerId = 0;
@@ -349,7 +313,7 @@ export class StartMenuKeybindings {
             this._settings,
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
             ACTION_MODES,
-            () => this._toggleMenu?.()
+            () => this._toggleMenu()
         );
         this._customEnabled = action !== Meta.KeyBindingAction.NONE;
         if (!this._customEnabled)
@@ -366,8 +330,7 @@ export class StartMenuKeybindings {
         this._customEnabled = false;
     }
 
-    _reportFailure(message, error = null) {
-        const detail = error ? `: ${error}` : '';
-        console.warn(`Simple Taskbar: ${message}${detail}`);
+    _reportFailure(message) {
+        console.warn(`Simple Taskbar: ${message}`);
     }
 }

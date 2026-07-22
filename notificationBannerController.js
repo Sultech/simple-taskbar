@@ -27,11 +27,7 @@ export class NotificationBannerController {
 
     enable() {
         this._messageTray = Main.messageTray;
-        this._bannerBin = this._messageTray?._bannerBin;
-        if (!this._bannerBin ||
-            typeof this._messageTray._hideNotification !== 'function') {
-            throw new Error('GNOME Shell 50 notification banner is unavailable');
-        }
+        this._bannerBin = this._messageTray._bannerBin;
 
         this._originalAlignmentX = this._messageTray.bannerAlignment;
         this._originalAlignmentY = this._bannerBin.get_y_align();

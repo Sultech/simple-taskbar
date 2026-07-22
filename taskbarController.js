@@ -1154,7 +1154,6 @@ export class TaskbarController {
 
         syncMenuArrowSide(menu, this._settings);
         menu.open(BoxPointer.PopupAnimation.FULL);
-        button._taskbarMenuManager.ignoreRelease?.();
     }
 
     _destroyAppMenu(button) {

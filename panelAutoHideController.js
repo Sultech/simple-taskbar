@@ -90,7 +90,7 @@ export class PanelAutoHideController {
     }
 
     syncPosition() {
-        const monitor = this._getMonitor?.();
+        const monitor = this._getMonitor();
         const actor = this._positionActor;
         if (!monitor || !actor)
             return;
@@ -99,7 +99,7 @@ export class PanelAutoHideController {
         actor.y = this._hidden && this._enabled()
             ? this._hiddenY(monitor)
             : this._visibleY(monitor);
-        Main.layoutManager._queueUpdateRegions?.();
+        Main.layoutManager._queueUpdateRegions();
     }
 
     show(animate = true) {
@@ -111,7 +111,7 @@ export class PanelAutoHideController {
         }
 
         this._hidden = false;
-        this._moveTo(this._visibleY(this._getMonitor?.()), animate);
+        this._moveTo(this._visibleY(this._getMonitor()), animate);
     }
 
     _connect(object, signal, callback) {
@@ -151,7 +151,7 @@ export class PanelAutoHideController {
                 }
 
                 this._hidden = true;
-                this._moveTo(this._hiddenY(this._getMonitor?.()), true);
+                this._moveTo(this._hiddenY(this._getMonitor()), true);
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -165,7 +165,7 @@ export class PanelAutoHideController {
 
     _isBlocked() {
         return this._focusIsInsidePanel() ||
-            (this._isBlockedCallback?.() ?? false);
+            this._isBlockedCallback();
     }
 
     _focusIsInsidePanel() {
@@ -177,19 +177,19 @@ export class PanelAutoHideController {
     }
 
     _pointerIsInsidePanel() {
-        const monitor = this._getMonitor?.();
+        const monitor = this._getMonitor();
         if (!monitor || this._hidden)
             return false;
 
         const [x, y] = global.get_pointer();
-        const panelHeight = this._getPanelHeight?.() ?? 0;
+        const panelHeight = this._getPanelHeight();
         const visibleY = this._visibleY(monitor);
         return x >= monitor.x && x < monitor.x + monitor.width &&
             y >= visibleY && y < visibleY + panelHeight;
     }
 
     _pointerIsAtRevealEdge(x, y) {
-        const monitor = this._getMonitor?.();
+        const monitor = this._getMonitor();
         if (!monitor || x < monitor.x || x >= monitor.x + monitor.width)
             return false;
 
@@ -201,7 +201,7 @@ export class PanelAutoHideController {
     _visibleY(monitor) {
         if (!monitor)
             return this._positionActor?.y ?? 0;
-        const panelHeight = this._getPanelHeight?.() ?? 0;
+        const panelHeight = this._getPanelHeight();
         return panelIsTop(this._settings)
             ? monitor.y
             : monitor.y + monitor.height - panelHeight;
@@ -210,7 +210,7 @@ export class PanelAutoHideController {
     _hiddenY(monitor) {
         if (!monitor)
             return this._positionActor?.y ?? 0;
-        const panelHeight = this._getPanelHeight?.() ?? 0;
+        const panelHeight = this._getPanelHeight();
         return panelIsTop(this._settings)
             ? monitor.y - panelHeight + REVEAL_EDGE_SIZE
             : monitor.y + monitor.height - REVEAL_EDGE_SIZE;
@@ -224,7 +224,7 @@ export class PanelAutoHideController {
         actor.remove_transition('y');
         if (!animate) {
             actor.y = y;
-            Main.layoutManager._queueUpdateRegions?.();
+            Main.layoutManager._queueUpdateRegions();
             return;
         }
 
@@ -232,7 +232,7 @@ export class PanelAutoHideController {
             y,
             duration: ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => Main.layoutManager._queueUpdateRegions?.(),
+            onComplete: () => Main.layoutManager._queueUpdateRegions(),
         });
     }
 }

@@ -89,15 +89,15 @@ function setFileAttributesAsync(file, info) {
 }
 
 export class StartMenuAppMenu extends TaskbarAppMenu {
-    constructor(sourceActor, side, settings, params = {}) {
+    constructor(sourceActor, side, settings, params) {
         super(sourceActor, side, {
             favoritesSection: true,
             showSingleWindows: true,
         });
 
         this._settings = settings;
-        this._onStartPinsChanged = params.onStartPinsChanged ?? null;
-        this._onAppAction = params.onAppAction ?? null;
+        this._onStartPinsChanged = params.onStartPinsChanged;
+        this._onAppAction = params.onAppAction;
         this._connectedActionItems = new WeakSet();
         this._shortcutQueryCancellable = null;
         this._destroyed = false;
@@ -166,7 +166,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
             return;
 
         this._connectedActionItems.add(item);
-        item.connect('activate', () => this._onAppAction?.());
+        item.connect('activate', () => this._onAppAction());
     }
 
     _toggleStartFavorite() {
@@ -182,7 +182,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
             pinnedApps.push(appId);
 
         this._settings.set_strv('start-menu-pinned-apps', pinnedApps);
-        this._onStartPinsChanged?.();
+        this._onStartPinsChanged();
     }
 
     _updateStartFavoriteItem() {
@@ -234,7 +234,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
             );
             return true;
         } catch (error) {
-            if (error.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.NOT_FOUND))
+            if (error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.NOT_FOUND))
                 return false;
             throw error;
         }
@@ -267,7 +267,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
                 ? _('Delete Desktop Shortcut')
                 : _('Create Desktop Shortcut');
         } catch (error) {
-            if (!error.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
+            if (!error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                 console.error(`Failed to inspect desktop shortcut: ${error}`);
         } finally {
             if (this._shortcutQueryCancellable === cancellable)

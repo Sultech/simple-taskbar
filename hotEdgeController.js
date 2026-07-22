@@ -16,7 +16,7 @@ const PRESSURE_TIMEOUT = 1000;
 const FALLBACK_TIMEOUT = 250;
 
 export class HotEdgeController {
-    constructor(settings, {isBlocked = null} = {}) {
+    constructor(settings, {isBlocked}) {
         this._settings = settings;
         this._isBlocked = isBlocked;
         this._signals = [];
@@ -63,7 +63,7 @@ export class HotEdgeController {
             this._edges.push(new HotEdge({
                 layoutManager: Main.layoutManager,
                 monitor,
-                isBlocked: () => this._isBlocked?.() ?? false,
+                isBlocked: () => this._isBlocked(),
                 showAnimation: () => this._settings?.get_boolean(
                     'hot-edge-animation-enabled'
                 ) ?? true,
@@ -222,7 +222,7 @@ class HotEdge {
     }
 
     _toggleOverview() {
-        if (this._isBlocked?.() || this._mouseButtonIsHeld())
+        if (this._isBlocked() || this._mouseButtonIsHeld())
             return;
         if (this._monitor?.inFullscreen && !Main.overview.visible)
             return;
@@ -230,7 +230,7 @@ class HotEdge {
             return;
 
         Main.overview.toggle();
-        if (this._showAnimation?.() && Main.overview.animationInProgress) {
+        if (this._showAnimation() && Main.overview.animationInProgress) {
             const [pointerX] = global.get_pointer();
             const bottom = this._monitor.y + this._monitor.height;
             this._ripples.playAnimation(pointerX, bottom);

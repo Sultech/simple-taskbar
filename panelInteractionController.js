@@ -278,7 +278,6 @@ export class PanelInteractionController {
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
         this._contextMenu.open(BoxPointer.PopupAnimation.FULL);
-        this._contextMenuManager.ignoreRelease?.();
     }
 
     _isFreePanelTarget(target) {

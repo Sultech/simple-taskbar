@@ -84,7 +84,7 @@ export class PanelController {
             positionActor: Main.layoutManager.panelBox,
             getMonitor: () => Main.layoutManager.primaryMonitor,
             getPanelHeight: () => this._panelHeight,
-            isBlocked: () => this._isAutoHideBlocked?.() ?? false,
+            isBlocked: () => this._isAutoHideBlocked(),
         });
     }
 
@@ -231,7 +231,7 @@ export class PanelController {
             centered: this.appsAreCentered(),
         });
         if (availableWidth !== undefined)
-            this._onTaskbarAvailableWidthChanged?.(availableWidth);
+            this._onTaskbarAvailableWidthChanged(availableWidth);
     }
 
     appsAreCentered() {
@@ -318,7 +318,7 @@ export class PanelController {
         }
 
         if (restoringUnlockPanel)
-            Main.panel._updatePanel?.();
+            Main.panel._updatePanel();
 
         this._panelItemState = null;
         this._startButton = null;

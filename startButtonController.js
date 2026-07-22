@@ -172,7 +172,6 @@ export class StartButtonController {
                     if (this._windowsModeEnabled())
                         this.actor.checked = open;
                 },
-                openPreferences: () => this._openPreferences(),
                 menuManager: this._menuManager,
                 onSourceContextMenu: () => this._openContextMenu(),
             }
@@ -285,7 +284,6 @@ export class StartButtonController {
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
         this._contextMenu.open(BoxPointer.PopupAnimation.FULL);
-        this._menuManager.ignoreRelease?.();
     }
 
     _toggleApplications() {

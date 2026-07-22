@@ -5,7 +5,6 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Shell from 'gi://Shell';
 
-import * as AppDisplay from 'resource:///org/gnome/shell/ui/appDisplay.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const SEARCH_DELAY = 150;
@@ -15,7 +14,6 @@ const MAX_PROVIDER_RESULTS = 5;
 export class StartMenuSearchController {
     constructor() {
         this._appSystem = Shell.AppSystem.get_default();
-        this._fallbackAppProvider = new AppDisplay.AppSearchProvider();
         this._cancellable = null;
         this._searchTimeoutId = 0;
         this._generation = 0;
@@ -83,7 +81,6 @@ export class StartMenuSearchController {
 
     destroy() {
         this.cancel();
-        this._fallbackAppProvider = null;
         this._appSystem = null;
         this._providerResults = null;
     }
@@ -92,8 +89,7 @@ export class StartMenuSearchController {
         generation, groups, onUpdate) {
         try {
             const provider = group.provider;
-            const resultIds = previousResults &&
-                typeof provider.getSubsearchResultSet === 'function'
+            const resultIds = previousResults
                 ? await provider.getSubsearchResultSet(
                     previousResults,
                     terms,
@@ -135,52 +131,28 @@ export class StartMenuSearchController {
             const visibleGroups = groups.filter(item =>
                 item.complete && item.results.length > 0
             );
-            try {
-                onUpdate(visibleGroups, complete);
-            } catch (error) {
-                console.error(`Failed to display start menu results: ${error}`);
-            }
+            onUpdate(visibleGroups, complete);
             if (complete && this._cancellable === cancellable)
                 this._cancellable = null;
         }
     }
 
     _getProviders() {
-        const searchController = Main.overview?.searchController ??
-            Main.overview?._overview?.controls?._searchController;
-        const shellProviders = searchController?._searchResults?._providers;
-        const providers = shellProviders?.[Symbol.iterator]
-            ? [...shellProviders]
-            : [];
-        const usableProviders = providers.filter(provider =>
-            typeof provider?.getInitialResultSet === 'function' &&
-            typeof provider?.getResultMetas === 'function'
-        );
-
-        if (!usableProviders.some(provider =>
-            provider instanceof AppDisplay.AppSearchProvider)) {
-            usableProviders.unshift(this._fallbackAppProvider);
-        }
-
-        return [...new Set(usableProviders)];
+        return [...new Set(
+            Main.overview.searchController._searchResults._providers
+        )];
     }
 
     _filterResults(provider, resultIds) {
         const maxResults = provider.appInfo
             ? MAX_PROVIDER_RESULTS
             : MAX_APPLICATION_RESULTS;
-        const filtered = typeof provider.filterResults === 'function'
-            ? provider.filterResults(resultIds, maxResults)
-            : resultIds.slice(0, maxResults);
+        const filtered = provider.filterResults(resultIds, maxResults);
         return Array.isArray(filtered) ? filtered : [];
     }
 
     _getProviderName(provider) {
-        try {
-            return provider.appInfo?.get_name?.() ?? null;
-        } catch {
-            return null;
-        }
+        return provider.appInfo ? provider.appInfo.get_name() : null;
     }
 
     _normalizeResults(provider, metas, terms) {

@@ -29,44 +29,6 @@ const ICON_VERTICAL_RESERVE = 14;
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
-        this._initializeState();
-
-        try {
-            this._enable();
-        } catch (error) {
-            this._teardown();
-            throw error;
-        }
-    }
-
-    disable() {
-        this._teardown();
-    }
-
-    _initializeState() {
-        this._signals = [];
-        this._extensionConflictController = null;
-        this._folderMenuController = null;
-        this._favoritesIntegration = null;
-        this._hotEdgeController = null;
-        this._panelController = null;
-        this._panelInteractionController = null;
-        this._multiMonitorController = null;
-        this._notificationBannerController = null;
-        this._overviewIntegration = null;
-        this._windowPreviews = null;
-        this._windowController = null;
-        this._taskbarController = null;
-        this._startButtonController = null;
-
-        this._taskbarBin = null;
-        this._showDesktopButton = null;
-        this._settings = null;
-        this._iconSize = 28;
-        this._panelHeight = 44;
-    }
-
-    _enable() {
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
@@ -147,7 +109,6 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._overviewIntegration.queueRelayout(),
             isAutoHideBlocked: () => this._panelAutoHideIsBlocked(),
         });
-        this._panelController.enable();
         this._panelInteractionController = new PanelInteractionController({
             settings: this._settings,
             taskbarController: this._taskbarController,
@@ -155,6 +116,7 @@ export default class SimpleTaskbarExtension extends Extension {
             previewController: this._windowPreviews,
             openPreferences: () => this.openPreferences(),
         });
+        this._panelController.enable();
         this._panelInteractionController.enable();
         this._startButtonController.enable();
         this._multiMonitorController = new MultiMonitorController({
@@ -180,39 +142,37 @@ export default class SimpleTaskbarExtension extends Extension {
         this._taskbarController.enable();
     }
 
-    _teardown() {
-        this._hotEdgeController?.destroy();
+    disable() {
+        this._settings.disconnectObject(this);
+        this._showDesktopButton.disconnectObject(this);
+
+        this._hotEdgeController.destroy();
         this._hotEdgeController = null;
-        this._extensionConflictController?.destroy();
+        this._extensionConflictController.destroy();
         this._extensionConflictController = null;
-        this._notificationBannerController?.destroy();
+        this._notificationBannerController.destroy();
         this._notificationBannerController = null;
-        this._multiMonitorController?.destroy();
+        this._multiMonitorController.destroy();
         this._multiMonitorController = null;
-        this._panelInteractionController?.destroy();
+        this._panelInteractionController.destroy();
         this._panelInteractionController = null;
-        for (const [object, id] of this._signals ?? []) {
-            if (id)
-                object.disconnect(id);
-        }
-        this._signals = null;
-        this._panelController?.destroy();
+        this._panelController.destroy();
         this._panelController = null;
-        this._folderMenuController?.destroy();
+        this._folderMenuController.destroy();
         this._folderMenuController = null;
-        this._favoritesIntegration?.destroy();
+        this._favoritesIntegration.destroy();
         this._favoritesIntegration = null;
-        this._startButtonController?.destroy();
+        this._startButtonController.destroy();
         this._startButtonController = null;
-        this._windowController?.destroy();
-        this._taskbarController?.destroy();
-        this._windowPreviews?.destroy();
+        this._windowController.destroy();
+        this._taskbarController.destroy();
+        this._windowPreviews.destroy();
         this._windowPreviews = null;
         this._taskbarController = null;
         this._windowController = null;
-        this._taskbarBin?.destroy();
-        this._showDesktopButton?.destroy();
-        this._overviewIntegration?.destroy();
+        this._taskbarBin.destroy();
+        this._showDesktopButton.destroy();
+        this._overviewIntegration.destroy();
         this._overviewIntegration = null;
 
         this._taskbarBin = null;
@@ -222,13 +182,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appSystem = null;
         this._settings = null;
         this._panelHeight = 44;
-        this._overviewIntegration = null;
-        this._panelInteractionController = null;
-        this._multiMonitorController = null;
-        this._panelController = null;
-        this._folderMenuController = null;
-        this._hotEdgeController = null;
-        this._startButtonController = null;
     }
 
     _createTaskbarActors() {
@@ -253,17 +206,15 @@ export default class SimpleTaskbarExtension extends Extension {
             accessible_name: _('Show desktop'),
         });
         this._windowController.setShowDesktopButton(this._showDesktopButton);
-        this._connect(this._showDesktopButton, 'clicked', () =>
-            this._windowController.toggleDesktop()
+        this._showDesktopButton.connectObject(
+            'clicked',
+            () => this._windowController.toggleDesktop(),
+            this
         );
     }
 
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
-    }
-
     _connectSignals() {
-        this._connect(this._settings, 'changed::icon-size', () => {
+        this._settings.connectObject('changed::icon-size', () => {
             this._iconSize = this._settings.get_int('icon-size');
             const minimumPanelHeight =
                 this._iconSize + ICON_VERTICAL_RESERVE;
@@ -277,15 +228,14 @@ export default class SimpleTaskbarExtension extends Extension {
             );
             this._taskbarController.setIconSize(this._iconSize);
             this._panelController.updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::icon-spacing', () => {
+        }, this);
+        this._settings.connectObject('changed::icon-spacing', () => {
             this._applyTaskbarAppearance();
-        });
-        this._connect(this._settings, 'changed::default-gnome-panel', () => {
+        }, this);
+        this._settings.connectObject('changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
-        });
-        this._connect(
-            this._settings,
+        }, this);
+        this._settings.connectObject(
             'changed::multi-window-click-spread',
             () => {
                 if (!this._settings.get_boolean(
@@ -293,9 +243,10 @@ export default class SimpleTaskbarExtension extends Extension {
                 )) {
                     this._overviewIntegration.cancelAppSpread();
                 }
-            }
+            },
+            this
         );
-        this._connect(this._settings, 'changed::panel-height', () => {
+        this._settings.connectObject('changed::panel-height', () => {
             this._panelHeight = this._settings.get_int('panel-height');
             const maximumIconSize =
                 this._panelHeight - ICON_VERTICAL_RESERVE;
@@ -306,17 +257,17 @@ export default class SimpleTaskbarExtension extends Extension {
             this._taskbarController.setPanelHeight(this._panelHeight);
             this._overviewIntegration.setPanelHeight(this._panelHeight);
             this._panelController.setPanelHeight(this._panelHeight);
-        });
-        this._connect(this._settings, 'changed::start-button-padding', () => {
+        }, this);
+        this._settings.connectObject('changed::start-button-padding', () => {
             this._startButtonController.applyAppearance(
                 this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
             this._panelController.updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::panel-position', () => {
+        }, this);
+        this._settings.connectObject('changed::panel-position', () => {
             this._overviewIntegration.syncPanelPosition();
-        });
+        }, this);
     }
 
     _applyTaskbarAppearance() {
@@ -344,26 +295,26 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _panelAutoHideIsBlocked() {
         return Boolean(
-            this._panelInteractionController?.menuIsOpen ||
-            this._startButtonController?.menuIsOpen ||
-            this._folderMenuController?.menuIsOpen ||
-            this._windowPreviews?.isOpen ||
-            this._taskbarController?.isDragging ||
-            this._taskbarController?.hasOpenMenu() ||
-            Main.panel.menuManager?.activeMenu?.isOpen
+            this._panelInteractionController.menuIsOpen ||
+            this._startButtonController.menuIsOpen ||
+            this._folderMenuController.menuIsOpen ||
+            this._windowPreviews.isOpen ||
+            this._taskbarController.isDragging ||
+            this._taskbarController.hasOpenMenu() ||
+            Main.panel.menuManager.activeMenu?.isOpen
         );
     }
 
     _toggleStartMenuAtPointer() {
         const [x, y] = global.get_pointer();
-        if (this._multiMonitorController?.hasPanelAt(x, y)) {
-            this._startButtonController?.closeMenus();
+        if (this._multiMonitorController.hasPanelAt(x, y)) {
+            this._startButtonController.closeMenus();
             this._multiMonitorController.toggleStartMenuAt(x, y);
             return;
         }
 
-        this._multiMonitorController?.closeStartMenus();
-        this._startButtonController?.toggleStartMenu();
+        this._multiMonitorController.closeStartMenus();
+        this._startButtonController.toggleStartMenu();
     }
 
 }
