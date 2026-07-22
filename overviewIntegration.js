@@ -127,6 +127,10 @@ export class OverviewIntegration {
     }
 
     destroy() {
+        const restoreVisible = Boolean(
+            this._settings &&
+            !this._settings.get_boolean('default-gnome-panel')
+        );
         this._cancelStartupOverview();
         this._cancelDashVisibilityRepair();
         // If the extension is disabled while the spread is visible, rebuild
@@ -142,7 +146,7 @@ export class OverviewIntegration {
         }
         this._signals = [];
         this._restoreStartupOverview();
-        this._restoreDash();
+        this._restoreDash(restoreVisible);
         this.queueRelayout();
         this._tracker = null;
         this._settings = null;
@@ -433,19 +437,23 @@ export class OverviewIntegration {
         }
     }
 
-    _restoreDash() {
-        if (!this._dashState)
+    _restoreDash(forceVisible = false) {
+        if (!this._dashState && !forceVisible)
             return;
 
-        const {dash: hiddenDash, visible} = this._dashState;
+        const hiddenDash = this._dashState?.dash ?? Main.overview.dash;
+        const visible = forceVisible || this._dashState?.visible;
         const dash = Main.overview._overview?._controls?.dash ?? hiddenDash;
+        if (!dash) {
+            this._dashState = null;
+            return;
+        }
         // `dash.height` is its current allocation, not its preferred-height
         // setting. Restoring that value would force a fixed-size dash and can
         // leave it partly outside the overview. GNOME's stock dash uses its
         // natural height, represented by -1.
-        hiddenDash.set_height(-1);
-        if (dash !== hiddenDash)
-            dash.set_height(-1);
+        hiddenDash?.set_height(-1);
+        dash.set_height(-1);
         if (visible) {
             dash.show();
             dash.queue_relayout();
