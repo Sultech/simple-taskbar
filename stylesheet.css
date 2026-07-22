@@ -579,7 +579,19 @@
 }
 
 .simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-content {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background-color: rgba(30, 30, 34, 0.98);
+    color: #f4f4f4;
     box-shadow: none;
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-item:hover,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-item:focus,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-item:selected,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-item:checked,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-item:active {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #f4f4f4;
 }
 
 .simple-taskbar-windows-start-recommended {
@@ -729,8 +741,12 @@
 }
 
 .simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:hover,
-.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:focus {
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:focus,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:selected,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:checked,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-item:active {
     background-color: rgba(26, 36, 52, 0.09);
+    color: #202124;
 }
 
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav,
