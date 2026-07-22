@@ -126,6 +126,7 @@ export default class SimpleTaskbarExtension extends Extension {
             iconSize: this._iconSize,
             previewController: this._windowPreviews,
             openPreferences: () => this.openPreferences(),
+            toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
         });
 
         this._createTaskbarActors();
@@ -351,6 +352,18 @@ export default class SimpleTaskbarExtension extends Extension {
             this._taskbarController?.hasOpenMenu() ||
             Main.panel.menuManager?.activeMenu?.isOpen
         );
+    }
+
+    _toggleStartMenuAtPointer() {
+        const [x, y] = global.get_pointer();
+        if (this._multiMonitorController?.hasPanelAt(x, y)) {
+            this._startButtonController?.closeMenus();
+            this._multiMonitorController.toggleStartMenuAt(x, y);
+            return;
+        }
+
+        this._multiMonitorController?.closeStartMenus();
+        this._startButtonController?.toggleStartMenu();
     }
 
 }

@@ -23,10 +23,12 @@ export class StartButtonController {
         previewController,
         openPreferences,
         manageKeybindings = true,
+        toggleFromShortcut = null,
     }) {
         this._settings = settings;
         this._previews = previewController;
         this._openPreferences = openPreferences;
+        this._toggleFromShortcut = toggleFromShortcut;
         this._signals = [];
         this._startOpenedOverview = false;
         this._windowsStartMenu = null;
@@ -76,7 +78,7 @@ export class StartButtonController {
         this._keybindings = manageKeybindings
             ? new StartMenuKeybindings(
                 settings,
-                () => this._toggleApplications(),
+                () => this._toggleApplicationsFromShortcut(),
                 () => this._toggleOverviewFromShortcut()
             )
             : null;
@@ -98,6 +100,20 @@ export class StartButtonController {
 
     syncKeybindings() {
         this._keybindings?.sync();
+    }
+
+    toggleStartMenu() {
+        if (!this._windowsModeEnabled())
+            return;
+
+        if (Main.overview.visible)
+            Main.overview.hide();
+        this._windowsStartMenu?.toggle();
+    }
+
+    closeMenus() {
+        this._windowsStartMenu?.close();
+        this._contextMenu?.close();
     }
 
     applyAppearance(iconSize, padding) {
@@ -136,6 +152,7 @@ export class StartButtonController {
         this._gnomeGIcon = null;
         this._previews = null;
         this._openPreferences = null;
+        this._toggleFromShortcut = null;
         this._settings = null;
         this._startOpenedOverview = false;
     }
@@ -273,9 +290,7 @@ export class StartButtonController {
 
     _toggleApplications() {
         if (this._windowsModeEnabled()) {
-            if (Main.overview.visible)
-                Main.overview.hide();
-            this._windowsStartMenu.toggle();
+            this.toggleStartMenu();
             return;
         }
 
@@ -296,6 +311,15 @@ export class StartButtonController {
             else
                 Main.overview.show(OverviewControls.ControlsState.WINDOW_PICKER);
         }
+    }
+
+    _toggleApplicationsFromShortcut() {
+        if (this._toggleFromShortcut) {
+            this._toggleFromShortcut();
+            return;
+        }
+
+        this._toggleApplications();
     }
 
     _toggleOverviewFromShortcut() {

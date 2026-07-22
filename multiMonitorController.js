@@ -217,6 +217,28 @@ export class MultiMonitorController {
             panel.destroy();
         this._panels = [];
     }
+
+    hasPanelAt(x, y) {
+        return this._panels.some(panel => panel.containsPoint(x, y));
+    }
+
+    toggleStartMenuAt(x, y) {
+        const target = this._panels.find(panel => panel.containsPoint(x, y));
+        if (!target)
+            return false;
+
+        for (const panel of this._panels) {
+            if (panel !== target)
+                panel.closeStartMenus();
+        }
+        target.toggleStartMenu();
+        return true;
+    }
+
+    closeStartMenus() {
+        for (const panel of this._panels)
+            panel.closeStartMenus();
+    }
 }
 
 class SecondaryTaskbarPanel {
@@ -329,6 +351,21 @@ class SecondaryTaskbarPanel {
         });
         this._autoHideController.enable();
         this._connectSignals();
+    }
+
+    containsPoint(x, y) {
+        return x >= this._monitor.x &&
+            x < this._monitor.x + this._monitor.width &&
+            y >= this._monitor.y &&
+            y < this._monitor.y + this._monitor.height;
+    }
+
+    toggleStartMenu() {
+        this._startButtonController?.toggleStartMenu();
+    }
+
+    closeStartMenus() {
+        this._startButtonController?.closeMenus();
     }
 
     destroy() {
