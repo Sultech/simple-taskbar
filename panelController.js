@@ -253,6 +253,7 @@ export class PanelController {
     }
 
     destroy() {
+        const restoringUnlockPanel = Main.sessionMode.isLocked;
         this._autoHideController?.destroy();
         this._autoHideController = null;
         if (this._layoutRepairId) {
@@ -295,8 +296,10 @@ export class PanelController {
             Main.panel.set_style(this._oldPanelStyle ?? '');
 
             const activities = Main.panel.statusArea.activities?.container;
-            if (activities && this._activitiesWasVisible !== null)
+            if (!restoringUnlockPanel && activities &&
+                this._activitiesWasVisible !== null) {
                 activities.visible = this._activitiesWasVisible;
+            }
         }
 
         const panelBox = Main.layoutManager.panelBox;
@@ -312,6 +315,9 @@ export class PanelController {
                 this._oldPanelGeometry.y
             );
         }
+
+        if (restoringUnlockPanel)
+            Main.panel._updatePanel?.();
 
         this._panelItemState = null;
         this._startButton = null;
