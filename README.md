@@ -1,5 +1,7 @@
 # <img src="docs/images/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
 
+[<img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" width="180">](https://extensions.gnome.org/extension/10448/simple-taskbar/)
+
 Simple Taskbar turns GNOME Shell's native panel into a configurable desktop
 taskbar. It combines pinned and running applications with GNOME's Activities,
 clock, calendar, Quick Settings and extension indicators, without replacing
@@ -198,8 +200,9 @@ settings page.
 
 ## Install
 
-Once Simple Taskbar is published on GNOME Extensions, it can be installed from
-the website or Extension Manager.
+Install Simple Taskbar from
+[GNOME Extensions](https://extensions.gnome.org/extension/10448/simple-taskbar/)
+or Extension Manager.
 
 To install the current source version:
 
