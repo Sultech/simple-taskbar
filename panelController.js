@@ -304,15 +304,16 @@ export class PanelController {
 
         const panelBox = Main.layoutManager.panelBox;
         if (this._oldPanelGeometry) {
+            const primaryMonitor = Main.layoutManager.primaryMonitor;
             if (this._oldPanelHeight !== null)
                 Main.panel.set_height(this._oldPanelHeight);
             panelBox.set_size(
-                this._oldPanelGeometry.width,
+                primaryMonitor?.width ?? this._oldPanelGeometry.width,
                 this._oldPanelGeometry.height
             );
             panelBox.set_position(
-                this._oldPanelGeometry.x,
-                this._oldPanelGeometry.y
+                primaryMonitor?.x ?? this._oldPanelGeometry.x,
+                primaryMonitor?.y ?? this._oldPanelGeometry.y
             );
         }
 
