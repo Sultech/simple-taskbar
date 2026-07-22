@@ -240,6 +240,7 @@ class SecondaryTaskbarPanel {
         this._windowController = new WindowController(tracker, {
             settings,
             spreadAppWindows,
+            getMonitor: () => this._monitor,
         });
         this._taskbarController = new TaskbarController({
             settings,

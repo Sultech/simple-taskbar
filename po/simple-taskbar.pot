@@ -146,6 +146,14 @@ msgid "Show running applications from the current workspace only"
 msgstr ""
 
 #: prefs.js:170
+msgid "Isolate Monitors"
+msgstr ""
+
+#: prefs.js:171
+msgid "Show running applications only on the taskbar for their monitor"
+msgstr ""
+
+#: prefs.js:170
 msgid "Spread Multiple Windows"
 msgstr ""
 

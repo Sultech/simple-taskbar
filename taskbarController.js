@@ -174,6 +174,11 @@ export class TaskbarController {
             this._connectActiveWorkspaceSignals();
             this._refreshWorkspaceIsolation();
         });
+        for (const signal of ['window-entered-monitor', 'window-left-monitor']) {
+            this._connect(global.display, signal, () => {
+                this._refreshWorkspaceIsolation();
+            });
+        }
         this._connect(
             this._settings,
             'changed::hide-pinned-taskbar-apps',
@@ -188,6 +193,12 @@ export class TaskbarController {
             () => this._syncApplicationVisibility()
         );
         this._connect(this._settings, 'changed::isolate-workspaces', () => {
+            this._refreshWorkspaceIsolation(true);
+        });
+        this._connect(this._settings, 'changed::isolate-monitors', () => {
+            this._refreshWorkspaceIsolation(true);
+        });
+        this._connect(this._settings, 'changed::multi-monitor-panels', () => {
             this._refreshWorkspaceIsolation(true);
         });
         this._connect(
@@ -421,7 +432,8 @@ export class TaskbarController {
                 : app.state === Shell.AppState.RUNNING && windowCount > 0;
             const focused = window
                 ? window === focusedWindow
-                : app === focusedApp;
+                : app === focusedApp &&
+                    this._interestingWindows(app).includes(focusedWindow);
             item.set_style_class_name(
                 `dash-item-container simple-taskbar-app-item` +
                 `${running ? ' running' : ''}` +
@@ -628,8 +640,11 @@ export class TaskbarController {
     }
 
     _refreshWorkspaceIsolation(force = false) {
-        if (!force && !this._settings.get_boolean('isolate-workspaces'))
+        if (!force &&
+            !this._settings.get_boolean('isolate-workspaces') &&
+            !this._settings.get_boolean('isolate-monitors')) {
             return;
+        }
 
         this._windowPreviews?.hideTooltip(false);
         this._windowPreviews?.hide();
@@ -833,23 +848,19 @@ export class TaskbarController {
     _getRunningApps() {
         const apps = [];
         const seen = new Set();
-        const activeWorkspace =
-            global.workspace_manager.get_active_workspace();
-        const isolateWorkspaces =
-            this._settings.get_boolean('isolate-workspaces');
 
         for (const windowActor of global.get_window_actors()) {
             const window = windowActor.meta_window;
-            if (!window || window.skip_taskbar ||
-                (isolateWorkspaces &&
-                    !window.located_on_workspace(activeWorkspace))) {
+            if (!window || window.skip_taskbar) {
                 continue;
             }
 
             const app = this._tracker.get_window_app(window);
             const appId = app?.get_id();
-            if (!appId || seen.has(appId))
+            if (!appId || seen.has(appId) ||
+                this._interestingWindows(app).length === 0) {
                 continue;
+            }
 
             seen.add(appId);
             apps.push(app);

@@ -166,6 +166,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const isolateMonitorsSwitch = new Adw.SwitchRow({
+            title: _('Isolate Monitors'),
+            subtitle: _('Show running applications only on the taskbar for their monitor'),
+            active: window._settings.get_boolean('isolate-monitors'),
+        });
+        appearanceGroup.add(isolateMonitorsSwitch);
+        window._settings.bind(
+            'isolate-monitors',
+            isolateMonitorsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const multiWindowSpreadSwitch = new Adw.SwitchRow({
             title: _('Spread Multiple Windows'),
             subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
@@ -517,6 +530,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        const syncMonitorIsolationSensitivity = () => {
+            isolateMonitorsSwitch.sensitive =
+                window._settings.get_boolean('multi-monitor-panels');
+        };
+        window._settings.connect(
+            'changed::multi-monitor-panels',
+            syncMonitorIsolationSensitivity
+        );
+        syncMonitorIsolationSensitivity();
 
         const panelGroup = new Adw.PreferencesGroup({
             title: _('Panel Items'),

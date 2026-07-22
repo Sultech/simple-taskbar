@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Meta from 'gi://Meta';
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 export class WindowController {
     constructor(tracker, {
         settings = null,
         spreadAppWindows = null,
+        getMonitor = null,
     } = {}) {
         this._tracker = tracker;
         this._settings = settings;
         this._spreadAppWindows = spreadAppWindows;
+        this._getMonitor = getMonitor;
         this._taskbar = null;
         this._previews = null;
         this._showDesktopButton = null;
@@ -34,13 +38,29 @@ export class WindowController {
         const windows = app.get_windows().filter(
             window => !window.skip_taskbar
         );
-        if (!this._settings?.get_boolean('isolate-workspaces'))
+        const isolateWorkspaces =
+            this._settings?.get_boolean('isolate-workspaces') ?? false;
+        const isolateMonitors = this._isolatesMonitors(isolateWorkspaces);
+        if (!isolateWorkspaces && !isolateMonitors)
             return windows;
 
         const activeWorkspace =
             global.workspace_manager.get_active_workspace();
+        const monitor = isolateMonitors ? this._getMonitor?.() : null;
         return windows.filter(window =>
-            window.located_on_workspace(activeWorkspace)
+            (!isolateWorkspaces ||
+                window.located_on_workspace(activeWorkspace)) &&
+            (!monitor || window.get_monitor() === monitor.index)
+        );
+    }
+
+    _isolatesMonitors(isolateWorkspaces = false) {
+        return Boolean(
+            this._settings?.get_boolean('multi-monitor-panels') &&
+            Main.layoutManager.monitors.length > 1 &&
+            (this._settings.get_boolean('isolate-monitors') ||
+                isolateWorkspaces &&
+                    Meta.prefs_get_workspaces_only_on_primary())
         );
     }
 
@@ -48,10 +68,13 @@ export class WindowController {
         const windows = this.getInterestingWindows(app);
         const overviewShown = Main.overview._shown ?? Main.overview.visible;
         if (windows.length === 0) {
-            const runningOutsideWorkspace =
-                this._settings?.get_boolean('isolate-workspaces') &&
+            const isolateWorkspaces =
+                this._settings?.get_boolean('isolate-workspaces') ?? false;
+            const runningOutsideScope =
+                (isolateWorkspaces ||
+                    this._isolatesMonitors(isolateWorkspaces)) &&
                 app.get_windows().some(window => !window.skip_taskbar);
-            if (runningOutsideWorkspace && app.can_open_new_window())
+            if (runningOutsideScope && app.can_open_new_window())
                 app.open_new_window(-1);
             else
                 app.activate();
@@ -178,6 +201,7 @@ export class WindowController {
         this._previews = null;
         this._taskbar = null;
         this._spreadAppWindows = null;
+        this._getMonitor = null;
         this._settings = null;
         this._tracker = null;
     }

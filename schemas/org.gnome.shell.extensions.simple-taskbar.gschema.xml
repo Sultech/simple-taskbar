@@ -124,6 +124,10 @@
       <default>false</default>
       <summary>Show running applications from the active workspace only</summary>
     </key>
+    <key name="isolate-monitors" type="b">
+      <default>false</default>
+      <summary>Show running applications only on the taskbar for their monitor</summary>
+    </key>
     <key name="multi-window-click-spread" type="b">
       <default>true</default>
       <summary>Show an application window spread when its taskbar icon is clicked</summary>

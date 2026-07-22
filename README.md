@@ -98,6 +98,7 @@ over applications does not trigger workspace switching.
 Optional controls can:
 
 - Show running applications from only the current workspace.
+- Show running applications only on the taskbar for their monitor.
 - Hide favourite applications that are not running.
 - Lock the taskbar against accidental rearrangement.
 - Show the desktop from a narrow button at the panel edge.

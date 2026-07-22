@@ -94,6 +94,7 @@ export default class SimpleTaskbarExtension extends Extension {
             settings: this._settings,
             spreadAppWindows: app =>
                 this._overviewIntegration.showAppWindows(app),
+            getMonitor: () => Main.layoutManager.primaryMonitor,
         });
         this._taskbarController = new TaskbarController({
             settings: this._settings,
