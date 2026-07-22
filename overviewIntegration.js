@@ -39,7 +39,6 @@ export class OverviewIntegration {
 
     enable() {
         this._startupState = {
-            startInOverview: Main.layoutManager.startInOverview,
             hasOverview: Main.sessionMode.hasOverview,
         };
         this._connect(
@@ -201,8 +200,6 @@ export class OverviewIntegration {
             return;
 
         const startInOverview = this._shouldStartInOverview();
-        Main.layoutManager.startInOverview = startInOverview;
-
         if (Main.layoutManager._startingUp)
             Main.sessionMode.hasOverview = startInOverview;
     }
@@ -211,8 +208,6 @@ export class OverviewIntegration {
         if (!this._startupState)
             return;
 
-        Main.layoutManager.startInOverview =
-            this._startupState.startInOverview;
         Main.sessionMode.hasOverview = this._startupState.hasOverview;
         this._startupState = null;
     }
