@@ -277,10 +277,12 @@ export class WindowsStartMenu {
             return this._sourceActor;
 
         const [, sourceY] = this._sourceActor.get_transformed_position();
+        const [, sourceHeight] = this._sourceActor.get_transformed_size();
         this._centerAnchor.set_position(
             Math.round(monitor.x + monitor.width / 2),
             Math.round(sourceY)
         );
+        this._centerAnchor.set_size(1, Math.max(1, Math.round(sourceHeight)));
         return this._centerAnchor;
     }
 
