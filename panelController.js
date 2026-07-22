@@ -69,6 +69,7 @@ export class PanelController {
         this._dateMenuIndicatorPadConstraints = [];
         this._layoutRepairId = 0;
         this._transparencyRepairId = 0;
+        this._taskbarWidthUpdateId = 0;
         this._applyingLayout = false;
         this._applyingTransparency = false;
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
@@ -264,6 +265,10 @@ export class PanelController {
             GLib.Source.remove(this._transparencyRepairId);
             this._transparencyRepairId = 0;
         }
+        if (this._taskbarWidthUpdateId) {
+            GLib.Source.remove(this._taskbarWidthUpdateId);
+            this._taskbarWidthUpdateId = 0;
+        }
         for (const [object, id] of this._signals) {
             if (id)
                 object.disconnect(id);
@@ -400,18 +405,18 @@ export class PanelController {
             this.position();
         });
         this._connect(Main.panel._centerBox, 'notify::width', () => {
-            this.updateTaskbarWidth();
+            this._queueTaskbarWidthUpdate();
         });
         for (const signal of ['child-added', 'child-removed']) {
             this._connect(this._taskbarActor, signal, () => {
-                this.updateTaskbarWidth();
+                this._queueTaskbarWidthUpdate();
             });
         }
         this._connect(this._settings, 'changed::hide-app-labels', () => {
-            this.updateTaskbarWidth();
+            this._queueTaskbarWidthUpdate();
         });
         this._connect(this._startButton, 'notify::visible', () => {
-            this.updateTaskbarWidth();
+            this._queueTaskbarWidthUpdate();
         });
         this._connect(Main.panel, 'notify::style-class', () => {
             this._applyTransparency();
@@ -523,6 +528,7 @@ export class PanelController {
         if (this._applyingLayout)
             return;
 
+        this._queueTaskbarWidthUpdate();
         const managedActors = [
             this._startButton,
             this._taskbarBin,
@@ -550,6 +556,21 @@ export class PanelController {
                 this._applyTheme();
                 this.position();
                 this._menuPositioner?.refresh();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _queueTaskbarWidthUpdate() {
+        if (!this._settings || this._taskbarWidthUpdateId)
+            return;
+
+        this._taskbarWidthUpdateId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._taskbarWidthUpdateId = 0;
+                if (this._settings)
+                    this.updateTaskbarWidth();
                 return GLib.SOURCE_REMOVE;
             }
         );
