@@ -783,6 +783,23 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updateSuperTabRow();
 
+        const superEFileManagerRow = new Adw.SwitchRow({
+            title: _('Super+E Opens File Manager'),
+            subtitle: _(
+                'Open your home folder with the system’s default file manager'
+            ),
+            active: window._settings.get_boolean(
+                'super-e-file-manager-enabled'
+            ),
+        });
+        startMenuGroup.add(superEFileManagerRow);
+        window._settings.bind(
+            'super-e-file-manager-enabled',
+            superEFileManagerRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const customShortcutLabel = new Gtk.ShortcutLabel({
             disabled_text: _('Not set'),
             valign: Gtk.Align.CENTER,

@@ -176,6 +176,8 @@ The Eleven-style Start Menu is enabled by default and includes:
 - Optional true monitor centering.
 - Super opens the Start Menu by default and moves Overview to Super+Tab. The
   shortcut can instead use Super+Tab, a custom binding or be disabled.
+- Super+E opens the home folder with the system’s default file manager by
+  default and can be disabled.
 
 The bottom hot edge is enabled by default, providing another quick way to use
 Overview after its Super shortcut has moved. Its ripple animation is optional

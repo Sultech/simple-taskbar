@@ -11,6 +11,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 const SUPER_KEY_SETTING = 'start-menu-super-key';
 const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';
 const CUSTOM_KEYBINDING = 'start-menu-custom-hotkey';
+const FILE_MANAGER_SETTING = 'super-e-file-manager-enabled';
+const FILE_MANAGER_KEYBINDING = 'super-e-file-manager-hotkey';
 const SWITCH_APPLICATIONS_KEY = 'switch-applications';
 const DISPLACED_BINDINGS_KEY =
     'start-menu-displaced-switch-applications';
@@ -23,10 +25,11 @@ const DEFAULT_OVERLAY_ACTION_MODES = Shell.ActionMode.NORMAL |
     Shell.ActionMode.OVERVIEW;
 
 export class StartMenuKeybindings {
-    constructor(settings, toggleMenu, toggleOverview) {
+    constructor(settings, toggleMenu, toggleOverview, openFileManager) {
         this._settings = settings;
         this._toggleMenu = toggleMenu;
         this._toggleOverview = toggleOverview;
+        this._openFileManager = openFileManager;
         this._wmKeybindings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.wm.keybindings',
         });
@@ -38,6 +41,7 @@ export class StartMenuKeybindings {
         );
         this._superTabMode = null;
         this._customEnabled = false;
+        this._fileManagerEnabled = false;
         this._overlayEnabled = false;
         this._overlayHandlerId = 0;
         this._defaultOverlayHandlerId = 0;
@@ -45,8 +49,9 @@ export class StartMenuKeybindings {
     }
 
     sync() {
+        this._syncFileManager();
         if (!this._startMenuAvailable()) {
-            this.disable();
+            this._disableStartMenuBindings();
             return;
         }
 
@@ -81,6 +86,11 @@ export class StartMenuKeybindings {
     }
 
     disable() {
+        this._disableStartMenuBindings();
+        this._disableFileManager();
+    }
+
+    _disableStartMenuBindings() {
         this._disableSuperTab();
         this._disableOverlayKey();
         this._disableCustom();
@@ -94,11 +104,44 @@ export class StartMenuKeybindings {
         this._settings = null;
         this._toggleMenu = null;
         this._toggleOverview = null;
+        this._openFileManager = null;
     }
 
     _startMenuAvailable() {
         return this._settings.get_boolean('windows-start-menu-enabled') &&
             !this._settings.get_boolean('default-gnome-panel');
+    }
+
+    _syncFileManager() {
+        if (!this._settings.get_boolean(FILE_MANAGER_SETTING)) {
+            this._disableFileManager();
+            return;
+        }
+
+        if (this._fileManagerEnabled)
+            return;
+
+        const action = Main.wm.addKeybinding(
+            FILE_MANAGER_KEYBINDING,
+            this._settings,
+            Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+            ACTION_MODES,
+            () => this._openFileManager()
+        );
+        this._fileManagerEnabled = action !== Meta.KeyBindingAction.NONE;
+        if (!this._fileManagerEnabled) {
+            this._reportFailure(
+                'Super+E file manager shortcut could not be registered'
+            );
+        }
+    }
+
+    _disableFileManager() {
+        if (!this._fileManagerEnabled)
+            return;
+
+        Main.wm.removeKeybinding(FILE_MANAGER_KEYBINDING);
+        this._fileManagerEnabled = false;
     }
 
     _enableSuperTab(mode) {

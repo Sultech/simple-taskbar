@@ -3,6 +3,7 @@
 
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import St from 'gi://St';
 
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
@@ -79,7 +80,8 @@ export class StartButtonController {
             ? new StartMenuKeybindings(
                 settings,
                 () => this._toggleApplicationsFromShortcut(),
-                () => this._toggleOverviewFromShortcut()
+                () => this._toggleOverviewFromShortcut(),
+                () => this._openFileManager()
             )
             : null;
         this.applyAppearance(iconSize, settings.get_int('start-button-padding'));
@@ -261,6 +263,11 @@ export class StartButtonController {
         this._connect(this._settings, 'changed::start-menu-custom-hotkey', () => {
             this._keybindings?.customAcceleratorChanged();
         });
+        this._connect(
+            this._settings,
+            'changed::super-e-file-manager-enabled',
+            () => this._keybindings?.sync()
+        );
         this._connect(this._settings, 'changed::start-menu-theme', () => {
             this._windowsStartMenu?.syncTheme();
         });
@@ -326,6 +333,21 @@ export class StartButtonController {
         this._previews.hideTooltip(false);
         this._previews.hide();
         Main.overview.toggle();
+    }
+
+    _openFileManager() {
+        const app = Gio.app_info_get_default_for_type(
+            'inode/directory',
+            false
+        );
+        if (!app)
+            return;
+
+        this.closeMenus();
+        this._previews.hideTooltip(false);
+        this._previews.hide();
+        const home = Gio.File.new_for_path(GLib.get_home_dir());
+        app.launch([home], global.create_app_launch_context(0, -1));
     }
 
     _syncState() {

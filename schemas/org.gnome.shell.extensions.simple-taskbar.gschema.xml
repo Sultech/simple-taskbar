@@ -210,6 +210,14 @@
       <default>[]</default>
       <summary>Custom shortcut for the Eleven-style Start Menu</summary>
     </key>
+    <key name="super-e-file-manager-enabled" type="b">
+      <default>true</default>
+      <summary>Open the default file manager with Super+E</summary>
+    </key>
+    <key name="super-e-file-manager-hotkey" type="as">
+      <default>['&lt;Super&gt;e']</default>
+      <summary>Internal Super+E shortcut for the default file manager</summary>
+    </key>
     <key name="start-menu-pinned-apps" type="as">
       <default>[]</default>
       <summary>Applications pinned to the Eleven-style Start Menu</summary>
