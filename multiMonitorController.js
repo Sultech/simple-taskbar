@@ -316,7 +316,6 @@ class SecondaryTaskbarPanel {
         this._autoHideController = null;
         this._menuManager = null;
         this._indicators = new Map();
-        this._taskbarWidthUpdateId = 0;
     }
 
     enable() {
@@ -370,10 +369,6 @@ class SecondaryTaskbarPanel {
     }
 
     destroy() {
-        if (this._taskbarWidthUpdateId) {
-            GLib.Source.remove(this._taskbarWidthUpdateId);
-            this._taskbarWidthUpdateId = 0;
-        }
         this._autoHideController?.destroy();
         this._autoHideController = null;
         this._interactionController?.destroy();
@@ -485,7 +480,7 @@ class SecondaryTaskbarPanel {
         });
         for (const signal of ['child-added', 'child-removed']) {
             this._connect(this._taskbarController.actor, signal, () => {
-                this._queueTaskbarWidthUpdate();
+                this._updateTaskbarWidth();
             });
         }
         this._connect(this._settings, 'changed::hide-app-labels', () => {
@@ -618,21 +613,6 @@ class SecondaryTaskbarPanel {
         });
         if (availableWidth !== undefined)
             this._taskbarController.setAvailableWidth(availableWidth);
-    }
-
-    _queueTaskbarWidthUpdate() {
-        if (!this._settings || this._taskbarWidthUpdateId)
-            return;
-
-        this._taskbarWidthUpdateId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
-            () => {
-                this._taskbarWidthUpdateId = 0;
-                if (this._settings)
-                    this._updateTaskbarWidth();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
     }
 
     _syncTheme() {
