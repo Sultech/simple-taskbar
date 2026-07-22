@@ -172,7 +172,10 @@ export class TaskbarController {
         });
         this._connect(global.window_manager, 'switch-workspace', () => {
             this._connectActiveWorkspaceSignals();
-            this._refreshWorkspaceIsolation();
+            this._refreshWorkspaceIsolation(
+                false,
+                this._settings.get_boolean('isolate-workspaces')
+            );
         });
         for (const signal of ['window-entered-monitor', 'window-left-monitor']) {
             this._connect(global.display, signal, () => {
@@ -193,10 +196,10 @@ export class TaskbarController {
             () => this._syncApplicationVisibility()
         );
         this._connect(this._settings, 'changed::isolate-workspaces', () => {
-            this._refreshWorkspaceIsolation(true);
+            this._refreshWorkspaceIsolation(true, true);
         });
         this._connect(this._settings, 'changed::isolate-monitors', () => {
-            this._refreshWorkspaceIsolation(true);
+            this._refreshWorkspaceIsolation(true, true);
         });
         this._connect(this._settings, 'changed::multi-monitor-panels', () => {
             this._refreshWorkspaceIsolation(true);
@@ -639,7 +642,7 @@ export class TaskbarController {
         this._activeWorkspace = null;
     }
 
-    _refreshWorkspaceIsolation(force = false) {
+    _refreshWorkspaceIsolation(force = false, suppressAnimations = false) {
         if (!force &&
             !this._settings.get_boolean('isolate-workspaces') &&
             !this._settings.get_boolean('isolate-monitors')) {
@@ -648,6 +651,8 @@ export class TaskbarController {
 
         this._windowPreviews?.hideTooltip(false);
         this._windowPreviews?.hide();
+        if (suppressAnimations)
+            this._shownInitially = false;
         this._queueRedisplay();
     }
 
