@@ -47,7 +47,7 @@ gnome-extensions pack \
     --extra-source=windowController.js \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
-    --extra-source=eleven-start-symbolic.svg \
+    --extra-source=gnome-start-symbolic.svg \
     --podir=po \
     --out-dir "$OUT_DIR" \
     "$SOURCE_DIR"

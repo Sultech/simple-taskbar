@@ -36,7 +36,7 @@ export class StartButtonController {
         this._menuManager = null;
 
         this._windowsGIcon = new Gio.FileIcon({
-            file: extensionDir.get_child('eleven-start-symbolic.svg'),
+            file: extensionDir.get_child('gnome-start-symbolic.svg'),
         });
         this._gnomeGIcon = new Gio.ThemedIcon({
             name: 'view-app-grid-symbolic',
