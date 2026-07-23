@@ -218,6 +218,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_int('panel-height', 32);
                 settings.set_string('panel-position', 'top');
                 settings.set_boolean('activities-button-visible', true);
+                settings.set_string('activities-button-position', 'left');
                 settings.set_string('clock-position', 'center');
                 settings.set_string('system-menu-position', 'right');
                 settings.set_boolean('multi-monitor-panels', true);
@@ -234,6 +235,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_string('clock-position', 'right');
                 settings.set_string('system-menu-position', 'right');
                 settings.set_boolean('activities-button-visible', true);
+                settings.set_string('activities-button-position', 'left');
                 settings.set_boolean('multi-monitor-panels', true);
                 settings.set_boolean('windows-start-menu-enabled', true);
                 settings.set_boolean('gnome-start-button-visible', true);
@@ -874,6 +876,61 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+
+        const activitiesPositionRow = this._addComboRow(
+            panelGroup,
+            window._settings,
+            {
+                key: 'activities-button-position',
+                title: _('Activities Button Position'),
+                choices: panelPositions.filter(
+                    position => position.value !== 'center'
+                ),
+            }
+        );
+        activitiesPositionRow.sensitive = activitiesButtonSwitch.active;
+        activitiesButtonSwitch.connect('notify::active', widget => {
+            activitiesPositionRow.sensitive = widget.active;
+        });
+
+        const activitiesRightPlacementRow = this._addComboRow(
+            panelGroup,
+            window._settings,
+            {
+                key: 'activities-button-right-placement',
+                title: _('Activities Right Placement'),
+                choices: [
+                    {
+                        value: 'before-system',
+                        label: _('Before System Menu'),
+                    },
+                    {
+                        value: 'after-system',
+                        label: _('After System Menu'),
+                    },
+                    {
+                        value: 'after-clock',
+                        label: _('After Clock'),
+                    },
+                ],
+            }
+        );
+        const updateActivitiesRightPlacementRow = () => {
+            activitiesRightPlacementRow.sensitive =
+                activitiesButtonSwitch.active &&
+                window._settings.get_string(
+                    'activities-button-position'
+                ) === 'right';
+        };
+        activitiesButtonSwitch.connect(
+            'notify::active',
+            updateActivitiesRightPlacementRow
+        );
+        window._settings.connect(
+            'changed::activities-button-position',
+            updateActivitiesRightPlacementRow
+        );
+        updateActivitiesRightPlacementRow();
 
         this._addComboRow(panelGroup, window._settings, {
             key: 'clock-position',

@@ -87,6 +87,23 @@
       <default>true</default>
       <summary>Show the Activities button on the taskbar</summary>
     </key>
+    <key name="activities-button-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="right"/>
+      </choices>
+      <default>'left'</default>
+      <summary>Place the Activities button on the left or right</summary>
+    </key>
+    <key name="activities-button-right-placement" type="s">
+      <choices>
+        <choice value="before-system"/>
+        <choice value="after-system"/>
+        <choice value="after-clock"/>
+      </choices>
+      <default>'after-system'</default>
+      <summary>Choose where the Activities button appears on the right</summary>
+    </key>
     <key name="folder-menu-enabled" type="b">
       <default>false</default>
       <summary>Show a selected folder menu on the taskbar</summary>

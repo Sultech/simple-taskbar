@@ -117,7 +117,8 @@ The settings provide control over:
 - Left or centered Start button placement, adjustable padding and a custom
   icon. By default, the Start button follows the application alignment and
   appears immediately before centered applications.
-- Show or hide the Activities button independently.
+- Show or hide the Activities button, place it on the left or right, and choose
+  its position within the right-side system cluster.
 - Left, center or right placement for the clock and Quick Settings.
 - Light, dark or Shell-following themes.
 - Adjustable transparency and Blur My Shell integration on the primary panel.

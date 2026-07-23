@@ -12,7 +12,10 @@ import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension
 
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
-import {panelIsTop} from './panelPosition.js';
+import {
+    orderActivitiesInRightPanel,
+    panelIsTop,
+} from './panelPosition.js';
 import {constrainTaskbarWidth} from './taskbarLayout.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 
@@ -148,6 +151,9 @@ export class PanelController {
         const leftBox = Main.panel._leftBox;
         const centerBox = Main.panel._centerBox;
         const rightBox = Main.panel._rightBox;
+        const activities = Main.panel.statusArea.activities?.container;
+        const quickSettings =
+            Main.panel.statusArea.quickSettings?.container;
         const actors = [
             this._startButton,
             this._taskbarBin,
@@ -168,23 +174,54 @@ export class PanelController {
             else
                 centerBox.add_child(this._startButton);
         }
+        if (activities && this._settings.get_string(
+            'activities-button-position'
+        ) === 'left') {
+            const startIndex = leftBox.get_children().indexOf(
+                this._startButton
+            );
+            leftBox.insert_child_at_index(
+                activities,
+                startIndex >= 0 ? startIndex + 1 : 0
+            );
+        }
         taskbarBox.add_child(this._taskbarBin);
 
+        const rightItems = [];
         for (const item of this._panelItemState) {
+            if (item.actor === activities)
+                continue;
+
             const position = this._settings.get_string(item.key);
             const target = position === 'left'
                 ? leftBox
                 : position === 'center'
                     ? centerBox
                     : rightBox;
-            let index = target.get_n_children();
-            if (target === rightBox &&
-                this._showDesktopButton.get_parent() === rightBox) {
-                index = rightBox.get_children().indexOf(
-                    this._showDesktopButton
-                );
-            }
-            target.insert_child_at_index(item.actor, index);
+            if (target === rightBox)
+                rightItems.push(item.actor);
+            else
+                target.add_child(item.actor);
+        }
+
+        const orderedRightItems = orderActivitiesInRightPanel(
+            rightItems,
+            this._settings.get_string('activities-button-position') ===
+                'right' ? activities : null,
+            quickSettings,
+            Main.panel.statusArea.dateMenu?.container,
+            this._settings.get_string('activities-button-right-placement')
+        );
+        for (const actor of orderedRightItems) {
+            const showDesktopIndex = rightBox.get_children().indexOf(
+                this._showDesktopButton
+            );
+            rightBox.insert_child_at_index(
+                actor,
+                showDesktopIndex >= 0
+                    ? showDesktopIndex
+                    : rightBox.get_n_children()
+            );
         }
         if (this._settings.get_boolean('folder-menu-enabled')) {
             const rightChildren = rightBox.get_children();
@@ -505,6 +542,14 @@ export class PanelController {
             this._syncActivitiesVisibility();
             this.updateTaskbarWidth();
         });
+        this._connect(this._settings, 'changed::activities-button-position', () => {
+            this.applyLayout();
+        });
+        this._connect(
+            this._settings,
+            'changed::activities-button-right-placement',
+            () => this.applyLayout()
+        );
         this._connect(this._settings, 'changed::start-button-padding', () => {
             this.updateTaskbarWidth();
         });
@@ -656,6 +701,7 @@ export class PanelController {
         this._activitiesWasVisible = activities?.visible ?? false;
 
         for (const [key, indicator] of [
+            ['activities-button-position', Main.panel.statusArea.activities],
             ['system-menu-position', Main.panel.statusArea.quickSettings],
             ['clock-position', Main.panel.statusArea.dateMenu],
         ]) {

@@ -12,7 +12,11 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {FolderMenuController} from './folderMenuController.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
-import {panelArrowSide, panelIsTop} from './panelPosition.js';
+import {
+    orderActivitiesInRightPanel,
+    panelArrowSide,
+    panelIsTop,
+} from './panelPosition.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
 import {constrainTaskbarWidth} from './taskbarLayout.js';
@@ -462,6 +466,14 @@ class SecondaryTaskbarPanel {
             this._syncActivitiesVisibility();
             this._updateTaskbarWidth();
         });
+        this._connect(this._settings, 'changed::activities-button-position', () => {
+            this._applyLayout();
+        });
+        this._connect(
+            this._settings,
+            'changed::activities-button-right-placement',
+            () => this._applyLayout()
+        );
         this._connect(this._settings, 'changed::clock-position', () => {
             this._applyLayout();
         });
@@ -533,11 +545,15 @@ class SecondaryTaskbarPanel {
             : this._leftBox;
         if (this._startButtonShouldBeVisible())
             startBox.add_child(startButton);
-        if (activities)
+        if (activities && this._settings.get_string(
+            'activities-button-position'
+        ) === 'left') {
             this._leftBox.add_child(activities);
+        }
         taskbarBox.add_child(this._taskbarBin);
         if (this._settings.get_boolean('folder-menu-enabled'))
             this._rightBox.add_child(folderMenuButton);
+        const rightItems = [];
         for (const [actor, settingKey] of [
             [quickSettings, 'system-menu-position'],
             [dateMenu, 'clock-position'],
@@ -550,8 +566,21 @@ class SecondaryTaskbarPanel {
                 : position === 'center'
                     ? this._centerBox
                     : this._rightBox;
-            target.add_child(actor);
+            if (target === this._rightBox)
+                rightItems.push(actor);
+            else
+                target.add_child(actor);
         }
+        const orderedRightItems = orderActivitiesInRightPanel(
+            rightItems,
+            this._settings.get_string('activities-button-position') ===
+                'right' ? activities : null,
+            quickSettings,
+            dateMenu,
+            this._settings.get_string('activities-button-right-placement')
+        );
+        for (const actor of orderedRightItems)
+            this._rightBox.add_child(actor);
         this._syncActivitiesVisibility();
         this._applyAppearance();
         this._updateTaskbarWidth();
