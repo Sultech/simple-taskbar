@@ -57,6 +57,7 @@ export class OverviewIntegration {
                     return;
 
                 this._syncStartupOverview();
+                this._syncDashVisibility();
                 if (this._desktopDockIsEnabled())
                     this._cancelStartupOverview();
             }
@@ -127,10 +128,6 @@ export class OverviewIntegration {
     }
 
     destroy() {
-        const restoreVisible = Boolean(
-            this._settings &&
-            !this._settings.get_boolean('default-gnome-panel')
-        );
         this._cancelStartupOverview();
         this._cancelDashVisibilityRepair();
         // If the extension is disabled while the spread is visible, rebuild
@@ -146,7 +143,7 @@ export class OverviewIntegration {
         }
         this._signals = [];
         this._restoreStartupOverview();
-        this._restoreDash(restoreVisible);
+        this._restoreDash();
         this.queueRelayout();
         this._tracker = null;
         this._settings = null;
@@ -284,7 +281,6 @@ export class OverviewIntegration {
 
         this._dashState = {
             dash,
-            visible: dash.visible,
         };
         dash.hide();
 
@@ -437,12 +433,8 @@ export class OverviewIntegration {
         }
     }
 
-    _restoreDash(forceVisible = false) {
-        if (!this._dashState && !forceVisible)
-            return;
-
+    _restoreDash() {
         const hiddenDash = this._dashState?.dash ?? Main.overview.dash;
-        const visible = forceVisible || this._dashState?.visible;
         const dash = Main.overview._overview?._controls?.dash ?? hiddenDash;
         if (!dash) {
             this._dashState = null;
@@ -454,12 +446,10 @@ export class OverviewIntegration {
         // natural height, represented by -1.
         hiddenDash?.set_height(-1);
         dash.set_height(-1);
-        if (visible) {
+        if (!this._desktopDockIsEnabled()) {
             dash.show();
+            dash._redisplay();
             dash.queue_relayout();
-            dash._queueRedisplay();
-        } else {
-            dash.hide();
         }
         this._dashState = null;
     }
