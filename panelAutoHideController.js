@@ -31,6 +31,7 @@ export class PanelAutoHideController {
         this._signals = [];
         this._hideTimeoutId = 0;
         this._hidden = false;
+        this._overviewSuspended = false;
     }
 
     enable() {
@@ -64,7 +65,14 @@ export class PanelAutoHideController {
             'changed::panel-autohide-enabled',
             () => this._syncEnabled()
         );
+        this._connect(Main.overview, 'showing', () => {
+            this._suspendForOverview();
+        });
+        this._connect(Main.overview, 'hidden', () => {
+            this._resumeAfterOverview();
+        });
 
+        this._overviewSuspended = Main.overview.visibleTarget;
         this.syncPosition();
         this._syncEnabled();
     }
@@ -78,6 +86,7 @@ export class PanelAutoHideController {
         this._signals = [];
 
         this._hidden = false;
+        this._overviewSuspended = false;
         this._positionActor?.remove_transition('y');
         this.syncPosition();
 
@@ -96,7 +105,8 @@ export class PanelAutoHideController {
             return;
 
         actor.remove_transition('y');
-        actor.y = this._hidden && this._enabled()
+        actor.y = this._hidden && this._enabled() &&
+            !this._overviewSuspended
             ? this._hiddenY(monitor)
             : this._visibleY(monitor);
         Main.layoutManager._queueUpdateRegions();
@@ -123,6 +133,11 @@ export class PanelAutoHideController {
     }
 
     _syncEnabled() {
+        if (this._overviewSuspended) {
+            this.show(false);
+            return;
+        }
+
         if (!this._enabled()) {
             this.show();
             return;
@@ -135,16 +150,20 @@ export class PanelAutoHideController {
     }
 
     _scheduleHide(delay = HIDE_DELAY) {
-        if (!this._enabled() || this._hidden || this._hideTimeoutId)
+        if (!this._enabled() || this._overviewSuspended ||
+            this._hidden || this._hideTimeoutId) {
             return;
+        }
 
         this._hideTimeoutId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
             delay,
             () => {
                 this._hideTimeoutId = 0;
-                if (!this._enabled() || this._pointerIsInsidePanel())
+                if (!this._enabled() || this._overviewSuspended ||
+                    this._pointerIsInsidePanel()) {
                     return GLib.SOURCE_REMOVE;
+                }
                 if (this._isBlocked()) {
                     this._scheduleHide(BLOCKED_RECHECK_DELAY);
                     return GLib.SOURCE_REMOVE;
@@ -161,6 +180,30 @@ export class PanelAutoHideController {
         if (this._hideTimeoutId)
             GLib.Source.remove(this._hideTimeoutId);
         this._hideTimeoutId = 0;
+    }
+
+    _suspendForOverview() {
+        this._overviewSuspended = true;
+        this._clearHideTimeout();
+        if (!this._enabled())
+            return;
+
+        this._hidden = false;
+        this._moveTo(this._visibleY(this._getMonitor()), false);
+    }
+
+    _resumeAfterOverview() {
+        if (!this._overviewSuspended)
+            return;
+
+        this._overviewSuspended = false;
+        if (!this._enabled())
+            return;
+
+        if (this._pointerIsInsidePanel())
+            this.show(false);
+        else
+            this._scheduleHide();
     }
 
     _isBlocked() {
