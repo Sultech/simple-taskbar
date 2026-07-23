@@ -455,6 +455,7 @@ export class OverviewIntegration {
         hiddenDash?.set_height(-1);
         dash.set_height(-1);
         if (visible) {
+            this._resetDashItems(dash);
             dash.show();
             dash.queue_relayout();
             dash._queueRedisplay();
@@ -462,5 +463,17 @@ export class OverviewIntegration {
             dash.hide();
         }
         this._dashState = null;
+    }
+
+    _resetDashItems(dash) {
+        for (const item of dash._box.get_children()) {
+            const child = item.child;
+            if (!child || !child._delegate || !child._delegate.app)
+                continue;
+
+            item.remove_all_transitions();
+            item.animatingOut = false;
+            item.show(false);
+        }
     }
 }
