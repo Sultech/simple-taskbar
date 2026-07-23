@@ -5,6 +5,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelIsTop} from './panelPosition.js';
 
@@ -12,6 +13,44 @@ const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
+
+const overviewControllers = new Set();
+const overviewInjectionManager = new InjectionManager();
+
+function registerOverviewController(controller) {
+    const installInjection = overviewControllers.size === 0;
+    overviewControllers.add(controller);
+    if (!installInjection)
+        return;
+
+    const prototype = Object.getPrototypeOf(Main.overview);
+    overviewInjectionManager.overrideMethod(
+        prototype,
+        'show',
+        originalMethod => function (...args) {
+            for (const activeController of overviewControllers)
+                activeController._suspendForOverview();
+
+            const result = originalMethod.apply(this, args);
+            if (!this._shown) {
+                for (const activeController of overviewControllers)
+                    activeController._resumeAfterOverview();
+            }
+            return result;
+        }
+    );
+}
+
+function unregisterOverviewController(controller) {
+    overviewControllers.delete(controller);
+    if (overviewControllers.size > 0)
+        return;
+
+    overviewInjectionManager.restoreMethod(
+        Object.getPrototypeOf(Main.overview),
+        'show'
+    );
+}
 
 export class PanelAutoHideController {
     constructor({
@@ -73,6 +112,7 @@ export class PanelAutoHideController {
         });
 
         this._overviewSuspended = Main.overview.visibleTarget;
+        registerOverviewController(this);
         this.syncPosition();
         this._syncEnabled();
     }
@@ -85,6 +125,7 @@ export class PanelAutoHideController {
         }
         this._signals = [];
 
+        unregisterOverviewController(this);
         this._hidden = false;
         this._overviewSuspended = false;
         this._positionActor?.remove_transition('y');

@@ -315,8 +315,20 @@ export class OverviewIntegration {
             originalAllocate => box => {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
-                if (!panelIsTop(this._settings))
+                if (panelIsTop(this._settings)) {
+                    if (this._settings.get_boolean(
+                        'panel-autohide-enabled'
+                    )) {
+                        const workAreaBox =
+                            controls.layout_manager._workAreaBox;
+                        workAreaBox.y1 = Math.max(
+                            workAreaBox.y1,
+                            this._panelHeight
+                        );
+                    }
+                } else {
                     box.y2 -= this._panelHeight;
+                }
                 originalAllocate.call(controls, box);
             }
         );
