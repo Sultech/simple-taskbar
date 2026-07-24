@@ -1400,13 +1400,14 @@ export class TaskbarController {
 
         const visual = item._taskbarVisual;
         const alignmentActor = this._alignmentActor ?? this.actor;
-        const offset = this._membershipAnimationOffset(item);
+        const {alignmentOffset} =
+            this._membershipAnimationGeometry(item);
         visual.remove_all_transitions();
         visual.opacity = 0;
         visual.scale_x = 0;
         visual.scale_y = 0;
         alignmentActor.remove_transition('translation-x');
-        alignmentActor.translation_x = offset;
+        alignmentActor.translation_x = alignmentOffset;
         alignmentActor.ease({
             translation_x: 0,
             duration: ITEM_ANIMATION_TIME,
@@ -1460,8 +1461,8 @@ export class TaskbarController {
 
         const visual = item._taskbarVisual;
         const alignmentActor = this._alignmentActor ?? this.actor;
-        const offset = this._membershipAnimationOffset(item);
-        const slotWidth = offset * 2;
+        const {alignmentOffset, slotWidth} =
+            this._membershipAnimationGeometry(item);
         const children = this.actor.get_children();
         const itemIndex = children.indexOf(item);
         const followingVisuals = children.slice(itemIndex + 1)
@@ -1486,7 +1487,7 @@ export class TaskbarController {
             });
         }
         alignmentActor.ease({
-            translation_x: offset,
+            translation_x: alignmentOffset,
             duration: ITEM_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         });
@@ -1507,12 +1508,46 @@ export class TaskbarController {
         });
     }
 
-    _membershipAnimationOffset(item) {
+    _membershipAnimationGeometry(item) {
         const [, itemWidth] = item.get_preferred_width(this._panelHeight);
         const spacing = this.actor.get_n_children() > 1
             ? Math.max(this._settings.get_int('icon-spacing'), 0)
             : 0;
-        return (itemWidth + spacing) / 2;
+        const slotWidth = itemWidth + spacing;
+        let alignmentOffset = slotWidth / 2;
+        const alignmentActor = this._alignmentActor;
+        if (!alignmentActor || !alignmentActor.has_allocation())
+            return {alignmentOffset, slotWidth};
+
+        const panel = alignmentActor.get_parent();
+        if (!panel || !panel.has_allocation())
+            return {alignmentOffset, slotWidth};
+
+        let centerOffset = 0;
+        if (panel === Main.panel) {
+            const monitor =
+                Main.layoutManager.findMonitorForActor(panel);
+            if (monitor) {
+                const workArea =
+                    Main.layoutManager.getWorkAreaForMonitor(
+                        monitor.index
+                    );
+                centerOffset = 2 * (workArea.x - monitor.x) +
+                    workArea.width - monitor.width;
+            }
+        }
+
+        const idealX =
+            (panel.width - alignmentActor.width + centerOffset) / 2;
+        const rightClampDistance = Math.max(
+            0,
+            idealX - alignmentActor.x
+        );
+        alignmentOffset = Math.min(
+            slotWidth,
+            alignmentOffset + rightClampDistance
+        );
+        return {alignmentOffset, slotWidth};
     }
 
     _animatePinnedLaunch(item) {
