@@ -303,7 +303,6 @@
 
 .simple-taskbar-running-indicator {
     height: 3px;
-    min-width: 7px;
     margin-bottom: 4px;
     spacing: 2px;
     background-color: transparent;
@@ -311,21 +310,12 @@
 
 .simple-taskbar-running-indicator-segment {
     height: 3px;
-    min-width: 7px;
     border-radius: 3px;
     background-color: transparent;
 }
 
 .simple-taskbar-app-item.running .simple-taskbar-running-indicator-segment {
     background-color: #8d8d8d;
-}
-
-.simple-taskbar-app-item.multiple-windows .simple-taskbar-running-indicator {
-    min-width: 17px;
-}
-
-.simple-taskbar-app-item.running.focused .simple-taskbar-running-indicator {
-    min-width: 21px;
 }
 
 .simple-taskbar-app-item.running.focused .simple-taskbar-running-indicator-segment {

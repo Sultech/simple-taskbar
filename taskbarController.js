@@ -451,6 +451,9 @@ export class TaskbarController {
                 `${!window && windowCount > 1 ? ' multiple-windows' : ''}` +
                 `${focused ? ' focused' : ''}`
             );
+            item._taskbarFocused = focused;
+            item._taskbarMultipleWindows = !window && windowCount > 1;
+            this._updateIndicatorGeometry(item);
             button.accessible_name = window
                 ? `${window.get_title() || app.get_name()}, ${_('running')}`
                 : running
@@ -1199,7 +1202,11 @@ export class TaskbarController {
         item._taskbarVisual = visual;
         item._taskbarGlassHost = glassHost;
         item._taskbarGlass = glass;
+        item._taskbarIndicator = indicator;
         item._taskbarIndicatorSecondary = indicatorSecondary;
+        item._taskbarFocused = false;
+        item._taskbarMultipleWindows = false;
+        this._updateIndicatorGeometry(item, glassWidth);
         if (window) {
             window.connectObject(
                 'notify::title',
@@ -1444,6 +1451,22 @@ export class TaskbarController {
         item._taskbarGlass.set_position(0, 4);
         item._taskbarGlass.set_size(glassWidth, glassHeight);
         item._taskbarLabel.set_width(this._appLabelWidth);
+        this._updateIndicatorGeometry(item, glassWidth);
+    }
+
+    _updateIndicatorGeometry(
+        item,
+        glassWidth = this._buttonWidth(item._taskbarWindow)
+    ) {
+        const evenWidth = glassWidth % 2 === 0;
+        let indicatorWidth = evenWidth ? 8 : 7;
+
+        if (item._taskbarFocused)
+            indicatorWidth = evenWidth ? 20 : 21;
+        else if (item._taskbarMultipleWindows)
+            indicatorWidth = evenWidth ? 18 : 17;
+
+        item._taskbarIndicator.set_width(indicatorWidth);
     }
 
     _buttonWidth(
@@ -1451,7 +1474,9 @@ export class TaskbarController {
         showLabels = this._showAppLabels(),
         labelWidth = this._appLabelWidth
     ) {
-        const iconWidth = Math.max(this._iconSize, 21) + 8;
+        const minimumIconWidth = this._iconSize % 2 === 0 ? 22 : 21;
+        const iconWidth =
+            Math.max(this._iconSize, minimumIconWidth) + 8;
         return window && showLabels
             ? iconWidth + APP_LABEL_SPACING + labelWidth
             : iconWidth;
