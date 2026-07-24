@@ -241,8 +241,10 @@ export class WindowsStartMenu {
         this._menu.sourceActor = this._getPositionSource();
         this._menu.open(BoxPointer.PopupAnimation.FULL);
         this._menu.sourceActor = originalSource;
-        if (this.isOpen)
+        if (this.isOpen) {
             this._searchEntry.grab_key_focus();
+            this._searchEntry.clutter_text.set_cursor_visible(false);
+        }
     }
 
     close(animation = BoxPointer.PopupAnimation.FULL) {
@@ -412,16 +414,26 @@ export class WindowsStartMenu {
         });
         this._searchEntry.connect('button-press-event', () => {
             this._searchEntry.remove_style_class_name(PASSIVE_SEARCH_CLASS);
+            this._searchEntry.clutter_text.set_cursor_visible(true);
             return Clutter.EVENT_PROPAGATE;
         });
         this._searchEntry.clutter_text.connect('text-changed', () => {
-            const query = this._searchEntry.get_text().trim();
+            const text = this._searchEntry.get_text();
+            const query = text.trim();
             this._searchEntry.set_secondary_icon(
                 query ? this._searchClearIcon : null
             );
             if (this._ignoreSearchChanged)
                 return;
-            this._searchEntry.remove_style_class_name(PASSIVE_SEARCH_CLASS);
+            if (text) {
+                this._searchEntry.remove_style_class_name(
+                    PASSIVE_SEARCH_CLASS
+                );
+                this._searchEntry.clutter_text.set_cursor_visible(true);
+            } else {
+                this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
+                this._searchEntry.clutter_text.set_cursor_visible(false);
+            }
             if (query)
                 this._showSearchResults(query);
             else if (this._view === 'all')
