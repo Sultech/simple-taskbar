@@ -481,9 +481,11 @@ export class WindowsStartMenu {
             this._searchEntry.set_text('');
             this._searchEntry.grab_key_focus();
         });
-        this._searchEntry.connect('button-press-event', () => {
-            this._searchEntry.remove_style_class_name(PASSIVE_SEARCH_CLASS);
-            this._searchEntry.clutter_text.set_cursor_visible(true);
+        this._searchEntry.connect('captured-event', (_actor, event) => {
+            if (event.type() === Clutter.EventType.BUTTON_PRESS ||
+                event.type() === Clutter.EventType.TOUCH_BEGIN) {
+                this._setSearchFocusVisible(true);
+            }
             return Clutter.EVENT_PROPAGATE;
         });
         this._searchEntry.clutter_text.connect('text-changed', () => {
@@ -494,15 +496,7 @@ export class WindowsStartMenu {
             );
             if (this._ignoreSearchChanged)
                 return;
-            if (text) {
-                this._searchEntry.remove_style_class_name(
-                    PASSIVE_SEARCH_CLASS
-                );
-                this._searchEntry.clutter_text.set_cursor_visible(true);
-            } else {
-                this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
-                this._searchEntry.clutter_text.set_cursor_visible(false);
-            }
+            this._setSearchFocusVisible(Boolean(text));
             if (query)
                 this._showSearchResults(query);
             else if (this._view === 'all')
@@ -554,6 +548,7 @@ export class WindowsStartMenu {
             () => {
                 this._view = 'pinned';
                 this._setSearchText('');
+                this._setSearchFocusVisible(false);
                 this._showPinnedApps();
             }
         );
@@ -1396,6 +1391,14 @@ export class WindowsStartMenu {
         this._ignoreSearchChanged = true;
         this._searchEntry.set_text(text);
         this._ignoreSearchChanged = false;
+    }
+
+    _setSearchFocusVisible(visible) {
+        if (visible)
+            this._searchEntry.remove_style_class_name(PASSIVE_SEARCH_CLASS);
+        else
+            this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
+        this._searchEntry.clutter_text.set_cursor_visible(visible);
     }
 
     _queuePrepare() {
