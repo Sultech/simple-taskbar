@@ -863,7 +863,7 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
-        this._addAppTooltip(button, app, label);
+        this._addAppTooltip(button, app, label, !compact);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
         this._syncShellButtonClasses(button);
@@ -1019,10 +1019,10 @@ export class WindowsStartMenu {
         return label;
     }
 
-    _addAppTooltip(button, app, label) {
+    _addAppTooltip(button, app, label, alignLeft = false) {
         button.connect('notify::hover', () => {
             if (button.hover)
-                this._queueAppTooltip(button, app, label);
+                this._queueAppTooltip(button, app, label, alignLeft);
             else if (this._appTooltipSource === button)
                 this._hideAppTooltip();
         });
@@ -1032,7 +1032,7 @@ export class WindowsStartMenu {
         });
     }
 
-    _queueAppTooltip(button, app, label) {
+    _queueAppTooltip(button, app, label, alignLeft) {
         this._hideAppTooltip(true);
         this._appTooltipSource = button;
         this._appTooltipTimeoutId = GLib.timeout_add_once(
@@ -1042,12 +1042,12 @@ export class WindowsStartMenu {
                 this._appTooltipTimeoutId = 0;
                 if (this._appTooltipSource !== button || !button.hover)
                     return;
-                this._showAppTooltip(button, app, label);
+                this._showAppTooltip(button, app, label, alignLeft);
             }
         );
     }
 
-    _showAppTooltip(button, app, label) {
+    _showAppTooltip(button, app, label, alignLeft) {
         const description = app.get_description()?.trim() ?? '';
         const ellipsized = label.clutter_text.get_layout().is_ellipsized();
         if (!ellipsized && !description) {
@@ -1080,8 +1080,12 @@ export class WindowsStartMenu {
         const gap = 6;
         const minX = monitor.x + gap;
         const maxX = monitor.x + monitor.width - tooltipWidth - gap;
+        const [labelX] = label.get_transformed_position();
+        const desiredX = alignLeft
+            ? labelX
+            : buttonX + Math.floor((buttonWidth - tooltipWidth) / 2);
         const x = Math.clamp(
-            buttonX + Math.floor((buttonWidth - tooltipWidth) / 2),
+            desiredX,
             minX,
             Math.max(minX, maxX)
         );
