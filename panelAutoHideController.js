@@ -32,6 +32,9 @@ export class PanelAutoHideController {
         this._hideTimeoutId = 0;
         this._hidden = false;
         this._overviewSuspended = false;
+        this._trackedActorData = null;
+        this._originalAffectsStruts = false;
+        this._unredirectDisabled = false;
     }
 
     enable() {
@@ -73,6 +76,8 @@ export class PanelAutoHideController {
         });
 
         this._overviewSuspended = Main.overview.visibleTarget;
+        this._captureStrutTracking();
+        this._syncStrutTracking();
         this.syncPosition();
         this._syncEnabled();
     }
@@ -89,6 +94,8 @@ export class PanelAutoHideController {
         this._overviewSuspended = false;
         this._positionActor?.remove_transition('y');
         this.syncPosition();
+        this._restoreStrutTracking();
+        this._restoreUnredirect();
 
         this._settings = null;
         this._panelActor = null;
@@ -96,6 +103,7 @@ export class PanelAutoHideController {
         this._getMonitor = null;
         this._getPanelHeight = null;
         this._isBlockedCallback = null;
+        this._trackedActorData = null;
     }
 
     syncPosition() {
@@ -133,13 +141,17 @@ export class PanelAutoHideController {
     }
 
     _syncEnabled() {
-        if (this._overviewSuspended) {
+        if (!this._enabled()) {
             this.show(false);
+            this._restoreStrutTracking();
+            this._restoreUnredirect();
             return;
         }
 
-        if (!this._enabled()) {
-            this.show();
+        this._disableUnredirect();
+        this._syncStrutTracking();
+        if (this._overviewSuspended) {
+            this.show(false);
             return;
         }
 
@@ -147,6 +159,52 @@ export class PanelAutoHideController {
             this.show(false);
         else
             this._scheduleHide();
+    }
+
+    _captureStrutTracking() {
+        const index = Main.layoutManager._findActor(this._positionActor);
+        this._trackedActorData =
+            Main.layoutManager._trackedActors[index];
+        this._originalAffectsStruts =
+            this._trackedActorData.affectsStruts;
+    }
+
+    _syncStrutTracking() {
+        if (!this._trackedActorData ||
+            !this._trackedActorData.affectsStruts) {
+            return;
+        }
+
+        this._trackedActorData.affectsStruts = false;
+        Main.layoutManager._queueUpdateRegions();
+    }
+
+    _restoreStrutTracking() {
+        if (!this._trackedActorData ||
+            this._trackedActorData.affectsStruts ===
+                this._originalAffectsStruts) {
+            return;
+        }
+
+        this._trackedActorData.affectsStruts =
+            this._originalAffectsStruts;
+        Main.layoutManager._queueUpdateRegions();
+    }
+
+    _disableUnredirect() {
+        if (this._unredirectDisabled)
+            return;
+
+        global.compositor.disable_unredirect();
+        this._unredirectDisabled = true;
+    }
+
+    _restoreUnredirect() {
+        if (!this._unredirectDisabled)
+            return;
+
+        global.compositor.enable_unredirect();
+        this._unredirectDisabled = false;
     }
 
     _scheduleHide(delay = HIDE_DELAY) {
