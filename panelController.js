@@ -18,6 +18,7 @@ import {
 } from './panelPosition.js';
 import {
     allocateAdaptivePanel,
+    allocateExpandedSidePanel,
     constrainTaskbarWidth,
 } from './taskbarLayout.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
@@ -410,8 +411,7 @@ export class PanelController {
             'vfunc_allocate',
             originalAllocate => function (box) {
                 if (!controller._taskbarBin.visible ||
-                    controller._taskbarBin.get_parent() !==
-                        this._centerBox) {
+                    !controller._taskbarBin.get_parent()) {
                     originalAllocate.call(this, box);
                     return;
                 }
@@ -427,7 +427,11 @@ export class PanelController {
                     centerOffset = 2 * (workArea.x - monitor.x) +
                         workArea.width - monitor.width;
                 }
-                allocateAdaptivePanel(
+                const allocate = controller._taskbarBin.get_parent() ===
+                    this._centerBox
+                    ? allocateAdaptivePanel
+                    : allocateExpandedSidePanel;
+                allocate(
                     this,
                     box,
                     this._leftBox,

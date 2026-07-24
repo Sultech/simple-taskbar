@@ -22,6 +22,7 @@ import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
 import {
     allocateAdaptivePanel,
+    allocateExpandedSidePanel,
     constrainTaskbarWidth,
 } from './taskbarLayout.js';
 import {WindowController} from './windowController.js';
@@ -65,11 +66,22 @@ class SecondaryPanelActor extends St.Widget {
         this.add_child(this.centerBox);
         this.add_child(this.rightBox);
         this.adaptiveCenter = false;
+        this.expandedSide = false;
     }
 
     vfunc_allocate(box) {
         if (this.adaptiveCenter) {
             allocateAdaptivePanel(
+                this,
+                box,
+                this.leftBox,
+                this.centerBox,
+                this.rightBox
+            );
+            return;
+        }
+        if (this.expandedSide) {
+            allocateExpandedSidePanel(
                 this,
                 box,
                 this.leftBox,
@@ -547,6 +559,8 @@ class SecondaryTaskbarPanel {
     _applyLayout() {
         this.actor.adaptiveCenter =
             this._taskbarBin.visible && this._appsAreCentered();
+        this.actor.expandedSide =
+            this._taskbarBin.visible && !this._appsAreCentered();
         const startButton = this._startButtonController.actor;
         const activities = this._indicators.get('activities')?.container;
         const quickSettings = this._indicators.get('quickSettings')?.container;

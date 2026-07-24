@@ -81,6 +81,52 @@ export function allocateAdaptivePanel(
     rightBox.allocate(childBox);
 }
 
+export function allocateExpandedSidePanel(
+    panel,
+    box,
+    leftBox,
+    centerBox,
+    rightBox,
+    centerOffset = 0
+) {
+    panel.set_allocation(box);
+
+    const width = box.x2 - box.x1;
+    const height = box.y2 - box.y1;
+    const [, leftNaturalWidth] = leftBox.get_preferred_width(-1);
+    const [, centerNaturalWidth] = centerBox.get_preferred_width(-1);
+    const [, rightNaturalWidth] = rightBox.get_preferred_width(-1);
+    const rtl =
+        panel.get_text_direction() === Clutter.TextDirection.RTL;
+    const childBox = new Clutter.ActorBox();
+    childBox.y1 = 0;
+    childBox.y2 = height;
+
+    if (rtl) {
+        childBox.x1 = Math.max(width - leftNaturalWidth, 0);
+        childBox.x2 = width;
+    } else {
+        childBox.x1 = 0;
+        childBox.x2 = Math.min(leftNaturalWidth, width);
+    }
+    leftBox.allocate(childBox);
+
+    childBox.x1 = Math.ceil(
+        (width - centerNaturalWidth + centerOffset) / 2
+    );
+    childBox.x2 = childBox.x1 + centerNaturalWidth;
+    centerBox.allocate(childBox);
+
+    if (rtl) {
+        childBox.x1 = 0;
+        childBox.x2 = Math.min(rightNaturalWidth, width);
+    } else {
+        childBox.x1 = Math.max(width - rightNaturalWidth, 0);
+        childBox.x2 = width;
+    }
+    rightBox.allocate(childBox);
+}
+
 export function constrainTaskbarWidth({
     taskbarBin,
     leftBox,
