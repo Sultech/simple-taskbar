@@ -505,6 +505,10 @@ export class WindowsStartMenu {
                 this._showPinnedApps();
         });
         this._searchEntry.clutter_text.connect('key-press-event', (_actor, event) => {
+            const navigationResult = this._onKeyNavigation(event);
+            if (navigationResult === Clutter.EVENT_STOP)
+                return navigationResult;
+
             const symbol = event.get_key_symbol();
             if (symbol !== Clutter.KEY_Return && symbol !== Clutter.KEY_KP_Enter)
                 return Clutter.EVENT_PROPAGATE;
@@ -540,6 +544,7 @@ export class WindowsStartMenu {
                 this._view = 'all';
                 this._setSearchText('');
                 this._showAllApps();
+                this._focusFirstViewControl();
             }
         );
         this._backButton = this._createTextButton(
@@ -550,6 +555,7 @@ export class WindowsStartMenu {
                 this._setSearchText('');
                 this._setSearchFocusVisible(false);
                 this._showPinnedApps();
+                this._focusFirstViewControl();
             }
         );
         this._backButton.hide();
@@ -579,6 +585,7 @@ export class WindowsStartMenu {
             track_hover: true,
             child: box,
         });
+        this._enableKeyNavigation(button);
         button.connect('clicked', callback);
         this._syncShellButtonClasses(button);
         return button;
@@ -611,6 +618,7 @@ export class WindowsStartMenu {
             x_align: Clutter.ActorAlign.START,
             child: userBox,
         });
+        this._enableKeyNavigation(userButton);
         userButton.connect('clicked', () => {
             this.close();
             this._openSettingsPanel('system', ['users']);
@@ -680,6 +688,7 @@ export class WindowsStartMenu {
                 icon_size: 18,
             }),
         });
+        this._enableKeyNavigation(button);
         button.connect('clicked', callback);
         this._syncShellButtonClasses(button);
         return button;
@@ -911,6 +920,7 @@ export class WindowsStartMenu {
                 }),
             });
             button._startMenuCategoryId = category.id;
+            this._enableKeyNavigation(button);
             button.connect('clicked', () => {
                 this._selectedAppCategory = category.id;
                 for (const child of this._categorySidebar.get_children()) {
@@ -994,6 +1004,7 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
+        this._enableKeyNavigation(button);
         this._addAppTooltip(button, app, label);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
@@ -1053,6 +1064,7 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
+        this._enableKeyNavigation(button);
         this._addAppTooltip(button, app, label, !compact);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
@@ -1086,6 +1098,7 @@ export class WindowsStartMenu {
             accessible_name: result.name,
             child: content,
         });
+        this._enableKeyNavigation(button);
         button.connect('clicked', () => this._activateSearchResult(result));
         if (result.app)
             this._addAppContextMenuHandler(button, result.app);
@@ -1399,6 +1412,153 @@ export class WindowsStartMenu {
         else
             this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
         this._searchEntry.clutter_text.set_cursor_visible(visible);
+    }
+
+    _onKeyNavigation(event) {
+        if (event.type() !== Clutter.EventType.KEY_PRESS)
+            return Clutter.EVENT_PROPAGATE;
+
+        const symbol = event.get_key_symbol();
+        const actors = this._focusableActors();
+        if (actors.length === 0)
+            return Clutter.EVENT_PROPAGATE;
+
+        const focus = global.stage.get_key_focus();
+        const current = focus
+            ? actors.find(actor =>
+                actor === focus || actor.contains(focus)
+            ) ?? null
+            : null;
+        let target = null;
+        if (symbol === Clutter.KEY_Tab) {
+            target = this._nextFocusableActor(actors, current, 1);
+        } else if (symbol === Clutter.KEY_ISO_Left_Tab) {
+            target = this._nextFocusableActor(actors, current, -1);
+        } else if (symbol === Clutter.KEY_Down) {
+            target = this._spatialFocusableActor(actors, current, 0, 1);
+        } else if (symbol === Clutter.KEY_Up) {
+            target = this._spatialFocusableActor(actors, current, 0, -1);
+        } else if (current !== this._searchEntry) {
+            if (symbol === Clutter.KEY_Left)
+                target = this._spatialFocusableActor(actors, current, -1, 0);
+            else if (symbol === Clutter.KEY_Right)
+                target = this._spatialFocusableActor(actors, current, 1, 0);
+        }
+
+        if (!target)
+            return Clutter.EVENT_PROPAGATE;
+
+        target.grab_key_focus();
+        if (target === this._searchEntry)
+            this._setSearchFocusVisible(true);
+        else if (!this._searchEntry.get_text())
+            this._setSearchFocusVisible(false);
+        this._ensureFocusedActorVisible();
+        return Clutter.EVENT_STOP;
+    }
+
+    _enableKeyNavigation(actor) {
+        actor.connect('key-press-event', (_actor, event) =>
+            this._onKeyNavigation(event)
+        );
+    }
+
+    _focusableActors() {
+        return this._focusableActorsIn(this._root);
+    }
+
+    _focusableActorsIn(root) {
+        const actors = [];
+        const collect = actor => {
+            const focusable = actor === this._searchEntry ||
+                actor instanceof St.Button;
+            if (focusable && actor.can_focus && actor.reactive && actor.mapped)
+                actors.push(actor);
+            for (const child of actor.get_children())
+                collect(child);
+        };
+        collect(root);
+        return actors;
+    }
+
+    _focusFirstViewControl() {
+        let target = null;
+        if (this._categorySidebar.visible) {
+            target = this._focusableActorsIn(this._categorySidebar)[0] ??
+                null;
+        }
+        if (!target)
+            target = this._focusableActorsIn(this._content)[0] ?? null;
+        if (!target) {
+            target = this._view === 'all'
+                ? this._backButton
+                : this._allAppsButton;
+        }
+
+        target.grab_key_focus();
+        this._ensureFocusedActorVisible();
+    }
+
+    _nextFocusableActor(actors, current, step) {
+        const currentIndex = actors.indexOf(current);
+        const nextIndex = currentIndex < 0
+            ? step > 0 ? 0 : actors.length - 1
+            : (currentIndex + step + actors.length) % actors.length;
+        return actors[nextIndex];
+    }
+
+    _spatialFocusableActor(actors, current, horizontal, vertical) {
+        if (!current)
+            return actors[0];
+
+        const [currentX, currentY] = current.get_transformed_position();
+        const [currentWidth, currentHeight] = current.get_transformed_size();
+        const centerX = currentX + currentWidth / 2;
+        const centerY = currentY + currentHeight / 2;
+        let closest = null;
+        let closestScore = Number.POSITIVE_INFINITY;
+        for (const actor of actors) {
+            if (actor === current)
+                continue;
+
+            const [actorX, actorY] = actor.get_transformed_position();
+            const [actorWidth, actorHeight] = actor.get_transformed_size();
+            const deltaX = actorX + actorWidth / 2 - centerX;
+            const deltaY = actorY + actorHeight / 2 - centerY;
+            const primary = horizontal !== 0
+                ? deltaX * horizontal
+                : deltaY * vertical;
+            if (primary <= 0)
+                continue;
+
+            const secondary = horizontal !== 0
+                ? Math.abs(deltaY)
+                : Math.abs(deltaX);
+            const score = primary * 4 + secondary;
+            if (score < closestScore) {
+                closest = actor;
+                closestScore = score;
+            }
+        }
+        return closest;
+    }
+
+    _ensureFocusedActorVisible() {
+        const focus = global.stage.get_key_focus();
+        if (!focus || !this._content.contains(focus))
+            return;
+
+        const [, focusY] = focus.get_transformed_position();
+        const [, focusHeight] = focus.get_transformed_size();
+        const [, viewY] = this._scrollView.get_transformed_position();
+        const [, viewHeight] = this._scrollView.get_transformed_size();
+        const adjustment = this._scrollView.vadjustment;
+        if (focusY < viewY) {
+            adjustment.value -= viewY - focusY;
+        } else if (focusY + focusHeight > viewY + viewHeight) {
+            adjustment.value +=
+                focusY + focusHeight - viewY - viewHeight;
+        }
     }
 
     _queuePrepare() {
