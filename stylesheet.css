@@ -856,6 +856,38 @@
     margin-bottom: 0;
 }
 
+.simple-taskbar-volume-mixer-row {
+    spacing: 12px;
+}
+
+.simple-taskbar-volume-mixer-icon {
+    icon-size: 20px;
+    -st-icon-style: regular !important;
+}
+
+.simple-taskbar-volume-mixer-details {
+    spacing: 4px;
+}
+
+.simple-taskbar-volume-mixer-title {
+    spacing: 8px;
+}
+
+.simple-taskbar-volume-mixer-app-name {
+    font-weight: bold;
+    max-width: 10em;
+}
+
+.simple-taskbar-volume-mixer-window-title {
+    opacity: 0.7;
+}
+
+.simple-taskbar-volume-mixer-slider {
+    min-width: 14em;
+    padding: 6px;
+    border-radius: 999px;
+}
+
 /* Keep symbolic file-type icons legible against the selected panel theme. */
 .simple-taskbar-folder-menu-dark .popup-menu-icon {
     -st-icon-style: symbolic;

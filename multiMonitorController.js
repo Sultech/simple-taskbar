@@ -25,6 +25,7 @@ import {
     allocateExpandedSidePanel,
     constrainTaskbarWidth,
 } from './taskbarLayout.js';
+import {VolumeMixerController} from './volumeMixerController.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
 
@@ -349,12 +350,21 @@ class SecondaryTaskbarPanel {
         this._autoHideController = null;
         this._menuManager = null;
         this._indicators = new Map();
+        this._volumeMixerController = null;
     }
 
     enable() {
         this._menuManager = new PopupMenu.PopupMenuManager(this.actor);
         this._folderMenuController.enable(this._menuManager);
         this._acquireIndicators();
+        const quickSettings = this._indicators.get('quickSettings');
+        if (quickSettings) {
+            this._volumeMixerController = new VolumeMixerController(
+                this._settings,
+                quickSettings
+            );
+            this._volumeMixerController.enable();
+        }
         this._applyLayout();
         this._syncTheme();
         Main.layoutManager.addChrome(this.actor, {
@@ -420,6 +430,9 @@ class SecondaryTaskbarPanel {
         this._windowPreviews = null;
         this._taskbarController = null;
         this._windowController = null;
+        if (this._volumeMixerController)
+            this._volumeMixerController.destroy();
+        this._volumeMixerController = null;
         this._releaseIndicators();
         this._folderMenuController?.destroy();
         this._folderMenuController = null;

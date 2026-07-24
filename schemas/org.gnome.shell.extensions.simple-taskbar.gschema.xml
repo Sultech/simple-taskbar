@@ -282,5 +282,9 @@
       <default>'right'</default>
       <summary>Quick Settings position</summary>
     </key>
+    <key name="volume-mixer-enabled" type="b">
+      <default>false</default>
+      <summary>Show per-application volume controls in Quick Settings</summary>
+    </key>
   </schema>
 </schemalist>

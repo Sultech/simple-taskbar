@@ -1028,6 +1028,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Quick Settings, volume, network, and power'),
             choices: panelPositions,
         });
+        const volumeMixerSwitch = new Adw.SwitchRow({
+            title: _('Application Volume Mixer'),
+            subtitle: _('Add per-application volume controls to Quick Settings'),
+            active: window._settings.get_boolean('volume-mixer-enabled'),
+        });
+        panelGroup.add(volumeMixerSwitch);
+        window._settings.bind(
+            'volume-mixer-enabled',
+            volumeMixerSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
         this._addComboRow(panelGroup, window._settings, {
             key: 'show-desktop-button-position',
             title: _('Show Desktop Button'),

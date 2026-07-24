@@ -9,3 +9,4 @@ panelInteractionController.js
 taskbarController.js
 windowPreviewController.js
 favoritesIntegration.js
+volumeMixerController.js

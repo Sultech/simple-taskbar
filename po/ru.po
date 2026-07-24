@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 20:39+0100\n"
+"POT-Creation-Date: 2026-07-24 22:42+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: extension.js:207
+#: extension.js:215
 msgid "Show desktop"
 msgstr "Показать рабочий стол"
 
@@ -377,7 +377,7 @@ msgstr "Пользовательский значок кнопки «Пуск»"
 msgid "Use the built-in icon"
 msgstr "Использовать встроенный значок"
 
-#: prefs.js:604 prefs.js:1057
+#: prefs.js:604 prefs.js:1069
 msgid "Choose…"
 msgstr "Выбрать…"
 
@@ -561,52 +561,61 @@ msgstr "Системное меню"
 msgid "Quick Settings, volume, network, and power"
 msgstr "Быстрые настройки, громкость, сеть и питание"
 
+#: prefs.js:1032
+#, fuzzy
+msgid "Application Volume Mixer"
+msgstr "Значки приложений"
+
 #: prefs.js:1033
+msgid "Add per-application volume controls to Quick Settings"
+msgstr ""
+
+#: prefs.js:1045
 msgid "Show Desktop Button"
 msgstr ""
 
-#: prefs.js:1034
+#: prefs.js:1046
 msgid "Place it next to Start or at the right edge"
 msgstr ""
 
-#: prefs.js:1041
+#: prefs.js:1053
 msgid "Show Folder Menu"
 msgstr "Показать меню папки"
 
-#: prefs.js:1042
+#: prefs.js:1054
 msgid "Place a selected folder on the right of the taskbar"
 msgstr "Разместить выбранную папку справа на панели задач"
 
-#: prefs.js:1054
+#: prefs.js:1066
 msgid "Folder Menu Location"
 msgstr "Расположение меню папки"
 
-#: prefs.js:1072
+#: prefs.js:1084
 msgid "No folder selected"
 msgstr "Папка не выбрана"
 
-#: prefs.js:1087 prefs.js:1114
+#: prefs.js:1099 prefs.js:1126
 msgid "Reset"
 msgstr "Сбросить"
 
-#: prefs.js:1092
+#: prefs.js:1104
 msgid "Reset All Settings"
 msgstr "Сбросить все настройки"
 
-#: prefs.js:1093
+#: prefs.js:1105
 msgid "Restore defaults without changing pinned taskbar apps"
 msgstr ""
 "Восстановить настройки по умолчанию без изменения закреплённых приложений"
 
-#: prefs.js:1096
+#: prefs.js:1108
 msgid "Reset…"
 msgstr "Сбросить…"
 
-#: prefs.js:1110
+#: prefs.js:1122
 msgid "Reset all settings?"
 msgstr "Сбросить все настройки?"
 
-#: prefs.js:1111
+#: prefs.js:1123
 msgid ""
 "This will restore taskbar and Start menu settings, including pinned Start "
 "apps. Pinned taskbar apps and their order will be kept."
@@ -614,41 +623,41 @@ msgstr ""
 "Это восстановит настройки панели задач и меню «Пуск», включая закреплённые "
 "приложения. Закреплённые приложения панели задач и их порядок сохранятся."
 
-#: prefs.js:1113
+#: prefs.js:1125
 msgid "Cancel"
 msgstr "Отмена"
 
-#: prefs.js:1150
+#: prefs.js:1162
 msgid "Set Custom Shortcut"
 msgstr "Задать пользовательское сочетание клавиш"
 
-#: prefs.js:1163
+#: prefs.js:1175
 msgid "Press a keyboard shortcut"
 msgstr "Нажмите сочетание клавиш"
 
-#: prefs.js:1164
+#: prefs.js:1176
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "Нажмите Backspace для очистки или Escape для отмены."
 
-#: prefs.js:1208
+#: prefs.js:1220
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 "Это сочетание клавиш требует клавишу-модификатор. Попробуйте другое "
 "сочетание."
 
-#: prefs.js:1219
+#: prefs.js:1231
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "Это сочетание клавиш уже используется. Нажмите другое сочетание."
 
-#: prefs.js:1237
+#: prefs.js:1249
 msgid "Image Files"
 msgstr "Файлы изображений"
 
-#: prefs.js:1253
+#: prefs.js:1265
 msgid "Choose a Start Button Icon"
 msgstr "Выберите значок кнопки «Пуск»"
 
-#: prefs.js:1273
+#: prefs.js:1285
 msgid "Choose a Folder"
 msgstr "Выберите папку"
 
@@ -837,3 +846,31 @@ msgstr "%s закреплён на панели задач."
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "%s откреплён от панели задач."
+
+#: volumeMixerController.js:92
+#, fuzzy
+msgid "Application"
+msgstr "Приложения"
+
+#: volumeMixerController.js:125
+#, javascript-format
+msgid "%s volume"
+msgstr ""
+
+#: volumeMixerController.js:226
+msgid "Mixer"
+msgstr ""
+
+#: volumeMixerController.js:236
+#, fuzzy
+msgid "Open application volume controls"
+msgstr "Расстояние между кнопками приложений"
+
+#: volumeMixerController.js:239
+#, fuzzy
+msgid "Application Volume"
+msgstr "Значки приложений"
+
+#: volumeMixerController.js:288
+msgid "No applications are playing audio"
+msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 20:39+0100\n"
+"POT-Creation-Date: 2026-07-24 22:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:207
+#: extension.js:215
 msgid "Show desktop"
 msgstr ""
 
@@ -365,7 +365,7 @@ msgstr ""
 msgid "Use the built-in icon"
 msgstr ""
 
-#: prefs.js:604 prefs.js:1057
+#: prefs.js:604 prefs.js:1069
 msgid "Choose…"
 msgstr ""
 
@@ -537,89 +537,97 @@ msgstr ""
 msgid "Quick Settings, volume, network, and power"
 msgstr ""
 
+#: prefs.js:1032
+msgid "Application Volume Mixer"
+msgstr ""
+
 #: prefs.js:1033
+msgid "Add per-application volume controls to Quick Settings"
+msgstr ""
+
+#: prefs.js:1045
 msgid "Show Desktop Button"
 msgstr ""
 
-#: prefs.js:1034
+#: prefs.js:1046
 msgid "Place it next to Start or at the right edge"
 msgstr ""
 
-#: prefs.js:1041
+#: prefs.js:1053
 msgid "Show Folder Menu"
 msgstr ""
 
-#: prefs.js:1042
+#: prefs.js:1054
 msgid "Place a selected folder on the right of the taskbar"
 msgstr ""
 
-#: prefs.js:1054
+#: prefs.js:1066
 msgid "Folder Menu Location"
 msgstr ""
 
-#: prefs.js:1072
+#: prefs.js:1084
 msgid "No folder selected"
 msgstr ""
 
-#: prefs.js:1087 prefs.js:1114
+#: prefs.js:1099 prefs.js:1126
 msgid "Reset"
 msgstr ""
 
-#: prefs.js:1092
+#: prefs.js:1104
 msgid "Reset All Settings"
 msgstr ""
 
-#: prefs.js:1093
+#: prefs.js:1105
 msgid "Restore defaults without changing pinned taskbar apps"
 msgstr ""
 
-#: prefs.js:1096
+#: prefs.js:1108
 msgid "Reset…"
 msgstr ""
 
-#: prefs.js:1110
+#: prefs.js:1122
 msgid "Reset all settings?"
 msgstr ""
 
-#: prefs.js:1111
+#: prefs.js:1123
 msgid ""
 "This will restore taskbar and Start menu settings, including pinned Start "
 "apps. Pinned taskbar apps and their order will be kept."
 msgstr ""
 
-#: prefs.js:1113
+#: prefs.js:1125
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:1150
+#: prefs.js:1162
 msgid "Set Custom Shortcut"
 msgstr ""
 
-#: prefs.js:1163
+#: prefs.js:1175
 msgid "Press a keyboard shortcut"
 msgstr ""
 
-#: prefs.js:1164
+#: prefs.js:1176
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr ""
 
-#: prefs.js:1208
+#: prefs.js:1220
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 
-#: prefs.js:1219
+#: prefs.js:1231
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr ""
 
-#: prefs.js:1237
+#: prefs.js:1249
 msgid "Image Files"
 msgstr ""
 
-#: prefs.js:1253
+#: prefs.js:1265
 msgid "Choose a Start Button Icon"
 msgstr ""
 
-#: prefs.js:1273
+#: prefs.js:1285
 msgid "Choose a Folder"
 msgstr ""
 
@@ -804,4 +812,29 @@ msgstr ""
 #: favoritesIntegration.js:59
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
+msgstr ""
+
+#: volumeMixerController.js:92
+msgid "Application"
+msgstr ""
+
+#: volumeMixerController.js:125
+#, javascript-format
+msgid "%s volume"
+msgstr ""
+
+#: volumeMixerController.js:226
+msgid "Mixer"
+msgstr ""
+
+#: volumeMixerController.js:236
+msgid "Open application volume controls"
+msgstr ""
+
+#: volumeMixerController.js:239
+msgid "Application Volume"
+msgstr ""
+
+#: volumeMixerController.js:288
+msgid "No applications are playing audio"
 msgstr ""
