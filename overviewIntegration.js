@@ -9,6 +9,9 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import {Workspace} from 'resource:///org/gnome/shell/ui/workspace.js';
+import {
+    SecondaryMonitorDisplay,
+} from 'resource:///org/gnome/shell/ui/workspacesView.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelIsTop} from './panelPosition.js';
@@ -48,6 +51,11 @@ export class OverviewIntegration {
                 this._syncStartupOverview();
                 this._syncDashVisibility();
             }
+        );
+        this._connect(
+            this._settings,
+            'changed::panel-autohide-enabled',
+            () => this.queueRelayout()
         );
         this._connect(
             Main.extensionManager,
@@ -309,17 +317,50 @@ export class OverviewIntegration {
         if (!controls)
             return;
 
+        const integration = this;
         this._injectionManager.overrideMethod(
             Object.getPrototypeOf(controls),
             'vfunc_allocate',
             originalAllocate => box => {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
-                if (!panelIsTop(this._settings))
-                    box.y2 -= this._panelHeight;
+                if (!panelIsTop(integration._settings))
+                    box.y2 -= integration._panelHeight;
+                else if (integration._reserveAutoHiddenDefaultPanel()) {
+                    const progress = Math.clamp(
+                        controls._stateAdjustment.value,
+                        0,
+                        1
+                    );
+                    box.y1 += integration._panelHeight * progress;
+                }
                 originalAllocate.call(controls, box);
             }
         );
+        this._injectionManager.overrideMethod(
+            SecondaryMonitorDisplay.prototype,
+            'vfunc_allocate',
+            originalAllocate => function (box) {
+                if (integration._reserveAutoHiddenDefaultPanel()) {
+                    const progress = Math.clamp(
+                        this._overviewAdjustment.value,
+                        0,
+                        1
+                    );
+                    const inset = integration._panelHeight * progress;
+                    if (panelIsTop(integration._settings))
+                        box.y1 += inset;
+                    else
+                        box.y2 -= inset;
+                }
+                originalAllocate.call(this, box);
+            }
+        );
+    }
+
+    _reserveAutoHiddenDefaultPanel() {
+        return this._settings.get_boolean('default-gnome-panel') &&
+            this._settings.get_boolean('panel-autohide-enabled');
     }
 
     _beginAppSpread() {
