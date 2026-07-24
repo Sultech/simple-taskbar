@@ -227,7 +227,7 @@ export class WindowsStartMenu {
         this._root.add_child(this._body);
 
         this._createFooter();
-        this._showPinnedApps();
+        this._showDefaultView();
         this._updateSize();
         this.syncTheme(true);
         this._prepareHiddenMenu();
@@ -296,10 +296,9 @@ export class WindowsStartMenu {
 
     open() {
         this._sourcePressWasOpen = false;
-        this._view = 'pinned';
         this._setSearchText('');
         this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
-        this._showPinnedApps();
+        this._showDefaultView();
         this._scrollView.vadjustment.value = 0;
         this._updateSize();
         syncMenuArrowSide(this._menu, this._settings);
@@ -331,6 +330,20 @@ export class WindowsStartMenu {
             this._showAllApps();
         else
             this._showPinnedApps();
+    }
+
+    refreshDefaultView() {
+        this._setSearchText('');
+        this._setSearchFocusVisible(false);
+        this._showDefaultView();
+        this._scrollView.vadjustment.value = 0;
+        this._updateSize();
+        if (this.isOpen) {
+            this._searchEntry.grab_key_focus();
+            this._searchEntry.clutter_text.set_cursor_visible(false);
+        } else {
+            this._queuePrepare();
+        }
     }
 
     syncTheme(force = false) {
@@ -551,10 +564,9 @@ export class WindowsStartMenu {
             _('Back'),
             'go-previous-symbolic',
             pointerActivated => {
-                this._view = 'pinned';
                 this._setSearchText('');
                 this._setSearchFocusVisible(false);
-                this._showPinnedApps();
+                this._showDefaultView();
                 this._focusAfterViewChange(pointerActivated);
             }
         );
@@ -732,6 +744,13 @@ export class WindowsStartMenu {
         this._content.add_child(this._pinnedView);
     }
 
+    _showDefaultView() {
+        if (this._settings.get_boolean('start-menu-open-all-apps'))
+            this._showAllApps();
+        else
+            this._showPinnedApps();
+    }
+
     _ensurePinnedView() {
         const pinnedApps = this._settings.get_strv('start-menu-pinned-apps')
             .map(id => this._appSystem.lookup_app(id))
@@ -780,7 +799,8 @@ export class WindowsStartMenu {
         this._view = 'all';
         this._headerTitle.text = _('All apps');
         this._allAppsButton.hide();
-        this._backButton.show();
+        this._backButton.visible =
+            !this._settings.get_boolean('start-menu-open-all-apps');
         const apps = this._allApps();
         if (this._settings.get_boolean('start-menu-app-categories')) {
             this._selectedAppCategory = 'all';
@@ -1509,7 +1529,9 @@ export class WindowsStartMenu {
             target = this._focusableActorsIn(this._content)[0] ?? null;
         if (!target) {
             target = this._view === 'all'
-                ? this._backButton
+                ? this._backButton.visible
+                    ? this._backButton
+                    : this._searchEntry
                 : this._allAppsButton;
         }
 

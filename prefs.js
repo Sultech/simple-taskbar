@@ -648,6 +648,29 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const openAllAppsSwitch = new Adw.SwitchRow({
+            title: _('Open All Apps by Default'),
+            subtitle: _('Skip Pinned and open directly to applications and categories'),
+            active: window._settings.get_boolean(
+                'start-menu-open-all-apps'
+            ),
+        });
+        startMenuGroup.add(openAllAppsSwitch);
+        window._settings.bind(
+            'start-menu-open-all-apps',
+            openAllAppsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateOpenAllAppsSwitch = () => {
+            openAllAppsSwitch.sensitive = windowsStartMenuSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateOpenAllAppsSwitch
+        );
+        updateOpenAllAppsSwitch();
+
         const recommendedAppsSwitch = new Adw.SwitchRow({
             title: _('Show Recommended Apps'),
             subtitle: _('Display frequently used applications below pinned apps'),
@@ -663,9 +686,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const updateRecommendedAppsSwitch = () => {
-            recommendedAppsSwitch.sensitive = windowsStartMenuSwitch.active;
+            recommendedAppsSwitch.sensitive =
+                windowsStartMenuSwitch.active &&
+                !openAllAppsSwitch.active;
         };
         windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateRecommendedAppsSwitch
+        );
+        openAllAppsSwitch.connect(
             'notify::active',
             updateRecommendedAppsSwitch
         );

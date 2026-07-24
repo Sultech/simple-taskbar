@@ -249,6 +249,11 @@ export class StartButtonController {
         );
         this._connect(
             this._settings,
+            'changed::start-menu-open-all-apps',
+            () => this._windowsStartMenu.refreshDefaultView()
+        );
+        this._connect(
+            this._settings,
             'changed::start-menu-app-categories',
             () => this._windowsStartMenu.refresh()
         );
