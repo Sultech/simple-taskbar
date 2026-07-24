@@ -13,7 +13,7 @@ import {
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
-const ICON_VERTICAL_RESERVE = 14;
+const ICON_VERTICAL_RESERVE = 16;
 
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
