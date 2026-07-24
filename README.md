@@ -167,18 +167,29 @@ The Eleven-style Start Menu is enabled by default and includes:
 - A separately configurable pinned-app grid with drag-and-drop reordering.
 - GNOME global search, including system providers and results contributed by
   compatible extensions.
-- An All Apps view.
-- Recommended applications.
+- An All Apps view organized into selectable categories by default. Categories
+  can be disabled to use a single alphabetical list.
+- Optional recommended applications based on frequently used apps.
+- Scrollbars when the pinned or All Apps lists are taller than the available
+  menu space.
+- Delayed hover tooltips with the full application name and description.
+- Keyboard navigation through applications and menu controls using Tab and the
+  arrow keys.
 - GNOME application context menus with open-window, launcher-action, App
   Details, Quit, Pin to Start and Pin to Taskbar actions. When a supported
   desktop-icons extension is active, applications can also add or remove a
   desktop shortcut.
+- Dragging an application from All Apps onto the taskbar to pin it at the
+  chosen position.
 - Dark, light and GNOME Shell theme options.
 - Optional true monitor centering.
 - Super opens the Start Menu by default and moves Overview to Super+Tab. The
   shortcut can instead use Super+Tab, a custom binding or be disabled.
 - Super+E opens the home folder with the system’s default file manager by
   default and can be disabled.
+
+Start Menu keyboard bindings are grouped in their own **Keyboard Shortcuts**
+section in the extension settings.
 
 The bottom hot edge is enabled by default, providing another quick way to use
 Overview after its Super shortcut has moved. Its ripple animation is optional
