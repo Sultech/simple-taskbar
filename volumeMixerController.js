@@ -302,12 +302,19 @@ class VolumeMixerToggle extends QuickMenuToggle {
     }
 
     destroy() {
-        super.destroy();
+        for (const row of this._streamRows.values())
+            row.destroy();
         this._streamRows.clear();
+
+        if (this._emptyItem)
+            this._emptyItem.destroy();
         this._emptyItem = null;
+
+        this._streamSection.destroy();
         this._streamSection = null;
         this._control = null;
         this._appSystem = null;
+        super.destroy();
     }
 });
 
