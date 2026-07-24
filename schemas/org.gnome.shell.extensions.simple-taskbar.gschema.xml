@@ -185,7 +185,7 @@
     </key>
     <key name="start-button-custom-icon" type="s">
       <default>''</default>
-      <summary>URI or path of a custom Start button icon</summary>
+      <summary>Bundled icon identifier, URI, or path for the Start button</summary>
     </key>
     <key name="gnome-start-button-visible" type="b">
       <default>true</default>

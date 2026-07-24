@@ -1,0 +1,51 @@
+# Asset credits
+
+## ArcMenu distribution icons
+
+The SVG files in `icons/distros/` are redistributed unmodified from the
+[ArcMenu](https://gitlab.com/arcmenu/ArcMenu) project. ArcMenu credits its
+logo and icon assets to [Andy C.](https://gitlab.com/LinxGem33) under the
+[Creative Commons Attribution-ShareAlike 4.0 International
+license](https://creativecommons.org/licenses/by-sa/4.0/).
+
+The distribution names and logos are trademarks or otherwise protected marks
+of their respective owners. Their inclusion identifies the corresponding
+distribution and does not imply endorsement of Simple Taskbar by any
+trademark holder, or endorsement of a trademark holder by Simple Taskbar.
+
+The collection contains marks associated with Arch Linux, Athena OS, Budgie,
+CachyOS, CentOS, Debian, EndeavourOS, Fedora, Gentoo, GNOME, Kali Linux,
+Manjaro, MX Linux, NixOS, Nobara, openSUSE, Oreon, Pardus, Pop!_OS, PureOS,
+Raspberry Pi OS, Red Hat, Solus, Ubuntu, Voyager and Zorin OS.
+
+ArcMenu records the following additional notices:
+
+- Ubuntu and its logo are trademarks of Canonical Ltd.
+- Fedora and the Infinity design logo are trademarks of Red Hat, Inc.
+- Debian is a registered trademark owned by Software in the Public Interest,
+  Inc. and managed by the Debian project.
+- Manjaro and its logo are trademarks of Manjaro GmbH & Co. KG.
+- Pop!_OS and its logo are trademarks of System76, Inc.
+- The Arch Linux logo is a recognized trademark of Arch Linux.
+- Solus and its logo are copyright the Solus Project.
+- Kali Linux and its logo are associated with OffSec Services Limited.
+- Raspberry Pi and its logo are associated with the Raspberry Pi Foundation.
+- Gentoo is a trademark of the Gentoo Foundation, Inc.
+- Red Hat is a trademark of Red Hat, Inc.
+- Zorin OS and the Z logomark are registered trademarks of Zorin Technology
+  Group Ltd.
+- Pardus is a trademark of TÜBİTAK ULAKBİM.
+- The NixOS logo is licensed under
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) and was designed
+  by Tim Cuthbertson.
+
+## Bazzite icon
+
+`icons/distros/distro-bazzite.png` was supplied separately for Simple
+Taskbar. Bazzite and its logo are associated with the Bazzite project and are
+included only to identify that distribution.
+
+## GNOME icon
+
+The GNOME foot logo is a trademark of the GNOME Foundation. It is included
+only to identify the GNOME desktop.

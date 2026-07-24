@@ -114,8 +114,9 @@ The settings provide control over:
 - 32–80px panel height.
 - 16–48px application icons with 0–16px spacing.
 - Left or centered application alignment.
-- Left or centered Start button placement, adjustable padding and a custom
-  icon. By default, the Start button follows the application alignment and
+- Left or centered Start button placement, adjustable padding and an icon
+  selected from bundled GNOME and distribution designs or a personal image
+  file. By default, the Start button follows the application alignment and
   appears immediately before centered applications.
 - Show or hide the Activities button, place it on the left or right, and choose
   its position within the right-side system cluster.
@@ -320,9 +321,10 @@ The resulting archive is:
 dist/simple-taskbar@sultech.shell-extension.zip
 ```
 
-The package contains the runtime modules, preferences, schema, licence and
-bundled Start icon. Development scripts and generated schema binaries are not
-included. An alternative output directory can be supplied:
+The package contains the runtime modules, preferences, schema, licence,
+bundled Start icons and their attribution notices. Development scripts and
+generated schema binaries are not included. An alternative output directory
+can be supplied:
 
 ```sh
 ./package.sh /tmp/simple-taskbar-package
@@ -344,3 +346,5 @@ rm -rf ~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
 
 Simple Taskbar is distributed under
 [GPL-2.0-or-later](COPYING).
+Bundled third-party icon credits and trademark notices are listed in
+[ASSET-CREDITS.md](ASSET-CREDITS.md).

@@ -23,6 +23,7 @@ mkdir -p "$OUT_DIR"
 gnome-extensions pack \
     --force \
     --extra-source=COPYING \
+    --extra-source=ASSET-CREDITS.md \
     --extra-source=extensionConflictController.js \
     --extra-source=panelMenuPositioner.js \
     --extra-source=panelPosition.js \
@@ -36,6 +37,7 @@ gnome-extensions pack \
     --extra-source=panelAutoHideController.js \
     --extra-source=panelInteractionController.js \
     --extra-source=startButtonController.js \
+    --extra-source=startIconChooser.js \
     --extra-source=startMenuAppMenu.js \
     --extra-source=startMenuKeybindings.js \
     --extra-source=startMenuPinnedDragController.js \
@@ -50,6 +52,7 @@ gnome-extensions pack \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
     --extra-source=gnome-start-symbolic.svg \
+    --extra-source=icons \
     --podir=po \
     --out-dir "$OUT_DIR" \
     "$SOURCE_DIR"

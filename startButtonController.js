@@ -26,6 +26,7 @@ export class StartButtonController {
         manageKeybindings = true,
         toggleFromShortcut = null,
     }) {
+        this._extensionDir = extensionDir;
         this._settings = settings;
         this._previews = previewController;
         this._openPreferences = openPreferences;
@@ -152,6 +153,7 @@ export class StartButtonController {
         this._icon = null;
         this._windowsGIcon = null;
         this._gnomeGIcon = null;
+        this._extensionDir = null;
         this._previews = null;
         this._openPreferences = null;
         this._toggleFromShortcut = null;
@@ -412,6 +414,35 @@ export class StartButtonController {
         );
         if (!location)
             return null;
+
+        if (location === 'builtin:gnome') {
+            return new Gio.FileIcon({
+                file: this._extensionDir
+                    .get_child('icons')
+                    .get_child('start')
+                    .get_child('gnome-start-symbolic.svg'),
+            });
+        }
+        if (location === 'builtin:eleven') {
+            return new Gio.FileIcon({
+                file: this._extensionDir
+                    .get_child('icons')
+                    .get_child('start')
+                    .get_child('eleven-start-symbolic.svg'),
+            });
+        }
+        if (location.startsWith('distro:')) {
+            const filename = location.slice('distro:'.length);
+            if (!/^distro-[a-z0-9-]+\.(?:png|svg)$/.test(filename))
+                return null;
+
+            return new Gio.FileIcon({
+                file: this._extensionDir
+                    .get_child('icons')
+                    .get_child('distros')
+                    .get_child(filename),
+            });
+        }
 
         const file = location.includes('://')
             ? Gio.File.new_for_uri(location)

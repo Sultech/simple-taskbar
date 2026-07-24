@@ -5,6 +5,7 @@ startMenuAppMenu.js
 folderMenuController.js
 taskbarAppMenu.js
 startButtonController.js
+startIconChooser.js
 panelInteractionController.js
 taskbarController.js
 windowPreviewController.js

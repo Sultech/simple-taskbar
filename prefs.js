@@ -11,6 +11,11 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {
+    getStartIconDisplayName,
+    StartIconChooserDialog,
+} from './startIconChooser.js';
+
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
 const ICON_VERTICAL_RESERVE = 16;
@@ -614,17 +619,20 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'start-button-custom-icon'
             );
             if (location) {
-                const file = location.includes('://')
-                    ? Gio.File.new_for_uri(location)
-                    : Gio.File.new_for_path(location);
-                customIconRow.subtitle = file.get_basename() ?? location;
+                customIconRow.subtitle =
+                    getStartIconDisplayName(location);
             } else {
                 customIconRow.subtitle = _('Using the built-in icon');
             }
             clearCustomIconButton.visible = Boolean(location);
         };
         chooseCustomIconButton.connect('clicked', () => {
-            this._selectStartButtonIcon(window);
+            const dialog = new StartIconChooserDialog({
+                extensionPath: this.path,
+                settings: window._settings,
+                parent: window,
+            });
+            dialog.present();
         });
         clearCustomIconButton.connect('clicked', () => {
             window._settings.set_string('start-button-custom-icon', '');
@@ -1242,42 +1250,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             }
         );
         dialog.present();
-    }
-
-    _selectStartButtonIcon(window) {
-        const imageFilter = new Gtk.FileFilter({
-            name: _('Image Files'),
-        });
-        for (const mimeType of [
-            'image/png',
-            'image/svg+xml',
-            'image/jpeg',
-            'image/webp',
-            'image/gif',
-        ])
-            imageFilter.add_mime_type(mimeType);
-
-        const filters = new Gio.ListStore({
-            item_type: Gtk.FileFilter,
-        });
-        filters.append(imageFilter);
-        const dialog = new Gtk.FileDialog({
-            title: _('Choose a Start Button Icon'),
-            filters,
-            default_filter: imageFilter,
-        });
-        dialog.open(window, null, (source, result) => {
-            let file;
-            try {
-                file = source.open_finish(result);
-            } catch (_error) {
-                return;
-            }
-            window._settings.set_string(
-                'start-button-custom-icon',
-                file.get_uri()
-            );
-        });
     }
 
     _selectFolderMenuLocation(window) {
