@@ -48,6 +48,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         startMenuPage.add(startMenuGroup);
 
+        const startMenuKeybindingsGroup = new Adw.PreferencesGroup({
+            title: _('Keyboard Shortcuts'),
+            description: _('Configure Start menu and file manager shortcuts.'),
+        });
+        startMenuPage.add(startMenuKeybindingsGroup);
+
         const showRequestedPage = () => {
             const target = window._settings.get_string('target-prefs-page');
             if (target === 'start-menu')
@@ -795,7 +801,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Use Super for the Start Menu and move Overview to Super+Tab'),
             active: window._settings.get_boolean('start-menu-super-key'),
         });
-        startMenuGroup.add(superKeyRow);
+        startMenuKeybindingsGroup.add(superKeyRow);
         window._settings.bind(
             'start-menu-super-key',
             superKeyRow,
@@ -808,7 +814,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Use GNOME’s application-switch shortcut for the Eleven-style Start Menu while it is enabled'),
             active: window._settings.get_boolean('start-menu-super-tab'),
         });
-        startMenuGroup.add(superTabRow);
+        startMenuKeybindingsGroup.add(superTabRow);
         window._settings.bind(
             'start-menu-super-tab',
             superTabRow,
@@ -840,7 +846,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'super-e-file-manager-enabled'
             ),
         });
-        startMenuGroup.add(superEFileManagerRow);
+        startMenuKeybindingsGroup.add(superEFileManagerRow);
         window._settings.bind(
             'super-e-file-manager-enabled',
             superEFileManagerRow,
@@ -869,7 +875,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         customShortcutRow.add_suffix(customShortcutLabel);
         customShortcutRow.add_suffix(clearCustomShortcutButton);
         customShortcutRow.add_suffix(editCustomShortcutButton);
-        startMenuGroup.add(customShortcutRow);
+        startMenuKeybindingsGroup.add(customShortcutRow);
 
         const updateCustomShortcutRow = () => {
             const [accelerator] = window._settings.get_strv(
