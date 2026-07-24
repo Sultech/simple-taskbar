@@ -1461,10 +1461,30 @@ export class TaskbarController {
         const visual = item._taskbarVisual;
         const alignmentActor = this._alignmentActor ?? this.actor;
         const offset = this._membershipAnimationOffset(item);
+        const slotWidth = offset * 2;
+        const children = this.actor.get_children();
+        const itemIndex = children.indexOf(item);
+        const followingVisuals = children.slice(itemIndex + 1)
+            .filter(child => !child._taskbarAnimatingOut)
+            .map(child => child._taskbarVisual)
+            .filter(Boolean);
+        const direction =
+            this.actor.get_text_direction() === Clutter.TextDirection.RTL
+                ? 1
+                : -1;
         item.animatingOut = true;
         visual.remove_all_transitions();
         alignmentActor.remove_transition('translation-x');
         alignmentActor.translation_x = 0;
+        for (const followingVisual of followingVisuals) {
+            followingVisual.remove_transition('translation-x');
+            followingVisual.translation_x = 0;
+            followingVisual.ease({
+                translation_x: direction * slotWidth,
+                duration: ITEM_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+        }
         alignmentActor.ease({
             translation_x: offset,
             duration: ITEM_ANIMATION_TIME,
@@ -1479,6 +1499,10 @@ export class TaskbarController {
             onComplete: () => {
                 item.destroy();
                 alignmentActor.translation_x = 0;
+                for (const followingVisual of followingVisuals) {
+                    followingVisual.remove_transition('translation-x');
+                    followingVisual.translation_x = 0;
+                }
             },
         });
     }
