@@ -237,7 +237,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('gnome-start-button-visible', false);
             } else {
                 settings.set_int('icon-size', 28);
-                settings.set_int('icon-spacing', 5);
+                settings.set_int('icon-spacing', 4);
                 settings.set_int('panel-height', 44);
                 settings.set_string('panel-position', 'bottom');
                 settings.set_string('app-alignment', 'center');
