@@ -262,13 +262,11 @@ export class PanelController {
 
         const availableWidth = constrainTaskbarWidth({
             taskbarBin: this._taskbarBin,
-            taskbarActor: this._taskbarActor,
             leftBox,
             centerBox,
             rightBox,
             panelWidth: monitor.width,
             panelHeight: this._panelHeight,
-            spacing: this._settings.get_int('icon-spacing'),
             centered: this.appsAreCentered(),
         });
         if (availableWidth !== undefined)

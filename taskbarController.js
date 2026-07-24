@@ -20,7 +20,6 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
-const ITEM_ANIMATION_TIME = 200;
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
 const APP_LABEL_MIN_WIDTH = 40;
@@ -98,7 +97,6 @@ export class TaskbarController {
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = [];
         this._shownInitially = false;
-        this._centered = false;
         this._availableWidth = 0;
         this._combineWhenFull = false;
         this._appLabelWidth = APP_LABEL_WIDTH;
@@ -290,7 +288,6 @@ export class TaskbarController {
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = null;
         this._shownInitially = false;
-        this._centered = false;
         this._availableWidth = 0;
         this._combineWhenFull = false;
         this._appLabelWidth = APP_LABEL_WIDTH;
@@ -326,13 +323,12 @@ export class TaskbarController {
         this.queueIconGeometryUpdate();
     }
 
-    applyAppearance(spacing, centered) {
-        this._centered = centered;
-        this.actor.set_style(`spacing: ${Math.max(spacing, 0)}px;`);
-        // Start alignment keeps width changes anchored in either panel box.
+    applyAppearance() {
+        this.actor.set_style('spacing: 0;');
         this.actor.x_align = Clutter.ActorAlign.START;
         for (const item of this._appButtons.values())
-            this._applyButtonSpacing(item);
+            this._updateGlassGeometry(item);
+        this.actor.queue_relayout();
     }
 
     redisplay() {
@@ -369,7 +365,6 @@ export class TaskbarController {
                     !animateMembershipChanges) {
                     item.destroy();
                 } else {
-                    item._taskbarAnimatingOut = true;
                     this._animateItemOutAndDestroy(item);
                 }
             }
@@ -400,6 +395,7 @@ export class TaskbarController {
 
         this._shownInitially = true;
         this.syncButtonStates();
+        this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
     }
 
@@ -998,7 +994,7 @@ export class TaskbarController {
         );
         const showLabels = !this._settings.get_boolean('hide-app-labels');
         const spacing = Math.max(this._settings.get_int('icon-spacing'), 0);
-        const spacingWidth = Math.max(0, entries.length - 1) * spacing;
+        const spacingWidth = entries.length * spacing;
         const fixedButtonsWidth = entries.reduce((width, entry) =>
             width + this._buttonWidth(entry.window, false), 0);
         const labelCount = showLabels
@@ -1073,6 +1069,7 @@ export class TaskbarController {
 
     _createAppButton(app, window = null) {
         const glassWidth = this._buttonWidth(window);
+        const slotWidth = this._itemSlotWidth(window);
         const item = new TaskbarItemContainer();
         item.add_style_class_name('simple-taskbar-app-item');
         item.reactive = true;
@@ -1082,20 +1079,19 @@ export class TaskbarController {
         item.connect('notify::allocation', () => {
             this.queueIconGeometryUpdate();
         });
-        // Scale the visual; scaling the slot also changes its allocation.
         const slot = new St.Widget({
             layout_manager: new Clutter.BinLayout(),
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
-            width: glassWidth,
+            width: slotWidth,
             height: this._panelHeight,
             clip_to_allocation: false,
         });
         const visual = new St.Widget({
             layout_manager: new Clutter.BinLayout(),
-            x_align: Clutter.ActorAlign.FILL,
-            x_expand: true,
+            x_align: Clutter.ActorAlign.CENTER,
+            x_expand: false,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
             width: glassWidth,
@@ -1241,7 +1237,6 @@ export class TaskbarController {
         });
 
         this._makeDraggable(item, button, icon, app);
-        this._applyButtonSpacing(item);
         this._createAppMenu(button, app, item);
         button.connect('clicked', () => {
             this._windowPreviews.hideTooltip();
@@ -1384,51 +1379,16 @@ export class TaskbarController {
     }
 
     _animateItemIn(item, animate) {
-        if (!this._centered) {
-            item.show(animate);
-            return;
-        }
-
-        // Reserve the centered slot, then animate its visual translation.
-        item.show(false);
-        item.remove_all_transitions();
-        item.scale_x = 1;
-        item.scale_y = 1;
-        item.opacity = 255;
-        if (!animate)
-            return;
-
-        const visual = item._taskbarVisual;
-        const alignmentActor = this._alignmentActor ?? this.actor;
-        const {alignmentOffset} =
-            this._membershipAnimationGeometry(item);
-        visual.remove_all_transitions();
-        visual.opacity = 0;
-        visual.scale_x = 0;
-        visual.scale_y = 0;
-        alignmentActor.remove_transition('translation-x');
-        alignmentActor.translation_x = alignmentOffset;
-        alignmentActor.ease({
-            translation_x: 0,
-            duration: ITEM_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
-        visual.ease({
-            scale_x: 1,
-            scale_y: 1,
-            opacity: 255,
-            duration: ITEM_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
+        item.show(animate);
     }
 
     _placeItemAtActiveIndex(item, index) {
         const children = this.actor.get_children();
         const activeChildren = children.filter(child =>
-            child !== item && !child._taskbarAnimatingOut
+            child !== item && !child.animatingOut
         );
         const currentActiveChildren = children.filter(child =>
-            !child._taskbarAnimatingOut
+            !child.animatingOut
         );
         if (currentActiveChildren.indexOf(item) === index)
             return;
@@ -1454,100 +1414,7 @@ export class TaskbarController {
         }
 
         item.reactive = false;
-        if (!this._centered) {
-            item.animateOutAndDestroy();
-            return;
-        }
-
-        const visual = item._taskbarVisual;
-        const alignmentActor = this._alignmentActor ?? this.actor;
-        const {alignmentOffset, slotWidth} =
-            this._membershipAnimationGeometry(item);
-        const children = this.actor.get_children();
-        const itemIndex = children.indexOf(item);
-        const followingVisuals = children.slice(itemIndex + 1)
-            .filter(child => !child._taskbarAnimatingOut)
-            .map(child => child._taskbarVisual)
-            .filter(Boolean);
-        const direction =
-            this.actor.get_text_direction() === Clutter.TextDirection.RTL
-                ? 1
-                : -1;
-        item.animatingOut = true;
-        visual.remove_all_transitions();
-        alignmentActor.remove_transition('translation-x');
-        alignmentActor.translation_x = 0;
-        for (const followingVisual of followingVisuals) {
-            followingVisual.remove_transition('translation-x');
-            followingVisual.translation_x = 0;
-            followingVisual.ease({
-                translation_x: direction * slotWidth,
-                duration: ITEM_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
-        }
-        alignmentActor.ease({
-            translation_x: alignmentOffset,
-            duration: ITEM_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
-        visual.ease({
-            scale_x: 0,
-            scale_y: 0,
-            opacity: 0,
-            duration: ITEM_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => {
-                item.destroy();
-                alignmentActor.translation_x = 0;
-                for (const followingVisual of followingVisuals) {
-                    followingVisual.remove_transition('translation-x');
-                    followingVisual.translation_x = 0;
-                }
-            },
-        });
-    }
-
-    _membershipAnimationGeometry(item) {
-        const [, itemWidth] = item.get_preferred_width(this._panelHeight);
-        const spacing = this.actor.get_n_children() > 1
-            ? Math.max(this._settings.get_int('icon-spacing'), 0)
-            : 0;
-        const slotWidth = itemWidth + spacing;
-        let alignmentOffset = slotWidth / 2;
-        const alignmentActor = this._alignmentActor;
-        if (!alignmentActor || !alignmentActor.has_allocation())
-            return {alignmentOffset, slotWidth};
-
-        const panel = alignmentActor.get_parent();
-        if (!panel || !panel.has_allocation())
-            return {alignmentOffset, slotWidth};
-
-        let centerOffset = 0;
-        if (panel === Main.panel) {
-            const monitor =
-                Main.layoutManager.findMonitorForActor(panel);
-            if (monitor) {
-                const workArea =
-                    Main.layoutManager.getWorkAreaForMonitor(
-                        monitor.index
-                    );
-                centerOffset = 2 * (workArea.x - monitor.x) +
-                    workArea.width - monitor.width;
-            }
-        }
-
-        const idealX =
-            (panel.width - alignmentActor.width + centerOffset) / 2;
-        const rightClampDistance = Math.max(
-            0,
-            idealX - alignmentActor.x
-        );
-        alignmentOffset = Math.min(
-            slotWidth,
-            alignmentOffset + rightClampDistance
-        );
-        return {alignmentOffset, slotWidth};
+        item.animateOutAndDestroy();
     }
 
     _animatePinnedLaunch(item) {
@@ -1567,10 +1434,11 @@ export class TaskbarController {
 
     _updateGlassGeometry(item) {
         const glassWidth = this._buttonWidth(item._taskbarWindow);
+        const slotWidth = this._itemSlotWidth(item._taskbarWindow);
         const glassHeight = Math.max(1, this._panelHeight - 8);
 
         item._taskbarButton.set_width(glassWidth);
-        item._taskbarSlot.set_size(glassWidth, this._panelHeight);
+        item._taskbarSlot.set_size(slotWidth, this._panelHeight);
         item._taskbarVisual.set_size(glassWidth, this._panelHeight);
         item._taskbarGlassHost.set_size(glassWidth, this._panelHeight);
         item._taskbarGlass.set_position(0, 4);
@@ -1589,15 +1457,18 @@ export class TaskbarController {
             : iconWidth;
     }
 
+    _itemSlotWidth(window) {
+        const spacing = Math.max(
+            this._settings.get_int('icon-spacing'),
+            0
+        );
+        return this._buttonWidth(window) + spacing;
+    }
+
     _applyCurrentButtonWidths() {
-        let width = 0;
-        for (const item of this._appButtons.values()) {
+        for (const item of this._appButtons.values())
             this._updateGlassGeometry(item);
-            width += item._taskbarSlot.width;
-        }
-        const spacing = Math.max(this._settings.get_int('icon-spacing'), 0);
-        width += Math.max(0, this._appButtons.size - 1) * spacing;
-        this.actor.set_width(width > 0 ? Math.ceil(width) : -1);
+        this.actor.queue_relayout();
     }
 
     _syncItemLabel(item) {
@@ -1613,8 +1484,4 @@ export class TaskbarController {
             item._taskbarButton.accessible_name = `${text}, ${_('running')}`;
     }
 
-    _applyButtonSpacing(button) {
-        const spacing = this._settings.get_int('icon-spacing');
-        button.set_style(spacing < 0 ? `margin-right: ${spacing}px;` : '');
-    }
 }

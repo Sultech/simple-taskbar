@@ -19,6 +19,7 @@ import {
 } from './panelPosition.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
+import {TaskbarViewport} from './taskbarViewport.js';
 import {
     allocateAdaptivePanel,
     constrainTaskbarWidth,
@@ -316,12 +317,13 @@ class SecondaryTaskbarPanel {
         });
         this._folderMenuController = new FolderMenuController(settings);
 
-        this._taskbarBin = new St.ScrollView({
+        this._taskbarBin = new TaskbarViewport({
             style_class: 'simple-taskbar-bin',
             hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
             enable_mouse_scrolling: true,
             clip_to_allocation: true,
+            x_expand: false,
             visible: !settings.get_boolean('default-gnome-panel'),
         });
         this._taskbarBin.add_child(this._taskbarController.actor);
@@ -529,10 +531,7 @@ class SecondaryTaskbarPanel {
             this._iconSize,
             this._settings.get_int('start-button-padding')
         );
-        this._taskbarController.applyAppearance(
-            this._settings.get_int('icon-spacing'),
-            this._appsAreCentered()
-        );
+        this._taskbarController.applyAppearance();
     }
 
     _syncTaskbarVisibility() {
@@ -657,13 +656,11 @@ class SecondaryTaskbarPanel {
     _updateTaskbarWidth() {
         const availableWidth = constrainTaskbarWidth({
             taskbarBin: this._taskbarBin,
-            taskbarActor: this._taskbarController.actor,
             leftBox: this._leftBox,
             centerBox: this._centerBox,
             rightBox: this._rightBox,
             panelWidth: this._monitor.width,
             panelHeight: this._panelHeight,
-            spacing: this._settings.get_int('icon-spacing'),
             centered: this._appsAreCentered(),
         });
         if (availableWidth !== undefined)

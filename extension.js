@@ -21,6 +21,7 @@ import {MultiMonitorController} from './multiMonitorController.js';
 import {NotificationBannerController} from './notificationBannerController.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
+import {TaskbarViewport} from './taskbarViewport.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
 import {OverviewIntegration} from './overviewIntegration.js';
@@ -185,13 +186,13 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _createTaskbarActors() {
-        this._taskbarBin = new St.ScrollView({
+        this._taskbarBin = new TaskbarViewport({
             style_class: 'simple-taskbar-bin',
             hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
             enable_mouse_scrolling: true,
             clip_to_allocation: true,
-            x_expand: true,
+            x_expand: false,
             y_expand: true,
             visible: !this._settings.get_boolean('default-gnome-panel'),
         });
@@ -271,13 +272,11 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _applyTaskbarAppearance() {
-        const spacing = this._settings.get_int('icon-spacing');
-        const centered = this._panelController.appsAreCentered();
         this._startButtonController.applyAppearance(
             this._iconSize,
             this._settings.get_int('start-button-padding')
         );
-        this._taskbarController.applyAppearance(spacing, centered);
+        this._taskbarController.applyAppearance();
         this._panelController.updateTaskbarWidth();
     }
 
