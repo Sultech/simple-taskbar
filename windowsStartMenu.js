@@ -579,7 +579,7 @@ export class WindowsStartMenu {
 
     _showPinnedApps() {
         this._searchController.cancel();
-        this._setAllAppsScrollbar(false);
+        this._setScrollbarPolicy(true, false);
         this._view = 'pinned';
         this._headerTitle.text = _('Pinned');
         this._allAppsButton.show();
@@ -640,7 +640,7 @@ export class WindowsStartMenu {
 
     _showAllApps() {
         this._searchController.cancel();
-        this._setAllAppsScrollbar(true);
+        this._setScrollbarPolicy(true);
         this._view = 'all';
         this._headerTitle.text = _('All apps');
         this._allAppsButton.hide();
@@ -649,7 +649,7 @@ export class WindowsStartMenu {
     }
 
     _showSearchResults(query) {
-        this._setAllAppsScrollbar(false);
+        this._setScrollbarPolicy(false);
         this._headerTitle.text = _('Search results');
         this._allAppsButton.hide();
         this._backButton.show();
@@ -662,13 +662,13 @@ export class WindowsStartMenu {
         });
     }
 
-    _setAllAppsScrollbar(visible) {
+    _setScrollbarPolicy(visible, resetScroll = visible) {
         this._scrollView.set_overlay_scrollbars(!visible);
         this._scrollView.set_policy(
             St.PolicyType.NEVER,
             visible ? St.PolicyType.AUTOMATIC : St.PolicyType.EXTERNAL
         );
-        if (visible)
+        if (resetScroll)
             this._scrollView.vadjustment.value = 0;
     }
 
