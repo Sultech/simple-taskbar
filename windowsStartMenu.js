@@ -949,8 +949,10 @@ export class WindowsStartMenu {
             this._appContextMenu = null;
             this._appContextMenuManager = null;
             menu.destroy();
-            if (refreshAfterClose)
+            if (refreshAfterClose && this._view === 'pinned' &&
+                !this._searchEntry.get_text().trim()) {
                 this.refresh();
+            }
         });
         menu.open(BoxPointer.PopupAnimation.FULL);
     }
