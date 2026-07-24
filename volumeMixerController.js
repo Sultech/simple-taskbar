@@ -217,6 +217,12 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
         }
         this._stream.push_volume();
     }
+
+    destroy() {
+        this.slider.disconnect(this._sliderChangedId);
+        this._sliderChangedId = 0;
+        super.destroy();
+    }
 });
 
 const VolumeMixerToggle = GObject.registerClass(
@@ -293,6 +299,15 @@ class VolumeMixerToggle extends QuickMenuToggle {
             this._emptyItem.destroy();
             this._emptyItem = null;
         }
+    }
+
+    destroy() {
+        super.destroy();
+        this._streamRows.clear();
+        this._emptyItem = null;
+        this._streamSection = null;
+        this._control = null;
+        this._appSystem = null;
     }
 });
 
