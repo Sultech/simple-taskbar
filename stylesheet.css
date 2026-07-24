@@ -579,6 +579,28 @@
     text-align: center;
 }
 
+.simple-taskbar-windows-start-tooltip {
+    max-width: 360px;
+    min-height: 0;
+    padding: 7px 10px;
+    border-radius: 7px;
+    text-align: left;
+}
+
+.simple-taskbar-windows-start-tooltip.simple-taskbar-windows-start-dark {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f4f4f4;
+    background-color: rgba(30, 30, 34, 0.98);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.24);
+}
+
+.simple-taskbar-windows-start-tooltip.simple-taskbar-windows-start-light {
+    border: 1px solid rgba(18, 22, 28, 0.14);
+    color: #20242a;
+    background-color: rgba(246, 247, 249, 0.98);
+    box-shadow: 0 2px 5px rgba(20, 24, 30, 0.18);
+}
+
 .simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark .popup-menu-content {
     border: 1px solid rgba(255, 255, 255, 0.16);
     background-color: rgba(30, 30, 34, 0.98);

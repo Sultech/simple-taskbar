@@ -24,6 +24,9 @@ import {StartMenuSearchController} from './startMenuSearchController.js';
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
 const MAX_RECOMMENDED_APPS = 6;
+const APP_TOOLTIP_DELAY = 500;
+const APP_TOOLTIP_SHOW_TIME = 120;
+const APP_TOOLTIP_HIDE_TIME = 100;
 
 export class WindowsStartMenu {
     constructor(sourceActor, settings, params = {}) {
@@ -63,6 +66,8 @@ export class WindowsStartMenu {
         this._appContextMenu = null;
         this._appContextMenuManager = null;
         this._appActionCloseIdleId = 0;
+        this._appTooltipTimeoutId = 0;
+        this._appTooltipSource = null;
         this._centerAnchor = new St.Widget({
             reactive: false,
             opacity: 0,
@@ -77,9 +82,22 @@ export class WindowsStartMenu {
             panelArrowSide(settings)
         );
         this._menu.actor.add_style_class_name('simple-taskbar-windows-start-menu');
-        this.syncTheme();
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
+
+        this._appTooltip = new St.Label({
+            style_class: 'dash-label simple-taskbar-windows-start-tooltip',
+            reactive: false,
+            opacity: 0,
+        });
+        this._appTooltip.clutter_text.set({
+            ellipsize: Pango.EllipsizeMode.NONE,
+            line_wrap: true,
+            line_wrap_mode: Pango.WrapMode.WORD_CHAR,
+        });
+        this._appTooltip.hide();
+        global.stage.add_child(this._appTooltip);
+        this.syncTheme();
 
         this._menuManager = params.menuManager ??
             new PopupMenu.PopupMenuManager(sourceActor);
@@ -148,6 +166,7 @@ export class WindowsStartMenu {
 
         this._menu.connect('open-state-changed', (_menu, open) => {
             if (!open) {
+                this._hideAppTooltip(true);
                 this._destroyAppContextMenu();
             }
             this._onOpenStateChanged(open);
@@ -247,6 +266,7 @@ export class WindowsStartMenu {
         const changed = force || theme !== this._appliedTheme;
         if (changed) {
             this._applyThemeClass(this._menu?.actor, theme);
+            this._applyThemeClass(this._appTooltip, theme);
             this._syncShellButtonClasses(this._root);
             this._appliedTheme = theme;
             this._queuePrepare();
@@ -348,9 +368,12 @@ export class WindowsStartMenu {
         this._pinnedSignature = null;
         this._searchController?.destroy();
         this._searchController = null;
+        this._hideAppTooltip(true);
         this._destroyAppContextMenu();
         this._menu?.destroy();
         this._menu = null;
+        this._appTooltip.destroy();
+        this._appTooltip = null;
         this._centerAnchor?.destroy();
         this._centerAnchor = null;
         this._sourceActor = null;
@@ -726,6 +749,7 @@ export class WindowsStartMenu {
     }
 
     _clearContent() {
+        this._hideAppTooltip(true);
         for (const child of this._content.get_children()) {
             if (child === this._pinnedView)
                 this._content.remove_child(child);
@@ -781,6 +805,7 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
+        this._addAppTooltip(button, app, label);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
         if (pinnedGrid) {
@@ -821,7 +846,11 @@ export class WindowsStartMenu {
             x_expand: true,
         });
         content.add_child(app.create_icon_texture(compact ? 28 : 30));
-        content.add_child(this._createAppLabel(app.get_name(), compact ? 190 : 480));
+        const label = this._createAppLabel(
+            app.get_name(),
+            compact ? 190 : 480
+        );
+        content.add_child(label);
         const button = new St.Button({
             style_class: compact
                 ? 'simple-taskbar-windows-start-recommended'
@@ -834,6 +863,7 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
+        this._addAppTooltip(button, app, label);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
         this._syncShellButtonClasses(button);
@@ -900,6 +930,7 @@ export class WindowsStartMenu {
     }
 
     _openAppContextMenu(sourceButton, app, event = null) {
+        this._hideAppTooltip(true);
         this._destroyAppContextMenu();
 
         let stageX;
@@ -986,6 +1017,111 @@ export class WindowsStartMenu {
         });
         label.clutter_text.ellipsize = Pango.EllipsizeMode.END;
         return label;
+    }
+
+    _addAppTooltip(button, app, label) {
+        button.connect('notify::hover', () => {
+            if (button.hover)
+                this._queueAppTooltip(button, app, label);
+            else if (this._appTooltipSource === button)
+                this._hideAppTooltip();
+        });
+        button.connect('destroy', () => {
+            if (this._appTooltipSource === button)
+                this._hideAppTooltip(true);
+        });
+    }
+
+    _queueAppTooltip(button, app, label) {
+        this._hideAppTooltip(true);
+        this._appTooltipSource = button;
+        this._appTooltipTimeoutId = GLib.timeout_add_once(
+            GLib.PRIORITY_DEFAULT,
+            APP_TOOLTIP_DELAY,
+            () => {
+                this._appTooltipTimeoutId = 0;
+                if (this._appTooltipSource !== button || !button.hover)
+                    return;
+                this._showAppTooltip(button, app, label);
+            }
+        );
+    }
+
+    _showAppTooltip(button, app, label) {
+        const description = app.get_description()?.trim() ?? '';
+        const ellipsized = label.clutter_text.get_layout().is_ellipsized();
+        if (!ellipsized && !description) {
+            this._appTooltipSource = null;
+            return;
+        }
+
+        if (ellipsized) {
+            this._appTooltip.text = '';
+            const titleMarkup = GLib.markup_escape_text(app.get_name(), -1);
+            const descriptionMarkup =
+                GLib.markup_escape_text(description, -1);
+            this._appTooltip.clutter_text.set_markup(
+                description
+                    ? `<b>${titleMarkup}</b>\n${descriptionMarkup}`
+                    : `<b>${titleMarkup}</b>`
+            );
+        } else {
+            this._appTooltip.text = description;
+        }
+        this._appTooltip.opacity = 0;
+        this._appTooltip.show();
+
+        const [buttonX, buttonY] = button.get_transformed_position();
+        const [buttonWidth, buttonHeight] = button.get_transformed_size();
+        const tooltipWidth = this._appTooltip.width;
+        const tooltipHeight = this._appTooltip.height;
+        const monitor = Main.layoutManager.findMonitorForActor(button) ??
+            Main.layoutManager.primaryMonitor;
+        const gap = 6;
+        const minX = monitor.x + gap;
+        const maxX = monitor.x + monitor.width - tooltipWidth - gap;
+        const x = Math.clamp(
+            buttonX + Math.floor((buttonWidth - tooltipWidth) / 2),
+            minX,
+            Math.max(minX, maxX)
+        );
+        const belowY = buttonY + buttonHeight + gap;
+        const aboveY = buttonY - tooltipHeight - gap;
+        const y = belowY + tooltipHeight <= monitor.y + monitor.height - gap
+            ? belowY
+            : Math.max(monitor.y + gap, aboveY);
+
+        this._appTooltip.set_position(Math.round(x), Math.round(y));
+        this._appTooltip.ease({
+            opacity: 255,
+            duration: APP_TOOLTIP_SHOW_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+    }
+
+    _hideAppTooltip(instant = false) {
+        if (this._appTooltipTimeoutId) {
+            GLib.Source.remove(this._appTooltipTimeoutId);
+            this._appTooltipTimeoutId = 0;
+        }
+        this._appTooltipSource = null;
+        if (!this._appTooltip.visible)
+            return;
+
+        this._appTooltip.remove_all_transitions();
+        if (instant) {
+            this._appTooltip.opacity = 0;
+            this._appTooltip.hide();
+            return;
+        }
+
+        const tooltip = this._appTooltip;
+        this._appTooltip.ease({
+            opacity: 0,
+            duration: APP_TOOLTIP_HIDE_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onComplete: () => tooltip.hide(),
+        });
     }
 
     _allApps() {
