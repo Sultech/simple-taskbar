@@ -97,12 +97,21 @@
     </key>
     <key name="activities-button-right-placement" type="s">
       <choices>
+        <choice value="first"/>
         <choice value="before-system"/>
         <choice value="after-system"/>
         <choice value="after-clock"/>
       </choices>
       <default>'after-system'</default>
       <summary>Choose where the Activities button appears on the right</summary>
+    </key>
+    <key name="show-desktop-button-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="right"/>
+      </choices>
+      <default>'right'</default>
+      <summary>Place the Show Desktop button on the left or right</summary>
     </key>
     <key name="folder-menu-enabled" type="b">
       <default>false</default>

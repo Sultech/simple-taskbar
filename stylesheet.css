@@ -146,7 +146,7 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop {
-    border-left-color: rgba(0, 0, 0, 0.26);
+    border-color: rgba(0, 0, 0, 0.26);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop:hover {
@@ -428,6 +428,13 @@
     border: 0 solid rgba(255, 255, 255, 0.28);
     border-left-width: 1px;
     border-radius: 0;
+}
+
+.simple-taskbar-show-desktop.simple-taskbar-show-desktop-left {
+    margin-left: 0;
+    margin-right: 5px;
+    border-left-width: 0;
+    border-right-width: 1px;
 }
 
 .simple-taskbar-show-desktop:hover {

@@ -610,13 +610,23 @@ class SecondaryTaskbarPanel {
             else
                 target.add_child(actor);
         }
+        const activitiesOnRight =
+            this._settings.get_string('activities-button-position') ===
+                'right' ? activities : null;
+        const activitiesRightPlacement = this._settings.get_string(
+            'activities-button-right-placement'
+        );
+        if (activitiesOnRight && activitiesRightPlacement === 'first')
+            this._rightBox.insert_child_at_index(activitiesOnRight, 0);
+
         const orderedRightItems = orderActivitiesInRightPanel(
             rightItems,
-            this._settings.get_string('activities-button-position') ===
-                'right' ? activities : null,
+            activitiesRightPlacement === 'first'
+                ? null
+                : activitiesOnRight,
             quickSettings,
             dateMenu,
-            this._settings.get_string('activities-button-right-placement')
+            activitiesRightPlacement
         );
         for (const actor of orderedRightItems)
             this._rightBox.add_child(actor);

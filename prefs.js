@@ -953,6 +953,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 title: _('Activities Right Placement'),
                 choices: [
                     {
+                        value: 'first',
+                        label: _('First on Right'),
+                    },
+                    {
                         value: 'before-system',
                         label: _('Before System Menu'),
                     },
@@ -994,6 +998,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             title: _('System Menu'),
             subtitle: _('Quick Settings, volume, network, and power'),
             choices: panelPositions,
+        });
+        this._addComboRow(panelGroup, window._settings, {
+            key: 'show-desktop-button-position',
+            title: _('Show Desktop Button'),
+            subtitle: _('Place it next to Start or at the right edge'),
+            choices: panelPositions.filter(
+                position => position.value !== 'center'
+            ),
         });
 
         const folderMenuSwitch = new Adw.SwitchRow({

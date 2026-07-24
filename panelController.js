@@ -162,6 +162,7 @@ export class PanelController {
         const actors = [
             this._startButton,
             this._taskbarBin,
+            this._showDesktopButton,
             this._folderMenuButton,
             ...this._panelItemState.map(item => item.actor),
         ];
@@ -173,21 +174,44 @@ export class PanelController {
         const startButtonBox = this._startButtonIsCentered()
             ? centerBox
             : leftBox;
+        const showDesktopOnLeft = this._settings.get_string(
+            'show-desktop-button-position'
+        ) === 'left';
+        this._showDesktopButton.remove_style_class_name(
+            'simple-taskbar-show-desktop-left'
+        );
+        if (showDesktopOnLeft) {
+            this._showDesktopButton.add_style_class_name(
+                'simple-taskbar-show-desktop-left'
+            );
+        }
         if (this._startButtonShouldBeVisible()) {
             if (startButtonBox === leftBox)
                 leftBox.insert_child_at_index(this._startButton, 0);
             else
                 centerBox.add_child(this._startButton);
         }
+        let leftLeadingIndex = leftBox.get_children().indexOf(
+            this._startButton
+        );
+        leftLeadingIndex = leftLeadingIndex >= 0
+            ? leftLeadingIndex + 1
+            : 0;
+        if (showDesktopOnLeft) {
+            leftBox.insert_child_at_index(
+                this._showDesktopButton,
+                leftLeadingIndex
+            );
+            leftLeadingIndex++;
+        } else {
+            rightBox.add_child(this._showDesktopButton);
+        }
         if (activities && this._settings.get_string(
             'activities-button-position'
         ) === 'left') {
-            const startIndex = leftBox.get_children().indexOf(
-                this._startButton
-            );
             leftBox.insert_child_at_index(
                 activities,
-                startIndex >= 0 ? startIndex + 1 : 0
+                leftLeadingIndex
             );
         }
         taskbarBox.add_child(this._taskbarBin);
@@ -209,13 +233,23 @@ export class PanelController {
                 target.add_child(item.actor);
         }
 
+        const activitiesOnRight =
+            this._settings.get_string('activities-button-position') ===
+                'right' ? activities : null;
+        const activitiesRightPlacement = this._settings.get_string(
+            'activities-button-right-placement'
+        );
+        if (activitiesOnRight && activitiesRightPlacement === 'first')
+            rightBox.insert_child_at_index(activitiesOnRight, 0);
+
         const orderedRightItems = orderActivitiesInRightPanel(
             rightItems,
-            this._settings.get_string('activities-button-position') ===
-                'right' ? activities : null,
+            activitiesRightPlacement === 'first'
+                ? null
+                : activitiesOnRight,
             quickSettings,
             Main.panel.statusArea.dateMenu?.container,
-            this._settings.get_string('activities-button-right-placement')
+            activitiesRightPlacement
         );
         for (const actor of orderedRightItems) {
             const showDesktopIndex = rightBox.get_children().indexOf(
@@ -237,11 +271,18 @@ export class PanelController {
             const showDesktopIndex = rightChildren.indexOf(
                 this._showDesktopButton
             );
-            const folderMenuIndex = rightPanelItemIndices.length > 0
-                ? Math.min(...rightPanelItemIndices)
-                : showDesktopIndex >= 0
-                    ? showDesktopIndex
-                    : rightBox.get_n_children();
+            const leadingActivitiesIndex =
+                activitiesOnRight &&
+                activitiesRightPlacement === 'first'
+                    ? rightChildren.indexOf(activitiesOnRight)
+                    : -1;
+            const folderMenuIndex = leadingActivitiesIndex >= 0
+                ? leadingActivitiesIndex + 1
+                : rightPanelItemIndices.length > 0
+                    ? Math.min(...rightPanelItemIndices)
+                    : showDesktopIndex >= 0
+                        ? showDesktopIndex
+                        : rightBox.get_n_children();
             rightBox.insert_child_at_index(
                 this._folderMenuButton,
                 folderMenuIndex
@@ -598,6 +639,11 @@ export class PanelController {
             'changed::activities-button-right-placement',
             () => this.applyLayout()
         );
+        this._connect(
+            this._settings,
+            'changed::show-desktop-button-position',
+            () => this.applyLayout()
+        );
         this._connect(this._settings, 'changed::start-button-padding', () => {
             this.updateTaskbarWidth();
         });
@@ -619,6 +665,7 @@ export class PanelController {
         const managedActors = [
             this._startButton,
             this._taskbarBin,
+            this._showDesktopButton,
             this._folderMenuButton,
             ...this._panelItemState.map(item => item.actor),
         ];

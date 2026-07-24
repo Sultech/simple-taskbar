@@ -33,7 +33,9 @@ export function orderActivitiesInRightPanel(
     const systemIndex = ordered.indexOf(systemMenu);
     const clockIndex = ordered.indexOf(clock);
     let index;
-    if (placement === 'before-system') {
+    if (placement === 'first') {
+        index = 0;
+    } else if (placement === 'before-system') {
         index = systemIndex >= 0 ? systemIndex : 0;
     } else if (placement === 'after-clock') {
         index = clockIndex >= 0
