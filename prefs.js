@@ -665,6 +665,29 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updateRecommendedAppsSwitch();
 
+        const appCategoriesSwitch = new Adw.SwitchRow({
+            title: _('Organize All Apps into Categories'),
+            subtitle: _('Browse applications by category in the Start menu'),
+            active: window._settings.get_boolean(
+                'start-menu-app-categories'
+            ),
+        });
+        startMenuGroup.add(appCategoriesSwitch);
+        window._settings.bind(
+            'start-menu-app-categories',
+            appCategoriesSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateAppCategoriesSwitch = () => {
+            appCategoriesSwitch.sensitive = windowsStartMenuSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateAppCategoriesSwitch
+        );
+        updateAppCategoriesSwitch();
+
         const gnomeStartButtonVisibleSwitch = new Adw.SwitchRow({
             title: _('Show Original GNOME Button'),
             subtitle: _('Show the Applications button when the Eleven-style Start Menu is disabled'),

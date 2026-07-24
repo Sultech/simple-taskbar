@@ -190,6 +190,10 @@
       <default>true</default>
       <summary>Show frequently used applications in the Eleven-style Start Menu</summary>
     </key>
+    <key name="start-menu-app-categories" type="b">
+      <default>true</default>
+      <summary>Organize All Apps into selectable application categories</summary>
+    </key>
     <key name="start-menu-theme" type="s">
       <choices>
         <choice value="dark"/>

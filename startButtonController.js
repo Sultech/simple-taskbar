@@ -247,6 +247,11 @@ export class StartButtonController {
             'changed::start-menu-recommended-apps',
             () => this._windowsStartMenu?.refresh()
         );
+        this._connect(
+            this._settings,
+            'changed::start-menu-app-categories',
+            () => this._windowsStartMenu.refresh()
+        );
         this._connect(this._settings, 'changed::start-button-custom-icon', () => {
             this._icon.gicon = this._currentGIcon();
         });

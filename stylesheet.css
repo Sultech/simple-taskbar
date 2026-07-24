@@ -555,6 +555,32 @@
     spacing: 4px;
 }
 
+.simple-taskbar-windows-start-categories {
+    width: 132px;
+    margin: 0 0 10px 14px;
+    spacing: 3px;
+}
+
+.simple-taskbar-windows-start-categorized .simple-taskbar-windows-start-scroll {
+    padding-left: 12px;
+}
+
+.simple-taskbar-windows-start-category {
+    padding: 7px 8px;
+    border-radius: 6px;
+    text-align: left;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-category:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-category:focus {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-category:checked {
+    background-color: rgba(96, 174, 247, 0.24);
+}
+
 .simple-taskbar-windows-start-app-grid,
 .simple-taskbar-windows-start-recommended-grid,
 .simple-taskbar-windows-start-app-list {
@@ -746,6 +772,8 @@
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-nav:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-nav:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-category:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-category:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-recommended:hover,
@@ -757,6 +785,10 @@
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-icon-button:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-icon-button:focus {
     background-color: rgba(26, 36, 52, 0.09);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-category:checked {
+    background-color: rgba(24, 119, 201, 0.16);
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-empty,

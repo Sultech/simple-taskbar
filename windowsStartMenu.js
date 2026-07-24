@@ -29,6 +29,58 @@ const APP_TOOLTIP_SHOW_TIME = 120;
 const APP_TOOLTIP_HIDE_TIME = 100;
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
+const APP_CATEGORIES = [
+    {
+        id: 'internet',
+        label: () => _('Internet'),
+        desktopCategories: ['Network'],
+    },
+    {
+        id: 'office',
+        label: () => _('Office'),
+        desktopCategories: ['Office'],
+    },
+    {
+        id: 'development',
+        label: () => _('Development'),
+        desktopCategories: ['Development'],
+    },
+    {
+        id: 'games',
+        label: () => _('Games'),
+        desktopCategories: ['Game'],
+    },
+    {
+        id: 'graphics',
+        label: () => _('Graphics'),
+        desktopCategories: ['Graphics'],
+    },
+    {
+        id: 'audio-video',
+        label: () => _('Sound & Video'),
+        desktopCategories: ['AudioVideo', 'Audio', 'Video'],
+    },
+    {
+        id: 'education',
+        label: () => _('Education'),
+        desktopCategories: ['Education'],
+    },
+    {
+        id: 'science',
+        label: () => _('Science'),
+        desktopCategories: ['Science'],
+    },
+    {
+        id: 'system',
+        label: () => _('System'),
+        desktopCategories: ['System', 'Settings'],
+    },
+    {
+        id: 'utilities',
+        label: () => _('Utilities'),
+        desktopCategories: ['Utility'],
+    },
+];
 
 export class WindowsStartMenu {
     constructor(sourceActor, settings, params = {}) {
@@ -63,6 +115,7 @@ export class WindowsStartMenu {
         this._pinnedView = null;
         this._pinnedSignature = null;
         this._pinnedApps = [];
+        this._selectedAppCategory = 'all';
         this._menuWidth = 0;
         this._menuHeight = 0;
         this._appContextMenu = null;
@@ -158,7 +211,20 @@ export class WindowsStartMenu {
             x_expand: true,
         });
         this._scrollView.add_child(this._content);
-        this._root.add_child(this._scrollView);
+        this._categorySidebar = new St.BoxLayout({
+            style_class: 'simple-taskbar-windows-start-categories',
+            orientation: Clutter.Orientation.VERTICAL,
+            y_expand: true,
+            visible: false,
+        });
+        this._body = new St.BoxLayout({
+            style_class: 'simple-taskbar-windows-start-body',
+            x_expand: true,
+            y_expand: true,
+        });
+        this._body.add_child(this._categorySidebar);
+        this._body.add_child(this._scrollView);
+        this._root.add_child(this._body);
 
         this._createFooter();
         this._showPinnedApps();
@@ -371,6 +437,7 @@ export class WindowsStartMenu {
         this._pinnedDragController?.destroy();
         this._pinnedDragController = null;
         this._pinnedApps = null;
+        this._selectedAppCategory = null;
         this._pinnedSignature = null;
         this._searchController?.destroy();
         this._searchController = null;
@@ -380,6 +447,8 @@ export class WindowsStartMenu {
         this._menu = null;
         this._appTooltip.destroy();
         this._appTooltip = null;
+        this._categorySidebar = null;
+        this._body = null;
         this._centerAnchor?.destroy();
         this._centerAnchor = null;
         this._sourceActor = null;
@@ -623,6 +692,7 @@ export class WindowsStartMenu {
 
     _showPinnedApps() {
         this._searchController.cancel();
+        this._setCategorySidebarVisible(false);
         this._setScrollbarPolicy(true, false);
         this._view = 'pinned';
         this._headerTitle.text = _('Pinned');
@@ -689,10 +759,21 @@ export class WindowsStartMenu {
         this._headerTitle.text = _('All apps');
         this._allAppsButton.hide();
         this._backButton.show();
-        this._displayAppList(this._allApps());
+        const apps = this._allApps();
+        if (this._settings.get_boolean('start-menu-app-categories')) {
+            this._selectedAppCategory = 'all';
+            const groupedApps = this._groupAppsByCategory(apps);
+            this._buildCategorySidebar(apps, groupedApps);
+            this._setCategorySidebarVisible(true);
+            this._displayAppList(apps, true);
+        } else {
+            this._setCategorySidebarVisible(false);
+            this._displayAppList(apps);
+        }
     }
 
     _showSearchResults(query) {
+        this._setCategorySidebarVisible(false);
         this._setScrollbarPolicy(false);
         this._headerTitle.text = _('Search results');
         this._allAppsButton.hide();
@@ -747,7 +828,7 @@ export class WindowsStartMenu {
         }
     }
 
-    _displayAppList(apps) {
+    _displayAppList(apps, categorized = false) {
         this._clearContent();
         this._firstVisibleApp = apps[0] ?? null;
         this._firstSearchResult = null;
@@ -765,8 +846,100 @@ export class WindowsStartMenu {
             orientation: Clutter.Orientation.VERTICAL,
         });
         for (const app of apps)
-            list.add_child(this._createAppListButton(app));
+            list.add_child(this._createAppListButton(app, false, categorized));
         this._content.add_child(list);
+    }
+
+    _groupAppsByCategory(apps) {
+        const groupedApps = new Map([
+            ...APP_CATEGORIES.map(category => [category.id, []]),
+            ['other', []],
+        ]);
+        for (const app of apps)
+            groupedApps.get(this._categoryForApp(app)).push(app);
+        return groupedApps;
+    }
+
+    _categoryForApp(app) {
+        const categories = new Set(
+            (app.get_app_info().get_categories() ?? '')
+                .split(';')
+                .filter(Boolean)
+        );
+        for (const category of APP_CATEGORIES) {
+            if (category.desktopCategories.some(name =>
+                categories.has(name)
+            )) {
+                return category.id;
+            }
+        }
+        return 'other';
+    }
+
+    _buildCategorySidebar(allApps, groupedApps) {
+        this._categorySidebar.destroy_all_children();
+        const categories = [
+            {id: 'all', label: _('All'), apps: allApps},
+            ...APP_CATEGORIES
+                .map(category => ({
+                    id: category.id,
+                    label: category.label(),
+                    apps: groupedApps.get(category.id),
+                }))
+                .filter(category => category.apps.length > 0),
+        ];
+        const otherApps = groupedApps.get('other');
+        if (otherApps.length > 0) {
+            categories.push({
+                id: 'other',
+                label: _('Other'),
+                apps: otherApps,
+            });
+        }
+
+        for (const category of categories) {
+            const button = new St.Button({
+                style_class: 'simple-taskbar-windows-start-category',
+                reactive: true,
+                can_focus: true,
+                track_hover: true,
+                toggle_mode: true,
+                checked: category.id === this._selectedAppCategory,
+                x_expand: true,
+                x_align: Clutter.ActorAlign.FILL,
+                accessible_name: category.label,
+                child: new St.Label({
+                    text: category.label,
+                    x_align: Clutter.ActorAlign.START,
+                    y_align: Clutter.ActorAlign.CENTER,
+                    x_expand: true,
+                }),
+            });
+            button._startMenuCategoryId = category.id;
+            button.connect('clicked', () => {
+                this._selectedAppCategory = category.id;
+                for (const child of this._categorySidebar.get_children()) {
+                    child.checked =
+                        child._startMenuCategoryId === category.id;
+                }
+                this._scrollView.vadjustment.value = 0;
+                this._displayAppList(category.apps, true);
+            });
+            this._syncShellButtonClasses(button);
+            this._categorySidebar.add_child(button);
+        }
+    }
+
+    _setCategorySidebarVisible(visible) {
+        this._categorySidebar.visible = visible;
+        if (visible)
+            this._body.add_style_class_name(
+                'simple-taskbar-windows-start-categorized'
+            );
+        else
+            this._body.remove_style_class_name(
+                'simple-taskbar-windows-start-categorized'
+            );
     }
 
     _clearContent() {
@@ -861,7 +1034,7 @@ export class WindowsStartMenu {
         return grid;
     }
 
-    _createAppListButton(app, compact = false) {
+    _createAppListButton(app, compact = false, categorized = false) {
         const content = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start-app-list-content',
             x_expand: true,
@@ -870,7 +1043,7 @@ export class WindowsStartMenu {
         content.add_child(icon);
         const label = this._createAppLabel(
             app.get_name(),
-            compact ? 190 : 480
+            compact ? 190 : categorized ? 330 : 480
         );
         content.add_child(label);
         const button = new St.Button({
