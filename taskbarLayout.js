@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+
 const PANEL_ITEM_GAP = 8;
 
 function naturalWidth(actor, height) {
@@ -25,6 +27,65 @@ function taskbarContentWidth(taskbarActor, height, spacing) {
     const childrenWidth = children.reduce((width, actor) =>
         width + naturalWidth(actor.child ?? actor, height), 0);
     return childrenWidth + Math.max(0, children.length - 1) * spacing;
+}
+
+export function allocateAdaptivePanel(
+    panel,
+    box,
+    leftBox,
+    centerBox,
+    rightBox,
+    centerOffset = 0
+) {
+    panel.set_allocation(box);
+
+    const width = box.x2 - box.x1;
+    const height = box.y2 - box.y1;
+    const [, leftNaturalWidth] = leftBox.get_preferred_width(-1);
+    const [, centerNaturalWidth] = centerBox.get_preferred_width(-1);
+    const [, rightNaturalWidth] = rightBox.get_preferred_width(-1);
+    const rtl =
+        panel.get_text_direction() === Clutter.TextDirection.RTL;
+    const physicalLeftWidth = rtl
+        ? rightNaturalWidth
+        : leftNaturalWidth;
+    const physicalRightWidth = rtl
+        ? leftNaturalWidth
+        : rightNaturalWidth;
+    const centeredX = (width - centerNaturalWidth + centerOffset) / 2;
+    const minimumCenterX = physicalLeftWidth + PANEL_ITEM_GAP;
+    const maximumCenterX = width - physicalRightWidth -
+        PANEL_ITEM_GAP - centerNaturalWidth;
+    const centerX = Math.clamp(
+        centeredX,
+        minimumCenterX,
+        Math.max(minimumCenterX, maximumCenterX)
+    );
+    const childBox = new Clutter.ActorBox();
+    childBox.y1 = 0;
+    childBox.y2 = height;
+
+    if (rtl) {
+        childBox.x1 = Math.max(width - leftNaturalWidth, 0);
+        childBox.x2 = width;
+    } else {
+        childBox.x1 = 0;
+        childBox.x2 = Math.min(leftNaturalWidth, width);
+    }
+    leftBox.allocate(childBox);
+
+    childBox.x1 = Math.round(centerX);
+    childBox.x2 = childBox.x1 + centerNaturalWidth;
+    centerBox.allocate(childBox);
+
+    if (rtl) {
+        childBox.x1 = 0;
+        childBox.x2 = Math.min(rightNaturalWidth, width);
+    } else {
+        childBox.x1 = Math.max(width - rightNaturalWidth, 0);
+        childBox.x2 = width;
+    }
+    rightBox.allocate(childBox);
 }
 
 export function constrainTaskbarWidth({
@@ -59,13 +120,17 @@ export function constrainTaskbarWidth({
             taskbarBin,
             panelHeight
         );
+        const rtl =
+            leftBox.get_text_direction() === Clutter.TextDirection.RTL;
+        const physicalLeftWidth = rtl ? rightWidth : leftWidth;
+        const physicalRightWidth = rtl ? leftWidth : rightWidth;
         const centerOtherWidth = childrenNaturalWidth(
             centerBox,
             taskbarBin,
             panelHeight
         );
         availableWidth = panelWidth - centerOtherWidth -
-            2 * (Math.max(leftWidth, rightWidth) + PANEL_ITEM_GAP);
+            physicalLeftWidth - physicalRightWidth - 2 * PANEL_ITEM_GAP;
     } else {
         const leftOtherWidth = childrenNaturalWidth(
             leftBox,

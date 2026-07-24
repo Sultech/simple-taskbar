@@ -16,7 +16,10 @@ import {
     orderActivitiesInRightPanel,
     panelIsTop,
 } from './panelPosition.js';
-import {constrainTaskbarWidth} from './taskbarLayout.js';
+import {
+    allocateAdaptivePanel,
+    constrainTaskbarWidth,
+} from './taskbarLayout.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 
 const EXTERNAL_PANEL_STYLES = [
@@ -94,6 +97,7 @@ export class PanelController {
     enable() {
         this._rememberPanelState();
         this._attachActors();
+        this._configureAdaptivePanelAllocation();
         this._syncPanelEdgeClass();
         this._syncPanelButtonPadding();
         this._applyTheme();
@@ -401,6 +405,42 @@ export class PanelController {
         );
     }
 
+    _configureAdaptivePanelAllocation() {
+        const controller = this;
+        this._injectionManager.overrideMethod(
+            Object.getPrototypeOf(Main.panel),
+            'vfunc_allocate',
+            originalAllocate => function (box) {
+                if (!controller._taskbarBin.visible ||
+                    controller._taskbarBin.get_parent() !==
+                        this._centerBox) {
+                    originalAllocate.call(this, box);
+                    return;
+                }
+
+                const monitor =
+                    Main.layoutManager.findMonitorForActor(this);
+                let centerOffset = 0;
+                if (monitor) {
+                    const workArea =
+                        Main.layoutManager.getWorkAreaForMonitor(
+                            monitor.index
+                        );
+                    centerOffset = 2 * (workArea.x - monitor.x) +
+                        workArea.width - monitor.width;
+                }
+                allocateAdaptivePanel(
+                    this,
+                    box,
+                    this._leftBox,
+                    this._centerBox,
+                    this._rightBox,
+                    centerOffset
+                );
+            }
+        );
+    }
+
     _removeDateMenuIndicatorPadding() {
         const dateMenu = Main.panel.statusArea.dateMenu;
         const indicatorPad = dateMenu
@@ -436,9 +476,15 @@ export class PanelController {
         this._connect(Main.layoutManager, 'monitors-changed', () => {
             this.position();
         });
-        this._connect(Main.panel._centerBox, 'notify::width', () => {
-            this.updateTaskbarWidth();
-        });
+        for (const box of [
+            Main.panel._leftBox,
+            Main.panel._centerBox,
+            Main.panel._rightBox,
+        ]) {
+            this._connect(box, 'notify::width', () => {
+                this.updateTaskbarWidth();
+            });
+        }
         for (const signal of ['child-added', 'child-removed']) {
             this._connect(this._taskbarActor, signal, () => {
                 this.updateTaskbarWidth();

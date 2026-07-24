@@ -19,7 +19,10 @@ import {
 } from './panelPosition.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
-import {constrainTaskbarWidth} from './taskbarLayout.js';
+import {
+    allocateAdaptivePanel,
+    constrainTaskbarWidth,
+} from './taskbarLayout.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
 
@@ -60,9 +63,21 @@ class SecondaryPanelActor extends St.Widget {
         this.add_child(this.leftBox);
         this.add_child(this.centerBox);
         this.add_child(this.rightBox);
+        this.adaptiveCenter = false;
     }
 
     vfunc_allocate(box) {
+        if (this.adaptiveCenter) {
+            allocateAdaptivePanel(
+                this,
+                box,
+                this.leftBox,
+                this.centerBox,
+                this.rightBox
+            );
+            return;
+        }
+
         this.set_allocation(box);
 
         const width = box.x2 - box.x1;
@@ -421,6 +436,15 @@ class SecondaryTaskbarPanel {
         this._connect(Main.panel, 'notify::style', () => {
             this._syncTheme();
         });
+        for (const box of [
+            this._leftBox,
+            this._centerBox,
+            this._rightBox,
+        ]) {
+            this._connect(box, 'notify::width', () => {
+                this._updateTaskbarWidth();
+            });
+        }
         this._connect(this._settings, 'changed::icon-size', () => {
             this._iconSize = this._settings.get_int('icon-size');
             this._startButtonController.applyAppearance(
@@ -522,6 +546,8 @@ class SecondaryTaskbarPanel {
     }
 
     _applyLayout() {
+        this.actor.adaptiveCenter =
+            this._taskbarBin.visible && this._appsAreCentered();
         const startButton = this._startButtonController.actor;
         const activities = this._indicators.get('activities')?.container;
         const quickSettings = this._indicators.get('quickSettings')?.container;
