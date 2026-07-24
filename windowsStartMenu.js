@@ -231,6 +231,7 @@ export class WindowsStartMenu {
         this._view = 'pinned';
         this._setSearchText('');
         this._showPinnedApps();
+        this._scrollView.vadjustment.value = 0;
         this._updateSize();
         syncMenuArrowSide(this._menu, this._settings);
         const originalSource = this._menu.sourceActor;
