@@ -555,7 +555,7 @@
 
 .simple-taskbar-windows-start-app-tile {
     min-width: 82px;
-    height: 70px;
+    height: 90px;
     padding: 7px 3px;
     border-radius: 7px;
     background-color: transparent;
@@ -575,6 +575,7 @@
 }
 
 .simple-taskbar-windows-start-app-tile-label {
+    height: 36px;
     text-align: center;
 }
 

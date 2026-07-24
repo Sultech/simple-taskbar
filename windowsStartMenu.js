@@ -766,6 +766,11 @@ export class WindowsStartMenu {
         const label = this._createAppLabel(app.get_name(), 78);
         label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
         label.x_align = Clutter.ActorAlign.CENTER;
+        label.clutter_text.set({
+            ellipsize: Pango.EllipsizeMode.END,
+            line_wrap: true,
+            line_wrap_mode: Pango.WrapMode.WORD_CHAR,
+        });
         content.add_child(label);
         const button = new St.Button({
             style_class: 'simple-taskbar-windows-start-app-tile',
