@@ -540,22 +540,22 @@ export class WindowsStartMenu {
         this._allAppsButton = this._createTextButton(
             _('All apps'),
             'go-next-symbolic',
-            () => {
+            pointerActivated => {
                 this._view = 'all';
                 this._setSearchText('');
                 this._showAllApps();
-                this._focusFirstViewControl();
+                this._focusAfterViewChange(pointerActivated);
             }
         );
         this._backButton = this._createTextButton(
             _('Back'),
             'go-previous-symbolic',
-            () => {
+            pointerActivated => {
                 this._view = 'pinned';
                 this._setSearchText('');
                 this._setSearchFocusVisible(false);
                 this._showPinnedApps();
-                this._focusFirstViewControl();
+                this._focusAfterViewChange(pointerActivated);
             }
         );
         this._backButton.hide();
@@ -585,8 +585,26 @@ export class WindowsStartMenu {
             track_hover: true,
             child: box,
         });
+        let pointerActivated = false;
+        button.connect('button-press-event', () => {
+            pointerActivated = true;
+            return Clutter.EVENT_PROPAGATE;
+        });
+        button.connect('touch-event', (_actor, event) => {
+            if (event.type() === Clutter.EventType.TOUCH_BEGIN)
+                pointerActivated = true;
+            return Clutter.EVENT_PROPAGATE;
+        });
+        button.connect('key-press-event', () => {
+            pointerActivated = false;
+            return Clutter.EVENT_PROPAGATE;
+        });
         this._enableKeyNavigation(button);
-        button.connect('clicked', callback);
+        button.connect('clicked', () => {
+            const activatedWithPointer = pointerActivated;
+            pointerActivated = false;
+            callback(activatedWithPointer);
+        });
         this._syncShellButtonClasses(button);
         return button;
     }
@@ -1497,6 +1515,16 @@ export class WindowsStartMenu {
 
         target.grab_key_focus();
         this._ensureFocusedActorVisible();
+    }
+
+    _focusAfterViewChange(pointerActivated) {
+        if (!pointerActivated) {
+            this._focusFirstViewControl();
+            return;
+        }
+
+        this._searchEntry.grab_key_focus();
+        this._setSearchFocusVisible(false);
     }
 
     _nextFocusableActor(actors, current, step) {
