@@ -866,7 +866,8 @@ export class WindowsStartMenu {
             style_class: 'simple-taskbar-windows-start-app-list-content',
             x_expand: true,
         });
-        content.add_child(app.create_icon_texture(compact ? 28 : 30));
+        const icon = app.create_icon_texture(compact ? 28 : 30);
+        content.add_child(icon);
         const label = this._createAppLabel(
             app.get_name(),
             compact ? 190 : 480
@@ -887,6 +888,14 @@ export class WindowsStartMenu {
         this._addAppTooltip(button, app, label, !compact);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
+        if (!compact) {
+            this._pinnedDragController.makeTaskbarDraggable(
+                button,
+                icon,
+                app,
+                () => this.close()
+            );
+        }
         this._syncShellButtonClasses(button);
         return button;
     }

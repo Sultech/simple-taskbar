@@ -104,6 +104,14 @@ export class TaskbarController {
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = Main.layoutManager._startingUp;
         this._startupSettleId = 0;
+        this._externalDragPlaceholder = null;
+        this._externalDragFavoriteIndex = -1;
+        this._externalDragFavoriteCenters = null;
+        this._panelDropActor = null;
+        this._previousPanelDropDelegate = null;
+        this._dragMonitor = {
+            dragMotion: event => this._onDragMotion(event),
+        };
 
         this.actor = new St.BoxLayout({
             style_class: 'simple-taskbar-apps',
@@ -150,6 +158,7 @@ export class TaskbarController {
     }
 
     enable() {
+        DND.addDragMonitor(this._dragMonitor);
         if (this._startupSettling) {
             this._connect(Main.layoutManager, 'startup-complete', () => {
                 this._scheduleStartupSettle();
@@ -236,6 +245,9 @@ export class TaskbarController {
 
     destroy() {
         this._iconGeometryUpdatesEnabled = false;
+        DND.removeDragMonitor(this._dragMonitor);
+        this._dragMonitor = null;
+        this._clearExternalDragPlaceholder();
         if (this._iconGeometryUpdateId)
             GLib.Source.remove(this._iconGeometryUpdateId);
         this._iconGeometryUpdateId = 0;
@@ -517,6 +529,9 @@ export class TaskbarController {
     }
 
     handleDragOver(source, _actor, x, _y, _time) {
+        if (source && source._startMenuTaskbarApp)
+            return this._handleStartMenuDragOver(source, x);
+
         if (this._settings.get_boolean('taskbar-locked') ||
             !this._combineAppButtons()) {
             return DND.DragMotionResult.NO_DROP;
@@ -546,6 +561,9 @@ export class TaskbarController {
     }
 
     acceptDrop(source, _actor, _x, _y, _time) {
+        if (source && source._startMenuTaskbarApp)
+            return this._acceptStartMenuDrop(source);
+
         if (this._settings.get_boolean('taskbar-locked') ||
             !this._combineAppButtons()) {
             return false;
@@ -581,6 +599,186 @@ export class TaskbarController {
             !showPinned || !this._favorites.isFavorite(id)
         );
         return true;
+    }
+
+    _handleStartMenuDragOver(source, x) {
+        if (!this._canAcceptStartMenuDrop(source)) {
+            if (source._taskbarDropTarget === this)
+                source._clearTaskbarDropTarget();
+            return DND.DragMotionResult.NO_DROP;
+        }
+
+        if (source._taskbarDropTarget !== this) {
+            source._clearTaskbarDropTarget();
+            source._taskbarDropTarget = this;
+            source._clearTaskbarDropTarget = () => {
+                this._clearExternalDragPlaceholder();
+                if (source._taskbarDropTarget === this)
+                    source._taskbarDropTarget = null;
+            };
+        }
+        this._activatePanelDropTarget();
+
+        const appId = source.app.get_id();
+        const favoriteItems = [];
+        const seen = new Set();
+        for (const child of this.actor.get_children()) {
+            if (child === this._externalDragPlaceholder)
+                continue;
+            const childId = child._taskbarApp
+                ? child._taskbarApp.get_id()
+                : null;
+            if (!childId || childId === appId || seen.has(childId) ||
+                !this._favorites.isFavorite(childId)) {
+                continue;
+            }
+            seen.add(childId);
+            favoriteItems.push(child);
+        }
+
+        if (!this._externalDragFavoriteCenters) {
+            this._externalDragFavoriteCenters = favoriteItems.map(item => {
+                const [itemX] = item.get_transformed_position();
+                const [itemWidth] = item.get_transformed_size();
+                return itemX + itemWidth / 2;
+            });
+        }
+        const [actorX] = this.actor.get_transformed_position();
+        const stageX = actorX + x;
+        let favoriteIndex = this._externalDragFavoriteCenters.findIndex(
+            center => stageX < center
+        );
+        if (favoriteIndex < 0)
+            favoriteIndex = favoriteItems.length;
+
+        this._showExternalDragPlaceholder(favoriteItems, favoriteIndex);
+        return DND.DragMotionResult.COPY_DROP;
+    }
+
+    _acceptStartMenuDrop(source) {
+        if (!this._canAcceptStartMenuDrop(source) ||
+            source._taskbarDropTarget !== this ||
+            !this._externalDragPlaceholder) {
+            return false;
+        }
+
+        const appId = source.app.get_id();
+        const favoriteIndex = this._externalDragFavoriteIndex;
+        source._taskbarDropAccepted = true;
+        source._clearTaskbarDropTarget();
+        if (this._favorites.isFavorite(appId))
+            this._favorites.moveFavoriteToPos(appId, favoriteIndex);
+        else
+            this._favorites.addFavoriteAtPos(appId, favoriteIndex);
+        return true;
+    }
+
+    _canAcceptStartMenuDrop(source) {
+        return Boolean(
+            source.app &&
+            !source.app.is_window_backed() &&
+            !this._favorites.isFavorite(source.app.get_id()) &&
+            !this._settings.get_boolean('taskbar-locked') &&
+            !this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('hide-pinned-taskbar-apps') &&
+            global.settings.is_writable('favorite-apps') &&
+            this.actor.visible
+        );
+    }
+
+    _showExternalDragPlaceholder(favoriteItems, favoriteIndex) {
+        if (!this._externalDragPlaceholder) {
+            const reference = favoriteItems[0];
+            this._externalDragPlaceholder = new St.Widget({
+                style_class: 'simple-taskbar-drag-placeholder',
+                width: Math.max(
+                    reference ? reference.width : 0,
+                    this._iconSize + 8
+                ),
+                height: Math.max(1, this._panelHeight - 10),
+                y_align: Clutter.ActorAlign.CENTER,
+            });
+            this.actor.add_child(this._externalDragPlaceholder);
+        }
+
+        if (favoriteIndex === this._externalDragFavoriteIndex)
+            return;
+
+        this._externalDragFavoriteIndex = favoriteIndex;
+        const beforeItem = favoriteItems[favoriteIndex] ?? null;
+        const children = this.actor.get_children().filter(child =>
+            child !== this._externalDragPlaceholder
+        );
+        let actorIndex;
+        if (beforeItem) {
+            actorIndex = children.indexOf(beforeItem);
+        } else if (favoriteItems.length > 0) {
+            actorIndex = children.indexOf(favoriteItems.at(-1)) + 1;
+        } else {
+            actorIndex = 0;
+        }
+        this.actor.set_child_at_index(
+            this._externalDragPlaceholder,
+            actorIndex
+        );
+    }
+
+    _clearExternalDragPlaceholder() {
+        if (this._externalDragPlaceholder)
+            this._externalDragPlaceholder.destroy();
+        this._externalDragPlaceholder = null;
+        this._externalDragFavoriteIndex = -1;
+        this._externalDragFavoriteCenters = null;
+        this._restorePanelDropTarget();
+    }
+
+    _onDragMotion(event) {
+        const source = event.source;
+        if (!source || !source._startMenuTaskbarApp)
+            return DND.DragMotionResult.CONTINUE;
+
+        if (!this._stagePointIsInPanel(event.x, event.y)) {
+            if (source._taskbarDropTarget === this)
+                source._clearTaskbarDropTarget();
+            return DND.DragMotionResult.CONTINUE;
+        }
+
+        const [, x] = this.actor.transform_stage_point(event.x, event.y);
+        return this._handleStartMenuDragOver(source, x);
+    }
+
+    _activatePanelDropTarget() {
+        if (this._panelDropActor)
+            return;
+
+        const panelActor = this._alignmentActor.get_parent();
+        this._panelDropActor = panelActor;
+        this._previousPanelDropDelegate = panelActor._delegate ?? null;
+        panelActor._delegate = this;
+    }
+
+    _restorePanelDropTarget() {
+        if (!this._panelDropActor)
+            return;
+
+        if (this._panelDropActor._delegate === this) {
+            this._panelDropActor._delegate =
+                this._previousPanelDropDelegate;
+        }
+        this._panelDropActor = null;
+        this._previousPanelDropDelegate = null;
+    }
+
+    _stagePointIsInPanel(x, y) {
+        const monitor = Main.layoutManager.findMonitorForActor(this.actor);
+        if (!monitor)
+            return false;
+
+        const [, actorY] = this.actor.get_transformed_position();
+        const [, actorHeight] = this.actor.get_transformed_size();
+        const panelHeight = Math.max(actorHeight, this._panelHeight);
+        return x >= monitor.x && x < monitor.x + monitor.width &&
+            y >= actorY && y < actorY + panelHeight;
     }
 
     _connect(object, signal, callback) {

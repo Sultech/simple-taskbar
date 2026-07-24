@@ -332,6 +332,12 @@
     background-color: #60aef7;
 }
 
+.simple-taskbar-drag-placeholder {
+    margin: 5px 1px;
+    border-radius: 5px;
+    background-color: rgba(53, 132, 228, 0.35);
+}
+
 .simple-taskbar-preview-menu {
     min-width: 0;
 }

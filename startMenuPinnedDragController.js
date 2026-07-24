@@ -57,6 +57,39 @@ export class StartMenuPinnedDragController {
         });
     }
 
+    makeTaskbarDraggable(button, icon, app, onDropAccepted) {
+        const dragSource = {
+            app,
+            _startMenuTaskbarApp: true,
+            _taskbarDropAccepted: false,
+            _taskbarDropTarget: null,
+            _clearTaskbarDropTarget: () => {},
+            getDragActor: () => app.create_icon_texture(40),
+            getDragActorSource: () => icon,
+        };
+        button._delegate = dragSource;
+
+        const draggable = DND.makeDraggable(button, {
+            timeoutThreshold: 200,
+            dragActorMaxSize: 48,
+        });
+        button._startMenuTaskbarDraggable = draggable;
+        draggable.connect('drag-begin', () => {
+            dragSource._taskbarDropAccepted = false;
+            button.opacity = 96;
+            this._closeContextMenu();
+        });
+        draggable.connect('drag-end', () => {
+            dragSource._clearTaskbarDropTarget();
+            dragSource._taskbarDropTarget = null;
+            dragSource._clearTaskbarDropTarget = () => {};
+            button.opacity = 255;
+            if (dragSource._taskbarDropAccepted)
+                onDropAccepted();
+            dragSource._taskbarDropAccepted = false;
+        });
+    }
+
     destroy() {
         this._settings = null;
         this._closeContextMenu = null;
