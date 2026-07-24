@@ -138,13 +138,13 @@ dark when applications use light mode; select **Light** manually in the
 extension settings to use a light taskbar in that situation.
 
 <p align="center">
-  <img src="docs/images/settings-appearance.png?v=20260723" alt="Application icon and panel appearance settings" width="100%">
+  <img src="docs/images/settings-appearance.png?v=20260724" alt="Application icon and panel appearance settings" width="100%">
 </p>
 
 <p align="center"><sub>Application icon, panel mode and appearance controls.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-behaviour.png?v=20260723" alt="Taskbar behaviour and panel item settings" width="100%">
+  <img src="docs/images/settings-behaviour.png?v=20260724" alt="Taskbar behaviour and panel item settings" width="100%">
 </p>
 
 <p align="center"><sub>Behaviour, panel item and reset controls.</sub></p>
@@ -200,17 +200,24 @@ buttons can be hidden. Right-clicking the Eleven-style Start button opens its
 settings page.
 
 <p align="center">
-  <img src="docs/images/start-menu-dark.png?v=20260723" alt="Eleven-style Start Menu using its dark theme" width="49%">
-  <img src="docs/images/start-menu-light.png?v=20260723" alt="Eleven-style Start Menu using its light theme" width="49%">
+  <img src="docs/images/start-menu-dark.png?v=20260724" alt="Eleven-style Start Menu using its dark theme" width="49%">
+  <img src="docs/images/start-menu-light.png?v=20260724" alt="Eleven-style Start Menu using its light theme" width="49%">
 </p>
 
 <p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-start-menu.png?v=20260723" alt="Start button and Eleven-style Start Menu settings" width="100%">
+  <img src="docs/images/start-menu-dark-categories.png?v=20260724" alt="Categorized All Apps view using the dark Start Menu theme" width="49%">
+  <img src="docs/images/start-menu-light-categories.png?v=20260724" alt="Categorized All Apps view using the light Start Menu theme" width="49%">
 </p>
 
-<p align="center"><sub>Start button and Eleven-style Start Menu controls.</sub></p>
+<p align="center"><sub>The categorized All Apps view using dark and light themes.</sub></p>
+
+<p align="center">
+  <img src="docs/images/settings-start-menu.png?v=20260724" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
+</p>
+
+<p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls.</sub></p>
 
 ## Install
 
