@@ -27,6 +27,8 @@ const MAX_RECOMMENDED_APPS = 6;
 const APP_TOOLTIP_DELAY = 500;
 const APP_TOOLTIP_SHOW_TIME = 120;
 const APP_TOOLTIP_HIDE_TIME = 100;
+const PASSIVE_SEARCH_CLASS =
+    'simple-taskbar-windows-start-search-passive';
 
 export class WindowsStartMenu {
     constructor(sourceActor, settings, params = {}) {
@@ -230,6 +232,7 @@ export class WindowsStartMenu {
         this._sourcePressWasOpen = false;
         this._view = 'pinned';
         this._setSearchText('');
+        this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
         this._showPinnedApps();
         this._scrollView.vadjustment.value = 0;
         this._updateSize();
@@ -407,6 +410,10 @@ export class WindowsStartMenu {
             this._searchEntry.set_text('');
             this._searchEntry.grab_key_focus();
         });
+        this._searchEntry.connect('button-press-event', () => {
+            this._searchEntry.remove_style_class_name(PASSIVE_SEARCH_CLASS);
+            return Clutter.EVENT_PROPAGATE;
+        });
         this._searchEntry.clutter_text.connect('text-changed', () => {
             const query = this._searchEntry.get_text().trim();
             this._searchEntry.set_secondary_icon(
@@ -414,6 +421,7 @@ export class WindowsStartMenu {
             );
             if (this._ignoreSearchChanged)
                 return;
+            this._searchEntry.remove_style_class_name(PASSIVE_SEARCH_CLASS);
             if (query)
                 this._showSearchResults(query);
             else if (this._view === 'all')

@@ -458,7 +458,6 @@
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search {
     border: 1px solid rgba(255, 255, 255, 0.14);
-    border-bottom: 2px solid #60aef7;
     background-color: rgba(18, 18, 21, 0.76);
     color: #f6f6f6;
     selection-background-color: #3479b9;
@@ -466,6 +465,14 @@
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search:focus {
     border-color: rgba(96, 174, 247, 0.78);
+}
+
+.simple-taskbar-windows-start-search-passive:focus {
+    box-shadow: none !important;
+}
+
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search-passive:focus {
+    border-color: rgba(255, 255, 255, 0.14);
 }
 
 .simple-taskbar-windows-start-search-icon {
@@ -700,7 +707,6 @@
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search {
     border: 1px solid rgba(30, 40, 56, 0.18);
-    border-bottom: 2px solid #1877c9;
     background-color: rgba(255, 255, 255, 0.82);
     color: #18191b;
     selection-background-color: #8bc5f5;
@@ -709,6 +715,10 @@
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search:focus {
     border-color: rgba(24, 119, 201, 0.72);
+}
+
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-search-passive:focus {
+    border-color: rgba(30, 40, 56, 0.18);
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search-icon {
