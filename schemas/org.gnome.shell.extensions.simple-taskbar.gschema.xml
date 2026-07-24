@@ -186,6 +186,10 @@
       <default>true</default>
       <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>
     </key>
+    <key name="start-menu-recommended-apps" type="b">
+      <default>true</default>
+      <summary>Show frequently used applications in the Eleven-style Start Menu</summary>
+    </key>
     <key name="start-menu-theme" type="s">
       <choices>
         <choice value="dark"/>

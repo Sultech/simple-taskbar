@@ -999,6 +999,9 @@ export class WindowsStartMenu {
     }
 
     _recommendedApps(pinnedApps) {
+        if (!this._settings.get_boolean('start-menu-recommended-apps'))
+            return [];
+
         const pinnedIds = new Set(pinnedApps.map(app => app.get_id()));
         return Shell.AppUsage.get_default().get_most_used()
             .filter(app => this._appShouldShow(app) && !pinnedIds.has(app.get_id()))

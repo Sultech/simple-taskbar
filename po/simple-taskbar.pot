@@ -370,6 +370,14 @@ msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr ""
 
 #: prefs.js:646
+msgid "Show Recommended Apps"
+msgstr ""
+
+#: prefs.js:647
+msgid "Display frequently used applications below pinned apps"
+msgstr ""
+
+#: prefs.js:646
 msgid "Show Original GNOME Button"
 msgstr ""
 

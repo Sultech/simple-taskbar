@@ -642,6 +642,29 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const recommendedAppsSwitch = new Adw.SwitchRow({
+            title: _('Show Recommended Apps'),
+            subtitle: _('Display frequently used applications below pinned apps'),
+            active: window._settings.get_boolean(
+                'start-menu-recommended-apps'
+            ),
+        });
+        startMenuGroup.add(recommendedAppsSwitch);
+        window._settings.bind(
+            'start-menu-recommended-apps',
+            recommendedAppsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateRecommendedAppsSwitch = () => {
+            recommendedAppsSwitch.sensitive = windowsStartMenuSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateRecommendedAppsSwitch
+        );
+        updateRecommendedAppsSwitch();
+
         const gnomeStartButtonVisibleSwitch = new Adw.SwitchRow({
             title: _('Show Original GNOME Button'),
             subtitle: _('Show the Applications button when the Eleven-style Start Menu is disabled'),
