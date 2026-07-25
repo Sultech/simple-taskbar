@@ -18,6 +18,7 @@ const DEFAULT_TASK_MANAGER_APP = 'net.nokyan.Resources.desktop';
 const TASK_MANAGER_FALLBACK_APPS = [
     DEFAULT_TASK_MANAGER_APP,
     'org.gnome.SystemMonitor.desktop',
+    'io.missioncenter.MissionCenter.desktop',
 ];
 
 export class PanelInteractionController {

@@ -529,6 +529,13 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 choices: taskManagerApps,
             }
         );
+        taskManagerAppRow.expression = Gtk.PropertyExpression.new(
+            Gtk.StringObject.$gtype,
+            null,
+            'string'
+        );
+        taskManagerAppRow.search_match_mode =
+            Gtk.StringFilterMatchMode.SUBSTRING;
         taskManagerAppRow.enable_search = true;
 
         const multiMonitorPanelsSwitch = new Adw.SwitchRow({
