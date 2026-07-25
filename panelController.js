@@ -519,6 +519,14 @@ export class PanelController {
         this._connect(Main.layoutManager, 'monitors-changed', () => {
             this.position();
         });
+        if (Main.screenShield) {
+            this._connect(Main.screenShield, 'locked-changed', () => {
+                if (!Main.screenShield.locked) {
+                    this._syncActivitiesVisibility();
+                    this.updateTaskbarWidth();
+                }
+            });
+        }
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
