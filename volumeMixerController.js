@@ -26,6 +26,12 @@ function normalizeAppIdentifier(value) {
         .replace(/[^a-z0-9]/g, '');
 }
 
+const GENERIC_STREAM_NAMES = new Set([
+    'audiostream',
+    'playback',
+    'playbackstream',
+]);
+
 function findStreamApp(stream, appSystem) {
     const identifiers = [
         stream.get_application_id(),
@@ -142,11 +148,14 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
             () => this._sliderChanged()
         );
         stream.connectObject(
+            'notify::description', this._syncWindowTitle.bind(this),
             'notify::is-muted', this._sync.bind(this),
+            'notify::name', this._syncWindowTitle.bind(this),
             'notify::volume', this._sync.bind(this),
             this
         );
         this._app = app;
+        this._appStreamCount = 1;
         this._window = null;
         if (app) {
             app.connectObject(
@@ -163,9 +172,44 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
         this._sync();
     }
 
+    get app() {
+        return this._app;
+    }
+
+    setAppStreamCount(count) {
+        if (count === this._appStreamCount)
+            return;
+
+        this._appStreamCount = count;
+        this._syncWindowTitle();
+    }
+
+    _getStreamTitle() {
+        const appName = this._app ? this._app.get_name() : null;
+        const applicationId = this._stream.get_application_id();
+        for (const value of [
+            this._stream.get_name(),
+            this._stream.get_description(),
+        ]) {
+            const title = value ? value.trim() : '';
+            const normalizedTitle = normalizeAppIdentifier(title);
+            if (!title ||
+                title === appName ||
+                title === applicationId ||
+                GENERIC_STREAM_NAMES.has(normalizedTitle)) {
+                continue;
+            }
+
+            return title;
+        }
+
+        return null;
+    }
+
     _syncWindowTitle() {
+        const streamTitle = this._getStreamTitle();
         let window = null;
-        if (this._app) {
+        if (!streamTitle && this._appStreamCount === 1 && this._app) {
             const windows = this._app.get_windows()
                 .filter(candidate => !candidate.is_skip_taskbar());
             window = windows.find(candidate => candidate.has_focus()) ||
@@ -186,7 +230,7 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
             }
         }
 
-        const title = window ? window.get_title() : null;
+        const title = streamTitle || (window ? window.get_title() : null);
         const appName = this._app ? this._app.get_name() : null;
         this._windowLabel.text =
             title && title !== appName ? `— ${title}` : '';
@@ -298,6 +342,22 @@ class VolumeMixerToggle extends QuickMenuToggle {
         } else if (this._streamRows.size > 0 && this._emptyItem) {
             this._emptyItem.destroy();
             this._emptyItem = null;
+        }
+
+        const appStreamCounts = new Map();
+        for (const row of this._streamRows.values()) {
+            if (!row.app)
+                continue;
+
+            appStreamCounts.set(
+                row.app,
+                (appStreamCounts.get(row.app) ?? 0) + 1
+            );
+        }
+        for (const row of this._streamRows.values()) {
+            row.setAppStreamCount(
+                row.app ? appStreamCounts.get(row.app) : 1
+            );
         }
     }
 
