@@ -31,6 +31,7 @@ those Shell components.
 - Place the panel at the top or bottom of the screen.
 - Align applications and the Start button to the left or center, independently or together.
 - Move the clock and Quick Settings between the left, center and right.
+- Mix application audio directly from Quick Settings.
 - Adjust panel height, icon size, spacing, transparency and colour scheme.
 - Use auto-hide, workspace scrolling and current-workspace isolation.
 - Push against the bottom screen edge to toggle Overview.
@@ -128,7 +129,12 @@ The settings provide control over:
 - Workspace switching by scrolling over empty panel space.
 - Notification banners that follow the panel edge and clock alignment.
 - Click-only switching between open panel menus.
-- A configurable Task Manager entry in the empty-panel context menu.
+- An application volume mixer in Quick Settings, enabled by default. Expand
+  **Mixer** to adjust individual application streams or open GNOME's Volume
+  Levels settings.
+- A configurable Task Manager entry in the empty-panel context menu. Its
+  searchable application selector defaults to Resources; if unavailable, the
+  launcher falls back to GNOME System Monitor and then Mission Center.
 
 **Theme note:** **Follow system theme** follows the GNOME Shell theme rather
 than the application colour preference alone. It switches to the light taskbar
@@ -170,6 +176,8 @@ The Eleven-style Start Menu is enabled by default and includes:
   compatible extensions.
 - An All Apps view organized into selectable categories by default. Categories
   can be disabled to use a single alphabetical list.
+- An option to open the Start Menu directly in All Apps instead of the pinned
+  applications page.
 - Optional recommended applications based on frequently used apps.
 - Scrollbars when the pinned or All Apps lists are taller than the available
   menu space.
