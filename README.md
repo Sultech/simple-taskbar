@@ -145,13 +145,19 @@ dark when applications use light mode; select **Light** manually in the
 extension settings to use a light taskbar in that situation.
 
 <p align="center">
-  <img src="docs/images/settings-appearance-20260724.png" alt="Application icon and panel appearance settings" width="100%">
+  <img src="docs/images/quick-settings-mixer.png" alt="Application volume mixer expanded in GNOME Quick Settings" width="390">
+</p>
+
+<p align="center"><sub>Adjust individual application volume from Quick Settings.</sub></p>
+
+<p align="center">
+  <img src="docs/images/settings-appearance-20260725.png" alt="Application icon and panel appearance settings" width="100%">
 </p>
 
 <p align="center"><sub>Application icon, panel mode and appearance controls.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-behaviour-20260724.png" alt="Taskbar behaviour and panel item settings" width="100%">
+  <img src="docs/images/settings-behaviour-20260725.png" alt="Taskbar behaviour and panel item settings" width="100%">
 </p>
 
 <p align="center"><sub>Behaviour, panel item and reset controls.</sub></p>
@@ -223,7 +229,7 @@ settings page.
 <p align="center"><sub>The categorized All Apps view using dark and light themes.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-start-menu-20260724.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
+  <img src="docs/images/settings-start-menu-20260725.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
 </p>
 
 <p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls.</sub></p>
