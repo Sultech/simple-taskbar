@@ -78,6 +78,8 @@ export class OverviewIntegration {
                         this._startupState.hasOverview;
                     if (startInOverview)
                         this._queueStartupOverview();
+                    else
+                        Main.overview.hide();
                 }
             });
         } else if (this._shouldStartInOverview()) {
