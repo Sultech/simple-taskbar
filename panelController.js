@@ -1001,7 +1001,6 @@ export class PanelController {
         const background = light ? '235, 235, 238' : '24, 24, 27';
         const border = '255, 255, 255';
         const borderOpacity = 0.12 * opacity;
-        const shadowOpacity = light ? 0 : 0.18 * opacity;
         const top = panelIsTop(this._settings);
         const borderStyle = top
             ? `border-top: 0; border-bottom: 1px solid ` +
@@ -1009,12 +1008,10 @@ export class PanelController {
             : `border-top: 1px solid ` +
                 `rgba(${border}, ${borderOpacity.toFixed(3)}); ` +
                 'border-bottom: 0; ';
-        const shadowY = top ? 2 : -2;
         const transparencyStyle =
             `background-color: rgba(${background}, ${opacity.toFixed(2)}); ` +
             borderStyle +
-            `box-shadow: 0 ${shadowY}px 8px ` +
-            `rgba(0, 0, 0, ${shadowOpacity.toFixed(3)});`;
+            'box-shadow: none;';
         this._setPanelStyle(
             originalStyle
                 ? `${originalStyle}; ${transparencyStyle}`

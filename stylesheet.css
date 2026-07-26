@@ -4,13 +4,13 @@
 .simple-taskbar-panel {
     background-color: rgba(24, 24, 27, 0.96);
     border-top: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.18);
+    box-shadow: none;
 }
 
 .simple-taskbar-panel.simple-taskbar-panel-top {
     border-top: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    box-shadow: none;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.transparent-panel {
@@ -36,24 +36,26 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-dark {
-    border-top-color: rgba(255, 255, 255, 0.20) !important;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.24) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-light {
-    border-top-color: rgba(255, 255, 255, 0.20) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
+    border-bottom: 0 !important;
     box-shadow: none !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-dark {
-    border-top-color: transparent !important;
-    border-bottom-color: rgba(255, 255, 255, 0.20) !important;
-    box-shadow: inset 0 -2px 8px rgba(0, 0, 0, 0.24) !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.20) !important;
+    box-shadow: none !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-light {
-    border-top-color: transparent !important;
-    border-bottom-color: rgba(255, 255, 255, 0.20) !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.20) !important;
     box-shadow: none !important;
 }
 
