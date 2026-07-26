@@ -381,25 +381,25 @@
 #panel.simple-taskbar-panel.simple-taskbar-theme-light
     .simple-taskbar-app-item.running
     .simple-taskbar-running-indicator-segment {
-    background-color: #74787d;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-theme-light
-    .simple-taskbar-app-item.running.focused
-    .simple-taskbar-running-indicator-segment {
-    background-color: #4c96d8;
+    background-color: #555a60;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
     .simple-taskbar-app-item.running
     .simple-taskbar-running-indicator-segment {
-    background-color: #44484e;
+    background-color: #3c4045;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-segment {
+    background-color: #2b82d0;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
     .simple-taskbar-app-item.running.focused
     .simple-taskbar-running-indicator-segment {
-    background-color: #4c96d8;
+    background-color: #0067c0;
 }
 
 .simple-taskbar-drag-placeholder {
