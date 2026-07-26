@@ -614,6 +614,14 @@ export class PanelController {
             this._syncPanelBorder();
             this._applyTransparency();
         });
+        this._connect(
+            this._settings,
+            'changed::panel-border-light-enabled',
+            () => {
+                this._syncPanelBorder();
+                this._applyTransparency();
+            }
+        );
         this._connect(this._settings, 'changed::panel-theme-follow-system', () => {
             this._applyTheme();
         });
@@ -943,7 +951,7 @@ export class PanelController {
         if (!this._panelWasModified)
             return;
 
-        if (this._settings.get_boolean('panel-border-enabled'))
+        if (this._panelBorderEnabled())
             Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
         else
             Main.panel.add_style_class_name(BORDER_DISABLED_CLASS);
@@ -970,6 +978,13 @@ export class PanelController {
         return shellMenusUseLightTheme();
     }
 
+    _panelBorderEnabled() {
+        const key = this._usesLightTheme()
+            ? 'panel-border-light-enabled'
+            : 'panel-border-enabled';
+        return this._settings.get_boolean(key);
+    }
+
     _applyTheme() {
         if (!this._settings || !this._panelWasModified)
             return;
@@ -981,6 +996,7 @@ export class PanelController {
         Main.panel.add_style_class_name(
             light ? 'simple-taskbar-theme-light' : 'simple-taskbar-theme-dark'
         );
+        this._syncPanelBorder();
         this._applyTransparency();
     }
 
@@ -1020,8 +1036,7 @@ export class PanelController {
         const border = '255, 255, 255';
         const borderOpacity = 0.20;
         const top = panelIsTop(this._settings);
-        const borderEnabled =
-            this._settings.get_boolean('panel-border-enabled');
+        const borderEnabled = this._panelBorderEnabled();
         let borderStyle = 'border-top: 0; border-bottom: 0; ';
         if (borderEnabled) {
             borderStyle = top

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:57+0100\n"
+"POT-Creation-Date: 2026-07-26 20:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Start Menu"
 msgstr ""
 
-#: prefs.js:45 prefs.js:584
+#: prefs.js:45 prefs.js:599
 msgid "Start Button"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Configure the Start button position and spacing."
 msgstr ""
 
-#: prefs.js:51 prefs.js:667
+#: prefs.js:51 prefs.js:682
 msgid "Eleven-style Start Menu"
 msgstr ""
 
@@ -224,11 +224,11 @@ msgstr ""
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 
-#: prefs.js:349 prefs.js:800
+#: prefs.js:349 prefs.js:815
 msgid "Light"
 msgstr ""
 
-#: prefs.js:350 prefs.js:799
+#: prefs.js:350 prefs.js:814
 msgid "Dark"
 msgstr ""
 
@@ -249,393 +249,397 @@ msgid "0% is opaque and 100% is fully transparent"
 msgstr ""
 
 #: prefs.js:389
-msgid "Show Panel Border"
+msgid "Show Border in Dark Mode"
 msgstr ""
 
-#: prefs.js:390
+#: prefs.js:390 prefs.js:403
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 
 #: prefs.js:402
+msgid "Show Border in Light Mode"
+msgstr ""
+
+#: prefs.js:417
 msgid "Taskbar Behavior"
 msgstr ""
 
-#: prefs.js:407
+#: prefs.js:422
 msgid "Auto-hide Panel"
 msgstr ""
 
-#: prefs.js:408
+#: prefs.js:423
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr ""
 
-#: prefs.js:420
+#: prefs.js:435
 msgid "Bottom Hot Edge"
 msgstr ""
 
-#: prefs.js:421
+#: prefs.js:436
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 
-#: prefs.js:435
+#: prefs.js:450
 msgid "Hot Edge Animation"
 msgstr ""
 
-#: prefs.js:436
+#: prefs.js:451
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr ""
 
-#: prefs.js:458
+#: prefs.js:473
 msgid "Workspace Scroll"
 msgstr ""
 
-#: prefs.js:459
+#: prefs.js:474
 msgid "Scroll over empty taskbar space to switch workspaces"
 msgstr ""
 
-#: prefs.js:475
+#: prefs.js:490
 msgid "Workspace Scroll Delay"
 msgstr ""
 
-#: prefs.js:476
+#: prefs.js:491
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 
-#: prefs.js:488
+#: prefs.js:503
 msgid "Panel Menus Require Click"
 msgstr ""
 
-#: prefs.js:489
+#: prefs.js:504
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr ""
 
-#: prefs.js:501
+#: prefs.js:516
 msgid "Taskbar-aligned Notification Banners"
 msgstr ""
 
-#: prefs.js:502
+#: prefs.js:517
 msgid "Follow the taskbar edge and the clock’s horizontal position"
 msgstr ""
 
-#: prefs.js:529
+#: prefs.js:544
 #, javascript-format
 msgid "%s (Unavailable)"
 msgstr ""
 
-#: prefs.js:540
+#: prefs.js:555
 msgid "Task Manager Application"
 msgstr ""
 
-#: prefs.js:541
+#: prefs.js:556
 msgid "Application opened from the taskbar context menu"
 msgstr ""
 
-#: prefs.js:555
+#: prefs.js:570
 msgid "Show Taskbar on All Monitors"
 msgstr ""
 
-#: prefs.js:556
+#: prefs.js:571
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 
-#: prefs.js:577
+#: prefs.js:592
 msgid "Panel Items"
 msgstr ""
 
-#: prefs.js:578
+#: prefs.js:593
 msgid "Choose where taskbar and system items appear."
 msgstr ""
 
-#: prefs.js:585
+#: prefs.js:600
 msgid "Place the Start button at the left edge or in the center"
 msgstr ""
 
-#: prefs.js:590
+#: prefs.js:605
 msgid "Follow Application Alignment"
 msgstr ""
 
-#: prefs.js:591
+#: prefs.js:606
 msgid "Move the Start button with the application buttons"
 msgstr ""
 
-#: prefs.js:614
+#: prefs.js:629
 msgid "Start Button Padding"
 msgstr ""
 
-#: prefs.js:615
+#: prefs.js:630
 msgid "Horizontal space around the Start icon in pixels"
 msgstr ""
 
-#: prefs.js:621
+#: prefs.js:636
 msgid "Custom Start Button Icon"
 msgstr ""
 
-#: prefs.js:625
+#: prefs.js:640
 msgid "Use the built-in icon"
 msgstr ""
 
-#: prefs.js:629 prefs.js:1120
+#: prefs.js:644 prefs.js:1135
 msgid "Choose…"
 msgstr ""
 
-#: prefs.js:645
+#: prefs.js:660
 msgid "Using the built-in icon"
 msgstr ""
 
-#: prefs.js:668
+#: prefs.js:683
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr ""
 
-#: prefs.js:680
+#: prefs.js:695
 msgid "Open All Apps by Default"
 msgstr ""
 
-#: prefs.js:681
+#: prefs.js:696
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr ""
 
-#: prefs.js:703
+#: prefs.js:718
 msgid "Show Recommended Apps"
 msgstr ""
 
-#: prefs.js:704
+#: prefs.js:719
 msgid "Display frequently used applications below pinned apps"
 msgstr ""
 
-#: prefs.js:732
+#: prefs.js:747
 msgid "Organize All Apps into Categories"
 msgstr ""
 
-#: prefs.js:733
+#: prefs.js:748
 msgid "Browse applications by category in the Start menu"
 msgstr ""
 
-#: prefs.js:755
+#: prefs.js:770
 msgid "Show Original GNOME Button"
 msgstr ""
 
-#: prefs.js:756
+#: prefs.js:771
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr ""
 
-#: prefs.js:777
+#: prefs.js:792
 msgid "Follow Panel Theme"
 msgstr ""
 
-#: prefs.js:778
+#: prefs.js:793
 msgid "Use the panel’s effective light or dark appearance"
 msgstr ""
 
-#: prefs.js:796
+#: prefs.js:811
 msgid "Start Menu Theme"
 msgstr ""
 
-#: prefs.js:797
+#: prefs.js:812
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr ""
 
-#: prefs.js:801
+#: prefs.js:816
 msgid "GNOME Shell"
 msgstr ""
 
-#: prefs.js:821
+#: prefs.js:836
 msgid "Center Start Menu on Monitor"
 msgstr ""
 
-#: prefs.js:822
+#: prefs.js:837
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 
-#: prefs.js:857
+#: prefs.js:872
 msgid "Super Opens Start Menu"
 msgstr ""
 
-#: prefs.js:858
+#: prefs.js:873
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr ""
 
-#: prefs.js:870
+#: prefs.js:885
 msgid "Super+Tab Opens Start Menu"
 msgstr ""
 
-#: prefs.js:871
+#: prefs.js:886
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
 msgstr ""
 
-#: prefs.js:898
+#: prefs.js:913
 msgid "Super+E Opens File Manager"
 msgstr ""
 
-#: prefs.js:900
+#: prefs.js:915
 msgid "Open your home folder with the system’s default file manager"
 msgstr ""
 
-#: prefs.js:915
+#: prefs.js:930
 msgid "Not set"
 msgstr ""
 
-#: prefs.js:920
+#: prefs.js:935
 msgid "Set custom shortcut"
 msgstr ""
 
-#: prefs.js:925
+#: prefs.js:940
 msgid "Clear custom shortcut"
 msgstr ""
 
-#: prefs.js:929
+#: prefs.js:944
 msgid "Custom Start Menu Shortcut"
 msgstr ""
 
-#: prefs.js:948
+#: prefs.js:963
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 
-#: prefs.js:951
+#: prefs.js:966
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 
-#: prefs.js:954
+#: prefs.js:969
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 
-#: prefs.js:977
+#: prefs.js:992
 msgid "Show Activities Button"
 msgstr ""
 
-#: prefs.js:978
+#: prefs.js:993
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr ""
 
-#: prefs.js:994
+#: prefs.js:1009
 msgid "Activities Button Position"
 msgstr ""
 
-#: prefs.js:1010
+#: prefs.js:1025
 msgid "Activities Right Placement"
 msgstr ""
 
-#: prefs.js:1014
+#: prefs.js:1029
 msgid "First on Right"
 msgstr ""
 
-#: prefs.js:1018
+#: prefs.js:1033
 msgid "Before System Menu"
 msgstr ""
 
-#: prefs.js:1022
+#: prefs.js:1037
 msgid "After System Menu"
 msgstr ""
 
-#: prefs.js:1026
+#: prefs.js:1041
 msgid "After Clock"
 msgstr ""
 
-#: prefs.js:1050
+#: prefs.js:1065
 msgid "Clock"
 msgstr ""
 
-#: prefs.js:1055
+#: prefs.js:1070
 msgid "System Menu"
 msgstr ""
 
-#: prefs.js:1056
+#: prefs.js:1071
 msgid "Quick Settings, volume, network, and power"
 msgstr ""
 
-#: prefs.js:1060
+#: prefs.js:1075
 msgid "Application Volume Mixer"
 msgstr ""
 
-#: prefs.js:1061
+#: prefs.js:1076
 msgid "Add per-application volume controls to Quick Settings"
 msgstr ""
 
-#: prefs.js:1072
+#: prefs.js:1087
 msgid "Show Desktop Button"
 msgstr ""
 
-#: prefs.js:1073
+#: prefs.js:1088
 msgid "Display a button that minimizes or restores all windows"
 msgstr ""
 
-#: prefs.js:1091
+#: prefs.js:1106
 msgid "Show Desktop Button Position"
 msgstr ""
 
-#: prefs.js:1092
+#: prefs.js:1107
 msgid "Place it next to Start or at the right edge"
 msgstr ""
 
-#: prefs.js:1104
+#: prefs.js:1119
 msgid "Show Folder Menu"
 msgstr ""
 
-#: prefs.js:1105
+#: prefs.js:1120
 msgid "Place a selected folder on the right of the taskbar"
 msgstr ""
 
-#: prefs.js:1117
+#: prefs.js:1132
 msgid "Folder Menu Location"
 msgstr ""
 
-#: prefs.js:1135
+#: prefs.js:1150
 msgid "No folder selected"
 msgstr ""
 
-#: prefs.js:1150 prefs.js:1177
+#: prefs.js:1165 prefs.js:1192
 msgid "Reset"
 msgstr ""
 
-#: prefs.js:1155
+#: prefs.js:1170
 msgid "Reset All Settings"
 msgstr ""
 
-#: prefs.js:1156
+#: prefs.js:1171
 msgid "Restore defaults without changing pinned taskbar apps"
 msgstr ""
 
-#: prefs.js:1159
+#: prefs.js:1174
 msgid "Reset…"
 msgstr ""
 
-#: prefs.js:1173
+#: prefs.js:1188
 msgid "Reset all settings?"
 msgstr ""
 
-#: prefs.js:1174
+#: prefs.js:1189
 msgid ""
 "This will restore taskbar and Start menu settings, including pinned Start "
 "apps. Pinned taskbar apps and their order will be kept."
 msgstr ""
 
-#: prefs.js:1176 startIconChooser.js:139
+#: prefs.js:1191 startIconChooser.js:139
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:1213
+#: prefs.js:1228
 msgid "Set Custom Shortcut"
 msgstr ""
 
-#: prefs.js:1226
+#: prefs.js:1241
 msgid "Press a keyboard shortcut"
 msgstr ""
 
-#: prefs.js:1227
+#: prefs.js:1242
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr ""
 
-#: prefs.js:1271
+#: prefs.js:1286
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 
-#: prefs.js:1282
+#: prefs.js:1297
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr ""
 
-#: prefs.js:1300
+#: prefs.js:1315
 msgid "Choose a Folder"
 msgstr ""
 

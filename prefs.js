@@ -385,15 +385,30 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             transparencyRow.sensitive = widget.active;
         });
 
-        const panelBorderSwitch = new Adw.SwitchRow({
-            title: _('Show Panel Border'),
+        const darkPanelBorderSwitch = new Adw.SwitchRow({
+            title: _('Show Border in Dark Mode'),
             subtitle: _('Display a thin border along the panel’s workspace-facing edge'),
             active: window._settings.get_boolean('panel-border-enabled'),
         });
-        panelAppearanceGroup.add(panelBorderSwitch);
+        panelAppearanceGroup.add(darkPanelBorderSwitch);
         window._settings.bind(
             'panel-border-enabled',
-            panelBorderSwitch,
+            darkPanelBorderSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
+        const lightPanelBorderSwitch = new Adw.SwitchRow({
+            title: _('Show Border in Light Mode'),
+            subtitle: _('Display a thin border along the panel’s workspace-facing edge'),
+            active: window._settings.get_boolean(
+                'panel-border-light-enabled'
+            ),
+        });
+        panelAppearanceGroup.add(lightPanelBorderSwitch);
+        window._settings.bind(
+            'panel-border-light-enabled',
+            lightPanelBorderSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );

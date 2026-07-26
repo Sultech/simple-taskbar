@@ -48,7 +48,11 @@
     </key>
     <key name="panel-border-enabled" type="b">
       <default>true</default>
-      <summary>Show the panel border</summary>
+      <summary>Show the panel border in dark mode</summary>
+    </key>
+    <key name="panel-border-light-enabled" type="b">
+      <default>false</default>
+      <summary>Show the panel border in light mode</summary>
     </key>
     <key name="panel-theme-follow-system" type="b">
       <default>true</default>
