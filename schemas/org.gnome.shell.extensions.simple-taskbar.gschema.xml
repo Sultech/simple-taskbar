@@ -105,6 +105,10 @@
       <default>'after-system'</default>
       <summary>Choose where the Activities button appears on the right</summary>
     </key>
+    <key name="show-desktop-button-visible" type="b">
+      <default>true</default>
+      <summary>Show the Show Desktop button on the taskbar</summary>
+    </key>
     <key name="show-desktop-button-position" type="s">
       <choices>
         <choice value="left"/>

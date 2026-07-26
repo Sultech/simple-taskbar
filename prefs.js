@@ -1055,13 +1055,36 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        this._addComboRow(panelGroup, window._settings, {
-            key: 'show-desktop-button-position',
+        const showDesktopSwitch = new Adw.SwitchRow({
             title: _('Show Desktop Button'),
-            subtitle: _('Place it next to Start or at the right edge'),
-            choices: panelPositions.filter(
-                position => position.value !== 'center'
+            subtitle: _('Display a button that minimizes or restores all windows'),
+            active: window._settings.get_boolean(
+                'show-desktop-button-visible'
             ),
+        });
+        panelGroup.add(showDesktopSwitch);
+        window._settings.bind(
+            'show-desktop-button-visible',
+            showDesktopSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
+        const showDesktopPositionRow = this._addComboRow(
+            panelGroup,
+            window._settings,
+            {
+                key: 'show-desktop-button-position',
+                title: _('Show Desktop Button Position'),
+                subtitle: _('Place it next to Start or at the right edge'),
+                choices: panelPositions.filter(
+                    position => position.value !== 'center'
+                ),
+            }
+        );
+        showDesktopPositionRow.sensitive = showDesktopSwitch.active;
+        showDesktopSwitch.connect('notify::active', widget => {
+            showDesktopPositionRow.sensitive = widget.active;
         });
 
         const folderMenuSwitch = new Adw.SwitchRow({

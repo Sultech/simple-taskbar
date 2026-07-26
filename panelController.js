@@ -182,6 +182,9 @@ export class PanelController {
         const showDesktopOnLeft = this._settings.get_string(
             'show-desktop-button-position'
         ) === 'left';
+        const showDesktopVisible = this._settings.get_boolean(
+            'show-desktop-button-visible'
+        );
         this._showDesktopButton.remove_style_class_name(
             'simple-taskbar-show-desktop-left'
         );
@@ -202,14 +205,16 @@ export class PanelController {
         leftLeadingIndex = leftLeadingIndex >= 0
             ? leftLeadingIndex + 1
             : 0;
-        if (showDesktopOnLeft) {
-            leftBox.insert_child_at_index(
-                this._showDesktopButton,
-                leftLeadingIndex
-            );
-            leftLeadingIndex++;
-        } else {
-            rightBox.add_child(this._showDesktopButton);
+        if (showDesktopVisible) {
+            if (showDesktopOnLeft) {
+                leftBox.insert_child_at_index(
+                    this._showDesktopButton,
+                    leftLeadingIndex
+                );
+                leftLeadingIndex++;
+            } else {
+                rightBox.add_child(this._showDesktopButton);
+            }
         }
         if (activities && this._settings.get_string(
             'activities-button-position'
@@ -667,6 +672,11 @@ export class PanelController {
             'changed::show-desktop-button-position',
             () => this.applyLayout()
         );
+        this._connect(
+            this._settings,
+            'changed::show-desktop-button-visible',
+            () => this.applyLayout()
+        );
         this._connect(this._settings, 'changed::start-button-padding', () => {
             this.updateTaskbarWidth();
         });
@@ -896,7 +906,8 @@ export class PanelController {
             leftBox.insert_child_at_index(this._startButton, 0);
         if (this._settings.get_boolean('folder-menu-enabled'))
             rightBox.add_child(this._folderMenuButton);
-        rightBox.add_child(this._showDesktopButton);
+        if (this._settings.get_boolean('show-desktop-button-visible'))
+            rightBox.add_child(this._showDesktopButton);
     }
 
     _syncActivitiesVisibility() {
