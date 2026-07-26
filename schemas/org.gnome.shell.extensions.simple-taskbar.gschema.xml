@@ -28,8 +28,8 @@
       <summary>Show a ripple when the bottom hot edge activates</summary>
     </key>
     <key name="icon-size" type="i">
-      <range min="16" max="48"/>
-      <default>28</default>
+      <range min="15" max="48"/>
+      <default>27</default>
       <summary>Application icon size</summary>
     </key>
     <key name="icon-spacing" type="i">

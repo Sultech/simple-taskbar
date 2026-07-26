@@ -128,7 +128,7 @@ The settings provide control over:
 - Top or bottom panel placement.
 - Panels on secondary monitors.
 - 32–80px panel height.
-- 16–48px application icons with 0–16px spacing.
+- 15–48px application icons with 0–16px spacing.
 - Left or centered application alignment.
 - Left or centered Start button placement, adjustable padding and an icon
   selected from bundled GNOME and distribution designs or a personal image

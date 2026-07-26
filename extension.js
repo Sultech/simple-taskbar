@@ -27,7 +27,7 @@ import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
 import {OverviewIntegration} from './overviewIntegration.js';
 
-const ICON_VERTICAL_RESERVE = 16;
+const ICON_VERTICAL_RESERVE = 17;
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {

@@ -18,7 +18,7 @@ import {
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
-const ICON_VERTICAL_RESERVE = 16;
+const ICON_VERTICAL_RESERVE = 17;
 
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -95,7 +95,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             key: 'icon-size',
             title: _('Icon Size'),
             subtitle: _('The panel grows automatically when larger icons need more room'),
-            lower: 16,
+            lower: 15,
             upper: MAX_ICON_SIZE,
         });
         this._addSpinRow(appearanceGroup, window._settings, {
@@ -236,7 +236,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('windows-start-menu-enabled', false);
                 settings.set_boolean('gnome-start-button-visible', false);
             } else {
-                settings.set_int('icon-size', 28);
+                settings.set_int('icon-size', 27);
                 settings.set_int('icon-spacing', 4);
                 settings.set_int('panel-height', 44);
                 settings.set_string('panel-position', 'bottom');
