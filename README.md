@@ -240,13 +240,6 @@ settings page.
 <p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
 
 <p align="center">
-  <img src="docs/images/start-menu-dark-categories.png" alt="Categorized All Apps view using the dark Start Menu theme" width="49%">
-  <img src="docs/images/start-menu-light-categories.png" alt="Categorized All Apps view using the light Start Menu theme" width="49%">
-</p>
-
-<p align="center"><sub>The categorized All Apps view using dark and light themes.</sub></p>
-
-<p align="center">
   <img src="docs/images/settings-start-menu-20260725.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
 </p>
 
