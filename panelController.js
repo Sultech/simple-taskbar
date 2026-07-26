@@ -1000,7 +1000,7 @@ export class PanelController {
         const opacity = 1 - transparency / 100;
         const background = light ? '235, 235, 238' : '24, 24, 27';
         const border = '255, 255, 255';
-        const borderOpacity = 0.12 * opacity;
+        const borderOpacity = 0.20;
         const top = panelIsTop(this._settings);
         const borderStyle = top
             ? `border-top: 0; border-bottom: 1px solid ` +

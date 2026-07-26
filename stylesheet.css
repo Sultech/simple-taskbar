@@ -3,13 +3,13 @@
 
 .simple-taskbar-panel {
     background-color: rgba(24, 24, 27, 0.96);
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.20);
     box-shadow: none;
 }
 
 .simple-taskbar-panel.simple-taskbar-panel-top {
     border-top: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.20);
     box-shadow: none;
 }
 
@@ -78,12 +78,12 @@
 
 .simple-taskbar-panel.simple-taskbar-theme-light {
     background-color: rgba(235, 235, 238, 0.96);
-    border-top-color: rgba(255, 255, 255, 0.12);
+    border-top-color: rgba(255, 255, 255, 0.20);
     box-shadow: none;
 }
 
 .simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-theme-light {
-    border-bottom-color: rgba(255, 255, 255, 0.12);
+    border-bottom-color: rgba(255, 255, 255, 0.20);
     box-shadow: none;
 }
 
