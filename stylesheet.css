@@ -818,6 +818,7 @@
 }
 
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button,
@@ -828,6 +829,8 @@
 
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended:hover,
@@ -839,6 +842,10 @@
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-icon-button:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-icon-button:focus {
     background-color: rgba(128, 128, 128, 0.18);
+}
+
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:checked {
+    background-color: st-transparentize(-st-accent-color, 0.76);
 }
 
 /* GNOME's top-panel popup spacing becomes a large gap above a bottom panel. */
