@@ -199,7 +199,8 @@ The Eleven-style Start Menu is enabled by default and includes:
   can be disabled to use a single alphabetical list.
 - An option to open the Start Menu directly in All Apps instead of the pinned
   applications page.
-- Optional recommended applications based on frequently used apps.
+- Optional recommended applications based on frequently used apps, excluding
+  applications already pinned to the Start Menu or taskbar.
 - Scrollbars when the pinned or All Apps lists are taller than the available
   menu space.
 - Delayed hover tooltips with the full application name and description.

@@ -8,6 +8,7 @@ import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -89,6 +90,7 @@ export class WindowsStartMenu {
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
         this._appSystem = Shell.AppSystem.get_default();
+        this._favorites = AppFavorites.getAppFavorites();
         this._searchController = new StartMenuSearchController();
         this._pinnedDragController = new StartMenuPinnedDragController(
             settings,
@@ -469,6 +471,7 @@ export class WindowsStartMenu {
         this._onSourceContextMenu = null;
         this._firstSearchResult = null;
         this._appSystem = null;
+        this._favorites = null;
         this._appliedTheme = null;
     }
 
@@ -1400,7 +1403,12 @@ export class WindowsStartMenu {
 
         const pinnedIds = new Set(pinnedApps.map(app => app.get_id()));
         return Shell.AppUsage.get_default().get_most_used()
-            .filter(app => this._appShouldShow(app) && !pinnedIds.has(app.get_id()))
+            .filter(app => {
+                const appId = app.get_id();
+                return this._appShouldShow(app) &&
+                    !pinnedIds.has(appId) &&
+                    !this._favorites.isFavorite(appId);
+            })
             .slice(0, MAX_RECOMMENDED_APPS);
     }
 
