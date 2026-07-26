@@ -196,7 +196,7 @@
       <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>
     </key>
     <key name="start-menu-open-all-apps" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Open the Eleven-style Start Menu directly to All Apps</summary>
     </key>
     <key name="start-menu-recommended-apps" type="b">
