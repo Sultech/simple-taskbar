@@ -12,6 +12,7 @@ import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
@@ -1423,6 +1424,8 @@ export class WindowsStartMenu {
 
     _activateSearchResult(result) {
         const isScreenshot = result.id === 'open-screenshot-ui';
+        const isSystemAction = result.provider.id === 'applications' &&
+            !result.id.endsWith('.desktop');
         this.close(isScreenshot
             ? BoxPointer.PopupAnimation.NONE
             : BoxPointer.PopupAnimation.FULL);
@@ -1430,7 +1433,9 @@ export class WindowsStartMenu {
             showScreenshotUI();
             return;
         }
-        if (result.provider.appInfo) {
+        if (isSystemAction) {
+            SystemActions.getDefault().activateAction(result.id);
+        } else if (result.provider.appInfo) {
             result.provider.activateResult(result.id, result.terms);
         } else if (result.app) {
             result.app.activate();
