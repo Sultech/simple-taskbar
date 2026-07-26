@@ -197,8 +197,8 @@ The Eleven-style Start Menu is enabled by default and includes:
   compatible extensions.
 - An All Apps view organized into selectable categories by default. Categories
   can be disabled to use a single alphabetical list.
-- Opens directly in All Apps by default, with an option to start on the pinned
-  applications page instead.
+- An option to open the Start Menu directly in All Apps instead of the pinned
+  applications page.
 - Optional recommended applications based on frequently used apps.
 - Scrollbars when the pinned or All Apps lists are taller than the available
   menu space.
