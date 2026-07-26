@@ -847,6 +847,72 @@
     color: #202124;
 }
 
+.bms-popup-background-transparent
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-dark
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-dark
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-dark
+    .popup-menu-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.46) !important;
+    background-gradient-end: rgba(30, 30, 34, 0.38) !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light
+    .popup-menu-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.62) !important;
+    background-gradient-end: rgba(230, 234, 242, 0.54) !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-windows-start-menu
+    .simple-taskbar-windows-start-footer,
+.bms-popup-background-light
+    .simple-taskbar-windows-start-menu
+    .simple-taskbar-windows-start-footer,
+.bms-popup-background-dark
+    .simple-taskbar-windows-start-menu
+    .simple-taskbar-windows-start-footer {
+    background-color: transparent;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
+    .popup-menu-content {
+    background-color: rgba(30, 30, 34, 0.64) !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-windows-start-context.simple-taskbar-windows-start-light
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-windows-start-context.simple-taskbar-windows-start-light
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-windows-start-context.simple-taskbar-windows-start-light
+    .popup-menu-content {
+    background-color: rgba(245, 247, 251, 0.68) !important;
+}
+
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile,
