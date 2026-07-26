@@ -29,6 +29,9 @@ const EXTERNAL_PANEL_STYLES = [
     'dark-panel',
     'contrasted-panel',
 ];
+const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
+const BLUR_MY_SHELL_ACTIVE_CLASS =
+    'simple-taskbar-blur-my-shell-active';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
@@ -76,6 +79,7 @@ export class PanelController {
         this._dateMenuIndicatorPadConstraints = [];
         this._layoutRepairId = 0;
         this._transparencyRepairId = 0;
+        this._blurMyShellSyncId = 0;
         this._applyingLayout = false;
         this._applyingTransparency = false;
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
@@ -107,6 +111,7 @@ export class PanelController {
         this._menuPositioner.enable();
         this._configurePanelMenuSwitching();
         this._connectSignals();
+        this._queueBlurMyShellSync();
         this._autoHideController.enable();
     }
 
@@ -345,6 +350,10 @@ export class PanelController {
             GLib.Source.remove(this._transparencyRepairId);
             this._transparencyRepairId = 0;
         }
+        if (this._blurMyShellSyncId) {
+            GLib.Source.remove(this._blurMyShellSyncId);
+            this._blurMyShellSyncId = 0;
+        }
         for (const [object, id] of this._signals) {
             if (id)
                 object.disconnect(id);
@@ -374,6 +383,9 @@ export class PanelController {
             Main.panel.remove_style_class_name('simple-taskbar-panel-bottom');
             Main.panel.remove_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
             Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
+            Main.panel.remove_style_class_name(
+                BLUR_MY_SHELL_ACTIVE_CLASS
+            );
             Main.panel.set_style(this._oldPanelStyle ?? '');
 
             const activities = Main.panel.statusArea.activities?.container;
@@ -563,8 +575,11 @@ export class PanelController {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                if (extension?.uuid === JUST_PERFECTION_UUID ||
-                    extension?.uuid === DASH_TO_PANEL_UUID) {
+                const uuid = extension?.uuid;
+                if (uuid === BLUR_MY_SHELL_UUID) {
+                    this._queueBlurMyShellSync();
+                } else if (uuid === JUST_PERFECTION_UUID ||
+                    uuid === DASH_TO_PANEL_UUID) {
                     this._queueLayoutRepair();
                 }
             }
@@ -717,6 +732,46 @@ export class PanelController {
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    _queueBlurMyShellSync() {
+        if (!this._settings || this._blurMyShellSyncId)
+            return;
+
+        this._blurMyShellSyncId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._blurMyShellSyncId = 0;
+                if (!this._settings)
+                    return GLib.SOURCE_REMOVE;
+
+                this._syncBlurMyShell();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _syncBlurMyShell() {
+        const extension = Main.extensionManager.lookup(
+            BLUR_MY_SHELL_UUID
+        );
+        const active =
+            extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
+        if (active) {
+            Main.panel.add_style_class_name(
+                BLUR_MY_SHELL_ACTIVE_CLASS
+            );
+            const panelBlur = global.blur_my_shell?._panel_blur;
+            if (panelBlur?.enabled && !Main.overview.visibleTarget) {
+                panelBlur.panel_hide_blur_dynamically();
+                panelBlur.update_visibility();
+            }
+        } else {
+            Main.panel.remove_style_class_name(
+                BLUR_MY_SHELL_ACTIVE_CLASS
+            );
+        }
+        this._applyTransparency();
     }
 
     _isJustPerfectionActive() {
@@ -908,7 +963,9 @@ export class PanelController {
         }
 
         const originalStyle = this._oldPanelStyle?.trim() ?? '';
-        const externalPanelStyle = EXTERNAL_PANEL_STYLES.some(style =>
+        const externalPanelStyle = Main.panel.has_style_class_name(
+            BLUR_MY_SHELL_ACTIVE_CLASS
+        ) && EXTERNAL_PANEL_STYLES.some(style =>
             Main.panel.has_style_class_name(style)
         );
         const light = this._usesLightTheme();

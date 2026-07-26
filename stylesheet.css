@@ -13,25 +13,25 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 
-#panel.simple-taskbar-panel.transparent-panel {
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.transparent-panel {
     background-color: transparent;
     border-top-color: transparent;
     box-shadow: none;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.transparent-panel {
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.transparent-panel {
     border-bottom-color: transparent;
 }
 
-#panel.simple-taskbar-panel.light-panel,
-#panel.simple-taskbar-panel.dark-panel,
-#panel.simple-taskbar-panel.contrasted-panel {
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.light-panel,
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.dark-panel,
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.contrasted-panel {
     border-top-color: transparent;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.light-panel,
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.dark-panel,
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.contrasted-panel {
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.light-panel,
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.dark-panel,
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.contrasted-panel {
     border-bottom-color: transparent;
 }
 
