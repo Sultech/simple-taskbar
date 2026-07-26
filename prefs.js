@@ -245,9 +245,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('windows-start-menu-enabled', false);
                 settings.set_boolean('gnome-start-button-visible', false);
             } else {
-                settings.set_int('icon-size', 27);
+                settings.set_int('icon-size', 32);
                 settings.set_int('icon-spacing', 4);
-                settings.set_int('panel-height', 44);
+                settings.set_int('panel-height', 49);
                 settings.set_string('panel-position', 'bottom');
                 settings.set_string('app-alignment', 'center');
                 settings.set_string('start-button-position', 'center');

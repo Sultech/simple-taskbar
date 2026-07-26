@@ -4,7 +4,7 @@
           path="/org/gnome/shell/extensions/simple-taskbar/">
     <key name="panel-height" type="i">
       <range min="32" max="80"/>
-      <default>44</default>
+      <default>49</default>
       <summary>Taskbar height</summary>
     </key>
     <key name="panel-position" type="s">
@@ -29,7 +29,7 @@
     </key>
     <key name="icon-size" type="i">
       <range min="15" max="48"/>
-      <default>27</default>
+      <default>32</default>
       <summary>Application icon size</summary>
     </key>
     <key name="icon-spacing" type="i">
