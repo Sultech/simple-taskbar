@@ -1091,6 +1091,7 @@ export class TaskbarController {
     _createAppButton(app, window = null) {
         const glassWidth = this._buttonWidth(window);
         const slotWidth = this._itemSlotWidth(window);
+        const glassHeight = this._glassHeight();
         const item = new TaskbarItemContainer();
         item.add_style_class_name('simple-taskbar-app-item');
         item.reactive = true;
@@ -1134,7 +1135,7 @@ export class TaskbarController {
             x: 0,
             y: 4,
             width: glassWidth,
-            height: Math.max(1, this._panelHeight - 8),
+            height: glassHeight,
         });
         glassHost.add_child(glass);
         const layout = new St.Widget({
@@ -1460,13 +1461,7 @@ export class TaskbarController {
     _updateGlassGeometry(item) {
         const glassWidth = this._buttonWidth(item._taskbarWindow);
         const slotWidth = this._itemSlotWidth(item._taskbarWindow);
-        const roundedIndicators = this._settings.get_string(
-            'running-indicator-style'
-        ) === 'rounded';
-        const glassHeight = Math.max(
-            1,
-            this._panelHeight - (roundedIndicators ? 7 : 8)
-        );
+        const glassHeight = this._glassHeight();
 
         item._taskbarButton.set_width(glassWidth);
         item._taskbarSlot.set_size(slotWidth, this._panelHeight);
@@ -1476,6 +1471,16 @@ export class TaskbarController {
         item._taskbarGlass.set_size(glassWidth, glassHeight);
         item._taskbarLabel.set_width(this._appLabelWidth);
         this._updateIndicatorGeometry(item, glassWidth);
+    }
+
+    _glassHeight() {
+        const roundedIndicators = this._settings.get_string(
+            'running-indicator-style'
+        ) === 'rounded';
+        return Math.max(
+            1,
+            this._panelHeight - (roundedIndicators ? 7 : 8)
+        );
     }
 
     _updateIndicatorGeometry(
