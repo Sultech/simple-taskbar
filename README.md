@@ -12,14 +12,29 @@ those Shell components.
 ## Preview
 
 <p align="center">
-  <img src="docs/images/taskbar-dark.png?v=20260723" alt="Simple Taskbar using its dark theme" width="100%">
+  <img src="docs/images/taskbar-dark-20260726.png" alt="Simple Taskbar using its dark theme" width="100%">
 </p>
 
 <p align="center">
-  <img src="docs/images/taskbar-light.png?v=20260723" alt="Simple Taskbar using its light theme" width="100%">
+  <img src="docs/images/taskbar-light-20260726.png" alt="Simple Taskbar using its light theme" width="100%">
 </p>
 
 <p align="center"><sub>Taskbar mode using the dark and light themes.</sub></p>
+
+## Blurred appearance
+
+Simple Taskbar integrates with Blur My Shell for an optional translucent,
+blurred panel appearance.
+
+<p align="center">
+  <img src="docs/images/taskbar-blurred-20260726.png" alt="Simple Taskbar with a blurred translucent panel" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/images/start-menu-blurred-20260726.png" alt="Eleven-style Start Menu with a blurred translucent theme" width="100%">
+</p>
+
+<p align="center"><sub>The taskbar and Eleven-style Start Menu using a blurred appearance.</sub></p>
 
 ## At a glance
 
@@ -145,7 +160,7 @@ dark when applications use light mode; select **Light** manually in the
 extension settings to use a light taskbar in that situation.
 
 <p align="center">
-  <img src="docs/images/quick-settings-mixer.png" alt="Application volume mixer expanded in GNOME Quick Settings" width="390">
+  <img src="docs/images/quick-settings-mixer-20260726.png" alt="Application volume mixer expanded in GNOME Quick Settings" width="100%">
 </p>
 
 <p align="center"><sub>Adjust individual application volume from Quick Settings.</sub></p>
@@ -215,8 +230,11 @@ buttons can be hidden. Right-clicking the Eleven-style Start button opens its
 settings page.
 
 <p align="center">
-  <img src="docs/images/start-menu-dark-20260724.png" alt="Eleven-style Start Menu using its dark theme" width="49%">
-  <img src="docs/images/start-menu-light-20260724.png" alt="Eleven-style Start Menu using its light theme" width="49%">
+  <img src="docs/images/start-menu-dark-20260726.png" alt="Eleven-style Start Menu using its dark theme" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/images/start-menu-light-20260726.png" alt="Eleven-style Start Menu using its light theme" width="100%">
 </p>
 
 <p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
