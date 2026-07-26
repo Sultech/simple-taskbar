@@ -41,8 +41,8 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-light {
-    border-top-color: rgba(255, 255, 255, 0.52) !important;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.18) !important;
+    border-top-width: 0 !important;
+    box-shadow: none !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-dark {
@@ -52,9 +52,9 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-light {
-    border-top-color: transparent !important;
-    border-bottom-color: rgba(255, 255, 255, 0.52) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
+    border-top-width: 0 !important;
+    border-bottom-width: 0 !important;
+    box-shadow: none !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active:overview,
@@ -68,7 +68,10 @@
 /* Preserve the light tint when external blur styles change in Overview. */
 #panel.simple-taskbar-panel.simple-taskbar-light-blur-overlay,
 #panel.simple-taskbar-panel.simple-taskbar-light-blur-overlay:overview {
-    background-color: rgba(235, 235, 238, 0.6) !important;
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.62) !important;
+    background-gradient-end: rgba(230, 234, 242, 0.54) !important;
 }
 
 .simple-taskbar-panel.simple-taskbar-theme-light {
@@ -350,6 +353,30 @@
 
 .simple-taskbar-app-item.running.focused .simple-taskbar-running-indicator-segment {
     background-color: #60aef7;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-segment {
+    background-color: #74787d;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-segment {
+    background-color: #4c96d8;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-segment {
+    background-color: #44484e;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-segment {
+    background-color: #4c96d8;
 }
 
 .simple-taskbar-drag-placeholder {

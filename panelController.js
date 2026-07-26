@@ -40,7 +40,7 @@ const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
-const LIGHT_BLUR_TRANSPARENCY = 30;
+const LIGHT_BLUR_TRANSPARENCY = 42;
 
 export class PanelController {
     constructor({
@@ -988,17 +988,27 @@ export class PanelController {
                 )
                 : 4;
         const opacity = 1 - transparency / 100;
+        const lightBlur = externalPanelStyle && light;
         const background = light ? '235, 235, 238' : '24, 24, 27';
-        const border = light ? '0, 0, 0' : '255, 255, 255';
-        const borderOpacity = (light ? 0.14 : 0.12) * opacity;
-        const shadowOpacity = 0.18 * opacity;
+        const border = light && !lightBlur
+            ? '0, 0, 0'
+            : '255, 255, 255';
+        const borderOpacity = lightBlur
+            ? 0
+            : (light ? 0.14 : 0.12) * opacity;
+        const shadowOpacity = lightBlur ? 0 : 0.18 * opacity;
         const top = panelIsTop(this._settings);
-        const borderStyle = top
-            ? `border-top: 0; border-bottom: 1px solid ` +
-                `rgba(${border}, ${borderOpacity.toFixed(3)}); `
-            : `border-top: 1px solid ` +
+        let borderStyle;
+        if (lightBlur) {
+            borderStyle = 'border-top: 0; border-bottom: 0; ';
+        } else if (top) {
+            borderStyle = `border-top: 0; border-bottom: 1px solid ` +
+                `rgba(${border}, ${borderOpacity.toFixed(3)}); `;
+        } else {
+            borderStyle = `border-top: 1px solid ` +
                 `rgba(${border}, ${borderOpacity.toFixed(3)}); ` +
                 'border-bottom: 0; ';
+        }
         const shadowY = top ? 2 : -2;
         const transparencyStyle =
             `background-color: rgba(${background}, ${opacity.toFixed(2)}); ` +
