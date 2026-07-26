@@ -40,7 +40,6 @@ const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
-const LIGHT_BLUR_TRANSPARENCY = 42;
 
 export class PanelController {
     constructor({
@@ -980,18 +979,18 @@ export class PanelController {
             Main.panel.has_style_class_name(style)
         );
         const light = this._usesLightTheme();
-        if (externalPanelStyle && light)
-            Main.panel.add_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
-        else
-            Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
-        if (externalPanelStyle && !light) {
+        if (externalPanelStyle) {
+            if (light)
+                Main.panel.add_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
+            else
+                Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
             this._setPanelStyle(originalStyle);
             return;
         }
+        Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
 
-        const transparency = externalPanelStyle
-            ? LIGHT_BLUR_TRANSPARENCY
-            : this._settings.get_boolean('transparency-enabled')
+        const transparency =
+            this._settings.get_boolean('transparency-enabled')
                 ? Math.clamp(
                     this._settings.get_int('transparency-level'),
                     0,
@@ -999,27 +998,17 @@ export class PanelController {
                 )
                 : 4;
         const opacity = 1 - transparency / 100;
-        const lightBlur = externalPanelStyle && light;
         const background = light ? '235, 235, 238' : '24, 24, 27';
-        const border = light && !lightBlur
-            ? '0, 0, 0'
-            : '255, 255, 255';
-        const borderOpacity = lightBlur
-            ? 0
-            : (light ? 0.14 : 0.12) * opacity;
-        const shadowOpacity = lightBlur ? 0 : 0.18 * opacity;
+        const border = '255, 255, 255';
+        const borderOpacity = 0.12 * opacity;
+        const shadowOpacity = light ? 0 : 0.18 * opacity;
         const top = panelIsTop(this._settings);
-        let borderStyle;
-        if (lightBlur) {
-            borderStyle = 'border-top: 0; border-bottom: 0; ';
-        } else if (top) {
-            borderStyle = `border-top: 0; border-bottom: 1px solid ` +
-                `rgba(${border}, ${borderOpacity.toFixed(3)}); `;
-        } else {
-            borderStyle = `border-top: 1px solid ` +
+        const borderStyle = top
+            ? `border-top: 0; border-bottom: 1px solid ` +
+                `rgba(${border}, ${borderOpacity.toFixed(3)}); `
+            : `border-top: 1px solid ` +
                 `rgba(${border}, ${borderOpacity.toFixed(3)}); ` +
                 'border-bottom: 0; ';
-        }
         const shadowY = top ? 2 : -2;
         const transparencyStyle =
             `background-color: rgba(${background}, ${opacity.toFixed(2)}); ` +
