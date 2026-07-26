@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 20:09+0100\n"
+"POT-Creation-Date: 2026-07-27 00:07+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -41,7 +41,7 @@ msgstr "Панель задач"
 msgid "Start Menu"
 msgstr "Меню «Пуск»"
 
-#: prefs.js:45 prefs.js:599
+#: prefs.js:45 prefs.js:608
 msgid "Start Button"
 msgstr "Кнопка «Пуск»"
 
@@ -49,7 +49,7 @@ msgstr "Кнопка «Пуск»"
 msgid "Configure the Start button position and spacing."
 msgstr "Настройте положение и отступы кнопки «Пуск»."
 
-#: prefs.js:51 prefs.js:682
+#: prefs.js:51 prefs.js:691
 msgid "Eleven-style Start Menu"
 msgstr "Eleven-style Start Menu"
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "Application Icons"
 msgstr "Значки приложений"
 
-#: prefs.js:90 prefs.js:219
+#: prefs.js:90 prefs.js:228
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "Измените размер, расстояние и расположение значков панели задач."
 
@@ -104,73 +104,89 @@ msgid "Space between application buttons"
 msgstr "Расстояние между кнопками приложений"
 
 #: prefs.js:110
+msgid "Running Indicator Style"
+msgstr "Стиль индикаторов запущенных приложений"
+
+#: prefs.js:111
+msgid "Choose the shape of indicators beneath running applications"
+msgstr "Выберите форму индикаторов под запущенными приложениями"
+
+#: prefs.js:113
+msgid "Rounded"
+msgstr "Закруглённые"
+
+#: prefs.js:114
+msgid "Straight"
+msgstr "Прямые"
+
+#: prefs.js:119
 msgid "Icon Alignment"
 msgstr "Выравнивание значков"
 
-#: prefs.js:111
+#: prefs.js:120
 msgid "Place application icons at the left or center"
 msgstr "Расположить значки приложений слева или по центру"
 
-#: prefs.js:116
+#: prefs.js:125
 msgid "Hide Pinned Applications"
 msgstr "Скрыть закреплённые приложения"
 
-#: prefs.js:117
+#: prefs.js:126
 msgid "Show pinned taskbar applications only while they are running"
 msgstr ""
 "Показывать закреплённые приложения панели задач только во время их работы"
 
-#: prefs.js:135
+#: prefs.js:144
 msgid "Combine Application Buttons"
 msgstr "Объединить кнопки приложений"
 
-#: prefs.js:136
+#: prefs.js:145
 msgid "Choose when windows share one taskbar button"
 msgstr "Выберите, когда окна объединяются в одну кнопку на панели задач"
 
-#: prefs.js:138
+#: prefs.js:147
 msgid "Always"
 msgstr "Всегда"
 
-#: prefs.js:139
+#: prefs.js:148
 msgid "Only When Full"
 msgstr "Только при заполнении"
 
-#: prefs.js:140
+#: prefs.js:149
 msgid "Never"
 msgstr "Никогда"
 
-#: prefs.js:146
+#: prefs.js:155
 msgid "Hide App Labels"
 msgstr "Скрыть подписи приложений"
 
-#: prefs.js:147
+#: prefs.js:156
 msgid "Show only icons on separate window buttons"
 msgstr "Показывать только значки на раздельных кнопках окон"
 
-#: prefs.js:168
+#: prefs.js:177
 msgid "Isolate Workspaces"
 msgstr "Изолировать рабочие столы"
 
-#: prefs.js:169
+#: prefs.js:178
 msgid "Show running applications from the current workspace only"
 msgstr "Показывать запущенные приложения только с текущего рабочего стола"
 
-#: prefs.js:181
+#: prefs.js:190
 msgid "Isolate Monitors"
 msgstr "Изолировать мониторы"
 
-#: prefs.js:182
+#: prefs.js:191
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Показывать запущенные приложения только на панели задач соответствующего "
 "монитора"
 
-#: prefs.js:194
+#: prefs.js:203
 msgid "Spread Multiple Windows"
 msgstr "Развернуть несколько окон"
 
-#: prefs.js:195
+#: prefs.js:204
 msgid ""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
@@ -178,307 +194,307 @@ msgstr ""
 "Нажмите на приложение с несколькими окнами, чтобы показать только его окна в "
 "обзоре, на всех рабочих столах"
 
-#: prefs.js:218
+#: prefs.js:227
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "Значки приложений недоступны в режиме стандартной панели GNOME."
 
-#: prefs.js:280
+#: prefs.js:289
 msgid "Panel Appearance"
 msgstr "Внешний вид панели"
 
-#: prefs.js:281
+#: prefs.js:290
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr "Измените высоту, цветовую схему и прозрачность панели задач."
 
-#: prefs.js:287
+#: prefs.js:296
 msgid "Panel Height"
 msgstr "Высота панели"
 
-#: prefs.js:288
+#: prefs.js:297
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr "Крупные значки автоматически уменьшаются при уменьшении панели"
 
-#: prefs.js:294
+#: prefs.js:303
 msgid "Panel Position"
 msgstr "Положение панели"
 
-#: prefs.js:295
+#: prefs.js:304
 msgid "Place the taskbar at the top or bottom of the screen"
 msgstr "Расположить панель задач вверху или внизу экрана"
 
-#: prefs.js:297
+#: prefs.js:306
 msgid "Top"
 msgstr "Вверху"
 
-#: prefs.js:298
+#: prefs.js:307
 msgid "Bottom"
 msgstr "Внизу"
 
-#: prefs.js:329
+#: prefs.js:338
 msgid "Follow System Theme"
 msgstr "Следовать системной теме"
 
-#: prefs.js:330
+#: prefs.js:339
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr "Использовать активную тему GNOME Shell независимо от цвета приложений"
 
-#: prefs.js:346
+#: prefs.js:355
 msgid "Taskbar Theme"
 msgstr "Тема панели задач"
 
-#: prefs.js:347
+#: prefs.js:356
 msgid "Choose the colour scheme when system matching is off"
 msgstr "Выберите цветовую схему, когда системное соответствие отключено"
 
-#: prefs.js:349 prefs.js:815
+#: prefs.js:358 prefs.js:824
 msgid "Light"
 msgstr "Светлая"
 
-#: prefs.js:350 prefs.js:814
+#: prefs.js:359 prefs.js:823
 msgid "Dark"
 msgstr "Тёмная"
 
-#: prefs.js:360
+#: prefs.js:369
 msgid "Enable Transparency"
 msgstr "Включить прозрачность"
 
-#: prefs.js:361
+#: prefs.js:370
 msgid "Make the taskbar background transparent"
 msgstr "Сделать фон панели задач прозрачным"
 
-#: prefs.js:377
+#: prefs.js:386
 msgid "Transparency"
 msgstr "Прозрачность"
 
-#: prefs.js:378
+#: prefs.js:387
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0% — непрозрачно, 100% — полностью прозрачно"
 
-#: prefs.js:389
+#: prefs.js:398
 msgid "Show Border in Dark Mode"
 msgstr "Показывать границу в тёмном режиме"
 
-#: prefs.js:390 prefs.js:403
+#: prefs.js:399 prefs.js:412
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 "Показывать тонкую границу вдоль края панели, обращённого к рабочей области"
 
-#: prefs.js:402
+#: prefs.js:411
 msgid "Show Border in Light Mode"
 msgstr "Показывать границу в светлом режиме"
 
-#: prefs.js:417
+#: prefs.js:426
 msgid "Taskbar Behavior"
 msgstr "Поведение панели задач"
 
-#: prefs.js:422
+#: prefs.js:431
 msgid "Auto-hide Panel"
 msgstr "Автоскрытие панели"
 
-#: prefs.js:423
+#: prefs.js:432
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr "Показывать панель задач, когда указатель достигает края экрана"
 
-#: prefs.js:435
+#: prefs.js:444
 msgid "Bottom Hot Edge"
 msgstr ""
 
-#: prefs.js:436
+#: prefs.js:445
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 
-#: prefs.js:450
+#: prefs.js:459
 msgid "Hot Edge Animation"
 msgstr ""
 
-#: prefs.js:451
+#: prefs.js:460
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr ""
 
-#: prefs.js:473
+#: prefs.js:482
 msgid "Workspace Scroll"
 msgstr "Прокрутка рабочих столов"
 
-#: prefs.js:474
+#: prefs.js:483
 msgid "Scroll over empty taskbar space to switch workspaces"
 msgstr ""
 "Прокручивайте пустое пространство панели задач для переключения рабочих "
 "столов"
 
-#: prefs.js:490
+#: prefs.js:499
 msgid "Workspace Scroll Delay"
 msgstr "Задержка прокрутки рабочих столов"
 
-#: prefs.js:491
+#: prefs.js:500
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 "Минимальная задержка между переключениями рабочих столов в миллисекундах"
 
-#: prefs.js:503
+#: prefs.js:512
 msgid "Panel Menus Require Click"
 msgstr "Меню панели открываются по щелчку"
 
-#: prefs.js:504
+#: prefs.js:513
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "Переключаться между меню часов, системы и трея только по щелчку"
 
-#: prefs.js:516
+#: prefs.js:525
 msgid "Taskbar-aligned Notification Banners"
 msgstr "Уведомления вдоль панели задач"
 
-#: prefs.js:517
+#: prefs.js:526
 msgid "Follow the taskbar edge and the clock’s horizontal position"
 msgstr "Следовать краю панели задач и горизонтальному положению часов"
 
-#: prefs.js:544
+#: prefs.js:553
 #, javascript-format
 msgid "%s (Unavailable)"
 msgstr "%s (недоступно)"
 
-#: prefs.js:555
+#: prefs.js:564
 msgid "Task Manager Application"
 msgstr "Приложение диспетчера задач"
 
-#: prefs.js:556
+#: prefs.js:565
 msgid "Application opened from the taskbar context menu"
 msgstr "Приложение, открываемое из контекстного меню панели задач"
 
-#: prefs.js:570
+#: prefs.js:579
 msgid "Show Taskbar on All Monitors"
 msgstr "Показывать панель задач на всех мониторах"
 
-#: prefs.js:571
+#: prefs.js:580
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 "Показывать «Деятельность», приложения, часы и системное меню на каждом "
 "мониторе"
 
-#: prefs.js:592
+#: prefs.js:601
 msgid "Panel Items"
 msgstr "Элементы панели"
 
-#: prefs.js:593
+#: prefs.js:602
 msgid "Choose where taskbar and system items appear."
 msgstr "Выберите, где отображаются элементы панели задач и системы."
 
-#: prefs.js:600
+#: prefs.js:609
 msgid "Place the Start button at the left edge or in the center"
 msgstr "Расположить кнопку «Пуск» у левого края или по центру"
 
-#: prefs.js:605
+#: prefs.js:614
 msgid "Follow Application Alignment"
 msgstr "Следовать выравниванию приложений"
 
-#: prefs.js:606
+#: prefs.js:615
 msgid "Move the Start button with the application buttons"
 msgstr "Перемещать кнопку «Пуск» вместе с кнопками приложений"
 
-#: prefs.js:629
+#: prefs.js:638
 msgid "Start Button Padding"
 msgstr "Отступ кнопки «Пуск»"
 
-#: prefs.js:630
+#: prefs.js:639
 msgid "Horizontal space around the Start icon in pixels"
 msgstr "Горизонтальное пространство вокруг значка «Пуск» в пикселях"
 
-#: prefs.js:636
+#: prefs.js:645
 msgid "Custom Start Button Icon"
 msgstr "Пользовательский значок кнопки «Пуск»"
 
-#: prefs.js:640
+#: prefs.js:649
 msgid "Use the built-in icon"
 msgstr "Использовать встроенный значок"
 
-#: prefs.js:644 prefs.js:1135
+#: prefs.js:653 prefs.js:1144
 msgid "Choose…"
 msgstr "Выбрать…"
 
-#: prefs.js:660
+#: prefs.js:669
 msgid "Using the built-in icon"
 msgstr "Используется встроенный значок"
 
-#: prefs.js:683
+#: prefs.js:692
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "Заменить сетку приложений GNOME меню Eleven-style"
 
-#: prefs.js:695
+#: prefs.js:704
 msgid "Open All Apps by Default"
 msgstr ""
 
-#: prefs.js:696
+#: prefs.js:705
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr ""
 
-#: prefs.js:718
+#: prefs.js:727
 #, fuzzy
 msgid "Show Recommended Apps"
 msgstr "Рекомендуемые"
 
-#: prefs.js:719
+#: prefs.js:728
 msgid "Display frequently used applications below pinned apps"
 msgstr ""
 
-#: prefs.js:747
+#: prefs.js:756
 msgid "Organize All Apps into Categories"
 msgstr ""
 
-#: prefs.js:748
+#: prefs.js:757
 msgid "Browse applications by category in the Start menu"
 msgstr ""
 
-#: prefs.js:770
+#: prefs.js:779
 msgid "Show Original GNOME Button"
 msgstr "Показать оригинальную кнопку GNOME"
 
-#: prefs.js:771
+#: prefs.js:780
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr ""
 "Показывать кнопку «Приложения», когда Eleven-style Start Menu отключено"
 
-#: prefs.js:792
+#: prefs.js:801
 msgid "Follow Panel Theme"
 msgstr "Следовать теме панели"
 
-#: prefs.js:793
+#: prefs.js:802
 msgid "Use the panel’s effective light or dark appearance"
 msgstr "Использовать текущую светлую или тёмную тему панели"
 
-#: prefs.js:811
+#: prefs.js:820
 msgid "Start Menu Theme"
 msgstr "Тема меню «Пуск»"
 
-#: prefs.js:812
+#: prefs.js:821
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "Использовать пользовательский вид или следовать теме GNOME Shell"
 
-#: prefs.js:816
+#: prefs.js:825
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: prefs.js:836
+#: prefs.js:845
 msgid "Center Start Menu on Monitor"
 msgstr "Центрировать меню «Пуск» на мониторе"
 
-#: prefs.js:837
+#: prefs.js:846
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr "Расположить меню по настоящему центру экрана, а не над кнопкой «Пуск»"
 
-#: prefs.js:872
+#: prefs.js:881
 msgid "Super Opens Start Menu"
 msgstr "Super открывает меню «Пуск»"
 
-#: prefs.js:873
+#: prefs.js:882
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr "Использовать Super для меню «Пуск» и перенести обзор на Super+Tab"
 
-#: prefs.js:885
+#: prefs.js:894
 msgid "Super+Tab Opens Start Menu"
 msgstr "Super+Tab открывает меню «Пуск»"
 
-#: prefs.js:886
+#: prefs.js:895
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
@@ -486,191 +502,192 @@ msgstr ""
 "Использовать сочетание клавиш переключения приложений GNOME для Eleven-style "
 "Start Menu, пока оно включено"
 
-#: prefs.js:913
+#: prefs.js:922
 #, fuzzy
 msgid "Super+E Opens File Manager"
 msgstr "Super открывает меню «Пуск»"
 
-#: prefs.js:915
+#: prefs.js:924
 msgid "Open your home folder with the system’s default file manager"
 msgstr ""
 
-#: prefs.js:930
+#: prefs.js:939
 msgid "Not set"
 msgstr "Не задано"
 
-#: prefs.js:935
+#: prefs.js:944
 msgid "Set custom shortcut"
 msgstr "Задать пользовательское сочетание клавиш"
 
-#: prefs.js:940
+#: prefs.js:949
 msgid "Clear custom shortcut"
 msgstr "Очистить пользовательское сочетание клавиш"
 
-#: prefs.js:944
+#: prefs.js:953
 msgid "Custom Start Menu Shortcut"
 msgstr "Пользовательское сочетание клавиш меню «Пуск»"
 
-#: prefs.js:963
+#: prefs.js:972
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 "Отключите сочетание с Super, чтобы использовать пользовательское сочетание "
 "клавиш"
 
-#: prefs.js:966
+#: prefs.js:975
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 "Отключите Super+Tab, чтобы использовать пользовательское сочетание клавиш"
 
-#: prefs.js:969
+#: prefs.js:978
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr "Выберите любое свободное сочетание клавиш; по умолчанию не назначено"
 
-#: prefs.js:992
+#: prefs.js:1001
 msgid "Show Activities Button"
 msgstr "Показать кнопку «Деятельность»"
 
-#: prefs.js:993
+#: prefs.js:1002
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr "Показывать кнопку обзора рабочих столов GNOME на панели задач"
 
-#: prefs.js:1009
+#: prefs.js:1018
 #, fuzzy
 msgid "Activities Button Position"
 msgstr "Показать кнопку «Деятельность»"
 
-#: prefs.js:1025
+#: prefs.js:1034
 msgid "Activities Right Placement"
 msgstr ""
 
-#: prefs.js:1029
+#: prefs.js:1038
 msgid "First on Right"
 msgstr ""
 
-#: prefs.js:1033
+#: prefs.js:1042
 #, fuzzy
 msgid "Before System Menu"
 msgstr "Системное меню"
 
-#: prefs.js:1037
+#: prefs.js:1046
 #, fuzzy
 msgid "After System Menu"
 msgstr "Системное меню"
 
-#: prefs.js:1041
+#: prefs.js:1050
 #, fuzzy
 msgid "After Clock"
 msgstr "Часы"
 
-#: prefs.js:1065
+#: prefs.js:1074
 msgid "Clock"
 msgstr "Часы"
 
-#: prefs.js:1070
+#: prefs.js:1079
 msgid "System Menu"
 msgstr "Системное меню"
 
-#: prefs.js:1071
+#: prefs.js:1080
 msgid "Quick Settings, volume, network, and power"
 msgstr "Быстрые настройки, громкость, сеть и питание"
 
-#: prefs.js:1075
+#: prefs.js:1084
 #, fuzzy
 msgid "Application Volume Mixer"
 msgstr "Значки приложений"
 
-#: prefs.js:1076
+#: prefs.js:1085
 msgid "Add per-application volume controls to Quick Settings"
 msgstr ""
 
-#: prefs.js:1087
+#: prefs.js:1096
 msgid "Show Desktop Button"
 msgstr ""
 
-#: prefs.js:1088
+#: prefs.js:1097
 msgid "Display a button that minimizes or restores all windows"
 msgstr ""
 
-#: prefs.js:1106
+#: prefs.js:1115
 msgid "Show Desktop Button Position"
 msgstr ""
 
-#: prefs.js:1107
+#: prefs.js:1116
 msgid "Place it next to Start or at the right edge"
 msgstr ""
 
-#: prefs.js:1119
+#: prefs.js:1128
 msgid "Show Folder Menu"
 msgstr "Показать меню папки"
 
-#: prefs.js:1120
+#: prefs.js:1129
 msgid "Place a selected folder on the right of the taskbar"
 msgstr "Разместить выбранную папку справа на панели задач"
 
-#: prefs.js:1132
+#: prefs.js:1141
 msgid "Folder Menu Location"
 msgstr "Расположение меню папки"
 
-#: prefs.js:1150
+#: prefs.js:1159
 msgid "No folder selected"
 msgstr "Папка не выбрана"
 
-#: prefs.js:1165 prefs.js:1192
+#: prefs.js:1174 prefs.js:1201
 msgid "Reset"
 msgstr "Сбросить"
 
-#: prefs.js:1170
+#: prefs.js:1179
 msgid "Reset All Settings"
 msgstr "Сбросить все настройки"
 
-#: prefs.js:1171
-msgid "Restore defaults without changing pinned taskbar apps"
+#: prefs.js:1180
+msgid "Restore defaults without changing pinned taskbar or Start Menu apps"
 msgstr ""
-"Восстановить настройки по умолчанию без изменения закреплённых приложений"
+"Восстановить настройки по умолчанию, сохранив закреплённые приложения панели "
+"задач и меню «Пуск»"
 
-#: prefs.js:1174
+#: prefs.js:1183
 msgid "Reset…"
 msgstr "Сбросить…"
 
-#: prefs.js:1188
+#: prefs.js:1197
 msgid "Reset all settings?"
 msgstr "Сбросить все настройки?"
 
-#: prefs.js:1189
+#: prefs.js:1198
 msgid ""
-"This will restore taskbar and Start menu settings, including pinned Start "
-"apps. Pinned taskbar apps and their order will be kept."
+"This will restore taskbar and Start Menu settings. Pinned taskbar and Start "
+"Menu apps, including their order, will be kept."
 msgstr ""
-"Это восстановит настройки панели задач и меню «Пуск», включая закреплённые "
-"приложения. Закреплённые приложения панели задач и их порядок сохранятся."
+"Это восстановит настройки панели задач и меню «Пуск». Закреплённые приложения "
+"панели задач и меню «Пуск», включая их порядок, будут сохранены."
 
-#: prefs.js:1191 startIconChooser.js:139
+#: prefs.js:1200 startIconChooser.js:139
 msgid "Cancel"
 msgstr "Отмена"
 
-#: prefs.js:1228
+#: prefs.js:1238
 msgid "Set Custom Shortcut"
 msgstr "Задать пользовательское сочетание клавиш"
 
-#: prefs.js:1241
+#: prefs.js:1251
 msgid "Press a keyboard shortcut"
 msgstr "Нажмите сочетание клавиш"
 
-#: prefs.js:1242
+#: prefs.js:1252
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "Нажмите Backspace для очистки или Escape для отмены."
 
-#: prefs.js:1286
+#: prefs.js:1296
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 "Это сочетание клавиш требует клавишу-модификатор. Попробуйте другое "
 "сочетание."
 
-#: prefs.js:1297
+#: prefs.js:1307
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "Это сочетание клавиш уже используется. Нажмите другое сочетание."
 
-#: prefs.js:1315
+#: prefs.js:1325
 msgid "Choose a Folder"
 msgstr "Выберите папку"
 
@@ -879,7 +896,7 @@ msgstr "Заблокировать панель задач"
 msgid "Taskbar Settings"
 msgstr "Настройки панели задач"
 
-#: taskbarController.js:458 taskbarController.js:460 taskbarController.js:1509
+#: taskbarController.js:476 taskbarController.js:478 taskbarController.js:1533
 msgid "running"
 msgstr "запущено"
 

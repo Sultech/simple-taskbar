@@ -358,6 +358,18 @@
     background-color: transparent;
 }
 
+.simple-taskbar-apps.simple-taskbar-rounded-indicators
+    .simple-taskbar-running-indicator {
+    height: 4px;
+    margin-bottom: 3px;
+}
+
+.simple-taskbar-apps.simple-taskbar-rounded-indicators
+    .simple-taskbar-running-indicator-segment {
+    height: 4px;
+    border-radius: 999px;
+}
+
 .simple-taskbar-app-item.running .simple-taskbar-running-indicator-segment {
     background-color: #8d8d8d;
 }

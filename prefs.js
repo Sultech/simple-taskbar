@@ -106,6 +106,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             upper: 16,
         });
         this._addComboRow(appearanceGroup, window._settings, {
+            key: 'running-indicator-style',
+            title: _('Running Indicator Style'),
+            subtitle: _('Choose the shape of indicators beneath running applications'),
+            choices: [
+                {value: 'rounded', label: _('Rounded')},
+                {value: 'straight', label: _('Straight')},
+            ],
+        });
+        this._addComboRow(appearanceGroup, window._settings, {
             key: 'app-alignment',
             title: _('Icon Alignment'),
             subtitle: _('Place application icons at the left or center'),
@@ -1168,7 +1177,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const resetRow = new Adw.ActionRow({
             title: _('Reset All Settings'),
-            subtitle: _('Restore defaults without changing pinned taskbar apps'),
+            subtitle: _('Restore defaults without changing pinned taskbar or Start Menu apps'),
         });
         const resetButton = new Gtk.Button({
             label: _('Reset…'),
@@ -1186,7 +1195,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     _confirmReset(window) {
         const dialog = new Adw.AlertDialog({
             heading: _('Reset all settings?'),
-            body: _('This will restore taskbar and Start menu settings, including pinned Start apps. Pinned taskbar apps and their order will be kept.'),
+            body: _('This will restore taskbar and Start Menu settings. Pinned taskbar and Start Menu apps, including their order, will be kept.'),
         });
         dialog.add_response('cancel', _('Cancel'));
         dialog.add_response('reset', _('Reset'));
@@ -1214,7 +1223,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             resetSettings.delay();
             for (const key of resetSettings.settings_schema.list_keys()) {
                 if (key === 'start-menu-displaced-switch-applications' ||
-                    key === 'start-menu-displaced-overlay-key') {
+                    key === 'start-menu-displaced-overlay-key' ||
+                    key === 'start-menu-pinned-apps') {
                     continue;
                 }
                 resetSettings.reset(key);

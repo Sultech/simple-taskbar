@@ -24,6 +24,8 @@ const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
 const APP_LABEL_MIN_WIDTH = 40;
 const APP_LABEL_SPACING = 8;
+const ROUNDED_INDICATORS_CLASS =
+    'simple-taskbar-rounded-indicators';
 
 // Retain DashItemContainer's scale-and-fade animation.
 const TaskbarItemContainer = GObject.registerClass(
@@ -231,6 +233,11 @@ export class TaskbarController {
             }
             this.queueIconGeometryUpdate();
         });
+        this._connect(
+            this._settings,
+            'changed::running-indicator-style',
+            () => this.applyAppearance()
+        );
         this._connect(this._settings, 'changed::taskbar-locked', () => {
             this._syncDragEnabled();
         });
@@ -326,9 +333,20 @@ export class TaskbarController {
     applyAppearance() {
         this.actor.set_style('spacing: 0;');
         this.actor.x_align = Clutter.ActorAlign.START;
+        this._syncIndicatorStyle();
         for (const item of this._appButtons.values())
             this._updateGlassGeometry(item);
         this.actor.queue_relayout();
+    }
+
+    _syncIndicatorStyle() {
+        const rounded = this._settings.get_string(
+            'running-indicator-style'
+        ) === 'rounded';
+        if (rounded)
+            this.actor.add_style_class_name(ROUNDED_INDICATORS_CLASS);
+        else
+            this.actor.remove_style_class_name(ROUNDED_INDICATORS_CLASS);
     }
 
     redisplay() {
@@ -1442,7 +1460,13 @@ export class TaskbarController {
     _updateGlassGeometry(item) {
         const glassWidth = this._buttonWidth(item._taskbarWindow);
         const slotWidth = this._itemSlotWidth(item._taskbarWindow);
-        const glassHeight = Math.max(1, this._panelHeight - 8);
+        const roundedIndicators = this._settings.get_string(
+            'running-indicator-style'
+        ) === 'rounded';
+        const glassHeight = Math.max(
+            1,
+            this._panelHeight - (roundedIndicators ? 7 : 8)
+        );
 
         item._taskbarButton.set_width(glassWidth);
         item._taskbarSlot.set_size(slotWidth, this._panelHeight);

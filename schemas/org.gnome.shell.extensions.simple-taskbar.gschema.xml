@@ -37,6 +37,14 @@
       <default>4</default>
       <summary>Space between application buttons</summary>
     </key>
+    <key name="running-indicator-style" type="s">
+      <choices>
+        <choice value="rounded"/>
+        <choice value="straight"/>
+      </choices>
+      <default>'rounded'</default>
+      <summary>Running application indicator style</summary>
+    </key>
     <key name="transparency-enabled" type="b">
       <default>true</default>
       <summary>Enable taskbar transparency</summary>
