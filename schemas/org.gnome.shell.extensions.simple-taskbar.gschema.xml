@@ -46,6 +46,10 @@
       <default>20</default>
       <summary>Taskbar background transparency percentage</summary>
     </key>
+    <key name="panel-border-enabled" type="b">
+      <default>true</default>
+      <summary>Show the panel border</summary>
+    </key>
     <key name="panel-theme-follow-system" type="b">
       <default>true</default>
       <summary>Follow the active GNOME Shell theme</summary>

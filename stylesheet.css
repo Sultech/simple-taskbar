@@ -59,6 +59,15 @@
     box-shadow: none !important;
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-border-disabled,
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-border-disabled,
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled,
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active:overview,
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active:overview {
     border-top-color: transparent !important;

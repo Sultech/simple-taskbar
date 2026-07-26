@@ -385,6 +385,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             transparencyRow.sensitive = widget.active;
         });
 
+        const panelBorderSwitch = new Adw.SwitchRow({
+            title: _('Show Panel Border'),
+            subtitle: _('Display a thin border along the panel’s workspace-facing edge'),
+            active: window._settings.get_boolean('panel-border-enabled'),
+        });
+        panelAppearanceGroup.add(panelBorderSwitch);
+        window._settings.bind(
+            'panel-border-enabled',
+            panelBorderSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Taskbar Behavior'),
         });

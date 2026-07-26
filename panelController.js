@@ -40,6 +40,8 @@ const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
+const BORDER_DISABLED_CLASS =
+    'simple-taskbar-border-disabled';
 
 export class PanelController {
     constructor({
@@ -103,6 +105,7 @@ export class PanelController {
         this._attachActors();
         this._configureAdaptivePanelAllocation();
         this._syncPanelEdgeClass();
+        this._syncPanelBorder();
         this._syncPanelButtonPadding();
         this._applyTheme();
         this.applyLayout();
@@ -387,6 +390,7 @@ export class PanelController {
             Main.panel.remove_style_class_name('simple-taskbar-panel-bottom');
             Main.panel.remove_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
             Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
+            Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
             Main.panel.remove_style_class_name(
                 BLUR_MY_SHELL_ACTIVE_CLASS
             );
@@ -604,6 +608,10 @@ export class PanelController {
             this._applyTransparency();
         });
         this._connect(this._settings, 'changed::transparency-level', () => {
+            this._applyTransparency();
+        });
+        this._connect(this._settings, 'changed::panel-border-enabled', () => {
+            this._syncPanelBorder();
             this._applyTransparency();
         });
         this._connect(this._settings, 'changed::panel-theme-follow-system', () => {
@@ -931,6 +939,16 @@ export class PanelController {
         );
     }
 
+    _syncPanelBorder() {
+        if (!this._panelWasModified)
+            return;
+
+        if (this._settings.get_boolean('panel-border-enabled'))
+            Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
+        else
+            Main.panel.add_style_class_name(BORDER_DISABLED_CLASS);
+    }
+
     _restorePanelItems() {
         for (const {actor} of this._panelItemState ?? [])
             actor.get_parent()?.remove_child(actor);
@@ -1002,12 +1020,17 @@ export class PanelController {
         const border = '255, 255, 255';
         const borderOpacity = 0.20;
         const top = panelIsTop(this._settings);
-        const borderStyle = top
-            ? `border-top: 0; border-bottom: 1px solid ` +
-                `rgba(${border}, ${borderOpacity.toFixed(3)}); `
-            : `border-top: 1px solid ` +
-                `rgba(${border}, ${borderOpacity.toFixed(3)}); ` +
-                'border-bottom: 0; ';
+        const borderEnabled =
+            this._settings.get_boolean('panel-border-enabled');
+        let borderStyle = 'border-top: 0; border-bottom: 0; ';
+        if (borderEnabled) {
+            borderStyle = top
+                ? `border-top: 0; border-bottom: 1px solid ` +
+                    `rgba(${border}, ${borderOpacity.toFixed(3)}); `
+                : `border-top: 1px solid ` +
+                    `rgba(${border}, ${borderOpacity.toFixed(3)}); ` +
+                    'border-bottom: 0; ';
+        }
         const transparencyStyle =
             `background-color: rgba(${background}, ${opacity.toFixed(2)}); ` +
             borderStyle +
