@@ -235,6 +235,11 @@ export class TaskbarController {
         });
         this._connect(
             this._settings,
+            'changed::nautilus-places-enabled',
+            () => this._syncFileManagerPlaces()
+        );
+        this._connect(
+            this._settings,
             'changed::running-indicator-style',
             () => this.applyAppearance()
         );
@@ -1349,6 +1354,10 @@ export class TaskbarController {
         const menu = new TaskbarAppMenu(button, panelArrowSide(this._settings), {
             favoritesSection: true,
             showSingleWindows: true,
+            fileManagerPlacesApp: app,
+            fileManagerPlacesEnabled: this._settings.get_boolean(
+                'nautilus-places-enabled'
+            ),
         });
         const menuManager = new PopupMenu.PopupMenuManager(button);
 
@@ -1367,6 +1376,16 @@ export class TaskbarController {
 
         button._taskbarMenu = menu;
         button._taskbarMenuManager = menuManager;
+    }
+
+    _syncFileManagerPlaces() {
+        const enabled = this._settings.get_boolean(
+            'nautilus-places-enabled'
+        );
+        for (const item of this._appButtons.values()) {
+            item._taskbarButton._taskbarMenu
+                .setFileManagerPlacesEnabled(enabled);
+        }
     }
 
     _popupAppMenu(button) {

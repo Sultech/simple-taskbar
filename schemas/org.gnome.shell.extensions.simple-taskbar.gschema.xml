@@ -178,6 +178,10 @@
       <default>true</default>
       <summary>Show an application window spread when its taskbar icon is clicked</summary>
     </key>
+    <key name="nautilus-places-enabled" type="b">
+      <default>true</default>
+      <summary>Show common folder shortcuts in the Nautilus taskbar menu</summary>
+    </key>
     <key name="app-alignment" type="s">
       <choices>
         <choice value="left"/>

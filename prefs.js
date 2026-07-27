@@ -214,6 +214,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const nautilusPlacesSwitch = new Adw.SwitchRow({
+            title: _('Nautilus Folder Shortcuts'),
+            subtitle: _('Show common folders in the Files taskbar menu'),
+            active: window._settings.get_boolean(
+                'nautilus-places-enabled'
+            ),
+        });
+        appearanceGroup.add(nautilusPlacesSwitch);
+        window._settings.bind(
+            'nautilus-places-enabled',
+            nautilusPlacesSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         let syncingDefaultGnomePanel = false;
         const syncDefaultGnomePanel = () => {
             const enabled = window._settings.get_boolean(

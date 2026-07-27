@@ -3,6 +3,7 @@ prefs.js
 windowsStartMenu.js
 startMenuAppMenu.js
 folderMenuController.js
+fileManagerPlacesSection.js
 taskbarAppMenu.js
 startButtonController.js
 startIconChooser.js
