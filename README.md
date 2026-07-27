@@ -87,13 +87,16 @@ Application buttons support:
 
 - **Left click:** launch, focus or minimize the application.
 - **Middle click:** open a new window.
-- **Right click:** open GNOME's application menu.
+- **Right click:** open GNOME's application menu. Nautilus additionally shows
+  Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts by
+  default; these shortcuts can be disabled in the extension settings.
 - **Drag:** while buttons are combined, rearrange favourites or drag a running
   application into the favourite section to pin it.
 - **Hover:** show live previews for open windows. A preview can activate or
   close its exact window.
 
-Running, focused and multi-window applications have dedicated indicators.
+Running, focused and multi-window applications have dedicated indicators,
+with a choice of rounded or straight indicator ends.
 Clicking an application with multiple windows can spread only that
 application's windows across the Overview, including windows on other
 workspaces. The preview flyout remains available as an alternative.
@@ -119,7 +122,8 @@ Optional controls can:
 - Show running applications only on the taskbar for their monitor.
 - Hide favourite applications that are not running.
 - Lock the taskbar against accidental rearrangement.
-- Show the desktop from a narrow button at the panel edge.
+- Show the desktop from a narrow button at either panel edge, or hide the
+  button.
 
 ## Panel customization
 
@@ -139,6 +143,7 @@ The settings provide control over:
 - Left, center or right placement for the clock and Quick Settings.
 - Light, dark or Shell-following themes.
 - Adjustable transparency and Blur My Shell integration on the primary panel.
+- Separate panel-border controls for the light and dark themes.
 - Animated auto-hide on every panel.
 - A bottom hot edge that toggles Overview, with an optional ripple animation.
 - Workspace switching by scrolling over empty panel space.
@@ -275,8 +280,8 @@ Settings**, or run:
 gnome-extensions prefs simple-taskbar@sultech
 ```
 
-**Reset All Settings** restores the extension defaults without changing GNOME's
-taskbar favourites or their order.
+**Reset All Settings** restores the extension defaults without changing
+GNOME's taskbar favourites or Eleven Start Menu pins, including their order.
 
 ## Compatibility
 
