@@ -114,6 +114,46 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 {value: 'straight', label: _('Straight')},
             ],
         });
+        const customIndicatorColorsSwitch = new Adw.SwitchRow({
+            title: _('Custom Indicator Colors'),
+            subtitle: _('Choose colors for running application indicators'),
+            active: window._settings.get_boolean(
+                'custom-indicator-colors-enabled'
+            ),
+        });
+        appearanceGroup.add(customIndicatorColorsSwitch);
+        window._settings.bind(
+            'custom-indicator-colors-enabled',
+            customIndicatorColorsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const focusedIndicatorColorRow = this._addColorRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'focused-indicator-color',
+                title: _('Focused Indicator Color'),
+            }
+        );
+        const unfocusedIndicatorColorRow = this._addColorRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'unfocused-indicator-color',
+                title: _('Unfocused Indicator Color'),
+            }
+        );
+        const syncIndicatorColorSensitivity = () => {
+            const enabled = customIndicatorColorsSwitch.active;
+            focusedIndicatorColorRow.sensitive = enabled;
+            unfocusedIndicatorColorRow.sensitive = enabled;
+        };
+        customIndicatorColorsSwitch.connect(
+            'notify::active',
+            syncIndicatorColorSensitivity
+        );
+        syncIndicatorColorSensitivity();
         this._addComboRow(appearanceGroup, window._settings, {
             key: 'app-alignment',
             title: _('Icon Alignment'),
@@ -1438,6 +1478,34 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             if (index >= 0 && row.get_selected() !== index)
                 row.set_selected(index);
         });
+        group.add(row);
+        return row;
+    }
+
+    _addColorRow(group, settings, {key, title}) {
+        const dialog = new Gtk.ColorDialog({title});
+        const button = new Gtk.ColorDialogButton({
+            dialog,
+            valign: Gtk.Align.CENTER,
+        });
+        const row = new Adw.ActionRow({title});
+        row.add_suffix(button);
+        row.activatable_widget = button;
+
+        let syncing = false;
+        const syncColor = () => {
+            const color = new Gdk.RGBA();
+            color.parse(settings.get_string(key));
+            syncing = true;
+            button.rgba = color;
+            syncing = false;
+        };
+        button.connect('notify::rgba', () => {
+            if (!syncing)
+                settings.set_string(key, button.rgba.to_string());
+        });
+        settings.connect(`changed::${key}`, syncColor);
+        syncColor();
         group.add(row);
         return row;
     }

@@ -45,6 +45,18 @@
       <default>'rounded'</default>
       <summary>Running application indicator style</summary>
     </key>
+    <key name="custom-indicator-colors-enabled" type="b">
+      <default>false</default>
+      <summary>Use custom running indicator colors</summary>
+    </key>
+    <key name="focused-indicator-color" type="s">
+      <default>'#60aef7'</default>
+      <summary>Focused application indicator color</summary>
+    </key>
+    <key name="unfocused-indicator-color" type="s">
+      <default>'#8d8d8d'</default>
+      <summary>Unfocused application indicator color</summary>
+    </key>
     <key name="transparency-enabled" type="b">
       <default>true</default>
       <summary>Enable taskbar transparency</summary>

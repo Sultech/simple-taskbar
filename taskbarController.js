@@ -243,6 +243,16 @@ export class TaskbarController {
             'changed::running-indicator-style',
             () => this.applyAppearance()
         );
+        for (const key of [
+            'custom-indicator-colors-enabled',
+            'focused-indicator-color',
+            'unfocused-indicator-color',
+        ]) {
+            this._connect(this._settings, `changed::${key}`, () => {
+                for (const item of this._appButtons.values())
+                    this._syncIndicatorColor(item);
+            });
+        }
         this._connect(this._settings, 'changed::taskbar-locked', () => {
             this._syncDragEnabled();
         });
@@ -475,8 +485,10 @@ export class TaskbarController {
                 `${focused ? ' focused' : ''}`
             );
             item._taskbarFocused = focused;
+            item._taskbarRunning = running;
             item._taskbarMultipleWindows = !window && windowCount > 1;
             this._updateIndicatorGeometry(item);
+            this._syncIndicatorColor(item);
             button.accessible_name = window
                 ? `${window.get_title() || app.get_name()}, ${_('running')}`
                 : running
@@ -1229,6 +1241,7 @@ export class TaskbarController {
         item._taskbarIndicator = indicator;
         item._taskbarIndicatorSecondary = indicatorSecondary;
         item._taskbarFocused = false;
+        item._taskbarRunning = false;
         item._taskbarMultipleWindows = false;
         this._updateIndicatorGeometry(item, glassWidth);
         if (window) {
@@ -1515,6 +1528,22 @@ export class TaskbarController {
             indicatorWidth = evenWidth ? 18 : 17;
 
         item._taskbarIndicator.set_width(indicatorWidth);
+    }
+
+    _syncIndicatorColor(item) {
+        let style = null;
+        if (item._taskbarRunning &&
+            this._settings.get_boolean('custom-indicator-colors-enabled')) {
+            const key = item._taskbarFocused
+                ? 'focused-indicator-color'
+                : 'unfocused-indicator-color';
+            style = `background-color: ${
+                this._settings.get_string(key)
+            };`;
+        }
+
+        for (const segment of item._taskbarIndicator.get_children())
+            segment.set_style(style);
     }
 
     _buttonWidth(
