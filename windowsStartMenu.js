@@ -126,6 +126,13 @@ export class WindowsStartMenu {
         this._appActionCloseIdleId = 0;
         this._appTooltipTimeoutId = 0;
         this._appTooltipSource = null;
+        this._centerAnchor = new Clutter.Actor({
+            opacity: 0,
+            reactive: false,
+            width: 1,
+            height: 1,
+        });
+        Main.layoutManager.uiGroup.add_child(this._centerAnchor);
         this._menu = new PopupMenu.PopupMenu(
             sourceActor,
             0.5,
@@ -297,9 +304,10 @@ export class WindowsStartMenu {
         this._scrollView.vadjustment.value = 0;
         this._updateSize();
         syncMenuArrowSide(this._menu, this._settings);
-        this._syncPositionSource();
+        const originalSource = this._menu.sourceActor;
+        this._menu.sourceActor = this._getPositionSource();
         this._menu.open(BoxPointer.PopupAnimation.FULL);
-        this._syncPositionSource();
+        this._menu.sourceActor = originalSource;
         if (this.isOpen) {
             this._searchEntry.grab_key_focus();
             this._searchEntry.clutter_text.set_cursor_visible(false);
@@ -367,32 +375,25 @@ export class WindowsStartMenu {
             actor.add_style_class_name('simple-taskbar-windows-start-shell');
     }
 
-    _syncPositionSource() {
+    _getPositionSource() {
         const centerOnMonitor =
             this._settings.get_boolean('start-menu-monitor-centered') &&
             this._startButtonIsCentered();
         const monitor = this._getSourceMonitor();
-        const sourceActor = centerOnMonitor && monitor
-            ? Main.layoutManager.dummyCursor
-            : this._sourceActor;
-
-        this._menu.sourceActor = sourceActor;
-        this._menu.focusActor = sourceActor;
-        this._menu._arrowAlignment = 0.5;
-        this._menu._boxPointer.setSourceAlignment(0.5);
-        this._menu._boxPointer.setPosition(sourceActor, 0.5);
-
-        if (!centerOnMonitor || !monitor)
-            return;
+        if (!centerOnMonitor || !monitor || !this._centerAnchor)
+            return this._sourceActor;
 
         const [, sourceY] = this._sourceActor.get_transformed_position();
         const [, sourceHeight] = this._sourceActor.get_transformed_size();
-        Main.layoutManager.setDummyCursorGeometry(
+        this._centerAnchor.set_position(
             Math.round(monitor.x + monitor.width / 2),
-            Math.round(sourceY),
+            Math.round(sourceY)
+        );
+        this._centerAnchor.set_size(
             1,
             Math.max(1, Math.round(sourceHeight))
         );
+        return this._centerAnchor;
     }
 
     _startButtonIsCentered() {
@@ -462,6 +463,8 @@ export class WindowsStartMenu {
         this._destroyAppContextMenu();
         this._menu?.destroy();
         this._menu = null;
+        this._centerAnchor?.destroy();
+        this._centerAnchor = null;
         this._appTooltip.destroy();
         this._appTooltip = null;
         this._categorySidebar = null;
@@ -1623,11 +1626,15 @@ export class WindowsStartMenu {
             return;
 
         this._updateSize();
+        syncMenuArrowSide(this._menu, this._settings);
+        const sourceActor = this._getPositionSource();
         this._resolveThemeNodes(this._menu.actor);
         this._menu.actor.get_preferred_size();
         this._root.get_preferred_size();
-        syncMenuArrowSide(this._menu, this._settings);
-        this._syncPositionSource();
+        this._menu._boxPointer.setPosition(
+            sourceActor,
+            this._menu._arrowAlignment
+        );
     }
 
     _resolveThemeNodes(actor) {
