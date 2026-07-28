@@ -259,6 +259,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('multi-monitor-panels', true);
                 settings.set_boolean('windows-start-menu-enabled', false);
                 settings.set_boolean('gnome-start-button-visible', false);
+                settings.set_boolean('show-desktop-button-visible', false);
+                settings.set_boolean('panel-border-enabled', false);
+                settings.set_boolean('panel-border-light-enabled', false);
             } else {
                 settings.set_int('icon-size', 32);
                 settings.set_int('icon-spacing', 4);
