@@ -297,10 +297,9 @@ export class WindowsStartMenu {
         this._scrollView.vadjustment.value = 0;
         this._updateSize();
         syncMenuArrowSide(this._menu, this._settings);
-        const originalSource = this._menu.sourceActor;
-        this._menu.sourceActor = this._getPositionSource();
+        this._syncPositionSource();
         this._menu.open(BoxPointer.PopupAnimation.FULL);
-        this._menu.sourceActor = originalSource;
+        this._syncPositionSource();
         if (this.isOpen) {
             this._searchEntry.grab_key_focus();
             this._searchEntry.clutter_text.set_cursor_visible(false);
@@ -368,13 +367,23 @@ export class WindowsStartMenu {
             actor.add_style_class_name('simple-taskbar-windows-start-shell');
     }
 
-    _getPositionSource() {
+    _syncPositionSource() {
         const centerOnMonitor =
             this._settings.get_boolean('start-menu-monitor-centered') &&
             this._startButtonIsCentered();
         const monitor = this._getSourceMonitor();
+        const sourceActor = centerOnMonitor && monitor
+            ? Main.layoutManager.dummyCursor
+            : this._sourceActor;
+
+        this._menu.sourceActor = sourceActor;
+        this._menu.focusActor = sourceActor;
+        this._menu._arrowAlignment = 0.5;
+        this._menu._boxPointer.setSourceAlignment(0.5);
+        this._menu._boxPointer.setPosition(sourceActor, 0.5);
+
         if (!centerOnMonitor || !monitor)
-            return this._sourceActor;
+            return;
 
         const [, sourceY] = this._sourceActor.get_transformed_position();
         const [, sourceHeight] = this._sourceActor.get_transformed_size();
@@ -384,7 +393,6 @@ export class WindowsStartMenu {
             1,
             Math.max(1, Math.round(sourceHeight))
         );
-        return Main.layoutManager.dummyCursor;
     }
 
     _startButtonIsCentered() {
@@ -1615,15 +1623,11 @@ export class WindowsStartMenu {
             return;
 
         this._updateSize();
-        syncMenuArrowSide(this._menu, this._settings);
-        const sourceActor = this._getPositionSource();
         this._resolveThemeNodes(this._menu.actor);
         this._menu.actor.get_preferred_size();
         this._root.get_preferred_size();
-        this._menu._boxPointer.setPosition(
-            sourceActor,
-            this._menu._arrowAlignment
-        );
+        syncMenuArrowSide(this._menu, this._settings);
+        this._syncPositionSource();
     }
 
     _resolveThemeNodes(actor) {
