@@ -82,8 +82,6 @@ export class OverviewIntegration {
                         Main.overview.hide();
                 }
             });
-        } else if (this._shouldStartInOverview()) {
-            this._queueStartupOverview();
         }
         this._syncStartupOverview();
         this._syncDashVisibility();
