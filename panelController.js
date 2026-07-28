@@ -300,6 +300,7 @@ export class PanelController {
                 folderMenuIndex
             );
         }
+        this._syncActivitiesVisibility();
         this.updateTaskbarWidth();
     }
 
@@ -542,6 +543,18 @@ export class PanelController {
         if (Main.screenShield) {
             this._connect(Main.screenShield, 'locked-changed', () => {
                 if (!Main.screenShield.locked) {
+                    this._syncActivitiesVisibility();
+                    this.updateTaskbarWidth();
+                }
+            });
+        }
+        const activities = Main.panel.statusArea.activities?.container;
+        if (activities) {
+            this._connect(activities, 'notify::visible', () => {
+                if (!Main.sessionMode.isLocked &&
+                    activities.visible !== this._settings.get_boolean(
+                        'activities-button-visible'
+                    )) {
                     this._syncActivitiesVisibility();
                     this.updateTaskbarWidth();
                 }
