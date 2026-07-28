@@ -126,14 +126,6 @@ export class WindowsStartMenu {
         this._appActionCloseIdleId = 0;
         this._appTooltipTimeoutId = 0;
         this._appTooltipSource = null;
-        this._centerAnchor = new St.Widget({
-            reactive: false,
-            opacity: 0,
-            width: 1,
-            height: 1,
-        });
-        Main.uiGroup.add_child(this._centerAnchor);
-
         this._menu = new PopupMenu.PopupMenu(
             sourceActor,
             0.5,
@@ -381,17 +373,18 @@ export class WindowsStartMenu {
             this._settings.get_boolean('start-menu-monitor-centered') &&
             this._startButtonIsCentered();
         const monitor = this._getSourceMonitor();
-        if (!centerOnMonitor || !monitor || !this._centerAnchor)
+        if (!centerOnMonitor || !monitor)
             return this._sourceActor;
 
         const [, sourceY] = this._sourceActor.get_transformed_position();
         const [, sourceHeight] = this._sourceActor.get_transformed_size();
-        this._centerAnchor.set_position(
+        Main.layoutManager.setDummyCursorGeometry(
             Math.round(monitor.x + monitor.width / 2),
-            Math.round(sourceY)
+            Math.round(sourceY),
+            1,
+            Math.max(1, Math.round(sourceHeight))
         );
-        this._centerAnchor.set_size(1, Math.max(1, Math.round(sourceHeight)));
-        return this._centerAnchor;
+        return Main.layoutManager.dummyCursor;
     }
 
     _startButtonIsCentered() {
@@ -465,8 +458,6 @@ export class WindowsStartMenu {
         this._appTooltip = null;
         this._categorySidebar = null;
         this._body = null;
-        this._centerAnchor?.destroy();
-        this._centerAnchor = null;
         this._sourceActor = null;
         this._settings = null;
         this._onSourceContextMenu = null;
