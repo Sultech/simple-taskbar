@@ -1164,7 +1164,7 @@ export class WindowsStartMenu {
             if (event.get_button() !== Clutter.BUTTON_SECONDARY)
                 return Clutter.EVENT_PROPAGATE;
 
-            this._openAppContextMenu(button, app, event);
+            this._openAppContextMenu(button, app);
             return Clutter.EVENT_STOP;
         });
         button.connect('popup-menu', () => {
@@ -1173,30 +1173,12 @@ export class WindowsStartMenu {
         });
     }
 
-    _openAppContextMenu(sourceButton, app, event = null) {
+    _openAppContextMenu(sourceButton, app) {
         this._hideAppTooltip(true);
         this._destroyAppContextMenu();
 
-        let stageX;
-        let stageY;
-        if (event) {
-            [stageX, stageY] = event.get_coords();
-        } else {
-            const [buttonX, buttonY] = sourceButton.get_transformed_position();
-            const [buttonWidth, buttonHeight] = sourceButton.get_transformed_size();
-            stageX = buttonX + Math.min(buttonWidth / 2, APP_TILE_WIDTH / 2);
-            stageY = buttonY + buttonHeight / 2;
-        }
-
-        Main.layoutManager.setDummyCursorGeometry(
-            Math.round(stageX),
-            Math.round(stageY),
-            0,
-            0
-        );
-
         const menu = new StartMenuAppMenu(
-            Main.layoutManager.dummyCursor,
+            sourceButton,
             panelArrowSide(this._settings),
             this._settings,
             {
