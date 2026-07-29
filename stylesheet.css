@@ -412,7 +412,7 @@
     min-width: 0;
 }
 
-.simple-taskbar-preview-menu .popup-menu-content {
+.simple-taskbar-preview-popup-content {
     padding: 0;
     border-width: 0;
     border-radius: 10px;

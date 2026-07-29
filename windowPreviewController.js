@@ -235,6 +235,13 @@ export class WindowPreviewController {
             0.5,
             panelArrowSide(this._settings)
         );
+        menu.box.remove_style_class_name('popup-menu-content');
+        menu.box.add_style_class_name(
+            'simple-taskbar-preview-popup-content'
+        );
+        // This flyout uses opaque preview cards, so exclude it from popup
+        // effects that target GNOME Shell's standard popup style classes.
+        menu.actor.remove_style_class_name('popup-menu');
         const section = new PopupMenu.PopupMenuSection();
         const scrollView = new St.ScrollView({
             style_class: 'simple-taskbar-preview-scroll',
