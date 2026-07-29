@@ -30,6 +30,8 @@ gnome-extensions pack \
     --extra-source=folderMenuController.js \
     --extra-source=fileManagerPlacesSection.js \
     --extra-source=favoritesIntegration.js \
+    --extra-source=gridAltTabController.js \
+    --extra-source=gridAltTabPopup.js \
     --extra-source=hotEdgeController.js \
     --extra-source=overviewIntegration.js \
     --extra-source=multiMonitorController.js \

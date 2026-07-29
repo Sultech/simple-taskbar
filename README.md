@@ -42,6 +42,7 @@ blurred panel appearance.
 - Combine application windows always, only when the taskbar is full, or never; buttons are always combined by default.
 - Launch, focus, minimize and open new application windows from their icons.
 - Preview open windows by hovering over an application.
+- Optionally replace Alt+Tab with a responsive grid of live window previews.
 - Use the taskbar on every monitor.
 - Place the panel at the top or bottom of the screen.
 - Align applications and the Start button to the left or center, independently or together.
@@ -124,6 +125,18 @@ Optional controls can:
 - Lock the taskbar against accidental rearrangement.
 - Show the desktop from a narrow button at either panel edge, or hide the
   button.
+
+## Grid Alt-Tab
+
+The Grid Alt-Tab window switcher is enabled by default and shows every open
+window as a live preview in a responsive grid. It preserves normal Alt+Tab and
+Shift+Alt+Tab selection behavior, supports pointer and arrow-key navigation,
+and activates the selected window when Alt is released.
+
+All workspaces are included by default. Enable **Isolate Workspaces** on the
+**Window Switching** settings page to show windows from only the current
+workspace. **Maximum Card Size** limits how tall previews can grow while the
+grid continues to shrink them automatically as more windows are opened.
 
 ## Panel customization
 

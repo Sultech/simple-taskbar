@@ -11,4 +11,5 @@ panelInteractionController.js
 taskbarController.js
 windowPreviewController.js
 favoritesIntegration.js
+gridAltTabPopup.js
 volumeMixerController.js

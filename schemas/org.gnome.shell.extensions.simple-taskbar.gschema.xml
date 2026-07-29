@@ -190,6 +190,31 @@
       <default>true</default>
       <summary>Show an application window spread when its taskbar icon is clicked</summary>
     </key>
+    <key name="grid-alt-tab-enabled" type="b">
+      <default>true</default>
+      <summary>Replace the application switcher with a grid of open windows</summary>
+    </key>
+    <key name="grid-alt-tab-isolate-workspaces" type="b">
+      <default>false</default>
+      <summary>Show Grid Alt-Tab windows from the current workspace only</summary>
+    </key>
+    <key name="grid-alt-tab-max-card-size" type="i">
+      <range min="120" max="500"/>
+      <default>250</default>
+      <summary>Maximum Grid Alt-Tab card preview height</summary>
+    </key>
+    <key name="grid-alt-tab-hotkey" type="as">
+      <default>['&lt;Alt&gt;Tab']</default>
+      <summary>Internal forward shortcut for Grid Alt-Tab</summary>
+    </key>
+    <key name="grid-alt-tab-backward-hotkey" type="as">
+      <default>['&lt;Shift&gt;&lt;Alt&gt;Tab']</default>
+      <summary>Internal backward shortcut for Grid Alt-Tab</summary>
+    </key>
+    <key name="grid-alt-tab-displaced-bindings" type="as">
+      <default>[]</default>
+      <summary>Internal recovery state for displaced Alt-Tab shortcuts</summary>
+    </key>
     <key name="nautilus-places-enabled" type="b">
       <default>true</default>
       <summary>Show common folder shortcuts in the Nautilus taskbar menu</summary>

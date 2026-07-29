@@ -35,11 +35,81 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         window.add(page);
 
+        const windowSwitchingPage = new Adw.PreferencesPage({
+            title: _('Window Switching'),
+            icon_name: 'focus-windows-symbolic',
+        });
+        window.add(windowSwitchingPage);
+
         const startMenuPage = new Adw.PreferencesPage({
             title: _('Start Menu'),
             icon_name: 'view-app-grid-symbolic',
         });
         window.add(startMenuPage);
+
+        const gridAltTabGroup = new Adw.PreferencesGroup({
+            title: _('Grid Alt-Tab'),
+            description: _(
+                'Switch directly between open windows using live previews.'
+            ),
+        });
+        windowSwitchingPage.add(gridAltTabGroup);
+
+        const gridAltTabSwitch = new Adw.SwitchRow({
+            title: _('Enable Grid Alt-Tab'),
+            subtitle: _(
+                'Replace GNOME’s application switcher with a responsive window grid'
+            ),
+            active: window._settings.get_boolean('grid-alt-tab-enabled'),
+        });
+        gridAltTabGroup.add(gridAltTabSwitch);
+        window._settings.bind(
+            'grid-alt-tab-enabled',
+            gridAltTabSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
+        const gridAltTabCardSizeRow = this._addSpinRow(
+            gridAltTabGroup,
+            window._settings,
+            {
+                key: 'grid-alt-tab-max-card-size',
+                title: _('Maximum Card Size'),
+                subtitle: _(
+                    'Largest preview height in pixels; widths follow each window’s shape'
+                ),
+                lower: 120,
+                upper: 500,
+                step: 10,
+            }
+        );
+        const gridAltTabWorkspaceSwitch = new Adw.SwitchRow({
+            title: _('Isolate Workspaces'),
+            subtitle: _(
+                'Show windows from the current workspace instead of all workspaces'
+            ),
+            active: window._settings.get_boolean(
+                'grid-alt-tab-isolate-workspaces'
+            ),
+        });
+        gridAltTabGroup.add(gridAltTabWorkspaceSwitch);
+        window._settings.bind(
+            'grid-alt-tab-isolate-workspaces',
+            gridAltTabWorkspaceSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateGridAltTabOptionSensitivity = () => {
+            const enabled = gridAltTabSwitch.active;
+            gridAltTabCardSizeRow.sensitive = enabled;
+            gridAltTabWorkspaceSwitch.sensitive = enabled;
+        };
+        gridAltTabSwitch.connect(
+            'notify::active',
+            updateGridAltTabOptionSensitivity
+        );
+        updateGridAltTabOptionSensitivity();
 
         const startButtonGroup = new Adw.PreferencesGroup({
             title: _('Start Button'),
@@ -1314,7 +1384,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const resetSettings = this.getSettings();
             resetSettings.delay();
             for (const key of resetSettings.settings_schema.list_keys()) {
-                if (key === 'start-menu-displaced-switch-applications' ||
+                if (key === 'grid-alt-tab-displaced-bindings' ||
+                    key === 'start-menu-displaced-switch-applications' ||
                     key === 'start-menu-displaced-overlay-key' ||
                     key === 'start-menu-pinned-apps') {
                     continue;

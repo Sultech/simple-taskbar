@@ -14,6 +14,7 @@ import {
 import {ExtensionConflictController} from './extensionConflictController.js';
 import {FolderMenuController} from './folderMenuController.js';
 import {FavoritesIntegration} from './favoritesIntegration.js';
+import {GridAltTabController} from './gridAltTabController.js';
 import {HotEdgeController} from './hotEdgeController.js';
 import {PanelController} from './panelController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
@@ -150,6 +151,9 @@ export default class SimpleTaskbarExtension extends Extension {
             isBlocked: () => this._panelAutoHideIsBlocked(),
         });
         this._hotEdgeController.enable();
+        this._gridAltTabController =
+            new GridAltTabController(this._settings);
+        this._gridAltTabController.enable();
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
         this._connectSignals();
@@ -162,6 +166,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._settings.disconnectObject(this);
         this._showDesktopButton.disconnectObject(this);
 
+        this._gridAltTabController.destroy();
+        this._gridAltTabController = null;
         this._hotEdgeController.destroy();
         this._hotEdgeController = null;
         this._extensionConflictController.destroy();

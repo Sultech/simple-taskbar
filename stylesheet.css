@@ -1086,3 +1086,38 @@
     height: 104px;
     border-radius: 52px;
 }
+
+.simple-taskbar-grid-alt-tab-list {
+    padding: 10px;
+}
+
+.simple-taskbar-grid-alt-tab-content,
+.simple-taskbar-grid-alt-tab-row {
+    spacing: 12px;
+}
+
+.simple-taskbar-grid-alt-tab-card {
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+}
+
+.simple-taskbar-grid-alt-tab-card:selected {
+    border-color: -st-accent-color;
+}
+
+.simple-taskbar-grid-alt-tab-card-content {
+    spacing: 8px;
+}
+
+.simple-taskbar-grid-alt-tab-header {
+    spacing: 8px;
+}
+
+.simple-taskbar-grid-alt-tab-title {
+    font-weight: bold;
+}
+
+.simple-taskbar-grid-alt-tab-preview {
+    border-radius: 8px;
+}
