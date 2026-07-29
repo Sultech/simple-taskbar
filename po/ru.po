@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 02:50+0100\n"
+"POT-Creation-Date: 2026-07-29 03:27+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -916,23 +916,33 @@ msgstr "Видео"
 msgid "Unable to open folder"
 msgstr "Не удалось открыть папку"
 
-#: taskbarAppMenu.js:51
+#: taskbarAppMenu.js:18
+#, fuzzy
+msgid "Close window"
+msgstr "Закрыть окно"
+
+#: taskbarAppMenu.js:79
+#, fuzzy
+msgid "Close all windows"
+msgstr "Закрыть окно"
+
+#: taskbarAppMenu.js:99
 msgid "Unpin from Taskbar"
 msgstr "Открепить от панели задач"
 
-#: taskbarAppMenu.js:52
+#: taskbarAppMenu.js:100
 msgid "Pin to Taskbar"
 msgstr "Закрепить на панели задач"
 
-#: startButtonController.js:195
+#: startButtonController.js:203
 msgid "Start Menu Settings"
 msgstr "Настройки меню «Пуск»"
 
-#: startButtonController.js:470
+#: startButtonController.js:478
 msgid "Start"
 msgstr "Пуск"
 
-#: startButtonController.js:470
+#: startButtonController.js:478
 msgid "Applications"
 msgstr "Приложения"
 
@@ -989,7 +999,7 @@ msgstr "Заблокировать панель задач"
 msgid "Taskbar Settings"
 msgstr "Настройки панели задач"
 
-#: taskbarController.js:493 taskbarController.js:495 taskbarController.js:1586
+#: taskbarController.js:493 taskbarController.js:495 taskbarController.js:1587
 msgid "running"
 msgstr "запущено"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 02:50+0100\n"
+"POT-Creation-Date: 2026-07-29 03:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -880,23 +880,31 @@ msgstr ""
 msgid "Unable to open folder"
 msgstr ""
 
-#: taskbarAppMenu.js:51
+#: taskbarAppMenu.js:18
+msgid "Close window"
+msgstr ""
+
+#: taskbarAppMenu.js:79
+msgid "Close all windows"
+msgstr ""
+
+#: taskbarAppMenu.js:99
 msgid "Unpin from Taskbar"
 msgstr ""
 
-#: taskbarAppMenu.js:52
+#: taskbarAppMenu.js:100
 msgid "Pin to Taskbar"
 msgstr ""
 
-#: startButtonController.js:195
+#: startButtonController.js:203
 msgid "Start Menu Settings"
 msgstr ""
 
-#: startButtonController.js:470
+#: startButtonController.js:478
 msgid "Start"
 msgstr ""
 
-#: startButtonController.js:470
+#: startButtonController.js:478
 msgid "Applications"
 msgstr ""
 
@@ -950,7 +958,7 @@ msgstr ""
 msgid "Taskbar Settings"
 msgstr ""
 
-#: taskbarController.js:493 taskbarController.js:495 taskbarController.js:1586
+#: taskbarController.js:493 taskbarController.js:495 taskbarController.js:1587
 msgid "running"
 msgstr ""
 

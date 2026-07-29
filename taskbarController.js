@@ -1367,6 +1367,7 @@ export class TaskbarController {
         const menu = new TaskbarAppMenu(button, panelArrowSide(this._settings), {
             favoritesSection: true,
             showSingleWindows: true,
+            targetWindow: item._taskbarWindow,
             fileManagerPlacesApp: app,
             fileManagerPlacesEnabled: this._settings.get_boolean(
                 'nautilus-places-enabled'
