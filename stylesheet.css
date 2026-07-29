@@ -424,6 +424,21 @@
     max-height: 220px;
 }
 
+.simple-taskbar-preview-scroll StScrollBar {
+    min-height: 9px;
+}
+
+.simple-taskbar-preview-scroll StScrollBar > .hhandle {
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.55);
+}
+
+.simple-taskbar-preview-scroll StScrollBar > .hhandle:hover,
+.simple-taskbar-preview-scroll StScrollBar > .hhandle:focus {
+    background-color: rgba(255, 255, 255, 0.80);
+}
+
 .simple-taskbar-preview-list {
     spacing: 8px;
 }

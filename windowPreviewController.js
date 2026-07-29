@@ -243,16 +243,24 @@ export class WindowPreviewController {
         // effects that target GNOME Shell's standard popup style classes.
         menu.actor.remove_style_class_name('popup-menu');
         const section = new PopupMenu.PopupMenuSection();
+        const previewBox = new St.BoxLayout({
+            style_class: 'simple-taskbar-preview-list',
+        });
+        const viewport = new St.Viewport({
+            layout_manager: new Clutter.BinLayout(),
+        });
+        viewport.add_child(previewBox);
         const scrollView = new St.ScrollView({
             style_class: 'simple-taskbar-preview-scroll',
             style: `max-width: ${Math.max(320, monitor.width - 32)}px;`,
-            hscrollbar_policy: St.PolicyType.EXTERNAL,
-            vscrollbar_policy: St.PolicyType.NEVER,
+            hscrollbar_policy: St.PolicyType.AUTOMATIC,
+            vscrollbar_policy: St.PolicyType.AUTOMATIC,
             enable_mouse_scrolling: true,
-            overlay_scrollbars: true,
+            overlay_scrollbars: false,
+            child: viewport,
         });
-        scrollView.connect('scroll-event', (_actor, event) => {
-            const adjustment = scrollView.get_hscroll_bar().get_adjustment();
+        const scrollPreviews = event => {
+            const adjustment = scrollView.hadjustment;
             const increment = Math.max(
                 adjustment.step_increment,
                 PREVIEW_WIDTH / 2
@@ -277,11 +285,7 @@ export class WindowPreviewController {
 
             adjustment.set_value(adjustment.get_value() + delta);
             return Clutter.EVENT_STOP;
-        });
-        const previewBox = new St.BoxLayout({
-            style_class: 'simple-taskbar-preview-list',
-        });
-
+        };
         for (const window of windows) {
             const preview = this._createWindowPreview(window);
             if (preview)
@@ -292,7 +296,6 @@ export class WindowPreviewController {
             return;
         }
 
-        scrollView.add_child(previewBox);
         section.actor.add_child(scrollView);
         menu.addMenuItem(section);
         // Window previews are visual flyouts rather than modal menus, so they
@@ -315,8 +318,12 @@ export class WindowPreviewController {
                 this.scheduleClose();
         });
         menu.actor.connect('captured-event', (_actor, event) => {
-            if (this._previewItem !== item ||
-                event.type() !== Clutter.EventType.MOTION)
+            if (this._previewItem !== item)
+                return Clutter.EVENT_PROPAGATE;
+
+            if (event.type() === Clutter.EventType.SCROLL)
+                return scrollPreviews(event);
+            if (event.type() !== Clutter.EventType.MOTION)
                 return Clutter.EVENT_PROPAGATE;
 
             const hoveredItem = this._taskbarItemAtPointer();
