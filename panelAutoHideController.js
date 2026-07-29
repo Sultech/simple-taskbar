@@ -12,6 +12,10 @@ const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
+const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
+const POINTER_BUTTON_MASK = Clutter.ModifierType.BUTTON1_MASK |
+    Clutter.ModifierType.BUTTON2_MASK |
+    Clutter.ModifierType.BUTTON3_MASK;
 
 export class PanelAutoHideController {
     constructor({
@@ -30,10 +34,14 @@ export class PanelAutoHideController {
         this._isBlockedCallback = isBlocked;
         this._signals = [];
         this._hideTimeoutId = 0;
+        this._fullscreenWatchId = 0;
+        this._fullscreenReleasePending = false;
+        this._pointerButtonPressed = false;
         this._hidden = false;
         this._overviewSuspended = false;
         this._trackedActorData = null;
         this._originalAffectsStruts = false;
+        this._originalTrackFullscreen = false;
         this._unredirectDisabled = false;
         this._fullscreenVisibilityHeld = false;
     }
@@ -110,15 +118,22 @@ export class PanelAutoHideController {
 
     setMenuOpen(open) {
         if (open) {
+            this._fullscreenReleasePending = false;
             this.show(false);
-            if (!this._positionActor.visible) {
+            const monitor = this._getMonitor();
+            if (global.window_group.visible && monitor?.inFullscreen) {
+                this._trackedActorData.trackFullscreen = false;
                 this._positionActor.visible = true;
                 this._fullscreenVisibilityHeld = true;
+                this._clearHideTimeout();
+                this._syncUnredirect();
+                this._startFullscreenWatch();
             }
             return;
         }
 
-        this._restoreFullscreenVisibility();
+        if (this._fullscreenVisibilityHeld)
+            return;
         if (this._enabled() && !this._pointerIsInsidePanel())
             this._scheduleHide();
     }
@@ -161,11 +176,11 @@ export class PanelAutoHideController {
         if (!this._enabled()) {
             this.show(false);
             this._restoreStrutTracking();
-            this._restoreUnredirect();
+            this._syncUnredirect();
             return;
         }
 
-        this._disableUnredirect();
+        this._syncUnredirect();
         this._syncStrutTracking();
         if (this._overviewSuspended) {
             this.show(false);
@@ -184,6 +199,8 @@ export class PanelAutoHideController {
             Main.layoutManager._trackedActors[index];
         this._originalAffectsStruts =
             this._trackedActorData.affectsStruts;
+        this._originalTrackFullscreen =
+            this._trackedActorData.trackFullscreen;
     }
 
     _syncStrutTracking() {
@@ -224,19 +241,74 @@ export class PanelAutoHideController {
         this._unredirectDisabled = false;
     }
 
+    _syncUnredirect() {
+        if (this._enabled() || this._fullscreenVisibilityHeld)
+            this._disableUnredirect();
+        else
+            this._restoreUnredirect();
+    }
+
     _restoreFullscreenVisibility() {
+        this._stopFullscreenWatch();
         if (!this._fullscreenVisibilityHeld)
             return;
 
         this._fullscreenVisibilityHeld = false;
         const monitor = this._getMonitor();
+        this._trackedActorData.trackFullscreen =
+            this._originalTrackFullscreen;
         this._positionActor.visible =
+            !this._originalTrackFullscreen ||
             !(global.window_group.visible && monitor?.inFullscreen);
+        this._syncUnredirect();
+    }
+
+    _startFullscreenWatch() {
+        if (this._fullscreenWatchId)
+            return;
+
+        this._fullscreenReleasePending = false;
+        this._pointerButtonPressed = this._mouseButtonIsPressed();
+        this._fullscreenWatchId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            FULLSCREEN_POINTER_POLL_INTERVAL,
+            () => {
+                const pointerPressed = this._mouseButtonIsPressed();
+                if (pointerPressed && !this._pointerButtonPressed) {
+                    this._fullscreenReleasePending =
+                        !this._pointerIsInsidePanel();
+                }
+                this._pointerButtonPressed = pointerPressed;
+
+                if (!this._fullscreenReleasePending ||
+                    this._isBlockedCallback()) {
+                    return GLib.SOURCE_CONTINUE;
+                }
+
+                this._fullscreenWatchId = 0;
+                this._restoreFullscreenVisibility();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _stopFullscreenWatch() {
+        if (this._fullscreenWatchId)
+            GLib.Source.remove(this._fullscreenWatchId);
+        this._fullscreenWatchId = 0;
+        this._fullscreenReleasePending = false;
+        this._pointerButtonPressed = false;
+    }
+
+    _mouseButtonIsPressed() {
+        const [, , modifiers] = global.get_pointer();
+        return Boolean(modifiers & POINTER_BUTTON_MASK);
     }
 
     _scheduleHide(delay = HIDE_DELAY) {
         if (!this._enabled() || this._overviewSuspended ||
-            this._hidden || this._hideTimeoutId) {
+            this._fullscreenVisibilityHeld || this._hidden ||
+            this._hideTimeoutId) {
             return;
         }
 
