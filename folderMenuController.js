@@ -131,7 +131,7 @@ export class FolderMenuController {
         }
         this._menu = null;
         this._menuManager = null;
-        this.actor?.destroy();
+        this.actor.destroy();
         this.actor = null;
         this._themeContext = null;
         this._stSettings = null;

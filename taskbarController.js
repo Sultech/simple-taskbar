@@ -292,7 +292,7 @@ export class TaskbarController {
             item.destroy();
         }
         this._appButtons.clear();
-        this.actor?.destroy();
+        this.actor.destroy();
         this.actor = null;
         this._redisplayWorkId = 0;
 

@@ -144,9 +144,9 @@ export class OverviewIntegration {
         // If the extension is disabled while the spread is visible, rebuild
         // the live Overview after restoring GNOME's normal window filter.
         this._restoreAppSpread(true);
-        this._spreadInjectionManager?.clear();
+        this._spreadInjectionManager.clear();
         this._spreadInjectionManager = null;
-        this._injectionManager?.clear();
+        this._injectionManager.clear();
         this._injectionManager = null;
         for (const [object, id] of this._signals) {
             if (id)
@@ -403,7 +403,7 @@ export class OverviewIntegration {
             Main.overview.disconnect(this._spreadHiddenId);
             this._spreadHiddenId = 0;
         }
-        this._spreadInjectionManager?.restoreMethod(
+        this._spreadInjectionManager.restoreMethod(
             Workspace.prototype,
             '_isMyWindow'
         );

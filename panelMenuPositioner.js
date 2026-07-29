@@ -68,7 +68,7 @@ export class PanelMenuPositioner {
         }
 
         this._states.clear();
-        this._injectionManager?.restoreMethod(
+        this._injectionManager.restoreMethod(
             Object.getPrototypeOf(Main.panel),
             'addToStatusArea'
         );

@@ -14,7 +14,7 @@ import {
 import {
     getStartIconDisplayName,
     StartIconChooserDialog,
-} from './startIconChooser.js';
+} from './prefs/startIconChooser.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;

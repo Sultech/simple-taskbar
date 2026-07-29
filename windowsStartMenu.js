@@ -339,10 +339,10 @@ export class WindowsStartMenu {
 
     close(animation = BoxPointer.PopupAnimation.FULL) {
         this._sourcePressWasOpen = false;
-        this._searchController?.cancel();
+        this._searchController.cancel();
         this._destroyAppContextMenu();
         this._destroyPowerMenu();
-        this._menu?.close(animation);
+        this._menu.close(animation);
     }
 
     refresh() {
@@ -489,23 +489,23 @@ export class WindowsStartMenu {
             global.stage.disconnect(this._stageCapturedEventId);
             this._stageCapturedEventId = 0;
         }
-        this._searchClearIcon?.destroy();
+        this._searchClearIcon.destroy();
         this._searchClearIcon = null;
         this._pinnedView?.destroy();
         this._pinnedView = null;
-        this._pinnedDragController?.destroy();
+        this._pinnedDragController.destroy();
         this._pinnedDragController = null;
         this._pinnedApps = null;
         this._selectedAppCategory = null;
         this._pinnedSignature = null;
-        this._searchController?.destroy();
+        this._searchController.destroy();
         this._searchController = null;
         this._hideAppTooltip(true);
         this._destroyAppContextMenu();
-        this._appContextMenuCursor?.destroy();
+        this._appContextMenuCursor.destroy();
         this._appContextMenuCursor = null;
         this._destroyPowerMenu();
-        this._menu?.destroy();
+        this._menu.destroy();
         this._menu = null;
         this._appTooltip.destroy();
         this._appTooltip = null;

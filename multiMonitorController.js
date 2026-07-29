@@ -419,11 +419,11 @@ class SecondaryTaskbarPanel {
     }
 
     toggleStartMenu() {
-        this._startButtonController?.toggleStartMenu();
+        this._startButtonController.toggleStartMenu();
     }
 
     closeStartMenus() {
-        this._startButtonController?.closeMenus();
+        this._startButtonController.closeMenus();
     }
 
     closePanelMenu() {
@@ -431,21 +431,21 @@ class SecondaryTaskbarPanel {
     }
 
     destroy() {
-        this._autoHideController?.destroy();
-        this._autoHideController = null;
-        this._interactionController?.destroy();
-        this._interactionController = null;
         for (const [object, id] of this._signals) {
             if (id)
                 object.disconnect(id);
         }
         this._signals = [];
 
-        this._startButtonController?.destroy();
+        this._autoHideController?.destroy();
+        this._autoHideController = null;
+        this._interactionController?.destroy();
+        this._interactionController = null;
+        this._startButtonController.destroy();
         this._startButtonController = null;
-        this._windowController?.destroy();
-        this._taskbarController?.destroy();
-        this._windowPreviews?.destroy();
+        this._windowController.destroy();
+        this._taskbarController.destroy();
+        this._windowPreviews.destroy();
         this._windowPreviews = null;
         this._taskbarController = null;
         this._windowController = null;
@@ -455,14 +455,12 @@ class SecondaryTaskbarPanel {
         this._quickSettingsPowerController?.destroy();
         this._quickSettingsPowerController = null;
         this._releaseIndicators();
-        this._folderMenuController?.destroy();
+        this._folderMenuController.destroy();
         this._folderMenuController = null;
         this._menuManager = null;
 
-        if (this.actor) {
-            Main.layoutManager.removeChrome(this.actor);
-            this.actor.destroy();
-        }
+        Main.layoutManager.removeChrome(this.actor);
+        this.actor.destroy();
         this.actor = null;
         this._leftBox = null;
         this._centerBox = null;

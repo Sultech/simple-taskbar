@@ -34,10 +34,11 @@ export class TaskbarAppMenu extends AppMenu {
     }
 
     destroy() {
-        super.destroy();
-        if (this._placesSection)
+        if (this._placesSection) {
             this._placesSection.destroy();
-        this._placesSection = null;
+            this._placesSection = null;
+        }
+        super.destroy();
     }
 
     _updateFavoriteItem() {

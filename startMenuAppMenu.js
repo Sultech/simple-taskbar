@@ -100,7 +100,6 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         this._onAppAction = params.onAppAction;
         this._connectedActionItems = new WeakSet();
         this._shortcutQueryCancellable = null;
-        this._destroyed = false;
 
         this._toggleStartItem = new PopupMenu.PopupMenuItem('');
         this._toggleStartItem.connect('activate', () =>
@@ -123,9 +122,6 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
 
     setApp(app) {
         super.setApp(app);
-        if (this._destroyed)
-            return;
-
         for (const actor of this._actionSection.box.get_children())
             this._connectAppAction(actor._delegate);
 
@@ -140,7 +136,6 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
     }
 
     destroy() {
-        this._destroyed = true;
         this._shortcutQueryCancellable?.cancel();
         this._shortcutQueryCancellable = null;
         this._toggleStartItem = null;
@@ -259,7 +254,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
                 files.destination,
                 cancellable
             );
-            if (this._destroyed || cancellable.is_cancelled() ||
+            if (cancellable.is_cancelled() ||
                 this._shortcutQueryCancellable !== cancellable)
                 return;
 

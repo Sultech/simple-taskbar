@@ -348,8 +348,6 @@ export class PanelController {
 
     destroy() {
         const restoringUnlockPanel = Main.sessionMode.isLocked;
-        this._autoHideController?.destroy();
-        this._autoHideController = null;
         if (this._layoutRepairId) {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
@@ -367,6 +365,9 @@ export class PanelController {
                 object.disconnect(id);
         }
         this._signals = [];
+
+        this._autoHideController.destroy();
+        this._autoHideController = null;
         this._restoreDateMenuIndicatorPadding();
 
         for (const actor of [
@@ -378,9 +379,9 @@ export class PanelController {
             actor?.get_parent()?.remove_child(actor);
         this._restorePanelItems();
 
-        this._menuPositioner?.destroy();
+        this._menuPositioner.destroy();
         this._menuPositioner = null;
-        this._injectionManager?.clear();
+        this._injectionManager.clear();
         this._injectionManager = null;
 
         if (this._panelWasModified) {
@@ -644,7 +645,7 @@ export class PanelController {
         this._connect(this._settings, 'changed::panel-position', () => {
             this._syncPanelEdgeClass();
             this.position();
-            this._menuPositioner?.refresh();
+            this._menuPositioner.refresh();
             this._applyTransparency();
         });
         this._connect(this._themeContext, 'changed', () => {
@@ -750,7 +751,7 @@ export class PanelController {
                 this._syncPanelButtonPadding();
                 this._applyTheme();
                 this.position();
-                this._menuPositioner?.refresh();
+                this._menuPositioner.refresh();
                 return GLib.SOURCE_REMOVE;
             }
         );

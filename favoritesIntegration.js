@@ -67,7 +67,7 @@ export class FavoritesIntegration {
     }
 
     destroy() {
-        this._injectionManager?.clear();
+        this._injectionManager.clear();
         this._injectionManager = null;
         this._settings = null;
     }

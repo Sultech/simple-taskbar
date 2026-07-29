@@ -131,9 +131,6 @@ export class StartButtonController {
     }
 
     destroy() {
-        this._keybindings?.destroy();
-        this._keybindings = null;
-
         for (const [object, id] of this._signals) {
             if (id)
                 object.disconnect(id);
@@ -143,12 +140,14 @@ export class StartButtonController {
             Main.overview._shown ?? Main.overview.visible
         );
 
+        this._keybindings?.destroy();
+        this._keybindings = null;
         this._contextMenu?.destroy();
         this._contextMenu = null;
         this._windowsStartMenu?.destroy();
         this._windowsStartMenu = null;
         this._menuManager = null;
-        this.actor?.destroy();
+        this.actor.destroy();
         this.actor = null;
 
         this._hover = null;

@@ -6,7 +6,7 @@ folderMenuController.js
 fileManagerPlacesSection.js
 taskbarAppMenu.js
 startButtonController.js
-startIconChooser.js
+prefs/startIconChooser.js
 panelInteractionController.js
 taskbarController.js
 windowPreviewController.js

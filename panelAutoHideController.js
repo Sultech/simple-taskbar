@@ -92,7 +92,7 @@ export class PanelAutoHideController {
 
         this._hidden = false;
         this._overviewSuspended = false;
-        this._positionActor?.remove_transition('y');
+        this._positionActor.remove_transition('y');
         this.syncPosition();
         this._restoreStrutTracking();
         this._restoreUnredirect();

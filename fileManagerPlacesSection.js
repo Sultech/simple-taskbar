@@ -78,8 +78,9 @@ export class FileManagerPlacesSection {
     }
 
     destroy() {
-        this._app = null;
+        this.section.destroy();
         this.section = null;
+        this._app = null;
     }
 
     _syncVisibility() {

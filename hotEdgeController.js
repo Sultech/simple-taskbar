@@ -145,7 +145,7 @@ class HotEdge {
         this._pressureBarrier?.destroy();
         this._pressureBarrier = null;
 
-        this._ripples?.destroy();
+        this._ripples.destroy();
         this._ripples = null;
         this._layoutManager = null;
         this._monitor = null;
