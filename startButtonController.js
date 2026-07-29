@@ -41,7 +41,10 @@ export class StartButtonController {
             file: extensionDir.get_child('gnome-start-symbolic.svg'),
         });
         this._powerGIcon = new Gio.FileIcon({
-            file: extensionDir.get_child('power-symbolic.svg'),
+            file: extensionDir
+                .get_child('icons')
+                .get_child('start')
+                .get_child('power-symbolic.svg'),
         });
         this._gnomeGIcon = new Gio.ThemedIcon({
             name: 'view-app-grid-symbolic',
