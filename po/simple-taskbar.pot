@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 19:19+0100\n"
+"POT-Creation-Date: 2026-07-29 19:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -792,11 +792,11 @@ msgid "Suspend"
 msgstr ""
 
 #: windowsStartMenu.js:784
-msgid "Restart…"
+msgid "Restart"
 msgstr ""
 
 #: windowsStartMenu.js:791
-msgid "Power Off…"
+msgid "Power Off"
 msgstr ""
 
 #: windowsStartMenu.js:801
@@ -804,11 +804,11 @@ msgid "Lock Screen"
 msgstr ""
 
 #: windowsStartMenu.js:808
-msgid "Log Out…"
+msgid "Log Out"
 msgstr ""
 
 #: windowsStartMenu.js:815
-msgid "Switch User…"
+msgid "Switch User"
 msgstr ""
 
 #: windowsStartMenu.js:994

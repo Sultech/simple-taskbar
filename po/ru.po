@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 19:01+0100\n"
+"POT-Creation-Date: 2026-07-29 19:48+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -827,24 +827,24 @@ msgid "Suspend"
 msgstr "Режим ожидания"
 
 #: windowsStartMenu.js:784
-msgid "Restart…"
-msgstr "Перезапуск…"
+msgid "Restart"
+msgstr "Перезапуск"
 
 #: windowsStartMenu.js:791
-msgid "Power Off…"
-msgstr "Выключение…"
+msgid "Power Off"
+msgstr "Выключение"
 
 #: windowsStartMenu.js:801
 msgid "Lock Screen"
 msgstr "Заблокировать экран"
 
 #: windowsStartMenu.js:808
-msgid "Log Out…"
-msgstr "Выйти…"
+msgid "Log Out"
+msgstr "Выйти"
 
 #: windowsStartMenu.js:815
-msgid "Switch User…"
-msgstr "Сменить пользователя…"
+msgid "Switch User"
+msgstr "Сменить пользователя"
 
 #: windowsStartMenu.js:994
 msgid "Choose All, then right-click an app to pin it"

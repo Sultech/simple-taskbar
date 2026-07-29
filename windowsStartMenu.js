@@ -781,14 +781,14 @@ export class WindowsStartMenu {
         ));
         powerItems.push(this._addPowerAction(
             menu,
-            _('Restart…'),
+            _('Restart'),
             'canRestart',
             'notify::can-restart',
             () => this._systemActions.activateRestart()
         ));
         powerItems.push(this._addPowerAction(
             menu,
-            _('Power Off…'),
+            _('Power Off'),
             'canPowerOff',
             'notify::can-power-off',
             () => this._systemActions.activatePowerOff()
@@ -805,14 +805,14 @@ export class WindowsStartMenu {
         ));
         sessionItems.push(this._addPowerAction(
             menu,
-            _('Log Out…'),
+            _('Log Out'),
             'canLogout',
             'notify::can-logout',
             () => this._systemActions.activateLogout()
         ));
         sessionItems.push(this._addPowerAction(
             menu,
-            _('Switch User…'),
+            _('Switch User'),
             'canSwitchUser',
             'notify::can-switch-user',
             () => this._systemActions.activateSwitchUser()
