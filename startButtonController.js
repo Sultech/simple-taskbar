@@ -112,6 +112,8 @@ export class StartButtonController {
         if (!this._windowsModeEnabled())
             return;
 
+        this._previews.hideTooltip(false);
+        this._previews.hide();
         if (Main.overview.visible)
             Main.overview.hide();
         this._windowsStartMenu?.toggle();
