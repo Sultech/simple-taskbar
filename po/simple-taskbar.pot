@@ -413,6 +413,14 @@ msgstr ""
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr ""
 
+#: prefs.js:764
+msgid "Power Options in Start Menu"
+msgstr ""
+
+#: prefs.js:766
+msgid "Show power actions here instead of in Quick Settings"
+msgstr ""
+
 #: prefs.js:719
 msgid "Open All Apps by Default"
 msgstr ""
@@ -725,6 +733,34 @@ msgstr ""
 
 #: windowsStartMenu.js:664
 msgid "Settings"
+msgstr ""
+
+#: windowsStartMenu.js:708
+msgid "Power Options"
+msgstr ""
+
+#: windowsStartMenu.js:768
+msgid "Suspend"
+msgstr ""
+
+#: windowsStartMenu.js:775
+msgid "Restart…"
+msgstr ""
+
+#: windowsStartMenu.js:782
+msgid "Power Off…"
+msgstr ""
+
+#: windowsStartMenu.js:792
+msgid "Lock Screen"
+msgstr ""
+
+#: windowsStartMenu.js:799
+msgid "Log Out…"
+msgstr ""
+
+#: windowsStartMenu.js:806
+msgid "Switch User…"
 msgstr ""
 
 #: windowsStartMenu.js:780

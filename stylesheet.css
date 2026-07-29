@@ -779,7 +779,7 @@
     padding: 11px 30px;
     border-top: 1px solid rgba(128, 128, 128, 0.32);
     border-radius: 0 0 11px 11px;
-    spacing: 7px;
+    spacing: 0;
 }
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-footer {
@@ -801,6 +801,11 @@
     background-color: rgba(255, 255, 255, 0.13);
 }
 
+.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-power-icon {
+    color: rgba(244, 244, 244, 0.91) !important;
+}
+
 .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light .popup-menu-content {
     border: 1px solid rgba(20, 28, 42, 0.18);
     border-radius: 12px;
@@ -812,6 +817,11 @@
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start {
     color: #202124;
+}
+
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-power-icon {
+    color: rgba(32, 33, 36, 0.91) !important;
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search {
@@ -937,6 +947,18 @@
     .simple-taskbar-windows-start-menu
     .simple-taskbar-windows-start-footer {
     background-color: transparent;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-power-icon,
+.bms-popup-background-light
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-power-icon,
+.bms-popup-background-dark
+    .simple-taskbar-windows-start-menu.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-power-icon {
+    color: rgba(32, 33, 36, 0.91) !important;
 }
 
 .bms-popup-background-transparent

@@ -426,6 +426,14 @@ msgstr "Используется встроенный значок"
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "Заменить сетку приложений GNOME меню Eleven-style"
 
+#: prefs.js:764
+msgid "Power Options in Start Menu"
+msgstr "Параметры питания в меню «Пуск»"
+
+#: prefs.js:766
+msgid "Show power actions here instead of in Quick Settings"
+msgstr "Показывать действия питания здесь, а не в быстрых настройках"
+
 #: prefs.js:719
 msgid "Open All Apps by Default"
 msgstr ""
@@ -759,6 +767,34 @@ msgstr "Назад"
 #: windowsStartMenu.js:664
 msgid "Settings"
 msgstr "Настройки"
+
+#: windowsStartMenu.js:708
+msgid "Power Options"
+msgstr "Параметры питания"
+
+#: windowsStartMenu.js:768
+msgid "Suspend"
+msgstr "Режим ожидания"
+
+#: windowsStartMenu.js:775
+msgid "Restart…"
+msgstr "Перезапуск…"
+
+#: windowsStartMenu.js:782
+msgid "Power Off…"
+msgstr "Выключение…"
+
+#: windowsStartMenu.js:792
+msgid "Lock Screen"
+msgstr "Заблокировать экран"
+
+#: windowsStartMenu.js:799
+msgid "Log Out…"
+msgstr "Выйти…"
+
+#: windowsStartMenu.js:806
+msgid "Switch User…"
+msgstr "Сменить пользователя…"
 
 #: windowsStartMenu.js:780
 msgid "Choose All, then right-click an app to pin it"

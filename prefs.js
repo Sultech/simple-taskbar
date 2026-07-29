@@ -760,6 +760,31 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const powerOptionsSwitch = new Adw.SwitchRow({
+            title: _('Power Options in Start Menu'),
+            subtitle: _(
+                'Show power actions here instead of in Quick Settings'
+            ),
+            active: window._settings.get_boolean(
+                'start-menu-power-options-enabled'
+            ),
+        });
+        startMenuGroup.add(powerOptionsSwitch);
+        window._settings.bind(
+            'start-menu-power-options-enabled',
+            powerOptionsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updatePowerOptionsSwitch = () => {
+            powerOptionsSwitch.sensitive = windowsStartMenuSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updatePowerOptionsSwitch
+        );
+        updatePowerOptionsSwitch();
+
         const openAllAppsSwitch = new Adw.SwitchRow({
             title: _('Open All Apps by Default'),
             subtitle: _('Skip Pinned and open directly to applications and categories'),

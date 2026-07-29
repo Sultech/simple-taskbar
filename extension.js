@@ -19,6 +19,9 @@ import {PanelController} from './panelController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
 import {MultiMonitorController} from './multiMonitorController.js';
 import {NotificationBannerController} from './notificationBannerController.js';
+import {
+    QuickSettingsPowerController,
+} from './quickSettingsPowerController.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
@@ -126,6 +129,12 @@ export default class SimpleTaskbarExtension extends Extension {
             Main.panel.statusArea.quickSettings
         );
         this._volumeMixerController.enable();
+        this._quickSettingsPowerController =
+            new QuickSettingsPowerController(
+                this._settings,
+                Main.panel.statusArea.quickSettings
+            );
+        this._quickSettingsPowerController.enable();
         this._multiMonitorController = new MultiMonitorController({
             extensionDir: this.dir,
             settings: this._settings,
@@ -161,6 +170,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._notificationBannerController = null;
         this._multiMonitorController.destroy();
         this._multiMonitorController = null;
+        this._quickSettingsPowerController.destroy();
+        this._quickSettingsPowerController = null;
         this._volumeMixerController.destroy();
         this._volumeMixerController = null;
         this._panelInteractionController.destroy();

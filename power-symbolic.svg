@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+<!-- Copyright (C) 2026 sultech -->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+     viewBox="0 0 16 16">
+  <title>Power</title>
+  <path d="M3.68 3.31a6.75 6.75 0 1 0 8.64 0l-1.14 1.4a4.95
+           4.95 0 1 1-6.36 0z"/>
+  <rect x="7.1" y="0.69" width="1.8" height="7.75" rx="0.9"/>
+</svg>

@@ -217,6 +217,9 @@ The Eleven-style Start Menu is enabled by default and includes:
   desktop shortcut.
 - Dragging an application from All Apps onto the taskbar to pin it at the
   chosen position.
+- An optional footer power menu with the system-available Suspend, Restart,
+  Power Off, Lock Screen, Log Out and Switch User actions. It is enabled by
+  default and replaces the original Quick Settings power menu while active.
 - Dark, light and GNOME Shell theme options.
 - Optional true monitor centering.
 - Super opens the Start Menu by default and moves Overview to Super+Tab. The

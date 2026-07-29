@@ -90,6 +90,7 @@ export class WindowsStartMenu {
         this._settings = settings;
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
+        this._powerGIcon = params.powerGIcon;
         this._appSystem = Shell.AppSystem.get_default();
         this._favorites = AppFavorites.getAppFavorites();
         this._searchController = new StartMenuSearchController();
@@ -112,6 +113,8 @@ export class WindowsStartMenu {
         this._firstVisibleApp = null;
         this._sourcePressWasOpen = false;
         this._sourcePressResetId = 0;
+        this._powerSourcePressWasOpen = false;
+        this._powerSourcePressResetId = 0;
         this._prepareIdleId = 0;
         this._ignoreSearchChanged = false;
         this._appliedTheme = null;
@@ -121,6 +124,10 @@ export class WindowsStartMenu {
         this._selectedAppCategory = 'all';
         this._menuWidth = 0;
         this._menuHeight = 0;
+        this._systemActions = SystemActions.getDefault();
+        this._powerMenu = null;
+        this._powerMenuManager = null;
+        this._powerActionIdleId = 0;
         this._appContextMenu = null;
         this._appContextMenuManager = null;
         this._appActionCloseIdleId = 0;
@@ -231,6 +238,7 @@ export class WindowsStartMenu {
             if (!open) {
                 this._hideAppTooltip(true);
                 this._destroyAppContextMenu();
+                this._destroyPowerMenu();
             }
             this._onOpenStateChanged(open);
         });
@@ -253,6 +261,9 @@ export class WindowsStartMenu {
                 const insideSource = target &&
                     (target === this._sourceActor ||
                         this._sourceActor.contains(target));
+                const insidePowerSource = target && this._powerButton &&
+                    (target === this._powerButton ||
+                        this._powerButton.contains(target));
 
                 if ((isButtonPress || isTouchBegin) && insideSource) {
                     this._sourcePressWasOpen = true;
@@ -263,6 +274,19 @@ export class WindowsStartMenu {
                         () => {
                             this._sourcePressResetId = 0;
                             this._sourcePressWasOpen = false;
+                            return GLib.SOURCE_REMOVE;
+                        }
+                    );
+                } else if ((isButtonPress || isTouchBegin) &&
+                    insidePowerSource && this._powerMenu) {
+                    this._powerSourcePressWasOpen = true;
+                    if (this._powerSourcePressResetId)
+                        GLib.Source.remove(this._powerSourcePressResetId);
+                    this._powerSourcePressResetId = GLib.idle_add(
+                        GLib.PRIORITY_DEFAULT_IDLE,
+                        () => {
+                            this._powerSourcePressResetId = 0;
+                            this._powerSourcePressWasOpen = false;
                             return GLib.SOURCE_REMOVE;
                         }
                     );
@@ -310,6 +334,7 @@ export class WindowsStartMenu {
         this._sourcePressWasOpen = false;
         this._searchController?.cancel();
         this._destroyAppContextMenu();
+        this._destroyPowerMenu();
         this._menu?.close(animation);
     }
 
@@ -351,6 +376,7 @@ export class WindowsStartMenu {
             this._queuePrepare();
         }
         this._applyThemeClass(this._appContextMenu?.actor, theme);
+        this._applyThemeClass(this._powerMenu?.actor, theme);
     }
 
     _applyThemeClass(actor, theme = this._effectiveTheme()) {
@@ -436,6 +462,10 @@ export class WindowsStartMenu {
             GLib.Source.remove(this._sourcePressResetId);
             this._sourcePressResetId = 0;
         }
+        if (this._powerSourcePressResetId) {
+            GLib.Source.remove(this._powerSourcePressResetId);
+            this._powerSourcePressResetId = 0;
+        }
         if (this._prepareIdleId) {
             GLib.Source.remove(this._prepareIdleId);
             this._prepareIdleId = 0;
@@ -443,6 +473,10 @@ export class WindowsStartMenu {
         if (this._appActionCloseIdleId) {
             GLib.Source.remove(this._appActionCloseIdleId);
             this._appActionCloseIdleId = 0;
+        }
+        if (this._powerActionIdleId) {
+            GLib.Source.remove(this._powerActionIdleId);
+            this._powerActionIdleId = 0;
         }
         if (this._stageCapturedEventId) {
             global.stage.disconnect(this._stageCapturedEventId);
@@ -461,6 +495,7 @@ export class WindowsStartMenu {
         this._searchController = null;
         this._hideAppTooltip(true);
         this._destroyAppContextMenu();
+        this._destroyPowerMenu();
         this._menu?.destroy();
         this._menu = null;
         this._appTooltip.destroy();
@@ -468,11 +503,14 @@ export class WindowsStartMenu {
         this._categorySidebar = null;
         this._body = null;
         this._sourceActor = null;
+        this._powerButton = null;
+        this._powerGIcon = null;
         this._settings = null;
         this._onSourceContextMenu = null;
         this._firstSearchResult = null;
         this._appSystem = null;
         this._favorites = null;
+        this._systemActions = null;
         this._appliedTheme = null;
     }
 
@@ -642,6 +680,7 @@ export class WindowsStartMenu {
         userBox.add_child(new St.Label({
             text: userName,
             y_align: Clutter.ActorAlign.CENTER,
+            translation_y: -1,
         }));
         const userButton = new St.Button({
             style_class: 'simple-taskbar-windows-start-footer-button',
@@ -667,9 +706,164 @@ export class WindowsStartMenu {
                 this._openSettings();
             }
         );
+        this._powerButton = this._createIconButton(
+            this._powerGIcon,
+            _('Power Options'),
+            () => this._togglePowerMenu(),
+            {
+                iconStyleClass:
+                    'simple-taskbar-windows-start-power-icon',
+            }
+        );
         this._footer.add_child(userButton);
         this._footer.add_child(settingsButton);
+        this._footer.add_child(this._powerButton);
         this._root.add_child(this._footer);
+        this.syncPowerOptions();
+    }
+
+    syncPowerOptions() {
+        const enabled = this._settings.get_boolean(
+            'start-menu-power-options-enabled'
+        );
+        this._powerButton.visible = enabled;
+        if (!enabled)
+            this._destroyPowerMenu();
+    }
+
+    _togglePowerMenu() {
+        if (this._powerSourcePressWasOpen) {
+            this._powerSourcePressWasOpen = false;
+            this._destroyPowerMenu();
+            return;
+        }
+
+        if (this._powerMenu) {
+            this._destroyPowerMenu();
+            return;
+        }
+
+        this._openPowerMenu();
+    }
+
+    _openPowerMenu() {
+        this._destroyPowerMenu();
+
+        const menu = new PopupMenu.PopupMenu(
+            this._powerButton,
+            0.5,
+            panelArrowSide(this._settings)
+        );
+        const menuManager = new PopupMenu.PopupMenuManager(this._powerButton);
+
+        menu.actor.add_style_class_name('simple-taskbar-windows-start-context');
+        this._applyThemeClass(menu.actor);
+        menu.actor.hide();
+        Main.uiGroup.add_child(menu.actor);
+        menuManager.addMenu(menu);
+
+        const powerItems = [];
+        powerItems.push(this._addPowerAction(
+            menu,
+            _('Suspend'),
+            'canSuspend',
+            'notify::can-suspend',
+            () => this._systemActions.activateSuspend()
+        ));
+        powerItems.push(this._addPowerAction(
+            menu,
+            _('Restart…'),
+            'canRestart',
+            'notify::can-restart',
+            () => this._systemActions.activateRestart()
+        ));
+        powerItems.push(this._addPowerAction(
+            menu,
+            _('Power Off…'),
+            'canPowerOff',
+            'notify::can-power-off',
+            () => this._systemActions.activatePowerOff()
+        ));
+        const separator = new PopupMenu.PopupSeparatorMenuItem();
+        menu.addMenuItem(separator);
+        const sessionItems = [];
+        sessionItems.push(this._addPowerAction(
+            menu,
+            _('Lock Screen'),
+            'canLockScreen',
+            'notify::can-lock-screen',
+            () => this._systemActions.activateLockScreen()
+        ));
+        sessionItems.push(this._addPowerAction(
+            menu,
+            _('Log Out…'),
+            'canLogout',
+            'notify::can-logout',
+            () => this._systemActions.activateLogout()
+        ));
+        sessionItems.push(this._addPowerAction(
+            menu,
+            _('Switch User…'),
+            'canSwitchUser',
+            'notify::can-switch-user',
+            () => this._systemActions.activateSwitchUser()
+        ));
+        const syncSeparator = () => {
+            separator.visible =
+                powerItems.some(item => item.visible) &&
+                sessionItems.some(item => item.visible);
+        };
+        for (const item of [...powerItems, ...sessionItems])
+            item.connectObject('notify::visible', syncSeparator, menu.actor);
+        syncSeparator();
+
+        this._powerMenu = menu;
+        this._powerMenuManager = menuManager;
+        menu.connect('menu-closed', () => {
+            if (this._powerMenu !== menu)
+                return;
+            this._powerMenu = null;
+            this._powerMenuManager = null;
+            menu.destroy();
+        });
+
+        this._systemActions.forceUpdate();
+        menu.open(BoxPointer.PopupAnimation.FULL);
+    }
+
+    _addPowerAction(menu, label, property, signal, activate) {
+        const item = menu.addAction(
+            label,
+            () => this._queuePowerAction(activate)
+        );
+        const syncVisibility = () => {
+            item.visible = this._systemActions[property];
+        };
+        this._systemActions.connectObject(signal, syncVisibility, menu.actor);
+        syncVisibility();
+        return item;
+    }
+
+    _queuePowerAction(activate) {
+        if (this._powerActionIdleId)
+            return;
+
+        this._powerActionIdleId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._powerActionIdleId = 0;
+                this.close();
+                activate();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _destroyPowerMenu() {
+        const menu = this._powerMenu;
+        this._powerMenu = null;
+        this._powerMenuManager = null;
+        menu?.destroy();
     }
 
     _getSettingsApp() {
@@ -710,16 +904,27 @@ export class WindowsStartMenu {
         );
     }
 
-    _createIconButton(iconName, accessibleName, callback) {
+    _createIconButton(iconSource, accessibleName, callback, params = {}) {
+        const iconProperty = typeof iconSource === 'string'
+            ? {icon_name: iconSource}
+            : {gicon: iconSource};
+        const icon = new St.Icon({
+            ...iconProperty,
+            style_class: params.iconStyleClass ?? null,
+            icon_size: params.iconSize ?? 18,
+        });
         const button = new St.Button({
             style_class: 'simple-taskbar-windows-start-icon-button',
             reactive: true,
             can_focus: true,
             track_hover: true,
             accessible_name: accessibleName,
-            child: new St.Icon({
-                icon_name: iconName,
-                icon_size: 18,
+            child: new St.Bin({
+                width: 20,
+                height: 20,
+                x_align: Clutter.ActorAlign.CENTER,
+                y_align: Clutter.ActorAlign.CENTER,
+                child: icon,
             }),
         });
         this._enableKeyNavigation(button);

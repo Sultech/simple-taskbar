@@ -40,6 +40,9 @@ export class StartButtonController {
         this._windowsGIcon = new Gio.FileIcon({
             file: extensionDir.get_child('gnome-start-symbolic.svg'),
         });
+        this._powerGIcon = new Gio.FileIcon({
+            file: extensionDir.get_child('power-symbolic.svg'),
+        });
         this._gnomeGIcon = new Gio.ThemedIcon({
             name: 'view-app-grid-symbolic',
         });
@@ -152,6 +155,7 @@ export class StartButtonController {
         this._content = null;
         this._icon = null;
         this._windowsGIcon = null;
+        this._powerGIcon = null;
         this._gnomeGIcon = null;
         this._extensionDir = null;
         this._previews = null;
@@ -178,6 +182,7 @@ export class StartButtonController {
                 },
                 menuManager: this._menuManager,
                 onSourceContextMenu: () => this._openContextMenu(),
+                powerGIcon: this._powerGIcon,
             }
         );
     }
@@ -248,6 +253,11 @@ export class StartButtonController {
             this._settings,
             'changed::start-menu-recommended-apps',
             () => this._windowsStartMenu?.refresh()
+        );
+        this._connect(
+            this._settings,
+            'changed::start-menu-power-options-enabled',
+            () => this._windowsStartMenu.syncPowerOptions()
         );
         this._connect(
             this._settings,

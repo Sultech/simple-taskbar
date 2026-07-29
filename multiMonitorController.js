@@ -17,6 +17,9 @@ import {
     panelArrowSide,
     panelIsTop,
 } from './panelPosition.js';
+import {
+    QuickSettingsPowerController,
+} from './quickSettingsPowerController.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
@@ -351,6 +354,7 @@ class SecondaryTaskbarPanel {
         this._menuManager = null;
         this._indicators = new Map();
         this._volumeMixerController = null;
+        this._quickSettingsPowerController = null;
     }
 
     enable() {
@@ -364,6 +368,12 @@ class SecondaryTaskbarPanel {
                 quickSettings
             );
             this._volumeMixerController.enable();
+            this._quickSettingsPowerController =
+                new QuickSettingsPowerController(
+                    this._settings,
+                    quickSettings
+                );
+            this._quickSettingsPowerController.enable();
         }
         this._applyLayout();
         this._syncTheme();
@@ -433,6 +443,8 @@ class SecondaryTaskbarPanel {
         if (this._volumeMixerController)
             this._volumeMixerController.destroy();
         this._volumeMixerController = null;
+        this._quickSettingsPowerController?.destroy();
+        this._quickSettingsPowerController = null;
         this._releaseIndicators();
         this._folderMenuController?.destroy();
         this._folderMenuController = null;

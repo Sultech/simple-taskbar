@@ -37,6 +37,7 @@ gnome-extensions pack \
     --extra-source=panelController.js \
     --extra-source=panelAutoHideController.js \
     --extra-source=panelInteractionController.js \
+    --extra-source=quickSettingsPowerController.js \
     --extra-source=startButtonController.js \
     --extra-source=startIconChooser.js \
     --extra-source=startMenuAppMenu.js \
@@ -53,6 +54,7 @@ gnome-extensions pack \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
     --extra-source=gnome-start-symbolic.svg \
+    --extra-source=power-symbolic.svg \
     --extra-source=icons \
     --podir=po \
     --out-dir "$OUT_DIR" \
