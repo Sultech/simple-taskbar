@@ -130,6 +130,13 @@ export class WindowsStartMenu {
         this._powerActionIdleId = 0;
         this._appContextMenu = null;
         this._appContextMenuManager = null;
+        this._appContextMenuCursor = new St.Widget({
+            width: 1,
+            height: 1,
+            opacity: 0,
+            reactive: false,
+        });
+        Main.uiGroup.add_child(this._appContextMenuCursor);
         this._appActionCloseIdleId = 0;
         this._appTooltipTimeoutId = 0;
         this._appTooltipSource = null;
@@ -495,6 +502,8 @@ export class WindowsStartMenu {
         this._searchController = null;
         this._hideAppTooltip(true);
         this._destroyAppContextMenu();
+        this._appContextMenuCursor?.destroy();
+        this._appContextMenuCursor = null;
         this._destroyPowerMenu();
         this._menu?.destroy();
         this._menu = null;
@@ -1378,7 +1387,8 @@ export class WindowsStartMenu {
             if (event.get_button() !== Clutter.BUTTON_SECONDARY)
                 return Clutter.EVENT_PROPAGATE;
 
-            this._openAppContextMenu(button, app);
+            const [x, y] = event.get_coords();
+            this._openAppContextMenu(button, app, {x, y});
             return Clutter.EVENT_STOP;
         });
         button.connect('popup-menu', () => {
@@ -1387,12 +1397,21 @@ export class WindowsStartMenu {
         });
     }
 
-    _openAppContextMenu(sourceButton, app) {
+    _openAppContextMenu(sourceButton, app, cursorPosition = null) {
         this._hideAppTooltip(true);
         this._destroyAppContextMenu();
 
+        let menuSource = sourceButton;
+        if (cursorPosition && this._appContextMenuCursor) {
+            this._appContextMenuCursor.set_position(
+                Math.round(cursorPosition.x),
+                Math.round(cursorPosition.y)
+            );
+            menuSource = this._appContextMenuCursor;
+        }
+
         const menu = new StartMenuAppMenu(
-            sourceButton,
+            menuSource,
             panelArrowSide(this._settings),
             this._settings,
             {
