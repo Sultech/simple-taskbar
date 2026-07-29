@@ -149,18 +149,17 @@ export class GridAltTabController {
     _startSwitcher(backward, _display, _window, _event, binding) {
         this._closePopup();
 
-        let popup;
-        popup = new GridAltTabPopup(
+        const popup = new GridAltTabPopup(
             this._getSwitcherWindows(),
             this._settings.get_int('grid-alt-tab-max-card-size'),
             this._forwardAction,
-            this._backwardAction,
-            () => {
-                if (this._popup === popup)
-                    this._popup = null;
-            }
+            this._backwardAction
         );
         this._popup = popup;
+        popup.connect('destroy', () => {
+            if (this._popup === popup)
+                this._popup = null;
+        });
 
         if (!popup.show(
             backward,

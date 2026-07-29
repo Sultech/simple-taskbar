@@ -546,15 +546,13 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
         windows,
         maxPreviewHeight,
         forwardAction,
-        backwardAction,
-        onDestroyed
+        backwardAction
     ) {
         super._init();
 
         this._monitor = getSwitcherMonitor();
         this._forwardAction = forwardAction;
         this._backwardAction = backwardAction;
-        this._onDestroyed = onDestroyed;
         this._switcherList = new GridAltTabList(
             windows,
             this._monitor,
@@ -588,13 +586,9 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
     }
 
     destroy() {
-        const onDestroyed = this._onDestroyed;
-        this._onDestroyed = null;
         this._monitor = null;
         this._forwardAction = Meta.KeyBindingAction.NONE;
         this._backwardAction = Meta.KeyBindingAction.NONE;
-        if (onDestroyed)
-            onDestroyed();
         super.destroy();
     }
 
