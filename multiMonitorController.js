@@ -275,6 +275,11 @@ export class MultiMonitorController {
         for (const panel of this._panels)
             panel.closeStartMenus();
     }
+
+    closePanelMenus() {
+        for (const panel of this._panels)
+            panel.closePanelMenu();
+    }
 }
 
 class SecondaryTaskbarPanel {
@@ -419,6 +424,10 @@ class SecondaryTaskbarPanel {
 
     closeStartMenus() {
         this._startButtonController?.closeMenus();
+    }
+
+    closePanelMenu() {
+        this._menuManager?.activeMenu?.close();
     }
 
     destroy() {

@@ -324,6 +324,9 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _toggleStartMenuAtPointer() {
+        Main.panel.menuManager.activeMenu?.close();
+        this._multiMonitorController.closePanelMenus();
+
         const [x, y] = global.get_pointer();
         if (this._multiMonitorController.hasPanelAt(x, y)) {
             this._startButtonController.closeMenus();
