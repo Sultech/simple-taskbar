@@ -241,7 +241,10 @@ The Eleven-style Start Menu is enabled by default and includes:
   default and can be disabled.
 
 Start Menu keyboard bindings are grouped in their own **Keyboard Shortcuts**
-section in the extension settings.
+section in the extension settings. Enabled Simple Taskbar shortcuts take
+priority over matching GNOME shortcuts, remember each displaced assignment and
+restore it when the owning option or extension is disabled. The custom Start
+Menu shortcut cannot duplicate another enabled Simple Taskbar shortcut.
 
 The bottom hot edge is enabled by default, providing another quick way to use
 Overview after its Super shortcut has moved. Its ripple animation is optional

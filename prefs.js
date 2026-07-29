@@ -15,6 +15,7 @@ import {
     getStartIconDisplayName,
     StartIconChooserDialog,
 } from './prefs/startIconChooser.js';
+import {normalizeAccelerator} from './systemKeybindingClaim.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
@@ -1385,8 +1386,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             resetSettings.delay();
             for (const key of resetSettings.settings_schema.list_keys()) {
                 if (key === 'grid-alt-tab-displaced-bindings' ||
+                    key === 'start-menu-custom-displaced-bindings' ||
                     key === 'start-menu-displaced-switch-applications' ||
                     key === 'start-menu-displaced-overlay-key' ||
+                    key === 'super-e-file-manager-displaced-bindings' ||
                     key === 'start-menu-pinned-apps') {
                     continue;
                 }
@@ -1465,7 +1468,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                     normalizedKeyval,
                     modifiers
                 );
-                if (this._findShortcutConflict(accelerator)) {
+                if (this._findManagedShortcutConflict(
+                    window._settings,
+                    accelerator
+                )) {
                     statusPage.description = _(
                         'That shortcut is already in use. Press a different shortcut.'
                     );
@@ -1506,31 +1512,35 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
     }
 
-    _findShortcutConflict(accelerator) {
-        const schemaIds = [
-            'org.gnome.mutter.keybindings',
-            'org.gnome.mutter.wayland.keybindings',
-            'org.gnome.shell.keybindings',
-            'org.gnome.desktop.wm.keybindings',
-            'org.gnome.settings-daemon.plugins.media-keys',
-        ];
-
-        for (const schemaId of schemaIds) {
-            let settings;
-            try {
-                settings = new Gio.Settings({schema_id: schemaId});
-            } catch (_error) {
-                continue;
-            }
-
-            for (const key of settings.settings_schema.list_keys()) {
-                const value = settings.get_value(key);
-                if (value.get_type_string() === 'as' &&
-                    value.deep_unpack().includes(accelerator))
-                    return true;
-            }
+    _findManagedShortcutConflict(settings, accelerator) {
+        const managed = [];
+        if (settings.get_boolean('grid-alt-tab-enabled')) {
+            managed.push(
+                ...settings.get_strv('grid-alt-tab-hotkey'),
+                ...settings.get_strv(
+                    'grid-alt-tab-backward-hotkey'
+                )
+            );
         }
-        return false;
+        if (settings.get_boolean('super-e-file-manager-enabled')) {
+            managed.push(
+                ...settings.get_strv('super-e-file-manager-hotkey')
+            );
+        }
+        const startMenuAvailable =
+            settings.get_boolean('windows-start-menu-enabled') &&
+            !settings.get_boolean('default-gnome-panel');
+        if (startMenuAvailable &&
+            (settings.get_boolean('start-menu-super-key') ||
+                settings.get_boolean('start-menu-super-tab'))) {
+            managed.push(
+                ...settings.get_strv('start-menu-super-tab-hotkey')
+            );
+        }
+
+        const normalized = normalizeAccelerator(accelerator);
+        return managed.some(candidate =>
+            normalizeAccelerator(candidate) === normalized);
     }
 
     _addSpinRow(group, settings, {

@@ -313,6 +313,10 @@
       <default>[]</default>
       <summary>Custom shortcut for the Eleven-style Start Menu</summary>
     </key>
+    <key name="start-menu-custom-displaced-bindings" type="as">
+      <default>[]</default>
+      <summary>Internal recovery state for bindings displaced by the custom Start Menu shortcut</summary>
+    </key>
     <key name="super-e-file-manager-enabled" type="b">
       <default>true</default>
       <summary>Open the default file manager with Super+E</summary>
@@ -320,6 +324,10 @@
     <key name="super-e-file-manager-hotkey" type="as">
       <default>['&lt;Super&gt;e']</default>
       <summary>Internal Super+E shortcut for the default file manager</summary>
+    </key>
+    <key name="super-e-file-manager-displaced-bindings" type="as">
+      <default>[]</default>
+      <summary>Internal recovery state for bindings displaced by the Super+E shortcut</summary>
     </key>
     <key name="start-menu-pinned-apps" type="as">
       <default>[]</default>

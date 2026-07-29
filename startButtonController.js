@@ -302,6 +302,11 @@ export class StartButtonController {
             'changed::super-e-file-manager-enabled',
             () => this._keybindings?.sync()
         );
+        this._connect(
+            this._settings,
+            'changed::grid-alt-tab-enabled',
+            () => this._keybindings?.sync()
+        );
         this._connect(this._settings, 'changed::start-menu-theme', () => {
             this._windowsStartMenu?.syncTheme();
         });

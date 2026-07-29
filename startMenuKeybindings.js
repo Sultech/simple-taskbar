@@ -3,10 +3,17 @@
 
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
+import {
+    KEYBINDING_RELEASE_DELAY,
+    normalizeAccelerator,
+    SystemKeybindingClaim,
+} from './systemKeybindingClaim.js';
 
 const SUPER_KEY_SETTING = 'start-menu-super-key';
 const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';
@@ -14,10 +21,15 @@ const CUSTOM_KEYBINDING = 'start-menu-custom-hotkey';
 const FILE_MANAGER_SETTING = 'super-e-file-manager-enabled';
 const FILE_MANAGER_KEYBINDING = 'super-e-file-manager-hotkey';
 const SWITCH_APPLICATIONS_KEY = 'switch-applications';
-const DISPLACED_BINDINGS_KEY =
+const SUPER_TAB_DISPLACED_BINDINGS_KEY =
     'start-menu-displaced-switch-applications';
+const CUSTOM_DISPLACED_BINDINGS_KEY =
+    'start-menu-custom-displaced-bindings';
+const FILE_MANAGER_DISPLACED_BINDINGS_KEY =
+    'super-e-file-manager-displaced-bindings';
 const DISPLACED_OVERLAY_KEY = 'start-menu-displaced-overlay-key';
 const OVERLAY_KEY = 'overlay-key';
+const RECOVERY_ENTRY_SEPARATOR = '\u001f';
 const ACTION_MODES = Shell.ActionMode.NORMAL |
     Shell.ActionMode.OVERVIEW |
     Shell.ActionMode.POPUP;
@@ -30,20 +42,37 @@ export class StartMenuKeybindings {
         this._toggleMenu = toggleMenu;
         this._toggleOverview = toggleOverview;
         this._openFileManager = openFileManager;
-        this._wmKeybindings = new Gio.Settings({
-            schema_id: 'org.gnome.desktop.wm.keybindings',
-        });
         this._mutterSettings = new Gio.Settings({
             schema_id: 'org.gnome.mutter',
         });
-        this._displacedSwitchApplications = this._settings.get_strv(
-            DISPLACED_BINDINGS_KEY
-        );
+        this._migrateLegacySuperTabRecovery();
+        this._superTabRegistrationId = 0;
+        this._pendingSuperTabMode = null;
+        this._customRegistrationId = 0;
+        this._fileManagerRegistrationId = 0;
         this._superTabMode = null;
         this._customEnabled = false;
         this._fileManagerEnabled = false;
+        this._superTabClaim = new SystemKeybindingClaim(
+            settings,
+            SUPER_TAB_DISPLACED_BINDINGS_KEY,
+            () => this._queueSuperTabRegistration(
+                this._superTabMode ?? this._pendingSuperTabMode
+            )
+        );
+        this._customClaim = new SystemKeybindingClaim(
+            settings,
+            CUSTOM_DISPLACED_BINDINGS_KEY,
+            () => this._queueCustomRegistration()
+        );
+        this._fileManagerClaim = new SystemKeybindingClaim(
+            settings,
+            FILE_MANAGER_DISPLACED_BINDINGS_KEY,
+            () => this._queueFileManagerRegistration()
+        );
         this._overlayEnabled = false;
         this._overlayHandlerId = 0;
+        this._overlaySettingChangedId = 0;
         this._defaultOverlayHandlerId = 0;
         this._startupCompleteId = 0;
     }
@@ -98,9 +127,13 @@ export class StartMenuKeybindings {
 
     destroy() {
         this.disable();
-        this._wmKeybindings = null;
+        this._superTabClaim.destroy();
+        this._superTabClaim = null;
+        this._customClaim.destroy();
+        this._customClaim = null;
+        this._fileManagerClaim.destroy();
+        this._fileManagerClaim = null;
         this._mutterSettings = null;
-        this._displacedSwitchApplications = null;
         this._settings = null;
         this._toggleMenu = null;
         this._toggleOverview = null;
@@ -118,9 +151,45 @@ export class StartMenuKeybindings {
             return;
         }
 
-        if (this._fileManagerEnabled)
+        if (this._fileManagerEnabled ||
+            this._fileManagerRegistrationId) {
             return;
+        }
 
+        const waitForRelease = this._fileManagerClaim.enable(
+            this._settings.get_strv(FILE_MANAGER_KEYBINDING)
+        );
+        if (waitForRelease) {
+            this._queueFileManagerRegistration();
+            return;
+        }
+        this._registerFileManager();
+    }
+
+    _queueFileManagerRegistration() {
+        if (this._fileManagerEnabled) {
+            Main.wm.removeKeybinding(FILE_MANAGER_KEYBINDING);
+            this._fileManagerEnabled = false;
+        }
+        if (this._fileManagerRegistrationId) {
+            GLib.Source.remove(this._fileManagerRegistrationId);
+            this._fileManagerRegistrationId = 0;
+        }
+        this._fileManagerRegistrationId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            KEYBINDING_RELEASE_DELAY,
+            () => {
+                this._fileManagerRegistrationId = 0;
+                if (this._settings.get_boolean(FILE_MANAGER_SETTING))
+                    this._registerFileManager();
+                else
+                    this._fileManagerClaim.disable();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _registerFileManager() {
         const action = Main.wm.addKeybinding(
             FILE_MANAGER_KEYBINDING,
             this._settings,
@@ -130,6 +199,7 @@ export class StartMenuKeybindings {
         );
         this._fileManagerEnabled = action !== Meta.KeyBindingAction.NONE;
         if (!this._fileManagerEnabled) {
+            this._fileManagerClaim.disable();
             this._reportFailure(
                 'Super+E file manager shortcut could not be registered'
             );
@@ -137,19 +207,62 @@ export class StartMenuKeybindings {
     }
 
     _disableFileManager() {
-        if (!this._fileManagerEnabled)
-            return;
-
-        Main.wm.removeKeybinding(FILE_MANAGER_KEYBINDING);
+        if (this._fileManagerRegistrationId) {
+            GLib.Source.remove(this._fileManagerRegistrationId);
+            this._fileManagerRegistrationId = 0;
+        }
+        if (this._fileManagerEnabled)
+            Main.wm.removeKeybinding(FILE_MANAGER_KEYBINDING);
         this._fileManagerEnabled = false;
+        this._fileManagerClaim.disable();
     }
 
     _enableSuperTab(mode) {
-        if (this._superTabMode === mode)
+        if (this._superTabMode === mode ||
+            this._pendingSuperTabMode === mode) {
             return true;
+        }
 
         this._disableSuperTab();
-        this._displaceSwitchApplicationsSuperTab();
+        const waitForRelease = this._superTabClaim.enable(
+            this._settings.get_strv(SUPER_TAB_KEYBINDING)
+        );
+        if (waitForRelease) {
+            this._queueSuperTabRegistration(mode);
+            return true;
+        }
+        return this._registerSuperTab(mode);
+    }
+
+    _queueSuperTabRegistration(mode) {
+        if (!mode)
+            return;
+
+        if (this._superTabMode) {
+            Main.wm.removeKeybinding(SUPER_TAB_KEYBINDING);
+            this._superTabMode = null;
+        }
+        if (this._superTabRegistrationId) {
+            GLib.Source.remove(this._superTabRegistrationId);
+            this._superTabRegistrationId = 0;
+        }
+        this._pendingSuperTabMode = mode;
+        this._superTabRegistrationId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            KEYBINDING_RELEASE_DELAY,
+            () => {
+                this._superTabRegistrationId = 0;
+                this._pendingSuperTabMode = null;
+                if (this._superTabModeIsWanted(mode))
+                    this._registerSuperTab(mode);
+                else
+                    this._superTabClaim.disable();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _registerSuperTab(mode) {
         const action = Main.wm.addKeybinding(
             SUPER_TAB_KEYBINDING,
             this._settings,
@@ -164,10 +277,11 @@ export class StartMenuKeybindings {
         );
 
         if (action === Meta.KeyBindingAction.NONE) {
-            this._restoreSwitchApplicationsSuperTab();
+            this._superTabClaim.disable();
             this._reportFailure(
                 `Super+Tab ${mode} shortcut could not be registered`
             );
+            this._disableSuperTabSetting(mode);
             return false;
         }
 
@@ -176,10 +290,32 @@ export class StartMenuKeybindings {
     }
 
     _disableSuperTab() {
+        if (this._superTabRegistrationId) {
+            GLib.Source.remove(this._superTabRegistrationId);
+            this._superTabRegistrationId = 0;
+        }
+        this._pendingSuperTabMode = null;
         if (this._superTabMode)
             Main.wm.removeKeybinding(SUPER_TAB_KEYBINDING);
         this._superTabMode = null;
-        this._restoreSwitchApplicationsSuperTab();
+        this._superTabClaim.disable();
+    }
+
+    _superTabModeIsWanted(mode) {
+        if (!this._startMenuAvailable())
+            return false;
+        if (mode === 'overview')
+            return this._settings.get_boolean(SUPER_KEY_SETTING);
+        return !this._settings.get_boolean(SUPER_KEY_SETTING) &&
+            this._settings.get_boolean('start-menu-super-tab');
+    }
+
+    _disableSuperTabSetting(mode) {
+        const key = mode === 'overview'
+            ? SUPER_KEY_SETTING
+            : 'start-menu-super-tab';
+        if (this._settings.get_boolean(key))
+            this._settings.set_boolean(key, false);
     }
 
     _enableOverlayKey() {
@@ -191,6 +327,10 @@ export class StartMenuKeybindings {
         Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
 
         this._overlayEnabled = true;
+        this._overlaySettingChangedId = this._mutterSettings.connect(
+            `changed::${OVERLAY_KEY}`,
+            () => this._overlayKeyChanged()
+        );
         if (Main.layoutManager._startingUp) {
             this._startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
@@ -206,12 +346,7 @@ export class StartMenuKeybindings {
         if (this._installOverlayHandler())
             return true;
 
-        this._overlayEnabled = false;
-        this._restoreOverlayKey();
-        Main.wm.allowKeybinding(
-            OVERLAY_KEY,
-            DEFAULT_OVERLAY_ACTION_MODES
-        );
+        this._disableOverlayKey();
         return false;
     }
 
@@ -245,6 +380,12 @@ export class StartMenuKeybindings {
 
     _disableOverlayKey() {
         this._overlayEnabled = false;
+        if (this._overlaySettingChangedId) {
+            this._mutterSettings.disconnect(
+                this._overlaySettingChangedId
+            );
+            this._overlaySettingChangedId = 0;
+        }
         if (this._startupCompleteId) {
             Main.layoutManager.disconnect(this._startupCompleteId);
             this._startupCompleteId = 0;
@@ -260,6 +401,15 @@ export class StartMenuKeybindings {
             DEFAULT_OVERLAY_ACTION_MODES
         );
         this._restoreOverlayKey();
+    }
+
+    _overlayKeyChanged() {
+        const overlayKey = this._mutterSettings.get_string(OVERLAY_KEY);
+        if (overlayKey === 'Super')
+            return;
+
+        this._settings.set_strv(DISPLACED_OVERLAY_KEY, [overlayKey]);
+        this._mutterSettings.set_string(OVERLAY_KEY, 'Super');
     }
 
     _saveOverlayKey() {
@@ -297,60 +447,57 @@ export class StartMenuKeybindings {
     }
 
     _disableSuperKeySetting() {
-        if (this._settings?.get_boolean(SUPER_KEY_SETTING))
+        if (this._settings.get_boolean(SUPER_KEY_SETTING))
             this._settings.set_boolean(SUPER_KEY_SETTING, false);
     }
 
-    _displaceSwitchApplicationsSuperTab() {
-        const accelerators = this._wmKeybindings.get_strv(
-            SWITCH_APPLICATIONS_KEY
-        );
-        const retained = [];
-        for (const accelerator of accelerators) {
-            if (accelerator.replaceAll(' ', '').toLowerCase() ===
-                '<super>tab') {
-                if (!this._displacedSwitchApplications.includes(accelerator))
-                    this._displacedSwitchApplications.push(accelerator);
-            } else {
-                retained.push(accelerator);
-            }
-        }
-
-        if (this._displacedSwitchApplications.length > 0) {
-            this._settings.set_strv(
-                DISPLACED_BINDINGS_KEY,
-                this._displacedSwitchApplications
-            );
-            this._wmKeybindings.set_strv(
-                SWITCH_APPLICATIONS_KEY,
-                retained
-            );
-        }
-    }
-
-    _restoreSwitchApplicationsSuperTab() {
-        if (this._displacedSwitchApplications.length === 0)
-            return;
-
-        const accelerators = this._wmKeybindings.get_strv(
-            SWITCH_APPLICATIONS_KEY
-        );
-        for (const accelerator of this._displacedSwitchApplications) {
-            if (!accelerators.includes(accelerator))
-                accelerators.push(accelerator);
-        }
-        this._wmKeybindings.set_strv(
-            SWITCH_APPLICATIONS_KEY,
-            accelerators
-        );
-        this._settings.set_strv(DISPLACED_BINDINGS_KEY, []);
-        this._displacedSwitchApplications = [];
-    }
-
     _enableCustom() {
-        if (this._customEnabled)
+        const accelerators = this._settings.get_strv(CUSTOM_KEYBINDING);
+        if (this._customConflictsWithManagedShortcut(accelerators)) {
+            this._disableCustom();
+            this._reportFailure(
+                'Custom Start menu shortcut conflicts with another Simple Taskbar shortcut'
+            );
+            return;
+        }
+        if (this._customEnabled || this._customRegistrationId)
             return;
 
+        const waitForRelease = this._customClaim.enable(accelerators);
+        if (waitForRelease) {
+            this._queueCustomRegistration();
+            return;
+        }
+        this._registerCustom();
+    }
+
+    _queueCustomRegistration() {
+        if (this._customEnabled) {
+            Main.wm.removeKeybinding(CUSTOM_KEYBINDING);
+            this._customEnabled = false;
+        }
+        if (this._customRegistrationId) {
+            GLib.Source.remove(this._customRegistrationId);
+            this._customRegistrationId = 0;
+        }
+        this._customRegistrationId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            KEYBINDING_RELEASE_DELAY,
+            () => {
+                this._customRegistrationId = 0;
+                const accelerators = this._settings.get_strv(
+                    CUSTOM_KEYBINDING
+                );
+                if (this._customShortcutIsWanted(accelerators))
+                    this._registerCustom();
+                else
+                    this._customClaim.disable();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _registerCustom() {
         const action = Main.wm.addKeybinding(
             CUSTOM_KEYBINDING,
             this._settings,
@@ -359,18 +506,78 @@ export class StartMenuKeybindings {
             () => this._toggleMenu()
         );
         this._customEnabled = action !== Meta.KeyBindingAction.NONE;
-        if (!this._customEnabled)
+        if (!this._customEnabled) {
+            this._customClaim.disable();
             this._reportFailure(
                 'Custom Start menu shortcut could not be registered'
             );
+        }
     }
 
     _disableCustom() {
-        if (!this._customEnabled)
+        if (this._customRegistrationId) {
+            GLib.Source.remove(this._customRegistrationId);
+            this._customRegistrationId = 0;
+        }
+        if (this._customEnabled)
+            Main.wm.removeKeybinding(CUSTOM_KEYBINDING);
+        this._customEnabled = false;
+        this._customClaim.disable();
+    }
+
+    _customShortcutIsWanted(accelerators) {
+        return this._startMenuAvailable() &&
+            !this._settings.get_boolean(SUPER_KEY_SETTING) &&
+            !this._settings.get_boolean('start-menu-super-tab') &&
+            accelerators.length > 0 &&
+            !this._customConflictsWithManagedShortcut(accelerators);
+    }
+
+    _customConflictsWithManagedShortcut(accelerators) {
+        const managed = [];
+        if (this._settings.get_boolean('grid-alt-tab-enabled')) {
+            managed.push(
+                ...this._settings.get_strv('grid-alt-tab-hotkey'),
+                ...this._settings.get_strv(
+                    'grid-alt-tab-backward-hotkey'
+                )
+            );
+        }
+        if (this._settings.get_boolean(FILE_MANAGER_SETTING)) {
+            managed.push(
+                ...this._settings.get_strv(FILE_MANAGER_KEYBINDING)
+            );
+        }
+        const managedSet = new Set(managed.map(normalizeAccelerator));
+        return accelerators.some(accelerator =>
+            managedSet.has(normalizeAccelerator(accelerator)));
+    }
+
+    _migrateLegacySuperTabRecovery() {
+        const displaced = this._settings.get_strv(
+            SUPER_TAB_DISPLACED_BINDINGS_KEY
+        );
+        const legacy = displaced.filter(accelerator =>
+            !accelerator.includes(RECOVERY_ENTRY_SEPARATOR));
+        if (legacy.length === 0)
             return;
 
-        Main.wm.removeKeybinding(CUSTOM_KEYBINDING);
-        this._customEnabled = false;
+        const wmKeybindings = new Gio.Settings({
+            schema_id: 'org.gnome.desktop.wm.keybindings',
+        });
+        const accelerators = wmKeybindings.get_strv(
+            SWITCH_APPLICATIONS_KEY
+        );
+        for (const accelerator of legacy) {
+            if (!accelerators.includes(accelerator))
+                accelerators.push(accelerator);
+        }
+        wmKeybindings.set_strv(SWITCH_APPLICATIONS_KEY, accelerators);
+        this._settings.set_strv(
+            SUPER_TAB_DISPLACED_BINDINGS_KEY,
+            displaced.filter(accelerator =>
+                accelerator.includes(RECOVERY_ENTRY_SEPARATOR))
+        );
     }
 
     _reportFailure(message) {

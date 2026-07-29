@@ -1,39 +1,32 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {GridAltTabPopup} from './gridAltTabPopup.js';
+import {
+    KEYBINDING_RELEASE_DELAY,
+    SystemKeybindingClaim,
+} from './systemKeybindingClaim.js';
 
 const FORWARD_BINDING = 'grid-alt-tab-hotkey';
 const BACKWARD_BINDING = 'grid-alt-tab-backward-hotkey';
 const DISPLACED_BINDINGS_KEY = 'grid-alt-tab-displaced-bindings';
-const ENTRY_SEPARATOR = '\u001f';
-const GRID_ACCELERATORS = new Set([
-    '<alt>tab',
-    '<shift><alt>tab',
-    '<alt><shift>tab',
-]);
-const KEYBINDING_SCHEMAS = [
-    'org.gnome.desktop.wm.keybindings',
-    'org.gnome.mutter.keybindings',
-    'org.gnome.mutter.wayland.keybindings',
-    'org.gnome.shell.keybindings',
-];
 
 export class GridAltTabController {
     constructor(settings) {
         this._settings = settings;
         this._settingChangedId = 0;
-        this._keybindingSettings = KEYBINDING_SCHEMAS.map(schemaId => ({
-            schemaId,
-            settings: new Gio.Settings({schema_id: schemaId}),
-            changedId: 0,
-        }));
+        this._registrationId = 0;
+        this._keybindingClaim = new SystemKeybindingClaim(
+            settings,
+            DISPLACED_BINDINGS_KEY,
+            () => this._queueBindingRegistration()
+        );
         this._forwardAction = Meta.KeyBindingAction.NONE;
         this._backwardAction = Meta.KeyBindingAction.NONE;
         this._popup = null;
@@ -45,12 +38,6 @@ export class GridAltTabController {
             'changed::grid-alt-tab-enabled',
             () => this._sync()
         );
-        for (const entry of this._keybindingSettings) {
-            entry.changedId = entry.settings.connect('changed', () => {
-                if (this._settings.get_boolean('grid-alt-tab-enabled'))
-                    this._displaceSystemBindings();
-            });
-        }
         this._sync();
     }
 
@@ -59,13 +46,10 @@ export class GridAltTabController {
             this._settings.disconnect(this._settingChangedId);
             this._settingChangedId = 0;
         }
-        for (const entry of this._keybindingSettings) {
-            entry.settings.disconnect(entry.changedId);
-            entry.changedId = 0;
-        }
         this._closePopup();
         this._disableBindings();
-        this._keybindingSettings = null;
+        this._keybindingClaim.destroy();
+        this._keybindingClaim = null;
         this._windowOrder = null;
         this._settings = null;
     }
@@ -79,10 +63,46 @@ export class GridAltTabController {
     }
 
     _enableBindings() {
-        if (this._forwardAction !== Meta.KeyBindingAction.NONE)
+        if (this._forwardAction !== Meta.KeyBindingAction.NONE ||
+            this._registrationId) {
             return;
+        }
 
-        this._displaceSystemBindings();
+        const waitForRelease = this._keybindingClaim.enable([
+            ...this._settings.get_strv(FORWARD_BINDING),
+            ...this._settings.get_strv(BACKWARD_BINDING),
+        ]);
+        if (waitForRelease) {
+            this._queueBindingRegistration();
+            return;
+        }
+        this._registerBindings();
+    }
+
+    _queueBindingRegistration() {
+        this._removeRegisteredBindings();
+        if (this._registrationId) {
+            GLib.Source.remove(this._registrationId);
+            this._registrationId = 0;
+        }
+        this._registrationId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            KEYBINDING_RELEASE_DELAY,
+            () => {
+                this._registrationId = 0;
+                if (this._settings.get_boolean(
+                    'grid-alt-tab-enabled'
+                )) {
+                    this._registerBindings();
+                } else {
+                    this._keybindingClaim.disable();
+                }
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _registerBindings() {
         this._forwardAction = Main.wm.addKeybinding(
             FORWARD_BINDING,
             this._settings,
@@ -103,18 +123,27 @@ export class GridAltTabController {
             console.warn(
                 'Simple Taskbar: Grid Alt-Tab shortcuts could not be registered'
             );
+            this._disableBindings();
             this._settings.set_boolean('grid-alt-tab-enabled', false);
         }
     }
 
     _disableBindings() {
+        if (this._registrationId) {
+            GLib.Source.remove(this._registrationId);
+            this._registrationId = 0;
+        }
+        this._removeRegisteredBindings();
+        this._keybindingClaim.disable();
+    }
+
+    _removeRegisteredBindings() {
         if (this._forwardAction !== Meta.KeyBindingAction.NONE)
             Main.wm.removeKeybinding(FORWARD_BINDING);
         if (this._backwardAction !== Meta.KeyBindingAction.NONE)
             Main.wm.removeKeybinding(BACKWARD_BINDING);
         this._forwardAction = Meta.KeyBindingAction.NONE;
         this._backwardAction = Meta.KeyBindingAction.NONE;
-        this._restoreSystemBindings();
     }
 
     _startSwitcher(backward, _display, _window, _event, binding) {
@@ -184,73 +213,4 @@ export class GridAltTabController {
         popup.destroy();
     }
 
-    _displaceSystemBindings() {
-        const displaced = this._settings.get_strv(
-            DISPLACED_BINDINGS_KEY
-        );
-        const displacedSet = new Set(displaced);
-
-        for (const entry of this._keybindingSettings) {
-            for (const key of entry.settings.settings_schema.list_keys()) {
-                const value = entry.settings.get_value(key);
-                if (value.get_type_string() !== 'as')
-                    continue;
-
-                const accelerators = value.deep_unpack();
-                const retained = [];
-                let changed = false;
-                for (const accelerator of accelerators) {
-                    if (!this._isGridAccelerator(accelerator)) {
-                        retained.push(accelerator);
-                        continue;
-                    }
-
-                    changed = true;
-                    displacedSet.add([
-                        entry.schemaId,
-                        key,
-                        accelerator,
-                    ].join(ENTRY_SEPARATOR));
-                }
-                if (changed)
-                    entry.settings.set_strv(key, retained);
-            }
-        }
-
-        this._settings.set_strv(
-            DISPLACED_BINDINGS_KEY,
-            [...displacedSet]
-        );
-    }
-
-    _restoreSystemBindings() {
-        const displaced = this._settings.get_strv(
-            DISPLACED_BINDINGS_KEY
-        );
-        if (displaced.length === 0)
-            return;
-
-        for (const encoded of displaced) {
-            const [schemaId, key, accelerator] =
-                encoded.split(ENTRY_SEPARATOR);
-            const entry = this._keybindingSettings.find(
-                candidate => candidate.schemaId === schemaId
-            );
-            if (!entry || !key || !accelerator)
-                continue;
-
-            const accelerators = entry.settings.get_strv(key);
-            if (!accelerators.includes(accelerator)) {
-                accelerators.push(accelerator);
-                entry.settings.set_strv(key, accelerators);
-            }
-        }
-        this._settings.set_strv(DISPLACED_BINDINGS_KEY, []);
-    }
-
-    _isGridAccelerator(accelerator) {
-        return GRID_ACCELERATORS.has(
-            accelerator.replaceAll(' ', '').toLowerCase()
-        );
-    }
 }
