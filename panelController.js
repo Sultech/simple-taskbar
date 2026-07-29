@@ -1061,7 +1061,8 @@ export class PanelController {
                     'border-bottom: 0; ';
         }
         const transparencyStyle =
-            `background-color: rgba(${background}, ${opacity.toFixed(2)}); ` +
+            `background-color: rgba(${background}, ` +
+            `${opacity.toFixed(2)}) !important; ` +
             borderStyle +
             'box-shadow: none;';
         this._setPanelStyle(
