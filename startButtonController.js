@@ -38,7 +38,10 @@ export class StartButtonController {
         this._menuManager = null;
 
         this._windowsGIcon = new Gio.FileIcon({
-            file: extensionDir.get_child('gnome-start-symbolic.svg'),
+            file: extensionDir
+                .get_child('icons')
+                .get_child('start')
+                .get_child('gnome-start-symbolic.svg'),
         });
         this._powerGIcon = new Gio.FileIcon({
             file: extensionDir
