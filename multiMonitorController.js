@@ -335,6 +335,8 @@ class SecondaryTaskbarPanel {
             previewController: this._windowPreviews,
             openPreferences,
             manageKeybindings: false,
+            onMenuOpenStateChanged: open =>
+                this._autoHideController?.setMenuOpen(open),
         });
         this._folderMenuController = new FolderMenuController(settings);
 

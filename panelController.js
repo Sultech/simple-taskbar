@@ -122,6 +122,10 @@ export class PanelController {
         this.position();
     }
 
+    setStartMenuOpen(open) {
+        this._autoHideController.setMenuOpen(open);
+    }
+
     position() {
         const monitor = Main.layoutManager.primaryMonitor;
         if (!monitor)

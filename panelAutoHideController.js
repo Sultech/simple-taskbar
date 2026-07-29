@@ -35,6 +35,7 @@ export class PanelAutoHideController {
         this._trackedActorData = null;
         this._originalAffectsStruts = false;
         this._unredirectDisabled = false;
+        this._fullscreenVisibilityHeld = false;
     }
 
     enable() {
@@ -84,6 +85,7 @@ export class PanelAutoHideController {
 
     destroy() {
         this._clearHideTimeout();
+        this._restoreFullscreenVisibility();
         for (const [object, id] of this._signals) {
             if (id)
                 object.disconnect(id);
@@ -104,6 +106,21 @@ export class PanelAutoHideController {
         this._getPanelHeight = null;
         this._isBlockedCallback = null;
         this._trackedActorData = null;
+    }
+
+    setMenuOpen(open) {
+        if (open) {
+            this.show(false);
+            if (!this._positionActor.visible) {
+                this._positionActor.visible = true;
+                this._fullscreenVisibilityHeld = true;
+            }
+            return;
+        }
+
+        this._restoreFullscreenVisibility();
+        if (this._enabled() && !this._pointerIsInsidePanel())
+            this._scheduleHide();
     }
 
     syncPosition() {
@@ -205,6 +222,16 @@ export class PanelAutoHideController {
 
         global.compositor.enable_unredirect();
         this._unredirectDisabled = false;
+    }
+
+    _restoreFullscreenVisibility() {
+        if (!this._fullscreenVisibilityHeld)
+            return;
+
+        this._fullscreenVisibilityHeld = false;
+        const monitor = this._getMonitor();
+        this._positionActor.visible =
+            !(global.window_group.visible && monitor?.inFullscreen);
     }
 
     _scheduleHide(delay = HIDE_DELAY) {

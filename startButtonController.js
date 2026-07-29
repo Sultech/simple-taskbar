@@ -26,12 +26,14 @@ export class StartButtonController {
         manageKeybindings = true,
         toggleFromShortcut = null,
         switcherKeybindings = null,
+        onMenuOpenStateChanged,
     }) {
         this._extensionDir = extensionDir;
         this._settings = settings;
         this._previews = previewController;
         this._openPreferences = openPreferences;
         this._toggleFromShortcut = toggleFromShortcut;
+        this._onMenuOpenStateChanged = onMenuOpenStateChanged;
         this._signals = [];
         this._startOpenedOverview = false;
         this._windowsStartMenu = null;
@@ -170,6 +172,7 @@ export class StartButtonController {
         this._previews = null;
         this._openPreferences = null;
         this._toggleFromShortcut = null;
+        this._onMenuOpenStateChanged = null;
         this._settings = null;
         this._startOpenedOverview = false;
     }
@@ -188,6 +191,7 @@ export class StartButtonController {
                 onOpenStateChanged: open => {
                     if (this._windowsModeEnabled())
                         this.actor.checked = open;
+                    this._notifyMenuOpenStateChanged();
                 },
                 menuManager: this._menuManager,
                 onSourceContextMenu: () => this._openContextMenu(),
@@ -210,6 +214,9 @@ export class StartButtonController {
         Main.uiGroup.add_child(menu.actor);
         this._menuManager.addMenu(menu);
         this._contextMenu = menu;
+        this._connect(menu, 'open-state-changed', () => {
+            this._notifyMenuOpenStateChanged();
+        });
 
         this._connect(this.actor, 'event', (_actor, event) => {
             if (event.type() !== Clutter.EventType.BUTTON_PRESS ||
@@ -332,6 +339,10 @@ export class StartButtonController {
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
         this._contextMenu.open(BoxPointer.PopupAnimation.FULL);
+    }
+
+    _notifyMenuOpenStateChanged() {
+        this._onMenuOpenStateChanged(this.menuIsOpen);
     }
 
     _toggleApplications() {
