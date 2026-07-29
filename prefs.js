@@ -67,10 +67,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             if (target)
                 window._settings.set_string('target-prefs-page', '');
         };
-        window._settings.connect(
+        let targetPageChangedId = window._settings.connect(
             'changed::target-prefs-page',
             showRequestedPage
         );
+        window.connect('close-request', () => {
+            if (!targetPageChangedId)
+                return;
+
+            window._settings.disconnect(targetPageChangedId);
+            targetPageChangedId = 0;
+        });
         showRequestedPage();
 
         const panelModeGroup = new Adw.PreferencesGroup({
