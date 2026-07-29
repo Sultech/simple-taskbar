@@ -211,10 +211,6 @@
       <default>['&lt;Shift&gt;&lt;Alt&gt;Tab']</default>
       <summary>Internal backward shortcut for Grid Alt-Tab</summary>
     </key>
-    <key name="grid-alt-tab-displaced-bindings" type="as">
-      <default>[]</default>
-      <summary>Internal recovery state for displaced Alt-Tab shortcuts</summary>
-    </key>
     <key name="nautilus-places-enabled" type="b">
       <default>true</default>
       <summary>Show common folder shortcuts in the Nautilus taskbar menu</summary>
@@ -295,7 +291,7 @@
     </key>
     <key name="start-menu-displaced-overlay-key" type="as">
       <default>[]</default>
-      <summary>Internal recovery state for the displaced Mutter overlay key</summary>
+      <summary>Recovery state for the Mutter overlay key</summary>
     </key>
     <key name="start-menu-super-tab" type="b">
       <default>false</default>
@@ -305,17 +301,9 @@
       <default>['&lt;Super&gt;Tab']</default>
       <summary>Internal Super+Tab shortcut for the Start Menu or Overview</summary>
     </key>
-    <key name="start-menu-displaced-switch-applications" type="as">
-      <default>[]</default>
-      <summary>Internal recovery state for the displaced GNOME shortcut</summary>
-    </key>
     <key name="start-menu-custom-hotkey" type="as">
       <default>[]</default>
       <summary>Custom shortcut for the Eleven-style Start Menu</summary>
-    </key>
-    <key name="start-menu-custom-displaced-bindings" type="as">
-      <default>[]</default>
-      <summary>Internal recovery state for bindings displaced by the custom Start Menu shortcut</summary>
     </key>
     <key name="super-e-file-manager-enabled" type="b">
       <default>true</default>
@@ -324,10 +312,6 @@
     <key name="super-e-file-manager-hotkey" type="as">
       <default>['&lt;Super&gt;e']</default>
       <summary>Internal Super+E shortcut for the default file manager</summary>
-    </key>
-    <key name="super-e-file-manager-displaced-bindings" type="as">
-      <default>[]</default>
-      <summary>Internal recovery state for bindings displaced by the Super+E shortcut</summary>
     </key>
     <key name="start-menu-pinned-apps" type="as">
       <default>[]</default>

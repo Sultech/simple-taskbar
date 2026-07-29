@@ -1,36 +1,52 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {GridAltTabPopup} from './gridAltTabPopup.js';
-import {
-    KEYBINDING_RELEASE_DELAY,
-    SystemKeybindingClaim,
-} from './systemKeybindingClaim.js';
 
 const FORWARD_BINDING = 'grid-alt-tab-hotkey';
 const BACKWARD_BINDING = 'grid-alt-tab-backward-hotkey';
-const DISPLACED_BINDINGS_KEY = 'grid-alt-tab-displaced-bindings';
+const SYSTEM_ACTIONS = new Map([
+    ['switch-applications', [
+        Meta.KeyBindingAction.SWITCH_APPLICATIONS,
+        Meta.KeyBindingAction.SWITCH_APPLICATIONS_BACKWARD,
+    ]],
+    ['switch-applications-backward', [
+        Meta.KeyBindingAction.SWITCH_APPLICATIONS,
+        Meta.KeyBindingAction.SWITCH_APPLICATIONS_BACKWARD,
+    ]],
+    ['switch-windows', [
+        Meta.KeyBindingAction.SWITCH_WINDOWS,
+        Meta.KeyBindingAction.SWITCH_WINDOWS_BACKWARD,
+    ]],
+    ['switch-windows-backward', [
+        Meta.KeyBindingAction.SWITCH_WINDOWS,
+        Meta.KeyBindingAction.SWITCH_WINDOWS_BACKWARD,
+    ]],
+    ['switch-group', [
+        Meta.KeyBindingAction.SWITCH_GROUP,
+        Meta.KeyBindingAction.SWITCH_GROUP_BACKWARD,
+    ]],
+    ['switch-group-backward', [
+        Meta.KeyBindingAction.SWITCH_GROUP,
+        Meta.KeyBindingAction.SWITCH_GROUP_BACKWARD,
+    ]],
+]);
 
 export class GridAltTabController {
-    constructor(settings) {
+    constructor(settings, switcherKeybindings) {
         this._settings = settings;
+        this._switcherKeybindings = switcherKeybindings;
         this._settingChangedId = 0;
-        this._registrationId = 0;
-        this._keybindingClaim = new SystemKeybindingClaim(
-            settings,
-            DISPLACED_BINDINGS_KEY,
-            () => this._queueBindingRegistration()
-        );
         this._forwardAction = Meta.KeyBindingAction.NONE;
         this._backwardAction = Meta.KeyBindingAction.NONE;
         this._popup = null;
         this._windowOrder = [];
+        this._systemHandler = this._startSystemSwitcher.bind(this);
     }
 
     enable() {
@@ -48,9 +64,9 @@ export class GridAltTabController {
         }
         this._closePopup();
         this._disableBindings();
-        this._keybindingClaim.destroy();
-        this._keybindingClaim = null;
+        this._systemHandler = null;
         this._windowOrder = null;
+        this._switcherKeybindings = null;
         this._settings = null;
     }
 
@@ -63,46 +79,10 @@ export class GridAltTabController {
     }
 
     _enableBindings() {
-        if (this._forwardAction !== Meta.KeyBindingAction.NONE ||
-            this._registrationId) {
+        this._switcherKeybindings.setGridHandler(this._systemHandler);
+        if (this._forwardAction !== Meta.KeyBindingAction.NONE)
             return;
-        }
 
-        const waitForRelease = this._keybindingClaim.enable([
-            ...this._settings.get_strv(FORWARD_BINDING),
-            ...this._settings.get_strv(BACKWARD_BINDING),
-        ]);
-        if (waitForRelease) {
-            this._queueBindingRegistration();
-            return;
-        }
-        this._registerBindings();
-    }
-
-    _queueBindingRegistration() {
-        this._removeRegisteredBindings();
-        if (this._registrationId) {
-            GLib.Source.remove(this._registrationId);
-            this._registrationId = 0;
-        }
-        this._registrationId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            KEYBINDING_RELEASE_DELAY,
-            () => {
-                this._registrationId = 0;
-                if (this._settings.get_boolean(
-                    'grid-alt-tab-enabled'
-                )) {
-                    this._registerBindings();
-                } else {
-                    this._keybindingClaim.disable();
-                }
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _registerBindings() {
         this._forwardAction = Main.wm.addKeybinding(
             FORWARD_BINDING,
             this._settings,
@@ -120,21 +100,13 @@ export class GridAltTabController {
 
         if (this._forwardAction === Meta.KeyBindingAction.NONE ||
             this._backwardAction === Meta.KeyBindingAction.NONE) {
-            console.warn(
-                'Simple Taskbar: Grid Alt-Tab shortcuts could not be registered'
-            );
-            this._disableBindings();
-            this._settings.set_boolean('grid-alt-tab-enabled', false);
+            this._removeRegisteredBindings();
         }
     }
 
     _disableBindings() {
-        if (this._registrationId) {
-            GLib.Source.remove(this._registrationId);
-            this._registrationId = 0;
-        }
+        this._switcherKeybindings.setGridHandler(null);
         this._removeRegisteredBindings();
-        this._keybindingClaim.disable();
     }
 
     _removeRegisteredBindings() {
@@ -147,13 +119,38 @@ export class GridAltTabController {
     }
 
     _startSwitcher(backward, _display, _window, _event, binding) {
+        this._showSwitcher(
+            backward,
+            binding,
+            this._forwardAction,
+            this._backwardAction
+        );
+    }
+
+    _startSystemSwitcher(_display, _window, _event, binding) {
+        const [forwardAction, backwardAction] =
+            SYSTEM_ACTIONS.get(binding.get_name());
+        this._showSwitcher(
+            binding.is_reversed(),
+            binding,
+            forwardAction,
+            backwardAction
+        );
+    }
+
+    _showSwitcher(
+        backward,
+        binding,
+        forwardAction,
+        backwardAction
+    ) {
         this._closePopup();
 
         const popup = new GridAltTabPopup(
             this._getSwitcherWindows(),
             this._settings.get_int('grid-alt-tab-max-card-size'),
-            this._forwardAction,
-            this._backwardAction
+            forwardAction,
+            backwardAction
         );
         this._popup = popup;
         popup.connect('destroy', () => {

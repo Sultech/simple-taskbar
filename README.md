@@ -241,10 +241,12 @@ The Eleven-style Start Menu is enabled by default and includes:
   default and can be disabled.
 
 Start Menu keyboard bindings are grouped in their own **Keyboard Shortcuts**
-section in the extension settings. Enabled Simple Taskbar shortcuts take
-priority over matching GNOME shortcuts, remember each displaced assignment and
-restore it when the owning option or extension is disabled. The custom Start
-Menu shortcut cannot duplicate another enabled Simple Taskbar shortcut.
+section in the extension settings. Grid Alt-Tab and Super+Tab replace GNOME’s
+window-switcher handlers only while their owning options are enabled, without
+changing GNOME’s saved shortcuts. Super+E and custom Start Menu shortcuts must
+be unassigned elsewhere. The custom Start Menu shortcut cannot duplicate
+another enabled Simple Taskbar shortcut. Bare Super uses Mutter’s dedicated
+overlay key and restores its previous value when disabled.
 
 The bottom hot edge is enabled by default, providing another quick way to use
 Overview after its Super shortcut has moved. Its ripple animation is optional

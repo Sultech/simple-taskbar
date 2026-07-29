@@ -16,6 +16,7 @@ import {FolderMenuController} from './folderMenuController.js';
 import {FavoritesIntegration} from './favoritesIntegration.js';
 import {GridAltTabController} from './gridAltTabController.js';
 import {HotEdgeController} from './hotEdgeController.js';
+import {restoreOverlayKey} from './keybindingRecovery.js';
 import {PanelController} from './panelController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
 import {MultiMonitorController} from './multiMonitorController.js';
@@ -24,6 +25,9 @@ import {
     QuickSettingsPowerController,
 } from './quickSettingsPowerController.js';
 import {StartButtonController} from './startButtonController.js';
+import {
+    SwitcherKeybindingRouter,
+} from './switcherKeybindingRouter.js';
 import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
 import {VolumeMixerController} from './volumeMixerController.js';
@@ -39,6 +43,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
         this._settings = this.getSettings();
+        restoreOverlayKey(this._settings);
+        this._switcherKeybindings = new SwitcherKeybindingRouter();
         this._extensionConflictController =
             new ExtensionConflictController(this._settings);
         this._extensionConflictController.enable();
@@ -95,6 +101,7 @@ export default class SimpleTaskbarExtension extends Extension {
             previewController: this._windowPreviews,
             openPreferences: () => this.openPreferences(),
             toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
+            switcherKeybindings: this._switcherKeybindings,
         });
 
         this._createTaskbarActors();
@@ -152,7 +159,10 @@ export default class SimpleTaskbarExtension extends Extension {
         });
         this._hotEdgeController.enable();
         this._gridAltTabController =
-            new GridAltTabController(this._settings);
+            new GridAltTabController(
+                this._settings,
+                this._switcherKeybindings
+            );
         this._gridAltTabController.enable();
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
@@ -190,6 +200,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._favoritesIntegration = null;
         this._startButtonController.destroy();
         this._startButtonController = null;
+        this._switcherKeybindings.destroy();
+        this._switcherKeybindings = null;
         this._windowController.destroy();
         this._taskbarController.destroy();
         this._windowPreviews.destroy();

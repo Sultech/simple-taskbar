@@ -15,7 +15,7 @@ import {
     getStartIconDisplayName,
     StartIconChooserDialog,
 } from './prefs/startIconChooser.js';
-import {normalizeAccelerator} from './systemKeybindingClaim.js';
+import {normalizeAccelerator} from './keybindingUtils.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
@@ -1385,11 +1385,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const resetSettings = this.getSettings();
             resetSettings.delay();
             for (const key of resetSettings.settings_schema.list_keys()) {
-                if (key === 'grid-alt-tab-displaced-bindings' ||
-                    key === 'start-menu-custom-displaced-bindings' ||
-                    key === 'start-menu-displaced-switch-applications' ||
-                    key === 'start-menu-displaced-overlay-key' ||
-                    key === 'super-e-file-manager-displaced-bindings' ||
+                if (key === 'start-menu-displaced-overlay-key' ||
                     key === 'start-menu-pinned-apps') {
                     continue;
                 }

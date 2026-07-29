@@ -33,6 +33,8 @@ gnome-extensions pack \
     --extra-source=gridAltTabController.js \
     --extra-source=gridAltTabPopup.js \
     --extra-source=hotEdgeController.js \
+    --extra-source=keybindingRecovery.js \
+    --extra-source=keybindingUtils.js \
     --extra-source=overviewIntegration.js \
     --extra-source=multiMonitorController.js \
     --extra-source=notificationBannerController.js \
@@ -46,7 +48,7 @@ gnome-extensions pack \
     --extra-source=startMenuKeybindings.js \
     --extra-source=startMenuPinnedDragController.js \
     --extra-source=startMenuSearchController.js \
-    --extra-source=systemKeybindingClaim.js \
+    --extra-source=switcherKeybindingRouter.js \
     --extra-source=taskbarAppMenu.js \
     --extra-source=taskbarController.js \
     --extra-source=taskbarLayout.js \

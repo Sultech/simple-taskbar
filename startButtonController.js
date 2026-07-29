@@ -25,6 +25,7 @@ export class StartButtonController {
         openPreferences,
         manageKeybindings = true,
         toggleFromShortcut = null,
+        switcherKeybindings = null,
     }) {
         this._extensionDir = extensionDir;
         this._settings = settings;
@@ -91,7 +92,8 @@ export class StartButtonController {
                 settings,
                 () => this._toggleApplicationsFromShortcut(),
                 () => this._toggleOverviewFromShortcut(),
-                () => this._openFileManager()
+                () => this._openFileManager(),
+                switcherKeybindings
             )
             : null;
         this.applyAppearance(iconSize, settings.get_int('start-button-padding'));
