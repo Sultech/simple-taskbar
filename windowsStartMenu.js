@@ -18,7 +18,11 @@ import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+import {
+    panelArrowSide,
+    panelIsTop,
+    syncMenuArrowSide,
+} from './panelPosition.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
@@ -405,20 +409,30 @@ export class WindowsStartMenu {
             this._settings.get_boolean('start-menu-monitor-centered') &&
             this._startButtonIsCentered();
         const monitor = this._getSourceMonitor();
-        const sourceActor = centerOnMonitor && monitor
+        const fixedPanelPosition = monitor &&
+            this._settings.get_boolean('panel-autohide-enabled');
+        const useDummySource =
+            Boolean(monitor && (centerOnMonitor || fixedPanelPosition));
+        const sourceActor = useDummySource
             ? Main.layoutManager.dummyCursor
             : this._sourceActor;
 
-        if (centerOnMonitor && monitor) {
-            const [, sourceY] =
+        if (useDummySource) {
+            const [actorX] =
                 this._sourceActor.get_transformed_position();
-            const [, sourceHeight] =
+            const [actorWidth, actorHeight] =
                 this._sourceActor.get_transformed_size();
+            const sourceX = centerOnMonitor
+                ? monitor.x + monitor.width / 2
+                : actorX;
+            const sourceY = panelIsTop(this._settings)
+                ? monitor.y
+                : monitor.y + monitor.height - actorHeight;
             Main.layoutManager.setDummyCursorGeometry(
-                Math.round(monitor.x + monitor.width / 2),
+                Math.round(sourceX),
                 Math.round(sourceY),
-                1,
-                Math.max(1, Math.round(sourceHeight))
+                centerOnMonitor ? 1 : Math.max(1, Math.round(actorWidth)),
+                Math.max(1, Math.round(actorHeight))
             );
         }
 
@@ -1852,10 +1866,7 @@ export class WindowsStartMenu {
         this._resolveThemeNodes(this._menu.actor);
         this._menu.actor.get_preferred_size();
         this._root.get_preferred_size();
-        this._menu._boxPointer.setPosition(
-            this._sourceActor,
-            this._menu._arrowAlignment
-        );
+        this._syncPositionSource();
     }
 
     _resolveThemeNodes(actor) {
