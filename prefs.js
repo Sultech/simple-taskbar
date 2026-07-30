@@ -872,6 +872,29 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const profilePictureSwitch = new Adw.SwitchRow({
+            title: _('Show Profile Picture'),
+            subtitle: _('Use your account picture in the Start Menu'),
+            active: window._settings.get_boolean(
+                'start-menu-show-profile-picture'
+            ),
+        });
+        startMenuGroup.add(profilePictureSwitch);
+        window._settings.bind(
+            'start-menu-show-profile-picture',
+            profilePictureSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateProfilePictureSwitch = () => {
+            profilePictureSwitch.sensitive = windowsStartMenuSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateProfilePictureSwitch
+        );
+        updateProfilePictureSwitch();
+
         const powerOptionsSwitch = new Adw.SwitchRow({
             title: _('Power Options in Start Menu'),
             subtitle: _(

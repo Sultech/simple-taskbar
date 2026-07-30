@@ -277,6 +277,11 @@ export class StartButtonController {
         );
         this._connect(
             this._settings,
+            'changed::start-menu-show-profile-picture',
+            () => this._windowsStartMenu.syncUserAvatar()
+        );
+        this._connect(
+            this._settings,
             'changed::start-menu-open-all-apps',
             () => this._windowsStartMenu.refreshDefaultView()
         );

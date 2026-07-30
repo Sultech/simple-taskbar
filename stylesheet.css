@@ -766,6 +766,10 @@
     spacing: 11px;
 }
 
+.simple-taskbar-windows-start-user-avatar {
+    border-radius: 999px;
+}
+
 .simple-taskbar-windows-start-character-icon {
     font-size: 24px;
 }

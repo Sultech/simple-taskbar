@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import AccountsService from 'gi://AccountsService';
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
@@ -15,6 +16,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
+import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
@@ -144,6 +146,8 @@ export class WindowsStartMenu {
         this._appActionCloseIdleId = 0;
         this._appTooltipTimeoutId = 0;
         this._appTooltipSource = null;
+        this._userAvatar = null;
+        this._defaultUserIcon = null;
         this._menu = new PopupMenu.PopupMenu(
             sourceActor,
             0.5,
@@ -521,6 +525,8 @@ export class WindowsStartMenu {
         this._destroyPowerMenu();
         this._menu.destroy();
         this._menu = null;
+        this._userAvatar = null;
+        this._defaultUserIcon = null;
         this._appTooltip.destroy();
         this._appTooltip = null;
         this._categorySidebar = null;
@@ -696,10 +702,26 @@ export class WindowsStartMenu {
             style_class: 'simple-taskbar-windows-start-user-content',
             x_expand: true,
         });
-        userBox.add_child(new St.Icon({
+        this._defaultUserIcon = new St.Icon({
             icon_name: 'avatar-default-symbolic',
             icon_size: 28,
-        }));
+        });
+        const user = AccountsService.UserManager
+            .get_default()
+            .get_user(GLib.get_user_name());
+        this._userAvatar = new UserWidget.Avatar(user, {
+            styleClass: 'simple-taskbar-windows-start-user-avatar',
+            iconSize: 28,
+        });
+        user.connectObject(
+            'notify::is-loaded', () => this._userAvatar.update(),
+            'changed', () => this._userAvatar.update(),
+            this._userAvatar
+        );
+        this._userAvatar.update();
+        userBox.add_child(this._defaultUserIcon);
+        userBox.add_child(this._userAvatar);
+        this.syncUserAvatar();
         userBox.add_child(new St.Label({
             text: userName,
             y_align: Clutter.ActorAlign.CENTER,
@@ -752,6 +774,14 @@ export class WindowsStartMenu {
         this._powerButton.visible = enabled;
         if (!enabled)
             this._destroyPowerMenu();
+    }
+
+    syncUserAvatar() {
+        const showProfilePicture = this._settings.get_boolean(
+            'start-menu-show-profile-picture'
+        );
+        this._userAvatar.visible = showProfilePicture;
+        this._defaultUserIcon.visible = !showProfilePicture;
     }
 
     _togglePowerMenu() {
