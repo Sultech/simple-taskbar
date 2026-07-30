@@ -54,35 +54,74 @@ function getCardWidth(aspect, previewHeight) {
 }
 
 function buildRows(itemWidths, rowCount) {
-    const rows = Array.from({length: rowCount}, () => []);
-    const rowWidths = new Array(rowCount).fill(0);
-    const maximumRowSize = Math.ceil(itemWidths.length / rowCount);
-    const indices = itemWidths
-        .map((_width, index) => index)
-        .sort((a, b) => itemWidths[b] - itemWidths[a] || a - b);
+    const minimumRowSize = Math.floor(
+        itemWidths.length / rowCount
+    );
+    const maximumRowSize = Math.ceil(
+        itemWidths.length / rowCount
+    );
+    const prefixWidths = [0];
+    for (const width of itemWidths)
+        prefixWidths.push(prefixWidths.at(-1) + width);
+    const memo = new Map();
 
-    for (const index of indices) {
-        let targetRow = -1;
-        for (let row = 0; row < rows.length; row++) {
-            if (rows[row].length >= maximumRowSize)
-                continue;
-            if (targetRow < 0 ||
-                rowWidths[row] < rowWidths[targetRow] ||
-                (rowWidths[row] === rowWidths[targetRow] &&
-                    rows[row].length < rows[targetRow].length)) {
-                targetRow = row;
-            }
+    function partition(start, rowIndex) {
+        if (rowIndex === rowCount) {
+            return start === itemWidths.length
+                ? {maximumWidth: 0, rows: []}
+                : null;
         }
 
-        if (rows[targetRow].length > 0)
-            rowWidths[targetRow] += CARD_SPACING;
-        rows[targetRow].push(index);
-        rowWidths[targetRow] += itemWidths[index];
+        const key = `${start}:${rowIndex}`;
+        if (memo.has(key))
+            return memo.get(key);
+
+        const remainingRows = rowCount - rowIndex - 1;
+        let best = null;
+        for (let size = maximumRowSize;
+            size >= minimumRowSize;
+            size--) {
+            const remainingItems =
+                itemWidths.length - start - size;
+            if (remainingItems <
+                    remainingRows * minimumRowSize ||
+                remainingItems >
+                    remainingRows * maximumRowSize) {
+                continue;
+            }
+
+            const next = partition(start + size, rowIndex + 1);
+            if (!next)
+                continue;
+
+            const width =
+                prefixWidths[start + size] -
+                prefixWidths[start] +
+                CARD_SPACING * Math.max(0, size - 1);
+            const maximumWidth = Math.max(
+                width,
+                next.maximumWidth
+            );
+            if (best && maximumWidth >= best.maximumWidth)
+                continue;
+
+            best = {
+                maximumWidth,
+                rows: [
+                    Array.from(
+                        {length: size},
+                        (_item, index) => start + index
+                    ),
+                    ...next.rows,
+                ],
+            };
+        }
+
+        memo.set(key, best);
+        return best;
     }
-    for (const row of rows)
-        row.sort((a, b) => a - b);
-    rows.sort((a, b) => a[0] - b[0]);
-    return rows;
+
+    return partition(0, 0).rows;
 }
 
 function getRowWidth(row, aspects, previewHeight) {
