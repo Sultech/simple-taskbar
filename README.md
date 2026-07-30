@@ -135,11 +135,16 @@ and activates the selected window when Alt is released.
 
 All workspaces are included by default. Enable **Isolate Workspaces** on the
 **Window Switching** settings page to show windows from only the current
-workspace. **Show on Primary Monitor** keeps the switcher on the primary
-display, while **Isolate Monitors** limits its window list to the monitor where
-the switcher appears. **Maximum Card Size** limits how tall previews can grow
-while the grid continues to shrink them automatically as more windows are
-opened.
+workspace. **Isolate Monitors** limits the window list to the monitor where
+the switcher appears, while **Show on Primary Monitor** always places it on the
+primary display. **Maximum Card Size** limits how tall previews can grow while
+the grid continues to shrink them automatically as more windows are opened.
+
+<p align="center">
+  <img src="docs/images/settings-window-switching-20260730.png" alt="Grid Alt-Tab controls on the Window Switching settings page" width="100%">
+</p>
+
+<p align="center"><sub>Grid Alt-Tab size, workspace and monitor controls.</sub></p>
 
 ## Panel customization
 
@@ -192,16 +197,16 @@ extension settings to use a light taskbar in that situation.
 <p align="center"><sub>Adjust individual application volume from Quick Settings.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-appearance-20260725.png" alt="Application icon and panel appearance settings" width="100%">
+  <img src="docs/images/settings-taskbar-20260730.png" alt="General, application icon and panel appearance settings with advanced controls shown" width="100%">
 </p>
 
-<p align="center"><sub>Application icon, panel mode and appearance controls.</sub></p>
+<p align="center"><sub>General, application icon and panel appearance controls with Advanced Settings enabled.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-behaviour-20260725.png" alt="Taskbar behaviour and panel item settings" width="100%">
+  <img src="docs/images/settings-taskbar-items-20260730.png" alt="Taskbar behavior, panel item and reset settings with advanced controls shown" width="100%">
 </p>
 
-<p align="center"><sub>Behaviour, panel item and reset controls.</sub></p>
+<p align="center"><sub>Taskbar behavior, panel item and reset controls with Advanced Settings enabled.</sub></p>
 
 ### Optional folder menu
 
@@ -276,10 +281,10 @@ settings page.
 <p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-start-menu-20260725.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
+  <img src="docs/images/settings-start-menu-20260730.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings with advanced controls shown" width="100%">
 </p>
 
-<p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls.</sub></p>
+<p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls with Advanced Settings enabled.</sub></p>
 
 ## Install
 
