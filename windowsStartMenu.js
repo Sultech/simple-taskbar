@@ -1639,7 +1639,7 @@ export class WindowsStartMenu {
 
     _launchApp(app) {
         this.close();
-        app.activate();
+        app.open_new_window(-1);
     }
 
     _activateSearchResult(result) {
