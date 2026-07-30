@@ -25,12 +25,6 @@ const POPUP_WIDTH_RATIO = 0.86;
 const POPUP_HEIGHT_RATIO = 0.74;
 const SCROLLBAR_RESERVE = 14;
 
-function getSwitcherMonitor() {
-    return Main.layoutManager.focusMonitor ??
-        Main.layoutManager.currentMonitor ??
-        Main.layoutManager.primaryMonitor;
-}
-
 function getWindowAspect(window) {
     const source = window.get_compositor_private();
     if (!source)
@@ -583,15 +577,18 @@ export const GridAltTabPopup = GObject.registerClass(
 class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
     _init(
         windows,
+        monitor,
         maxPreviewHeight,
         forwardAction,
-        backwardAction
+        backwardAction,
+        focusedWindowFirst
     ) {
         super._init();
 
-        this._monitor = getSwitcherMonitor();
+        this._monitor = monitor;
         this._forwardAction = forwardAction;
         this._backwardAction = backwardAction;
+        this._focusedWindowFirst = focusedWindowFirst;
         this._switcherList = new GridAltTabList(
             windows,
             this._monitor,
@@ -628,13 +625,15 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
         this._monitor = null;
         this._forwardAction = Meta.KeyBindingAction.NONE;
         this._backwardAction = Meta.KeyBindingAction.NONE;
+        this._focusedWindowFirst = false;
         super.destroy();
     }
 
     _initialSelection(backward) {
         if (backward)
             this._select(this._items.length - 1);
-        else if (this._items.length > 1)
+        else if (this._focusedWindowFirst &&
+            this._items.length > 1)
             this._select(1);
         else
             this._select(0);

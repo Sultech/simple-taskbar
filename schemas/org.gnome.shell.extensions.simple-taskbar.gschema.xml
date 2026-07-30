@@ -198,6 +198,14 @@
       <default>false</default>
       <summary>Show Grid Alt-Tab windows from the current workspace only</summary>
     </key>
+    <key name="grid-alt-tab-show-on-primary-monitor" type="b">
+      <default>false</default>
+      <summary>Always display Grid Alt-Tab on the primary monitor</summary>
+    </key>
+    <key name="grid-alt-tab-isolate-monitors" type="b">
+      <default>false</default>
+      <summary>Show Grid Alt-Tab windows from its display monitor only</summary>
+    </key>
     <key name="grid-alt-tab-max-card-size" type="i">
       <range min="120" max="500"/>
       <default>250</default>

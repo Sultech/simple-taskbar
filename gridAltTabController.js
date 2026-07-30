@@ -146,11 +146,15 @@ export class GridAltTabController {
     ) {
         this._closePopup();
 
+        const monitor = this._getSwitcherMonitor();
+        const windows = this._getSwitcherWindows(monitor);
         const popup = new GridAltTabPopup(
-            this._getSwitcherWindows(),
+            windows,
+            monitor,
             this._settings.get_int('grid-alt-tab-max-card-size'),
             forwardAction,
-            backwardAction
+            backwardAction,
+            windows[0] === this._getFocusedWindow()
         );
         this._popup = popup;
         popup.connect('destroy', () => {
@@ -167,7 +171,19 @@ export class GridAltTabController {
         }
     }
 
-    _getSwitcherWindows() {
+    _getSwitcherMonitor() {
+        if (this._settings.get_boolean(
+            'grid-alt-tab-show-on-primary-monitor'
+        )) {
+            return Main.layoutManager.primaryMonitor;
+        }
+
+        return Main.layoutManager.focusMonitor ??
+            Main.layoutManager.currentMonitor ??
+            Main.layoutManager.primaryMonitor;
+    }
+
+    _getSwitcherWindows(monitor) {
         const workspace = this._settings.get_boolean(
             'grid-alt-tab-isolate-workspaces'
         )
@@ -177,6 +193,9 @@ export class GridAltTabController {
             Meta.TabList.NORMAL_ALL,
             workspace
         );
+        const isolateMonitors = this._settings.get_boolean(
+            'grid-alt-tab-isolate-monitors'
+        );
         const windows = tabList
             .map(window =>
                 window.is_attached_dialog()
@@ -184,6 +203,8 @@ export class GridAltTabController {
                     : window)
             .filter((window, index, allWindows) =>
                 !window.skip_taskbar &&
+                (!isolateMonitors ||
+                    window.get_monitor() === monitor.index) &&
                 allWindows.indexOf(window) === index);
         const currentWindows = new Set(windows);
         const orderIsCurrent =
@@ -204,6 +225,13 @@ export class GridAltTabController {
 
         this._windowOrder = windows;
         return [...this._windowOrder];
+    }
+
+    _getFocusedWindow() {
+        const window = global.display.focus_window;
+        return window?.is_attached_dialog()
+            ? window.get_transient_for()
+            : window;
     }
 
     _closePopup() {

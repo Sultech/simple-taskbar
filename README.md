@@ -135,8 +135,11 @@ and activates the selected window when Alt is released.
 
 All workspaces are included by default. Enable **Isolate Workspaces** on the
 **Window Switching** settings page to show windows from only the current
-workspace. **Maximum Card Size** limits how tall previews can grow while the
-grid continues to shrink them automatically as more windows are opened.
+workspace. **Show on Primary Monitor** keeps the switcher on the primary
+display, while **Isolate Monitors** limits its window list to the monitor where
+the switcher appears. **Maximum Card Size** limits how tall previews can grow
+while the grid continues to shrink them automatically as more windows are
+opened.
 
 ## Panel customization
 

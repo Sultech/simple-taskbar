@@ -101,10 +101,44 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        const gridAltTabMonitorSwitch = new Adw.SwitchRow({
+            title: _('Isolate Monitors'),
+            subtitle: _(
+                'Show only windows from the monitor displaying the switcher'
+            ),
+            active: window._settings.get_boolean(
+                'grid-alt-tab-isolate-monitors'
+            ),
+        });
+        gridAltTabGroup.add(gridAltTabMonitorSwitch);
+        window._settings.bind(
+            'grid-alt-tab-isolate-monitors',
+            gridAltTabMonitorSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const gridAltTabPrimaryMonitorSwitch = new Adw.SwitchRow({
+            title: _('Show on Primary Monitor'),
+            subtitle: _(
+                'Always display the switcher on the primary monitor'
+            ),
+            active: window._settings.get_boolean(
+                'grid-alt-tab-show-on-primary-monitor'
+            ),
+        });
+        gridAltTabGroup.add(gridAltTabPrimaryMonitorSwitch);
+        window._settings.bind(
+            'grid-alt-tab-show-on-primary-monitor',
+            gridAltTabPrimaryMonitorSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
         const updateGridAltTabOptionSensitivity = () => {
             const enabled = gridAltTabSwitch.active;
             gridAltTabCardSizeRow.sensitive = enabled;
             gridAltTabWorkspaceSwitch.sensitive = enabled;
+            gridAltTabPrimaryMonitorSwitch.sensitive = enabled;
+            gridAltTabMonitorSwitch.sensitive = enabled;
         };
         gridAltTabSwitch.connect(
             'notify::active',
