@@ -595,6 +595,8 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
     _initialSelection(backward) {
         if (backward)
             this._select(this._items.length - 1);
+        else if (this._items.length > 1)
+            this._select(1);
         else
             this._select(0);
     }

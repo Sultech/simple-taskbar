@@ -191,11 +191,17 @@ export class GridAltTabController {
             this._windowOrder.every(window =>
                 currentWindows.has(window));
 
-        if (orderIsCurrent)
+        if (orderIsCurrent) {
+            const focusedWindow = windows[0];
+            const focusedIndex =
+                this._windowOrder.indexOf(focusedWindow);
+            if (focusedIndex > 0) {
+                this._windowOrder.splice(focusedIndex, 1);
+                this._windowOrder.unshift(focusedWindow);
+            }
             return [...this._windowOrder];
+        }
 
-        if (windows.length > 1)
-            windows.push(windows.shift());
         this._windowOrder = windows;
         return [...this._windowOrder];
     }
