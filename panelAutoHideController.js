@@ -83,6 +83,9 @@ export class PanelAutoHideController {
         this._connect(Main.overview, 'hidden', () => {
             this._resumeAfterOverview();
         });
+        this._connect(global.display, 'in-fullscreen-changed', () => {
+            this._fullscreenChanged();
+        });
 
         this._overviewSuspended = Main.overview.visibleTarget;
         this._captureStrutTracking();
@@ -261,6 +264,17 @@ export class PanelAutoHideController {
             !this._originalTrackFullscreen ||
             !(global.window_group.visible && monitor?.inFullscreen);
         this._syncUnredirect();
+    }
+
+    _fullscreenChanged() {
+        if (!this._fullscreenVisibilityHeld ||
+            this._getMonitor()?.inFullscreen) {
+            return;
+        }
+
+        this._restoreFullscreenVisibility();
+        if (this._enabled() && !this._pointerIsInsidePanel())
+            this._scheduleHide();
     }
 
     _startFullscreenWatch() {
