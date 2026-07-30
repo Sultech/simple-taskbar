@@ -384,11 +384,11 @@ class SecondaryTaskbarPanel {
         }
         this._applyLayout();
         this._syncTheme();
-        this._position();
         Main.layoutManager.addChrome(this.actor, {
             affectsStruts: true,
             trackFullscreen: true,
         });
+        this._position();
         this._startButtonController.enable();
         this._taskbarController.enable();
         this._interactionController = new PanelInteractionController({
