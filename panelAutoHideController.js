@@ -80,6 +80,9 @@ export class PanelAutoHideController {
         this._connect(Main.overview, 'showing', () => {
             this._suspendForOverview();
         });
+        this._connect(Main.overview, 'hiding', () => {
+            this._restoreFullscreenVisibility();
+        });
         this._connect(Main.overview, 'hidden', () => {
             this._resumeAfterOverview();
         });
