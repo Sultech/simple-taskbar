@@ -161,6 +161,10 @@
       <default>false</default>
       <summary>Use a GNOME-style panel without taskbar applications</summary>
     </key>
+    <key name="advanced-settings-enabled" type="b">
+      <default>false</default>
+      <summary>Show less commonly used preferences</summary>
+    </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>

@@ -186,7 +186,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         showRequestedPage();
 
         const panelModeGroup = new Adw.PreferencesGroup({
-            title: _('Panel Mode'),
+            title: _('General'),
         });
         page.add(panelModeGroup);
 
@@ -196,6 +196,23 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             active: window._settings.get_boolean('default-gnome-panel'),
         });
         panelModeGroup.add(defaultGnomePanelSwitch);
+
+        const advancedSettingsSwitch = new Adw.SwitchRow({
+            title: _('Show Advanced Settings'),
+            subtitle: _(
+                'Show less commonly used Taskbar and Start Menu options'
+            ),
+            active: window._settings.get_boolean(
+                'advanced-settings-enabled'
+            ),
+        });
+        panelModeGroup.add(advancedSettingsSwitch);
+        window._settings.bind(
+            'advanced-settings-enabled',
+            advancedSettingsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
 
         const appearanceGroup = new Adw.PreferencesGroup({
             title: _('Application Icons'),
@@ -217,15 +234,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             lower: 0,
             upper: 16,
         });
-        this._addComboRow(appearanceGroup, window._settings, {
-            key: 'running-indicator-style',
-            title: _('Running Indicator Style'),
-            subtitle: _('Choose the shape of indicators beneath running applications'),
-            choices: [
-                {value: 'rounded', label: _('Rounded')},
-                {value: 'straight', label: _('Straight')},
-            ],
-        });
+        const indicatorStyleRow = this._addComboRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'running-indicator-style',
+                title: _('Running Indicator Style'),
+                subtitle: _(
+                    'Choose the shape of indicators beneath running applications'
+                ),
+                choices: [
+                    {value: 'rounded', label: _('Rounded')},
+                    {value: 'straight', label: _('Straight')},
+                ],
+            }
+        );
         const customIndicatorColorsSwitch = new Adw.SwitchRow({
             title: _('Custom Indicator Colors'),
             subtitle: _('Choose colors for running application indicators'),
@@ -972,6 +995,35 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updateRecommendedAppsSwitch();
 
+        const advancedRows = [
+            indicatorStyleRow,
+            customIndicatorColorsSwitch,
+            focusedIndicatorColorRow,
+            unfocusedIndicatorColorRow,
+            hidePinnedAppsSwitch,
+            combineAppButtonsRow,
+            hideAppLabelsSwitch,
+            isolateWorkspacesSwitch,
+            isolateMonitorsSwitch,
+            panelAutoHideSwitch,
+            hotEdgeAnimationSwitch,
+            panelMenuClickOnlySwitch,
+            notificationBannerSwitch,
+            profilePictureSwitch,
+            powerOptionsSwitch,
+            openAllAppsSwitch,
+            recommendedAppsSwitch,
+        ];
+        const updateAdvancedSettingsVisibility = () => {
+            for (const row of advancedRows)
+                row.visible = advancedSettingsSwitch.active;
+        };
+        advancedSettingsSwitch.connect(
+            'notify::active',
+            updateAdvancedSettingsVisibility
+        );
+        updateAdvancedSettingsVisibility();
+
         const appCategoriesSwitch = new Adw.SwitchRow({
             title: _('Organize All Apps into Categories'),
             subtitle: _('Browse applications by category in the Start menu'),
@@ -1273,11 +1325,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             }
         );
         const updateActivitiesRightPlacementRow = () => {
+            const position = window._settings.get_string(
+                'activities-button-position'
+            );
+            activitiesRightPlacementRow.visible = position === 'right';
             activitiesRightPlacementRow.sensitive =
-                activitiesButtonSwitch.active &&
-                window._settings.get_string(
-                    'activities-button-position'
-                ) === 'right';
+                activitiesButtonSwitch.active;
         };
         activitiesButtonSwitch.connect(
             'notify::active',
@@ -1300,18 +1353,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Quick Settings, volume, network, and power'),
             choices: panelPositions,
         });
-        const volumeMixerSwitch = new Adw.SwitchRow({
-            title: _('Application Volume Mixer'),
-            subtitle: _('Add per-application volume controls to Quick Settings'),
-            active: window._settings.get_boolean('volume-mixer-enabled'),
-        });
-        panelGroup.add(volumeMixerSwitch);
-        window._settings.bind(
-            'volume-mixer-enabled',
-            volumeMixerSwitch,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        );
         const showDesktopSwitch = new Adw.SwitchRow({
             title: _('Show Desktop Button'),
             subtitle: _('Display a button that minimizes or restores all windows'),
@@ -1343,6 +1384,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         showDesktopSwitch.connect('notify::active', widget => {
             showDesktopPositionRow.sensitive = widget.active;
         });
+
+        const volumeMixerSwitch = new Adw.SwitchRow({
+            title: _('Application Volume Mixer'),
+            subtitle: _('Add per-application volume controls to Quick Settings'),
+            active: window._settings.get_boolean('volume-mixer-enabled'),
+        });
+        panelGroup.add(volumeMixerSwitch);
+        window._settings.bind(
+            'volume-mixer-enabled',
+            volumeMixerSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
 
         const folderMenuSwitch = new Adw.SwitchRow({
             title: _('Show Folder Menu'),

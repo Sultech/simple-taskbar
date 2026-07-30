@@ -143,6 +143,11 @@ opened.
 
 ## Panel customization
 
+Less commonly used controls are hidden by default. Enable **Show Advanced
+Settings** at the top of the **Taskbar** settings page to show them in both
+the Taskbar and Start Menu settings. Hiding the controls does not reset their
+values.
+
 The settings provide control over:
 
 - Top or bottom panel placement.
