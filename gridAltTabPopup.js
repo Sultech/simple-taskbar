@@ -26,9 +26,9 @@ const POPUP_HEIGHT_RATIO = 0.74;
 const SCROLLBAR_RESERVE = 14;
 
 function getSwitcherMonitor() {
-    return Main.layoutManager.focusMonitor ??
+    return Main.layoutManager.primaryMonitor ??
         Main.layoutManager.currentMonitor ??
-        Main.layoutManager.primaryMonitor;
+        Main.layoutManager.focusMonitor;
 }
 
 function getWindowAspect(window) {
