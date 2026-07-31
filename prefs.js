@@ -459,13 +459,13 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('panel-border-light-enabled', false);
             } else {
                 settings.set_int('icon-size', 32);
-                settings.set_int('icon-spacing', 4);
+                settings.set_int('icon-spacing', 3);
                 settings.set_int('panel-height', 49);
                 settings.set_int('panel-button-padding', -1);
                 settings.set_string('panel-position', 'bottom');
                 settings.set_string('app-alignment', 'center');
                 settings.set_string('start-button-position', 'center');
-                settings.set_int('start-button-padding', 4);
+                settings.set_int('start-button-padding', 2);
                 settings.set_string('clock-position', 'right');
                 settings.set_string('system-menu-position', 'right');
                 settings.set_string('folder-menu-position', 'right');

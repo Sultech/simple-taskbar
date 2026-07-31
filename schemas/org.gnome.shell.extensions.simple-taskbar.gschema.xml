@@ -40,7 +40,7 @@
     </key>
     <key name="icon-spacing" type="i">
       <range min="0" max="16"/>
-      <default>4</default>
+      <default>3</default>
       <summary>Space between application buttons</summary>
     </key>
     <key name="running-indicator-style" type="s">
@@ -259,7 +259,7 @@
     </key>
     <key name="start-button-padding" type="i">
       <range min="0" max="20"/>
-      <default>4</default>
+      <default>2</default>
       <summary>Horizontal padding around the Start button icon</summary>
     </key>
     <key name="start-button-custom-icon" type="s">

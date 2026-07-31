@@ -70,9 +70,8 @@ export class StartButtonController {
         this._hover = new St.Widget({
             style_class: 'simple-taskbar-start-hover',
             reactive: false,
-            x_align: Clutter.ActorAlign.FILL,
+            x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.FILL,
-            x_expand: true,
             y_expand: true,
         });
         this._content.add_child(this._hover);
@@ -136,6 +135,7 @@ export class StartButtonController {
 
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
+        this._hover.set_width(iconSize);
         const width = iconSize + padding * 2;
         this._content.set_width(width);
         this.actor.set_width(width);

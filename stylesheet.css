@@ -286,6 +286,11 @@
     color: #f3f3f3;
 }
 
+#panel.simple-taskbar-panel .simple-taskbar-start {
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
 #panel.simple-taskbar-panel .simple-taskbar-start:focus,
 #panel.simple-taskbar-panel .simple-taskbar-start:hover,
 #panel.simple-taskbar-panel .simple-taskbar-start:active,
