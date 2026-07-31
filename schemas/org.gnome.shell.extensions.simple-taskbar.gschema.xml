@@ -15,6 +15,12 @@
       <default>'bottom'</default>
       <summary>Taskbar screen edge</summary>
     </key>
+    <key name="panel-button-padding" type="i">
+      <range min="-1" max="20"/>
+      <default>-1</default>
+      <summary>Horizontal padding around panel buttons</summary>
+      <description>Use -1 for automatic padding or 0 through 20 for an explicit pixel value</description>
+    </key>
     <key name="panel-autohide-enabled" type="b">
       <default>false</default>
       <summary>Hide the panel until the pointer reaches its screen edge</summary>

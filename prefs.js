@@ -214,6 +214,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        this._addSpinRow(panelModeGroup, window._settings, {
+            key: 'panel-button-padding',
+            title: _('Panel Button Padding'),
+            subtitle: _(
+                'Horizontal space around panel buttons; −1 uses Just Perfection when configured, otherwise 4 px'
+            ),
+            lower: -1,
+            upper: 20,
+        });
+
         const appearanceGroup = new Adw.PreferencesGroup({
             title: _('Application Icons'),
             description: _('Change the size, spacing, and placement of taskbar icons.'),
@@ -426,6 +436,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings.set_boolean('default-gnome-panel', enabled);
             if (enabled) {
                 settings.set_int('panel-height', 32);
+                settings.set_int('panel-button-padding', 12);
                 settings.set_string('panel-position', 'top');
                 settings.set_boolean('activities-button-visible', true);
                 settings.set_string('activities-button-position', 'left');
@@ -441,6 +452,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_int('icon-size', 32);
                 settings.set_int('icon-spacing', 4);
                 settings.set_int('panel-height', 49);
+                settings.set_int('panel-button-padding', -1);
                 settings.set_string('panel-position', 'bottom');
                 settings.set_string('app-alignment', 'center');
                 settings.set_string('start-button-position', 'center');

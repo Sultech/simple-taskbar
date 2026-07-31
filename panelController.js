@@ -11,6 +11,9 @@ import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {PanelAutoHideController} from './panelAutoHideController.js';
+import {
+    PanelButtonPaddingController,
+} from './panelButtonPaddingController.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {
     orderActivitiesInRightPanel,
@@ -34,10 +37,6 @@ const BLUR_MY_SHELL_ACTIVE_CLASS =
     'simple-taskbar-blur-my-shell-active';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
-const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
-    'just-perfection-api-panel-button-padding-size';
-const DEFAULT_BUTTON_PADDING_CLASS =
-    'simple-taskbar-default-panel-button-padding';
 const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
 const BORDER_DISABLED_CLASS =
@@ -98,6 +97,15 @@ export class PanelController {
             getPanelHeight: () => this._panelHeight,
             isBlocked: () => this._isAutoHideBlocked(),
         });
+        this._buttonPaddingController = new PanelButtonPaddingController(
+            settings,
+            Main.panel,
+            [
+                Main.panel._leftBox,
+                Main.panel._centerBox,
+                Main.panel._rightBox,
+            ]
+        );
     }
 
     enable() {
@@ -106,7 +114,7 @@ export class PanelController {
         this._configureAdaptivePanelAllocation();
         this._syncPanelEdgeClass();
         this._syncPanelBorder();
-        this._syncPanelButtonPadding();
+        this._buttonPaddingController.enable();
         this._applyTheme();
         this.applyLayout();
         this._removeDateMenuIndicatorPadding();
@@ -161,6 +169,7 @@ export class PanelController {
         } finally {
             this._applyingLayout = false;
         }
+        this._buttonPaddingController.sync();
     }
 
     _applyLayout() {
@@ -372,6 +381,8 @@ export class PanelController {
 
         this._autoHideController.destroy();
         this._autoHideController = null;
+        this._buttonPaddingController.destroy();
+        this._buttonPaddingController = null;
         this._restoreDateMenuIndicatorPadding();
 
         for (const actor of [
@@ -394,7 +405,6 @@ export class PanelController {
             Main.panel.remove_style_class_name('simple-taskbar-theme-dark');
             Main.panel.remove_style_class_name('simple-taskbar-panel-top');
             Main.panel.remove_style_class_name('simple-taskbar-panel-bottom');
-            Main.panel.remove_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
             Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
             Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
             Main.panel.remove_style_class_name(
@@ -593,11 +603,6 @@ export class PanelController {
                 this._queueTransparencyRepair();
         });
         this._connect(
-            Main.layoutManager.uiGroup,
-            'notify::style-class',
-            () => this._syncPanelButtonPadding()
-        );
-        this._connect(
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
@@ -752,7 +757,6 @@ export class PanelController {
 
                 this.applyLayout();
                 this._syncActivitiesVisibility();
-                this._syncPanelButtonPadding();
                 this._applyTheme();
                 this.position();
                 this._menuPositioner.refresh();
@@ -822,26 +826,6 @@ export class PanelController {
             JUST_PERFECTION_UUID
         );
         return extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
-    }
-
-    _syncPanelButtonPadding() {
-        if (!this._panelWasModified)
-            return;
-
-        const uiStyleClasses =
-            Main.layoutManager.uiGroup.get_style_class_name() ?? '';
-        const externalPaddingActive = uiStyleClasses
-            .split(/\s+/)
-            .some(style => style.startsWith(
-                JUST_PERFECTION_BUTTON_PADDING_PREFIX
-            ));
-        if (externalPaddingActive) {
-            Main.panel.remove_style_class_name(
-                DEFAULT_BUTTON_PADDING_CLASS
-            );
-        } else {
-            Main.panel.add_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
-        }
     }
 
     _withPanelChildAddedSignalsBlocked(callback) {

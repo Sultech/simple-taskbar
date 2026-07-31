@@ -11,6 +11,9 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {FolderMenuController} from './folderMenuController.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
+import {
+    PanelButtonPaddingController,
+} from './panelButtonPaddingController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
 import {
     orderActivitiesInRightPanel,
@@ -355,6 +358,11 @@ class SecondaryTaskbarPanel {
         this._leftBox = this.actor.leftBox;
         this._centerBox = this.actor.centerBox;
         this._rightBox = this.actor.rightBox;
+        this._buttonPaddingController = new PanelButtonPaddingController(
+            settings,
+            this.actor,
+            [this._leftBox, this._centerBox, this._rightBox]
+        );
         this._taskbarController.setAlignmentActor(this._centerBox);
         this._interactionController = null;
         this._autoHideController = null;
@@ -384,6 +392,7 @@ class SecondaryTaskbarPanel {
         }
         this._applyLayout();
         this._syncTheme();
+        this._buttonPaddingController.enable();
         Main.layoutManager.addChrome(this.actor, {
             affectsStruts: true,
             trackFullscreen: true,
@@ -443,6 +452,8 @@ class SecondaryTaskbarPanel {
         this._autoHideController = null;
         this._interactionController?.destroy();
         this._interactionController = null;
+        this._buttonPaddingController.destroy();
+        this._buttonPaddingController = null;
         this._startButtonController.destroy();
         this._startButtonController = null;
         this._windowController.destroy();

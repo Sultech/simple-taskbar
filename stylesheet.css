@@ -243,20 +243,34 @@
     box-shadow: none;
 }
 
-/* Keep panel-item hit targets full height while making their themed hover
- * backgrounds more compact vertically. The clock paints its state on an
- * inner actor, so it needs the same transparent inset there. */
+/* Keep panel-item hit targets full height while scaling their hover inset
+ * with the panel. The clock paints its state on an inner actor, so it needs
+ * the same transparent inset there. */
 #panel.simple-taskbar-panel.simple-taskbar-default-panel-button-padding .panel-button {
-    -natural-hpadding: 2px;
-    -minimum-hpadding: 2px;
+    -natural-hpadding: 4px;
+    -minimum-hpadding: 4px;
 }
 
-#panel.simple-taskbar-panel .panel-button {
-    border-top-width: 6px;
-    border-bottom-width: 6px;
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
+    border-top-width: 3px;
+    border-bottom-width: 3px;
 }
 
-#panel.simple-taskbar-panel .panel-button.clock-display .clock {
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
     border-top-width: 6px;
     border-bottom-width: 6px;
 }
