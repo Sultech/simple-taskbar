@@ -26,6 +26,7 @@ gnome-extensions pack \
     --extra-source=ASSET-CREDITS.md \
     --extra-source=extensionConflictController.js \
     --extra-source=panelButtonPaddingController.js \
+    --extra-source=panelItemOrder.js \
     --extra-source=panelMenuPositioner.js \
     --extra-source=panelPosition.js \
     --extra-source=folderMenuController.js \

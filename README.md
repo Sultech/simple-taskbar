@@ -67,7 +67,9 @@ Dock or Dash to Dock is active, it starts on the desktop instead.
 
 Both modes remain customizable after being enabled. Panel position, height,
 theme, item placement, multi-monitor support and other appearance settings
-continue to work.
+continue to work. Because Default GNOME Panel mode hides taskbar applications
+and Start buttons, their placement controls and ordering arrows are disabled
+until Taskbar mode is restored.
 
 <p align="center">
   <img src="docs/images/gnome-panel-dark.png" alt="Default GNOME Panel mode using its dark theme" width="100%">
@@ -164,9 +166,15 @@ The settings provide control over:
   selected from bundled GNOME and distribution designs or a personal image
   file. By default, the Start button follows the application alignment and
   appears immediately before centered applications.
-- Show or hide the Activities button, place it on the left or right, and choose
-  its position within the right-side system cluster.
-- Left, center or right placement for the clock and Quick Settings.
+- Separate Left, Center and Right lists for Start, Activities, applications,
+  Folder Menu, Quick Settings, clock and Show Desktop.
+- Per-item placement where supported, with Move Up/Move Down restricted to
+  neighbors in the same position list. Show Desktop remains limited to the
+  Left and Right lists.
+- The Icon Alignment and Start Button position controls remain available in
+  their original sections and stay synchronized with their list rows.
+- Visibility toggles for Activities, Show Desktop and Folder Menu above the
+  order list.
 - Light, dark or Shell-following themes.
 - Adjustable transparency and Blur My Shell integration on the primary panel.
 - Separate panel-border controls for the light and dark themes.

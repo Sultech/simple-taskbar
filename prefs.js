@@ -16,6 +16,10 @@ import {
     StartIconChooserDialog,
 } from './prefs/startIconChooser.js';
 import {normalizeAccelerator} from './keybindingUtils.js';
+import {
+    DEFAULT_PANEL_ITEM_ORDER,
+    normalizePanelItemOrder,
+} from './panelItemOrder.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
@@ -442,6 +446,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_string('activities-button-position', 'left');
                 settings.set_string('clock-position', 'center');
                 settings.set_string('system-menu-position', 'right');
+                settings.set_string('folder-menu-position', 'right');
+                settings.set_strv(
+                    'panel-item-order',
+                    DEFAULT_PANEL_ITEM_ORDER
+                );
                 settings.set_boolean('multi-monitor-panels', true);
                 settings.set_boolean('windows-start-menu-enabled', false);
                 settings.set_boolean('gnome-start-button-visible', false);
@@ -459,6 +468,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_int('start-button-padding', 4);
                 settings.set_string('clock-position', 'right');
                 settings.set_string('system-menu-position', 'right');
+                settings.set_string('folder-menu-position', 'right');
+                settings.set_strv(
+                    'panel-item-order',
+                    DEFAULT_PANEL_ITEM_ORDER
+                );
                 settings.set_boolean('activities-button-visible', true);
                 settings.set_string('activities-button-position', 'left');
                 settings.set_boolean('multi-monitor-panels', true);
@@ -806,16 +820,22 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const panelGroup = new Adw.PreferencesGroup({
             title: _('Panel Items'),
-            description: _('Choose where taskbar and system items appear.'),
+            description: _('Choose which optional panel items appear.'),
         });
         page.add(panelGroup);
 
-        const startPositionRow = this._addComboRow(startButtonGroup, window._settings, {
-            key: 'start-button-position',
-            title: _('Start Button'),
-            subtitle: _('Place the Start button at the left edge or in the center'),
-            choices: panelPositions.slice(0, 2),
-        });
+        const startPositionRow = this._addComboRow(
+            startButtonGroup,
+            window._settings,
+            {
+                key: 'start-button-position',
+                title: _('Start Button'),
+                subtitle: _(
+                    'Place the Start button at the left edge or in the center'
+                ),
+                choices: panelPositions.slice(0, 2),
+            }
+        );
 
         const followAppAlignmentSwitch = new Adw.SwitchRow({
             title: _('Follow Application Alignment'),
@@ -832,10 +852,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const updateStartPositionRow = () => {
-            startPositionRow.sensitive = !followAppAlignmentSwitch.active;
+            const defaultPanel = window._settings.get_boolean(
+                'default-gnome-panel'
+            );
+            startPositionRow.sensitive =
+                !defaultPanel && !followAppAlignmentSwitch.active;
+            followAppAlignmentSwitch.sensitive = !defaultPanel;
         };
         followAppAlignmentSwitch.connect(
             'notify::active',
+            updateStartPositionRow
+        );
+        window._settings.connect(
+            'changed::default-gnome-panel',
             updateStartPositionRow
         );
         updateStartPositionRow();
@@ -1146,7 +1175,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             centerStartMenuRow.sensitive =
                 windowsStartMenuSwitch.active && centered;
         };
-        startPositionRow.connect('notify::selected', updateCenterStartMenuRow);
+        window._settings.connect(
+            'changed::start-button-position',
+            updateCenterStartMenuRow
+        );
         followAppAlignmentSwitch.connect(
             'notify::active',
             updateCenterStartMenuRow
@@ -1294,77 +1326,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
-        const activitiesPositionRow = this._addComboRow(
-            panelGroup,
-            window._settings,
-            {
-                key: 'activities-button-position',
-                title: _('Activities Button Position'),
-                choices: panelPositions.filter(
-                    position => position.value !== 'center'
-                ),
-            }
-        );
-        activitiesPositionRow.sensitive = activitiesButtonSwitch.active;
-        activitiesButtonSwitch.connect('notify::active', widget => {
-            activitiesPositionRow.sensitive = widget.active;
-        });
-
-        const activitiesRightPlacementRow = this._addComboRow(
-            panelGroup,
-            window._settings,
-            {
-                key: 'activities-button-right-placement',
-                title: _('Activities Right Placement'),
-                choices: [
-                    {
-                        value: 'first',
-                        label: _('First on Right'),
-                    },
-                    {
-                        value: 'before-system',
-                        label: _('Before System Menu'),
-                    },
-                    {
-                        value: 'after-system',
-                        label: _('After System Menu'),
-                    },
-                    {
-                        value: 'after-clock',
-                        label: _('After Clock'),
-                    },
-                ],
-            }
-        );
-        const updateActivitiesRightPlacementRow = () => {
-            const position = window._settings.get_string(
-                'activities-button-position'
-            );
-            activitiesRightPlacementRow.visible = position === 'right';
-            activitiesRightPlacementRow.sensitive =
-                activitiesButtonSwitch.active;
-        };
-        activitiesButtonSwitch.connect(
-            'notify::active',
-            updateActivitiesRightPlacementRow
-        );
-        window._settings.connect(
-            'changed::activities-button-position',
-            updateActivitiesRightPlacementRow
-        );
-        updateActivitiesRightPlacementRow();
-
-        this._addComboRow(panelGroup, window._settings, {
-            key: 'clock-position',
-            title: _('Clock'),
-            choices: panelPositions,
-        });
-        this._addComboRow(panelGroup, window._settings, {
-            key: 'system-menu-position',
-            title: _('System Menu'),
-            subtitle: _('Quick Settings, volume, network, and power'),
-            choices: panelPositions,
-        });
         const showDesktopSwitch = new Adw.SwitchRow({
             title: _('Show Desktop Button'),
             subtitle: _('Display a button that minimizes or restores all windows'),
@@ -1379,23 +1340,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-
-        const showDesktopPositionRow = this._addComboRow(
-            panelGroup,
-            window._settings,
-            {
-                key: 'show-desktop-button-position',
-                title: _('Show Desktop Button Position'),
-                subtitle: _('Place it next to Start or at the right edge'),
-                choices: panelPositions.filter(
-                    position => position.value !== 'center'
-                ),
-            }
-        );
-        showDesktopPositionRow.sensitive = showDesktopSwitch.active;
-        showDesktopSwitch.connect('notify::active', widget => {
-            showDesktopPositionRow.sensitive = widget.active;
-        });
 
         const volumeMixerSwitch = new Adw.SwitchRow({
             title: _('Application Volume Mixer'),
@@ -1412,7 +1356,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const folderMenuSwitch = new Adw.SwitchRow({
             title: _('Show Folder Menu'),
-            subtitle: _('Place a selected folder on the right of the taskbar'),
+            subtitle: _('Show a selected folder on the taskbar'),
             active: window._settings.get_boolean('folder-menu-enabled'),
         });
         panelGroup.add(folderMenuSwitch);
@@ -1455,6 +1399,230 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         folderMenuSwitch.connect('notify::active', updateFolderMenuRow);
         updateFolderMenuRow();
+
+        const panelOrderGroups = new Map([
+            ['left', new Adw.PreferencesGroup({
+                title: _('Left Items'),
+                description: _(
+                    'Move items only within their current panel position.'
+                ),
+            })],
+            ['center', new Adw.PreferencesGroup({
+                title: _('Center Items'),
+            })],
+            ['right', new Adw.PreferencesGroup({
+                title: _('Right Items'),
+            })],
+        ]);
+        for (const group of panelOrderGroups.values())
+            page.add(group);
+
+        const panelOrderDefinitions = new Map([
+            ['start-button', {
+                key: 'start-button-position',
+                title: _('Start Button'),
+                subtitle: _('Eleven-style or original GNOME Start button'),
+                choices: panelPositions.slice(0, 2),
+            }],
+            ['activities', {
+                key: 'activities-button-position',
+                title: _('Activities'),
+                subtitle: _('GNOME workspace overview button'),
+                choices: panelPositions,
+            }],
+            ['applications', {
+                key: 'app-alignment',
+                title: _('Applications'),
+                subtitle: _('Taskbar application buttons'),
+                choices: panelPositions.slice(0, 2),
+            }],
+            ['folder-menu', {
+                key: 'folder-menu-position',
+                title: _('Folder Menu'),
+                subtitle: _('Selected folder shortcuts'),
+                choices: panelPositions,
+            }],
+            ['system-menu', {
+                key: 'system-menu-position',
+                title: _('System Menu'),
+                subtitle: _('Quick Settings, volume, network, and power'),
+                choices: panelPositions,
+            }],
+            ['clock', {
+                key: 'clock-position',
+                title: _('Clock'),
+                choices: panelPositions,
+            }],
+            ['show-desktop', {
+                key: 'show-desktop-button-position',
+                title: _('Show Desktop Button'),
+                subtitle: _('Minimize or restore all windows'),
+                choices: panelPositions.filter(
+                    position => position.value !== 'center'
+                ),
+            }],
+        ]);
+        const panelOrderRows = new Map();
+        for (const id of DEFAULT_PANEL_ITEM_ORDER) {
+            const controls = this._createPanelOrderRow(
+                window._settings,
+                panelOrderDefinitions.get(id)
+            );
+            panelOrderRows.set(id, controls);
+        }
+
+        const getPanelItemPosition = id => {
+            if (id === 'start-button' &&
+                followAppAlignmentSwitch.active) {
+                return window._settings.get_string('app-alignment');
+            }
+
+            return window._settings.get_string(
+                panelOrderDefinitions.get(id).key
+            );
+        };
+        const isPanelItemLocked = id => {
+            if (!window._settings.get_boolean('default-gnome-panel'))
+                return false;
+
+            return id === 'start-button' || id === 'applications';
+        };
+        const syncPanelItemOrder = () => {
+            const stored = window._settings.get_strv('panel-item-order');
+            const order = normalizePanelItemOrder(stored);
+            if (stored.length !== order.length ||
+                stored.some((id, index) => id !== order[index])) {
+                window._settings.set_strv('panel-item-order', order);
+                return;
+            }
+
+            for (const controls of panelOrderRows.values()) {
+                if (controls.group) {
+                    controls.group.remove(controls.row);
+                    controls.group = null;
+                }
+            }
+
+            const positionOrders = new Map([
+                ['left', []],
+                ['center', []],
+                ['right', []],
+            ]);
+            for (const id of order) {
+                const controls = panelOrderRows.get(id);
+                const position = getPanelItemPosition(id);
+                const group = panelOrderGroups.get(position);
+                controls.syncPosition(position);
+                group.add(controls.row);
+                controls.group = group;
+                positionOrders.get(position).push(id);
+            }
+            for (const positionOrder of positionOrders.values()) {
+                for (const [index, id] of positionOrder.entries()) {
+                    const controls = panelOrderRows.get(id);
+                    const previousId = positionOrder[index - 1];
+                    const nextId = positionOrder[index + 1];
+                    controls.upButton.sensitive =
+                        index > 0 &&
+                        !isPanelItemLocked(id) &&
+                        !isPanelItemLocked(previousId);
+                    controls.downButton.sensitive =
+                        index < positionOrder.length - 1 &&
+                        !isPanelItemLocked(id) &&
+                        !isPanelItemLocked(nextId);
+                }
+            }
+        };
+        const movePanelItem = (id, offset) => {
+            if (isPanelItemLocked(id))
+                return;
+
+            const order = normalizePanelItemOrder(
+                window._settings.get_strv('panel-item-order')
+            );
+            const position = getPanelItemPosition(id);
+            const positionOrder = order.filter(
+                candidate => getPanelItemPosition(candidate) === position
+            );
+            const index = positionOrder.indexOf(id);
+            const targetIndex = index + offset;
+            if (index < 0 || targetIndex < 0 ||
+                targetIndex >= positionOrder.length) {
+                return;
+            }
+
+            const otherId = positionOrder[targetIndex];
+            if (isPanelItemLocked(otherId))
+                return;
+
+            const orderIndex = order.indexOf(id);
+            const otherOrderIndex = order.indexOf(otherId);
+            [order[orderIndex], order[otherOrderIndex]] =
+                [order[otherOrderIndex], order[orderIndex]];
+            window._settings.set_strv('panel-item-order', order);
+        };
+        for (const [id, controls] of panelOrderRows) {
+            controls.upButton.connect('clicked', () => {
+                movePanelItem(id, -1);
+            });
+            controls.downButton.connect('clicked', () => {
+                movePanelItem(id, 1);
+            });
+        }
+        window._settings.connect(
+            'changed::panel-item-order',
+            syncPanelItemOrder
+        );
+        for (const definition of panelOrderDefinitions.values()) {
+            window._settings.connect(
+                `changed::${definition.key}`,
+                syncPanelItemOrder
+            );
+        }
+
+        const syncPanelPositionSensitivity = () => {
+            const defaultPanel = window._settings.get_boolean(
+                'default-gnome-panel'
+            );
+            panelOrderRows.get('start-button').positionDropDown.sensitive =
+                !defaultPanel && !followAppAlignmentSwitch.active;
+            panelOrderRows.get('applications').positionDropDown.sensitive =
+                !defaultPanel;
+            panelOrderRows.get('activities').positionDropDown.sensitive =
+                activitiesButtonSwitch.active;
+            panelOrderRows.get('folder-menu').positionDropDown.sensitive =
+                folderMenuSwitch.active;
+            panelOrderRows.get('show-desktop').positionDropDown.sensitive =
+                showDesktopSwitch.active;
+        };
+        followAppAlignmentSwitch.connect(
+            'notify::active',
+            () => {
+                syncPanelPositionSensitivity();
+                syncPanelItemOrder();
+            }
+        );
+        activitiesButtonSwitch.connect(
+            'notify::active',
+            syncPanelPositionSensitivity
+        );
+        folderMenuSwitch.connect(
+            'notify::active',
+            syncPanelPositionSensitivity
+        );
+        showDesktopSwitch.connect(
+            'notify::active',
+            syncPanelPositionSensitivity
+        );
+        window._settings.connect(
+            'changed::default-gnome-panel',
+            () => {
+                syncPanelItemOrder();
+                syncPanelPositionSensitivity();
+            }
+        );
+        syncPanelItemOrder();
+        syncPanelPositionSensitivity();
 
         const resetGroup = new Adw.PreferencesGroup({
             title: _('Reset'),
@@ -1684,6 +1852,81 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         group.add(row);
         return row;
+    }
+
+    _createPanelOrderRow(settings, {
+        key,
+        title,
+        subtitle = '',
+        choices,
+    }) {
+        const model = new Gtk.StringList();
+        for (const choice of choices)
+            model.append(choice.label);
+
+        const positionDropDown = new Gtk.DropDown({
+            model,
+            tooltip_text: _('Panel Position'),
+            valign: Gtk.Align.CENTER,
+        });
+        let syncingPosition = false;
+        const syncPosition = value => {
+            const index = choices.findIndex(
+                choice => choice.value === value
+            );
+            if (index < 0 || positionDropDown.selected === index)
+                return;
+
+            syncingPosition = true;
+            positionDropDown.selected = index;
+            syncingPosition = false;
+        };
+        syncPosition(settings.get_string(key));
+        positionDropDown.connect('notify::selected', widget => {
+            if (syncingPosition)
+                return;
+
+            const choice = choices[widget.selected];
+            if (choice)
+                settings.set_string(key, choice.value);
+        });
+        settings.connect(`changed::${key}`, () => {
+            syncPosition(settings.get_string(key));
+        });
+
+        const upButton = new Gtk.Button({
+            icon_name: 'go-up-symbolic',
+            tooltip_text: _('Move Up'),
+            valign: Gtk.Align.CENTER,
+        });
+        const downButton = new Gtk.Button({
+            icon_name: 'go-down-symbolic',
+            tooltip_text: _('Move Down'),
+            valign: Gtk.Align.CENTER,
+        });
+        upButton.add_css_class('flat');
+        downButton.add_css_class('flat');
+        const moveBox = new Gtk.Box({
+            orientation: Gtk.Orientation.HORIZONTAL,
+            spacing: 2,
+            valign: Gtk.Align.CENTER,
+        });
+        moveBox.append(upButton);
+        moveBox.append(downButton);
+
+        const row = new Adw.ActionRow({title, subtitle});
+        row.add_prefix(moveBox);
+        row.add_suffix(positionDropDown);
+        row.activatable_widget = positionDropDown;
+
+        return {
+            row,
+            positionDropDown,
+            upButton,
+            downButton,
+            syncPosition,
+            group: null,
+        };
     }
 
     _addComboRow(group, settings, {key, title, subtitle = '', choices}) {

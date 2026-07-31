@@ -124,20 +124,11 @@
     <key name="activities-button-position" type="s">
       <choices>
         <choice value="left"/>
+        <choice value="center"/>
         <choice value="right"/>
       </choices>
       <default>'left'</default>
-      <summary>Place the Activities button on the left or right</summary>
-    </key>
-    <key name="activities-button-right-placement" type="s">
-      <choices>
-        <choice value="first"/>
-        <choice value="before-system"/>
-        <choice value="after-system"/>
-        <choice value="after-clock"/>
-      </choices>
-      <default>'after-system'</default>
-      <summary>Choose where the Activities button appears on the right</summary>
+      <summary>Activities button position</summary>
     </key>
     <key name="show-desktop-button-visible" type="b">
       <default>true</default>
@@ -155,9 +146,22 @@
       <default>false</default>
       <summary>Show a selected folder menu on the taskbar</summary>
     </key>
+    <key name="folder-menu-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'right'</default>
+      <summary>Folder Menu position</summary>
+    </key>
     <key name="folder-menu-uri" type="s">
       <default>''</default>
       <summary>Folder displayed by the taskbar folder menu</summary>
+    </key>
+    <key name="panel-item-order" type="as">
+      <default>['start-button', 'activities', 'applications', 'folder-menu', 'system-menu', 'clock', 'show-desktop']</default>
+      <summary>Panel item order within each position</summary>
     </key>
     <key name="multi-monitor-panels" type="b">
       <default>true</default>

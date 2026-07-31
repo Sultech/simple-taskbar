@@ -14,11 +14,9 @@ import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
+import {orderPanelItems} from './panelItemOrder.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
-import {
-    orderActivitiesInRightPanel,
-    panelIsTop,
-} from './panelPosition.js';
+import {panelIsTop} from './panelPosition.js';
 import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
@@ -190,128 +188,73 @@ export class PanelController {
         for (const actor of actors)
             actor.get_parent()?.remove_child(actor);
 
-        const taskbarBox = this.appsAreCentered() ? centerBox : leftBox;
-        const startButtonBox = this._startButtonIsCentered()
-            ? centerBox
-            : leftBox;
-        const showDesktopOnLeft = this._settings.get_string(
+        const showDesktopPosition = this._settings.get_string(
             'show-desktop-button-position'
-        ) === 'left';
-        const showDesktopVisible = this._settings.get_boolean(
-            'show-desktop-button-visible'
         );
         this._showDesktopButton.remove_style_class_name(
             'simple-taskbar-show-desktop-left'
         );
-        if (showDesktopOnLeft) {
+        if (showDesktopPosition === 'left') {
             this._showDesktopButton.add_style_class_name(
                 'simple-taskbar-show-desktop-left'
             );
         }
-        if (this._startButtonShouldBeVisible()) {
-            if (startButtonBox === leftBox)
-                leftBox.insert_child_at_index(this._startButton, 0);
-            else
-                centerBox.add_child(this._startButton);
-        }
-        let leftLeadingIndex = leftBox.get_children().indexOf(
-            this._startButton
-        );
-        leftLeadingIndex = leftLeadingIndex >= 0
-            ? leftLeadingIndex + 1
-            : 0;
-        if (showDesktopVisible) {
-            if (showDesktopOnLeft) {
-                leftBox.insert_child_at_index(
-                    this._showDesktopButton,
-                    leftLeadingIndex
-                );
-                leftLeadingIndex++;
-            } else {
-                rightBox.add_child(this._showDesktopButton);
-            }
-        }
-        if (activities && this._settings.get_string(
-            'activities-button-position'
-        ) === 'left') {
-            leftBox.insert_child_at_index(
-                activities,
-                leftLeadingIndex
-            );
-        }
-        taskbarBox.add_child(this._taskbarBin);
-
-        const rightItems = [];
-        for (const item of this._panelItemState) {
-            if (item.actor === activities)
-                continue;
-
-            const position = this._settings.get_string(item.key);
-            const target = position === 'left'
-                ? leftBox
-                : position === 'center'
-                    ? centerBox
-                    : rightBox;
-            if (target === rightBox)
-                rightItems.push(item.actor);
-            else
-                target.add_child(item.actor);
-        }
-
-        const activitiesOnRight =
-            this._settings.get_string('activities-button-position') ===
-                'right' ? activities : null;
-        const activitiesRightPlacement = this._settings.get_string(
-            'activities-button-right-placement'
-        );
-        if (activitiesOnRight && activitiesRightPlacement === 'first')
-            rightBox.insert_child_at_index(activitiesOnRight, 0);
-
-        const orderedRightItems = orderActivitiesInRightPanel(
-            rightItems,
-            activitiesRightPlacement === 'first'
-                ? null
-                : activitiesOnRight,
-            quickSettings,
-            Main.panel.statusArea.dateMenu?.container,
-            activitiesRightPlacement
-        );
-        for (const actor of orderedRightItems) {
-            const showDesktopIndex = rightBox.get_children().indexOf(
-                this._showDesktopButton
-            );
-            rightBox.insert_child_at_index(
-                actor,
-                showDesktopIndex >= 0
-                    ? showDesktopIndex
-                    : rightBox.get_n_children()
-            );
-        }
-        if (this._settings.get_boolean('folder-menu-enabled')) {
-            const rightChildren = rightBox.get_children();
-            const rightPanelItemIndices = this._panelItemState
-                .filter(item => item.actor.get_parent() === rightBox)
-                .map(item => rightChildren.indexOf(item.actor))
-                .filter(index => index >= 0);
-            const showDesktopIndex = rightChildren.indexOf(
-                this._showDesktopButton
-            );
-            const leadingActivitiesIndex =
-                activitiesOnRight &&
-                activitiesRightPlacement === 'first'
-                    ? rightChildren.indexOf(activitiesOnRight)
-                    : -1;
-            const folderMenuIndex = leadingActivitiesIndex >= 0
-                ? leadingActivitiesIndex + 1
-                : rightPanelItemIndices.length > 0
-                    ? Math.min(...rightPanelItemIndices)
-                    : showDesktopIndex >= 0
-                        ? showDesktopIndex
-                        : rightBox.get_n_children();
-            rightBox.insert_child_at_index(
-                this._folderMenuButton,
-                folderMenuIndex
-            );
+        const boxes = {
+            left: leftBox,
+            center: centerBox,
+            right: rightBox,
+        };
+        const panelItems = orderPanelItems([
+            {
+                id: 'start-button',
+                actor: this._startButton,
+                position: this._startButtonPosition(),
+                visible: this._startButtonShouldBeVisible(),
+            },
+            {
+                id: 'activities',
+                actor: activities,
+                position: this._settings.get_string(
+                    'activities-button-position'
+                ),
+                visible: true,
+            },
+            {
+                id: 'applications',
+                actor: this._taskbarBin,
+                position: this._settings.get_string('app-alignment'),
+                visible: true,
+            },
+            {
+                id: 'folder-menu',
+                actor: this._folderMenuButton,
+                position: this._settings.get_string('folder-menu-position'),
+                visible: this._settings.get_boolean('folder-menu-enabled'),
+            },
+            {
+                id: 'system-menu',
+                actor: quickSettings,
+                position: this._settings.get_string('system-menu-position'),
+                visible: true,
+            },
+            {
+                id: 'clock',
+                actor: Main.panel.statusArea.dateMenu?.container,
+                position: this._settings.get_string('clock-position'),
+                visible: true,
+            },
+            {
+                id: 'show-desktop',
+                actor: this._showDesktopButton,
+                position: showDesktopPosition,
+                visible: this._settings.get_boolean(
+                    'show-desktop-button-visible'
+                ),
+            },
+        ], this._settings.get_strv('panel-item-order'));
+        for (const item of panelItems) {
+            if (item.actor && item.visible)
+                boxes[item.position].add_child(item.actor);
         }
         this._syncActivitiesVisibility();
         this.updateTaskbarWidth();
@@ -345,12 +288,12 @@ export class PanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _startButtonIsCentered() {
+    _startButtonPosition() {
         return this._settings.get_boolean(
             'start-button-follow-app-alignment'
         )
-            ? this.appsAreCentered()
-            : this._settings.get_string('start-button-position') === 'center';
+            ? this._settings.get_string('app-alignment')
+            : this._settings.get_string('start-button-position');
     }
 
     _startButtonShouldBeVisible() {
@@ -702,11 +645,6 @@ export class PanelController {
         });
         this._connect(
             this._settings,
-            'changed::activities-button-right-placement',
-            () => this.applyLayout()
-        );
-        this._connect(
-            this._settings,
             'changed::show-desktop-button-position',
             () => this.applyLayout()
         );
@@ -725,6 +663,12 @@ export class PanelController {
             this.applyLayout();
         });
         this._connect(this._settings, 'changed::folder-menu-enabled', () => {
+            this.applyLayout();
+        });
+        this._connect(this._settings, 'changed::folder-menu-position', () => {
+            this.applyLayout();
+        });
+        this._connect(this._settings, 'changed::panel-item-order', () => {
             this.applyLayout();
         });
     }
@@ -885,10 +829,10 @@ export class PanelController {
         this._oldPanelStyle = Main.panel.get_style();
         this._activitiesWasVisible = activities?.visible ?? false;
 
-        for (const [key, indicator] of [
-            ['activities-button-position', Main.panel.statusArea.activities],
-            ['system-menu-position', Main.panel.statusArea.quickSettings],
-            ['clock-position', Main.panel.statusArea.dateMenu],
+        for (const indicator of [
+            Main.panel.statusArea.activities,
+            Main.panel.statusArea.quickSettings,
+            Main.panel.statusArea.dateMenu,
         ]) {
             const actor = indicator?.container;
             const parent = actor?.get_parent();
@@ -896,7 +840,6 @@ export class PanelController {
                 continue;
 
             this._panelItemState.push({
-                key,
                 actor,
                 parent,
                 index: parent.get_children().indexOf(actor),

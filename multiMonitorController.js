@@ -14,12 +14,9 @@ import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
+import {orderPanelItems} from './panelItemOrder.js';
 import {PanelInteractionController} from './panelInteractionController.js';
-import {
-    orderActivitiesInRightPanel,
-    panelArrowSide,
-    panelIsTop,
-} from './panelPosition.js';
+import {panelArrowSide, panelIsTop} from './panelPosition.js';
 import {
     QuickSettingsPowerController,
 } from './quickSettingsPowerController.js';
@@ -552,11 +549,6 @@ class SecondaryTaskbarPanel {
         this._connect(this._settings, 'changed::activities-button-position', () => {
             this._applyLayout();
         });
-        this._connect(
-            this._settings,
-            'changed::activities-button-right-placement',
-            () => this._applyLayout()
-        );
         this._connect(this._settings, 'changed::clock-position', () => {
             this._applyLayout();
         });
@@ -564,6 +556,12 @@ class SecondaryTaskbarPanel {
             this._applyLayout();
         });
         this._connect(this._settings, 'changed::folder-menu-enabled', () => {
+            this._applyLayout();
+        });
+        this._connect(this._settings, 'changed::folder-menu-position', () => {
+            this._applyLayout();
+        });
+        this._connect(this._settings, 'changed::panel-item-order', () => {
             this._applyLayout();
         });
         this._connect(this._settings, 'changed::start-button-padding', () => {
@@ -621,60 +619,55 @@ class SecondaryTaskbarPanel {
         ])
             actor?.get_parent()?.remove_child(actor);
 
-        const startBox = this._startButtonIsCentered()
-            ? this._centerBox
-            : this._leftBox;
-        const taskbarBox = this._appsAreCentered()
-            ? this._centerBox
-            : this._leftBox;
-        if (this._startButtonShouldBeVisible())
-            startBox.add_child(startButton);
-        if (activities && this._settings.get_string(
-            'activities-button-position'
-        ) === 'left') {
-            this._leftBox.add_child(activities);
+        const boxes = {
+            left: this._leftBox,
+            center: this._centerBox,
+            right: this._rightBox,
+        };
+        const panelItems = orderPanelItems([
+            {
+                id: 'start-button',
+                actor: startButton,
+                position: this._startButtonPosition(),
+                visible: this._startButtonShouldBeVisible(),
+            },
+            {
+                id: 'activities',
+                actor: activities,
+                position: this._settings.get_string(
+                    'activities-button-position'
+                ),
+                visible: true,
+            },
+            {
+                id: 'applications',
+                actor: this._taskbarBin,
+                position: this._settings.get_string('app-alignment'),
+                visible: true,
+            },
+            {
+                id: 'folder-menu',
+                actor: folderMenuButton,
+                position: this._settings.get_string('folder-menu-position'),
+                visible: this._settings.get_boolean('folder-menu-enabled'),
+            },
+            {
+                id: 'system-menu',
+                actor: quickSettings,
+                position: this._settings.get_string('system-menu-position'),
+                visible: true,
+            },
+            {
+                id: 'clock',
+                actor: dateMenu,
+                position: this._settings.get_string('clock-position'),
+                visible: true,
+            },
+        ], this._settings.get_strv('panel-item-order'));
+        for (const item of panelItems) {
+            if (item.actor && item.visible)
+                boxes[item.position].add_child(item.actor);
         }
-        taskbarBox.add_child(this._taskbarBin);
-        if (this._settings.get_boolean('folder-menu-enabled'))
-            this._rightBox.add_child(folderMenuButton);
-        const rightItems = [];
-        for (const [actor, settingKey] of [
-            [quickSettings, 'system-menu-position'],
-            [dateMenu, 'clock-position'],
-        ]) {
-            if (!actor)
-                continue;
-            const position = this._settings.get_string(settingKey);
-            const target = position === 'left'
-                ? this._leftBox
-                : position === 'center'
-                    ? this._centerBox
-                    : this._rightBox;
-            if (target === this._rightBox)
-                rightItems.push(actor);
-            else
-                target.add_child(actor);
-        }
-        const activitiesOnRight =
-            this._settings.get_string('activities-button-position') ===
-                'right' ? activities : null;
-        const activitiesRightPlacement = this._settings.get_string(
-            'activities-button-right-placement'
-        );
-        if (activitiesOnRight && activitiesRightPlacement === 'first')
-            this._rightBox.insert_child_at_index(activitiesOnRight, 0);
-
-        const orderedRightItems = orderActivitiesInRightPanel(
-            rightItems,
-            activitiesRightPlacement === 'first'
-                ? null
-                : activitiesOnRight,
-            quickSettings,
-            dateMenu,
-            activitiesRightPlacement
-        );
-        for (const actor of orderedRightItems)
-            this._rightBox.add_child(actor);
         this._syncActivitiesVisibility();
         this._applyAppearance();
         this._updateTaskbarWidth();
@@ -684,12 +677,12 @@ class SecondaryTaskbarPanel {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _startButtonIsCentered() {
+    _startButtonPosition() {
         return this._settings.get_boolean(
             'start-button-follow-app-alignment'
         )
-            ? this._appsAreCentered()
-            : this._settings.get_string('start-button-position') === 'center';
+            ? this._settings.get_string('app-alignment')
+            : this._settings.get_string('start-button-position');
     }
 
     _startButtonShouldBeVisible() {
