@@ -1418,6 +1418,24 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             page.add(group);
 
         const panelOrderDefinitions = new Map([
+            ['left-box', {
+                title: _('Left Box'),
+                subtitle: _('Other GNOME Shell and extension items'),
+                choices: [panelPositions[0]],
+                fixedPosition: 'left',
+            }],
+            ['center-box', {
+                title: _('Center Box'),
+                subtitle: _('Other GNOME Shell and extension items'),
+                choices: [panelPositions[1]],
+                fixedPosition: 'center',
+            }],
+            ['right-box', {
+                title: _('Right Box'),
+                subtitle: _('Other GNOME Shell and extension items'),
+                choices: [panelPositions[2]],
+                fixedPosition: 'right',
+            }],
             ['start-button', {
                 key: 'start-button-position',
                 title: _('Start Button'),
@@ -1472,14 +1490,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         }
 
         const getPanelItemPosition = id => {
+            const definition = panelOrderDefinitions.get(id);
+            if (definition.fixedPosition)
+                return definition.fixedPosition;
+
             if (id === 'start-button' &&
                 followAppAlignmentSwitch.active) {
                 return window._settings.get_string('app-alignment');
             }
 
-            return window._settings.get_string(
-                panelOrderDefinitions.get(id).key
-            );
+            return window._settings.get_string(definition.key);
         };
         const isPanelItemLocked = id => {
             if (!window._settings.get_boolean('default-gnome-panel'))
@@ -1574,6 +1594,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             syncPanelItemOrder
         );
         for (const definition of panelOrderDefinitions.values()) {
+            if (definition.fixedPosition)
+                continue;
+
             window._settings.connect(
                 `changed::${definition.key}`,
                 syncPanelItemOrder
@@ -1859,6 +1882,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         title,
         subtitle = '',
         choices,
+        fixedPosition = null,
     }) {
         const model = new Gtk.StringList();
         for (const choice of choices)
@@ -1881,18 +1905,23 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             positionDropDown.selected = index;
             syncingPosition = false;
         };
-        syncPosition(settings.get_string(key));
-        positionDropDown.connect('notify::selected', widget => {
-            if (syncingPosition)
-                return;
-
-            const choice = choices[widget.selected];
-            if (choice)
-                settings.set_string(key, choice.value);
-        });
-        settings.connect(`changed::${key}`, () => {
+        if (fixedPosition) {
+            syncPosition(fixedPosition);
+            positionDropDown.sensitive = false;
+        } else {
             syncPosition(settings.get_string(key));
-        });
+            positionDropDown.connect('notify::selected', widget => {
+                if (syncingPosition)
+                    return;
+
+                const choice = choices[widget.selected];
+                if (choice)
+                    settings.set_string(key, choice.value);
+            });
+            settings.connect(`changed::${key}`, () => {
+                syncPosition(settings.get_string(key));
+            });
+        }
 
         const upButton = new Gtk.Button({
             icon_name: 'go-up-symbolic',

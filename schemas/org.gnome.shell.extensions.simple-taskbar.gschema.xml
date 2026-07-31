@@ -160,7 +160,7 @@
       <summary>Folder displayed by the taskbar folder menu</summary>
     </key>
     <key name="panel-item-order" type="as">
-      <default>['start-button', 'activities', 'applications', 'folder-menu', 'system-menu', 'clock', 'show-desktop']</default>
+      <default>['left-box', 'center-box', 'right-box', 'start-button', 'activities', 'applications', 'folder-menu', 'system-menu', 'clock', 'show-desktop']</default>
       <summary>Panel item order within each position</summary>
     </key>
     <key name="multi-monitor-panels" type="b">

@@ -14,7 +14,7 @@ import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
-import {orderPanelItems} from './panelItemOrder.js';
+import {placePanelItems} from './panelItemOrder.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelIsTop} from './panelPosition.js';
 import {
@@ -204,7 +204,7 @@ export class PanelController {
             center: centerBox,
             right: rightBox,
         };
-        const panelItems = orderPanelItems([
+        placePanelItems(boxes, [
             {
                 id: 'start-button',
                 actor: this._startButton,
@@ -252,10 +252,6 @@ export class PanelController {
                 ),
             },
         ], this._settings.get_strv('panel-item-order'));
-        for (const item of panelItems) {
-            if (item.actor && item.visible)
-                boxes[item.position].add_child(item.actor);
-        }
         this._syncActivitiesVisibility();
         this.updateTaskbarWidth();
     }
@@ -563,11 +559,11 @@ export class PanelController {
             Main.panel._centerBox,
             Main.panel._rightBox,
         ]) {
-            this._connect(box, 'child-added', (_box, child) => {
-                this._onPanelBoxChildChanged(child);
+            this._connect(box, 'child-added', () => {
+                this._onPanelBoxChildChanged();
             });
-            this._connect(box, 'child-removed', (_box, child) => {
-                this._onPanelBoxChildChanged(child);
+            this._connect(box, 'child-removed', () => {
+                this._onPanelBoxChildChanged();
             });
         }
         this._connect(this._settings, 'changed::transparency-enabled', () => {
@@ -673,19 +669,11 @@ export class PanelController {
         });
     }
 
-    _onPanelBoxChildChanged(child) {
+    _onPanelBoxChildChanged() {
         if (this._applyingLayout)
             return;
 
-        const managedActors = [
-            this._startButton,
-            this._taskbarBin,
-            this._showDesktopButton,
-            this._folderMenuButton,
-            ...this._panelItemState.map(item => item.actor),
-        ];
-        if (managedActors.includes(child))
-            this._queueLayoutRepair();
+        this._queueLayoutRepair();
     }
 
     _queueLayoutRepair() {

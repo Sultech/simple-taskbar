@@ -14,7 +14,7 @@ import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
-import {orderPanelItems} from './panelItemOrder.js';
+import {placePanelItems} from './panelItemOrder.js';
 import {PanelInteractionController} from './panelInteractionController.js';
 import {panelArrowSide, panelIsTop} from './panelPosition.js';
 import {
@@ -624,7 +624,7 @@ class SecondaryTaskbarPanel {
             center: this._centerBox,
             right: this._rightBox,
         };
-        const panelItems = orderPanelItems([
+        placePanelItems(boxes, [
             {
                 id: 'start-button',
                 actor: startButton,
@@ -664,10 +664,6 @@ class SecondaryTaskbarPanel {
                 visible: true,
             },
         ], this._settings.get_strv('panel-item-order'));
-        for (const item of panelItems) {
-            if (item.actor && item.visible)
-                boxes[item.position].add_child(item.actor);
-        }
         this._syncActivitiesVisibility();
         this._applyAppearance();
         this._updateTaskbarWidth();

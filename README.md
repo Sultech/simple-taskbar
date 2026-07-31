@@ -168,6 +168,9 @@ The settings provide control over:
   appears immediately before centered applications.
 - Separate Left, Center and Right lists for Start, Activities, applications,
   Folder Menu, Quick Settings, clock and Show Desktop.
+- Each list includes a fixed-position box row representing other GNOME Shell
+  and extension items. Managed items can be placed before or after that row,
+  while the box itself cannot move to another list.
 - Per-item placement where supported, with Move Up/Move Down restricted to
   neighbors in the same position list. Show Desktop remains limited to the
   Left and Right lists.
