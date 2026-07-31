@@ -235,13 +235,16 @@ export class WindowPreviewController {
             0.5,
             panelArrowSide(this._settings)
         );
-        menu.box.remove_style_class_name('popup-menu-content');
+        const themeClass = Main.panel.has_style_class_name(
+            'simple-taskbar-theme-light'
+        )
+            ? 'simple-taskbar-preview-light'
+            : 'simple-taskbar-preview-dark';
+        menu.actor.add_style_class_name('simple-taskbar-preview-menu');
+        menu.actor.add_style_class_name(themeClass);
         menu.box.add_style_class_name(
             'simple-taskbar-preview-popup-content'
         );
-        // This flyout uses opaque preview cards, so exclude it from popup
-        // effects that target GNOME Shell's standard popup style classes.
-        menu.actor.remove_style_class_name('popup-menu');
         const section = new PopupMenu.PopupMenuSection();
         const previewBox = new St.BoxLayout({
             style_class: 'simple-taskbar-preview-list',
@@ -300,7 +303,6 @@ export class WindowPreviewController {
         menu.addMenuItem(section);
         // Window previews are visual flyouts rather than modal menus, so they
         // must not consume the first click intended for the source icon.
-        menu.actor.add_style_class_name('simple-taskbar-preview-menu');
         menu.actor.track_hover = true;
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);

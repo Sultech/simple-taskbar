@@ -426,12 +426,31 @@
     min-width: 0;
 }
 
-.simple-taskbar-preview-popup-content {
+.simple-taskbar-preview-menu
+    .popup-menu-content.simple-taskbar-preview-popup-content {
     padding: 0;
     border-width: 0;
-    border-radius: 10px;
+    border-radius: 12px;
+    border-radius-bottomleft: 18px;
+    border-radius-bottomright: 18px;
     background-color: transparent;
     box-shadow: none;
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .popup-menu-content.simple-taskbar-preview-popup-content {
+    background: transparent;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.98);
+    background-gradient-end: rgba(30, 30, 34, 0.98);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .popup-menu-content.simple-taskbar-preview-popup-content {
+    background: transparent;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.98);
+    background-gradient-end: rgba(230, 234, 242, 0.98);
 }
 
 .simple-taskbar-preview-scroll {
@@ -442,15 +461,38 @@
     min-height: 9px;
 }
 
-.simple-taskbar-preview-scroll StScrollBar > .hhandle {
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle {
     border: 2px solid transparent;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.55);
 }
 
-.simple-taskbar-preview-scroll StScrollBar > .hhandle:hover,
-.simple-taskbar-preview-scroll StScrollBar > .hhandle:focus {
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle:hover,
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle:focus {
     background-color: rgba(255, 255, 255, 0.80);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background-color: rgba(24, 28, 34, 0.58);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle:hover,
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle:focus {
+    background-color: rgba(24, 28, 34, 0.78);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-scroll StScrollBar StBin#trough {
+    border-radius: 5px;
+    background-color: rgba(24, 28, 34, 0.12);
 }
 
 .simple-taskbar-preview-list {
@@ -458,17 +500,27 @@
 }
 
 .simple-taskbar-preview-item {
-    border-radius: 10px;
-    background-color: rgba(47, 47, 51, 0.98);
+    border-radius: 12px;
+    border-radius-bottomleft: 18px;
+    border-radius-bottomright: 18px;
+    background-color: transparent;
 }
 
-.simple-taskbar-preview-item:hover {
-    background-color: rgba(72, 72, 77, 0.98);
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-item:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-item:hover {
+    background-color: rgba(26, 36, 52, 0.09);
 }
 
 .simple-taskbar-preview-button {
-    padding: 3px;
-    border-radius: 9px;
+    padding: 3px 5px 8px;
+    border-radius: 11px;
+    border-radius-bottomleft: 17px;
+    border-radius-bottomright: 17px;
     background-color: transparent;
 }
 
@@ -476,8 +528,14 @@
     background-color: transparent;
 }
 
-.simple-taskbar-preview-button:focus {
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-button:focus {
     background-color: rgba(255, 255, 255, 0.16);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-button:focus {
+    background-color: rgba(26, 36, 52, 0.12);
 }
 
 .simple-taskbar-preview-content {
@@ -486,16 +544,25 @@
 
 .simple-taskbar-preview-thumbnail {
     border-width: 0;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: transparent;
 }
 
 .simple-taskbar-preview-title {
     max-width: 260px;
     padding: 2px 22px 0 6px;
-    color: #f4f4f4;
     font-size: 11pt;
     text-align: left;
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-title {
+    color: #f4f4f4;
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-title {
+    color: #202124;
 }
 
 .simple-taskbar-preview-close {
@@ -504,18 +571,58 @@
     margin: 5px 2px 0 1px;
     padding: 2px;
     border-radius: 9px;
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-close {
     color: #f4f4f4;
     background-color: rgba(20, 20, 22, 0.72);
 }
 
-.simple-taskbar-preview-close:hover,
-.simple-taskbar-preview-close:focus {
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-close {
+    color: #202124;
+    background-color: rgba(20, 28, 42, 0.10);
+}
+
+.simple-taskbar-preview-menu .simple-taskbar-preview-close:hover,
+.simple-taskbar-preview-menu .simple-taskbar-preview-close:focus {
     color: #ffffff;
     background-color: rgba(225, 56, 62, 0.92);
 }
 
 .simple-taskbar-preview-close-icon {
     icon-size: 12px;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .popup-menu-content.simple-taskbar-preview-popup-content,
+.bms-popup-background-light
+    .simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .popup-menu-content.simple-taskbar-preview-popup-content,
+.bms-popup-background-dark
+    .simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .popup-menu-content.simple-taskbar-preview-popup-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.46) !important;
+    background-gradient-end: rgba(30, 30, 34, 0.38) !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .popup-menu-content.simple-taskbar-preview-popup-content,
+.bms-popup-background-light
+    .simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .popup-menu-content.simple-taskbar-preview-popup-content,
+.bms-popup-background-dark
+    .simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .popup-menu-content.simple-taskbar-preview-popup-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.62) !important;
+    background-gradient-end: rgba(230, 234, 242, 0.54) !important;
 }
 
 .simple-taskbar-show-desktop {
