@@ -1109,19 +1109,87 @@
     padding: 10px;
 }
 
-.simple-taskbar-grid-alt-tab-content,
-.simple-taskbar-grid-alt-tab-row {
-    spacing: 12px;
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    background: transparent;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.98);
+    background-gradient-end: rgba(30, 30, 34, 0.98);
+    box-shadow: none;
+    color: #f4f4f4;
 }
 
-.simple-taskbar-grid-alt-tab-card {
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light {
+    border: 1px solid rgba(20, 28, 42, 0.18);
+    border-radius: 12px;
+    background: transparent;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.98);
+    background-gradient-end: rgba(230, 234, 242, 0.98);
+    box-shadow: none;
+    color: #202124;
+}
+
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark
+    .simple-taskbar-grid-alt-tab-card,
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light
+    .simple-taskbar-grid-alt-tab-card {
     padding: 10px;
     border: 2px solid transparent;
     border-radius: 12px;
+    background-color: transparent;
 }
 
-.simple-taskbar-grid-alt-tab-card:selected {
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark
+    .simple-taskbar-grid-alt-tab-card {
+    color: #f4f4f4;
+}
+
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light
+    .simple-taskbar-grid-alt-tab-card {
+    color: #202124;
+}
+
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark
+    .simple-taskbar-grid-alt-tab-card:selected {
     border-color: -st-accent-color;
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light
+    .simple-taskbar-grid-alt-tab-card:selected {
+    border-color: -st-accent-color;
+    background-color: rgba(26, 36, 52, 0.12);
+}
+
+.bms-popup-background-transparent
+    .switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark,
+.bms-popup-background-light
+    .switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark,
+.bms-popup-background-dark
+    .switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-dark {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.46) !important;
+    background-gradient-end: rgba(30, 30, 34, 0.38) !important;
+}
+
+.bms-popup-background-transparent
+    .switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light,
+.bms-popup-background-light
+    .switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light,
+.bms-popup-background-dark
+    .switcher-list.simple-taskbar-grid-alt-tab-list.simple-taskbar-grid-alt-tab-light {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.62) !important;
+    background-gradient-end: rgba(230, 234, 242, 0.54) !important;
+}
+
+.simple-taskbar-grid-alt-tab-content,
+.simple-taskbar-grid-alt-tab-row {
+    spacing: 12px;
 }
 
 .simple-taskbar-grid-alt-tab-card-content {

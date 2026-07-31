@@ -360,10 +360,15 @@ const GridAltTabList = GObject.registerClass({
         const height = visibleRows * cardHeight +
             Math.max(0, visibleRows - 1) * CARD_SPACING +
             CARD_PADDING;
+        const themeClass = Main.panel.has_style_class_name(
+            'simple-taskbar-theme-light'
+        )
+            ? 'simple-taskbar-grid-alt-tab-light'
+            : 'simple-taskbar-grid-alt-tab-dark';
 
         super._init({
             style_class:
-                'switcher-list simple-taskbar-grid-alt-tab-list',
+                `switcher-list simple-taskbar-grid-alt-tab-list ${themeClass}`,
             reactive: true,
             enable_mouse_scrolling: true,
             overlay_scrollbars: false,
