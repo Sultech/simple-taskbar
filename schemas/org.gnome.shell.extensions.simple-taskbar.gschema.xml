@@ -73,7 +73,7 @@
       <summary>Taskbar background transparency percentage</summary>
     </key>
     <key name="panel-border-enabled" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show the panel border in dark mode</summary>
     </key>
     <key name="panel-border-light-enabled" type="b">
@@ -259,7 +259,7 @@
     </key>
     <key name="start-button-padding" type="i">
       <range min="0" max="20"/>
-      <default>2</default>
+      <default>3</default>
       <summary>Horizontal padding around the Start button icon</summary>
     </key>
     <key name="start-button-custom-icon" type="s">

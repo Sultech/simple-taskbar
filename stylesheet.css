@@ -247,8 +247,8 @@
  * with the panel. The clock paints its state on an inner actor, so it needs
  * the same transparent inset there. */
 #panel.simple-taskbar-panel.simple-taskbar-default-panel-button-padding .panel-button {
-    -natural-hpadding: 4px;
-    -minimum-hpadding: 4px;
+    -natural-hpadding: 3px;
+    -minimum-hpadding: 3px;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop),

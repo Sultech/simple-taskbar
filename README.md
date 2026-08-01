@@ -163,11 +163,12 @@ The settings provide control over:
 - 15–48px application icons with 0–16px spacing.
 - Automatic or explicit 0–20px horizontal padding around panel buttons.
   Automatic follows Just Perfection's button padding when that extension
-  supplies it and otherwise uses a 4px fallback. An explicit value always takes
+  supplies it and otherwise uses a 3px fallback. An explicit value always takes
   precedence, without changing Just Perfection's own setting. Default GNOME
   Panel mode applies 12px and restores Automatic when Taskbar mode returns.
 - Left or centered application alignment.
-- Left or centered Start button placement, adjustable padding and an icon
+- Left or centered Start button placement, adjustable padding with a 3px
+  default, and an icon
   selected from bundled GNOME and distribution designs or a personal image
   file. By default, the Start button follows the application alignment and
   appears immediately before centered applications.
@@ -185,7 +186,8 @@ The settings provide control over:
   order list.
 - Light, dark or Shell-following themes.
 - Adjustable transparency and Blur My Shell integration on the primary panel.
-- Separate panel-border controls for the light and dark themes.
+- Separate panel-border controls for the light and dark themes, both off by
+  default.
 - Animated auto-hide on every panel.
 - A bottom hot edge that toggles Overview, with an optional ripple animation.
 - Workspace switching by scrolling over empty panel space.
