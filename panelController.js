@@ -973,9 +973,10 @@ export class PanelController {
             `${opacity.toFixed(2)}) !important; ` +
             borderStyle +
             'box-shadow: none;';
+        const separator = originalStyle.endsWith(';') ? ' ' : '; ';
         this._setPanelStyle(
             originalStyle
-                ? `${originalStyle}; ${transparencyStyle}`
+                ? `${originalStyle}${separator}${transparencyStyle}`
                 : transparencyStyle
         );
     }
