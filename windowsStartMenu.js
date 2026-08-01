@@ -416,29 +416,33 @@ export class WindowsStartMenu {
         const fixedPanelPosition = monitor &&
             this._settings.get_boolean('panel-autohide-enabled');
         const useDummySource = Boolean(
-            monitor && (centerOnMonitor || fixedPanelPosition) &&
-            this._sourceActor.has_allocation()
+            monitor && (centerOnMonitor ||
+                (fixedPanelPosition && this._sourceActor.has_allocation()))
         );
         const sourceActor = useDummySource
             ? Main.layoutManager.dummyCursor
             : this._sourceActor;
 
         if (useDummySource) {
-            const [actorX] =
-                this._sourceActor.get_transformed_position();
-            const [actorWidth, actorHeight] =
-                this._sourceActor.get_transformed_size();
-            const sourceX = centerOnMonitor
-                ? monitor.x + monitor.width / 2
-                : actorX;
+            const panelHeight = this._settings.get_int('panel-height');
+            let sourceX = monitor.x + monitor.width / 2;
+            let sourceWidth = 1;
+            if (!centerOnMonitor) {
+                const [actorX] =
+                    this._sourceActor.get_transformed_position();
+                const [actorWidth] =
+                    this._sourceActor.get_transformed_size();
+                sourceX = actorX;
+                sourceWidth = Math.max(1, Math.round(actorWidth));
+            }
             const sourceY = panelIsTop(this._settings)
                 ? monitor.y
-                : monitor.y + monitor.height - actorHeight;
+                : monitor.y + monitor.height - panelHeight;
             Main.layoutManager.setDummyCursorGeometry(
                 Math.round(sourceX),
                 Math.round(sourceY),
-                centerOnMonitor ? 1 : Math.max(1, Math.round(actorWidth)),
-                Math.max(1, Math.round(actorHeight))
+                sourceWidth,
+                panelHeight
             );
         }
 
