@@ -222,7 +222,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             key: 'panel-button-padding',
             title: _('Panel Button Padding'),
             subtitle: _(
-                'Horizontal space around panel buttons; −1 uses Just Perfection when configured, otherwise 4 px'
+                'Horizontal space around panel buttons; −1 uses Just Perfection when configured, otherwise 3 px'
             ),
             lower: -1,
             upper: 20,

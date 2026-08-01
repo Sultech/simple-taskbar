@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 22:04+0100\n"
+"POT-Creation-Date: 2026-08-01 05:46+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -147,10 +147,10 @@ msgstr "Отступ кнопок панели"
 #: prefs.js:225
 msgid ""
 "Horizontal space around panel buttons; −1 uses Just Perfection when "
-"configured, otherwise 4 px"
+"configured, otherwise 3 px"
 msgstr ""
 "Горизонтальный отступ вокруг кнопок панели; −1 использует настройки Just "
-"Perfection, если они заданы, иначе 4 пикселя"
+"Perfection, если они заданы, иначе 3 пикселя"
 
 #: prefs.js:232
 msgid "Application Icons"
@@ -874,77 +874,77 @@ msgstr "Системное меню"
 msgid "Utilities"
 msgstr ""
 
-#: windowsStartMenu.js:549
+#: windowsStartMenu.js:555
 msgid "Type here to search"
 msgstr "Введите текст для поиска"
 
-#: windowsStartMenu.js:620 windowsStartMenu.js:994
+#: windowsStartMenu.js:626 windowsStartMenu.js:1000
 msgid "Pinned"
 msgstr "Закреплённые"
 
-#: windowsStartMenu.js:625 windowsStartMenu.js:1062
+#: windowsStartMenu.js:631 windowsStartMenu.js:1068
 msgid "All apps"
 msgstr "Все приложения"
 
-#: windowsStartMenu.js:635
+#: windowsStartMenu.js:641
 msgid "Back"
 msgstr "Назад"
 
-#: windowsStartMenu.js:748
+#: windowsStartMenu.js:754
 msgid "Settings"
 msgstr "Настройки"
 
-#: windowsStartMenu.js:756
+#: windowsStartMenu.js:762
 msgid "Power Options"
 msgstr "Параметры питания"
 
-#: windowsStartMenu.js:821
+#: windowsStartMenu.js:827
 msgid "Suspend"
 msgstr "Режим ожидания"
 
-#: windowsStartMenu.js:828
+#: windowsStartMenu.js:834
 msgid "Restart"
 msgstr "Перезапуск"
 
-#: windowsStartMenu.js:835
+#: windowsStartMenu.js:841
 msgid "Power Off"
 msgstr "Выключение"
 
-#: windowsStartMenu.js:845
+#: windowsStartMenu.js:851
 msgid "Lock Screen"
 msgstr "Заблокировать экран"
 
-#: windowsStartMenu.js:852
+#: windowsStartMenu.js:858
 msgid "Log Out"
 msgstr "Выйти"
 
-#: windowsStartMenu.js:859
+#: windowsStartMenu.js:865
 msgid "Switch User"
 msgstr "Сменить пользователя"
 
-#: windowsStartMenu.js:1038
+#: windowsStartMenu.js:1044
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Выберите «Все», затем нажмите правой кнопкой на приложение, чтобы закрепить "
 "его"
 
-#: windowsStartMenu.js:1046
+#: windowsStartMenu.js:1052
 msgid "Recommended"
 msgstr "Рекомендуемые"
 
-#: windowsStartMenu.js:1082
+#: windowsStartMenu.js:1088
 msgid "Search results"
 msgstr "Результаты поиска"
 
-#: windowsStartMenu.js:1112 windowsStartMenu.js:1142
+#: windowsStartMenu.js:1118 windowsStartMenu.js:1148
 msgid "No results found"
 msgstr "Результаты не найдены"
 
-#: windowsStartMenu.js:1186
+#: windowsStartMenu.js:1192
 msgid "All"
 msgstr ""
 
-#: windowsStartMenu.js:1199
+#: windowsStartMenu.js:1205
 msgid "Other"
 msgstr ""
 
