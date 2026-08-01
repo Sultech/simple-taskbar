@@ -47,11 +47,25 @@ export function orderPanelItems(items, order) {
         .filter(item => item !== undefined);
 }
 
+function reorderBoxChildren(box, actors) {
+    for (let index = 0; index < actors.length; index++) {
+        const actor = actors[index];
+        if (box.get_child_at_index(index) === actor)
+            continue;
+
+        if (actor.get_parent() === box)
+            box.set_child_at_index(actor, index);
+        else
+            box.insert_child_at_index(actor, index);
+    }
+}
+
 export function placePanelItems(boxes, items, order) {
     const boxReached = new Set();
-    const leadingItemCounts = new Map(
-        PANEL_BOX_ITEMS.map(({position}) => [position, 0])
-    );
+    const targets = new Map(PANEL_BOX_ITEMS.map(({position}) => [
+        position,
+        {leading: [], trailing: []},
+    ]));
     const boxItems = PANEL_BOX_ITEMS.map(item => ({
         ...item,
         isBox: true,
@@ -65,13 +79,28 @@ export function placePanelItems(boxes, items, order) {
         if (!item.actor || !item.visible)
             continue;
 
-        const box = boxes[item.position];
-        if (boxReached.has(item.position)) {
-            box.add_child(item.actor);
-        } else {
-            const index = leadingItemCounts.get(item.position);
-            box.insert_child_at_index(item.actor, index);
-            leadingItemCounts.set(item.position, index + 1);
-        }
+        const target = targets.get(item.position);
+        if (boxReached.has(item.position))
+            target.trailing.push(item.actor);
+        else
+            target.leading.push(item.actor);
+    }
+
+    const managedActors = new Set();
+    for (const {actor, position, visible} of items) {
+        if (!actor)
+            continue;
+
+        managedActors.add(actor);
+        const parent = actor.get_parent();
+        if (parent && (!visible || parent !== boxes[position]))
+            parent.remove_child(actor);
+    }
+
+    for (const [position, {leading, trailing}] of targets) {
+        const box = boxes[position];
+        const unmanaged = box.get_children()
+            .filter(child => !managedActors.has(child));
+        reorderBoxChildren(box, [...leading, ...unmanaged, ...trailing]);
     }
 }

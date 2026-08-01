@@ -177,17 +177,6 @@ export class PanelController {
         const activities = Main.panel.statusArea.activities?.container;
         const quickSettings =
             Main.panel.statusArea.quickSettings?.container;
-        const actors = [
-            this._startButton,
-            this._taskbarBin,
-            this._showDesktopButton,
-            this._folderMenuButton,
-            ...this._panelItemState.map(item => item.actor),
-        ];
-
-        for (const actor of actors)
-            actor.get_parent()?.remove_child(actor);
-
         const showDesktopPosition = this._settings.get_string(
             'show-desktop-button-position'
         );
