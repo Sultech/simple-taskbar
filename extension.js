@@ -221,7 +221,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._tracker = null;
         this._appSystem = null;
         this._settings = null;
-        this._panelHeight = 44;
+        this._panelHeight = null;
     }
 
     _createTaskbarActors() {

@@ -342,6 +342,11 @@ export class FolderMenuController {
     _closeEnumerator(enumerator) {
         try {
             enumerator.close(null);
-        } catch {}
+        } catch (error) {
+            console.warn(
+                'Simple Taskbar could not close a folder enumerator: ' +
+                error.message
+            );
+        }
     }
 }
