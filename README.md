@@ -161,6 +161,11 @@ The settings provide control over:
 - Panels on secondary monitors.
 - 32–80px panel height.
 - 15–48px application icons with 0–16px spacing.
+- Automatic or explicit 0–20px horizontal padding around panel buttons.
+  Automatic follows Just Perfection's button padding when that extension
+  supplies it and otherwise uses a 4px fallback. An explicit value always takes
+  precedence, without changing Just Perfection's own setting. Default GNOME
+  Panel mode applies 12px and restores Automatic when Taskbar mode returns.
 - Left or centered application alignment.
 - Left or centered Start button placement, adjustable padding and an icon
   selected from bundled GNOME and distribution designs or a personal image
@@ -349,10 +354,10 @@ GNOME Shell caches imported extension modules for the lifetime of the Shell
 process. Disabling and re-enabling an extension cannot load edited JavaScript
 into that same process.
 
-On Ubuntu, install Mutter's development helper:
+On Ubuntu, install the development dependencies:
 
 ```sh
-sudo apt install mutter-dev-bin
+sudo apt install mutter-dev-bin gettext
 ```
 
 Then run:
@@ -386,7 +391,8 @@ journalctl -f -o cat /usr/bin/gnome-shell
 
 ## Build a package
 
-Create the complete installable archive with:
+Building requires `msgfmt` from GNU gettext, `glib-compile-schemas` and
+`gnome-extensions`. Create the complete installable archive with:
 
 ```sh
 ./package.sh
@@ -399,9 +405,10 @@ dist/simple-taskbar@sultech.shell-extension.zip
 ```
 
 The package contains the runtime modules, preferences, schema, licence,
-bundled Start icons and their attribution notices. Development scripts and
-generated schema binaries are not included. An alternative output directory
-can be supplied:
+bundled Start and distribution icons, their attribution notices and the
+compiled translations. Development scripts, translation sources and generated
+schema binaries are not included. An alternative output directory can be
+supplied:
 
 ```sh
 ./package.sh /tmp/simple-taskbar-package
