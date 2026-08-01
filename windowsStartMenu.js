@@ -415,8 +415,10 @@ export class WindowsStartMenu {
         const monitor = this._getSourceMonitor();
         const fixedPanelPosition = monitor &&
             this._settings.get_boolean('panel-autohide-enabled');
-        const useDummySource =
-            Boolean(monitor && (centerOnMonitor || fixedPanelPosition));
+        const useDummySource = Boolean(
+            monitor && (centerOnMonitor || fixedPanelPosition) &&
+            this._sourceActor.has_allocation()
+        );
         const sourceActor = useDummySource
             ? Main.layoutManager.dummyCursor
             : this._sourceActor;
