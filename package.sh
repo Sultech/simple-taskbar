@@ -52,6 +52,7 @@ gnome-extensions pack \
     --extra-source=startMenuSearchController.js \
     --extra-source=switcherKeybindingRouter.js \
     --extra-source=taskbarAppMenu.js \
+    --extra-source=taskbarButtonGeometry.js \
     --extra-source=taskbarController.js \
     --extra-source=taskbarLayout.js \
     --extra-source=taskbarViewport.js \
