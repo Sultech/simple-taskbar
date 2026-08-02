@@ -13,12 +13,6 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
-import {
-    getTaskbarButtonGlassHeight,
-    getTaskbarButtonSlotWidth,
-    getTaskbarIconButtonWidth,
-    TASKBAR_BUTTON_GLASS_TOP,
-} from './taskbarButtonGeometry.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
@@ -68,7 +62,7 @@ export class StartButtonController {
             y_align: Clutter.ActorAlign.CENTER,
         });
         this._content = new St.Widget({
-            layout_manager: new Clutter.FixedLayout(),
+            layout_manager: new Clutter.BinLayout(),
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
@@ -76,6 +70,9 @@ export class StartButtonController {
         this._hover = new St.Widget({
             style_class: 'simple-taskbar-start-hover',
             reactive: false,
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.FILL,
+            y_expand: true,
         });
         this._content.add_child(this._hover);
         this._content.add_child(this._icon);
@@ -138,14 +135,10 @@ export class StartButtonController {
 
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
-        const glassWidth = getTaskbarIconButtonWidth(iconSize);
-        const width = getTaskbarButtonSlotWidth(
-            glassWidth,
-            this._settings.get_int('icon-spacing')
-        ) + padding * 2;
+        this._hover.set_width(iconSize);
+        const width = iconSize + padding * 2;
         this._content.set_width(width);
         this.actor.set_width(width);
-        this._syncHoverGeometry();
         this.actor.set_style('min-width: 0; padding: 0;');
     }
 
@@ -249,7 +242,6 @@ export class StartButtonController {
         if (shellShowAppsButton) {
             this._connect(shellShowAppsButton, 'notify::checked', () => {
                 this._syncState();
-                this._notifyMenuOpenStateChanged();
             });
         }
         this._connect(Main.overview, 'showing', () => {
@@ -262,7 +254,6 @@ export class StartButtonController {
                 : false;
             this._startOpenedOverview = false;
             this._setActivitiesOverviewState(false);
-            this._notifyMenuOpenStateChanged();
         });
         this._connect(this._settings, 'changed::windows-start-menu-enabled', () => {
             this._windowsStartMenu?.close();
@@ -272,7 +263,6 @@ export class StartButtonController {
             this.actor.accessible_name = this._accessibleName();
             this._syncVisibility();
             this._syncState();
-            this._notifyMenuOpenStateChanged();
             this._keybindings?.sync();
         });
         this._connect(
@@ -312,14 +302,6 @@ export class StartButtonController {
             this._syncVisibility();
             this._keybindings?.sync();
         });
-        this._connect(this._settings, 'changed::panel-height', () => {
-            this._syncHoverGeometry();
-        });
-        this._connect(
-            this._settings,
-            'changed::running-indicator-style',
-            () => this._syncHoverGeometry()
-        );
         this._connect(this._settings, 'changed::start-menu-super-key', () => {
             this._keybindings?.sync();
         });
@@ -365,10 +347,7 @@ export class StartButtonController {
     }
 
     _notifyMenuOpenStateChanged() {
-        const open = this._windowsModeEnabled()
-            ? this.menuIsOpen
-            : Main.overview.searchController._showAppsButton.checked;
-        this._onMenuOpenStateChanged(open);
+        this._onMenuOpenStateChanged(this.menuIsOpen);
     }
 
     _toggleApplications() {
@@ -457,34 +436,6 @@ export class StartButtonController {
 
     _windowsModeEnabled() {
         return this._settings.get_boolean('windows-start-menu-enabled');
-    }
-
-    _syncHoverGeometry() {
-        const roundedIndicators = this._settings.get_string(
-            'running-indicator-style'
-        ) === 'rounded';
-        const iconSize = this._icon.icon_size;
-        const glassWidth = getTaskbarIconButtonWidth(iconSize);
-        const buttonWidth = getTaskbarButtonSlotWidth(
-            glassWidth,
-            this._settings.get_int('icon-spacing')
-        ) + this._settings.get_int('start-button-padding') * 2;
-        const panelHeight = this._settings.get_int('panel-height');
-        this._hover.set_position(
-            Math.floor((buttonWidth - glassWidth) / 2),
-            TASKBAR_BUTTON_GLASS_TOP
-        );
-        this._hover.set_size(
-            glassWidth,
-            getTaskbarButtonGlassHeight(
-                panelHeight,
-                roundedIndicators
-            )
-        );
-        this._icon.set_position(
-            Math.floor((buttonWidth - iconSize) / 2),
-            Math.floor((panelHeight - iconSize) / 2)
-        );
     }
 
     _currentGIcon() {

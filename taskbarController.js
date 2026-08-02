@@ -18,12 +18,6 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
-import {
-    getTaskbarButtonGlassHeight,
-    getTaskbarButtonSlotWidth,
-    getTaskbarIconButtonWidth,
-    TASKBAR_BUTTON_GLASS_TOP,
-} from './taskbarButtonGeometry.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
@@ -107,7 +101,6 @@ export class TaskbarController {
         this._shownInitially = false;
         this._availableWidth = 0;
         this._combineWhenFull = false;
-        this._startMenuOpen = false;
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = Main.layoutManager._startingUp;
         this._startupSettleId = 0;
@@ -319,7 +312,6 @@ export class TaskbarController {
         this._shownInitially = false;
         this._availableWidth = 0;
         this._combineWhenFull = false;
-        this._startMenuOpen = null;
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = false;
     }
@@ -351,11 +343,6 @@ export class TaskbarController {
             this._updateGlassGeometry(item);
         }
         this.queueIconGeometryUpdate();
-    }
-
-    setStartMenuOpen(open) {
-        this._startMenuOpen = open;
-        this.syncButtonStates();
     }
 
     applyAppearance() {
@@ -487,11 +474,10 @@ export class TaskbarController {
             const running = window
                 ? windowCount > 0
                 : app.state === Shell.AppState.RUNNING && windowCount > 0;
-            const hasFocus = window
+            const focused = window
                 ? window === focusedWindow
                 : app === focusedApp &&
                     this._interestingWindows(app).includes(focusedWindow);
-            const focused = hasFocus && !this._startMenuOpen;
             item.set_style_class_name(
                 `dash-item-container simple-taskbar-app-item` +
                 `${running ? ' running' : ''}` +
@@ -1164,7 +1150,7 @@ export class TaskbarController {
         const glass = new St.Widget({
             style_class: 'simple-taskbar-app-glass',
             x: 0,
-            y: TASKBAR_BUTTON_GLASS_TOP,
+            y: 4,
             width: glassWidth,
             height: glassHeight,
         });
@@ -1514,7 +1500,7 @@ export class TaskbarController {
         item._taskbarSlot.set_size(slotWidth, this._panelHeight);
         item._taskbarVisual.set_size(glassWidth, this._panelHeight);
         item._taskbarGlassHost.set_size(glassWidth, this._panelHeight);
-        item._taskbarGlass.set_position(0, TASKBAR_BUTTON_GLASS_TOP);
+        item._taskbarGlass.set_position(0, 4);
         item._taskbarGlass.set_size(glassWidth, glassHeight);
         item._taskbarLabel.set_width(this._appLabelWidth);
         this._updateIndicatorGeometry(item, glassWidth);
@@ -1524,9 +1510,9 @@ export class TaskbarController {
         const roundedIndicators = this._settings.get_string(
             'running-indicator-style'
         ) === 'rounded';
-        return getTaskbarButtonGlassHeight(
-            this._panelHeight,
-            roundedIndicators
+        return Math.max(
+            1,
+            this._panelHeight - (roundedIndicators ? 7 : 8)
         );
     }
 
@@ -1566,17 +1552,20 @@ export class TaskbarController {
         showLabels = this._showAppLabels(),
         labelWidth = this._appLabelWidth
     ) {
-        const iconWidth = getTaskbarIconButtonWidth(this._iconSize);
+        const minimumIconWidth = this._iconSize % 2 === 0 ? 22 : 21;
+        const iconWidth =
+            Math.max(this._iconSize, minimumIconWidth) + 8;
         return window && showLabels
             ? iconWidth + APP_LABEL_SPACING + labelWidth
             : iconWidth;
     }
 
     _itemSlotWidth(window) {
-        return getTaskbarButtonSlotWidth(
-            this._buttonWidth(window),
-            this._settings.get_int('icon-spacing')
+        const spacing = Math.max(
+            this._settings.get_int('icon-spacing'),
+            0
         );
+        return this._buttonWidth(window) + spacing;
     }
 
     _applyCurrentButtonWidths() {

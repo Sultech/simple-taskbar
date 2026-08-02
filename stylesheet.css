@@ -289,8 +289,6 @@
 #panel.simple-taskbar-panel .simple-taskbar-start {
     border-left-width: 0;
     border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-width: 0;
 }
 
 #panel.simple-taskbar-panel .simple-taskbar-start:focus,

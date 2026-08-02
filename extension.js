@@ -102,10 +102,8 @@ export default class SimpleTaskbarExtension extends Extension {
             openPreferences: () => this.openPreferences(),
             toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
             switcherKeybindings: this._switcherKeybindings,
-            onMenuOpenStateChanged: open => {
-                this._taskbarController.setStartMenuOpen(open);
-                this._panelController?.setStartMenuOpen(open);
-            },
+            onMenuOpenStateChanged: open =>
+                this._panelController?.setStartMenuOpen(open),
         });
 
         this._createTaskbarActors();
