@@ -717,7 +717,7 @@ msgstr "Afficher le bouton des activités"
 #: prefs.js:1331
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr ""
-"Affichier le bouton de l’aperçu des espaces de travail GNOME sur la barre "
+"Afficher le bouton de l’aperçu des espaces de travail GNOME sur la barre "
 "des tâches"
 
 #: prefs.js:1343 prefs.js:1489
