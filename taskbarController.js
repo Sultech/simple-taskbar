@@ -1226,8 +1226,7 @@ export class TaskbarController {
             style_class: 'simple-taskbar-running-indicator-segment',
         });
         const indicatorSecondary = new St.Widget({
-            style_class: 'simple-taskbar-running-indicator-segment ' +
-                'simple-taskbar-running-indicator-segment-split',
+            style_class: 'simple-taskbar-running-indicator-segment',
             visible: false,
         });
         indicator.add_child(indicatorPrimary);
@@ -1544,11 +1543,9 @@ export class TaskbarController {
             barWidth = evenWidth ? 18 : 17;
 
         const show = item._taskbarShowSecondary;
-        const secondaryWidth = show
-            ? Math.max(1, Math.floor(
-                (barWidth - INDICATOR_SEGMENT_GAP) / 2
-            ))
-            : 0;
+        const secondaryWidth = Math.max(1, Math.floor(
+            (containerWidth - INDICATOR_SEGMENT_GAP) / 2
+        ));
         const primaryWidth = show
             ? barWidth - INDICATOR_SEGMENT_GAP - secondaryWidth
             : barWidth;
@@ -1560,14 +1557,14 @@ export class TaskbarController {
         if (item._taskbarIndicatorWidth === containerWidth &&
             item._taskbarIndicatorPrimaryWidth === primaryWidth &&
             item._taskbarIndicatorPrimaryX === primaryX &&
-            item._taskbarIndicatorSecondaryWidth === secondaryWidth &&
+            item._taskbarIndicatorSecondaryX === secondaryX &&
             item._taskbarIndicatorSecondaryShown === show)
             return;
 
         item._taskbarIndicatorWidth = containerWidth;
         item._taskbarIndicatorPrimaryWidth = primaryWidth;
         item._taskbarIndicatorPrimaryX = primaryX;
-        item._taskbarIndicatorSecondaryWidth = secondaryWidth;
+        item._taskbarIndicatorSecondaryX = secondaryX;
         item._taskbarIndicatorSecondaryShown = show;
 
         const indicator = item._taskbarIndicator;
@@ -1575,16 +1572,15 @@ export class TaskbarController {
         const secondary = item._taskbarIndicatorSecondary;
 
         indicator.set_width(containerWidth);
+        secondary.set_width(secondaryWidth);
 
         if (!animate) {
             primary.remove_transition('width');
             primary.remove_transition('x');
-            secondary.remove_transition('width');
             secondary.remove_transition('x');
             secondary.remove_transition('opacity');
             primary.set_width(primaryWidth);
             primary.set_x(primaryX);
-            secondary.set_width(secondaryWidth);
             secondary.set_x(secondaryX);
             secondary.opacity = 255;
             secondary.visible = show;
@@ -1600,13 +1596,11 @@ export class TaskbarController {
 
         if (show) {
             if (!secondary.visible) {
-                secondary.set_width(0);
-                secondary.set_x(primaryX + primaryWidth);
+                secondary.set_x(primaryX + barWidth);
                 secondary.opacity = 0;
                 secondary.visible = true;
             }
             secondary.ease({
-                width: secondaryWidth,
                 x: secondaryX,
                 opacity: 255,
                 duration: INDICATOR_ANIMATION_DURATION,
@@ -1616,7 +1610,6 @@ export class TaskbarController {
         }
 
         secondary.ease({
-            width: secondaryWidth,
             x: secondaryX,
             opacity: 0,
             duration: INDICATOR_ANIMATION_DURATION,

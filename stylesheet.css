@@ -377,10 +377,6 @@
     transition-duration: 150ms;
 }
 
-.simple-taskbar-running-indicator-segment-split {
-    transition-duration: 0ms;
-}
-
 .simple-taskbar-apps.simple-taskbar-rounded-indicators
     .simple-taskbar-running-indicator {
     height: 4px;
