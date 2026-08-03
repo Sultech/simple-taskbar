@@ -180,9 +180,9 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
-    background-gradient-start: rgba(255, 255, 255, 0.40);
-    background-gradient-end: rgba(255, 255, 255, 0.26);
-    border-color: rgba(255, 255, 255, 0.32);
+    background-gradient-start: rgba(255, 255, 255, 0.52);
+    background-gradient-end: rgba(255, 255, 255, 0.36);
+    border-color: rgba(255, 255, 255, 0.42);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-label {
