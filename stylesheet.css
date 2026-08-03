@@ -173,16 +173,16 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item:hover .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
-    background-gradient-start: rgba(0, 0, 0, 0.10);
-    background-gradient-end: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.10);
+    background-gradient-start: rgba(255, 255, 255, 0.22);
+    background-gradient-end: rgba(255, 255, 255, 0.14);
+    border-color: rgba(0, 0, 0, 0.05);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
-    background-gradient-start: rgba(0, 0, 0, 0.15);
-    background-gradient-end: rgba(0, 0, 0, 0.07);
-    border-color: rgba(0, 0, 0, 0.14);
+    background-gradient-start: rgba(255, 255, 255, 0.40);
+    background-gradient-end: rgba(255, 255, 255, 0.26);
+    border-color: rgba(0, 0, 0, 0.06);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-label {
@@ -337,16 +337,16 @@
 
 .simple-taskbar-app-item:hover .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
-    background-gradient-start: rgba(255, 255, 255, 0.13);
-    background-gradient-end: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.10);
+    background-gradient-start: rgba(255, 255, 255, 0.16);
+    background-gradient-end: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.12);
 }
 
 .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
-    background-gradient-start: rgba(255, 255, 255, 0.22);
-    background-gradient-end: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.18);
+    background-gradient-start: rgba(255, 255, 255, 0.28);
+    background-gradient-end: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 .simple-taskbar-app-button {
