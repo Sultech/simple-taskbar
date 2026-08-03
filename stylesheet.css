@@ -367,7 +367,6 @@
 .simple-taskbar-running-indicator {
     height: 3px;
     margin-bottom: 4px;
-    spacing: 2px;
     background-color: transparent;
 }
 
@@ -375,6 +374,11 @@
     height: 3px;
     border-radius: 3px;
     background-color: transparent;
+    transition-duration: 150ms;
+}
+
+.simple-taskbar-running-indicator-segment-split {
+    transition-duration: 0ms;
 }
 
 .simple-taskbar-apps.simple-taskbar-rounded-indicators

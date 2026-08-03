@@ -21,6 +21,8 @@ import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
+const INDICATOR_ANIMATION_DURATION = 150;
+const INDICATOR_SEGMENT_GAP = 2;
 const APP_LABEL_WIDTH = 140;
 const APP_LABEL_MIN_WIDTH = 40;
 const APP_LABEL_SPACING = 8;
@@ -437,7 +439,7 @@ export class TaskbarController {
         }
 
         this._shownInitially = true;
-        this.syncButtonStates();
+        this.syncButtonStates(animateMembershipChanges);
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
     }
@@ -473,7 +475,7 @@ export class TaskbarController {
         this._shownInitially = false;
     }
 
-    syncButtonStates() {
+    syncButtonStates(animate = true) {
         const focusedApp = this._tracker?.focus_app;
         const focusedWindow = global.display.focus_window;
         for (const item of this._appButtons.values()) {
@@ -498,7 +500,9 @@ export class TaskbarController {
             item._taskbarFocused = focused;
             item._taskbarRunning = running;
             item._taskbarMultipleWindows = !window && windowCount > 1;
-            this._updateIndicatorGeometry(item);
+            item._taskbarShowSecondary =
+                !window && focused && windowCount > 1;
+            this._updateIndicatorGeometry(item, animate);
             this._syncIndicatorColor(item);
             button.accessible_name = window
                 ? `${window.get_title() || app.get_name()}, ${_('running')}`
@@ -511,9 +515,6 @@ export class TaskbarController {
                 button.add_style_pseudo_class('selected');
             else
                 button.remove_style_pseudo_class('selected');
-
-            item._taskbarIndicatorSecondary.visible =
-                !window && focused && windowCount > 1;
         }
     }
 
@@ -1217,17 +1218,16 @@ export class TaskbarController {
             accessible_name: app.get_name(),
             child: layout,
         });
-        const indicator = new St.BoxLayout({
+        const indicator = new St.Widget({
             style_class: 'simple-taskbar-running-indicator',
             x_align: Clutter.ActorAlign.CENTER,
         });
         const indicatorPrimary = new St.Widget({
             style_class: 'simple-taskbar-running-indicator-segment',
-            x_expand: true,
         });
         const indicatorSecondary = new St.Widget({
-            style_class: 'simple-taskbar-running-indicator-segment',
-            x_expand: true,
+            style_class: 'simple-taskbar-running-indicator-segment ' +
+                'simple-taskbar-running-indicator-segment-split',
             visible: false,
         });
         indicator.add_child(indicatorPrimary);
@@ -1250,11 +1250,13 @@ export class TaskbarController {
         item._taskbarGlassHost = glassHost;
         item._taskbarGlass = glass;
         item._taskbarIndicator = indicator;
+        item._taskbarIndicatorPrimary = indicatorPrimary;
         item._taskbarIndicatorSecondary = indicatorSecondary;
         item._taskbarFocused = false;
         item._taskbarRunning = false;
         item._taskbarMultipleWindows = false;
-        this._updateIndicatorGeometry(item, glassWidth);
+        item._taskbarShowSecondary = false;
+        this._updateIndicatorGeometry(item, false, glassWidth);
         if (window) {
             window.connectObject(
                 'notify::title',
@@ -1514,7 +1516,7 @@ export class TaskbarController {
         item._taskbarGlass.set_position(0, 4);
         item._taskbarGlass.set_size(glassWidth, glassHeight);
         item._taskbarLabel.set_width(this._appLabelWidth);
-        this._updateIndicatorGeometry(item, glassWidth);
+        this._updateIndicatorGeometry(item, false, glassWidth);
     }
 
     _glassHeight() {
@@ -1529,17 +1531,101 @@ export class TaskbarController {
 
     _updateIndicatorGeometry(
         item,
+        animate = false,
         glassWidth = this._buttonWidth(item._taskbarWindow)
     ) {
         const evenWidth = glassWidth % 2 === 0;
-        let indicatorWidth = evenWidth ? 8 : 7;
+        const containerWidth = evenWidth ? 20 : 21;
+        let barWidth = evenWidth ? 8 : 7;
 
         if (item._taskbarFocused)
-            indicatorWidth = evenWidth ? 20 : 21;
+            barWidth = containerWidth;
         else if (item._taskbarMultipleWindows)
-            indicatorWidth = evenWidth ? 18 : 17;
+            barWidth = evenWidth ? 18 : 17;
 
-        item._taskbarIndicator.set_width(indicatorWidth);
+        const show = item._taskbarShowSecondary;
+        const secondaryWidth = show
+            ? Math.max(1, Math.floor(
+                (barWidth - INDICATOR_SEGMENT_GAP) / 2
+            ))
+            : 0;
+        const primaryWidth = show
+            ? barWidth - INDICATOR_SEGMENT_GAP - secondaryWidth
+            : barWidth;
+        const primaryX = (containerWidth - barWidth) / 2;
+        const secondaryX = show
+            ? primaryX + primaryWidth + INDICATOR_SEGMENT_GAP
+            : primaryX + primaryWidth;
+
+        if (item._taskbarIndicatorWidth === containerWidth &&
+            item._taskbarIndicatorPrimaryWidth === primaryWidth &&
+            item._taskbarIndicatorPrimaryX === primaryX &&
+            item._taskbarIndicatorSecondaryWidth === secondaryWidth &&
+            item._taskbarIndicatorSecondaryShown === show)
+            return;
+
+        item._taskbarIndicatorWidth = containerWidth;
+        item._taskbarIndicatorPrimaryWidth = primaryWidth;
+        item._taskbarIndicatorPrimaryX = primaryX;
+        item._taskbarIndicatorSecondaryWidth = secondaryWidth;
+        item._taskbarIndicatorSecondaryShown = show;
+
+        const indicator = item._taskbarIndicator;
+        const primary = item._taskbarIndicatorPrimary;
+        const secondary = item._taskbarIndicatorSecondary;
+
+        indicator.set_width(containerWidth);
+
+        if (!animate) {
+            primary.remove_transition('width');
+            primary.remove_transition('x');
+            secondary.remove_transition('width');
+            secondary.remove_transition('x');
+            secondary.remove_transition('opacity');
+            primary.set_width(primaryWidth);
+            primary.set_x(primaryX);
+            secondary.set_width(secondaryWidth);
+            secondary.set_x(secondaryX);
+            secondary.opacity = 255;
+            secondary.visible = show;
+            return;
+        }
+
+        primary.ease({
+            width: primaryWidth,
+            x: primaryX,
+            duration: INDICATOR_ANIMATION_DURATION,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+
+        if (show) {
+            if (!secondary.visible) {
+                secondary.set_width(0);
+                secondary.set_x(primaryX + primaryWidth);
+                secondary.opacity = 0;
+                secondary.visible = true;
+            }
+            secondary.ease({
+                width: secondaryWidth,
+                x: secondaryX,
+                opacity: 255,
+                duration: INDICATOR_ANIMATION_DURATION,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+            return;
+        }
+
+        secondary.ease({
+            width: secondaryWidth,
+            x: secondaryX,
+            opacity: 0,
+            duration: INDICATOR_ANIMATION_DURATION,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onComplete: () => {
+                secondary.visible = false;
+                secondary.opacity = 255;
+            },
+        });
     }
 
     _syncIndicatorColor(item) {
