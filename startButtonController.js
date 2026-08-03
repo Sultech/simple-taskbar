@@ -242,6 +242,7 @@ export class StartButtonController {
         if (shellShowAppsButton) {
             this._connect(shellShowAppsButton, 'notify::checked', () => {
                 this._syncState();
+                this._notifyMenuOpenStateChanged();
             });
         }
         this._connect(Main.overview, 'showing', () => {
@@ -254,6 +255,7 @@ export class StartButtonController {
                 : false;
             this._startOpenedOverview = false;
             this._setActivitiesOverviewState(false);
+            this._notifyMenuOpenStateChanged();
         });
         this._connect(this._settings, 'changed::windows-start-menu-enabled', () => {
             this._windowsStartMenu?.close();
@@ -263,6 +265,7 @@ export class StartButtonController {
             this.actor.accessible_name = this._accessibleName();
             this._syncVisibility();
             this._syncState();
+            this._notifyMenuOpenStateChanged();
             this._keybindings?.sync();
         });
         this._connect(
@@ -347,7 +350,12 @@ export class StartButtonController {
     }
 
     _notifyMenuOpenStateChanged() {
-        this._onMenuOpenStateChanged(this.menuIsOpen);
+        const shellShowAppsButton =
+            Main.overview.searchController?._showAppsButton;
+        const open = this._windowsModeEnabled()
+            ? this.menuIsOpen
+            : Boolean(shellShowAppsButton?.checked);
+        this._onMenuOpenStateChanged(open);
     }
 
     _toggleApplications() {

@@ -101,6 +101,7 @@ export class TaskbarController {
         this._shownInitially = false;
         this._availableWidth = 0;
         this._combineWhenFull = false;
+        this._startMenuOpen = false;
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = Main.layoutManager._startingUp;
         this._startupSettleId = 0;
@@ -312,6 +313,7 @@ export class TaskbarController {
         this._shownInitially = false;
         this._availableWidth = 0;
         this._combineWhenFull = false;
+        this._startMenuOpen = false;
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = false;
     }
@@ -334,6 +336,14 @@ export class TaskbarController {
             this._updateGlassGeometry(item);
         }
         this.queueIconGeometryUpdate();
+    }
+
+    setStartMenuOpen(open) {
+        if (this._startMenuOpen === open)
+            return;
+
+        this._startMenuOpen = open;
+        this.syncButtonStates();
     }
 
     setPanelHeight(panelHeight) {
@@ -474,10 +484,11 @@ export class TaskbarController {
             const running = window
                 ? windowCount > 0
                 : app.state === Shell.AppState.RUNNING && windowCount > 0;
-            const focused = window
+            const hasFocus = window
                 ? window === focusedWindow
                 : app === focusedApp &&
                     this._interestingWindows(app).includes(focusedWindow);
+            const focused = hasFocus && !this._startMenuOpen;
             item.set_style_class_name(
                 `dash-item-container simple-taskbar-app-item` +
                 `${running ? ' running' : ''}` +
