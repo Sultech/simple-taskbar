@@ -175,14 +175,14 @@
     background-gradient-direction: vertical;
     background-gradient-start: rgba(255, 255, 255, 0.22);
     background-gradient-end: rgba(255, 255, 255, 0.14);
-    border-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(255, 255, 255, 0.16);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
     background-gradient-start: rgba(255, 255, 255, 0.40);
     background-gradient-end: rgba(255, 255, 255, 0.26);
-    border-color: rgba(0, 0, 0, 0.06);
+    border-color: rgba(255, 255, 255, 0.32);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-label {
