@@ -1313,9 +1313,13 @@ export class TaskbarController {
             if (mouseButton === 2) {
                 this._windowPreviews.hideTooltip();
                 this._windowPreviews.hide();
-                if (this._favorites.isFavorite(app.get_id()))
-                    this._animatePinnedLaunch(item);
-                this._openNewWindow(app);
+                if (this._settings.get_boolean('middle-click-close-apps')) {
+                    app.request_quit();
+                } else {
+                    if (this._favorites.isFavorite(app.get_id()))
+                        this._animatePinnedLaunch(item);
+                    this._openNewWindow(app);
+                }
                 return Clutter.EVENT_STOP;
             }
             if (mouseButton === 3) {

@@ -101,6 +101,10 @@
       <default>5</default>
       <summary>Minimum delay between scroll workspace changes in milliseconds</summary>
     </key>
+    <key name="middle-click-close-apps" type="b">
+      <default>false</default>
+      <summary>Close applications with the middle mouse button</summary>
+    </key>
     <key name="panel-menu-click-only" type="b">
       <default>true</default>
       <summary>Require a click to switch between panel menus</summary>
