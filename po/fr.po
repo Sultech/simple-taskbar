@@ -65,7 +65,7 @@ msgstr "Activer la grille Alt-Tab"
 msgid "Replace GNOME’s application switcher with a responsive window grid"
 msgstr ""
 "Remplacer le sélecteur d’applications de GNOME par une grille de fenêtres "
-"dynamique "
+"dynamique"
 
 #: prefs.js:83
 msgid "Maximum Card Size"
@@ -791,7 +791,7 @@ msgstr "Bouton démarrer style Eleven ou GNOME d’origine"
 
 #: prefs.js:1460
 msgid "Activities"
-msgstr "Activités "
+msgstr "Activités"
 
 #: prefs.js:1461
 msgid "GNOME workspace overview button"
