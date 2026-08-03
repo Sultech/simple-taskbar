@@ -89,7 +89,8 @@ Pinning, unpinning or rearranging a favourite updates the Dash as well.
 Application buttons support:
 
 - **Left click:** launch, focus or minimize the application.
-- **Middle click:** open a new window.
+- **Middle click:** open a new window, or close all application windows when
+  the advanced **Middle Click Closes Applications** setting is enabled.
 - **Right click:** open GNOME's application menu. Nautilus additionally shows
   Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts by
   default; these shortcuts can be disabled in the extension settings.

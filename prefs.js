@@ -729,6 +729,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             workspaceScrollDelayRow.sensitive = widget.active;
         });
 
+        const middleClickCloseAppsSwitch = new Adw.SwitchRow({
+            title: _('Middle Click Closes Applications'),
+            subtitle: _('Close all application windows instead of opening a new window'),
+            active: window._settings.get_boolean('middle-click-close-apps'),
+        });
+        behaviorGroup.add(middleClickCloseAppsSwitch);
+        window._settings.bind(
+            'middle-click-close-apps',
+            middleClickCloseAppsSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const panelMenuClickOnlySwitch = new Adw.SwitchRow({
             title: _('Panel Menus Require Click'),
             subtitle: _('Switch between clock, system, and tray menus only when clicked'),
@@ -1046,7 +1059,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             hideAppLabelsSwitch,
             isolateWorkspacesSwitch,
             isolateMonitorsSwitch,
-            panelAutoHideSwitch,
+            middleClickCloseAppsSwitch,
             hotEdgeAnimationSwitch,
             panelMenuClickOnlySwitch,
             notificationBannerSwitch,
