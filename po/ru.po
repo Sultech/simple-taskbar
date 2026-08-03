@@ -39,7 +39,7 @@ msgstr "Панель задач"
 
 #: prefs.js:44
 msgid "Window Switching"
-msgstr ""
+msgstr "Переключение окон"
 
 #: prefs.js:50
 msgid "Start Menu"
@@ -47,36 +47,36 @@ msgstr "Меню «Пуск»"
 
 #: prefs.js:56
 msgid "Grid Alt-Tab"
-msgstr ""
+msgstr "Сетка Alt-Tab"
 
 #: prefs.js:58
 msgid "Switch directly between open windows using live previews."
-msgstr ""
+msgstr "Переключайтесь между открытыми окнами с помощью живых миниатюр."
 
 #: prefs.js:64
 msgid "Enable Grid Alt-Tab"
-msgstr ""
+msgstr "Включить сетку Alt-Tab"
 
 #: prefs.js:66
 msgid "Replace GNOME’s application switcher with a responsive window grid"
-msgstr ""
+msgstr "Заменить переключатель приложений GNOME адаптивной сеткой окон"
 
 #: prefs.js:83
 msgid "Maximum Card Size"
-msgstr ""
+msgstr "Максимальный размер карточки"
 
 #: prefs.js:85
 msgid "Largest preview height in pixels; widths follow each window’s shape"
 msgstr ""
+"Наибольшая высота миниатюры в пикселях; ширина зависит от пропорций окна"
 
 #: prefs.js:93 prefs.js:366
 msgid "Isolate Workspaces"
 msgstr "Изолировать рабочие столы"
 
 #: prefs.js:95
-#, fuzzy
 msgid "Show windows from the current workspace instead of all workspaces"
-msgstr "Показывать запущенные приложения только с текущего рабочего стола"
+msgstr "Показывать окна только с текущего рабочего стола, а не со всех"
 
 #: prefs.js:109 prefs.js:379
 msgid "Isolate Monitors"
@@ -195,20 +195,19 @@ msgstr "Прямые"
 
 #: prefs.js:267
 msgid "Custom Indicator Colors"
-msgstr ""
+msgstr "Свои цвета индикаторов"
 
 #: prefs.js:268
-#, fuzzy
 msgid "Choose colors for running application indicators"
-msgstr "Выберите форму индикаторов под запущенными приложениями"
+msgstr "Выберите цвета индикаторов запущенных приложений"
 
 #: prefs.js:285
 msgid "Focused Indicator Color"
-msgstr ""
+msgstr "Цвет индикатора активного приложения"
 
 #: prefs.js:293
 msgid "Unfocused Indicator Color"
-msgstr ""
+msgstr "Цвет индикатора неактивного приложения"
 
 #: prefs.js:308
 msgid "Icon Alignment"
@@ -389,19 +388,20 @@ msgstr "Показывать панель задач, когда указате�
 
 #: prefs.js:665
 msgid "Bottom Hot Edge"
-msgstr ""
+msgstr "Активный нижний край"
 
 #: prefs.js:666
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
+"Подведите указатель к нижнему краю экрана, чтобы открыть или закрыть обзор"
 
 #: prefs.js:680
 msgid "Hot Edge Animation"
-msgstr ""
+msgstr "Анимация активного края"
 
 #: prefs.js:681
 msgid "Show a ripple when the bottom hot edge activates"
-msgstr ""
+msgstr "Показывать волну при срабатывании нижнего края"
 
 #: prefs.js:703
 msgid "Workspace Scroll"
@@ -535,28 +535,27 @@ msgstr "Показывать действия питания здесь, а не
 
 #: prefs.js:1001
 msgid "Open All Apps by Default"
-msgstr ""
+msgstr "Открывать «Все приложения» по умолчанию"
 
 #: prefs.js:1002
 msgid "Skip Pinned and open directly to applications and categories"
-msgstr ""
+msgstr "Пропускать закреплённые и сразу открывать приложения и категории"
 
 #: prefs.js:1024
-#, fuzzy
 msgid "Show Recommended Apps"
-msgstr "Рекомендуемые"
+msgstr "Показывать рекомендуемые приложения"
 
 #: prefs.js:1025
 msgid "Display frequently used applications below pinned apps"
-msgstr ""
+msgstr "Показывать часто используемые приложения под закреплёнными"
 
 #: prefs.js:1082
 msgid "Organize All Apps into Categories"
-msgstr ""
+msgstr "Разбить все приложения по категориям"
 
 #: prefs.js:1083
 msgid "Browse applications by category in the Start menu"
-msgstr ""
+msgstr "Просматривать приложения по категориям в меню «Пуск»"
 
 #: prefs.js:1105
 msgid "Show Original GNOME Button"
@@ -618,13 +617,12 @@ msgstr ""
 "Start Menu, пока оно включено"
 
 #: prefs.js:1251
-#, fuzzy
 msgid "Super+E Opens File Manager"
-msgstr "Super открывает меню «Пуск»"
+msgstr "Super+E открывает файловый менеджер"
 
 #: prefs.js:1253
 msgid "Open your home folder with the system’s default file manager"
-msgstr ""
+msgstr "Открывать домашнюю папку в файловом менеджере по умолчанию"
 
 #: prefs.js:1268
 msgid "Not set"
@@ -843,44 +841,43 @@ msgstr "Переместить вниз"
 
 #: windowsStartMenu.js:43
 msgid "Internet"
-msgstr ""
+msgstr "Интернет"
 
 #: windowsStartMenu.js:48
 msgid "Office"
-msgstr ""
+msgstr "Офис"
 
 #: windowsStartMenu.js:53
 msgid "Development"
-msgstr ""
+msgstr "Разработка"
 
 #: windowsStartMenu.js:58
 msgid "Games"
-msgstr ""
+msgstr "Игры"
 
 #: windowsStartMenu.js:63
 msgid "Graphics"
-msgstr ""
+msgstr "Графика"
 
 #: windowsStartMenu.js:68
 msgid "Sound & Video"
-msgstr ""
+msgstr "Аудио и видео"
 
 #: windowsStartMenu.js:73
 msgid "Education"
-msgstr ""
+msgstr "Образование"
 
 #: windowsStartMenu.js:78
 msgid "Science"
-msgstr ""
+msgstr "Наука"
 
 #: windowsStartMenu.js:83
-#, fuzzy
 msgid "System"
-msgstr "Системное меню"
+msgstr "Система"
 
 #: windowsStartMenu.js:88
 msgid "Utilities"
-msgstr ""
+msgstr "Утилиты"
 
 #: windowsStartMenu.js:555
 msgid "Type here to search"
@@ -950,11 +947,11 @@ msgstr "Результаты не найдены"
 
 #: windowsStartMenu.js:1192
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: windowsStartMenu.js:1205
 msgid "Other"
-msgstr ""
+msgstr "Прочее"
 
 #: startMenuAppMenu.js:110 startMenuAppMenu.js:263
 msgid "Create Desktop Shortcut"
@@ -1034,14 +1031,12 @@ msgid "Unable to open folder"
 msgstr "Не удалось открыть папку"
 
 #: taskbarAppMenu.js:18
-#, fuzzy
 msgid "Close window"
 msgstr "Закрыть окно"
 
 #: taskbarAppMenu.js:79
-#, fuzzy
 msgid "Close all windows"
-msgstr "Закрыть окно"
+msgstr "Закрыть все окна"
 
 #: taskbarAppMenu.js:99
 msgid "Unpin from Taskbar"
@@ -1062,39 +1057,36 @@ msgstr "Пуск"
 #: prefs/startIconChooser.js:61
 #, javascript-format
 msgid "%s Alternate"
-msgstr ""
+msgstr "%s (альтернативный)"
 
 #: prefs/startIconChooser.js:63
 #, javascript-format
 msgid "%s (Symbolic)"
-msgstr ""
+msgstr "%s (символьный)"
 
 #: prefs/startIconChooser.js:99 prefs/startIconChooser.js:214
-#, fuzzy
 msgid "GNOME"
-msgstr "GNOME Shell"
+msgstr "GNOME"
 
 #: prefs/startIconChooser.js:101 prefs/startIconChooser.js:219
-#, fuzzy
 msgid "Eleven-style"
-msgstr "Eleven-style Start Menu"
+msgstr "В стиле Eleven"
 
 #: prefs/startIconChooser.js:118 prefs/startIconChooser.js:337
 msgid "Choose a Start Button Icon"
 msgstr "Выберите значок кнопки «Пуск»"
 
 #: prefs/startIconChooser.js:145
-#, fuzzy
 msgid "Select"
-msgstr "Выбрана"
+msgstr "Выбрать"
 
 #: prefs/startIconChooser.js:165
 msgid "Search icons…"
-msgstr ""
+msgstr "Поиск значков…"
 
 #: prefs/startIconChooser.js:199
 msgid "Browse Files…"
-msgstr ""
+msgstr "Обзор файлов…"
 
 #: prefs/startIconChooser.js:321
 msgid "Image Files"
@@ -1135,32 +1127,29 @@ msgid "%s has been unpinned from the taskbar."
 msgstr "%s откреплён от панели задач."
 
 #: volumeMixerController.js:98
-#, fuzzy
 msgid "Application"
-msgstr "Приложения"
+msgstr "Приложение"
 
 #: volumeMixerController.js:131
 #, javascript-format
 msgid "%s volume"
-msgstr ""
+msgstr "Громкость %s"
 
 #: volumeMixerController.js:276
 msgid "Mixer"
-msgstr ""
+msgstr "Микшер"
 
 #: volumeMixerController.js:286
-#, fuzzy
 msgid "Open application volume controls"
-msgstr "Расстояние между кнопками приложений"
+msgstr "Открыть регуляторы громкости приложений"
 
 #: volumeMixerController.js:289
-#, fuzzy
 msgid "Application Volume"
-msgstr "Значки приложений"
+msgstr "Громкость приложений"
 
 #: volumeMixerController.js:338
 msgid "No applications are playing audio"
-msgstr ""
+msgstr "Нет приложений, воспроизводящих звук"
 
 #~ msgid "Panel Item Order"
 #~ msgstr "Порядок элементов панели"
