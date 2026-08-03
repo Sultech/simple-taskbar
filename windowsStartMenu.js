@@ -1694,7 +1694,7 @@ export class WindowsStartMenu {
         } else if (result.provider.appInfo) {
             result.provider.activateResult(result.id, result.terms);
         } else if (result.app) {
-            result.app.activate();
+            result.app.open_new_window(-1);
         }
         if (result.meta.clipboardText) {
             St.Clipboard.get_default().set_text(
