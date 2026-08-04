@@ -57,6 +57,7 @@ gnome-extensions pack \
     --extra-source=taskbarLayout.js \
     --extra-source=taskbarViewport.js \
     --extra-source=themeUtils.js \
+    --extra-source=transparencyUtils.js \
     --extra-source=volumeMixerController.js \
     --extra-source=windowController.js \
     --extra-source=windowPreviewController.js \

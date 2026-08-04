@@ -16,6 +16,10 @@ import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
+const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
+const BLUR_MY_SHELL_SCHEMA =
+    'org.gnome.shell.extensions.blur-my-shell';
+
 export class StartButtonController {
     constructor({
         extensionDir,
@@ -104,6 +108,7 @@ export class StartButtonController {
         this._createWindowsStartMenu();
         this._createContextMenu();
         this._connectStateSignals();
+        this._connectBlurMyShellSignals();
         this._syncState();
     }
 
@@ -179,6 +184,43 @@ export class StartButtonController {
 
     _connect(object, signal, callback) {
         this._signals.push([object, object.connect(signal, callback)]);
+    }
+
+    _connectBlurMyShellSignals() {
+        this._connect(Main.uiGroup, 'notify::style-class', () => {
+            this._windowsStartMenu?.syncTransparency();
+        });
+        this._connect(
+            Main.extensionManager,
+            'extension-state-changed',
+            (_manager, extension) => {
+                if (extension?.uuid === BLUR_MY_SHELL_UUID)
+                    this._windowsStartMenu?.syncTransparency();
+            }
+        );
+
+        const schema = Gio.SettingsSchemaSource.get_default().lookup(
+            BLUR_MY_SHELL_SCHEMA,
+            true
+        );
+        if (!schema)
+            return;
+
+        const settings = new Gio.Settings({settings_schema: schema});
+        const popupSettings = settings.get_child('popup');
+        const panelSettings = settings.get_child('panel');
+        for (const [componentSettings, key] of [
+            [popupSettings, 'blur'],
+            [popupSettings, 'override-background'],
+            [popupSettings, 'style-popup'],
+            [panelSettings, 'blur'],
+        ]) {
+            this._connect(
+                componentSettings,
+                `changed::${key}`,
+                () => this._windowsStartMenu?.syncTransparency()
+            );
+        }
     }
 
     _createWindowsStartMenu() {
@@ -331,6 +373,21 @@ export class StartButtonController {
             this._settings,
             'changed::start-menu-follow-panel-theme',
             () => this._windowsStartMenu?.syncTheme()
+        );
+        this._connect(
+            this._settings,
+            'changed::start-menu-follow-panel-transparency',
+            () => this._windowsStartMenu?.syncTransparency()
+        );
+        this._connect(
+            this._settings,
+            'changed::transparency-enabled',
+            () => this._windowsStartMenu?.syncTransparency()
+        );
+        this._connect(
+            this._settings,
+            'changed::transparency-level',
+            () => this._windowsStartMenu?.syncTransparency()
         );
         this._connect(Main.panel, 'notify::style-class', () => {
             if (this._settings.get_boolean(

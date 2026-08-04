@@ -1140,6 +1140,30 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const followPanelTransparencySwitch = new Adw.SwitchRow({
+            title: _('Follow Panel Transparency'),
+            subtitle: _('Use the panel’s configured transparency level'),
+            active: window._settings.get_boolean(
+                'start-menu-follow-panel-transparency'
+            ),
+        });
+        startMenuGroup.add(followPanelTransparencySwitch);
+        window._settings.bind(
+            'start-menu-follow-panel-transparency',
+            followPanelTransparencySwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateStartMenuTransparencyRow = () => {
+            followPanelTransparencySwitch.sensitive =
+                windowsStartMenuSwitch.active;
+        };
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateStartMenuTransparencyRow
+        );
+        updateStartMenuTransparencyRow();
+
         const startMenuThemeRow = this._addComboRow(
             startMenuGroup,
             window._settings,

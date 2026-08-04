@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 04:44+0100\n"
+"POT-Creation-Date: 2026-08-04 06:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Always display the switcher on the primary monitor"
 msgstr ""
 
-#: prefs.js:154 prefs.js:847 prefs.js:1469
+#: prefs.js:154 prefs.js:847 prefs.js:1493
 msgid "Start Button"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgstr ""
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr ""
 
-#: prefs.js:526 prefs.js:1933
+#: prefs.js:526 prefs.js:1957
 msgid "Panel Position"
 msgstr ""
 
@@ -326,11 +326,11 @@ msgstr ""
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 
-#: prefs.js:581 prefs.js:1152
+#: prefs.js:581 prefs.js:1176
 msgid "Light"
 msgstr ""
 
-#: prefs.js:582 prefs.js:1151
+#: prefs.js:582 prefs.js:1175
 msgid "Dark"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr ""
 msgid "Use the built-in icon"
 msgstr ""
 
-#: prefs.js:904 prefs.js:1402
+#: prefs.js:904 prefs.js:1426
 msgid "Choose…"
 msgstr ""
 
@@ -556,380 +556,388 @@ msgstr ""
 msgid "Use the panel’s effective light or dark appearance"
 msgstr ""
 
-#: prefs.js:1148
+#: prefs.js:1144
+msgid "Follow Panel Transparency"
+msgstr ""
+
+#: prefs.js:1145
+msgid "Use the panel’s configured transparency level"
+msgstr ""
+
+#: prefs.js:1172
 msgid "Start Menu Theme"
 msgstr ""
 
-#: prefs.js:1149
+#: prefs.js:1173
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr ""
 
-#: prefs.js:1153
+#: prefs.js:1177
 msgid "GNOME Shell"
 msgstr ""
 
-#: prefs.js:1173
+#: prefs.js:1197
 msgid "Center Start Menu on Monitor"
 msgstr ""
 
-#: prefs.js:1174
+#: prefs.js:1198
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 
-#: prefs.js:1212
+#: prefs.js:1236
 msgid "Super Opens Start Menu"
 msgstr ""
 
-#: prefs.js:1213
+#: prefs.js:1237
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr ""
 
-#: prefs.js:1225
+#: prefs.js:1249
 msgid "Super+Tab Opens Start Menu"
 msgstr ""
 
-#: prefs.js:1226
+#: prefs.js:1250
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
 msgstr ""
 
-#: prefs.js:1253
+#: prefs.js:1277
 msgid "Super+E Opens File Manager"
 msgstr ""
 
-#: prefs.js:1255
+#: prefs.js:1279
 msgid "Open your home folder with the system’s default file manager"
 msgstr ""
 
-#: prefs.js:1270
+#: prefs.js:1294
 msgid "Not set"
 msgstr ""
 
-#: prefs.js:1275
+#: prefs.js:1299
 msgid "Set custom shortcut"
 msgstr ""
 
-#: prefs.js:1280
+#: prefs.js:1304
 msgid "Clear custom shortcut"
 msgstr ""
 
-#: prefs.js:1284
+#: prefs.js:1308
 msgid "Custom Start Menu Shortcut"
 msgstr ""
 
-#: prefs.js:1303
+#: prefs.js:1327
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 
-#: prefs.js:1306
+#: prefs.js:1330
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 
-#: prefs.js:1309
+#: prefs.js:1333
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 
-#: prefs.js:1332
+#: prefs.js:1356
 msgid "Show Activities Button"
 msgstr ""
 
-#: prefs.js:1333
+#: prefs.js:1357
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr ""
 
-#: prefs.js:1345 prefs.js:1510
+#: prefs.js:1369 prefs.js:1534
 msgid "Show Desktop Button"
 msgstr ""
 
-#: prefs.js:1346
+#: prefs.js:1370
 msgid "Display a button that minimizes or restores all windows"
 msgstr ""
 
-#: prefs.js:1360
+#: prefs.js:1384
 msgid "Application Volume Mixer"
 msgstr ""
 
-#: prefs.js:1361
+#: prefs.js:1385
 msgid "Add per-application volume controls to Quick Settings"
 msgstr ""
 
-#: prefs.js:1373
+#: prefs.js:1397
 msgid "Collect Tray Icons"
 msgstr ""
 
-#: prefs.js:1374 prefs.js:1494
+#: prefs.js:1398 prefs.js:1518
 msgid "Gather application tray icons behind a panel arrow"
 msgstr ""
 
-#: prefs.js:1386
+#: prefs.js:1410
 msgid "Show Folder Menu"
 msgstr ""
 
-#: prefs.js:1387
+#: prefs.js:1411
 msgid "Show a selected folder on the taskbar"
 msgstr ""
 
-#: prefs.js:1399
+#: prefs.js:1423
 msgid "Folder Menu Location"
 msgstr ""
 
-#: prefs.js:1417
+#: prefs.js:1441
 msgid "No folder selected"
 msgstr ""
 
-#: prefs.js:1433
+#: prefs.js:1457
 msgid "Left Items"
 msgstr ""
 
-#: prefs.js:1435
+#: prefs.js:1459
 msgid "Move items only within their current panel position."
 msgstr ""
 
-#: prefs.js:1439
+#: prefs.js:1463
 msgid "Center Items"
 msgstr ""
 
-#: prefs.js:1442
+#: prefs.js:1466
 msgid "Right Items"
 msgstr ""
 
-#: prefs.js:1450
+#: prefs.js:1474
 msgid "Left Box"
 msgstr ""
 
-#: prefs.js:1451 prefs.js:1457 prefs.js:1463
+#: prefs.js:1475 prefs.js:1481 prefs.js:1487
 msgid "Other GNOME Shell and extension items"
 msgstr ""
 
-#: prefs.js:1456
+#: prefs.js:1480
 msgid "Center Box"
 msgstr ""
 
-#: prefs.js:1462
+#: prefs.js:1486
 msgid "Right Box"
 msgstr ""
 
-#: prefs.js:1470
+#: prefs.js:1494
 msgid "Eleven-style or original GNOME Start button"
 msgstr ""
 
-#: prefs.js:1475
+#: prefs.js:1499
 msgid "Activities"
 msgstr ""
 
-#: prefs.js:1476
+#: prefs.js:1500
 msgid "GNOME workspace overview button"
 msgstr ""
 
-#: prefs.js:1481 startButtonController.js:509
+#: prefs.js:1505 startButtonController.js:524
 msgid "Applications"
 msgstr ""
 
-#: prefs.js:1482
+#: prefs.js:1506
 msgid "Taskbar application buttons"
 msgstr ""
 
-#: prefs.js:1487
+#: prefs.js:1511
 msgid "Folder Menu"
 msgstr ""
 
-#: prefs.js:1488
+#: prefs.js:1512
 msgid "Selected folder shortcuts"
 msgstr ""
 
-#: prefs.js:1493 trayOverflowController.js:172
+#: prefs.js:1517 trayOverflowController.js:173
 msgid "Tray icons"
 msgstr ""
 
-#: prefs.js:1499
+#: prefs.js:1523
 msgid "System Menu"
 msgstr ""
 
-#: prefs.js:1500
+#: prefs.js:1524
 msgid "Quick Settings, volume, network, and power"
 msgstr ""
 
-#: prefs.js:1505
+#: prefs.js:1529
 msgid "Clock"
 msgstr ""
 
-#: prefs.js:1511
+#: prefs.js:1535
 msgid "Minimize or restore all windows"
 msgstr ""
 
-#: prefs.js:1691 prefs.js:1718
+#: prefs.js:1715 prefs.js:1742
 msgid "Reset"
 msgstr ""
 
-#: prefs.js:1696
+#: prefs.js:1720
 msgid "Reset All Settings"
 msgstr ""
 
-#: prefs.js:1697
+#: prefs.js:1721
 msgid "Restore defaults without changing pinned taskbar or Start Menu apps"
 msgstr ""
 
-#: prefs.js:1700
+#: prefs.js:1724
 msgid "Reset…"
 msgstr ""
 
-#: prefs.js:1714
+#: prefs.js:1738
 msgid "Reset all settings?"
 msgstr ""
 
-#: prefs.js:1715
+#: prefs.js:1739
 msgid ""
 "This will restore taskbar and Start Menu settings. Pinned taskbar and Start "
 "Menu apps, including their order, will be kept."
 msgstr ""
 
-#: prefs.js:1717 prefs/startIconChooser.js:139
+#: prefs.js:1741 prefs/startIconChooser.js:139
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:1754
+#: prefs.js:1778
 msgid "Set Custom Shortcut"
 msgstr ""
 
-#: prefs.js:1767
+#: prefs.js:1791
 msgid "Press a keyboard shortcut"
 msgstr ""
 
-#: prefs.js:1768
+#: prefs.js:1792
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr ""
 
-#: prefs.js:1812
+#: prefs.js:1836
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 
-#: prefs.js:1826
+#: prefs.js:1850
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr ""
 
-#: prefs.js:1844
+#: prefs.js:1868
 msgid "Choose a Folder"
 msgstr ""
 
-#: prefs.js:1968
+#: prefs.js:1992
 msgid "Move Up"
 msgstr ""
 
-#: prefs.js:1973
+#: prefs.js:1997
 msgid "Move Down"
 msgstr ""
 
-#: windowsStartMenu.js:43
+#: windowsStartMenu.js:44
 msgid "Internet"
 msgstr ""
 
-#: windowsStartMenu.js:48
+#: windowsStartMenu.js:49
 msgid "Office"
 msgstr ""
 
-#: windowsStartMenu.js:53
+#: windowsStartMenu.js:54
 msgid "Development"
 msgstr ""
 
-#: windowsStartMenu.js:58
+#: windowsStartMenu.js:59
 msgid "Games"
 msgstr ""
 
-#: windowsStartMenu.js:63
+#: windowsStartMenu.js:64
 msgid "Graphics"
 msgstr ""
 
-#: windowsStartMenu.js:68
+#: windowsStartMenu.js:69
 msgid "Sound & Video"
 msgstr ""
 
-#: windowsStartMenu.js:73
+#: windowsStartMenu.js:74
 msgid "Education"
 msgstr ""
 
-#: windowsStartMenu.js:78
+#: windowsStartMenu.js:79
 msgid "Science"
 msgstr ""
 
-#: windowsStartMenu.js:83
+#: windowsStartMenu.js:84
 msgid "System"
 msgstr ""
 
-#: windowsStartMenu.js:88
+#: windowsStartMenu.js:89
 msgid "Utilities"
 msgstr ""
 
-#: windowsStartMenu.js:555
+#: windowsStartMenu.js:592
 msgid "Type here to search"
 msgstr ""
 
-#: windowsStartMenu.js:626 windowsStartMenu.js:1000
+#: windowsStartMenu.js:663 windowsStartMenu.js:1037
 msgid "Pinned"
 msgstr ""
 
-#: windowsStartMenu.js:631 windowsStartMenu.js:1068
+#: windowsStartMenu.js:668 windowsStartMenu.js:1105
 msgid "All apps"
 msgstr ""
 
-#: windowsStartMenu.js:641
+#: windowsStartMenu.js:678
 msgid "Back"
 msgstr ""
 
-#: windowsStartMenu.js:754
+#: windowsStartMenu.js:791
 msgid "Settings"
 msgstr ""
 
-#: windowsStartMenu.js:762
+#: windowsStartMenu.js:799
 msgid "Power Options"
 msgstr ""
 
-#: windowsStartMenu.js:827
+#: windowsStartMenu.js:864
 msgid "Suspend"
 msgstr ""
 
-#: windowsStartMenu.js:834
+#: windowsStartMenu.js:871
 msgid "Restart"
 msgstr ""
 
-#: windowsStartMenu.js:841
+#: windowsStartMenu.js:878
 msgid "Power Off"
 msgstr ""
 
-#: windowsStartMenu.js:851
+#: windowsStartMenu.js:888
 msgid "Lock Screen"
 msgstr ""
 
-#: windowsStartMenu.js:858
+#: windowsStartMenu.js:895
 msgid "Log Out"
 msgstr ""
 
-#: windowsStartMenu.js:865
+#: windowsStartMenu.js:902
 msgid "Switch User"
 msgstr ""
 
-#: windowsStartMenu.js:1044
+#: windowsStartMenu.js:1081
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 
-#: windowsStartMenu.js:1052
+#: windowsStartMenu.js:1089
 msgid "Recommended"
 msgstr ""
 
-#: windowsStartMenu.js:1088
+#: windowsStartMenu.js:1125
 msgid "Search results"
 msgstr ""
 
-#: windowsStartMenu.js:1118 windowsStartMenu.js:1148
+#: windowsStartMenu.js:1155 windowsStartMenu.js:1185
 msgid "No results found"
 msgstr ""
 
-#: windowsStartMenu.js:1192
+#: windowsStartMenu.js:1229
 msgid "All"
 msgstr ""
 
-#: windowsStartMenu.js:1205
+#: windowsStartMenu.js:1242
 msgid "Other"
 msgstr ""
 
@@ -1030,7 +1038,7 @@ msgstr ""
 msgid "Start Menu Settings"
 msgstr ""
 
-#: startButtonController.js:509
+#: startButtonController.js:524
 msgid "Start"
 msgstr ""
 

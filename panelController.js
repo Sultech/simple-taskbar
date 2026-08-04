@@ -24,6 +24,7 @@ import {
     constrainTaskbarWidth,
 } from './taskbarLayout.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
+import {panelTransparencyOpacity} from './transparencyUtils.js';
 
 const EXTERNAL_PANEL_STYLES = [
     'transparent-panel',
@@ -1010,15 +1011,7 @@ export class PanelController {
         }
         Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
 
-        const transparency =
-            this._settings.get_boolean('transparency-enabled')
-                ? Math.clamp(
-                    this._settings.get_int('transparency-level'),
-                    0,
-                    100
-                )
-                : 0;
-        const opacity = 1 - transparency / 100;
+        const opacity = panelTransparencyOpacity(this._settings);
         const background = light ? '217, 217, 222' : '24, 24, 27';
         const border = '255, 255, 255';
         const borderOpacity = 0.20;

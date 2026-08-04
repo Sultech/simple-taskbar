@@ -28,6 +28,8 @@ import {
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
+import {shellMenusUseLightTheme} from './themeUtils.js';
+import {panelTransparencyOpacity} from './transparencyUtils.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
@@ -37,6 +39,11 @@ const APP_TOOLTIP_SHOW_TIME = 120;
 const APP_TOOLTIP_HIDE_TIME = 100;
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
+const BLUR_MY_SHELL_POPUP_CLASSES = [
+    'bms-popup-background-transparent',
+    'bms-popup-background-light',
+    'bms-popup-background-dark',
+];
 const APP_CATEGORIES = [
     {
         id: 'internet',
@@ -392,6 +399,48 @@ export class WindowsStartMenu {
         }
         this._applyThemeClass(this._appContextMenu?.actor, theme);
         this._applyThemeClass(this._powerMenu?.actor, theme);
+        this.syncTransparency();
+    }
+
+    syncTransparency() {
+        if (!this._menu)
+            return;
+        if (!this._settings.get_boolean(
+            'start-menu-follow-panel-transparency'
+        ) || this._blurMyShellOwnsTransparency()) {
+            this._menu.box.set_style(null);
+            return;
+        }
+
+        const opacity = panelTransparencyOpacity(this._settings);
+        const theme = this._effectiveTheme();
+        const light = theme === 'light' ||
+            (theme === 'shell' && shellMenusUseLightTheme());
+        const gradientStart = light ? '249, 250, 253' : '42, 42, 47';
+        const gradientEnd = light ? '230, 234, 242' : '30, 30, 34';
+        this._menu.box.set_style(
+            'background: transparent !important; ' +
+            'background-gradient-direction: vertical; ' +
+            `background-gradient-start: rgba(${gradientStart}, ` +
+                `${opacity.toFixed(2)}) !important; ` +
+            `background-gradient-end: rgba(${gradientEnd}, ` +
+                `${opacity.toFixed(2)}) !important;`
+        );
+    }
+
+    _blurMyShellOwnsTransparency() {
+        const blurMyShell = global.blur_my_shell;
+        if (blurMyShell && blurMyShell._popup &&
+            blurMyShell._popup.enabled) {
+            return true;
+        }
+        if (blurMyShell && blurMyShell._panel_blur &&
+            blurMyShell._panel_blur.enabled) {
+            return true;
+        }
+        return BLUR_MY_SHELL_POPUP_CLASSES.some(styleClass =>
+            Main.uiGroup.has_style_class_name(styleClass)
+        );
     }
 
     _applyThemeClass(actor, theme = this._effectiveTheme()) {
