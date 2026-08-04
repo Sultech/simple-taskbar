@@ -440,6 +440,7 @@ export class TrayOverflowController {
         indicator.menu.connectObject(
             'open-state-changed',
             (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
+            'activate', () => this._menu.close(BoxPointer.PopupAnimation.NONE),
             this
         );
     }
