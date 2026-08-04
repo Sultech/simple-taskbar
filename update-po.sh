@@ -17,7 +17,7 @@ xgettext \
     --package-version=1.0 \
     --copyright-holder="sultech" \
     -o po/simple-taskbar.pot \
-    $(cat po/POTFILES.in)
+    --files-from=po/POTFILES.in
 
 echo "Template: po/simple-taskbar.pot"
 
