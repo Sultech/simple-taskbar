@@ -190,14 +190,14 @@ export class StartButtonController {
 
     _connectBlurMyShellSignals() {
         this._connect(Main.uiGroup, 'notify::style-class', () => {
-            this._windowsStartMenu?.syncTransparency();
+            this._windowsStartMenu?.queueTransparencySync();
         });
         this._connect(
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
                 if (extension?.uuid === BLUR_MY_SHELL_UUID)
-                    this._windowsStartMenu?.syncTransparency();
+                    this._windowsStartMenu?.queueTransparencySync();
             }
         );
 
@@ -220,7 +220,7 @@ export class StartButtonController {
             this._connect(
                 componentSettings,
                 `changed::${key}`,
-                () => this._windowsStartMenu?.syncTransparency()
+                () => this._windowsStartMenu?.queueTransparencySync()
             );
         }
     }

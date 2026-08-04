@@ -129,6 +129,7 @@ export class WindowsStartMenu {
         this._powerSourcePressWasOpen = false;
         this._powerSourcePressResetId = 0;
         this._prepareIdleId = 0;
+        this._transparencySyncId = 0;
         this._ignoreSearchChanged = false;
         this._appliedTheme = null;
         this._pinnedView = null;
@@ -402,6 +403,20 @@ export class WindowsStartMenu {
         this.syncTransparency();
     }
 
+    queueTransparencySync() {
+        if (this._transparencySyncId)
+            return;
+
+        this._transparencySyncId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._transparencySyncId = 0;
+                this.syncTransparency();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
     syncTransparency() {
         if (!this._menu)
             return;
@@ -549,6 +564,10 @@ export class WindowsStartMenu {
         if (this._prepareIdleId) {
             GLib.Source.remove(this._prepareIdleId);
             this._prepareIdleId = 0;
+        }
+        if (this._transparencySyncId) {
+            GLib.Source.remove(this._transparencySyncId);
+            this._transparencySyncId = 0;
         }
         if (this._appActionCloseIdleId) {
             GLib.Source.remove(this._appActionCloseIdleId);
