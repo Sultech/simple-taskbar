@@ -330,10 +330,24 @@ export class TrayOverflowController {
         });
     }
 
-    _onIndicatorMenuStateChanged(indicator, open) {
-        this._syncIndicatorMenuStacking(indicator, open);
-        if (!open && this._menu.isOpen)
-            this._menu.close(BoxPointer.PopupAnimation.FULL);
+    _handleIndicatorMenuCapturedEvent(entry, actor, event) {
+        const type = event.type();
+        const isPress = type === Clutter.EventType.BUTTON_PRESS ||
+            type === Clutter.EventType.TOUCH_BEGIN;
+        if (!isPress)
+            return Clutter.EVENT_PROPAGATE;
+
+        const target = global.stage.get_event_actor(event);
+        if (target && actor.contains(target))
+            return Clutter.EVENT_PROPAGATE;
+
+        if (type === Clutter.EventType.BUTTON_PRESS &&
+            event.get_button() === Clutter.BUTTON_SECONDARY && target &&
+            (entry.indicator === target || entry.indicator.contains(target)))
+            return Clutter.EVENT_PROPAGATE;
+
+        this._menu.close(BoxPointer.PopupAnimation.FULL);
+        return Clutter.EVENT_PROPAGATE;
     }
 
     _isTrayIndicator(role, indicator) {
@@ -467,8 +481,14 @@ export class TrayOverflowController {
         );
         indicator.menu.connectObject(
             'open-state-changed',
-            (_menu, open) => this._onIndicatorMenuStateChanged(indicator, open),
+            (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
             'activate', () => this._menu.close(BoxPointer.PopupAnimation.NONE),
+            this
+        );
+        indicator.menu.actor.connectObject(
+            'captured-event',
+            (actor, event) =>
+                this._handleIndicatorMenuCapturedEvent(entry, actor, event),
             this
         );
         this._applyTrayIndicatorStyle(entry);
@@ -493,6 +513,7 @@ export class TrayOverflowController {
         const {indicator, origin, cell} = entry;
         indicator.disconnectObject(this);
         this._syncIndicatorMenuStacking(indicator, false);
+        indicator.menu.actor.disconnectObject(this);
         indicator.menu.disconnectObject(this);
         indicator.menu.close(BoxPointer.PopupAnimation.NONE);
         indicator.set_style(entry.originalStyle || null);
