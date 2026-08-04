@@ -24,6 +24,7 @@ gnome-extensions pack \
     --force \
     --extra-source=COPYING \
     --extra-source=ASSET-CREDITS.md \
+    --extra-source=blurMyShellUtils.js \
     --extra-source=extensionConflictController.js \
     --extra-source=panelButtonPaddingController.js \
     --extra-source=panelItemOrder.js \

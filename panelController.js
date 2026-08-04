@@ -10,6 +10,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {getBlurMyShellSettings} from './blurMyShellUtils.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
@@ -555,6 +556,14 @@ export class PanelController {
                 }
             }
         );
+        const blurMyShellSettings = getBlurMyShellSettings();
+        if (blurMyShellSettings) {
+            this._connect(
+                blurMyShellSettings.get_child('panel'),
+                'changed::blur',
+                () => this._queueBlurMyShellSync()
+            );
+        }
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
@@ -740,12 +749,12 @@ export class PanelController {
         );
         const active =
             extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
-        if (active) {
+        const panelBlur = global.blur_my_shell?._panel_blur;
+        if (active && panelBlur?.enabled) {
             Main.panel.add_style_class_name(
                 BLUR_MY_SHELL_ACTIVE_CLASS
             );
-            const panelBlur = global.blur_my_shell?._panel_blur;
-            if (panelBlur?.enabled && !Main.overview.visibleTarget) {
+            if (!Main.overview.visibleTarget) {
                 panelBlur.panel_hide_blur_dynamically();
                 panelBlur.update_visibility();
             }
@@ -995,11 +1004,12 @@ export class PanelController {
         }
 
         const originalStyle = this._oldPanelStyle?.trim() ?? '';
-        const externalPanelStyle = Main.panel.has_style_class_name(
-            BLUR_MY_SHELL_ACTIVE_CLASS
-        ) && EXTERNAL_PANEL_STYLES.some(style =>
-            Main.panel.has_style_class_name(style)
-        );
+        const panelBlur = global.blur_my_shell?._panel_blur;
+        const externalPanelStyle = panelBlur?.enabled &&
+            Main.panel.has_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS) &&
+            EXTERNAL_PANEL_STYLES.some(style =>
+                Main.panel.has_style_class_name(style)
+            );
         const light = this._usesLightTheme();
         if (externalPanelStyle) {
             if (light)

@@ -20,14 +20,75 @@ import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
 } from './panelItemOrder.js';
+import {getBlurMyShellSettings} from './blurMyShellUtils.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
 const ICON_VERTICAL_RESERVE = 17;
-
+const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
+const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         window._settings = this.getSettings();
+        const shellSettings = new Gio.Settings({
+            schema_id: GNOME_SHELL_SCHEMA,
+        });
+        const blurMyShellSettings = getBlurMyShellSettings();
+        let blurMyShellPanelSettings = null;
+        let blurMyShellPopupSettings = null;
+        if (blurMyShellSettings) {
+            blurMyShellPanelSettings = blurMyShellSettings.get_child('panel');
+            blurMyShellPopupSettings = blurMyShellSettings.get_child('popup');
+        }
+        const blurMyShellExtensionEnabled = () => {
+            const enabledExtensions = shellSettings.get_strv(
+                'enabled-extensions'
+            );
+            const disabledExtensions = shellSettings.get_strv(
+                'disabled-extensions'
+            );
+            return enabledExtensions.includes(BLUR_MY_SHELL_UUID) &&
+                !disabledExtensions.includes(BLUR_MY_SHELL_UUID);
+        };
+        const blurMyShellPanelBlurEnabled = () => {
+            if (!blurMyShellPanelSettings ||
+                !blurMyShellExtensionEnabled())
+                return false;
+            return blurMyShellPanelSettings.get_boolean('blur');
+        };
+        const blurMyShellPopupBlurEnabled = () => {
+            if (!blurMyShellPopupSettings ||
+                !blurMyShellExtensionEnabled())
+                return false;
+            return blurMyShellPopupSettings.get_boolean('blur');
+        };
+        let syncPanelTransparencyControls = () => {};
+        let syncStartMenuTransparencyControl = () => {};
+        const syncBlurMyShellTransparencyState = () => {
+            syncPanelTransparencyControls();
+            syncStartMenuTransparencyControl();
+        };
+        if (blurMyShellPanelSettings) {
+            blurMyShellPanelSettings.connect(
+                'changed::blur',
+                syncBlurMyShellTransparencyState
+            );
+        }
+        if (blurMyShellPopupSettings) {
+            blurMyShellPopupSettings.connect(
+                'changed::blur',
+                syncBlurMyShellTransparencyState
+            );
+        }
+        for (const key of [
+            'enabled-extensions',
+            'disabled-extensions',
+        ]) {
+            shellSettings.connect(
+                `changed::${key}`,
+                syncBlurMyShellTransparencyState
+            );
+        }
         const panelPositions = [
             {value: 'left', label: _('Left')},
             {value: 'center', label: _('Center')},
@@ -588,9 +649,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             panelThemeRow.sensitive = !widget.active;
         });
 
+        const transparencySwitchSubtitle = _(
+            'Make the taskbar background transparent'
+        );
+        const panelBlurTransparencySubtitle = _(
+            'Disable Blur My Shell panel blur to use this option'
+        );
         const transparencySwitch = new Adw.SwitchRow({
             title: _('Enable Transparency'),
-            subtitle: _('Make the taskbar background transparent'),
+            subtitle: transparencySwitchSubtitle,
             active: window._settings.get_boolean('transparency-enabled'),
         });
         panelAppearanceGroup.add(transparencySwitch);
@@ -601,21 +668,37 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const transparencyRowSubtitle = _(
+            '0% is opaque and 100% is fully transparent'
+        );
         const transparencyRow = this._addSpinRow(
             panelAppearanceGroup,
             window._settings,
             {
                 key: 'transparency-level',
                 title: _('Transparency'),
-                subtitle: _('0% is opaque and 100% is fully transparent'),
+                subtitle: transparencyRowSubtitle,
                 lower: 0,
                 upper: 100,
             }
         );
-        transparencyRow.sensitive = transparencySwitch.active;
-        transparencySwitch.connect('notify::active', widget => {
-            transparencyRow.sensitive = widget.active;
-        });
+        const updatePanelTransparencyControls = () => {
+            const blocked = blurMyShellPanelBlurEnabled();
+            transparencySwitch.sensitive = !blocked;
+            transparencySwitch.subtitle = blocked
+                ? panelBlurTransparencySubtitle
+                : transparencySwitchSubtitle;
+            transparencyRow.sensitive = !blocked && transparencySwitch.active;
+            transparencyRow.subtitle = blocked
+                ? panelBlurTransparencySubtitle
+                : transparencyRowSubtitle;
+        };
+        syncPanelTransparencyControls = updatePanelTransparencyControls;
+        transparencySwitch.connect(
+            'notify::active',
+            updatePanelTransparencyControls
+        );
+        updatePanelTransparencyControls();
 
         const darkPanelBorderSwitch = new Adw.SwitchRow({
             title: _('Show Border in Dark Mode'),
@@ -1140,30 +1223,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
-        const followPanelTransparencySwitch = new Adw.SwitchRow({
-            title: _('Follow Panel Transparency'),
-            subtitle: _('Use the panel’s configured transparency level'),
-            active: window._settings.get_boolean(
-                'start-menu-follow-panel-transparency'
-            ),
-        });
-        startMenuGroup.add(followPanelTransparencySwitch);
-        window._settings.bind(
-            'start-menu-follow-panel-transparency',
-            followPanelTransparencySwitch,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        );
-        const updateStartMenuTransparencyRow = () => {
-            followPanelTransparencySwitch.sensitive =
-                windowsStartMenuSwitch.active;
-        };
-        windowsStartMenuSwitch.connect(
-            'notify::active',
-            updateStartMenuTransparencyRow
-        );
-        updateStartMenuTransparencyRow();
-
         const startMenuThemeRow = this._addComboRow(
             startMenuGroup,
             window._settings,
@@ -1192,6 +1251,59 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             updateStartMenuThemeRows
         );
         updateStartMenuThemeRows();
+
+        const followPanelTransparencySubtitle = _(
+            'Use the panel’s configured transparency level'
+        );
+        const panelBlurStartMenuTransparencySubtitle = _(
+            'Disable Blur My Shell panel blur to use this option'
+        );
+        const popupBlurStartMenuTransparencySubtitle = _(
+            'Disable Blur My Shell popup blur to use this option'
+        );
+        const panelAndPopupBlurStartMenuTransparencySubtitle = _(
+            'Disable Blur My Shell panel and popup blur to use this option'
+        );
+        const followPanelTransparencySwitch = new Adw.SwitchRow({
+            title: _('Follow Panel Transparency'),
+            subtitle: followPanelTransparencySubtitle,
+            active: window._settings.get_boolean(
+                'start-menu-follow-panel-transparency'
+            ),
+        });
+        startMenuGroup.add(followPanelTransparencySwitch);
+        window._settings.bind(
+            'start-menu-follow-panel-transparency',
+            followPanelTransparencySwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const updateStartMenuTransparencyRow = () => {
+            const panelBlur = blurMyShellPanelBlurEnabled();
+            const popupBlur = blurMyShellPopupBlurEnabled();
+            const blocked = panelBlur || popupBlur;
+            followPanelTransparencySwitch.sensitive =
+                windowsStartMenuSwitch.active && !blocked;
+            if (!blocked) {
+                followPanelTransparencySwitch.subtitle =
+                    followPanelTransparencySubtitle;
+            } else if (panelBlur && popupBlur) {
+                followPanelTransparencySwitch.subtitle =
+                    panelAndPopupBlurStartMenuTransparencySubtitle;
+            } else if (panelBlur) {
+                followPanelTransparencySwitch.subtitle =
+                    panelBlurStartMenuTransparencySubtitle;
+            } else {
+                followPanelTransparencySwitch.subtitle =
+                    popupBlurStartMenuTransparencySubtitle;
+            }
+        };
+        syncStartMenuTransparencyControl = updateStartMenuTransparencyRow;
+        windowsStartMenuSwitch.connect(
+            'notify::active',
+            updateStartMenuTransparencyRow
+        );
+        updateStartMenuTransparencyRow();
 
         const centerStartMenuRow = new Adw.SwitchRow({
             title: _('Center Start Menu on Monitor'),

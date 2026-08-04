@@ -14,11 +14,10 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
+import {getBlurMyShellSettings} from './blurMyShellUtils.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
 const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
-const BLUR_MY_SHELL_SCHEMA =
-    'org.gnome.shell.extensions.blur-my-shell';
 
 export class StartButtonController {
     constructor({
@@ -199,14 +198,10 @@ export class StartButtonController {
             }
         );
 
-        const schema = Gio.SettingsSchemaSource.get_default().lookup(
-            BLUR_MY_SHELL_SCHEMA,
-            true
-        );
-        if (!schema)
+        const settings = getBlurMyShellSettings();
+        if (!settings)
             return;
 
-        const settings = new Gio.Settings({settings_schema: schema});
         const popupSettings = settings.get_child('popup');
         const panelSettings = settings.get_child('panel');
         for (const [componentSettings, key] of [
