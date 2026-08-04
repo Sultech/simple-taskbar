@@ -98,6 +98,15 @@ export class TrayOverflowController {
         this._menu.close(BoxPointer.PopupAnimation.NONE);
     }
 
+    get menuIsOpen() {
+        if (this._menu && this._menu.isOpen)
+            return true;
+
+        return [...this._stashed.values()].some(
+            ({indicator}) => indicator.menu.isOpen
+        );
+    }
+
     _syncButtonVisibility(visible) {
         this._button.visible = visible;
         this._button.container.visible = visible;

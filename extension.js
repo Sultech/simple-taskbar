@@ -348,6 +348,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelInteractionController.menuIsOpen ||
             this._startButtonController.menuIsOpen ||
             this._folderMenuController.menuIsOpen ||
+            this._trayOverflowController.menuIsOpen ||
             this._windowPreviews.isOpen ||
             this._taskbarController.isDragging ||
             this._taskbarController.hasOpenMenu() ||
