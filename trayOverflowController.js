@@ -24,6 +24,7 @@ const TRAY_TYPE_NAMES = ['IndicatorStatusIcon', 'IndicatorTrayIcon'];
 const RESCAN_DELAY = 120;
 const GRID_MAX_COLUMNS = 5;
 const LIGHT_MENU_CLASS = 'simple-taskbar-tray-overflow-light';
+const TRAY_INDICATOR_STYLE = '-natural-hpadding: 0px;';
 
 export class TrayOverflowController {
     constructor(settings) {
@@ -390,6 +391,16 @@ export class TrayOverflowController {
         return {parent, after: null};
     }
 
+    _applyTrayIndicatorStyle(entry) {
+        const currentStyle = entry.indicator.get_style() ?? '';
+        if (currentStyle === TRAY_INDICATOR_STYLE)
+            return;
+
+        entry.originalStyle = currentStyle;
+        entry.indicator.set_style(TRAY_INDICATOR_STYLE);
+        entry.indicator.queue_relayout();
+    }
+
     _reclaim(entry, parent) {
         const container = entry.indicator.container;
         entry.origin = this._recordOrigin(parent, container);
@@ -417,6 +428,7 @@ export class TrayOverflowController {
             indicator,
             origin,
             cell,
+            originalStyle: indicator.get_style() ?? '',
             clickCount: 0,
             lastClickTime: -1,
             lastClickX: -1,
@@ -442,12 +454,18 @@ export class TrayOverflowController {
             () => this._queueRelayout(),
             this
         );
+        indicator.connectObject(
+            'notify::style',
+            () => this._applyTrayIndicatorStyle(entry),
+            this
+        );
         indicator.menu.connectObject(
             'open-state-changed',
             (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
             'activate', () => this._menu.close(BoxPointer.PopupAnimation.NONE),
             this
         );
+        this._applyTrayIndicatorStyle(entry);
     }
 
     _forget(role) {
@@ -471,6 +489,8 @@ export class TrayOverflowController {
         this._syncIndicatorMenuStacking(indicator, false);
         indicator.menu.disconnectObject(this);
         indicator.menu.close(BoxPointer.PopupAnimation.NONE);
+        indicator.set_style(entry.originalStyle || null);
+        indicator.queue_relayout();
 
         const container = indicator.container;
         if (cell.get_parent() === this._grid)
