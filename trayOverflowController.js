@@ -249,7 +249,7 @@ export class TrayOverflowController {
             return;
 
         for (const [role, indicator] of Object.entries(Main.panel.statusArea)) {
-            if (indicator && this._isTrayIndicator(role, indicator) &&
+            if (this._isTrayIndicator(role, indicator) &&
                 indicator.container === container) {
                 container.hide();
                 break;
@@ -396,7 +396,7 @@ export class TrayOverflowController {
 
         const indicatorsByContainer = new Map();
         for (const [role, indicator] of Object.entries(Main.panel.statusArea)) {
-            if (indicator && !this._stashed.has(role) &&
+            if (!this._stashed.has(role) &&
                 this._isTrayIndicator(role, indicator))
                 indicatorsByContainer.set(indicator.container, [role, indicator]);
         }
