@@ -419,12 +419,12 @@ export class WindowsStartMenu {
         const gradientStart = light ? '249, 250, 253' : '42, 42, 47';
         const gradientEnd = light ? '230, 234, 242' : '30, 30, 34';
         this._menu.box.set_style(
-            'background: transparent !important; ' +
+            'background: transparent; ' +
             'background-gradient-direction: vertical; ' +
             `background-gradient-start: rgba(${gradientStart}, ` +
-                `${opacity.toFixed(2)}) !important; ` +
+                `${opacity.toFixed(2)}); ` +
             `background-gradient-end: rgba(${gradientEnd}, ` +
-                `${opacity.toFixed(2)}) !important;`
+                `${opacity.toFixed(2)});`
         );
     }
 
