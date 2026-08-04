@@ -269,10 +269,16 @@ export class TrayOverflowController {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._activationCloseId = 0;
-                this._menu.close(BoxPointer.PopupAnimation.NONE);
+                this._menu.close(BoxPointer.PopupAnimation.FULL);
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    _indicatorSupportsActivation(indicator) {
+        if (indicator.constructor.name !== 'IndicatorStatusIcon')
+            return true;
+        return indicator._indicator.supportsActivation !== false;
     }
 
     _handleIndicatorCapturedEvent(entry, event) {
@@ -294,7 +300,8 @@ export class TrayOverflowController {
         entry.lastClickY = y;
         entry.clickCount = (entry.clickCount % 2) + 1;
 
-        if (entry.clickCount === 2)
+        if (entry.clickCount === 2 &&
+            this._indicatorSupportsActivation(entry.indicator))
             this._queueActivationMenuClose();
 
         return Clutter.EVENT_PROPAGATE;
@@ -341,9 +348,12 @@ export class TrayOverflowController {
         if (target && actor.contains(target))
             return Clutter.EVENT_PROPAGATE;
 
-        if (type === Clutter.EventType.BUTTON_PRESS &&
-            event.get_button() === Clutter.BUTTON_SECONDARY && target &&
-            (entry.indicator === target || entry.indicator.contains(target)))
+        const sameIndicator = target &&
+            (entry.indicator === target || entry.indicator.contains(target));
+        if (type === Clutter.EventType.BUTTON_PRESS && sameIndicator &&
+            (event.get_button() === Clutter.BUTTON_SECONDARY ||
+             (event.get_button() === Clutter.BUTTON_PRIMARY &&
+              !this._indicatorSupportsActivation(entry.indicator))))
             return Clutter.EVENT_PROPAGATE;
 
         this._menu.close(BoxPointer.PopupAnimation.FULL);
@@ -482,7 +492,7 @@ export class TrayOverflowController {
         indicator.menu.connectObject(
             'open-state-changed',
             (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
-            'activate', () => this._menu.close(BoxPointer.PopupAnimation.NONE),
+            'activate', () => this._menu.close(BoxPointer.PopupAnimation.FULL),
             this
         );
         indicator.menu.actor.connectObject(
