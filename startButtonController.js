@@ -15,6 +15,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
 import {
+    blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
@@ -213,8 +214,10 @@ export class StartButtonController {
             [popupSettings, 'style-popup'],
             [panelSettings, 'blur'],
         ]) {
-            if (!componentSettings)
+            if (!componentSettings ||
+                !blurMyShellHasKey(componentSettings, key)) {
                 continue;
+            }
             this._connect(
                 componentSettings,
                 `changed::${key}`,

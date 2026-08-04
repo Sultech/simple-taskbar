@@ -55,3 +55,9 @@ export function getBlurMyShellChildSettings(settings, childName) {
 
     return settings.get_child(childName);
 }
+
+export function blurMyShellHasKey(settings, key) {
+    return Boolean(
+        settings && settings.settings_schema.list_keys().includes(key)
+    );
+}

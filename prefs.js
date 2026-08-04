@@ -21,6 +21,7 @@ import {
     normalizePanelItemOrder,
 } from './panelItemOrder.js';
 import {
+    blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
@@ -61,12 +62,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         };
         const blurMyShellPanelBlurEnabled = () => {
             if (!blurMyShellPanelSettings ||
+                !blurMyShellHasKey(blurMyShellPanelSettings, 'blur') ||
                 !blurMyShellExtensionEnabled())
                 return false;
             return blurMyShellPanelSettings.get_boolean('blur');
         };
         const blurMyShellPopupBlurEnabled = () => {
             if (!blurMyShellPopupSettings ||
+                !blurMyShellHasKey(blurMyShellPopupSettings, 'blur') ||
                 !blurMyShellExtensionEnabled())
                 return false;
             return blurMyShellPopupSettings.get_boolean('blur');
@@ -77,13 +80,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             syncPanelTransparencyControls();
             syncStartMenuTransparencyControl();
         };
-        if (blurMyShellPanelSettings) {
+        if (blurMyShellPanelSettings &&
+            blurMyShellHasKey(blurMyShellPanelSettings, 'blur')) {
             blurMyShellPanelSettings.connect(
                 'changed::blur',
                 syncBlurMyShellTransparencyState
             );
         }
-        if (blurMyShellPopupSettings) {
+        if (blurMyShellPopupSettings &&
+            blurMyShellHasKey(blurMyShellPopupSettings, 'blur')) {
             blurMyShellPopupSettings.connect(
                 'changed::blur',
                 syncBlurMyShellTransparencyState

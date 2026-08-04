@@ -11,6 +11,7 @@ import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
+    blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
@@ -565,7 +566,7 @@ export class PanelController {
                 blurMyShellSettings,
                 'panel'
             );
-            if (panelSettings) {
+            if (panelSettings && blurMyShellHasKey(panelSettings, 'blur')) {
                 this._connect(
                     panelSettings,
                     'changed::blur',
@@ -764,8 +765,12 @@ export class PanelController {
                 BLUR_MY_SHELL_ACTIVE_CLASS
             );
             if (!Main.overview.visibleTarget) {
-                panelBlur.panel_hide_blur_dynamically();
-                panelBlur.update_visibility();
+                if (typeof panelBlur.panel_hide_blur_dynamically ===
+                    'function') {
+                    panelBlur.panel_hide_blur_dynamically();
+                }
+                if (typeof panelBlur.update_visibility === 'function')
+                    panelBlur.update_visibility();
             }
         } else {
             Main.panel.remove_style_class_name(
