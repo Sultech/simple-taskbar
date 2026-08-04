@@ -107,7 +107,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._taskbarController.setStartMenuOpen(open);
                 this._panelController?.setStartMenuOpen(open);
                 if (open)
-                    this._trayOverflowController.close();
+                    this._trayOverflowController?.close();
             },
         });
 
