@@ -13,6 +13,7 @@ import {
 
 import {ExtensionConflictController} from './extensionConflictController.js';
 import {FolderMenuController} from './folderMenuController.js';
+import {TrayOverflowController} from './trayOverflowController.js';
 import {FavoritesIntegration} from './favoritesIntegration.js';
 import {GridAltTabController} from './gridAltTabController.js';
 import {HotEdgeController} from './hotEdgeController.js';
@@ -105,12 +106,17 @@ export default class SimpleTaskbarExtension extends Extension {
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
                 this._panelController?.setStartMenuOpen(open);
+                if (open)
+                    this._trayOverflowController.close();
             },
         });
 
         this._createTaskbarActors();
         this._folderMenuController = new FolderMenuController(this._settings);
         this._folderMenuController.enable();
+        this._trayOverflowController = new TrayOverflowController(
+            this._settings
+        );
         this._panelController = new PanelController({
             settings: this._settings,
             panelHeight: this._panelHeight,
@@ -134,6 +140,7 @@ export default class SimpleTaskbarExtension extends Extension {
             openPreferences: () => this.openPreferences(),
         });
         this._panelController.enable();
+        this._trayOverflowController.enable();
         this._panelInteractionController.enable();
         this._startButtonController.enable();
         this._volumeMixerController = new VolumeMixerController(
@@ -196,6 +203,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._volumeMixerController = null;
         this._panelInteractionController.destroy();
         this._panelInteractionController = null;
+        this._trayOverflowController.destroy();
+        this._trayOverflowController = null;
         this._panelController.destroy();
         this._panelController = null;
         this._folderMenuController.destroy();

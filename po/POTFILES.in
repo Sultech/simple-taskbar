@@ -9,6 +9,7 @@ startButtonController.js
 prefs/startIconChooser.js
 panelInteractionController.js
 taskbarController.js
+trayOverflowController.js
 windowPreviewController.js
 favoritesIntegration.js
 gridAltTabPopup.js

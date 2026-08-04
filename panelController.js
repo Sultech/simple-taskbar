@@ -67,7 +67,7 @@ export class PanelController {
         this._queueOverviewRelayout = queueOverviewRelayout;
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signals = [];
-        this._panelItemState = [];
+        this._panelBoxState = [];
         this._panelWasModified = false;
         this._oldPanelGeometry = null;
         this._oldPanelHeight = null;
@@ -365,7 +365,7 @@ export class PanelController {
         if (restoringUnlockPanel)
             Main.panel._updatePanel();
 
-        this._panelItemState = null;
+        this._panelBoxState = null;
         this._startButton = null;
         this._taskbarBin = null;
         this._taskbarActor = null;
@@ -806,20 +806,14 @@ export class PanelController {
         this._oldPanelStyle = Main.panel.get_style();
         this._activitiesWasVisible = activities?.visible ?? false;
 
-        for (const indicator of [
-            Main.panel.statusArea.activities,
-            Main.panel.statusArea.quickSettings,
-            Main.panel.statusArea.dateMenu,
+        for (const box of [
+            Main.panel._leftBox,
+            Main.panel._centerBox,
+            Main.panel._rightBox,
         ]) {
-            const actor = indicator?.container;
-            const parent = actor?.get_parent();
-            if (!parent)
-                continue;
-
-            this._panelItemState.push({
-                actor,
-                parent,
-                index: parent.get_children().indexOf(actor),
+            this._panelBoxState.push({
+                box,
+                children: box.get_children(),
             });
         }
     }
@@ -880,16 +874,73 @@ export class PanelController {
     }
 
     _restorePanelItems() {
-        for (const {actor} of this._panelItemState ?? [])
-            actor.get_parent()?.remove_child(actor);
+        const states = this._panelBoxState ?? [];
+        const boxes = states.map(({box}) => box);
+        const originalBoxByActor = new Map();
+        for (const {box, children} of states) {
+            for (const actor of children)
+                originalBoxByActor.set(actor, box);
+        }
 
-        const states = [...(this._panelItemState ?? [])]
-            .sort((a, b) => a.index - b.index);
-        for (const {actor, parent, index} of states) {
-            parent.insert_child_at_index(
-                actor,
-                Math.min(index, parent.get_n_children())
+        const currentChildrenByBox = new Map(
+            boxes.map(box => [box, box.get_children()])
+        );
+        const currentPanelActors = new Set(
+            [...currentChildrenByBox.values()].flat()
+        );
+        const originalChildrenByBox = new Map(
+            states.map(({box, children}) => [
+                box,
+                children.filter(actor => currentPanelActors.has(actor)),
+            ])
+        );
+
+        for (const actor of currentPanelActors) {
+            if (originalBoxByActor.has(actor))
+                actor.get_parent()?.remove_child(actor);
+        }
+
+        for (const {box} of states) {
+            const currentChildren = currentChildrenByBox.get(box);
+            const originalChildren = originalChildrenByBox.get(box);
+            const originalIndexByActor = new Map(
+                originalChildren.map((actor, index) => [actor, index])
             );
+            const dynamicByGap = Array.from(
+                {length: originalChildren.length + 1},
+                () => []
+            );
+            let gap = 0;
+            for (const actor of currentChildren) {
+                const originalBox = originalBoxByActor.get(actor);
+                if (originalBox !== box) {
+                    if (!originalBox)
+                        dynamicByGap[gap].push(actor);
+                    continue;
+                }
+
+                const originalIndex = originalIndexByActor.get(actor);
+                if (originalIndex !== undefined)
+                    gap = originalIndex + 1;
+            }
+
+            const targetChildren = [];
+            for (let index = 0; index < originalChildren.length; index++) {
+                targetChildren.push(...dynamicByGap[index]);
+                targetChildren.push(originalChildren[index]);
+            }
+            targetChildren.push(...dynamicByGap[originalChildren.length]);
+
+            for (let index = 0; index < targetChildren.length; index++) {
+                const actor = targetChildren[index];
+                if (box.get_child_at_index(index) === actor)
+                    continue;
+
+                if (actor.get_parent() === box)
+                    box.set_child_at_index(actor, index);
+                else
+                    box.insert_child_at_index(actor, index);
+            }
         }
     }
 

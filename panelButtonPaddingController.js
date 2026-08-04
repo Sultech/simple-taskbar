@@ -144,21 +144,27 @@ export class PanelButtonPaddingController {
     }
 
     _applyToActor(actor, padding) {
-        let originalStyle = this._styledActors.get(actor);
-        if (originalStyle === undefined) {
-            originalStyle = actor.get_style() ?? '';
-            this._styledActors.set(actor, originalStyle);
+        let state = this._styledActors.get(actor);
+        const currentStyle = actor.get_style() ?? '';
+        if (!state) {
+            state = {
+                originalStyle: currentStyle,
+                appliedStyle: null,
+            };
+        } else if (currentStyle !== state.appliedStyle) {
+            state.originalStyle = currentStyle;
         }
 
-        const separator = originalStyle &&
-            !originalStyle.trimEnd().endsWith(';')
+        const separator = state.originalStyle &&
+            !state.originalStyle.trimEnd().endsWith(';')
             ? '; '
             : ' ';
-        actor.set_style(
-            `${originalStyle}${separator}` +
+        state.appliedStyle =
+            `${state.originalStyle}${separator}` +
             `-natural-hpadding: ${padding}px; ` +
-            `-minimum-hpadding: ${padding}px;`
-        );
+            `-minimum-hpadding: ${padding}px;`;
+        this._styledActors.set(actor, state);
+        actor.set_style(state.appliedStyle);
         actor.queue_relayout();
     }
 
@@ -169,12 +175,14 @@ export class PanelButtonPaddingController {
     }
 
     _restoreActor(actor) {
-        const originalStyle = this._styledActors.get(actor);
-        if (originalStyle === undefined)
+        const state = this._styledActors.get(actor);
+        if (!state)
             return;
 
-        actor.set_style(originalStyle);
-        actor.queue_relayout();
+        if ((actor.get_style() ?? '') === state.appliedStyle) {
+            actor.set_style(state.originalStyle);
+            actor.queue_relayout();
+        }
         this._styledActors.delete(actor);
     }
 

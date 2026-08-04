@@ -1098,6 +1098,8 @@
     background-gradient-direction: vertical;
     background-gradient-start: rgba(249, 250, 253, 0.62) !important;
     background-gradient-end: rgba(230, 234, 242, 0.54) !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .bms-popup-background-transparent
@@ -1225,6 +1227,61 @@
 .simple-taskbar-folder-menu-light .popup-menu-icon {
     -st-icon-style: symbolic;
     color: rgba(36, 36, 39, 0.92);
+}
+
+.popup-menu.simple-taskbar-tray-overflow-menu {
+    min-width: 0;
+}
+
+.simple-taskbar-tray-overflow-menu .popup-menu-content {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.simple-taskbar-tray-overflow-menu.simple-taskbar-tray-overflow-light
+    .popup-menu-content {
+    background-color: rgba(233, 233, 238, 0.82);
+    border: 1px solid rgba(206, 206, 214, 0.82);
+    box-shadow: none;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-tray-overflow-menu
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-tray-overflow-menu
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-tray-overflow-menu
+    .popup-menu-content {
+    border: 1px solid rgba(45, 45, 50, 0.52) !important;
+    box-shadow: none !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-tray-overflow-menu.simple-taskbar-tray-overflow-light
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-tray-overflow-menu.simple-taskbar-tray-overflow-light
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-tray-overflow-menu.simple-taskbar-tray-overflow-light
+    .popup-menu-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.62) !important;
+    background-gradient-end: rgba(230, 234, 242, 0.54) !important;
+    border: 1px solid rgba(230, 234, 242, 0.54) !important;
+    box-shadow: none !important;
+}
+
+.simple-taskbar-tray-overflow-grid {
+    padding: 2px;
+    spacing: 20px;
+}
+
+.simple-taskbar-tray-overflow-row {
+    spacing: 20px;
 }
 
 .simple-taskbar-hot-edge-ripple {

@@ -373,5 +373,9 @@
       <default>true</default>
       <summary>Show per-application volume controls in Quick Settings</summary>
     </key>
+    <key name="tray-overflow-enabled" type="b">
+      <default>true</default>
+      <summary>Collect application tray icons behind a panel arrow</summary>
+    </key>
   </schema>
 </schemalist>

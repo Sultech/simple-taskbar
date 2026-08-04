@@ -25,7 +25,7 @@ echo "Template: po/simple-taskbar.pot"
 for po_file in po/*.po; do
     [ -f "$po_file" ] || continue
     lang=$(basename "$po_file" .po)
-    msgmerge --update "$po_file" po/simple-taskbar.pot
+    msgmerge --update --backup=none "$po_file" po/simple-taskbar.pot
     echo "Updated: $po_file"
 done
 

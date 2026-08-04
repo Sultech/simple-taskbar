@@ -1367,6 +1367,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const trayOverflowSwitch = new Adw.SwitchRow({
+            title: _('Collect Tray Icons'),
+            subtitle: _('Gather application tray icons behind a panel arrow'),
+            active: window._settings.get_boolean('tray-overflow-enabled'),
+        });
+        panelGroup.add(trayOverflowSwitch);
+        window._settings.bind(
+            'tray-overflow-enabled',
+            trayOverflowSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const folderMenuSwitch = new Adw.SwitchRow({
             title: _('Show Folder Menu'),
             subtitle: _('Show a selected folder on the taskbar'),

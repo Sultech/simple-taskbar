@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-03 05:59+0100\n"
+"POT-Creation-Date: 2026-08-04 00:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:248
+#: extension.js:257
 msgid "Show desktop"
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Always display the switcher on the primary monitor"
 msgstr ""
 
-#: prefs.js:154 prefs.js:845 prefs.js:1454
+#: prefs.js:154 prefs.js:845 prefs.js:1467
 msgid "Start Button"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgstr ""
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr ""
 
-#: prefs.js:524 prefs.js:1906
+#: prefs.js:524 prefs.js:1919
 msgid "Panel Position"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr ""
 msgid "Use the built-in icon"
 msgstr ""
 
-#: prefs.js:902 prefs.js:1387
+#: prefs.js:902 prefs.js:1400
 msgid "Choose…"
 msgstr ""
 
@@ -639,7 +639,7 @@ msgstr ""
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr ""
 
-#: prefs.js:1343 prefs.js:1489
+#: prefs.js:1343 prefs.js:1502
 msgid "Show Desktop Button"
 msgstr ""
 
@@ -656,156 +656,164 @@ msgid "Add per-application volume controls to Quick Settings"
 msgstr ""
 
 #: prefs.js:1371
-msgid "Show Folder Menu"
+msgid "Collect Tray Icons"
 msgstr ""
 
 #: prefs.js:1372
-msgid "Show a selected folder on the taskbar"
+msgid "Gather application tray icons behind a panel arrow"
 msgstr ""
 
 #: prefs.js:1384
+msgid "Show Folder Menu"
+msgstr ""
+
+#: prefs.js:1385
+msgid "Show a selected folder on the taskbar"
+msgstr ""
+
+#: prefs.js:1397
 msgid "Folder Menu Location"
 msgstr ""
 
-#: prefs.js:1402
+#: prefs.js:1415
 msgid "No folder selected"
 msgstr ""
 
-#: prefs.js:1418
+#: prefs.js:1431
 msgid "Left Items"
 msgstr ""
 
-#: prefs.js:1420
+#: prefs.js:1433
 msgid "Move items only within their current panel position."
 msgstr ""
 
-#: prefs.js:1424
+#: prefs.js:1437
 msgid "Center Items"
 msgstr ""
 
-#: prefs.js:1427
+#: prefs.js:1440
 msgid "Right Items"
 msgstr ""
 
-#: prefs.js:1435
+#: prefs.js:1448
 msgid "Left Box"
 msgstr ""
 
-#: prefs.js:1436 prefs.js:1442 prefs.js:1448
+#: prefs.js:1449 prefs.js:1455 prefs.js:1461
 msgid "Other GNOME Shell and extension items"
 msgstr ""
 
-#: prefs.js:1441
+#: prefs.js:1454
 msgid "Center Box"
 msgstr ""
 
-#: prefs.js:1447
+#: prefs.js:1460
 msgid "Right Box"
 msgstr ""
 
-#: prefs.js:1455
+#: prefs.js:1468
 msgid "Eleven-style or original GNOME Start button"
 msgstr ""
 
-#: prefs.js:1460
+#: prefs.js:1473
 msgid "Activities"
 msgstr ""
 
-#: prefs.js:1461
+#: prefs.js:1474
 msgid "GNOME workspace overview button"
 msgstr ""
 
-#: prefs.js:1466 startButtonController.js:509
+#: prefs.js:1479 startButtonController.js:509
 msgid "Applications"
 msgstr ""
 
-#: prefs.js:1467
+#: prefs.js:1480
 msgid "Taskbar application buttons"
 msgstr ""
 
-#: prefs.js:1472
+#: prefs.js:1485
 msgid "Folder Menu"
 msgstr ""
 
-#: prefs.js:1473
+#: prefs.js:1486
 msgid "Selected folder shortcuts"
 msgstr ""
 
-#: prefs.js:1478
+#: prefs.js:1491
 msgid "System Menu"
 msgstr ""
 
-#: prefs.js:1479
+#: prefs.js:1492
 msgid "Quick Settings, volume, network, and power"
 msgstr ""
 
-#: prefs.js:1484
+#: prefs.js:1497
 msgid "Clock"
 msgstr ""
 
-#: prefs.js:1490
+#: prefs.js:1503
 msgid "Minimize or restore all windows"
 msgstr ""
 
-#: prefs.js:1664 prefs.js:1691
+#: prefs.js:1677 prefs.js:1704
 msgid "Reset"
 msgstr ""
 
-#: prefs.js:1669
+#: prefs.js:1682
 msgid "Reset All Settings"
 msgstr ""
 
-#: prefs.js:1670
+#: prefs.js:1683
 msgid "Restore defaults without changing pinned taskbar or Start Menu apps"
 msgstr ""
 
-#: prefs.js:1673
+#: prefs.js:1686
 msgid "Reset…"
 msgstr ""
 
-#: prefs.js:1687
+#: prefs.js:1700
 msgid "Reset all settings?"
 msgstr ""
 
-#: prefs.js:1688
+#: prefs.js:1701
 msgid ""
 "This will restore taskbar and Start Menu settings. Pinned taskbar and Start "
 "Menu apps, including their order, will be kept."
 msgstr ""
 
-#: prefs.js:1690 prefs/startIconChooser.js:139
+#: prefs.js:1703 prefs/startIconChooser.js:139
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:1727
+#: prefs.js:1740
 msgid "Set Custom Shortcut"
 msgstr ""
 
-#: prefs.js:1740
+#: prefs.js:1753
 msgid "Press a keyboard shortcut"
 msgstr ""
 
-#: prefs.js:1741
+#: prefs.js:1754
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr ""
 
-#: prefs.js:1785
+#: prefs.js:1798
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 
-#: prefs.js:1799
+#: prefs.js:1812
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr ""
 
-#: prefs.js:1817
+#: prefs.js:1830
 msgid "Choose a Folder"
 msgstr ""
 
-#: prefs.js:1941
+#: prefs.js:1954
 msgid "Move Up"
 msgstr ""
 
-#: prefs.js:1946
+#: prefs.js:1959
 msgid "Move Down"
 msgstr ""
 
@@ -1074,6 +1082,10 @@ msgstr ""
 
 #: taskbarController.js:508 taskbarController.js:510 taskbarController.js:1681
 msgid "running"
+msgstr ""
+
+#: trayOverflowController.js:158
+msgid "Tray icons"
 msgstr ""
 
 #: windowPreviewController.js:576 gridAltTabPopup.js:221 gridAltTabPopup.js:306

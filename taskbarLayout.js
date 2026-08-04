@@ -34,9 +34,9 @@ export function allocateAdaptivePanel(
 
     const width = box.x2 - box.x1;
     const height = box.y2 - box.y1;
-    const [, leftNaturalWidth] = leftBox.get_preferred_width(-1);
-    const [, centerNaturalWidth] = centerBox.get_preferred_width(-1);
-    const [, rightNaturalWidth] = rightBox.get_preferred_width(-1);
+    const [, leftNaturalWidth] = leftBox.get_preferred_width(height);
+    const [, centerNaturalWidth] = centerBox.get_preferred_width(height);
+    const [, rightNaturalWidth] = rightBox.get_preferred_width(height);
     const rtl =
         panel.get_text_direction() === Clutter.TextDirection.RTL;
     const physicalLeftWidth = rtl
@@ -93,9 +93,9 @@ export function allocateExpandedSidePanel(
 
     const width = box.x2 - box.x1;
     const height = box.y2 - box.y1;
-    const [, leftNaturalWidth] = leftBox.get_preferred_width(-1);
-    const [, centerNaturalWidth] = centerBox.get_preferred_width(-1);
-    const [, rightNaturalWidth] = rightBox.get_preferred_width(-1);
+    const [, leftNaturalWidth] = leftBox.get_preferred_width(height);
+    const [, centerNaturalWidth] = centerBox.get_preferred_width(height);
+    const [, rightNaturalWidth] = rightBox.get_preferred_width(height);
     const rtl =
         panel.get_text_direction() === Clutter.TextDirection.RTL;
     const childBox = new Clutter.ActorBox();
