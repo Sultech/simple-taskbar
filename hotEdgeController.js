@@ -11,7 +11,6 @@ import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Ripples from 'resource:///org/gnome/shell/ui/ripples.js';
 
-const PRESSURE_THRESHOLD = 150;
 const PRESSURE_TIMEOUT = 1000;
 const FALLBACK_TIMEOUT = 250;
 
@@ -27,6 +26,11 @@ export class HotEdgeController {
         this._connect(
             this._settings,
             'changed::hot-edge-overview-enabled',
+            () => this._rebuild()
+        );
+        this._connect(
+            this._settings,
+            'changed::hot-edge-pressure-threshold',
             () => this._rebuild()
         );
         this._connect(Main.layoutManager, 'monitors-changed', () => {
@@ -63,6 +67,9 @@ export class HotEdgeController {
             this._edges.push(new HotEdge({
                 layoutManager: Main.layoutManager,
                 monitor,
+                pressureThreshold: this._settings?.get_int(
+                    'hot-edge-pressure-threshold'
+                ) ?? 150,
                 isBlocked: () => this._isBlocked(),
                 showAnimation: () => this._settings?.get_boolean(
                     'hot-edge-animation-enabled'
@@ -94,9 +101,16 @@ export class HotEdgeController {
 }
 
 class HotEdge {
-    constructor({layoutManager, monitor, isBlocked, showAnimation}) {
+    constructor({
+        layoutManager,
+        monitor,
+        pressureThreshold,
+        isBlocked,
+        showAnimation,
+    }) {
         this._layoutManager = layoutManager;
         this._monitor = monitor;
+        this._pressureThreshold = pressureThreshold;
         this._isBlocked = isBlocked;
         this._showAnimation = showAnimation;
         this._barrier = null;
@@ -149,6 +163,7 @@ class HotEdge {
         this._ripples = null;
         this._layoutManager = null;
         this._monitor = null;
+        this._pressureThreshold = null;
         this._isBlocked = null;
         this._showAnimation = null;
     }
@@ -171,7 +186,7 @@ class HotEdge {
             directions: Meta.BarrierDirection.NEGATIVE_Y,
         });
         this._pressureBarrier = new Layout.PressureBarrier(
-            PRESSURE_THRESHOLD,
+            this._pressureThreshold,
             PRESSURE_TIMEOUT,
             Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW
         );

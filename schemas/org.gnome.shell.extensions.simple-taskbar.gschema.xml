@@ -29,6 +29,12 @@
       <default>true</default>
       <summary>Push against the bottom screen edge to toggle Overview</summary>
     </key>
+    <key name="hot-edge-pressure-threshold" type="i">
+      <range min="0" max="500"/>
+      <default>150</default>
+      <summary>Activation pressure for the bottom hot edge</summary>
+      <description>Pixels the pointer must travel past the bottom edge before Overview activates</description>
+    </key>
     <key name="hot-edge-animation-enabled" type="b">
       <default>false</default>
       <summary>Show a ripple when the bottom hot edge activates</summary>

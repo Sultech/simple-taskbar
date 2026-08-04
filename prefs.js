@@ -775,6 +775,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const hotEdgePressureRow = this._addSpinRow(
+            behaviorGroup,
+            window._settings,
+            {
+                key: 'hot-edge-pressure-threshold',
+                title: _('Activation Pressure'),
+                subtitle: _(
+                    'Pixels the pointer must travel past the bottom edge before Overview activates'
+                ),
+                lower: 0,
+                upper: 500,
+                step: 25,
+            }
+        );
+
         const hotEdgeAnimationSwitch = new Adw.SwitchRow({
             title: _('Hot Edge Animation'),
             subtitle: _('Show a ripple when the bottom hot edge activates'),
@@ -791,6 +806,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         const updateHotEdgeAnimationSwitch = () => {
             hotEdgeAnimationSwitch.sensitive = hotEdgeOverviewSwitch.active;
+            hotEdgePressureRow.visible = hotEdgeOverviewSwitch.active;
         };
         hotEdgeOverviewSwitch.connect(
             'notify::active',
