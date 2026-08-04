@@ -25,6 +25,7 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
+import {resolveTaskManagerAppId} from './taskManagerUtils.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
@@ -885,7 +886,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
-        const taskManagerApps = Gio.AppInfo.get_all()
+        const allTaskManagerApps = Gio.AppInfo.get_all();
+        const taskManagerApps = allTaskManagerApps
             .filter(app => app.should_show() && app.get_id())
             .map(app => ({
                 value: app.get_id(),
@@ -894,6 +896,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             .sort((a, b) => a.label.localeCompare(b.label));
         const configuredTaskManager = window._settings.get_string(
             'task-manager-app'
+        );
+        const availableTaskManagerIds = new Set(
+            allTaskManagerApps
+                .map(app => app.get_id())
+                .filter(Boolean)
+        );
+        const effectiveTaskManager = resolveTaskManagerAppId(
+            configuredTaskManager,
+            availableTaskManagerIds
         );
         if (!taskManagerApps.some(app =>
             app.value === configuredTaskManager)) {
@@ -913,6 +924,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 title: _('Task Manager Application'),
                 subtitle: _('Application opened from the taskbar context menu'),
                 choices: taskManagerApps,
+                initialValue: effectiveTaskManager ?? configuredTaskManager,
             }
         );
         taskManagerAppRow.expression = Gtk.PropertyExpression.new(
@@ -2164,7 +2176,13 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         };
     }
 
-    _addComboRow(group, settings, {key, title, subtitle = '', choices}) {
+    _addComboRow(group, settings, {
+        key,
+        title,
+        subtitle = '',
+        choices,
+        initialValue = null,
+    }) {
         const model = new Gtk.StringList();
         for (const choice of choices)
             model.append(choice.label);
@@ -2174,7 +2192,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle,
             model,
         });
-        const currentValue = settings.get_string(key);
+        const currentValue = initialValue ?? settings.get_string(key);
         const selected = choices.findIndex(choice => choice.value === currentValue);
         row.set_selected(Math.max(selected, 0));
         row.connect('notify::selected', widget => {

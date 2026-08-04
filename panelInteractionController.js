@@ -13,13 +13,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
-
-const DEFAULT_TASK_MANAGER_APP = 'net.nokyan.Resources.desktop';
-const TASK_MANAGER_FALLBACK_APPS = [
-    DEFAULT_TASK_MANAGER_APP,
-    'org.gnome.SystemMonitor.desktop',
-    'io.missioncenter.MissionCenter.desktop',
-];
+import {taskManagerCandidates} from './taskManagerUtils.js';
 
 export class PanelInteractionController {
     constructor({
@@ -137,11 +131,7 @@ export class PanelInteractionController {
     _openTaskManager() {
         const configuredApp = this._settings.get_string('task-manager-app');
         const appSystem = Shell.AppSystem.get_default();
-        const candidates = [
-            configuredApp,
-            ...TASK_MANAGER_FALLBACK_APPS,
-        ];
-        for (const appId of new Set(candidates)) {
+        for (const appId of taskManagerCandidates(configuredApp)) {
             if (!appId)
                 continue;
 
