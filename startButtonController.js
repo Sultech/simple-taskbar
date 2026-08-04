@@ -14,7 +14,10 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
-import {getBlurMyShellSettings} from './blurMyShellUtils.js';
+import {
+    getBlurMyShellChildSettings,
+    getBlurMyShellSettings,
+} from './blurMyShellUtils.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 
 const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
@@ -202,14 +205,16 @@ export class StartButtonController {
         if (!settings)
             return;
 
-        const popupSettings = settings.get_child('popup');
-        const panelSettings = settings.get_child('panel');
+        const popupSettings = getBlurMyShellChildSettings(settings, 'popup');
+        const panelSettings = getBlurMyShellChildSettings(settings, 'panel');
         for (const [componentSettings, key] of [
             [popupSettings, 'blur'],
             [popupSettings, 'override-background'],
             [popupSettings, 'style-popup'],
             [panelSettings, 'blur'],
         ]) {
+            if (!componentSettings)
+                continue;
             this._connect(
                 componentSettings,
                 `changed::${key}`,

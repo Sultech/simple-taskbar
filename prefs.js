@@ -20,7 +20,10 @@ import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
 } from './panelItemOrder.js';
-import {getBlurMyShellSettings} from './blurMyShellUtils.js';
+import {
+    getBlurMyShellChildSettings,
+    getBlurMyShellSettings,
+} from './blurMyShellUtils.js';
 
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
@@ -37,8 +40,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         let blurMyShellPanelSettings = null;
         let blurMyShellPopupSettings = null;
         if (blurMyShellSettings) {
-            blurMyShellPanelSettings = blurMyShellSettings.get_child('panel');
-            blurMyShellPopupSettings = blurMyShellSettings.get_child('popup');
+            blurMyShellPanelSettings = getBlurMyShellChildSettings(
+                blurMyShellSettings,
+                'panel'
+            );
+            blurMyShellPopupSettings = getBlurMyShellChildSettings(
+                blurMyShellSettings,
+                'popup'
+            );
         }
         const blurMyShellExtensionEnabled = () => {
             const enabledExtensions = shellSettings.get_strv(

@@ -10,7 +10,10 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {getBlurMyShellSettings} from './blurMyShellUtils.js';
+import {
+    getBlurMyShellChildSettings,
+    getBlurMyShellSettings,
+} from './blurMyShellUtils.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
@@ -558,11 +561,17 @@ export class PanelController {
         );
         const blurMyShellSettings = getBlurMyShellSettings();
         if (blurMyShellSettings) {
-            this._connect(
-                blurMyShellSettings.get_child('panel'),
-                'changed::blur',
-                () => this._queueBlurMyShellSync()
+            const panelSettings = getBlurMyShellChildSettings(
+                blurMyShellSettings,
+                'panel'
             );
+            if (panelSettings) {
+                this._connect(
+                    panelSettings,
+                    'changed::blur',
+                    () => this._queueBlurMyShellSync()
+                );
+            }
         }
         for (const box of [
             Main.panel._leftBox,

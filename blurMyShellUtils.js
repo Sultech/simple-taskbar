@@ -44,3 +44,14 @@ export function getBlurMyShellSettings() {
 
     return null;
 }
+
+export function getBlurMyShellChildSettings(settings, childName) {
+    if (!settings)
+        return null;
+
+    const children = settings.settings_schema.list_children();
+    if (!children.includes(childName))
+        return null;
+
+    return settings.get_child(childName);
+}
