@@ -6,6 +6,8 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const AUTOMATIC_PADDING = -1;
+const AUTOMATIC_FALLBACK_PADDING = 3;
+const STATUS_ICON_CLASS = 'system-status-icon';
 const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const HOVER_INSET_CLASS_PREFIX =
@@ -45,9 +47,8 @@ export class PanelButtonPaddingController {
         );
         for (const box of this._panelBoxes) {
             this._connect(box, 'child-added', (_box, actor) => {
-                const padding =
-                    this._settings.get_int('panel-button-padding');
-                if (padding !== AUTOMATIC_PADDING)
+                const padding = this._effectivePadding();
+                if (padding !== null)
                     this._applyToSubtree(actor, padding);
             });
             this._connect(box, 'child-removed', (_box, actor) => {
@@ -59,20 +60,23 @@ export class PanelButtonPaddingController {
     }
 
     sync() {
-        const padding = this._settings.get_int('panel-button-padding');
+        const automatic =
+            this._settings.get_int('panel-button-padding') ===
+            AUTOMATIC_PADDING;
+        const padding = this._effectivePadding();
         this._panelActor.remove_style_class_name(
             DEFAULT_BUTTON_PADDING_CLASS
         );
-        if (padding === AUTOMATIC_PADDING) {
+        if (padding === null) {
             this._restoreAll();
-            if (!this._externalPaddingIsActive()) {
-                this._panelActor.add_style_class_name(
-                    DEFAULT_BUTTON_PADDING_CLASS
-                );
-            }
             return;
         }
 
+        if (automatic) {
+            this._panelActor.add_style_class_name(
+                DEFAULT_BUTTON_PADDING_CLASS
+            );
+        }
         for (const box of this._panelBoxes)
             this._applyToSubtree(box, padding);
     }
@@ -133,14 +137,72 @@ export class PanelButtonPaddingController {
         this._panelActor.add_style_class_name(this._hoverInsetClass);
     }
 
+    _effectivePadding() {
+        const configured = this._settings.get_int('panel-button-padding');
+        if (configured !== AUTOMATIC_PADDING)
+            return configured;
+        if (this._externalPaddingIsActive())
+            return null;
+        return AUTOMATIC_FALLBACK_PADDING;
+    }
+
     _applyToSubtree(actor, padding) {
-        if (actor instanceof St.Widget &&
-            actor.has_style_class_name('panel-button')) {
-            this._applyToActor(actor, padding);
+        if (actor instanceof St.Widget) {
+            if (actor.has_style_class_name('panel-button'))
+                this._applyToActor(actor, padding);
+            else if (actor.has_style_class_name(STATUS_ICON_CLASS))
+                this._clearIconMargin(actor);
         }
 
         for (const child of actor.get_children())
             this._applyToSubtree(child, padding);
+    }
+
+    _styleWithoutMargin(style) {
+        return style
+            .split(';')
+            .filter(declaration => {
+                const property = declaration.split(':')[0].trim();
+                return property !== '' && property !== 'margin' &&
+                    property !== 'margin-left' &&
+                    property !== 'margin-right';
+            })
+            .map(declaration => `${declaration.trim()};`)
+            .join(' ');
+    }
+
+    _clearIconMargin(actor) {
+        const currentStyle = actor.get_style() ?? '';
+        const state = this._styledActors.get(actor);
+        if (state && currentStyle === state.appliedStyle)
+            return;
+
+        const stripped = this._styleWithoutMargin(currentStyle);
+        if (!state) {
+            this._styledActors.set(actor, {
+                originalStyle: currentStyle,
+                appliedStyle: stripped,
+                styleNotifyId: actor.connect(
+                    'notify::style',
+                    () => this._clearIconMargin(actor)
+                ),
+            });
+        } else {
+            state.originalStyle = currentStyle;
+            state.appliedStyle = stripped;
+        }
+
+        if (stripped === currentStyle)
+            return;
+
+        actor.set_style(stripped === '' ? null : stripped);
+        actor.queue_relayout();
+    }
+
+    _reapplyToActor(actor) {
+        const padding = this._effectivePadding();
+        if (padding !== null)
+            this._applyToActor(actor, padding);
     }
 
     _applyToActor(actor, padding) {
@@ -150,10 +212,19 @@ export class PanelButtonPaddingController {
             state = {
                 originalStyle: currentStyle,
                 appliedStyle: null,
+                appliedPadding: null,
+                styleNotifyId: actor.connect(
+                    'notify::style',
+                    () => this._reapplyToActor(actor)
+                ),
             };
+        } else if (currentStyle === state.appliedStyle &&
+            padding === state.appliedPadding) {
+            return;
         } else if (currentStyle !== state.appliedStyle) {
             state.originalStyle = currentStyle;
         }
+        state.appliedPadding = padding;
 
         const separator = state.originalStyle &&
             !state.originalStyle.trimEnd().endsWith(';')
@@ -179,8 +250,12 @@ export class PanelButtonPaddingController {
         if (!state)
             return;
 
+        if (state.styleNotifyId)
+            actor.disconnect(state.styleNotifyId);
         if ((actor.get_style() ?? '') === state.appliedStyle) {
-            actor.set_style(state.originalStyle);
+            actor.set_style(state.originalStyle === ''
+                ? null
+                : state.originalStyle);
             actor.queue_relayout();
         }
         this._styledActors.delete(actor);
