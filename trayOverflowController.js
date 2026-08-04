@@ -351,9 +351,8 @@ export class TrayOverflowController {
         const sameIndicator = target &&
             (entry.indicator === target || entry.indicator.contains(target));
         if (type === Clutter.EventType.BUTTON_PRESS && sameIndicator &&
-            (event.get_button() === Clutter.BUTTON_SECONDARY ||
-             (event.get_button() === Clutter.BUTTON_PRIMARY &&
-              !this._indicatorSupportsActivation(entry.indicator))))
+            (event.get_button() === Clutter.BUTTON_PRIMARY ||
+             event.get_button() === Clutter.BUTTON_SECONDARY))
             return Clutter.EVENT_PROPAGATE;
 
         this._menu.close(BoxPointer.PopupAnimation.FULL);
