@@ -99,7 +99,7 @@ export class TrayOverflowController {
     }
 
     get menuIsOpen() {
-        if (this._menu && this._menu.isOpen)
+        if (this._menu.isOpen)
             return true;
 
         return [...this._stashed.values()].some(
@@ -555,9 +555,6 @@ export class TrayOverflowController {
     }
 
     _relayoutGrid() {
-        if (!this._grid)
-            return;
-
         const retainedCells = new Set(
             [...this._stashed.values()].map(({cell}) => cell)
         );
