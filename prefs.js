@@ -910,10 +910,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             app.value === configuredTaskManager)) {
             taskManagerApps.unshift({
                 value: configuredTaskManager,
-                label: _('%s (Unavailable)').replace(
-                    '%s',
-                    configuredTaskManager
-                ),
+                label: _('Automatic Fallback'),
             });
         }
         const taskManagerAppRow = this._addComboRow(
