@@ -765,12 +765,8 @@ export class PanelController {
                 BLUR_MY_SHELL_ACTIVE_CLASS
             );
             if (!Main.overview.visibleTarget) {
-                if (typeof panelBlur.panel_hide_blur_dynamically ===
-                    'function') {
-                    panelBlur.panel_hide_blur_dynamically();
-                }
-                if (typeof panelBlur.update_visibility === 'function')
-                    panelBlur.update_visibility();
+                panelBlur.panel_hide_blur_dynamically();
+                panelBlur.update_visibility();
             }
         } else {
             Main.panel.remove_style_class_name(
