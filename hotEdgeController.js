@@ -56,7 +56,7 @@ export class HotEdgeController {
 
     _rebuild() {
         this._destroyEdges();
-        if (!this._settings?.get_boolean('hot-edge-overview-enabled'))
+        if (!this._settings.get_boolean('hot-edge-overview-enabled'))
             return;
 
         const monitors = Main.layoutManager.monitors;
@@ -67,13 +67,13 @@ export class HotEdgeController {
             this._edges.push(new HotEdge({
                 layoutManager: Main.layoutManager,
                 monitor,
-                pressureThreshold: this._settings?.get_int(
+                pressureThreshold: this._settings.get_int(
                     'hot-edge-pressure-threshold'
-                ) ?? 150,
+                ),
                 isBlocked: () => this._isBlocked(),
-                showAnimation: () => this._settings?.get_boolean(
+                showAnimation: () => this._settings.get_boolean(
                     'hot-edge-animation-enabled'
-                ) ?? true,
+                ),
             }));
         }
     }
