@@ -17,6 +17,7 @@ import {
 import {placePanelItems} from './panelItemOrder.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelIsTop} from './panelPosition.js';
+import {TRAY_OVERFLOW_ROLE} from './trayOverflowController.js';
 import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
@@ -177,6 +178,8 @@ export class PanelController {
         const activities = Main.panel.statusArea.activities?.container;
         const quickSettings =
             Main.panel.statusArea.quickSettings?.container;
+        const trayOverflow =
+            Main.panel.statusArea[TRAY_OVERFLOW_ROLE]?.container;
         const showDesktopPosition = this._settings.get_string(
             'show-desktop-button-position'
         );
@@ -219,6 +222,14 @@ export class PanelController {
                 actor: this._folderMenuButton,
                 position: this._settings.get_string('folder-menu-position'),
                 visible: this._settings.get_boolean('folder-menu-enabled'),
+            },
+            {
+                id: 'tray-overflow',
+                actor: trayOverflow,
+                position: this._settings.get_string(
+                    'tray-overflow-position'
+                ),
+                visible: true,
             },
             {
                 id: 'system-menu',
@@ -651,6 +662,9 @@ export class PanelController {
             this.applyLayout();
         });
         this._connect(this._settings, 'changed::folder-menu-position', () => {
+            this.applyLayout();
+        });
+        this._connect(this._settings, 'changed::tray-overflow-position', () => {
             this.applyLayout();
         });
         this._connect(this._settings, 'changed::panel-item-order', () => {

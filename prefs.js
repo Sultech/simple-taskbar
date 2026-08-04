@@ -447,6 +447,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_string('clock-position', 'center');
                 settings.set_string('system-menu-position', 'right');
                 settings.set_string('folder-menu-position', 'right');
+                settings.set_string('tray-overflow-position', 'right');
                 settings.set_strv(
                     'panel-item-order',
                     DEFAULT_PANEL_ITEM_ORDER
@@ -469,6 +470,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_string('clock-position', 'right');
                 settings.set_string('system-menu-position', 'right');
                 settings.set_string('folder-menu-position', 'right');
+                settings.set_string('tray-overflow-position', 'right');
                 settings.set_strv(
                     'panel-item-order',
                     DEFAULT_PANEL_ITEM_ORDER
@@ -1486,6 +1488,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 subtitle: _('Selected folder shortcuts'),
                 choices: panelPositions,
             }],
+            ['tray-overflow', {
+                key: 'tray-overflow-position',
+                title: _('Tray icons'),
+                subtitle: _('Gather application tray icons behind a panel arrow'),
+                choices: panelPositions,
+            }],
             ['system-menu', {
                 key: 'system-menu-position',
                 title: _('System Menu'),
@@ -1641,6 +1649,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 activitiesButtonSwitch.active;
             panelOrderRows.get('folder-menu').positionDropDown.sensitive =
                 folderMenuSwitch.active;
+            panelOrderRows.get('tray-overflow').positionDropDown.sensitive =
+                trayOverflowSwitch.active;
             panelOrderRows.get('show-desktop').positionDropDown.sensitive =
                 showDesktopSwitch.active;
         };
@@ -1656,6 +1666,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             syncPanelPositionSensitivity
         );
         folderMenuSwitch.connect(
+            'notify::active',
+            syncPanelPositionSensitivity
+        );
+        trayOverflowSwitch.connect(
             'notify::active',
             syncPanelPositionSensitivity
         );

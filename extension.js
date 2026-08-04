@@ -141,6 +141,7 @@ export default class SimpleTaskbarExtension extends Extension {
         });
         this._panelController.enable();
         this._trayOverflowController.enable();
+        this._panelController.applyLayout();
         this._panelInteractionController.enable();
         this._startButtonController.enable();
         this._volumeMixerController = new VolumeMixerController(

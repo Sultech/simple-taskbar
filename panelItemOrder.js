@@ -13,6 +13,7 @@ export const DEFAULT_PANEL_ITEM_ORDER = Object.freeze([
     'activities',
     'applications',
     'folder-menu',
+    'tray-overflow',
     'system-menu',
     'clock',
     'show-desktop',

@@ -18,7 +18,7 @@ import {
 } from './panelPosition.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 
-const OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
+export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
 const TRAY_ROLE_PREFIXES = ['appindicator-', 'ubuntu-appindicator-'];
 const TRAY_TYPE_NAMES = ['IndicatorStatusIcon', 'IndicatorTrayIcon'];
 const RESCAN_DELAY = 120;
@@ -156,7 +156,7 @@ export class TrayOverflowController {
         this._grid = null;
 
         if (this._button) {
-            delete Main.panel.statusArea[OVERFLOW_ROLE];
+            delete Main.panel.statusArea[TRAY_OVERFLOW_ROLE];
             this._button.destroy();
         }
         this._button = null;
@@ -180,7 +180,12 @@ export class TrayOverflowController {
             this._menu.toggle();
             return Clutter.EVENT_STOP;
         });
-        Main.panel.addToStatusArea(OVERFLOW_ROLE, this._button, 0, 'right');
+        Main.panel.addToStatusArea(
+            TRAY_OVERFLOW_ROLE,
+            this._button,
+            0,
+            this._settings.get_string('tray-overflow-position')
+        );
     }
 
     _overrideOutsideClicks() {
@@ -325,7 +330,7 @@ export class TrayOverflowController {
     }
 
     _isTrayIndicator(role, indicator) {
-        if (role === OVERFLOW_ROLE)
+        if (role === TRAY_OVERFLOW_ROLE)
             return false;
         if (TRAY_ROLE_PREFIXES.some(prefix => role.startsWith(prefix)))
             return true;
