@@ -330,6 +330,12 @@ export class TrayOverflowController {
         });
     }
 
+    _onIndicatorMenuStateChanged(indicator, open) {
+        this._syncIndicatorMenuStacking(indicator, open);
+        if (!open && this._menu.isOpen)
+            this._menu.close(BoxPointer.PopupAnimation.FULL);
+    }
+
     _isTrayIndicator(role, indicator) {
         if (role === TRAY_OVERFLOW_ROLE)
             return false;
@@ -461,7 +467,7 @@ export class TrayOverflowController {
         );
         indicator.menu.connectObject(
             'open-state-changed',
-            (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
+            (_menu, open) => this._onIndicatorMenuStateChanged(indicator, open),
             'activate', () => this._menu.close(BoxPointer.PopupAnimation.NONE),
             this
         );
