@@ -11,6 +11,7 @@ import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
+    BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
@@ -37,7 +38,6 @@ const EXTERNAL_PANEL_STYLES = [
     'dark-panel',
     'contrasted-panel',
 ];
-const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
 const BLUR_MY_SHELL_ACTIVE_CLASS =
     'simple-taskbar-blur-my-shell-active';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';

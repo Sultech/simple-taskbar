@@ -4,7 +4,7 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
-const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
+export const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
 const BLUR_MY_SHELL_SCHEMA =
     'org.gnome.shell.extensions.blur-my-shell';
 

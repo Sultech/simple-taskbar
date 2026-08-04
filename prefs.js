@@ -21,6 +21,7 @@ import {
     normalizePanelItemOrder,
 } from './panelItemOrder.js';
 import {
+    BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
@@ -30,7 +31,6 @@ import {resolveTaskManagerAppId} from './taskManagerUtils.js';
 const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
 const ICON_VERTICAL_RESERVE = 17;
-const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
 const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {

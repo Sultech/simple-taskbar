@@ -15,13 +15,12 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
 import {
+    BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
-
-const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
 
 export class StartButtonController {
     constructor({
