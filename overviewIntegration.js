@@ -326,7 +326,7 @@ export class OverviewIntegration {
                 // bottom, where Overview normally expects the stock dash.
                 if (!panelIsTop(integration._settings))
                     box.y2 -= integration._panelHeight;
-                else if (integration._reserveAutoHiddenDefaultPanel()) {
+                else if (integration._reserveAutoHiddenPanel()) {
                     const progress = Math.clamp(
                         controls._stateAdjustment.value,
                         0,
@@ -341,7 +341,7 @@ export class OverviewIntegration {
             SecondaryMonitorDisplay.prototype,
             'vfunc_allocate',
             originalAllocate => function (box) {
-                if (integration._reserveAutoHiddenDefaultPanel()) {
+                if (integration._reserveAutoHiddenPanel()) {
                     const progress = Math.clamp(
                         this._overviewAdjustment.value,
                         0,
@@ -358,9 +358,8 @@ export class OverviewIntegration {
         );
     }
 
-    _reserveAutoHiddenDefaultPanel() {
-        return this._settings.get_boolean('default-gnome-panel') &&
-            this._settings.get_boolean('panel-autohide-enabled');
+    _reserveAutoHiddenPanel() {
+        return this._settings.get_boolean('panel-autohide-enabled');
     }
 
     _beginAppSpread() {
