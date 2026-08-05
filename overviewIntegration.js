@@ -290,12 +290,9 @@ export class OverviewIntegration {
         if (!dash)
             return;
 
-        const [, preferredHeight] =
-            dash.get_preferred_height(global.stage.width);
         this._dashState = {
             dash,
             visible: dash.visible,
-            nativeHeight: Math.max(dash.height, preferredHeight),
         };
         dash.hide();
 
@@ -311,8 +308,7 @@ export class OverviewIntegration {
             .scale_factor;
         return Math.max(
             this._panelHeight,
-            OVERVIEW_LABEL_MARGIN * scaleFactor,
-            this._dashState.nativeHeight
+            OVERVIEW_LABEL_MARGIN * scaleFactor
         );
     }
 
