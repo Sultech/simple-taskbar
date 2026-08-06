@@ -96,6 +96,7 @@ export class TaskbarController {
         this._appButtons = new Map();
         this._sessionOrder = [];
         this._dragging = false;
+        this._dragEnabled = null;
         this._iconGeometryUpdateId = 0;
         this._iconGeometryUpdatesEnabled = true;
         this._activeWorkspace = null;
@@ -1347,14 +1348,14 @@ export class TaskbarController {
         };
         button._delegate = dragSource;
 
+        if (!this._dragIsEnabled())
+            return;
+
         const draggable = DND.makeDraggable(button, {
             timeoutThreshold: 200,
             dragActorMaxSize: this._iconSize,
         });
         item._taskbarDraggable = draggable;
-        draggable._dndGesture.enabled =
-            !this._settings.get_boolean('taskbar-locked') &&
-            this._combineAppButtons();
         draggable.connect('drag-begin', () => {
             this._dragging = true;
             item.opacity = 96;
@@ -1369,14 +1370,21 @@ export class TaskbarController {
         });
     }
 
-    _syncDragEnabled() {
-        const enabled = !this._settings.get_boolean('taskbar-locked') &&
+    _dragIsEnabled() {
+        return !this._settings.get_boolean('taskbar-locked') &&
             this._combineAppButtons();
-        for (const item of this._appButtons.values()) {
-            const gesture = item._taskbarDraggable?._dndGesture;
-            if (gesture)
-                gesture.enabled = enabled;
-        }
+    }
+
+    _syncDragEnabled() {
+        const enabled = this._dragIsEnabled();
+        if (enabled === this._dragEnabled)
+            return;
+
+        this._dragEnabled = enabled;
+        const sessionOrder = this._sessionOrder;
+        this._clearAppButtons();
+        this._sessionOrder = sessionOrder;
+        this._queueRedisplay();
     }
 
     _createAppMenu(button, app, item) {
