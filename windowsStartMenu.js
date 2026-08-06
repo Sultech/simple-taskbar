@@ -1622,14 +1622,15 @@ export class WindowsStartMenu {
     _queueAppTooltip(button, app, label, alignLeft) {
         this._hideAppTooltip(true);
         this._appTooltipSource = button;
-        this._appTooltipTimeoutId = GLib.timeout_add_once(
+        this._appTooltipTimeoutId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
             APP_TOOLTIP_DELAY,
             () => {
                 this._appTooltipTimeoutId = 0;
                 if (this._appTooltipSource !== button || !button.hover)
-                    return;
+                    return GLib.SOURCE_REMOVE;
                 this._showAppTooltip(button, app, label, alignLeft);
+                return GLib.SOURCE_REMOVE;
             }
         );
     }

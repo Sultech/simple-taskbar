@@ -7,7 +7,7 @@ taskbar. It combines pinned and running applications with GNOME's Activities,
 clock, calendar, Quick Settings and extension indicators, without replacing
 those Shell components.
 
-> Simple Taskbar currently supports GNOME Shell 50.
+> Simple Taskbar currently supports GNOME Shell 48, 49 and 50.
 
 ## Preview
 
@@ -339,8 +339,8 @@ GNOME's taskbar favourites or Eleven Start Menu pins, including their order.
 
 ## Compatibility
 
-Simple Taskbar supports GNOME Shell 50. Other GNOME versions are deliberately
-not declared until they have been tested.
+Simple Taskbar supports GNOME Shell 48, 49 and 50. Other GNOME versions are
+deliberately not declared until they have been tested.
 
 Because Simple Taskbar and Dash to Panel both restructure GNOME's main panel,
 Dash to Panel remains disabled while Simple Taskbar is active. Dash to Dock and
@@ -370,7 +370,7 @@ Then run:
 ```
 
 The helper compiles the GSettings schema, creates this development symlink and
-starts a fresh GNOME Shell 50 session in a window:
+starts a fresh nested GNOME Shell session in a window:
 
 ```text
 ~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
