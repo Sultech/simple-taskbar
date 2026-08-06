@@ -104,6 +104,7 @@ export class WindowsStartMenu {
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
         this._powerGIcon = params.powerGIcon;
+        this._settingsGIcon = params.settingsGIcon;
         this._appSystem = Shell.AppSystem.get_default();
         this._favorites = AppFavorites.getAppFavorites();
         this._searchController = new StartMenuSearchController();
@@ -612,6 +613,7 @@ export class WindowsStartMenu {
         this._sourceActor = null;
         this._powerButton = null;
         this._powerGIcon = null;
+        this._settingsGIcon = null;
         this._settings = null;
         this._onSourceContextMenu = null;
         this._firstSearchResult = null;
@@ -822,7 +824,7 @@ export class WindowsStartMenu {
         this._syncShellButtonClasses(userButton);
 
         const settingsButton = this._createIconButton(
-            'emblem-system-symbolic',
+            this._settingsGIcon,
             _('Settings'),
             () => {
                 this.close();

@@ -58,6 +58,12 @@ export class StartButtonController {
                 .get_child('start')
                 .get_child('power-symbolic.svg'),
         });
+        this._settingsGIcon = new Gio.FileIcon({
+            file: extensionDir
+                .get_child('icons')
+                .get_child('start')
+                .get_child('settings-symbolic.svg'),
+        });
         this._gnomeGIcon = new Gio.ThemedIcon({
             name: 'view-app-grid-symbolic',
         });
@@ -174,6 +180,7 @@ export class StartButtonController {
         this._icon = null;
         this._windowsGIcon = null;
         this._powerGIcon = null;
+        this._settingsGIcon = null;
         this._gnomeGIcon = null;
         this._extensionDir = null;
         this._previews = null;
@@ -240,6 +247,7 @@ export class StartButtonController {
                 menuManager: this._menuManager,
                 onSourceContextMenu: () => this._openContextMenu(),
                 powerGIcon: this._powerGIcon,
+                settingsGIcon: this._settingsGIcon,
             }
         );
     }
