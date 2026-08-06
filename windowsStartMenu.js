@@ -156,6 +156,8 @@ export class WindowsStartMenu {
         this._appTooltipSource = null;
         this._userAvatar = null;
         this._defaultUserIcon = null;
+        this._userNameLabel = null;
+        this._user = null;
         this._menu = new PopupMenu.PopupMenu(
             sourceActor,
             0.5,
@@ -601,6 +603,8 @@ export class WindowsStartMenu {
         this._menu = null;
         this._userAvatar = null;
         this._defaultUserIcon = null;
+        this._userNameLabel = null;
+        this._user = null;
         this._appTooltip.destroy();
         this._appTooltip = null;
         this._categorySidebar = null;
@@ -771,7 +775,6 @@ export class WindowsStartMenu {
             style_class: 'simple-taskbar-windows-start-footer',
             x_expand: true,
         });
-        const userName = GLib.get_real_name() || GLib.get_user_name();
         const userBox = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start-user-content',
             x_expand: true,
@@ -781,27 +784,27 @@ export class WindowsStartMenu {
             icon_size: 28,
             y_align: Clutter.ActorAlign.CENTER,
         });
-        const user = AccountsService.UserManager
+        this._user = AccountsService.UserManager
             .get_default()
             .get_user(GLib.get_user_name());
-        this._userAvatar = new UserWidget.Avatar(user, {
+        this._userAvatar = new UserWidget.Avatar(this._user, {
             styleClass: 'simple-taskbar-windows-start-user-avatar',
             iconSize: 28,
         });
         this._userAvatar.y_align = Clutter.ActorAlign.CENTER;
-        user.connectObject(
-            'notify::is-loaded', () => this._userAvatar.update(),
-            'changed', () => this._userAvatar.update(),
+        this._userNameLabel = new St.Label({
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        this._user.connectObject(
+            'notify::is-loaded', () => this._syncUserDetails(),
+            'changed', () => this._syncUserDetails(),
             this._userAvatar
         );
-        this._userAvatar.update();
+        this._syncUserDetails();
         userBox.add_child(this._defaultUserIcon);
         userBox.add_child(this._userAvatar);
         this.syncUserAvatar();
-        userBox.add_child(new St.Label({
-            text: userName,
-            y_align: Clutter.ActorAlign.CENTER,
-        }));
+        userBox.add_child(this._userNameLabel);
         const userButton = new St.Button({
             style_class: 'simple-taskbar-windows-start-footer-button',
             reactive: true,
@@ -857,6 +860,12 @@ export class WindowsStartMenu {
         );
         this._userAvatar.visible = showProfilePicture;
         this._defaultUserIcon.visible = !showProfilePicture;
+    }
+
+    _syncUserDetails() {
+        this._userAvatar.update();
+        const realName = this._user.get_real_name();
+        this._userNameLabel.text = realName || GLib.get_user_name();
     }
 
     _togglePowerMenu() {
