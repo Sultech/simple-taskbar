@@ -182,8 +182,8 @@ export class PanelButtonPaddingController {
             this._styledActors.set(actor, {
                 originalStyle: currentStyle,
                 appliedStyle: stripped,
-                styleNotifyId: actor.connect(
-                    'notify::style',
+                ...this._trackActor(
+                    actor,
                     () => this._clearIconMargin(actor)
                 ),
             });
@@ -197,6 +197,19 @@ export class PanelButtonPaddingController {
 
         actor.set_style(stripped === '' ? null : stripped);
         actor.queue_relayout();
+    }
+
+    _trackActor(actor, onStyleChanged) {
+        return {
+            styleNotifyId: actor.connect(
+                'notify::style',
+                onStyleChanged
+            ),
+            destroyId: actor.connect(
+                'destroy',
+                () => this._styledActors.delete(actor)
+            ),
+        };
     }
 
     _reapplyToActor(actor) {
@@ -213,8 +226,8 @@ export class PanelButtonPaddingController {
                 originalStyle: currentStyle,
                 appliedStyle: null,
                 appliedPadding: null,
-                styleNotifyId: actor.connect(
-                    'notify::style',
+                ...this._trackActor(
+                    actor,
                     () => this._reapplyToActor(actor)
                 ),
             };
@@ -250,8 +263,8 @@ export class PanelButtonPaddingController {
         if (!state)
             return;
 
-        if (state.styleNotifyId)
-            actor.disconnect(state.styleNotifyId);
+        actor.disconnect(state.styleNotifyId);
+        actor.disconnect(state.destroyId);
         if ((actor.get_style() ?? '') === state.appliedStyle) {
             actor.set_style(state.originalStyle === ''
                 ? null
