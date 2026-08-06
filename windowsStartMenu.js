@@ -779,6 +779,7 @@ export class WindowsStartMenu {
         this._defaultUserIcon = new St.Icon({
             icon_name: 'avatar-default-symbolic',
             icon_size: 28,
+            y_align: Clutter.ActorAlign.CENTER,
         });
         const user = AccountsService.UserManager
             .get_default()
@@ -787,6 +788,7 @@ export class WindowsStartMenu {
             styleClass: 'simple-taskbar-windows-start-user-avatar',
             iconSize: 28,
         });
+        this._userAvatar.y_align = Clutter.ActorAlign.CENTER;
         user.connectObject(
             'notify::is-loaded', () => this._userAvatar.update(),
             'changed', () => this._userAvatar.update(),
@@ -799,7 +801,6 @@ export class WindowsStartMenu {
         userBox.add_child(new St.Label({
             text: userName,
             y_align: Clutter.ActorAlign.CENTER,
-            translation_y: -1,
         }));
         const userButton = new St.Button({
             style_class: 'simple-taskbar-windows-start-footer-button',
