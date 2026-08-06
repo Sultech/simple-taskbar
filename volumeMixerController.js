@@ -187,23 +187,19 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
     _getStreamTitle() {
         const appName = this._app ? this._app.get_name() : null;
         const applicationId = this._stream.get_application_id();
-        for (const value of [
-            this._stream.get_name(),
-            this._stream.get_description(),
-        ]) {
-            const title = value ? value.trim() : '';
-            const normalizedTitle = normalizeAppIdentifier(title);
-            if (!title ||
-                title === appName ||
-                title === applicationId ||
-                GENERIC_STREAM_NAMES.has(normalizedTitle)) {
-                continue;
-            }
-
-            return title;
+        const streamAppName = this._stream.get_name();
+        const description = this._stream.get_description();
+        const title = description ? description.trim() : '';
+        const normalizedTitle = normalizeAppIdentifier(title);
+        if (!title ||
+            title === appName ||
+            title === applicationId ||
+            title === streamAppName ||
+            GENERIC_STREAM_NAMES.has(normalizedTitle)) {
+            return null;
         }
 
-        return null;
+        return title;
     }
 
     _syncWindowTitle() {
