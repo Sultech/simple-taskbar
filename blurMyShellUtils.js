@@ -32,11 +32,19 @@ export function getBlurMyShellSettings() {
         if (!compiledSchema.query_exists(null))
             continue;
 
-        schemaSource = Gio.SettingsSchemaSource.new_from_directory(
-            schemaDirectory,
-            schemaSource,
-            false
-        );
+        try {
+            schemaSource = Gio.SettingsSchemaSource.new_from_directory(
+                schemaDirectory,
+                schemaSource,
+                false
+            );
+        } catch (error) {
+            console.warn(
+                `Simple Taskbar: ignoring unreadable Blur My Shell ` +
+                `schema in ${schemaDirectory}: ${error.message}`
+            );
+            continue;
+        }
         schema = schemaSource.lookup(BLUR_MY_SHELL_SCHEMA, true);
         if (schema)
             return new Gio.Settings({settings_schema: schema});
