@@ -323,7 +323,7 @@ export class TaskbarController {
 
     setAvailableWidth(width) {
         this._availableWidth = Math.max(0, Math.floor(width));
-        if (this._syncCombineWhenFull()) {
+        if (this._syncCombineWhenFull().combinationChanged) {
             this._shownInitially = false;
             this._windowPreviews?.hideTooltip(false);
             this._windowPreviews?.hide();
@@ -386,7 +386,9 @@ export class TaskbarController {
             return;
         }
 
-        if (this._syncCombineWhenFull()) {
+        const {combinationChanged, labelWidthChanged} =
+            this._syncCombineWhenFull();
+        if (combinationChanged) {
             this._shownInitially = false;
             this._windowPreviews?.hideTooltip(false);
             this._windowPreviews?.hide();
@@ -394,7 +396,7 @@ export class TaskbarController {
         }
         const entries = this._orderedEntries(this._startupSettling);
         const animateMembershipChanges = this._shownInitially &&
-            !this._startupSettling;
+            !this._startupSettling && !labelWidthChanged;
         const wantedKeys = new Set(entries.map(entry => entry.key));
         const wantedAppIds = new Set(
             entries.map(entry => entry.app.get_id())
@@ -405,10 +407,10 @@ export class TaskbarController {
                 this._windowPreviews.removeItem(item);
                 this._destroyAppMenu(item._taskbarButton);
                 this._appButtons.delete(key);
-                if (this._favorites.isFavorite(
-                    item._taskbarApp.get_id()
-                ) ||
-                    !animateMembershipChanges) {
+                if (this._isPinnedPlaceholder(
+                    item._taskbarApp,
+                    item._taskbarWindow
+                ) || !animateMembershipChanges) {
                     item.destroy();
                 } else {
                     this._animateItemOutAndDestroy(item);
@@ -427,7 +429,7 @@ export class TaskbarController {
                 this._animateItemIn(
                     item,
                     animateMembershipChanges &&
-                        !this._favorites.isFavorite(app.get_id())
+                        !this._isPinnedPlaceholder(app, window)
                 );
             } else {
                 this._placeItemAtActiveIndex(item, index);
@@ -915,6 +917,10 @@ export class TaskbarController {
             : [];
     }
 
+    _isPinnedPlaceholder(app, window) {
+        return !window && this._favorites.isFavorite(app.get_id());
+    }
+
     _isPersistentPinned(app) {
         const appId = app?.get_id();
         return Boolean(appId) && this._favorites.isFavorite(appId) &&
@@ -1030,13 +1036,13 @@ export class TaskbarController {
             shouldCombine !== this._combineWhenFull;
         const labelWidthChanged = labelWidth !== this._appLabelWidth;
         if (!combinationChanged && !labelWidthChanged)
-            return false;
+            return {combinationChanged: false, labelWidthChanged: false};
 
         this._combineWhenFull = shouldCombine;
         this._appLabelWidth = labelWidth;
         if (labelWidthChanged)
             this._applyCurrentButtonWidths();
-        return combinationChanged;
+        return {combinationChanged, labelWidthChanged};
     }
 
     _calculateWhenFullLayout() {
