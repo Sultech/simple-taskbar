@@ -34,6 +34,7 @@ const ICON_VERTICAL_RESERVE = 17;
 const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
+        window.set_default_size(820, 740);
         window._settings = this.getSettings();
         const shellSettings = new Gio.Settings({
             schema_id: GNOME_SHELL_SCHEMA,
@@ -127,6 +128,52 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             icon_name: 'view-app-grid-symbolic',
         });
         window.add(startMenuPage);
+
+        const advancedPage = new Adw.PreferencesPage({
+            title: _('Advanced'),
+            icon_name: 'applications-engineering-symbolic',
+        });
+        window.add(advancedPage);
+
+        const advancedAppearanceGroup = new Adw.PreferencesGroup({
+            title: _('Appearance'),
+            description: _(
+                'Less commonly used taskbar and indicator appearance options.'
+            ),
+        });
+        advancedPage.add(advancedAppearanceGroup);
+
+        const advancedAppBehaviorGroup = new Adw.PreferencesGroup({
+            title: _('Application Behavior'),
+            description: _(
+                'Choose which applications appear and how they are grouped.'
+            ),
+        });
+        advancedPage.add(advancedAppBehaviorGroup);
+
+        const advancedBehaviorGroup = new Adw.PreferencesGroup({
+            title: _('Taskbar Behavior'),
+            description: _(
+                'Less commonly used taskbar interaction options.'
+            ),
+        });
+        advancedPage.add(advancedBehaviorGroup);
+
+        const advancedFileManagerGroup = new Adw.PreferencesGroup({
+            title: _('File Manager'),
+            description: _(
+                'File manager shortcuts and taskbar menu folders.'
+            ),
+        });
+        advancedPage.add(advancedFileManagerGroup);
+
+        const advancedStartMenuGroup = new Adw.PreferencesGroup({
+            title: _('Start Menu'),
+            description: _(
+                'Less commonly used Start menu options.'
+            ),
+        });
+        advancedPage.add(advancedStartMenuGroup);
 
         const gridAltTabGroup = new Adw.PreferencesGroup({
             title: _('Grid Alt-Tab'),
@@ -277,22 +324,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         panelModeGroup.add(defaultGnomePanelSwitch);
 
-        const advancedSettingsSwitch = new Adw.SwitchRow({
-            title: _('Show Advanced Settings'),
-            subtitle: _(
-                'Show less commonly used Taskbar and Start Menu options'
-            ),
-            active: window._settings.get_boolean(
-                'advanced-settings-enabled'
-            ),
-        });
-        panelModeGroup.add(advancedSettingsSwitch);
-        window._settings.bind(
-            'advanced-settings-enabled',
-            advancedSettingsSwitch,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        );
 
         this._addSpinRow(panelModeGroup, window._settings, {
             key: 'panel-button-padding',
@@ -325,7 +356,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             upper: 16,
         });
         const indicatorStyleRow = this._addComboRow(
-            appearanceGroup,
+            advancedAppearanceGroup,
             window._settings,
             {
                 key: 'running-indicator-style',
@@ -346,7 +377,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'custom-indicator-colors-enabled'
             ),
         });
-        appearanceGroup.add(customIndicatorColorsSwitch);
+        advancedAppearanceGroup.add(customIndicatorColorsSwitch);
         window._settings.bind(
             'custom-indicator-colors-enabled',
             customIndicatorColorsSwitch,
@@ -354,7 +385,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const focusedIndicatorColorRow = this._addColorRow(
-            appearanceGroup,
+            advancedAppearanceGroup,
             window._settings,
             {
                 key: 'focused-indicator-color',
@@ -362,23 +393,23 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             }
         );
         const unfocusedIndicatorColorRow = this._addColorRow(
-            appearanceGroup,
+            advancedAppearanceGroup,
             window._settings,
             {
                 key: 'unfocused-indicator-color',
                 title: _('Unfocused Indicator Color'),
             }
         );
-        const syncIndicatorColorSensitivity = () => {
+        const syncIndicatorColorVisibility = () => {
             const enabled = customIndicatorColorsSwitch.active;
-            focusedIndicatorColorRow.sensitive = enabled;
-            unfocusedIndicatorColorRow.sensitive = enabled;
+            focusedIndicatorColorRow.visible = enabled;
+            unfocusedIndicatorColorRow.visible = enabled;
         };
         customIndicatorColorsSwitch.connect(
             'notify::active',
-            syncIndicatorColorSensitivity
+            syncIndicatorColorVisibility
         );
-        syncIndicatorColorSensitivity();
+        syncIndicatorColorVisibility();
         this._addComboRow(appearanceGroup, window._settings, {
             key: 'app-alignment',
             title: _('Icon Alignment'),
@@ -393,7 +424,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'hide-pinned-taskbar-apps'
             ),
         });
-        appearanceGroup.add(hidePinnedAppsSwitch);
+        advancedAppBehaviorGroup.add(hidePinnedAppsSwitch);
         window._settings.bind(
             'hide-pinned-taskbar-apps',
             hidePinnedAppsSwitch,
@@ -402,7 +433,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
 
         const combineAppButtonsRow = this._addComboRow(
-            appearanceGroup,
+            advancedAppBehaviorGroup,
             window._settings,
             {
                 key: 'combine-app-buttons-mode',
@@ -421,7 +452,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Show only icons on separate window buttons'),
             active: window._settings.get_boolean('hide-app-labels'),
         });
-        appearanceGroup.add(hideAppLabelsSwitch);
+        advancedAppBehaviorGroup.add(hideAppLabelsSwitch);
         window._settings.bind(
             'hide-app-labels',
             hideAppLabelsSwitch,
@@ -443,7 +474,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Show running applications from the current workspace only'),
             active: window._settings.get_boolean('isolate-workspaces'),
         });
-        appearanceGroup.add(isolateWorkspacesSwitch);
+        advancedAppBehaviorGroup.add(isolateWorkspacesSwitch);
         window._settings.bind(
             'isolate-workspaces',
             isolateWorkspacesSwitch,
@@ -456,7 +487,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Show running applications only on the taskbar for their monitor'),
             active: window._settings.get_boolean('isolate-monitors'),
         });
-        appearanceGroup.add(isolateMonitorsSwitch);
+        advancedAppBehaviorGroup.add(isolateMonitorsSwitch);
         window._settings.bind(
             'isolate-monitors',
             isolateMonitorsSwitch,
@@ -486,7 +517,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'nautilus-places-enabled'
             ),
         });
-        appearanceGroup.add(nautilusPlacesSwitch);
+        advancedFileManagerGroup.add(nautilusPlacesSwitch);
         window._settings.bind(
             'nautilus-places-enabled',
             nautilusPlacesSwitch,
@@ -503,9 +534,22 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             defaultGnomePanelSwitch.active = enabled;
             appearanceGroup.sensitive = !enabled;
             startMenuPage.sensitive = !enabled;
+            advancedAppBehaviorGroup.sensitive = !enabled;
+            advancedStartMenuGroup.sensitive = !enabled;
+            for (const row of [
+                indicatorStyleRow,
+                customIndicatorColorsSwitch,
+                focusedIndicatorColorRow,
+                unfocusedIndicatorColorRow,
+                nautilusPlacesSwitch,
+            ])
+                row.sensitive = !enabled;
             appearanceGroup.description = enabled
                 ? _('Application icons are unavailable in Default GNOME Panel mode.')
                 : _('Change the size, spacing, and placement of taskbar icons.');
+            advancedAppBehaviorGroup.description = enabled
+                ? _('Application options are unavailable in Default GNOME Panel mode.')
+                : _('Choose which applications appear and how they are grouped.');
             syncingDefaultGnomePanel = false;
         };
 
@@ -724,7 +768,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'custom-panel-color-enabled'
             ),
         });
-        panelAppearanceGroup.add(customPanelColorSwitch);
+        advancedAppearanceGroup.add(customPanelColorSwitch);
         window._settings.bind(
             'custom-panel-color-enabled',
             customPanelColorSwitch,
@@ -732,21 +776,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const customPanelColorRow = this._addColorRow(
-            panelAppearanceGroup,
+            advancedAppearanceGroup,
             window._settings,
             {
                 key: 'custom-panel-color',
                 title: _('Taskbar Color'),
             }
         );
-        const syncCustomPanelColorSensitivity = () => {
-            customPanelColorRow.sensitive = customPanelColorSwitch.active;
+        const syncCustomPanelColorVisibility = () => {
+            customPanelColorRow.visible = customPanelColorSwitch.active;
         };
         customPanelColorSwitch.connect(
             'notify::active',
-            syncCustomPanelColorSensitivity
+            syncCustomPanelColorVisibility
         );
-        syncCustomPanelColorSensitivity();
+        syncCustomPanelColorVisibility();
 
         const darkPanelBorderSwitch = new Adw.SwitchRow({
             title: _('Show Border in Dark Mode'),
@@ -831,7 +875,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'hot-edge-animation-enabled'
             ),
         });
-        behaviorGroup.add(hotEdgeAnimationSwitch);
         window._settings.bind(
             'hot-edge-animation-enabled',
             hotEdgeAnimationSwitch,
@@ -883,7 +926,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Close all application windows instead of opening a new window'),
             active: window._settings.get_boolean('middle-click-close-apps'),
         });
-        behaviorGroup.add(middleClickCloseAppsSwitch);
+        advancedAppBehaviorGroup.add(middleClickCloseAppsSwitch);
         window._settings.bind(
             'middle-click-close-apps',
             middleClickCloseAppsSwitch,
@@ -896,7 +939,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             subtitle: _('Switch between clock, system, and tray menus only when clicked'),
             active: window._settings.get_boolean('panel-menu-click-only'),
         });
-        behaviorGroup.add(panelMenuClickOnlySwitch);
+        advancedBehaviorGroup.add(panelMenuClickOnlySwitch);
         window._settings.bind(
             'panel-menu-click-only',
             panelMenuClickOnlySwitch,
@@ -911,7 +954,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'notification-banner-bottom-end'
             ),
         });
-        behaviorGroup.add(notificationBannerSwitch);
+        advancedBehaviorGroup.add(notificationBannerSwitch);
+        advancedBehaviorGroup.add(hotEdgeAnimationSwitch);
         window._settings.bind(
             'notification-banner-bottom-end',
             notificationBannerSwitch,
@@ -1113,7 +1157,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'start-menu-show-profile-picture'
             ),
         });
-        startMenuGroup.add(profilePictureSwitch);
         window._settings.bind(
             'start-menu-show-profile-picture',
             profilePictureSwitch,
@@ -1138,7 +1181,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'start-menu-power-options-enabled'
             ),
         });
-        startMenuGroup.add(powerOptionsSwitch);
         window._settings.bind(
             'start-menu-power-options-enabled',
             powerOptionsSwitch,
@@ -1161,7 +1203,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'start-menu-open-all-apps'
             ),
         });
-        startMenuGroup.add(openAllAppsSwitch);
         window._settings.bind(
             'start-menu-open-all-apps',
             openAllAppsSwitch,
@@ -1184,13 +1225,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'start-menu-recommended-apps'
             ),
         });
-        startMenuGroup.add(recommendedAppsSwitch);
         window._settings.bind(
             'start-menu-recommended-apps',
             recommendedAppsSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        advancedStartMenuGroup.add(recommendedAppsSwitch);
+        advancedStartMenuGroup.add(powerOptionsSwitch);
+        advancedStartMenuGroup.add(openAllAppsSwitch);
+        advancedStartMenuGroup.add(profilePictureSwitch);
         const updateRecommendedAppsSwitch = () => {
             recommendedAppsSwitch.sensitive =
                 windowsStartMenuSwitch.active &&
@@ -1205,35 +1249,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             updateRecommendedAppsSwitch
         );
         updateRecommendedAppsSwitch();
-
-        const advancedRows = [
-            indicatorStyleRow,
-            customIndicatorColorsSwitch,
-            focusedIndicatorColorRow,
-            unfocusedIndicatorColorRow,
-            hidePinnedAppsSwitch,
-            combineAppButtonsRow,
-            hideAppLabelsSwitch,
-            isolateWorkspacesSwitch,
-            isolateMonitorsSwitch,
-            middleClickCloseAppsSwitch,
-            hotEdgeAnimationSwitch,
-            panelMenuClickOnlySwitch,
-            notificationBannerSwitch,
-            profilePictureSwitch,
-            powerOptionsSwitch,
-            openAllAppsSwitch,
-            recommendedAppsSwitch,
-        ];
-        const updateAdvancedSettingsVisibility = () => {
-            for (const row of advancedRows)
-                row.visible = advancedSettingsSwitch.active;
-        };
-        advancedSettingsSwitch.connect(
-            'notify::active',
-            updateAdvancedSettingsVisibility
-        );
-        updateAdvancedSettingsVisibility();
 
         const appCategoriesSwitch = new Adw.SwitchRow({
             title: _('Organize All Apps into Categories'),
@@ -1343,7 +1358,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'start-menu-follow-panel-transparency'
             ),
         });
-        startMenuGroup.add(followPanelTransparencySwitch);
+        advancedStartMenuGroup.add(followPanelTransparencySwitch);
         window._settings.bind(
             'start-menu-follow-panel-transparency',
             followPanelTransparencySwitch,
@@ -1466,7 +1481,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'super-e-file-manager-enabled'
             ),
         });
-        startMenuKeybindingsGroup.add(superEFileManagerRow);
+        advancedFileManagerGroup.add(superEFileManagerRow);
         window._settings.bind(
             'super-e-file-manager-enabled',
             superEFileManagerRow,

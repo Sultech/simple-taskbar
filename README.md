@@ -90,7 +90,8 @@ Application buttons support:
 
 - **Left click:** launch, focus or minimize the application.
 - **Middle click:** open a new window, or close all application windows when
-  the advanced **Middle Click Closes Applications** setting is enabled.
+  the **Middle Click Closes Applications** setting on the **Advanced** page
+  is enabled.
 - **Right click:** open GNOME's application menu. Nautilus additionally shows
   Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts by
   default; these shortcuts can be disabled in the extension settings.
@@ -151,10 +152,8 @@ the grid continues to shrink them automatically as more windows are opened.
 
 ## Panel customization
 
-Less commonly used controls are hidden by default. Enable **Show Advanced
-Settings** at the top of the **Taskbar** settings page to show them in both
-the Taskbar and Start Menu settings. Hiding the controls does not reset their
-values.
+Less commonly used controls live on the **Advanced** settings page, grouped by
+the area they affect.
 
 The settings provide control over:
 
@@ -216,16 +215,16 @@ extension settings to use a light taskbar in that situation.
 <p align="center"><sub>Adjust individual application volume from Quick Settings.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-taskbar-20260730.png" alt="General, application icon and panel appearance settings with advanced controls shown" width="100%">
+  <img src="docs/images/settings-taskbar-20260730.png" alt="General, application icon and panel appearance settings" width="100%">
 </p>
 
-<p align="center"><sub>General, application icon and panel appearance controls with Advanced Settings enabled.</sub></p>
+<p align="center"><sub>General, application icon and panel appearance controls.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-taskbar-items-20260730.png" alt="Taskbar behavior, panel item and reset settings with advanced controls shown" width="100%">
+  <img src="docs/images/settings-taskbar-items-20260730.png" alt="Taskbar behavior, panel item and reset settings" width="100%">
 </p>
 
-<p align="center"><sub>Taskbar behavior, panel item and reset controls with Advanced Settings enabled.</sub></p>
+<p align="center"><sub>Taskbar behavior, panel item and reset controls.</sub></p>
 
 ### Optional folder menu
 
@@ -300,10 +299,10 @@ settings page.
 <p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
 
 <p align="center">
-  <img src="docs/images/settings-start-menu-20260730.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings with advanced controls shown" width="100%">
+  <img src="docs/images/settings-start-menu-20260730.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
 </p>
 
-<p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls with Advanced Settings enabled.</sub></p>
+<p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls.</sub></p>
 
 ## Install
 
