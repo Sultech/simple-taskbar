@@ -86,6 +86,14 @@
       <default>false</default>
       <summary>Show the panel border in light mode</summary>
     </key>
+    <key name="custom-panel-color-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom taskbar color</summary>
+    </key>
+    <key name="custom-panel-color" type="s">
+      <default>'#18181b'</default>
+      <summary>Custom taskbar color</summary>
+    </key>
     <key name="panel-theme-follow-system" type="b">
       <default>true</default>
       <summary>Follow the active GNOME Shell theme</summary>

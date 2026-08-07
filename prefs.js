@@ -715,6 +715,39 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updatePanelTransparencyControls();
 
+        const customPanelColorSwitch = new Adw.SwitchRow({
+            title: _('Custom Taskbar Color'),
+            subtitle: _(
+                'Use a chosen color instead of the light or dark theme color'
+            ),
+            active: window._settings.get_boolean(
+                'custom-panel-color-enabled'
+            ),
+        });
+        panelAppearanceGroup.add(customPanelColorSwitch);
+        window._settings.bind(
+            'custom-panel-color-enabled',
+            customPanelColorSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        const customPanelColorRow = this._addColorRow(
+            panelAppearanceGroup,
+            window._settings,
+            {
+                key: 'custom-panel-color',
+                title: _('Taskbar Color'),
+            }
+        );
+        const syncCustomPanelColorSensitivity = () => {
+            customPanelColorRow.sensitive = customPanelColorSwitch.active;
+        };
+        customPanelColorSwitch.connect(
+            'notify::active',
+            syncCustomPanelColorSensitivity
+        );
+        syncCustomPanelColorSensitivity();
+
         const darkPanelBorderSwitch = new Adw.SwitchRow({
             title: _('Show Border in Dark Mode'),
             subtitle: _('Display a thin border along the panel’s workspace-facing edge'),

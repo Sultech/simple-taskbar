@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import Cogl from 'gi://Cogl';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
@@ -592,6 +593,14 @@ export class PanelController {
         this._connect(this._settings, 'changed::transparency-level', () => {
             this._applyTransparency();
         });
+        for (const key of [
+            'custom-panel-color-enabled',
+            'custom-panel-color',
+        ]) {
+            this._connect(this._settings, `changed::${key}`, () => {
+                this._applyTransparency();
+            });
+        }
         this._connect(this._settings, 'changed::panel-border-enabled', () => {
             this._syncPanelBorder();
             this._applyTransparency();
@@ -1007,6 +1016,16 @@ export class PanelController {
         this._applyTransparency();
     }
 
+    _panelBackground(light) {
+        if (!this._settings.get_boolean('custom-panel-color-enabled'))
+            return light ? '217, 217, 222' : '24, 24, 27';
+
+        const [, color] = Cogl.Color.from_string(
+            this._settings.get_string('custom-panel-color')
+        );
+        return `${color.red}, ${color.green}, ${color.blue}`;
+    }
+
     _applyTransparency() {
         if (!this._settings || !this._panelWasModified ||
             this._applyingTransparency) {
@@ -1032,7 +1051,7 @@ export class PanelController {
         Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
 
         const opacity = panelTransparencyOpacity(this._settings);
-        const background = light ? '217, 217, 222' : '24, 24, 27';
+        const background = this._panelBackground(light);
         const border = '255, 255, 255';
         const borderOpacity = 0.20;
         const top = panelIsTop(this._settings);
