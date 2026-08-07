@@ -77,9 +77,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             return blurMyShellPopupSettings.get_boolean('blur');
         };
         let syncPanelTransparencyControls = () => {};
+        let syncCustomPanelColorControls = () => {};
         let syncStartMenuTransparencyControl = () => {};
         const syncBlurMyShellTransparencyState = () => {
             syncPanelTransparencyControls();
+            syncCustomPanelColorControls();
             syncStartMenuTransparencyControl();
         };
         if (blurMyShellPanelSettings &&
@@ -759,11 +761,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updatePanelTransparencyControls();
 
+        const customPanelColorSubtitle = _(
+            'Use a chosen color instead of the light or dark theme color'
+        );
         const customPanelColorSwitch = new Adw.SwitchRow({
             title: _('Custom Taskbar Color'),
-            subtitle: _(
-                'Use a chosen color instead of the light or dark theme color'
-            ),
+            subtitle: customPanelColorSubtitle,
             active: window._settings.get_boolean(
                 'custom-panel-color-enabled'
             ),
@@ -783,14 +786,22 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 title: _('Taskbar Color'),
             }
         );
-        const syncCustomPanelColorVisibility = () => {
+        const updateCustomPanelColorControls = () => {
+            const blocked = blurMyShellPanelBlurEnabled();
+            customPanelColorSwitch.sensitive = !blocked;
+            customPanelColorSwitch.subtitle = blocked
+                ? panelBlurTransparencySubtitle
+                : customPanelColorSubtitle;
             customPanelColorRow.visible = customPanelColorSwitch.active;
+            customPanelColorRow.sensitive = !blocked &&
+                customPanelColorSwitch.active;
         };
+        syncCustomPanelColorControls = updateCustomPanelColorControls;
         customPanelColorSwitch.connect(
             'notify::active',
-            syncCustomPanelColorVisibility
+            updateCustomPanelColorControls
         );
-        syncCustomPanelColorVisibility();
+        updateCustomPanelColorControls();
 
         const darkPanelBorderSwitch = new Adw.SwitchRow({
             title: _('Show Border in Dark Mode'),
