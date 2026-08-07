@@ -32,6 +32,9 @@ export function getBlurMyShellSettings() {
         if (!compiledSchema.query_exists(null))
             continue;
 
+        // query_exists() only proves the file is there. new_from_directory()
+        // validates the gvdb and throws GLib.FileError on a corrupt
+        // gschemas.compiled, which would otherwise escape into enable().
         try {
             schemaSource = Gio.SettingsSchemaSource.new_from_directory(
                 schemaDirectory,
