@@ -97,6 +97,7 @@ export class TaskbarController {
         this._sessionOrder = [];
         this._dragging = false;
         this._dragEnabled = null;
+        this._suppressMembershipAnimation = false;
         this._iconGeometryUpdateId = 0;
         this._iconGeometryUpdatesEnabled = true;
         this._activeWorkspace = null;
@@ -395,8 +396,11 @@ export class TaskbarController {
             this._syncDragEnabled();
         }
         const entries = this._orderedEntries(this._startupSettling);
-        const animateMembershipChanges = this._shownInitially &&
+        const animateIndicators = this._shownInitially &&
             !this._startupSettling && !labelWidthChanged;
+        const animateMembershipChanges = animateIndicators &&
+            !this._suppressMembershipAnimation;
+        this._suppressMembershipAnimation = false;
         const wantedKeys = new Set(entries.map(entry => entry.key));
         const wantedAppIds = new Set(
             entries.map(entry => entry.app.get_id())
@@ -442,7 +446,7 @@ export class TaskbarController {
         }
 
         this._shownInitially = true;
-        this.syncButtonStates(animateMembershipChanges);
+        this.syncButtonStates(animateIndicators);
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
     }
@@ -1391,6 +1395,7 @@ export class TaskbarController {
         this._clearAppButtons();
         this._sessionOrder = sessionOrder;
         this._shownInitially = shownInitially;
+        this._suppressMembershipAnimation = true;
         this._queueRedisplay();
     }
 
