@@ -93,6 +93,8 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         super(sourceActor, side, {
             favoritesSection: true,
             showSingleWindows: true,
+            closeApp: params.closeApp,
+            getInterestingWindows: params.getInterestingWindows,
         });
 
         this._settings = settings;

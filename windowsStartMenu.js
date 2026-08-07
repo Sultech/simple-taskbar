@@ -103,6 +103,8 @@ export class WindowsStartMenu {
         this._settings = settings;
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
+        this._closeApp = params.closeApp;
+        this._getInterestingWindows = params.getInterestingWindows;
         this._powerGIcon = params.powerGIcon;
         this._settingsGIcon = params.settingsGIcon;
         this._appSystem = Shell.AppSystem.get_default();
@@ -616,6 +618,8 @@ export class WindowsStartMenu {
         this._settingsGIcon = null;
         this._settings = null;
         this._onSourceContextMenu = null;
+        this._closeApp = null;
+        this._getInterestingWindows = null;
         this._firstSearchResult = null;
         this._appSystem = null;
         this._favorites = null;
@@ -1559,6 +1563,10 @@ export class WindowsStartMenu {
                     refreshAfterClose = true;
                 },
                 onAppAction: () => this._queueCloseAfterAppAction(),
+                closeApp: (app, timestamp) =>
+                    this._closeApp(app, timestamp),
+                getInterestingWindows: app =>
+                    this._getInterestingWindows(app),
             }
         );
         const menuManager = new PopupMenu.PopupMenuManager(sourceButton);

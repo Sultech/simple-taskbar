@@ -29,6 +29,8 @@ export class StartButtonController {
         iconSize,
         previewController,
         openPreferences,
+        closeApp,
+        getInterestingWindows,
         manageKeybindings = true,
         toggleFromShortcut = null,
         switcherKeybindings = null,
@@ -38,6 +40,8 @@ export class StartButtonController {
         this._settings = settings;
         this._previews = previewController;
         this._openPreferences = openPreferences;
+        this._closeApp = closeApp;
+        this._getInterestingWindows = getInterestingWindows;
         this._toggleFromShortcut = toggleFromShortcut;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
         this._signals = [];
@@ -185,6 +189,8 @@ export class StartButtonController {
         this._extensionDir = null;
         this._previews = null;
         this._openPreferences = null;
+        this._closeApp = null;
+        this._getInterestingWindows = null;
         this._toggleFromShortcut = null;
         this._onMenuOpenStateChanged = null;
         this._settings = null;
@@ -246,6 +252,10 @@ export class StartButtonController {
                 },
                 menuManager: this._menuManager,
                 onSourceContextMenu: () => this._openContextMenu(),
+                closeApp: (app, timestamp) =>
+                    this._closeApp(app, timestamp),
+                getInterestingWindows: app =>
+                    this._getInterestingWindows(app),
                 powerGIcon: this._powerGIcon,
                 settingsGIcon: this._settingsGIcon,
             }

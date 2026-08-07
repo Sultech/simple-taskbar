@@ -922,7 +922,7 @@ export class TaskbarController {
         return this._getInterestingWindows(app);
     }
 
-    _closeApp(app, timestamp) {
+    closeApp(app, timestamp) {
         if (!this._settings.get_boolean('isolate-workspaces')) {
             app.request_quit();
             return;
@@ -1427,7 +1427,7 @@ export class TaskbarController {
             favoritesSection: true,
             showSingleWindows: true,
             targetWindow: item._taskbarWindow,
-            closeApp: (app, timestamp) => this._closeApp(app, timestamp),
+            closeApp: (app, timestamp) => this.closeApp(app, timestamp),
             getInterestingWindows: app => this._interestingWindows(app),
             fileManagerPlacesApp: app,
             fileManagerPlacesEnabled: this._settings.get_boolean(

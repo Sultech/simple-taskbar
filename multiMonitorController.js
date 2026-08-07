@@ -334,6 +334,10 @@ class SecondaryTaskbarPanel {
             iconSize: this._iconSize,
             previewController: this._windowPreviews,
             openPreferences,
+            closeApp: (app, timestamp) =>
+                this._taskbarController.closeApp(app, timestamp),
+            getInterestingWindows: app =>
+                this._windowController.getInterestingWindows(app),
             manageKeybindings: false,
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
