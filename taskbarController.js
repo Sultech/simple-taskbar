@@ -429,6 +429,12 @@ export class TaskbarController {
                 item = this._createAppButton(app, window);
                 this._trackApp(app);
                 this._appButtons.set(key, item);
+                this._syncButtonState(
+                    item,
+                    this._tracker?.focus_app,
+                    global.display.focus_window,
+                    false
+                );
                 this._placeItemAtActiveIndex(item, index);
                 this._animateItemIn(
                     item,
@@ -485,44 +491,47 @@ export class TaskbarController {
     syncButtonStates(animate = true) {
         const focusedApp = this._tracker?.focus_app;
         const focusedWindow = global.display.focus_window;
-        for (const item of this._appButtons.values()) {
-            const app = item._taskbarApp;
-            const window = item._taskbarWindow;
-            const button = item._taskbarButton;
-            const windowCount = this._windowsForItem(item).length;
-            const running = window
-                ? windowCount > 0
-                : app.state === Shell.AppState.RUNNING && windowCount > 0;
-            const hasFocus = window
-                ? window === focusedWindow
-                : app === focusedApp &&
-                    this._interestingWindows(app).includes(focusedWindow);
-            const focused = hasFocus && !this._startMenuOpen;
-            item.set_style_class_name(
-                `dash-item-container simple-taskbar-app-item` +
-                `${running ? ' running' : ''}` +
-                `${!window && windowCount > 1 ? ' multiple-windows' : ''}` +
-                `${focused ? ' focused' : ''}`
-            );
-            item._taskbarFocused = focused;
-            item._taskbarRunning = running;
-            item._taskbarMultipleWindows = !window && windowCount > 1;
-            item._taskbarShowSecondary =
-                !window && focused && windowCount > 1;
-            this._updateIndicatorGeometry(item, animate);
-            this._syncIndicatorColor(item);
-            button.accessible_name = window
-                ? `${window.get_title() || app.get_name()}, ${_('running')}`
-                : running
-                    ? `${app.get_name()}, ${_('running')}`
-                    : app.get_name();
-            this._syncItemLabel(item);
+        for (const item of this._appButtons.values())
+            this._syncButtonState(item, focusedApp, focusedWindow, animate);
+    }
 
-            if (focused)
-                button.add_style_pseudo_class('selected');
-            else
-                button.remove_style_pseudo_class('selected');
-        }
+    _syncButtonState(item, focusedApp, focusedWindow, animate) {
+        const app = item._taskbarApp;
+        const window = item._taskbarWindow;
+        const button = item._taskbarButton;
+        const windowCount = this._windowsForItem(item).length;
+        const running = window
+            ? windowCount > 0
+            : app.state === Shell.AppState.RUNNING && windowCount > 0;
+        const hasFocus = window
+            ? window === focusedWindow
+            : app === focusedApp &&
+                this._interestingWindows(app).includes(focusedWindow);
+        const focused = hasFocus && !this._startMenuOpen;
+        item.set_style_class_name(
+            `dash-item-container simple-taskbar-app-item` +
+            `${running ? ' running' : ''}` +
+            `${!window && windowCount > 1 ? ' multiple-windows' : ''}` +
+            `${focused ? ' focused' : ''}`
+        );
+        item._taskbarFocused = focused;
+        item._taskbarRunning = running;
+        item._taskbarMultipleWindows = !window && windowCount > 1;
+        item._taskbarShowSecondary =
+            !window && focused && windowCount > 1;
+        this._updateIndicatorGeometry(item, animate);
+        this._syncIndicatorColor(item);
+        button.accessible_name = window
+            ? `${window.get_title() || app.get_name()}, ${_('running')}`
+            : running
+                ? `${app.get_name()}, ${_('running')}`
+                : app.get_name();
+        this._syncItemLabel(item);
+
+        if (focused)
+            button.add_style_pseudo_class('selected');
+        else
+            button.remove_style_pseudo_class('selected');
     }
 
     queueIconGeometryUpdate() {
