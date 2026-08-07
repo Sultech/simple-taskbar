@@ -304,6 +304,10 @@
       <default>true</default>
       <summary>Show frequently used applications in the Eleven-style Start Menu</summary>
     </key>
+    <key name="start-menu-hide-pinned-app-titles" type="b">
+      <default>false</default>
+      <summary>Hide names below pinned Start Menu application icons</summary>
+    </key>
     <key name="start-menu-app-categories" type="b">
       <default>true</default>
       <summary>Organize All Apps into selectable application categories</summary>

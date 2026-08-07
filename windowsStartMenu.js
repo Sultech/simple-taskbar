@@ -1104,9 +1104,13 @@ export class WindowsStartMenu {
             .map(id => this._appSystem.lookup_app(id))
             .filter(app => this._appShouldShow(app));
         const recommended = this._recommendedApps(pinnedApps);
+        const hidePinnedAppTitles = this._settings.get_boolean(
+            'start-menu-hide-pinned-app-titles'
+        );
         const signature = JSON.stringify({
             pinned: pinnedApps.map(app => [app.get_id(), app.get_name()]),
             recommended: recommended.map(app => [app.get_id(), app.get_name()]),
+            hidePinnedAppTitles,
         });
         if (this._pinnedView && signature === this._pinnedSignature)
             return;
@@ -1365,15 +1369,21 @@ export class WindowsStartMenu {
     }
 
     _createAppTile(app, pinnedGrid = null) {
+        const hideTitle = this._settings.get_boolean(
+            'start-menu-hide-pinned-app-titles'
+        );
         const content = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start-app-tile-content',
             orientation: Clutter.Orientation.VERTICAL,
             x_align: Clutter.ActorAlign.CENTER,
         });
-        const icon = app.create_icon_texture(32);
+        if (hideTitle)
+            content.y_align = Clutter.ActorAlign.CENTER;
+        const icon = app.create_icon_texture(hideTitle ? 40 : 32);
         content.add_child(icon);
         const label = this._createAppLabel(app.get_name(), 78);
         label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
+        label.visible = !hideTitle;
         label.x_align = Clutter.ActorAlign.CENTER;
         label.clutter_text.set({
             ellipsize: Pango.EllipsizeMode.END,
@@ -1391,7 +1401,7 @@ export class WindowsStartMenu {
             child: content,
         });
         this._enableKeyNavigation(button);
-        this._addAppTooltip(button, app, label);
+        this._addAppTooltip(button, app, label, false, hideTitle);
         button.connect('clicked', () => this._launchApp(app));
         this._addAppContextMenuHandler(button, app);
         if (pinnedGrid) {
@@ -1608,10 +1618,22 @@ export class WindowsStartMenu {
         return label;
     }
 
-    _addAppTooltip(button, app, label, alignLeft = false) {
+    _addAppTooltip(
+        button,
+        app,
+        label,
+        alignLeft = false,
+        alwaysShowTitle = false
+    ) {
         button.connect('notify::hover', () => {
             if (button.hover)
-                this._queueAppTooltip(button, app, label, alignLeft);
+                this._queueAppTooltip(
+                    button,
+                    app,
+                    label,
+                    alignLeft,
+                    alwaysShowTitle
+                );
             else if (this._appTooltipSource === button)
                 this._hideAppTooltip();
         });
@@ -1621,7 +1643,7 @@ export class WindowsStartMenu {
         });
     }
 
-    _queueAppTooltip(button, app, label, alignLeft) {
+    _queueAppTooltip(button, app, label, alignLeft, alwaysShowTitle) {
         this._hideAppTooltip(true);
         this._appTooltipSource = button;
         this._appTooltipTimeoutId = GLib.timeout_add(
@@ -1631,21 +1653,28 @@ export class WindowsStartMenu {
                 this._appTooltipTimeoutId = 0;
                 if (this._appTooltipSource !== button || !button.hover)
                     return GLib.SOURCE_REMOVE;
-                this._showAppTooltip(button, app, label, alignLeft);
+                this._showAppTooltip(
+                    button,
+                    app,
+                    label,
+                    alignLeft,
+                    alwaysShowTitle
+                );
                 return GLib.SOURCE_REMOVE;
             }
         );
     }
 
-    _showAppTooltip(button, app, label, alignLeft) {
+    _showAppTooltip(button, app, label, alignLeft, alwaysShowTitle) {
         const description = app.get_description()?.trim() ?? '';
-        const ellipsized = label.clutter_text.get_layout().is_ellipsized();
-        if (!ellipsized && !description) {
+        const showTitle = alwaysShowTitle ||
+            label.clutter_text.get_layout().is_ellipsized();
+        if (!showTitle && !description) {
             this._appTooltipSource = null;
             return;
         }
 
-        if (ellipsized) {
+        if (showTitle) {
             this._appTooltip.text = '';
             const titleMarkup = GLib.markup_escape_text(app.get_name(), -1);
             const descriptionMarkup =

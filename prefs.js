@@ -1231,14 +1231,31 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        const hidePinnedAppTitlesSwitch = new Adw.SwitchRow({
+            title: _('Hide Pinned App Titles'),
+            subtitle: _(
+                'Hide the names below pinned icons and show them in a tooltip when hovered'
+            ),
+            active: window._settings.get_boolean(
+                'start-menu-hide-pinned-app-titles'
+            ),
+        });
+        window._settings.bind(
+            'start-menu-hide-pinned-app-titles',
+            hidePinnedAppTitlesSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
         advancedStartMenuGroup.add(recommendedAppsSwitch);
         advancedStartMenuGroup.add(powerOptionsSwitch);
         advancedStartMenuGroup.add(openAllAppsSwitch);
         advancedStartMenuGroup.add(profilePictureSwitch);
+        advancedStartMenuGroup.add(hidePinnedAppTitlesSwitch);
         const updateRecommendedAppsSwitch = () => {
-            recommendedAppsSwitch.sensitive =
-                windowsStartMenuSwitch.active &&
+            const sensitive = windowsStartMenuSwitch.active &&
                 !openAllAppsSwitch.active;
+            recommendedAppsSwitch.sensitive = sensitive;
+            hidePinnedAppTitlesSwitch.sensitive = sensitive;
         };
         windowsStartMenuSwitch.connect(
             'notify::active',
