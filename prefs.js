@@ -834,7 +834,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         syncCustomPanelColorControls = updateCustomPanelColorControls;
         customPanelColorSwitch.connect(
             'notify::active',
-            updateCustomPanelColorControls
+            widget => {
+                if (widget.active &&
+                    window._settings.get_boolean(
+                        'panel-theme-follow-system'
+                    )) {
+                    window._settings.set_boolean(
+                        'panel-theme-follow-system',
+                        false
+                    );
+                }
+                updateCustomPanelColorControls();
+            }
         );
         updateCustomPanelColorControls();
 
