@@ -14,6 +14,15 @@ export class TaskbarAppMenu extends AppMenu {
         super(sourceActor, side, params);
 
         this._targetWindow = params.targetWindow ?? null;
+        this._closeApp = params.closeApp;
+        this._getInterestingWindows = params.getInterestingWindows;
+        const quitIndex = this._getMenuItems().indexOf(this._quitItem);
+        this._quitItem.destroy();
+        this._quitItem = this.addAction(
+            _('Quit'),
+            event => this._closeApp(this._app, event.get_time())
+        );
+        this.moveMenuItem(this._quitItem, quitIndex);
         this._closeWindowItem = this.addAction(
             _('Close window'),
             event => {
@@ -23,7 +32,6 @@ export class TaskbarAppMenu extends AppMenu {
                 window.delete(event.get_time());
             }
         );
-        const quitIndex = this._getMenuItems().indexOf(this._quitItem);
         this.moveMenuItem(this._closeWindowItem, quitIndex);
 
         this._placesSection = supportsFileManagerPlaces(
@@ -70,11 +78,15 @@ export class TaskbarAppMenu extends AppMenu {
         if (targetAvailable)
             this._closeWindowItem.setSensitive(targetWindow.can_close());
 
-        if (!targetWindow)
+        if (!this._app)
             return;
 
-        const windows = this._app?.get_windows()
-            .filter(window => !window.skip_taskbar) ?? [];
+        const windows = this._getInterestingWindows(this._app);
+        if (!targetWindow) {
+            this._quitItem.visible = windows.length > 0;
+            return;
+        }
+
         this._quitItem.visible = windows.length > 1;
         this._quitItem.label.text = _('Close all windows');
     }
@@ -87,6 +99,8 @@ export class TaskbarAppMenu extends AppMenu {
             this._placesSection = null;
         }
         super.destroy();
+        this._closeApp = null;
+        this._getInterestingWindows = null;
     }
 
     _updateFavoriteItem() {

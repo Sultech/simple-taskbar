@@ -920,6 +920,18 @@ export class TaskbarController {
         return this._getInterestingWindows(app);
     }
 
+    _closeApp(app, timestamp) {
+        if (!this._settings.get_boolean('isolate-workspaces')) {
+            app.request_quit();
+            return;
+        }
+
+        for (const window of this._interestingWindows(app)) {
+            if (window.get_compositor_private() !== null)
+                window.delete(timestamp);
+        }
+    }
+
     _windowsForItem(item) {
         const window = item?._taskbarWindow;
         if (!window)
@@ -1413,6 +1425,8 @@ export class TaskbarController {
             favoritesSection: true,
             showSingleWindows: true,
             targetWindow: item._taskbarWindow,
+            closeApp: (app, timestamp) => this._closeApp(app, timestamp),
+            getInterestingWindows: app => this._interestingWindows(app),
             fileManagerPlacesApp: app,
             fileManagerPlacesEnabled: this._settings.get_boolean(
                 'nautilus-places-enabled'
