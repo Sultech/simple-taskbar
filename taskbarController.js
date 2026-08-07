@@ -913,6 +913,8 @@ export class TaskbarController {
         this._windowPreviews?.hide();
         if (suppressAnimations)
             this._shownInitially = false;
+        for (const item of this._appButtons.values())
+            item._taskbarButton._taskbarMenu?.syncWindowScope();
         this._queueRedisplay();
     }
 

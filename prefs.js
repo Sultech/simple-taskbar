@@ -786,6 +786,30 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 title: _('Taskbar Color'),
             }
         );
+        const customPanelTextColorSubtitle = _(
+            'White text uses the dark panel theme; black text uses the light panel theme'
+        );
+        const customPanelTextColorRow = this._addComboRow(
+            advancedAppearanceGroup,
+            window._settings,
+            {
+                key: 'panel-theme',
+                title: _('Taskbar Text Color'),
+                subtitle: customPanelTextColorSubtitle,
+                choices: [
+                    {value: 'dark', label: _('White')},
+                    {value: 'light', label: _('Black')},
+                ],
+            }
+        );
+        customPanelTextColorRow.connect('notify::selected', () => {
+            if (window._settings.get_boolean('panel-theme-follow-system')) {
+                window._settings.set_boolean(
+                    'panel-theme-follow-system',
+                    false
+                );
+            }
+        });
         const updateCustomPanelColorControls = () => {
             const blocked = blurMyShellPanelBlurEnabled();
             customPanelColorSwitch.sensitive = !blocked;
@@ -795,6 +819,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             customPanelColorRow.visible = customPanelColorSwitch.active;
             customPanelColorRow.sensitive = !blocked &&
                 customPanelColorSwitch.active;
+            customPanelTextColorRow.visible = customPanelColorSwitch.active;
+            customPanelTextColorRow.sensitive = !blocked &&
+                customPanelColorSwitch.active;
+            customPanelTextColorRow.subtitle = blocked
+                ? panelBlurTransparencySubtitle
+                : customPanelTextColorSubtitle;
         };
         syncCustomPanelColorControls = updateCustomPanelColorControls;
         customPanelColorSwitch.connect(

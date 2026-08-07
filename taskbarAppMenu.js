@@ -65,6 +65,10 @@ export class TaskbarAppMenu extends AppMenu {
         this._syncWindowCloseItems();
     }
 
+    syncWindowScope() {
+        this._syncWindowCloseItems();
+    }
+
     _syncWindowCloseItems() {
         if (!this._closeWindowItem)
             return;
