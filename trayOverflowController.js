@@ -24,7 +24,8 @@ const TRAY_TYPE_NAMES = ['IndicatorStatusIcon', 'IndicatorTrayIcon'];
 const RESCAN_DELAY = 120;
 const GRID_MAX_COLUMNS = 5;
 const LIGHT_MENU_CLASS = 'simple-taskbar-tray-overflow-light';
-const TRAY_INDICATOR_STYLE = '-natural-hpadding: 0px;';
+const TRAY_INDICATOR_STYLE =
+    '-natural-hpadding: 0px; -minimum-hpadding: 0px;';
 
 export class TrayOverflowController {
     constructor(settings) {
