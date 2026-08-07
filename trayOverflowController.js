@@ -69,11 +69,13 @@ export class TrayOverflowController {
         this._menuManager.addMenu(this._menu);
 
         this._connect(this._menu, 'open-state-changed', (_menu, open) => {
-            this._button.checked = open;
-            if (open)
+            if (open) {
+                this._button.add_style_pseudo_class('active');
                 this._syncTheme();
-            if (!open)
+            } else {
+                this._button.remove_style_pseudo_class('active');
                 this._closeStashedMenus();
+            }
         });
         this._connect(this._settings, 'changed::tray-overflow-enabled', () => {
             this._sync();
