@@ -1036,7 +1036,7 @@ export class TaskbarController {
         this._appLabelWidth = labelWidth;
         if (labelWidthChanged)
             this._applyCurrentButtonWidths();
-        return true;
+        return combinationChanged;
     }
 
     _calculateWhenFullLayout() {
@@ -1294,7 +1294,6 @@ export class TaskbarController {
         });
 
         this._makeDraggable(item, button, icon, app);
-        this._createAppMenu(button, app, item);
         button.connect('clicked', () => {
             this._windowPreviews.hideTooltip();
             const targetWindow = item._taskbarWindow;
@@ -1326,13 +1325,13 @@ export class TaskbarController {
             if (mouseButton === 3) {
                 this._windowPreviews.hideTooltip();
                 this._windowPreviews.hide();
-                this._popupAppMenu(button);
+                this._popupAppMenu(button, app, item);
                 return Clutter.EVENT_STOP;
             }
             return Clutter.EVENT_PROPAGATE;
         });
         button.connect('popup-menu', () => {
-            this._popupAppMenu(button);
+            this._popupAppMenu(button, app, item);
             return Clutter.EVENT_STOP;
         });
 
@@ -1424,17 +1423,17 @@ export class TaskbarController {
         );
         for (const item of this._appButtons.values()) {
             item._taskbarButton._taskbarMenu
-                .setFileManagerPlacesEnabled(enabled);
+                ?.setFileManagerPlacesEnabled(enabled);
         }
     }
 
-    _popupAppMenu(button) {
+    _popupAppMenu(button, app, item) {
         this._windowPreviews.hideTooltip();
         this._windowPreviews.hide();
-        const menu = button._taskbarMenu;
-        if (!menu)
-            return;
+        if (!button._taskbarMenu)
+            this._createAppMenu(button, app, item);
 
+        const menu = button._taskbarMenu;
         syncMenuArrowSide(menu, this._settings);
         menu.open(BoxPointer.PopupAnimation.FULL);
     }
