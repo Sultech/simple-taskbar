@@ -708,6 +708,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         panelThemeRow.sensitive = !followSystemThemeSwitch.active;
         followSystemThemeSwitch.connect('notify::active', widget => {
             panelThemeRow.sensitive = !widget.active;
+            if (widget.active)
+                window._settings.set_boolean(
+                    'custom-panel-color-enabled',
+                    false
+                );
         });
 
         const transparencySwitchSubtitle = _(
