@@ -1382,8 +1382,10 @@ export class TaskbarController {
 
         this._dragEnabled = enabled;
         const sessionOrder = this._sessionOrder;
+        const shownInitially = this._shownInitially;
         this._clearAppButtons();
         this._sessionOrder = sessionOrder;
+        this._shownInitially = shownInitially;
         this._queueRedisplay();
     }
 
