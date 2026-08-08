@@ -391,7 +391,10 @@ export class WindowPreviewController {
     }
 
     _windowsForItem(item) {
-        const window = item?._taskbarWindow;
+        if (item._taskbarIsLauncher)
+            return [];
+
+        const window = item._taskbarWindow;
         if (!window)
             return this._interestingWindows(item._taskbarApp);
 

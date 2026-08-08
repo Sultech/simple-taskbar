@@ -171,6 +171,7 @@ export class TaskbarController {
         }
         this._connect(this._appSystem, 'app-state-changed', (_system, app) => {
             if (this._combineMode() === 'always' &&
+                !this._usePinnedAppLaunchers() &&
                 this._isPersistentPinned(app) &&
                 this._hasItemsForApp(app.get_id())) {
                 this.syncButtonStates();
@@ -201,6 +202,16 @@ export class TaskbarController {
             'changed::hide-pinned-taskbar-apps',
             () => {
                 this._sessionOrder = [];
+                this._queueRedisplay();
+            }
+        );
+        this._connect(
+            this._settings,
+            'changed::use-pinned-apps-as-launchers',
+            () => {
+                this._windowPreviews.hideTooltip(false);
+                this._windowPreviews.hide();
+                this._shownInitially = false;
                 this._queueRedisplay();
             }
         );
@@ -413,7 +424,8 @@ export class TaskbarController {
                 this._appButtons.delete(key);
                 if (this._isPinnedPlaceholder(
                     item._taskbarApp,
-                    item._taskbarWindow
+                    item._taskbarWindow,
+                    item._taskbarIsLauncher
                 ) || !animateMembershipChanges) {
                     item.destroy();
                 } else {
@@ -423,10 +435,10 @@ export class TaskbarController {
         }
 
         for (let index = 0; index < entries.length; index++) {
-            const {key, app, window} = entries[index];
+            const {key, app, window, isLauncher} = entries[index];
             let item = this._appButtons.get(key);
             if (!item) {
-                item = this._createAppButton(app, window);
+                item = this._createAppButton(app, window, isLauncher);
                 this._trackApp(app);
                 this._appButtons.set(key, item);
                 this._syncButtonState(
@@ -439,7 +451,11 @@ export class TaskbarController {
                 this._animateItemIn(
                     item,
                     animateMembershipChanges &&
-                        !this._isPinnedPlaceholder(app, window)
+                        !this._isPinnedPlaceholder(
+                            app,
+                            window,
+                            isLauncher
+                        )
                 );
             } else {
                 this._placeItemAtActiveIndex(item, index);
@@ -499,19 +515,24 @@ export class TaskbarController {
         const app = item._taskbarApp;
         const window = item._taskbarWindow;
         const button = item._taskbarButton;
-        const windowCount = this._windowsForItem(item).length;
-        const running = window
+        const isLauncher = item._taskbarIsLauncher;
+        const windowCount = isLauncher
+            ? 0
+            : this._windowsForItem(item).length;
+        const running = !isLauncher && (window
             ? windowCount > 0
-            : app.state === Shell.AppState.RUNNING && windowCount > 0;
-        const hasFocus = window
+            : app.state === Shell.AppState.RUNNING && windowCount > 0);
+        const hasFocus = !isLauncher && (window
             ? window === focusedWindow
             : app === focusedApp &&
-                this._interestingWindows(app).includes(focusedWindow);
+                this._interestingWindows(app).includes(focusedWindow));
         const focused = hasFocus && !this._startMenuOpen;
         item.set_style_class_name(
             `dash-item-container simple-taskbar-app-item` +
             `${running ? ' running' : ''}` +
-            `${!window && windowCount > 1 ? ' multiple-windows' : ''}` +
+            `${!isLauncher && !window && windowCount > 1
+                ? ' multiple-windows'
+                : ''}` +
             `${focused ? ' focused' : ''}`
         );
         item._taskbarFocused = focused;
@@ -691,7 +712,8 @@ export class TaskbarController {
                 ? child._taskbarApp.get_id()
                 : null;
             if (!childId || childId === appId || seen.has(childId) ||
-                !this._favorites.isFavorite(childId)) {
+                !this._favorites.isFavorite(childId) ||
+                this._usePinnedAppLaunchers() && !child._taskbarIsLauncher) {
                 continue;
             }
             seen.add(childId);
@@ -936,7 +958,10 @@ export class TaskbarController {
     }
 
     _windowsForItem(item) {
-        const window = item?._taskbarWindow;
+        if (item._taskbarIsLauncher)
+            return [];
+
+        const window = item._taskbarWindow;
         if (!window)
             return this._interestingWindows(item._taskbarApp);
 
@@ -945,10 +970,11 @@ export class TaskbarController {
             : [];
     }
 
-    _isPinnedPlaceholder(app, window) {
+    _isPinnedPlaceholder(app, window, isLauncher = false) {
         return !window &&
             this._favorites.isFavorite(app.get_id()) &&
-            !this._settings.get_boolean('hide-pinned-taskbar-apps');
+            !this._settings.get_boolean('hide-pinned-taskbar-apps') &&
+            (!this._usePinnedAppLaunchers() || isLauncher);
     }
 
     _isPersistentPinned(app) {
@@ -957,14 +983,31 @@ export class TaskbarController {
             !this._settings.get_boolean('hide-pinned-taskbar-apps');
     }
 
+    _usePinnedAppLaunchers() {
+        return this._settings.get_boolean('use-pinned-apps-as-launchers');
+    }
+
+    _pinnedApps() {
+        if (this._settings.get_boolean('hide-pinned-taskbar-apps'))
+            return [];
+
+        const apps = [];
+        const seen = new Set();
+        for (const app of this._favorites.getFavorites()) {
+            const id = app.get_id();
+            if (!id || seen.has(id))
+                continue;
+
+            seen.add(id);
+            apps.push(app);
+        }
+        return apps;
+    }
+
     _orderedApps(pinnedOnly = false) {
         const seen = new Set();
         const runningApps = pinnedOnly ? [] : this._getRunningApps();
-        const pinnedApps = this._settings.get_boolean(
-            'hide-pinned-taskbar-apps'
-        )
-            ? []
-            : this._favorites.getFavorites();
+        const pinnedApps = this._pinnedApps();
 
         for (const app of pinnedApps) {
             const id = app.get_id();
@@ -982,16 +1025,18 @@ export class TaskbarController {
             seen.add(id);
             return true;
         });
+        const appsToOrder = this._usePinnedAppLaunchers()
+            ? runningApps
+            : unpinnedApps;
         const visibleRunningIds = new Set(
-            unpinnedApps.map(app => app.get_id())
+            appsToOrder.map(app => app.get_id())
         );
         this._sessionOrder = this._sessionOrder.filter(appId =>
             visibleRunningIds.has(appId)
         );
 
-        // Preserve unpinned app order while window stacking settles.
         const orderedIds = new Set(this._sessionOrder);
-        for (const app of unpinnedApps) {
+        for (const app of appsToOrder) {
             const appId = app.get_id();
             if (orderedIds.has(appId))
                 continue;
@@ -1003,7 +1048,7 @@ export class TaskbarController {
         const positions = new Map(
             this._sessionOrder.map((id, index) => [id, index])
         );
-        const orderedRunningApps = [...unpinnedApps].sort((a, b) =>
+        const orderedRunningApps = [...appsToOrder].sort((a, b) =>
             positions.get(a.get_id()) - positions.get(b.get_id())
         );
         return [...pinnedApps, ...orderedRunningApps];
@@ -1011,25 +1056,53 @@ export class TaskbarController {
 
     _orderedEntries(pinnedOnly = false) {
         const apps = this._orderedApps(pinnedOnly);
+        const launcherCount = this._usePinnedAppLaunchers()
+            ? this._pinnedApps().length
+            : 0;
         if (this._combineAppButtons()) {
-            return apps.map(app => ({
-                key: app.get_id(),
-                app,
-                window: null,
-            }));
+            return apps.map((app, index) => {
+                const isLauncher = index < launcherCount;
+                return {
+                    key: isLauncher
+                        ? `launcher:${app.get_id()}`
+                        : this._usePinnedAppLaunchers()
+                            ? `app:${app.get_id()}`
+                            : app.get_id(),
+                    app,
+                    window: null,
+                    isLauncher,
+                };
+            });
         }
 
-        return this._uncombinedEntries(apps);
+        return this._uncombinedEntries(apps, launcherCount);
     }
 
-    _uncombinedEntries(apps) {
+    _uncombinedEntries(apps, launcherCount = 0) {
         const entries = [];
-        for (const app of apps) {
+        for (let index = 0; index < apps.length; index++) {
+            const app = apps[index];
+            const isLauncher = index < launcherCount;
+            if (isLauncher) {
+                entries.push({
+                    key: `launcher:${app.get_id()}`,
+                    app,
+                    window: null,
+                    isLauncher: true,
+                });
+                continue;
+            }
+
             const windows = this._interestingWindows(app).sort((a, b) =>
                 a.get_stable_sequence() - b.get_stable_sequence()
             );
             if (windows.length === 0) {
-                entries.push({key: app.get_id(), app, window: null});
+                entries.push({
+                    key: app.get_id(),
+                    app,
+                    window: null,
+                    isLauncher: false,
+                });
                 continue;
             }
 
@@ -1038,6 +1111,7 @@ export class TaskbarController {
                     key: `window:${window.get_stable_sequence()}`,
                     app,
                     window,
+                    isLauncher: false,
                 });
             }
         }
@@ -1076,8 +1150,10 @@ export class TaskbarController {
     }
 
     _calculateWhenFullLayout() {
+        const pinnedApps = this._pinnedApps();
         const entries = this._uncombinedEntries(
-            this._orderedApps(this._startupSettling)
+            this._orderedApps(this._startupSettling),
+            this._usePinnedAppLaunchers() ? pinnedApps.length : 0
         );
         const showLabels = !this._settings.get_boolean('hide-app-labels');
         const spacing = Math.max(this._settings.get_int('icon-spacing'), 0);
@@ -1154,7 +1230,7 @@ export class TaskbarController {
         return apps;
     }
 
-    _createAppButton(app, window = null) {
+    _createAppButton(app, window = null, isLauncher = false) {
         const glassWidth = this._buttonWidth(window);
         const slotWidth = this._itemSlotWidth(window);
         const glassHeight = this._glassHeight();
@@ -1278,6 +1354,7 @@ export class TaskbarController {
 
         item._taskbarApp = app;
         item._taskbarWindow = window;
+        item._taskbarIsLauncher = isLauncher;
         item._taskbarButton = button;
         item._taskbarIcon = icon;
         item._taskbarLabel = label;
@@ -1306,7 +1383,9 @@ export class TaskbarController {
                 return;
             if (item.hover) {
                 item.add_style_pseudo_class('hover');
-                const windowCount = this._windowsForItem(item).length;
+                const windowCount = item._taskbarIsLauncher
+                    ? 0
+                    : this._windowsForItem(item).length;
                 if (this._windowPreviews.currentItem &&
                     this._windowPreviews.currentItem !== item) {
                     if (windowCount > 0)
@@ -1332,6 +1411,12 @@ export class TaskbarController {
         this._makeDraggable(item, button, icon, app);
         button.connect('clicked', () => {
             this._windowPreviews.hideTooltip();
+            if (item._taskbarIsLauncher) {
+                this._windowPreviews.hide();
+                this._animatePinnedLaunch(item);
+                this._openNewWindow(app);
+                return;
+            }
             const targetWindow = item._taskbarWindow;
             if (!targetWindow && this._favorites.isFavorite(app.get_id()) &&
                 this._interestingWindows(app).length === 0) {
@@ -1491,6 +1576,7 @@ export class TaskbarController {
         const id = app.connect('windows-changed', () => {
             this._windowPreviews.windowsChanged(app);
             if (this._combineMode() === 'always' &&
+                !this._usePinnedAppLaunchers() &&
                 this._isPersistentPinned(app)) {
                 this.syncButtonStates();
                 this.queueIconGeometryUpdate();

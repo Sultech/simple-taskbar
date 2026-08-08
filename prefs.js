@@ -434,6 +434,23 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const pinnedAppsAsLaunchersSwitch = new Adw.SwitchRow({
+            title: _('Use Pinned Apps as Application Launchers'),
+            subtitle: _(
+                'Keep pinned applications as launchers and show running applications separately'
+            ),
+            active: window._settings.get_boolean(
+                'use-pinned-apps-as-launchers'
+            ),
+        });
+        advancedAppBehaviorGroup.add(pinnedAppsAsLaunchersSwitch);
+        window._settings.bind(
+            'use-pinned-apps-as-launchers',
+            pinnedAppsAsLaunchersSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
         const combineAppButtonsRow = this._addComboRow(
             advancedAppBehaviorGroup,
             window._settings,

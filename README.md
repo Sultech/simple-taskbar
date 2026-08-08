@@ -126,6 +126,7 @@ Optional controls can:
 - Show running applications from only the current workspace.
 - Show running applications only on the taskbar for their monitor.
 - Hide favourite applications that are not running.
+- Use pinned applications as launchers while showing their running windows in separate buttons.
 - Lock the taskbar against accidental rearrangement.
 - Show the desktop from a narrow button at either panel edge, or hide the
   button.

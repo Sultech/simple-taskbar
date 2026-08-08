@@ -193,6 +193,11 @@
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>
     </key>
+    <key name="use-pinned-apps-as-launchers" type="b">
+      <default>false</default>
+      <summary>Use pinned applications as separate launchers</summary>
+      <description>Keep pinned applications as launchers and show their running windows separately</description>
+    </key>
     <key name="combine-app-buttons-mode" type="s">
       <choices>
         <choice value="always"/>
