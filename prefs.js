@@ -289,7 +289,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const startMenuKeybindingsGroup = new Adw.PreferencesGroup({
             title: _('Keyboard Shortcuts'),
-            description: _('Configure Start menu and file manager shortcuts.'),
+            description: _('Configure Start menu shortcuts.'),
         });
         startMenuPage.add(startMenuKeybindingsGroup);
 
