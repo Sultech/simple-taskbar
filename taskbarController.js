@@ -923,7 +923,8 @@ export class TaskbarController {
     }
 
     closeApp(app, timestamp) {
-        if (!this._settings.get_boolean('isolate-workspaces')) {
+        if (!this._settings.get_boolean('isolate-workspaces') &&
+            !this._settings.get_boolean('isolate-monitors')) {
             app.request_quit();
             return;
         }
