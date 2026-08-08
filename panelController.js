@@ -1018,7 +1018,7 @@ export class PanelController {
 
     _panelBackground(light) {
         if (!this._settings.get_boolean('custom-panel-color-enabled'))
-            return light ? '217, 217, 222' : '24, 24, 27';
+            return light ? '224, 229, 238' : '24, 24, 27';
 
         const [, color] = Cogl.Color.from_string(
             this._settings.get_string('custom-panel-color')

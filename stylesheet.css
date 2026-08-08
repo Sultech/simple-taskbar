@@ -86,7 +86,7 @@
 }
 
 .simple-taskbar-panel.simple-taskbar-theme-light {
-    background-color: rgba(217, 217, 222, 0.96);
+    background-color: rgb(224, 229, 238);
     border-top-color: rgba(255, 255, 255, 0.20);
     box-shadow: none;
 }
@@ -1043,7 +1043,7 @@
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer {
     border-top: 1px solid rgba(30, 40, 56, 0.14);
-    background-color: rgba(217, 217, 222, 0.98);
+    background-color: rgb(224, 229, 238);
 }
 
 .simple-taskbar-windows-start-context.simple-taskbar-windows-start-light .popup-menu-content {
