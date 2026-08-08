@@ -38,6 +38,10 @@ export class WindowPreviewController {
         this._appTooltip = null;
         this._tooltipItem = null;
         this._tooltipTimeoutId = 0;
+        this._overviewShowingId = Main.overview.connect('showing', () => {
+            this.hideTooltip(false);
+            this.hide();
+        });
     }
 
     get currentItem() {
@@ -59,6 +63,8 @@ export class WindowPreviewController {
     }
 
     destroy() {
+        Main.overview.disconnect(this._overviewShowingId);
+        this._overviewShowingId = 0;
         this.hideTooltip(false);
         this.hide();
         this._clearTimeouts();
@@ -109,6 +115,10 @@ export class WindowPreviewController {
     schedule(item) {
         this._clearTimeout('_previewCloseId');
         this._clearTimeout('_previewOpenId');
+        if (this._overviewIsVisible()) {
+            this.hide();
+            return;
+        }
         if (this._windowsForItem(item).length === 0)
             return;
         if (this._previewItem === item)
@@ -198,6 +208,10 @@ export class WindowPreviewController {
     scheduleSwitch(item) {
         this._clearTimeout('_previewOpenId');
         this._clearTimeout('_previewCloseId');
+        if (this._overviewIsVisible()) {
+            this.hide();
+            return;
+        }
         if (this._previewSwitchItem === item)
             return;
 
@@ -216,6 +230,10 @@ export class WindowPreviewController {
     show(item) {
         this._clearTimeouts();
         this.hideTooltip();
+        if (this._overviewIsVisible()) {
+            this.hide();
+            return;
+        }
         const windows = this._windowsForItem(item)
             .sort((a, b) => b.get_user_time() - a.get_user_time());
         if (windows.length === 0)
@@ -388,6 +406,10 @@ export class WindowPreviewController {
 
     _interestingWindows(app) {
         return this._getInterestingWindows(app);
+    }
+
+    _overviewIsVisible() {
+        return Main.overview.visible || Main.overview.visibleTarget;
     }
 
     _windowsForItem(item) {
