@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-08 06:04+0100\n"
-"PO-Revision-Date: 2026-08-07 13:49+0800\n"
-"Last-Translator:  <adogecheems@outlook.com>\n"
+"PO-Revision-Date: 2026-08-08 22:01+0800\n"
+"Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr "外观"
 
 #: prefs.js:143
 msgid "Less commonly used taskbar and indicator appearance options."
-msgstr "较少使用的任务栏和指示器外观选项。"
+msgstr "使用较少的任务栏和指示器外观选项。"
 
 #: prefs.js:149
 msgid "Application Behavior"
@@ -71,7 +71,7 @@ msgstr "任务栏行为"
 
 #: prefs.js:159
 msgid "Less commonly used taskbar interaction options."
-msgstr "较少使用的任务栏交互选项。"
+msgstr "使用较少的任务栏交互选项。"
 
 #: prefs.js:165
 msgid "File Manager"
@@ -83,7 +83,7 @@ msgstr "文件管理器快捷方式和任务栏菜单文件夹。"
 
 #: prefs.js:175
 msgid "Less commonly used Start menu options."
-msgstr "较少使用的开始菜单选项。"
+msgstr "使用较少的开始菜单选项。"
 
 #: prefs.js:181
 msgid "Grid Alt-Tab"
@@ -178,8 +178,8 @@ msgid ""
 "Horizontal space around panel buttons. Use -1 for automatic: Just "
 "Perfection’s value when it is configured, otherwise 3 px"
 msgstr ""
-"面板按钮周围的水平间距。使用 -1 表示自动：已配置时使用 Just Perfection 的数"
-"值，否则使用 3 像素"
+"面板按钮周围的水平间距。使用 -1 表示自动："
+"已配置 Just Perfection 时使用其数值，否则使用 3 像素"
 
 #: prefs.js:341
 msgid "Application Icons"
@@ -394,7 +394,7 @@ msgstr "透明度"
 
 #: prefs.js:770
 msgid "Use a chosen color instead of the light or dark theme color"
-msgstr "使用选定的颜色，而不是浅色或深色主题颜色"
+msgstr "使用选定的颜色，而不是浅色或深色的主题颜色"
 
 #: prefs.js:773
 msgid "Custom Taskbar Color"
@@ -405,9 +405,8 @@ msgid "Taskbar Color"
 msgstr "任务栏颜色"
 
 #: prefs.js:795
-msgid ""
-"White text uses the dark panel theme; black text uses the light panel theme"
-msgstr "白色文字使用深色面板主题；黑色文字使用浅色面板主题"
+msgid "White text uses the dark panel theme; black text uses the light panel theme"
+msgstr "白色文字使用深色面板主题，黑色文字使用浅色面板主题"
 
 #: prefs.js:802
 msgid "Taskbar Text Color"
@@ -456,7 +455,7 @@ msgstr "激活压力"
 #: prefs.js:920
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
-msgstr "指针必须越过底部边缘移动的像素数，超过后才会激活概览"
+msgstr "指针越过底部边缘所移动的像素数，超过此值后才会激活概览"
 
 #: prefs.js:929
 msgid "Hot Edge Animation"
@@ -604,16 +603,16 @@ msgstr "展示推荐应用"
 
 #: prefs.js:1280
 msgid "Display frequently used applications below pinned apps"
-msgstr "在固定应用下方展示常用的应用"
+msgstr "在已固定的应用下方展示常用的应用"
 
 #: prefs.js:1292
 msgid "Hide Pinned App Titles"
-msgstr "隐藏已固定应用的标题"
+msgstr "隐藏已固定的应用的标题"
 
 #: prefs.js:1294
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
-msgstr "隐藏固定图标下方的名称，并在悬停时通过工具提示显示"
+msgstr "隐藏已固定的图标下方的名称，并在悬停时通过提示框显示"
 
 #: prefs.js:1328
 msgid "Organize All Apps into Categories"
@@ -628,8 +627,7 @@ msgid "Show Original GNOME Button"
 msgstr "展示原始 GNOME 按钮"
 
 #: prefs.js:1352
-msgid ""
-"Show the Applications button when the Eleven-style Start Menu is disabled"
+msgid "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr "当 11 风格开始菜单被禁用时，展示“应用程序”按钮"
 
 #: prefs.js:1373
@@ -884,8 +882,7 @@ msgid ""
 "This will restore taskbar and Start Menu settings. Pinned taskbar and Start "
 "Menu apps, including their order, will be kept."
 msgstr ""
-"这将恢复任务栏与开始菜单的设置。已固定的任务栏与开始菜单应用（包括其顺序）将"
-"保留。"
+"这将恢复任务栏与开始菜单的设置。已固定的任务栏与开始菜单应用（包括其顺序）将被保留。"
 
 #: prefs.js:2014 prefs/startIconChooser.js:139
 msgid "Cancel"
