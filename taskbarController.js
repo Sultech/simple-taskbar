@@ -946,7 +946,9 @@ export class TaskbarController {
     }
 
     _isPinnedPlaceholder(app, window) {
-        return !window && this._favorites.isFavorite(app.get_id());
+        return !window &&
+            this._favorites.isFavorite(app.get_id()) &&
+            !this._settings.get_boolean('hide-pinned-taskbar-apps');
     }
 
     _isPersistentPinned(app) {
