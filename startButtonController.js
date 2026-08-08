@@ -333,12 +333,12 @@ export class StartButtonController {
         this._connect(
             this._settings,
             'changed::start-menu-recommended-apps',
-            () => this._windowsStartMenu?.refresh()
+            () => this._windowsStartMenu.refresh()
         );
         this._connect(
             this._settings,
             'changed::start-menu-hide-pinned-app-titles',
-            () => this._windowsStartMenu?.refresh()
+            () => this._windowsStartMenu.refresh()
         );
         this._connect(
             this._settings,

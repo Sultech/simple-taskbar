@@ -102,9 +102,9 @@ export class TaskbarAppMenu extends AppMenu {
             this._placesSection.destroy();
             this._placesSection = null;
         }
-        super.destroy();
         this._closeApp = null;
         this._getInterestingWindows = null;
+        super.destroy();
     }
 
     _updateFavoriteItem() {
