@@ -72,7 +72,7 @@ export class StartButtonController {
         this._gnomeGIcon = new Gio.ThemedIcon({
             name: 'view-app-grid-symbolic',
         });
-        this._windowsXpStartButton = new WindowsXpStartButton(extensionDir);
+        this._windowsXpStartButton = new WindowsXpStartButton();
         this._icon = new St.Icon({
             gicon: this._currentGIcon(),
             icon_size: iconSize,

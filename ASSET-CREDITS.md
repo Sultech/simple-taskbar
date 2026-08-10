@@ -50,9 +50,15 @@ included only to identify that distribution.
 The GNOME foot logo is a trademark of the GNOME Foundation. It is included
 only to identify the GNOME desktop.
 
-## Windows XP Luna Start button assets
+## Windows XP Luna Start button slice assets
 
-The PNG files in `icons/start/xp/` are copied unchanged from the Luna Blue
-resources in the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc)
-project. The Windows XP name and flag are Microsoft trademarks and are
-included only to reproduce the Windows XP visual style.
+The `start_button_body.png`, `start_button_border.png`,
+`start_button_hover_body.png`, `start_button_hover_border.png`,
+`start_button_press_body.png`, `start_button_press_border.png`, and
+`start_flag.png` files are copied unchanged from the Luna Blue resources in
+the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc) project.
+
+The `start-button-normal.png`, `start-button-hover.png`, and
+`start-button-pressed.png` files were supplied separately for Simple Taskbar.
+The Windows XP name and flag are Microsoft trademarks and are included only
+to reproduce the Windows XP visual style.
