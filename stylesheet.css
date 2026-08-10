@@ -1518,6 +1518,20 @@
     color: white;
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-label {
+    color: #FFFFFF;
+    font-family: Tahoma;
+    font-size: 8pt;
+    font-style: normal;
+    font-weight: normal;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-button-content {
+    spacing: 4px;
+}
+
 .simple-taskbar-xp-start-content {
     background-image: url('icons/start/xp/start-button-normal.png');
     background-position: 0 0;
