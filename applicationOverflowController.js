@@ -460,7 +460,7 @@ export class ApplicationOverflowController {
             accessible_name: item._taskbarButton.accessible_name,
             child: clone,
         });
-        this._configureAuxiliaryItem(button, item, button, true);
+        this._configureAuxiliaryItem(button, item, item, true);
         return button;
     }
 

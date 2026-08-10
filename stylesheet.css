@@ -1375,13 +1375,6 @@
     background-color: transparent;
 }
 
-.simple-taskbar-application-overflow-taskbar-item:hover,
-.simple-taskbar-application-overflow-taskbar-item:focus {
-    background-gradient-direction: vertical;
-    background-gradient-start: rgba(255, 255, 255, 0.16);
-    background-gradient-end: rgba(255, 255, 255, 0.09);
-}
-
 .simple-taskbar-application-overflow-list {
     min-width: 240px;
     spacing: 2px;
