@@ -300,10 +300,14 @@ export default class SimpleTaskbarExtension extends Extension {
         );
     }
 
-    _syncWindowsXpTheme(resetWhenDisabled) {
+    _syncWindowsXpTheme(modeChanged) {
         if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
-            if (resetWhenDisabled &&
+            if (modeChanged &&
                 !this._settings.get_boolean('default-gnome-panel')) {
+                this._settings.set_boolean(
+                    'activities-button-visible',
+                    true
+                );
                 applyDefaultTaskbarSettings(this._settings);
                 return;
             }
@@ -324,6 +328,12 @@ export default class SimpleTaskbarExtension extends Extension {
 
         if (this._settings.get_boolean('default-gnome-panel'))
             this._settings.set_boolean('default-gnome-panel', false);
+        if (modeChanged) {
+            this._settings.set_boolean(
+                'activities-button-visible',
+                false
+            );
+        }
         applyWindowsXpThemeSettings(this._settings);
     }
 

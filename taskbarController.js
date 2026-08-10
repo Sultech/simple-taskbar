@@ -304,6 +304,11 @@ export class TaskbarController {
             'changed::running-indicator-style',
             () => this.applyAppearance()
         );
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => this.applyAppearance()
+        );
         for (const key of [
             'custom-indicator-colors-enabled',
             'focused-indicator-color',
@@ -428,8 +433,10 @@ export class TaskbarController {
         this.actor.set_style('spacing: 0;');
         this.actor.x_align = Clutter.ActorAlign.START;
         this._syncIndicatorStyle();
-        for (const item of this._appButtons.values())
+        for (const item of this._appButtons.values()) {
+            this._syncIndicatorVisibility(item);
             this._updateGlassGeometry(item);
+        }
         this.actor.queue_relayout();
     }
 
@@ -1557,6 +1564,7 @@ export class TaskbarController {
         item._taskbarRunning = false;
         item._taskbarMultipleWindows = false;
         item._taskbarShowSecondary = false;
+        this._syncIndicatorVisibility(item);
         this._updateIndicatorGeometry(item, false, glassWidth);
         if (window) {
             window.connectObject(
@@ -1908,6 +1916,12 @@ export class TaskbarController {
 
         for (const segment of item._taskbarIndicator.get_children())
             segment.set_style(style);
+    }
+
+    _syncIndicatorVisibility(item) {
+        item._taskbarIndicator.opacity = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        ) ? 0 : 255;
     }
 
     _buttonWidth(

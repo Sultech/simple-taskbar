@@ -72,8 +72,10 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
     if (enabled) {
         if (settings.get_boolean('default-gnome-panel'))
             settings.set_boolean('default-gnome-panel', false);
+        setBoolean(settings, 'activities-button-visible', false);
         applyWindowsXpThemeSettings(settings);
     } else {
+        setBoolean(settings, 'activities-button-visible', true);
         applyDefaultTaskbarSettings(settings);
     }
 }
