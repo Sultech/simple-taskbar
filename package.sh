@@ -42,6 +42,7 @@ gnome-extensions pack \
     --extra-source=keybindingUtils.js \
     --extra-source=overviewIntegration.js \
     --extra-source=multiMonitorController.js \
+    --extra-source=notificationAreaController.js \
     --extra-source=notificationBannerController.js \
     --extra-source=panelController.js \
     --extra-source=panelAutoHideController.js \

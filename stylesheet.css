@@ -1833,3 +1833,94 @@
     border-color: transparent;
     border-image: url('icons/taskbar/xp/taskband_button_press_border.png') 2 2 2 2;
 }
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area {
+    margin: 0 0 0 4px;
+    padding: 0;
+    background-color: transparent;
+    background-image: url('icons/taskbar/xp/notification-area/taskband_tray_horz_body.png');
+    background-size: 1px 100%;
+    background-repeat: repeat-x;
+    border-style: solid;
+    border-width: 5px 0 3px 16px;
+    border-color: transparent;
+    border-image: url('icons/taskbar/xp/notification-area/taskband_tray_horz.png') 5 0 3 16;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+.simple-taskbar-xp-notification-area-content {
+    spacing: 0;
+    padding: 0 14px 0 15px;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .panel-button,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .simple-taskbar-tray-overflow {
+    margin: 0;
+    padding: 0;
+    -natural-hpadding: 0;
+    -minimum-hpadding: 0;
+    background-color: transparent;
+    background-image: none;
+    border-width: 0;
+    border-style: none;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .simple-taskbar-tray-overflow {
+    margin-right: 4px;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .panel-button:hover,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .panel-button:focus,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .panel-button:active,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .panel-button:checked,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .simple-taskbar-tray-overflow:hover,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .simple-taskbar-tray-overflow:focus,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .simple-taskbar-tray-overflow:active,
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .simple-taskbar-tray-overflow:checked {
+    background-color: transparent;
+    background-image: none;
+    border-width: 0;
+    border-style: none;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+.simple-taskbar-xp-notification-area .panel-status-indicators-box {
+    spacing: 3px;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .system-status-icon {
+    margin: 0;
+    padding: 0;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-xp-notification-area .clock-display-box {
+    spacing: 0;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+.simple-taskbar-xp-notification-area .clock-display-box .clock {
+    color: #FFFFFF;
+    font-family: Tahoma;
+    font-size: 8pt;
+    font-style: normal;
+    font-weight: normal;
+    padding: 0;
+    box-shadow: none;
+}

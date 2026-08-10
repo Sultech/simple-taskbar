@@ -34,6 +34,7 @@ import {
     allocateExpandedSidePanel,
     constrainTaskbarWidth,
 } from './taskbarLayout.js';
+import {NotificationAreaController} from './notificationAreaController.js';
 import {VolumeMixerController} from './volumeMixerController.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
@@ -391,6 +392,7 @@ class SecondaryTaskbarPanel {
         this._volumeMixerController = null;
         this._quickSettingsPowerController = null;
         this._quickSettingsXpIconController = null;
+        this._notificationAreaController = new NotificationAreaController();
     }
 
     enable() {
@@ -505,6 +507,8 @@ class SecondaryTaskbarPanel {
         this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController?.destroy();
         this._quickSettingsPowerController = null;
+        this._notificationAreaController.restore(this._rightBox);
+        this._notificationAreaController.destroy();
         this._releaseIndicators();
         this._folderMenuController.destroy();
         this._folderMenuController = null;
@@ -516,6 +520,7 @@ class SecondaryTaskbarPanel {
         this._leftBox = null;
         this._centerBox = null;
         this._rightBox = null;
+        this._notificationAreaController = null;
         this._taskbarBin = null;
         this._monitor = null;
         this._extensionDir = null;
@@ -564,6 +569,14 @@ class SecondaryTaskbarPanel {
         this._connect(this._settings, 'changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
         });
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => {
+                this._applyLayout();
+                this._syncTheme();
+            }
+        );
         this._connect(this._settings, 'changed::app-alignment', () => {
             this._applyAppearance();
             this._applyLayout();
@@ -661,12 +674,21 @@ class SecondaryTaskbarPanel {
         ])
             actor?.get_parent()?.remove_child(actor);
 
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        this._notificationAreaController.sync(
+            windowsXpThemeEnabled ? [quickSettings, dateMenu] : [],
+            dateMenu,
+            windowsXpThemeEnabled
+        );
+
         const boxes = {
             left: this._leftBox,
             center: this._centerBox,
             right: this._rightBox,
         };
-        placePanelItems(boxes, [
+        const items = [
             {
                 id: 'start-button',
                 actor: startButton,
@@ -693,19 +715,37 @@ class SecondaryTaskbarPanel {
                 position: this._settings.get_string('folder-menu-position'),
                 visible: this._settings.get_boolean('folder-menu-enabled'),
             },
-            {
-                id: 'system-menu',
-                actor: quickSettings,
-                position: this._settings.get_string('system-menu-position'),
-                visible: true,
-            },
-            {
+        ];
+        if (windowsXpThemeEnabled) {
+            items.push({
                 id: 'clock',
-                actor: dateMenu,
+                actor: this._notificationAreaController.actor,
                 position: this._settings.get_string('clock-position'),
                 visible: true,
-            },
-        ], this._settings.get_strv('panel-item-order'));
+            });
+        } else {
+            items.push(
+                {
+                    id: 'system-menu',
+                    actor: quickSettings,
+                    position: this._settings.get_string(
+                        'system-menu-position'
+                    ),
+                    visible: true,
+                },
+                {
+                    id: 'clock',
+                    actor: dateMenu,
+                    position: this._settings.get_string('clock-position'),
+                    visible: true,
+                }
+            );
+        }
+        placePanelItems(
+            boxes,
+            items,
+            this._settings.get_strv('panel-item-order')
+        );
         this._syncActivitiesVisibility();
         this._applyAppearance();
         this._updateTaskbarWidth();
