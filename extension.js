@@ -398,6 +398,9 @@ export default class SimpleTaskbarExtension extends Extension {
             'panel-position',
             'clock-position',
             'system-menu-position',
+            'show-desktop-button-position',
+            'show-desktop-button-visible',
+            'windows-start-menu-enabled',
             'panel-item-order',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {

@@ -55,6 +55,7 @@ export function applyWindowsXpThemeSettings(settings) {
         'system-menu-position',
         WINDOWS_XP_SYSTEM_MENU_POSITION
     );
+    setString(settings, 'show-desktop-button-position', 'left');
     setStringArray(
         settings,
         'panel-item-order',
@@ -66,6 +67,8 @@ export function applyWindowsXpThemeSettings(settings) {
         WINDOWS_XP_ALIGNMENT
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', true);
+    setBoolean(settings, 'windows-start-menu-enabled', true);
+    setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
     setString(
@@ -83,6 +86,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setString(settings, 'panel-position', 'bottom');
     setString(settings, 'clock-position', 'right');
     setString(settings, 'system-menu-position', 'right');
+    setString(settings, 'show-desktop-button-position', 'right');
     setStringArray(
         settings,
         'panel-item-order',
@@ -94,6 +98,8 @@ export function applyDefaultTaskbarSettings(settings) {
         DEFAULT_TASKBAR_ALIGNMENT
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', false);
+    setBoolean(settings, 'windows-start-menu-enabled', true);
+    setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
     setString(

@@ -2036,6 +2036,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 return [
                     'start-button',
                     'applications',
+                    'show-desktop',
                     'system-menu',
                     'clock',
                 ].includes(id);
@@ -2147,6 +2148,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const windowsXpTheme = window._settings.get_boolean(
                 'windows-xp-theme-enabled'
             );
+            windowsStartMenuSwitch.sensitive = !windowsXpTheme;
+            showDesktopSwitch.sensitive = !windowsXpTheme;
             panelOrderRows.get('start-button').positionDropDown.sensitive =
                 !defaultPanel && !windowsXpTheme &&
                 !followAppAlignmentSwitch.active;
@@ -2163,7 +2166,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             panelOrderRows.get('tray-overflow').positionDropDown.sensitive =
                 trayOverflowSwitch.active;
             panelOrderRows.get('show-desktop').positionDropDown.sensitive =
-                showDesktopSwitch.active;
+                !windowsXpTheme && showDesktopSwitch.active;
         };
         followAppAlignmentSwitch.connect(
             'notify::active',

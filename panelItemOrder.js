@@ -43,12 +43,14 @@ export function normalizePanelItemOrder(order) {
 
 export function getWindowsXpPanelItemOrder(order) {
     const normalized = normalizePanelItemOrder(order);
-    return [
-        ...normalized.filter(id =>
-            id !== 'system-menu' && id !== 'clock'),
-        'system-menu',
-        'clock',
-    ];
+    const xpOrder = normalized.filter(id =>
+        id !== 'show-desktop' &&
+        id !== 'system-menu' &&
+        id !== 'clock');
+    const startButtonIndex = xpOrder.indexOf('start-button');
+    xpOrder.splice(startButtonIndex + 1, 0, 'show-desktop');
+    xpOrder.push('system-menu', 'clock');
+    return xpOrder;
 }
 
 export function orderPanelItems(items, order) {
