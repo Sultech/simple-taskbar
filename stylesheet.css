@@ -1297,16 +1297,12 @@
 }
 
 .simple-taskbar-application-overflow-menu .popup-menu-content {
-    padding: 8px;
+    padding: 2px 8px;
     border-radius: 8px;
 }
 
 .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
     .popup-menu-content {
-    background: transparent;
-    background-gradient-direction: vertical;
-    background-gradient-start: rgba(42, 42, 47, 0.98);
-    background-gradient-end: rgba(30, 30, 34, 0.98);
     border: 1px solid rgba(45, 45, 50, 0.92);
     box-shadow: none;
     color: #f4f4f4;
@@ -1314,7 +1310,6 @@
 
 .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
     .popup-menu-content {
-    background-color: rgba(233, 233, 238, 0.82);
     border: 1px solid rgba(206, 206, 214, 0.82);
     box-shadow: none;
     color: #242427;
@@ -1329,39 +1324,7 @@
 .bms-popup-background-dark
     .simple-taskbar-application-overflow-menu
     .popup-menu-content {
-    border: 1px solid rgba(45, 45, 50, 0.52) !important;
-    box-shadow: none !important;
-}
-
-.bms-popup-background-transparent
-    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
-    .popup-menu-content,
-.bms-popup-background-light
-    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
-    .popup-menu-content,
-.bms-popup-background-dark
-    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
-    .popup-menu-content {
-    background: transparent !important;
-    background-gradient-direction: vertical;
-    background-gradient-start: rgba(42, 42, 47, 0.46) !important;
-    background-gradient-end: rgba(30, 30, 34, 0.38) !important;
-}
-
-.bms-popup-background-transparent
-    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
-    .popup-menu-content,
-.bms-popup-background-light
-    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
-    .popup-menu-content,
-.bms-popup-background-dark
-    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
-    .popup-menu-content {
-    background: transparent !important;
-    background-gradient-direction: vertical;
-    background-gradient-start: rgba(249, 250, 253, 0.62) !important;
-    background-gradient-end: rgba(230, 234, 242, 0.54) !important;
-    border: 1px solid rgba(230, 234, 242, 0.54) !important;
+    border: 0 !important;
     box-shadow: none !important;
 }
 

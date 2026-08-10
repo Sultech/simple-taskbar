@@ -17,10 +17,13 @@ import {
     panelIsTop,
     syncMenuArrowSide,
 } from './panelPosition.js';
+import {panelTransparencyOpacity} from './transparencyUtils.js';
 
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
 const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';
 const POPUP_MARGIN = 32;
+const LIGHT_GRADIENT_START_MAX_OPACITY = 0.62;
+const LIGHT_GRADIENT_END_MAX_OPACITY = 0.54;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
@@ -132,6 +135,12 @@ export class ApplicationOverflowController {
         );
         this._connect(this._settings, 'changed::icon-spacing', () => {
             this._queueSync();
+        });
+        this._connect(this._settings, 'changed::transparency-enabled', () => {
+            this._syncTheme();
+        });
+        this._connect(this._settings, 'changed::transparency-level', () => {
+            this._syncTheme();
         });
         this._connect(this._settings, 'changed::panel-position', () => {
             this.close();
@@ -644,12 +653,34 @@ export class ApplicationOverflowController {
     }
 
     _syncTheme() {
+        const light = Main.panel.has_style_class_name(
+            'simple-taskbar-theme-light'
+        );
         this._menu.actor.remove_style_class_name(LIGHT_MENU_CLASS);
         this._menu.actor.remove_style_class_name(DARK_MENU_CLASS);
         this._menu.actor.add_style_class_name(
-            Main.panel.has_style_class_name('simple-taskbar-theme-light')
-                ? LIGHT_MENU_CLASS
-                : DARK_MENU_CLASS
+            light ? LIGHT_MENU_CLASS : DARK_MENU_CLASS
+        );
+
+        const panelOpacity = panelTransparencyOpacity(this._settings);
+        const gradientStart = light ? '249, 250, 253' : '42, 42, 47';
+        const gradientEnd = light ? '230, 234, 242' : '30, 30, 34';
+        const startOpacity = light
+            ? Math.min(panelOpacity, LIGHT_GRADIENT_START_MAX_OPACITY)
+            : panelOpacity;
+        const endOpacity = light
+            ? Math.min(panelOpacity, LIGHT_GRADIENT_END_MAX_OPACITY)
+            : panelOpacity;
+        const radiusDeclaration = (this._menu.box.get_style() ?? '')
+            .match(/(?:^|;)\s*(border-radius:\s*[^;]+)/)?.[1] ?? '';
+        this._menu.box.set_style(
+            'background: transparent !important; ' +
+            'background-gradient-direction: vertical !important; ' +
+            `background-gradient-start: rgba(${gradientStart}, ` +
+                `${startOpacity.toFixed(2)}) !important; ` +
+            `background-gradient-end: rgba(${gradientEnd}, ` +
+                `${endOpacity.toFixed(2)}) !important; ` +
+            radiusDeclaration
         );
     }
 
