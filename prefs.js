@@ -795,6 +795,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             iconSizeRow.sensitive = !enabled;
             panelHeightRow.sensitive = !enabled;
             appAlignmentRow.sensitive = !enabled;
+            pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
+            combineAppButtonsRow.sensitive = !enabled;
             syncingWindowsXpTheme = false;
         };
         const setWindowsXpTheme = enabled => {
@@ -825,6 +827,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         window._settings.connect('changed::app-alignment', syncWindowsXpTheme);
         window._settings.connect(
             'changed::start-button-position',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::use-pinned-apps-as-launchers',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::combine-app-buttons-mode',
             syncWindowsXpTheme
         );
         syncWindowsXpTheme();

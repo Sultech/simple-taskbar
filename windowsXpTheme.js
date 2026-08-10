@@ -4,9 +4,11 @@
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
 export const WINDOWS_XP_ALIGNMENT = 'left';
+export const WINDOWS_XP_COMBINE_MODE = 'never';
 export const DEFAULT_TASKBAR_PANEL_HEIGHT = 49;
 export const DEFAULT_TASKBAR_ICON_SIZE = 32;
 export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
+export const DEFAULT_TASKBAR_COMBINE_MODE = 'always';
 
 function setInteger(settings, key, value) {
     if (settings.get_int(key) !== value)
@@ -18,6 +20,11 @@ function setString(settings, key, value) {
         settings.set_string(key, value);
 }
 
+function setBoolean(settings, key, value) {
+    if (settings.get_boolean(key) !== value)
+        settings.set_boolean(key, value);
+}
+
 export function applyWindowsXpThemeSettings(settings) {
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
     setInteger(settings, 'icon-size', WINDOWS_XP_ICON_SIZE);
@@ -26,6 +33,12 @@ export function applyWindowsXpThemeSettings(settings) {
         settings,
         'start-button-position',
         WINDOWS_XP_ALIGNMENT
+    );
+    setBoolean(settings, 'use-pinned-apps-as-launchers', true);
+    setString(
+        settings,
+        'combine-app-buttons-mode',
+        WINDOWS_XP_COMBINE_MODE
     );
 }
 
@@ -38,11 +51,16 @@ export function applyDefaultTaskbarSettings(settings) {
         'start-button-position',
         DEFAULT_TASKBAR_ALIGNMENT
     );
+    setBoolean(settings, 'use-pinned-apps-as-launchers', false);
+    setString(
+        settings,
+        'combine-app-buttons-mode',
+        DEFAULT_TASKBAR_COMBINE_MODE
+    );
 }
 
 export function setWindowsXpThemeEnabled(settings, enabled) {
-    if (settings.get_boolean('windows-xp-theme-enabled') !== enabled)
-        settings.set_boolean('windows-xp-theme-enabled', enabled);
+    setBoolean(settings, 'windows-xp-theme-enabled', enabled);
     if (enabled) {
         if (settings.get_boolean('default-gnome-panel'))
             settings.set_boolean('default-gnome-panel', false);

@@ -362,7 +362,12 @@ export default class SimpleTaskbarExtension extends Extension {
             () => this._syncWindowsXpTheme(true),
             this
         );
-        for (const key of ['app-alignment', 'start-button-position']) {
+        for (const key of [
+            'app-alignment',
+            'start-button-position',
+            'use-pinned-apps-as-launchers',
+            'combine-app-buttons-mode',
+        ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 if (this._settings.get_boolean(
                     'windows-xp-theme-enabled'
