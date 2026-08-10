@@ -41,14 +41,26 @@ export function normalizePanelItemOrder(order) {
     return normalized;
 }
 
-export function getWindowsXpPanelItemOrder(order) {
+export function getWindowsXpPanelItemOrder(order, activitiesPosition) {
     const normalized = normalizePanelItemOrder(order);
     const xpOrder = normalized.filter(id =>
         id !== 'show-desktop' &&
         id !== 'system-menu' &&
         id !== 'clock');
+    xpOrder.splice(xpOrder.indexOf('right-box'), 1);
+    xpOrder.splice(xpOrder.indexOf('center-box') + 1, 0, 'right-box');
+    if (activitiesPosition === 'left') {
+        xpOrder.splice(xpOrder.indexOf('activities'), 1);
+        xpOrder.splice(xpOrder.indexOf('start-button') + 1, 0, 'activities');
+    } else if (activitiesPosition === 'right') {
+        xpOrder.splice(xpOrder.indexOf('activities'), 1);
+        xpOrder.splice(xpOrder.indexOf('right-box'), 0, 'activities');
+    }
     const startButtonIndex = xpOrder.indexOf('start-button');
-    xpOrder.splice(startButtonIndex + 1, 0, 'show-desktop');
+    const showDesktopIndex = activitiesPosition === 'left'
+        ? xpOrder.indexOf('activities') + 1
+        : startButtonIndex + 1;
+    xpOrder.splice(showDesktopIndex, 0, 'show-desktop');
     xpOrder.push('system-menu', 'clock');
     return xpOrder;
 }

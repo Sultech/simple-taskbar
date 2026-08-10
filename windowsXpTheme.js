@@ -50,6 +50,7 @@ export function applyWindowsXpThemeAppearance(settings) {
 
 export function applyWindowsXpThemeSettings(settings) {
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
+    setInteger(settings, 'panel-button-padding', 0);
     setInteger(settings, 'icon-size', WINDOWS_XP_ICON_SIZE);
     setInteger(settings, 'icon-spacing', WINDOWS_XP_ICON_SPACING);
     setString(settings, 'app-alignment', WINDOWS_XP_ALIGNMENT);
@@ -61,10 +62,15 @@ export function applyWindowsXpThemeSettings(settings) {
         WINDOWS_XP_SYSTEM_MENU_POSITION
     );
     setString(settings, 'show-desktop-button-position', 'left');
+    if (settings.get_string('activities-button-position') === 'center')
+        setString(settings, 'activities-button-position', 'left');
     setStringArray(
         settings,
         'panel-item-order',
-        getWindowsXpPanelItemOrder(settings.get_strv('panel-item-order'))
+        getWindowsXpPanelItemOrder(
+            settings.get_strv('panel-item-order'),
+            settings.get_string('activities-button-position')
+        )
     );
     setString(
         settings,
@@ -73,7 +79,11 @@ export function applyWindowsXpThemeSettings(settings) {
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', true);
     setBoolean(settings, 'windows-start-menu-enabled', true);
-    setBoolean(settings, 'show-desktop-button-visible', true);
+    setBoolean(settings, 'start-menu-super-key', true);
+    setBoolean(settings, 'custom-indicator-colors-enabled', false);
+    setBoolean(settings, 'custom-panel-color-enabled', false);
+    setBoolean(settings, 'panel-border-enabled', false);
+    setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
     setString(
@@ -85,9 +95,11 @@ export function applyWindowsXpThemeSettings(settings) {
 
 export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'panel-height', DEFAULT_TASKBAR_PANEL_HEIGHT);
+    setInteger(settings, 'panel-button-padding', -1);
     setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);
     setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
     setString(settings, 'app-alignment', DEFAULT_TASKBAR_ALIGNMENT);
+    setString(settings, 'activities-button-position', 'left');
     setString(settings, 'panel-position', 'bottom');
     setString(settings, 'clock-position', 'right');
     setString(settings, 'system-menu-position', 'right');
@@ -119,6 +131,7 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
     if (enabled) {
         setBoolean(settings, 'default-gnome-panel', false);
         setBoolean(settings, 'activities-button-visible', false);
+        setBoolean(settings, 'tray-overflow-enabled', true);
         applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     } else {

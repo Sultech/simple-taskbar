@@ -345,15 +345,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         panelModeGroup.add(windowsXpThemeSwitch);
 
-        this._addSpinRow(panelModeGroup, window._settings, {
-            key: 'panel-button-padding',
-            title: _('Panel Button Padding'),
-            subtitle: _(
-                'Horizontal space around panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
-            ),
-            lower: -1,
-            upper: 20,
-        });
+        const panelButtonPaddingRow = this._addSpinRow(
+            panelModeGroup,
+            window._settings,
+            {
+                key: 'panel-button-padding',
+                title: _('Panel Button Padding'),
+                subtitle: _(
+                    'Horizontal space around panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
+                ),
+                lower: -1,
+                upper: 20,
+            }
+        );
 
         const appearanceGroup = new Adw.PreferencesGroup({
             title: _('Application Icons'),
@@ -430,16 +434,29 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 title: _('Unfocused Indicator Color'),
             }
         );
-        const syncIndicatorColorVisibility = () => {
+        const syncIndicatorControls = () => {
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             const enabled = customIndicatorColorsSwitch.active;
+            indicatorStyleRow.sensitive = !windowsXpThemeEnabled;
+            customIndicatorColorsSwitch.sensitive = !windowsXpThemeEnabled;
             focusedIndicatorColorRow.visible = enabled;
             unfocusedIndicatorColorRow.visible = enabled;
+            focusedIndicatorColorRow.sensitive = !windowsXpThemeEnabled &&
+                enabled;
+            unfocusedIndicatorColorRow.sensitive =
+                !windowsXpThemeEnabled && enabled;
         };
         customIndicatorColorsSwitch.connect(
             'notify::active',
-            syncIndicatorColorVisibility
+            syncIndicatorControls
         );
-        syncIndicatorColorVisibility();
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncIndicatorControls
+        );
+        syncIndicatorControls();
         const appAlignmentRow = this._addComboRow(
             appearanceGroup,
             window._settings,
@@ -806,6 +823,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             );
             iconSizeRow.sensitive = !enabled;
             iconSpacingRow.sensitive = !enabled;
+            panelButtonPaddingRow.sensitive = !enabled;
             panelHeightRow.sensitive = !enabled;
             panelPositionRow.sensitive = !enabled;
             defaultGnomePanelSwitch.sensitive = !enabled;
@@ -843,6 +861,22 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         window._settings.connect('changed::icon-spacing', syncWindowsXpTheme);
         window._settings.connect('changed::panel-height', syncWindowsXpTheme);
         window._settings.connect('changed::panel-position', syncWindowsXpTheme);
+        window._settings.connect(
+            'changed::panel-button-padding',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::custom-indicator-colors-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::custom-panel-color-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::activities-button-position',
+            syncWindowsXpTheme
+        );
         window._settings.connect('changed::app-alignment', syncWindowsXpTheme);
         window._settings.connect(
             'changed::start-button-position',
@@ -1010,12 +1044,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const windowsXpThemeEnabled = window._settings.get_boolean(
                 'windows-xp-theme-enabled'
             );
-            customPanelColorSwitch.sensitive = !blocked;
+            customPanelColorSwitch.sensitive = !blocked &&
+                !windowsXpThemeEnabled;
             customPanelColorSwitch.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : customPanelColorSubtitle;
             customPanelColorRow.visible = customPanelColorSwitch.active;
             customPanelColorRow.sensitive = !blocked &&
+                !windowsXpThemeEnabled &&
                 customPanelColorSwitch.active;
             customPanelTextColorRow.visible = customPanelColorSwitch.active;
             customPanelTextColorRow.sensitive = !blocked &&
@@ -1090,6 +1126,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        const syncPanelBorderControls = () => {
+            const enabled = !window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            darkPanelBorderSwitch.sensitive = enabled;
+            lightPanelBorderSwitch.sensitive = enabled;
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncPanelBorderControls
+        );
+        syncPanelBorderControls();
 
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Taskbar Behavior'),
@@ -1363,13 +1411,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         updateStartPositionRow();
 
-        this._addSpinRow(startButtonGroup, window._settings, {
-            key: 'start-button-padding',
-            title: _('Start Button Padding'),
-            subtitle: _('Horizontal space around the Start icon in pixels'),
-            lower: 0,
-            upper: 20,
-        });
+        const startButtonPaddingRow = this._addSpinRow(
+            startButtonGroup,
+            window._settings,
+            {
+                key: 'start-button-padding',
+                title: _('Start Button Padding'),
+                subtitle: _('Horizontal space around the Start icon in pixels'),
+                lower: 0,
+                upper: 20,
+            }
+        );
 
         const customIconRow = new Adw.ActionRow({
             title: _('Custom Start Button Icon'),
@@ -1416,6 +1468,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             updateCustomIconRow
         );
         updateCustomIconRow();
+
+        const syncXpStartButtonControls = () => {
+            const enabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            startButtonPaddingRow.sensitive = !enabled;
+            customIconRow.sensitive = !enabled;
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncXpStartButtonControls
+        );
+        syncXpStartButtonControls();
 
         const windowsStartMenuSwitch = new Adw.SwitchRow({
             title: _('Eleven-style Start Menu'),
@@ -1754,7 +1819,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const updateSuperTabRow = () => {
-            superKeyRow.sensitive = windowsStartMenuSwitch.active;
+            const windowsXpTheme = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            superKeyRow.sensitive = windowsStartMenuSwitch.active &&
+                !windowsXpTheme;
             superTabRow.sensitive = windowsStartMenuSwitch.active &&
                 !superKeyRow.active;
         };
@@ -1765,6 +1834,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         windowsStartMenuSwitch.connect(
             'notify::active',
+            updateSuperTabRow
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updateSuperTabRow
         );
         updateSuperTabRow();
@@ -2042,6 +2115,20 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             );
             panelOrderRows.set(id, controls);
         }
+        const activitiesPanelPositions = panelPositions.filter(
+            position => position.value !== 'center'
+        );
+        const syncActivitiesPositionChoices = () => {
+            const choices = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            ) ? activitiesPanelPositions : panelPositions;
+            panelOrderRows.get('activities').setChoices(choices);
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncActivitiesPositionChoices
+        );
+        syncActivitiesPositionChoices();
 
         const getPanelItemPosition = id => {
             const definition = panelOrderDefinitions.get(id);
@@ -2058,7 +2145,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const isPanelItemLocked = id => {
             if (window._settings.get_boolean('windows-xp-theme-enabled')) {
                 return [
+                    'right-box',
                     'start-button',
+                    'activities',
                     'applications',
                     'show-desktop',
                     'system-menu',
@@ -2173,7 +2262,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 'windows-xp-theme-enabled'
             );
             windowsStartMenuSwitch.sensitive = !windowsXpTheme;
-            showDesktopSwitch.sensitive = !windowsXpTheme;
             panelOrderRows.get('start-button').positionDropDown.sensitive =
                 !defaultPanel && !windowsXpTheme &&
                 !followAppAlignmentSwitch.active;
@@ -2469,18 +2557,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         choices,
         fixedPosition = null,
     }) {
-        const model = new Gtk.StringList();
-        for (const choice of choices)
-            model.append(choice.label);
-
+        let currentChoices = choices;
+        const createModel = availableChoices => {
+            const model = new Gtk.StringList();
+            for (const choice of availableChoices)
+                model.append(choice.label);
+            return model;
+        };
         const positionDropDown = new Gtk.DropDown({
-            model,
+            model: createModel(currentChoices),
             tooltip_text: _('Panel Position'),
             valign: Gtk.Align.CENTER,
         });
         let syncingPosition = false;
         const syncPosition = value => {
-            const index = choices.findIndex(
+            const index = currentChoices.findIndex(
                 choice => choice.value === value
             );
             if (index < 0 || positionDropDown.selected === index)
@@ -2488,6 +2579,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
             syncingPosition = true;
             positionDropDown.selected = index;
+            syncingPosition = false;
+        };
+        const setChoices = availableChoices => {
+            currentChoices = availableChoices;
+            syncingPosition = true;
+            positionDropDown.set_model(createModel(currentChoices));
+            const index = currentChoices.findIndex(
+                choice => choice.value === settings.get_string(key)
+            );
+            positionDropDown.selected = index < 0 ? 0 : index;
             syncingPosition = false;
         };
         if (fixedPosition) {
@@ -2499,7 +2600,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 if (syncingPosition)
                     return;
 
-                const choice = choices[widget.selected];
+                const choice = currentChoices[widget.selected];
                 if (choice)
                     settings.set_string(key, choice.value);
             });
@@ -2538,6 +2639,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             positionDropDown,
             upButton,
             downButton,
+            setChoices,
             syncPosition,
             group: null,
         };

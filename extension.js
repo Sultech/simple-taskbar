@@ -398,15 +398,22 @@ export default class SimpleTaskbarExtension extends Extension {
             this
         );
         for (const key of [
+            'panel-button-padding',
             'app-alignment',
             'start-button-position',
             'use-pinned-apps-as-launchers',
             'combine-app-buttons-mode',
             'application-overflow-enabled',
             'hide-app-labels',
+            'custom-indicator-colors-enabled',
+            'custom-panel-color-enabled',
+            'activities-button-position',
+            'panel-border-enabled',
+            'panel-border-light-enabled',
             'panel-position',
             'clock-position',
             'system-menu-position',
+            'start-menu-super-key',
             'show-desktop-button-position',
             'show-desktop-button-visible',
             'windows-start-menu-enabled',
