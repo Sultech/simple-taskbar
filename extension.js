@@ -178,7 +178,7 @@ export default class SimpleTaskbarExtension extends Extension {
         });
         this._multiMonitorController.enable();
         this._hotEdgeController = new HotEdgeController(this._settings, {
-            isBlocked: () => this._panelAutoHideIsBlocked(),
+            isBlocked: () => this._hotEdgeIsBlocked(),
         });
         this._hotEdgeController.enable();
         this._gridAltTabController =
@@ -366,13 +366,21 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _panelAutoHideIsBlocked() {
+        return this._panelInteractionIsBlocked(true);
+    }
+
+    _hotEdgeIsBlocked() {
+        return this._panelInteractionIsBlocked(false);
+    }
+
+    _panelInteractionIsBlocked(includeWindowPreviews) {
         return Boolean(
             this._panelInteractionController.menuIsOpen ||
             this._startButtonController.menuIsOpen ||
             this._folderMenuController.menuIsOpen ||
             this._trayOverflowController.menuIsOpen ||
             this._applicationOverflowController.menuIsOpen ||
-            this._windowPreviews.isOpen ||
+            (includeWindowPreviews && this._windowPreviews.isOpen) ||
             this._taskbarController.isDragging ||
             this._taskbarController.hasOpenMenu() ||
             Main.panel.menuManager.activeMenu?.isOpen
