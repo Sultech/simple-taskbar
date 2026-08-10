@@ -1528,6 +1528,11 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-button {
+    padding: 0 8px;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
     .simple-taskbar-app-button-content {
     spacing: 4px;
 }

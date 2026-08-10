@@ -29,6 +29,9 @@ const APP_LABEL_SPACING = 8;
 const APP_CONTENT_VERTICAL_RESERVE = 14;
 const WINDOWS_XP_BUTTON_Y = 3;
 const WINDOWS_XP_BUTTON_BORDER_WIDTH = 2;
+const WINDOWS_XP_TASKBUTTON_WIDTH = 160;
+const WINDOWS_XP_TASKBUTTON_HORIZONTAL_PADDING = 8;
+const WINDOWS_XP_TASKBUTTON_ICON_SPACING = 4;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -1529,7 +1532,7 @@ export class TaskbarController {
         const label = new St.Label({
             style_class: 'simple-taskbar-app-label',
             text: window?.get_title() || app.get_name(),
-            width: this._appLabelWidth,
+            width: this._labelWidthForButton(window),
             y_align: Clutter.ActorAlign.CENTER,
             visible: Boolean(window) && this._showAppLabels(),
         });
@@ -1839,7 +1842,9 @@ export class TaskbarController {
         );
         item._taskbarGlassBorder.set_position(0, glassY);
         item._taskbarGlassBorder.set_size(glassWidth, glassHeight);
-        item._taskbarLabel.set_width(this._appLabelWidth);
+        item._taskbarLabel.set_width(
+            this._labelWidthForButton(item._taskbarWindow)
+        );
         this._updateIndicatorGeometry(item, false, glassWidth);
     }
 
@@ -1988,12 +1993,27 @@ export class TaskbarController {
         showLabels = this._showAppLabels(),
         labelWidth = this._appLabelWidth
     ) {
+        if (this._settings.get_boolean('windows-xp-theme-enabled') &&
+            window && showLabels)
+            return WINDOWS_XP_TASKBUTTON_WIDTH;
+
         const minimumIconWidth = this._iconSize % 2 === 0 ? 22 : 21;
         const iconWidth =
             Math.max(this._iconSize, minimumIconWidth) + 8;
         return window && showLabels
             ? iconWidth + APP_LABEL_SPACING + labelWidth
             : iconWidth;
+    }
+
+    _labelWidthForButton(window) {
+        if (this._settings.get_boolean('windows-xp-theme-enabled') &&
+            window) {
+            return WINDOWS_XP_TASKBUTTON_WIDTH - this._iconSize -
+                WINDOWS_XP_TASKBUTTON_ICON_SPACING -
+                WINDOWS_XP_TASKBUTTON_HORIZONTAL_PADDING * 2;
+        }
+
+        return this._appLabelWidth;
     }
 
     _buttonContentHeight() {
