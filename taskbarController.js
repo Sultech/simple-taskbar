@@ -27,6 +27,8 @@ const APP_LABEL_WIDTH = 140;
 const APP_LABEL_MIN_WIDTH = 40;
 const APP_LABEL_SPACING = 8;
 const APP_CONTENT_VERTICAL_RESERVE = 14;
+const WINDOWS_XP_BUTTON_Y = 3;
+const WINDOWS_XP_BUTTON_BORDER_WIDTH = 2;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -1483,7 +1485,18 @@ export class TaskbarController {
             width: glassWidth,
             height: glassHeight,
         });
+        const glassTexture = new St.Widget({
+            style_class: 'simple-taskbar-app-glass-texture',
+            x: glassInset,
+            y: glassY + glassInset,
+            width: glassContentWidth,
+            height: glassContentHeight,
+        });
+        glassTexture.set_style(
+            `background-size: ${glassContentWidth}px ${glassContentHeight}px;`
+        );
         glassHost.add_child(glass);
+        glassHost.add_child(glassTexture);
         glassHost.add_child(glassBorder);
         const layout = new St.Widget({
             layout_manager: new Clutter.BoxLayout({
@@ -1569,6 +1582,7 @@ export class TaskbarController {
         item._taskbarVisual = visual;
         item._taskbarGlassHost = glassHost;
         item._taskbarGlass = glass;
+        item._taskbarGlassTexture = glassTexture;
         item._taskbarGlassBorder = glassBorder;
         item._taskbarIndicator = indicator;
         item._taskbarIndicatorPrimary = indicatorPrimary;
@@ -1812,6 +1826,17 @@ export class TaskbarController {
         const glassContentHeight = glassHeight - glassInset * 2;
         item._taskbarGlass.set_position(glassInset, glassY + glassInset);
         item._taskbarGlass.set_size(glassContentWidth, glassContentHeight);
+        item._taskbarGlassTexture.set_position(
+            glassInset,
+            glassY + glassInset
+        );
+        item._taskbarGlassTexture.set_size(
+            glassContentWidth,
+            glassContentHeight
+        );
+        item._taskbarGlassTexture.set_style(
+            `background-size: ${glassContentWidth}px ${glassContentHeight}px;`
+        );
         item._taskbarGlassBorder.set_position(0, glassY);
         item._taskbarGlassBorder.set_size(glassWidth, glassHeight);
         item._taskbarLabel.set_width(this._appLabelWidth);
@@ -1832,11 +1857,15 @@ export class TaskbarController {
     }
 
     _glassY() {
-        return this._settings.get_boolean('windows-xp-theme-enabled') ? 3 : 4;
+        return this._settings.get_boolean('windows-xp-theme-enabled')
+            ? WINDOWS_XP_BUTTON_Y
+            : 4;
     }
 
     _glassInset() {
-        return this._settings.get_boolean('windows-xp-theme-enabled') ? 2 : 0;
+        return this._settings.get_boolean('windows-xp-theme-enabled')
+            ? WINDOWS_XP_BUTTON_BORDER_WIDTH
+            : 0;
     }
 
     _updateIndicatorGeometry(

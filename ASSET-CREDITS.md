@@ -65,7 +65,9 @@ to reproduce the Windows XP visual style.
 
 ## Windows XP Luna taskband button assets
 
-The `taskband_button_border.png`, `taskband_button_hover_border.png`,
+The `taskband_button_body.png`, `taskband_button_hover_body.png`,
+`taskband_button_press_body.png`, `taskband_button_press_hover_body.png`,
+`taskband_button_border.png`, `taskband_button_hover_border.png`,
 `taskband_button_press_border.png`, and
 `taskband_button_press_hover_border.png` files are copied unchanged from the
 Luna Blue resources in the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc)

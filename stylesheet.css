@@ -1545,7 +1545,8 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
     .simple-taskbar-app-glass,
-    .simple-taskbar-app-glass-border {
+    .simple-taskbar-app-glass-border,
+    .simple-taskbar-app-glass-texture {
     opacity: 0;
     border-radius: 0;
     border-style: none;
@@ -1564,6 +1565,14 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-item.running .simple-taskbar-app-glass-texture {
+    opacity: 1;
+    background-image: url('icons/taskbar/xp/taskband_button_body.png');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
     .simple-taskbar-app-item.running .simple-taskbar-app-glass-border {
     opacity: 1;
     border-style: solid;
@@ -1574,8 +1583,14 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
     .simple-taskbar-app-item.running:hover .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
     background-gradient-start: rgba(145, 201, 255, 1);
     background-gradient-end: rgba(49, 132, 255, 1);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-item.running:hover .simple-taskbar-app-glass-texture {
+    background-image: url('icons/taskbar/xp/taskband_button_hover_body.png');
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
@@ -1585,8 +1600,14 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
     .simple-taskbar-app-item.running.focused .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
     background-gradient-start: rgba(22, 76, 168, 1);
     background-gradient-end: rgba(42, 93, 182, 1);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-item.running.focused .simple-taskbar-app-glass-texture {
+    background-image: url('icons/taskbar/xp/taskband_button_press_body.png');
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
@@ -1596,8 +1617,14 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
     .simple-taskbar-app-item.running.focused:hover .simple-taskbar-app-glass {
+    background-gradient-direction: vertical;
     background-gradient-start: rgba(51, 106, 222, 1);
     background-gradient-end: rgba(54, 116, 232, 1);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-app-item.running.focused:hover .simple-taskbar-app-glass-texture {
+    background-image: url('icons/taskbar/xp/taskband_button_press_hover_body.png');
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
