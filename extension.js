@@ -44,6 +44,7 @@ import {
 } from './panelSizing.js';
 import {
     applyDefaultTaskbarSettings,
+    applyWindowsXpThemeAppearance,
     applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SPACING,
     WINDOWS_XP_ICON_SIZE,
@@ -334,6 +335,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 false
             );
         }
+        applyWindowsXpThemeAppearance(this._settings);
         applyWindowsXpThemeSettings(this._settings);
     }
 

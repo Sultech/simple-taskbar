@@ -43,6 +43,11 @@ function setStringArray(settings, key, value) {
     }
 }
 
+export function applyWindowsXpThemeAppearance(settings) {
+    setBoolean(settings, 'panel-theme-follow-system', false);
+    setString(settings, 'panel-theme', 'dark');
+}
+
 export function applyWindowsXpThemeSettings(settings) {
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
     setInteger(settings, 'icon-size', WINDOWS_XP_ICON_SIZE);
@@ -114,6 +119,7 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
     if (enabled) {
         setBoolean(settings, 'default-gnome-panel', false);
         setBoolean(settings, 'activities-button-visible', false);
+        applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     } else {
         setBoolean(settings, 'activities-button-visible', true);

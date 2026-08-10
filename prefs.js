@@ -1007,6 +1007,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         const updateCustomPanelColorControls = () => {
             const blocked = blurMyShellPanelBlurEnabled();
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             customPanelColorSwitch.sensitive = !blocked;
             customPanelColorSwitch.subtitle = blocked
                 ? panelBlurTransparencySubtitle
@@ -1016,12 +1019,33 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 customPanelColorSwitch.active;
             customPanelTextColorRow.visible = customPanelColorSwitch.active;
             customPanelTextColorRow.sensitive = !blocked &&
+                !windowsXpThemeEnabled &&
                 customPanelColorSwitch.active;
             customPanelTextColorRow.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : customPanelTextColorSubtitle;
         };
         syncCustomPanelColorControls = updateCustomPanelColorControls;
+        const syncPanelThemeControls = () => {
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            followSystemThemeSwitch.sensitive = !windowsXpThemeEnabled;
+            panelThemeRow.sensitive = !windowsXpThemeEnabled &&
+                !followSystemThemeSwitch.active;
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            () => {
+                syncPanelThemeControls();
+                syncCustomPanelColorControls();
+            }
+        );
+        window._settings.connect(
+            'changed::panel-theme-follow-system',
+            syncPanelThemeControls
+        );
+        syncPanelThemeControls();
         customPanelColorSwitch.connect(
             'notify::active',
             widget => {
