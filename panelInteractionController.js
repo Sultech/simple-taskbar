@@ -172,7 +172,10 @@ export class PanelInteractionController {
             eventType !== Clutter.EventType.SCROLL)
             return Clutter.EVENT_PROPAGATE;
 
-        if (!this._isFreePanelTarget(target))
+        const scrollOverOverflowApp = target &&
+            this._settings.get_boolean('application-overflow-enabled') &&
+            this._taskbarController.hasTarget(target);
+        if (!this._isFreePanelTarget(target) && !scrollOverOverflowApp)
             return Clutter.EVENT_PROPAGATE;
 
         const [previousDirection, nextDirection] =
