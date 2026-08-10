@@ -24,6 +24,9 @@ import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
 import {
+    ApplicationOverflowController,
+} from './applicationOverflowController.js';
+import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
     constrainTaskbarWidth,
@@ -342,20 +345,30 @@ class SecondaryTaskbarPanel {
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
                 this._autoHideController?.setMenuOpen(open);
+                if (open)
+                    this._applicationOverflowController.close();
             },
         });
         this._folderMenuController = new FolderMenuController(settings);
 
-        this._taskbarBin = new TaskbarViewport({
+        this._taskbarViewport = new TaskbarViewport({
             style_class: 'simple-taskbar-bin',
             hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
             enable_mouse_scrolling: true,
             clip_to_allocation: true,
             x_expand: false,
-            visible: !settings.get_boolean('default-gnome-panel'),
         });
-        this._taskbarBin.add_child(this._taskbarController.actor);
+        this._taskbarViewport.add_child(this._taskbarController.actor);
+        this._applicationOverflowController =
+            new ApplicationOverflowController({
+                settings,
+                taskbarController: this._taskbarController,
+                viewport: this._taskbarViewport,
+            });
+        this._taskbarBin = this._applicationOverflowController.actor;
+        this._taskbarBin.visible =
+            !settings.get_boolean('default-gnome-panel');
 
         this.actor = new SecondaryPanelActor();
         this._leftBox = this.actor.leftBox;
@@ -402,11 +415,13 @@ class SecondaryTaskbarPanel {
         });
         this._position();
         this._startButtonController.enable();
+        this._applicationOverflowController.enable();
         this._taskbarController.enable();
         this._interactionController = new PanelInteractionController({
             settings: this._settings,
             taskbarController: this._taskbarController,
-            taskbarBin: this._taskbarBin,
+            taskbarBin: this._taskbarViewport,
+            taskbarContainer: this._taskbarBin,
             previewController: this._windowPreviews,
             openPreferences: this._openPreferencesCallback,
             panelActor: this.actor,
@@ -442,6 +457,7 @@ class SecondaryTaskbarPanel {
 
     closePanelMenu() {
         this._menuManager?.activeMenu?.close();
+        this._applicationOverflowController.close();
     }
 
     destroy() {
@@ -460,11 +476,15 @@ class SecondaryTaskbarPanel {
         this._startButtonController.destroy();
         this._startButtonController = null;
         this._windowController.destroy();
+        this._applicationOverflowController.destroy();
+        this._applicationOverflowController = null;
         this._taskbarController.destroy();
         this._windowPreviews.destroy();
         this._windowPreviews = null;
         this._taskbarController = null;
         this._windowController = null;
+        this._taskbarViewport.destroy();
+        this._taskbarViewport = null;
         if (this._volumeMixerController)
             this._volumeMixerController.destroy();
         this._volumeMixerController = null;
@@ -710,6 +730,7 @@ class SecondaryTaskbarPanel {
             this._interactionController?.menuIsOpen ||
             this._startButtonController?.menuIsOpen ||
             this._folderMenuController?.menuIsOpen ||
+            this._applicationOverflowController.menuIsOpen ||
             this._windowPreviews?.isOpen ||
             this._taskbarController?.isDragging ||
             this._taskbarController?.hasOpenMenu() ||

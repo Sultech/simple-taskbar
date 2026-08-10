@@ -466,6 +466,41 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             }
         );
 
+        const applicationOverflowSwitch = new Adw.SwitchRow({
+            title: _('Application Overflow'),
+            subtitle: _(
+                'Show application buttons that do not fit in an overflow popup instead of scrolling the taskbar'
+            ),
+            active: window._settings.get_boolean(
+                'application-overflow-enabled'
+            ),
+        });
+        advancedAppBehaviorGroup.add(applicationOverflowSwitch);
+        window._settings.bind(
+            'application-overflow-enabled',
+            applicationOverflowSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+
+        const applicationOverflowStyleRow = this._addComboRow(
+            advancedAppBehaviorGroup,
+            window._settings,
+            {
+                key: 'application-overflow-style',
+                title: _('Overflow Style'),
+                choices: [
+                    {value: 'taskbar', label: _('Taskbar Flyout')},
+                    {value: 'list', label: _('Application List')},
+                ],
+            }
+        );
+        applicationOverflowStyleRow.sensitive =
+            applicationOverflowSwitch.active;
+        applicationOverflowSwitch.connect('notify::active', widget => {
+            applicationOverflowStyleRow.sensitive = widget.active;
+        });
+
         const hideAppLabelsSwitch = new Adw.SwitchRow({
             title: _('Hide App Labels'),
             subtitle: _('Show only icons on separate window buttons'),

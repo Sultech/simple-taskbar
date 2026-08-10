@@ -207,6 +207,18 @@
       <default>'always'</default>
       <summary>Choose when windows from the same application are combined</summary>
     </key>
+    <key name="application-overflow-enabled" type="b">
+      <default>false</default>
+      <summary>Show application buttons that do not fit in an overflow popup</summary>
+    </key>
+    <key name="application-overflow-style" type="s">
+      <choices>
+        <choice value="taskbar"/>
+        <choice value="list"/>
+      </choices>
+      <default>'taskbar'</default>
+      <summary>Application overflow popup style</summary>
+    </key>
     <key name="hide-app-labels" type="b">
       <default>false</default>
       <summary>Hide window title labels when application buttons are not combined</summary>

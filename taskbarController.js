@@ -94,6 +94,7 @@ export class TaskbarController {
         this._signals = [];
         this._appSignals = new Map();
         this._appButtons = new Map();
+        this._auxiliaryItems = new Set();
         this._sessionOrder = [];
         this._dragging = false;
         this._dragEnabled = null;
@@ -141,11 +142,32 @@ export class TaskbarController {
     }
 
     getItems() {
-        return this._appButtons.values();
+        return [...this._appButtons.values(), ...this._auxiliaryItems];
+    }
+
+    getOrderedItems() {
+        const items = new Set(this._appButtons.values());
+        return this.actor.get_children().filter(item => items.has(item));
+    }
+
+    getPinnedItemCount() {
+        return this._pinnedApps().length;
+    }
+
+    registerAuxiliaryItem(item) {
+        this._auxiliaryItems.add(item);
+    }
+
+    removeAuxiliaryItem(item) {
+        if (!this._auxiliaryItems.delete(item))
+            return;
+
+        this._windowPreviews.removeItem(item);
+        this._destroyAppMenu(item._taskbarButton);
     }
 
     hasOpenMenu() {
-        return [...this._appButtons.values()].some(item =>
+        return this.getItems().some(item =>
             item._taskbarButton?._taskbarMenu?.isOpen
         );
     }
@@ -302,6 +324,10 @@ export class TaskbarController {
             app.disconnect(id);
         this._appSignals.clear();
 
+        for (const item of [...this._auxiliaryItems])
+            this.removeAuxiliaryItem(item);
+        this._auxiliaryItems.clear();
+
         for (const item of this._appButtons.values()) {
             this._windowPreviews?.removeItem(item);
             this._destroyAppMenu(item._taskbarButton);
@@ -323,6 +349,7 @@ export class TaskbarController {
         this._onWindowClicked = null;
         this._openNewWindow = null;
         this._sessionOrder = null;
+        this._auxiliaryItems = null;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = null;
         this._shownInitially = false;
@@ -377,6 +404,82 @@ export class TaskbarController {
         for (const item of this._appButtons.values())
             this._updateGlassGeometry(item);
         this.actor.queue_relayout();
+    }
+
+    activateItem(item, interactionItem = item) {
+        const app = item._taskbarApp;
+        this._windowPreviews.hideTooltip();
+        if (item._taskbarIsLauncher) {
+            this._windowPreviews.hide();
+            this._animatePinnedLaunch(item);
+            this._openNewWindow(app);
+            return false;
+        }
+
+        const targetWindow = item._taskbarWindow;
+        if (!targetWindow && this._favorites.isFavorite(app.get_id()) &&
+            this._interestingWindows(app).length === 0) {
+            this._animatePinnedLaunch(item);
+        }
+        if (targetWindow) {
+            this._windowPreviews.hide();
+            this._onWindowClicked(targetWindow);
+            return false;
+        }
+
+        const keepOpen = this._interestingWindows(app).length > 1 &&
+            !this._settings.get_boolean('multi-window-click-spread');
+        this._onAppClicked(interactionItem, app);
+        return keepOpen;
+    }
+
+    handleItemMiddleClick(item) {
+        const app = item._taskbarApp;
+        this._windowPreviews.hideTooltip();
+        this._windowPreviews.hide();
+        if (this._settings.get_boolean('middle-click-close-apps')) {
+            app.request_quit();
+        } else {
+            if (this._favorites.isFavorite(app.get_id()))
+                this._animatePinnedLaunch(item);
+            this._openNewWindow(app);
+        }
+    }
+
+    popupItemMenu(item, button = item._taskbarButton) {
+        this._popupAppMenu(button, item._taskbarApp, item);
+    }
+
+    handleItemHover(item, hovering, styleItem = item, retainForPreview = true) {
+        if (this._dragging)
+            return;
+
+        if (hovering) {
+            styleItem.add_style_pseudo_class('hover');
+            const windowCount = item._taskbarIsLauncher
+                ? 0
+                : this._windowsForItem(item).length;
+            if (this._windowPreviews.currentItem &&
+                this._windowPreviews.currentItem !== item) {
+                if (windowCount > 0)
+                    this._windowPreviews.scheduleSwitch(item);
+                else
+                    this._windowPreviews.hide(true);
+            } else {
+                this._windowPreviews.schedule(item);
+            }
+            if (windowCount === 0)
+                this._windowPreviews.scheduleTooltip(item);
+            else
+                this._windowPreviews.hideTooltip();
+            return;
+        }
+
+        if (!retainForPreview || this._windowPreviews.hoverItem !== item)
+            styleItem.remove_style_pseudo_class('hover');
+        if (this._windowPreviews.tooltipItem === item)
+            this._windowPreviews.hideTooltip();
+        this._windowPreviews.scheduleClose();
     }
 
     _syncIndicatorStyle() {
@@ -935,7 +1038,7 @@ export class TaskbarController {
         this._windowPreviews?.hide();
         if (suppressAnimations)
             this._shownInitially = false;
-        for (const item of this._appButtons.values())
+        for (const item of this.getItems())
             item._taskbarButton._taskbarMenu?.syncWindowScope();
         this._queueRedisplay();
     }
@@ -1079,6 +1182,9 @@ export class TaskbarController {
     }
 
     _uncombinedEntries(apps, launcherCount = 0) {
+        if (!this._usePinnedAppLaunchers())
+            return this._uncombinedWindowEntries(apps);
+
         const entries = [];
         for (let index = 0; index < apps.length; index++) {
             const app = apps[index];
@@ -1116,6 +1222,58 @@ export class TaskbarController {
             }
         }
         return entries;
+    }
+
+    _uncombinedWindowEntries(apps) {
+        const pinnedEntries = [];
+        const runningEntries = [];
+        for (const app of apps) {
+            const windows = this._interestingWindows(app).sort((a, b) =>
+                a.get_stable_sequence() - b.get_stable_sequence()
+            );
+            if (!this._isPersistentPinned(app)) {
+                for (const window of windows) {
+                    runningEntries.push({
+                        key: `window:${window.get_stable_sequence()}`,
+                        app,
+                        window,
+                        isLauncher: false,
+                    });
+                }
+                continue;
+            }
+
+            if (windows.length === 0) {
+                pinnedEntries.push({
+                    key: app.get_id(),
+                    app,
+                    window: null,
+                    isLauncher: false,
+                });
+                continue;
+            }
+
+            const [firstWindow, ...remainingWindows] = windows;
+            pinnedEntries.push({
+                key: `window:${firstWindow.get_stable_sequence()}`,
+                app,
+                window: firstWindow,
+                isLauncher: false,
+            });
+            for (const window of remainingWindows) {
+                runningEntries.push({
+                    key: `window:${window.get_stable_sequence()}`,
+                    app,
+                    window,
+                    isLauncher: false,
+                });
+            }
+        }
+
+        runningEntries.sort((a, b) =>
+            a.window.get_stable_sequence() - b.window.get_stable_sequence()
+        );
+        return [...pinnedEntries, ...runningEntries];
     }
 
     _combineMode() {
@@ -1379,80 +1537,27 @@ export class TaskbarController {
         }
 
         item.connect('notify::hover', () => {
-            if (this._dragging)
-                return;
-            if (item.hover) {
-                item.add_style_pseudo_class('hover');
-                const windowCount = item._taskbarIsLauncher
-                    ? 0
-                    : this._windowsForItem(item).length;
-                if (this._windowPreviews.currentItem &&
-                    this._windowPreviews.currentItem !== item) {
-                    if (windowCount > 0)
-                        this._windowPreviews.scheduleSwitch(item);
-                    else
-                        this._windowPreviews.hide(true);
-                } else {
-                    this._windowPreviews.schedule(item);
-                }
-                if (windowCount === 0)
-                    this._windowPreviews.scheduleTooltip(item);
-                else
-                    this._windowPreviews.hideTooltip();
-            } else {
-                if (this._windowPreviews.hoverItem !== item)
-                    item.remove_style_pseudo_class('hover');
-                if (this._windowPreviews.tooltipItem === item)
-                    this._windowPreviews.hideTooltip();
-                this._windowPreviews.scheduleClose();
-            }
+            this.handleItemHover(item, item.hover);
         });
 
         this._makeDraggable(item, button, icon, app);
         button.connect('clicked', () => {
-            this._windowPreviews.hideTooltip();
-            if (item._taskbarIsLauncher) {
-                this._windowPreviews.hide();
-                this._animatePinnedLaunch(item);
-                this._openNewWindow(app);
-                return;
-            }
-            const targetWindow = item._taskbarWindow;
-            if (!targetWindow && this._favorites.isFavorite(app.get_id()) &&
-                this._interestingWindows(app).length === 0) {
-                this._animatePinnedLaunch(item);
-            }
-            if (targetWindow) {
-                this._windowPreviews.hide();
-                this._onWindowClicked(targetWindow);
-            } else {
-                this._onAppClicked(item, app);
-            }
+            this.activateItem(item);
         });
         button.connect('button-press-event', (_actor, event) => {
             const mouseButton = event.get_button();
             if (mouseButton === 2) {
-                this._windowPreviews.hideTooltip();
-                this._windowPreviews.hide();
-                if (this._settings.get_boolean('middle-click-close-apps')) {
-                    app.request_quit();
-                } else {
-                    if (this._favorites.isFavorite(app.get_id()))
-                        this._animatePinnedLaunch(item);
-                    this._openNewWindow(app);
-                }
+                this.handleItemMiddleClick(item);
                 return Clutter.EVENT_STOP;
             }
             if (mouseButton === 3) {
-                this._windowPreviews.hideTooltip();
-                this._windowPreviews.hide();
-                this._popupAppMenu(button, app, item);
+                this.popupItemMenu(item, button);
                 return Clutter.EVENT_STOP;
             }
             return Clutter.EVENT_PROPAGATE;
         });
         button.connect('popup-menu', () => {
-            this._popupAppMenu(button, app, item);
+            this.popupItemMenu(item, button);
             return Clutter.EVENT_STOP;
         });
 
@@ -1545,7 +1650,7 @@ export class TaskbarController {
         const enabled = this._settings.get_boolean(
             'nautilus-places-enabled'
         );
-        for (const item of this._appButtons.values()) {
+        for (const item of this.getItems()) {
             item._taskbarButton._taskbarMenu
                 ?.setFileManagerPlacesEnabled(enabled);
         }

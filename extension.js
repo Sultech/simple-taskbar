@@ -12,6 +12,9 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {ExtensionConflictController} from './extensionConflictController.js';
+import {
+    ApplicationOverflowController,
+} from './applicationOverflowController.js';
 import {FolderMenuController} from './folderMenuController.js';
 import {TrayOverflowController} from './trayOverflowController.js';
 import {FavoritesIntegration} from './favoritesIntegration.js';
@@ -110,8 +113,10 @@ export default class SimpleTaskbarExtension extends Extension {
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
                 this._panelController?.setStartMenuOpen(open);
-                if (open)
+                if (open) {
+                    this._applicationOverflowController.close();
                     this._trayOverflowController?.close();
+                }
             },
         });
 
@@ -139,10 +144,12 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelInteractionController = new PanelInteractionController({
             settings: this._settings,
             taskbarController: this._taskbarController,
-            taskbarBin: this._taskbarBin,
+            taskbarBin: this._taskbarViewport,
+            taskbarContainer: this._taskbarBin,
             previewController: this._windowPreviews,
             openPreferences: () => this.openPreferences(),
         });
+        this._applicationOverflowController.enable();
         this._panelController.enable();
         this._trayOverflowController.enable();
         this._panelController.applyLayout();
@@ -212,6 +219,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._trayOverflowController = null;
         this._panelController.destroy();
         this._panelController = null;
+        this._applicationOverflowController.destroy();
+        this._applicationOverflowController = null;
         this._folderMenuController.destroy();
         this._folderMenuController = null;
         this._favoritesIntegration.destroy();
@@ -226,12 +235,13 @@ export default class SimpleTaskbarExtension extends Extension {
         this._windowPreviews = null;
         this._taskbarController = null;
         this._windowController = null;
-        this._taskbarBin.destroy();
+        this._taskbarViewport.destroy();
         this._showDesktopButton.destroy();
         this._overviewIntegration.destroy();
         this._overviewIntegration = null;
 
         this._taskbarBin = null;
+        this._taskbarViewport = null;
         this._showDesktopButton = null;
         this._favorites = null;
         this._tracker = null;
@@ -241,7 +251,7 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _createTaskbarActors() {
-        this._taskbarBin = new TaskbarViewport({
+        this._taskbarViewport = new TaskbarViewport({
             style_class: 'simple-taskbar-bin',
             hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
@@ -249,9 +259,17 @@ export default class SimpleTaskbarExtension extends Extension {
             clip_to_allocation: true,
             x_expand: false,
             y_expand: true,
-            visible: !this._settings.get_boolean('default-gnome-panel'),
         });
-        this._taskbarBin.add_child(this._taskbarController.actor);
+        this._taskbarViewport.add_child(this._taskbarController.actor);
+        this._applicationOverflowController =
+            new ApplicationOverflowController({
+                settings: this._settings,
+                taskbarController: this._taskbarController,
+                viewport: this._taskbarViewport,
+            });
+        this._taskbarBin = this._applicationOverflowController.actor;
+        this._taskbarBin.visible =
+            !this._settings.get_boolean('default-gnome-panel');
 
         this._showDesktopButton = new St.Button({
             style_class: 'panel-button simple-taskbar-show-desktop',
@@ -353,6 +371,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._startButtonController.menuIsOpen ||
             this._folderMenuController.menuIsOpen ||
             this._trayOverflowController.menuIsOpen ||
+            this._applicationOverflowController.menuIsOpen ||
             this._windowPreviews.isOpen ||
             this._taskbarController.isDragging ||
             this._taskbarController.hasOpenMenu() ||

@@ -1,4 +1,5 @@
 extension.js
+applicationOverflowController.js
 prefs.js
 windowsStartMenu.js
 startMenuAppMenu.js

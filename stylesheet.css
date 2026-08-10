@@ -1284,6 +1284,152 @@
     spacing: 20px;
 }
 
+.simple-taskbar-application-overflow-container {
+    spacing: 0;
+}
+
+.simple-taskbar-application-overflow-button {
+    min-width: 0;
+}
+
+.popup-menu.simple-taskbar-application-overflow-menu {
+    min-width: 0;
+}
+
+.simple-taskbar-application-overflow-menu .popup-menu-content {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
+    .popup-menu-content {
+    background: transparent;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.98);
+    background-gradient-end: rgba(30, 30, 34, 0.98);
+    border: 1px solid rgba(45, 45, 50, 0.92);
+    box-shadow: none;
+    color: #f4f4f4;
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
+    .popup-menu-content {
+    background-color: rgba(233, 233, 238, 0.96);
+    border: 1px solid rgba(206, 206, 214, 0.92);
+    box-shadow: none;
+    color: #242427;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-application-overflow-menu
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-application-overflow-menu
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-application-overflow-menu
+    .popup-menu-content {
+    border: 1px solid rgba(45, 45, 50, 0.52) !important;
+    box-shadow: none !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-dark
+    .popup-menu-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(42, 42, 47, 0.46) !important;
+    background-gradient-end: rgba(30, 30, 34, 0.38) !important;
+}
+
+.bms-popup-background-transparent
+    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
+    .popup-menu-content,
+.bms-popup-background-light
+    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
+    .popup-menu-content,
+.bms-popup-background-dark
+    .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-light
+    .popup-menu-content {
+    background: transparent !important;
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(249, 250, 253, 0.92) !important;
+    background-gradient-end: rgba(230, 234, 242, 0.88) !important;
+    border: 1px solid rgba(230, 234, 242, 0.54) !important;
+    box-shadow: none !important;
+}
+
+.simple-taskbar-application-overflow-taskbar {
+    spacing: 0;
+}
+
+.simple-taskbar-application-overflow-taskbar-item {
+    padding: 0;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.simple-taskbar-application-overflow-taskbar-item:hover,
+.simple-taskbar-application-overflow-taskbar-item:focus {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(255, 255, 255, 0.16);
+    background-gradient-end: rgba(255, 255, 255, 0.09);
+}
+
+.simple-taskbar-application-overflow-list {
+    min-width: 240px;
+    spacing: 2px;
+}
+
+.simple-taskbar-application-overflow-list-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.92);
+    text-align: left;
+}
+
+.simple-taskbar-application-overflow-list-item:hover,
+.simple-taskbar-application-overflow-list-item:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.simple-taskbar-application-overflow-list-item.focused {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.simple-taskbar-application-overflow-light
+    .simple-taskbar-application-overflow-list-item {
+    color: #242427;
+}
+
+.simple-taskbar-application-overflow-light
+    .simple-taskbar-application-overflow-list-item:hover,
+.simple-taskbar-application-overflow-light
+    .simple-taskbar-application-overflow-list-item:focus {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.simple-taskbar-application-overflow-light
+    .simple-taskbar-application-overflow-list-item.focused {
+    background-color: rgba(0, 0, 0, 0.16);
+}
+
+.simple-taskbar-application-overflow-list-content {
+    spacing: 10px;
+}
+
+.simple-taskbar-application-overflow-scroll StScrollBar {
+    min-width: 9px;
+    min-height: 9px;
+}
+
 .simple-taskbar-hot-edge-ripple {
     background-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.2);

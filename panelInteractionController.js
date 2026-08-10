@@ -20,6 +20,7 @@ export class PanelInteractionController {
         settings,
         taskbarController,
         taskbarBin,
+        taskbarContainer = taskbarBin,
         previewController,
         openPreferences,
         panelActor = Main.panel,
@@ -32,6 +33,7 @@ export class PanelInteractionController {
         this._settings = settings;
         this._taskbarController = taskbarController;
         this._taskbarBin = taskbarBin;
+        this._taskbarContainer = taskbarContainer;
         this._previews = previewController;
         this._openPreferences = openPreferences;
         this._panelActor = panelActor;
@@ -74,6 +76,7 @@ export class PanelInteractionController {
         this._previews = null;
         this._taskbarController = null;
         this._taskbarBin = null;
+        this._taskbarContainer = null;
         this._panelBoxes = null;
         this._panelActor = null;
         this._settings = null;
@@ -209,6 +212,9 @@ export class PanelInteractionController {
     }
 
     _scrollTaskbar(event) {
+        if (this._settings.get_boolean('application-overflow-enabled'))
+            return false;
+
         const adjustment = this._taskbarBin.hadjustment;
         const [value, , upper, stepIncrement, , pageSize] =
             adjustment.get_values();
@@ -281,7 +287,7 @@ export class PanelInteractionController {
 
         for (const box of this._panelBoxes) {
             for (const child of box.get_children()) {
-                if (child === this._taskbarBin)
+                if (child === this._taskbarContainer)
                     continue;
                 if (child === target || child.contains(target))
                     return false;
