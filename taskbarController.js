@@ -32,6 +32,7 @@ const WINDOWS_XP_BUTTON_BORDER_WIDTH = 2;
 const WINDOWS_XP_TASKBUTTON_WIDTH = 160;
 const WINDOWS_XP_TASKBUTTON_HORIZONTAL_PADDING = 8;
 const WINDOWS_XP_TASKBUTTON_ICON_SPACING = 4;
+const WINDOWS_XP_PINNED_TO_RUNNING_GAP = 6;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -578,6 +579,9 @@ export class TaskbarController {
 
         for (let index = 0; index < entries.length; index++) {
             const {key, app, window, isLauncher} = entries[index];
+            const pinnedToRunningGap = isLauncher &&
+                index + 1 < entries.length &&
+                !entries[index + 1].isLauncher;
             let item = this._appButtons.get(key);
             if (!item) {
                 item = this._createAppButton(app, window, isLauncher);
@@ -601,6 +605,11 @@ export class TaskbarController {
                 );
             } else {
                 this._placeItemAtActiveIndex(item, index);
+            }
+
+            if (item._taskbarPinnedToRunningGap !== pinnedToRunningGap) {
+                item._taskbarPinnedToRunningGap = pinnedToRunningGap;
+                this._updateGlassGeometry(item);
             }
         }
 
@@ -1577,6 +1586,7 @@ export class TaskbarController {
         item._taskbarApp = app;
         item._taskbarWindow = window;
         item._taskbarIsLauncher = isLauncher;
+        item._taskbarPinnedToRunningGap = false;
         item._taskbarButton = button;
         item._taskbarButtonContent = buttonContent;
         item._taskbarIcon = icon;
@@ -1818,7 +1828,8 @@ export class TaskbarController {
         const glassWidth = this._buttonWidth(item._taskbarWindow);
         const slotWidth = this._itemSlotWidth(
             item._taskbarWindow,
-            item._taskbarIsLauncher
+            item._taskbarIsLauncher,
+            item._taskbarPinnedToRunningGap
         );
         const glassHeight = this._glassHeight();
 
@@ -2035,8 +2046,18 @@ export class TaskbarController {
         return Math.max(spacing, 0);
     }
 
-    _itemSlotWidth(window, isLauncher = false) {
-        return this._buttonWidth(window) + this._iconSpacing(isLauncher);
+    _itemSlotWidth(
+        window,
+        isLauncher = false,
+        pinnedToRunningGap = false
+    ) {
+        const transitionGap =
+            this._settings.get_boolean('windows-xp-theme-enabled') &&
+            pinnedToRunningGap
+                ? WINDOWS_XP_PINNED_TO_RUNNING_GAP
+                : 0;
+        return this._buttonWidth(window) +
+            this._iconSpacing(isLauncher) + transitionGap;
     }
 
     _applyCurrentButtonWidths() {
