@@ -48,6 +48,7 @@ gnome-extensions pack \
     --extra-source=panelInteractionController.js \
     --extra-source=quickSettingsPowerController.js \
     --extra-source=startButtonController.js \
+    --extra-source=windowsXpStartButton.js \
     --extra-source=prefs \
     --extra-source=startMenuAppMenu.js \
     --extra-source=startMenuKeybindings.js \

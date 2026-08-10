@@ -387,7 +387,14 @@ export default class SimpleTaskbarExtension extends Extension {
         }, this);
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
-            () => this._syncWindowsXpTheme(true),
+            () => {
+                this._syncWindowsXpTheme(true);
+                this._startButtonController.applyAppearance(
+                    this._iconSize,
+                    this._settings.get_int('start-button-padding')
+                );
+                this._panelController.updateTaskbarWidth();
+            },
             this
         );
         for (const key of [

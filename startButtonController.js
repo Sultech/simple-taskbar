@@ -14,6 +14,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {WindowsStartMenu} from './windowsStartMenu.js';
+import {WindowsXpStartButton} from './windowsXpStartButton.js';
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
@@ -71,6 +72,7 @@ export class StartButtonController {
         this._gnomeGIcon = new Gio.ThemedIcon({
             name: 'view-app-grid-symbolic',
         });
+        this._windowsXpStartButton = new WindowsXpStartButton(extensionDir);
         this._icon = new St.Icon({
             gicon: this._currentGIcon(),
             icon_size: iconSize,
@@ -99,9 +101,12 @@ export class StartButtonController {
             track_hover: true,
             toggle_mode: true,
             accessible_name: this._accessibleName(),
-            child: this._content,
+            child: this._settings.get_boolean('windows-xp-theme-enabled')
+                ? this._windowsXpStartButton.actor
+                : this._content,
         });
         this._connect(this.actor, 'clicked', () => this._toggleApplications());
+        this._syncWindowsXpStartButton();
         this._syncVisibility();
 
         this._keybindings = manageKeybindings
@@ -153,7 +158,9 @@ export class StartButtonController {
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
         this._hover.set_width(iconSize);
-        const width = iconSize + padding * 2;
+        const width = this._settings.get_boolean('windows-xp-theme-enabled')
+            ? this._windowsXpStartButton.width
+            : iconSize + padding * 2;
         this._content.set_width(width);
         this.actor.set_width(width);
         this.actor.set_style('min-width: 0; padding: 0;');
@@ -176,6 +183,8 @@ export class StartButtonController {
         this._windowsStartMenu?.destroy();
         this._windowsStartMenu = null;
         this._menuManager = null;
+        this._windowsXpStartButton.destroy();
+        this._windowsXpStartButton = null;
         this.actor.destroy();
         this.actor = null;
 
@@ -329,6 +338,18 @@ export class StartButtonController {
             this._syncState();
             this._notifyMenuOpenStateChanged();
             this._keybindings?.sync();
+        });
+        this._connect(this._settings, 'changed::windows-xp-theme-enabled', () => {
+            this._windowsStartMenu?.close();
+            this._contextMenu?.close();
+            this._syncWindowsXpStartButton();
+            this.applyAppearance(
+                this._icon.icon_size,
+                this._settings.get_int('start-button-padding')
+            );
+            this._syncVisibility();
+            this._syncState();
+            this._notifyMenuOpenStateChanged();
         });
         this._connect(
             this._settings,
@@ -526,6 +547,17 @@ export class StartButtonController {
 
     _windowsModeEnabled() {
         return this._settings.get_boolean('windows-start-menu-enabled');
+    }
+
+    _syncWindowsXpStartButton() {
+        const enabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        this.actor.child = enabled
+            ? this._windowsXpStartButton.actor
+            : this._content;
+        this._icon.visible = !enabled;
+        this._hover.visible = !enabled;
     }
 
     _currentGIcon() {
