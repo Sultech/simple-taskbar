@@ -108,6 +108,7 @@ export class ApplicationOverflowController {
         this._connect(this._menu, 'open-state-changed', (_menu, open) => {
             if (open) {
                 this._button.add_style_pseudo_class('active');
+                this._syncTheme();
                 this._syncPopupGeometry();
                 this._grab = Main.pushModal(global.stage, {
                     actionMode: Shell.ActionMode.POPUP,
@@ -662,7 +663,20 @@ export class ApplicationOverflowController {
             light ? LIGHT_MENU_CLASS : DARK_MENU_CLASS
         );
 
-        const panelOpacity = panelTransparencyOpacity(this._settings);
+        const radiusDeclaration = (this._menu.box.get_style() ?? '')
+            .match(/(?:^|;)\s*(border-radius:\s*[^;]+)/)?.[1] ?? '';
+        const popupBlurEnabled = global.blur_my_shell?._popup?.enabled;
+        if (popupBlurEnabled && !light) {
+            this._menu.box.set_style(
+                'background: transparent !important; ' +
+                radiusDeclaration
+            );
+            return;
+        }
+
+        const panelOpacity = popupBlurEnabled
+            ? 1
+            : panelTransparencyOpacity(this._settings);
         const gradientStart = light ? '249, 250, 253' : '42, 42, 47';
         const gradientEnd = light ? '230, 234, 242' : '30, 30, 34';
         const startOpacity = light
@@ -671,8 +685,6 @@ export class ApplicationOverflowController {
         const endOpacity = light
             ? Math.min(panelOpacity, LIGHT_GRADIENT_END_MAX_OPACITY)
             : panelOpacity;
-        const radiusDeclaration = (this._menu.box.get_style() ?? '')
-            .match(/(?:^|;)\s*(border-radius:\s*[^;]+)/)?.[1] ?? '';
         this._menu.box.set_style(
             'background: transparent !important; ' +
             'background-gradient-direction: vertical !important; ' +
