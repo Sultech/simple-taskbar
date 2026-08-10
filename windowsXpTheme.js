@@ -8,7 +8,7 @@ import {
 
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
-export const WINDOWS_XP_ICON_SPACING = 0;
+export const WINDOWS_XP_ICON_SPACING = -5;
 export const WINDOWS_XP_ALIGNMENT = 'left';
 export const WINDOWS_XP_COMBINE_MODE = 'never';
 export const WINDOWS_XP_PANEL_POSITION = 'bottom';

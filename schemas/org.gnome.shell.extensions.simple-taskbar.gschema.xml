@@ -45,7 +45,7 @@
       <summary>Application icon size</summary>
     </key>
     <key name="icon-spacing" type="i">
-      <range min="0" max="16"/>
+      <range min="-5" max="16"/>
       <default>3</default>
       <summary>Space between application buttons</summary>
     </key>

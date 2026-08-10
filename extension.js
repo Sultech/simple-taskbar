@@ -365,13 +365,20 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelController.updateTaskbarWidth();
         }, this);
         this._settings.connectObject('changed::icon-spacing', () => {
-            if (this._settings.get_boolean('windows-xp-theme-enabled') &&
-                this._settings.get_int('icon-spacing') !==
-                WINDOWS_XP_ICON_SPACING) {
+            const windowsXpThemeEnabled = this._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            const iconSpacing = this._settings.get_int('icon-spacing');
+            if (windowsXpThemeEnabled &&
+                iconSpacing !== WINDOWS_XP_ICON_SPACING) {
                 this._settings.set_int(
                     'icon-spacing',
                     WINDOWS_XP_ICON_SPACING
                 );
+                return;
+            }
+            if (!windowsXpThemeEnabled && iconSpacing < 0) {
+                this._settings.set_int('icon-spacing', 0);
                 return;
             }
             this._applyTaskbarAppearance();

@@ -36,6 +36,7 @@ import {
     applyDefaultTaskbarSettings,
     applyWindowsXpThemeSettings,
     setWindowsXpThemeEnabled,
+    WINDOWS_XP_ICON_SPACING,
 } from './windowsXpTheme.js';
 
 const MAX_ICON_SIZE = 48;
@@ -821,6 +822,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             panelHeightRow.get_adjustment().set_lower(
                 enabled ? MIN_PANEL_HEIGHT : STANDARD_MIN_PANEL_HEIGHT
             );
+            iconSpacingRow.get_adjustment().set_lower(
+                enabled ? WINDOWS_XP_ICON_SPACING : 0
+            );
+            const iconSpacing = window._settings.get_int('icon-spacing');
+            if (iconSpacingRow.get_value() !== iconSpacing)
+                iconSpacingRow.set_value(iconSpacing);
             iconSizeRow.sensitive = !enabled;
             iconSpacingRow.sensitive = !enabled;
             panelButtonPaddingRow.sensitive = !enabled;

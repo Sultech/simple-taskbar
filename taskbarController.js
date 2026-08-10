@@ -1353,8 +1353,8 @@ export class TaskbarController {
             this._usePinnedAppLaunchers() ? pinnedApps.length : 0
         );
         const showLabels = !this._settings.get_boolean('hide-app-labels');
-        const spacing = Math.max(this._settings.get_int('icon-spacing'), 0);
-        const spacingWidth = entries.length * spacing;
+        const spacingWidth = entries.reduce((width, entry) =>
+            width + this._iconSpacing(entry.isLauncher), 0);
         const fixedButtonsWidth = entries.reduce((width, entry) =>
             width + this._buttonWidth(entry.window, false), 0);
         const labelCount = showLabels
@@ -1429,7 +1429,7 @@ export class TaskbarController {
 
     _createAppButton(app, window = null, isLauncher = false) {
         const glassWidth = this._buttonWidth(window);
-        const slotWidth = this._itemSlotWidth(window);
+        const slotWidth = this._itemSlotWidth(window, isLauncher);
         const glassHeight = this._glassHeight();
         const glassInset = this._glassInset();
         const glassContentWidth = glassWidth - glassInset * 2;
@@ -1816,7 +1816,10 @@ export class TaskbarController {
 
     _updateGlassGeometry(item) {
         const glassWidth = this._buttonWidth(item._taskbarWindow);
-        const slotWidth = this._itemSlotWidth(item._taskbarWindow);
+        const slotWidth = this._itemSlotWidth(
+            item._taskbarWindow,
+            item._taskbarIsLauncher
+        );
         const glassHeight = this._glassHeight();
 
         item._taskbarButton.set_width(glassWidth);
@@ -2023,12 +2026,17 @@ export class TaskbarController {
         );
     }
 
-    _itemSlotWidth(window) {
-        const spacing = Math.max(
-            this._settings.get_int('icon-spacing'),
-            0
-        );
-        return this._buttonWidth(window) + spacing;
+    _iconSpacing(isLauncher) {
+        const spacing = this._settings.get_int('icon-spacing');
+        if (this._settings.get_boolean('windows-xp-theme-enabled') &&
+            isLauncher)
+            return spacing;
+
+        return Math.max(spacing, 0);
+    }
+
+    _itemSlotWidth(window, isLauncher = false) {
+        return this._buttonWidth(window) + this._iconSpacing(isLauncher);
     }
 
     _applyCurrentButtonWidths() {
