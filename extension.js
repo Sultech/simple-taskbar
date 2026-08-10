@@ -368,6 +368,7 @@ export default class SimpleTaskbarExtension extends Extension {
             'use-pinned-apps-as-launchers',
             'combine-app-buttons-mode',
             'application-overflow-enabled',
+            'hide-app-labels',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 if (this._settings.get_boolean(

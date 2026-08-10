@@ -36,6 +36,7 @@ export function applyWindowsXpThemeSettings(settings) {
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', true);
     setBoolean(settings, 'application-overflow-enabled', true);
+    setBoolean(settings, 'hide-app-labels', false);
     setString(
         settings,
         'combine-app-buttons-mode',
@@ -54,6 +55,7 @@ export function applyDefaultTaskbarSettings(settings) {
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', false);
     setBoolean(settings, 'application-overflow-enabled', true);
+    setBoolean(settings, 'hide-app-labels', false);
     setString(
         settings,
         'combine-app-buttons-mode',

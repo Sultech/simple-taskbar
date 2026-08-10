@@ -544,9 +544,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const syncLabelSensitivity = () => {
-            hideAppLabelsSwitch.sensitive = window._settings.get_string(
-                'combine-app-buttons-mode'
-            ) !== 'always';
+            hideAppLabelsSwitch.sensitive =
+                !window._settings.get_boolean(
+                    'windows-xp-theme-enabled'
+                ) && window._settings.get_string(
+                    'combine-app-buttons-mode'
+                ) !== 'always';
         };
         combineAppButtonsRow.connect('notify::selected', () => {
             syncLabelSensitivity();
@@ -798,6 +801,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
             combineAppButtonsRow.sensitive = !enabled;
             applicationOverflowSwitch.sensitive = !enabled;
+            syncLabelSensitivity();
             syncingWindowsXpTheme = false;
         };
         const setWindowsXpTheme = enabled => {
@@ -840,6 +844,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::application-overflow-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::hide-app-labels',
             syncWindowsXpTheme
         );
         syncWindowsXpTheme();
