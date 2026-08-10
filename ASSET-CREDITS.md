@@ -72,3 +72,8 @@ The `taskband_button_body.png`, `taskband_button_hover_body.png`,
 `taskband_button_press_hover_border.png` files are copied unchanged from the
 Luna Blue resources in the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc)
 project.
+
+## Windows XP Luna desktop icon
+
+The `desktop.png` file is copied unchanged from the Luna Blue resources in
+the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc) project.

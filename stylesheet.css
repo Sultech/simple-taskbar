@@ -1508,6 +1508,16 @@
     background-position: top left !important;
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
+    .simple-taskbar-show-desktop {
+    min-width: 16px;
+    border-width: 0;
+    background-image: url('icons/taskbar/xp/desktop.png');
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    background-size: 16px 16px;
+}
+
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme .simple-taskbar-start {
     background-color: transparent;
     background-image: none;
