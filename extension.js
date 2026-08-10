@@ -41,9 +41,13 @@ import {OverviewIntegration} from './overviewIntegration.js';
 import {
     ICON_VERTICAL_RESERVE,
     STANDARD_MIN_PANEL_HEIGHT,
+} from './panelSizing.js';
+import {
+    applyDefaultTaskbarDimensions,
+    applyWindowsXpThemeDimensions,
     WINDOWS_XP_ICON_SIZE,
     WINDOWS_XP_PANEL_HEIGHT,
-} from './panelSizing.js';
+} from './windowsXpTheme.js';
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
@@ -61,7 +65,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._notificationBannerController =
             new NotificationBannerController(this._settings);
         this._notificationBannerController.enable();
-        this._syncWindowsXpTheme();
+        this._syncWindowsXpTheme(false);
         this._iconSize = this._settings.get_int('icon-size');
         this._panelHeight = this._settings.get_int('panel-height');
         if (!this._settings.get_boolean('default-gnome-panel') &&
@@ -295,8 +299,13 @@ export default class SimpleTaskbarExtension extends Extension {
         );
     }
 
-    _syncWindowsXpTheme() {
+    _syncWindowsXpTheme(resetWhenDisabled) {
         if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
+            if (resetWhenDisabled &&
+                !this._settings.get_boolean('default-gnome-panel')) {
+                applyDefaultTaskbarDimensions(this._settings);
+                return;
+            }
             if (!this._settings.get_boolean('default-gnome-panel')) {
                 const minimumPanelHeight =
                     this._settings.get_int('icon-size') +
@@ -314,15 +323,7 @@ export default class SimpleTaskbarExtension extends Extension {
 
         if (this._settings.get_boolean('default-gnome-panel'))
             this._settings.set_boolean('default-gnome-panel', false);
-        if (this._settings.get_int('panel-height') !==
-            WINDOWS_XP_PANEL_HEIGHT) {
-            this._settings.set_int(
-                'panel-height',
-                WINDOWS_XP_PANEL_HEIGHT
-            );
-        }
-        if (this._settings.get_int('icon-size') !== WINDOWS_XP_ICON_SIZE)
-            this._settings.set_int('icon-size', WINDOWS_XP_ICON_SIZE);
+        applyWindowsXpThemeDimensions(this._settings);
     }
 
     _connectSignals() {
@@ -358,7 +359,7 @@ export default class SimpleTaskbarExtension extends Extension {
         }, this);
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
-            () => this._syncWindowsXpTheme(),
+            () => this._syncWindowsXpTheme(true),
             this
         );
         this._settings.connectObject(

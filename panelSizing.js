@@ -4,5 +4,3 @@
 export const MIN_PANEL_HEIGHT = 30;
 export const STANDARD_MIN_PANEL_HEIGHT = 32;
 export const ICON_VERTICAL_RESERVE = 17;
-export const WINDOWS_XP_PANEL_HEIGHT = 30;
-export const WINDOWS_XP_ICON_SIZE = 16;

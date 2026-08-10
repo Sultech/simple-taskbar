@@ -31,9 +31,13 @@ import {
     ICON_VERTICAL_RESERVE,
     MIN_PANEL_HEIGHT,
     STANDARD_MIN_PANEL_HEIGHT,
-    WINDOWS_XP_ICON_SIZE,
-    WINDOWS_XP_PANEL_HEIGHT,
 } from './panelSizing.js';
+import {
+    applyWindowsXpThemeDimensions,
+    DEFAULT_TASKBAR_ICON_SIZE,
+    DEFAULT_TASKBAR_PANEL_HEIGHT,
+    setWindowsXpThemeEnabled,
+} from './windowsXpTheme.js';
 
 const MAX_ICON_SIZE = 48;
 const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
@@ -655,9 +659,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('panel-border-enabled', false);
                 settings.set_boolean('panel-border-light-enabled', false);
             } else {
-                settings.set_int('icon-size', 32);
+                settings.set_int(
+                    'icon-size',
+                    DEFAULT_TASKBAR_ICON_SIZE
+                );
                 settings.set_int('icon-spacing', 3);
-                settings.set_int('panel-height', 49);
+                settings.set_int(
+                    'panel-height',
+                    DEFAULT_TASKBAR_PANEL_HEIGHT
+                );
                 settings.set_int('panel-button-padding', -1);
                 settings.set_string('panel-position', 'bottom');
                 settings.set_string('app-alignment', 'center');
@@ -779,33 +789,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                         false
                     );
                 }
-                if (window._settings.get_int('panel-height') !==
-                    WINDOWS_XP_PANEL_HEIGHT) {
-                    window._settings.set_int(
-                        'panel-height',
-                        WINDOWS_XP_PANEL_HEIGHT
-                    );
-                }
-                if (window._settings.get_int('icon-size') !==
-                    WINDOWS_XP_ICON_SIZE) {
-                    window._settings.set_int(
-                        'icon-size',
-                        WINDOWS_XP_ICON_SIZE
-                    );
-                }
-            } else if (!window._settings.get_boolean(
-                'default-gnome-panel'
-            )) {
-                const minimumPanelHeight =
-                    window._settings.get_int('icon-size') +
-                    ICON_VERTICAL_RESERVE;
-                if (window._settings.get_int('panel-height') <
-                    minimumPanelHeight) {
-                    window._settings.set_int(
-                        'panel-height',
-                        minimumPanelHeight
-                    );
-                }
+                applyWindowsXpThemeDimensions(window._settings);
             }
             syncingWindowsXpTheme = true;
             windowsXpThemeSwitch.active = enabled;
@@ -819,12 +803,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const setWindowsXpTheme = enabled => {
             const settings = this.getSettings();
             settings.delay();
-            settings.set_boolean('windows-xp-theme-enabled', enabled);
-            if (enabled) {
-                settings.set_boolean('default-gnome-panel', false);
-                settings.set_int('panel-height', WINDOWS_XP_PANEL_HEIGHT);
-                settings.set_int('icon-size', WINDOWS_XP_ICON_SIZE);
-            }
+            setWindowsXpThemeEnabled(settings, enabled);
             settings.apply();
         };
         windowsXpThemeSwitch.connect('notify::active', () => {
