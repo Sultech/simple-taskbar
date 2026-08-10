@@ -797,6 +797,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             appAlignmentRow.sensitive = !enabled;
             pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
             combineAppButtonsRow.sensitive = !enabled;
+            applicationOverflowSwitch.sensitive = !enabled;
             syncingWindowsXpTheme = false;
         };
         const setWindowsXpTheme = enabled => {
@@ -835,6 +836,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::combine-app-buttons-mode',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::application-overflow-enabled',
             syncWindowsXpTheme
         );
         syncWindowsXpTheme();

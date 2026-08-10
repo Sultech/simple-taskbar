@@ -367,6 +367,7 @@ export default class SimpleTaskbarExtension extends Extension {
             'start-button-position',
             'use-pinned-apps-as-launchers',
             'combine-app-buttons-mode',
+            'application-overflow-enabled',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 if (this._settings.get_boolean(

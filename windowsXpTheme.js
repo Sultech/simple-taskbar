@@ -35,6 +35,7 @@ export function applyWindowsXpThemeSettings(settings) {
         WINDOWS_XP_ALIGNMENT
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', true);
+    setBoolean(settings, 'application-overflow-enabled', true);
     setString(
         settings,
         'combine-app-buttons-mode',
@@ -52,6 +53,7 @@ export function applyDefaultTaskbarSettings(settings) {
         DEFAULT_TASKBAR_ALIGNMENT
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', false);
+    setBoolean(settings, 'application-overflow-enabled', true);
     setString(
         settings,
         'combine-app-buttons-mode',
