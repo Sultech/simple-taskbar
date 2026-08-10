@@ -4,6 +4,7 @@
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
@@ -62,6 +63,7 @@ export class ApplicationOverflowController {
         this._taskbarController = taskbarController;
         this._viewport = viewport;
         this._signals = [];
+        this._grab = null;
         this._menu = null;
         this._section = null;
         this._button = null;
@@ -103,8 +105,13 @@ export class ApplicationOverflowController {
             if (open) {
                 this._button.add_style_pseudo_class('active');
                 this._syncPopupGeometry();
+                this._grab = Main.pushModal(global.stage, {
+                    actionMode: Shell.ActionMode.POPUP,
+                });
                 this._menu.actor.grab_key_focus();
             } else {
+                Main.popModal(this._grab);
+                this._grab = null;
                 this._button.remove_style_pseudo_class('active');
                 this._closeAuxiliaryMenus();
             }
@@ -183,6 +190,10 @@ export class ApplicationOverflowController {
         for (const [object, id] of this._signals)
             object.disconnect(id);
         this._signals = [];
+        if (this._grab) {
+            Main.popModal(this._grab);
+            this._grab = null;
+        }
 
         this._clearPopupItems();
         this._menu.destroy();
@@ -237,7 +248,7 @@ export class ApplicationOverflowController {
             return Clutter.EVENT_PROPAGATE;
         }
 
-        this.close();
+        this._menu.close(BoxPointer.PopupAnimation.FULL);
         return Clutter.EVENT_PROPAGATE;
     }
 
