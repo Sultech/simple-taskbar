@@ -83,6 +83,8 @@ export class PanelController {
         this._activitiesWasVisible = null;
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
+        this._dateMenuDisplayBox = null;
+        this._dateMenuDisplayBoxTranslationY = null;
         this._layoutRepairId = 0;
         this._transparencyRepairId = 0;
         this._blurMyShellSyncId = 0;
@@ -147,6 +149,7 @@ export class PanelController {
 
         Main.panel.set_height(this._panelHeight);
         Main.layoutManager.panelBox.set_size(monitor.width, this._panelHeight);
+        this._syncDateMenuVerticalAlignment();
         const panelBox = Main.layoutManager.panelBox;
         panelBox.x = monitor.x;
         if (this._autoHideController)
@@ -330,6 +333,7 @@ export class PanelController {
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
         this._restoreDateMenuIndicatorPadding();
+        this._restoreDateMenuVerticalAlignment();
 
         for (const actor of [
             this._startButton,
@@ -402,6 +406,8 @@ export class PanelController {
         this._activitiesWasVisible = null;
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = null;
+        this._dateMenuDisplayBox = null;
+        this._dateMenuDisplayBoxTranslationY = null;
         this._applyingLayout = false;
         this._applyingTransparency = false;
         this._panelWasModified = false;
@@ -468,14 +474,15 @@ export class PanelController {
 
     _removeDateMenuIndicatorPadding() {
         const dateMenu = Main.panel.statusArea.dateMenu;
-        const indicatorPad = dateMenu
-            ?.get_first_child()
-            ?.get_first_child();
+        const displayBox = dateMenu?.get_first_child();
+        const indicatorPad = displayBox?.get_first_child();
         if (!indicatorPad?.get_constraints ||
             !indicatorPad?.clear_constraints) {
             return;
         }
 
+        this._dateMenuDisplayBox = displayBox;
+        this._dateMenuDisplayBoxTranslationY = displayBox.translation_y;
         this._dateMenuIndicatorPad = indicatorPad;
         this._dateMenuIndicatorPadConstraints =
             [...indicatorPad.get_constraints()];
@@ -495,6 +502,23 @@ export class PanelController {
         Main.panel.statusArea.dateMenu?.queue_relayout();
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
+    }
+
+    _syncDateMenuVerticalAlignment() {
+        if (!this._dateMenuDisplayBox)
+            return;
+
+        const parityOffset = this._panelHeight % 2 === 0 ? 1 : 0;
+        this._dateMenuDisplayBox.translation_y =
+            this._dateMenuDisplayBoxTranslationY + parityOffset;
+    }
+
+    _restoreDateMenuVerticalAlignment() {
+        if (!this._dateMenuDisplayBox)
+            return;
+
+        this._dateMenuDisplayBox.translation_y =
+            this._dateMenuDisplayBoxTranslationY;
     }
 
     _connectSignals() {
