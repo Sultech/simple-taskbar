@@ -1,1278 +1,1289 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR sultech
+# Hungarian translations for simple-taskbar package.
+# Copyright (C) 2026 sultech
 # This file is distributed under the same license as the simple-taskbar package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-10 16:43+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2026-08-10 16:41+0200\n"
+"PO-Revision-Date: 2026-08-10 16:41+0200\n"
+"Last-Translator: \n"
+"Language-Team: Hungarian\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: extension.js:282
 msgid "Show desktop"
-msgstr ""
+msgstr "Asztal megjelenítése"
 
 #: applicationOverflowController.js:302
 msgid "Application overflow"
-msgstr ""
+msgstr "Alkalmazások túlfolyása"
 
 #: prefs.js:111
 msgid "Left"
-msgstr ""
+msgstr "Bal"
 
 #: prefs.js:112
 msgid "Center"
-msgstr ""
+msgstr "Közép"
 
 #: prefs.js:113
 msgid "Right"
-msgstr ""
+msgstr "Jobb"
 
 #: prefs.js:117
 msgid "Taskbar"
-msgstr ""
+msgstr "Tálca"
 
 #: prefs.js:123
 msgid "Window Switching"
-msgstr ""
+msgstr "Ablakváltás"
 
 #: prefs.js:129 prefs.js:173
 msgid "Start Menu"
-msgstr ""
+msgstr "Start menü"
 
 #: prefs.js:135
 msgid "Advanced"
-msgstr ""
+msgstr "Haladó"
 
 #: prefs.js:141
 msgid "Appearance"
-msgstr ""
+msgstr "Megjelenés"
 
 #: prefs.js:143
 msgid "Less commonly used taskbar and indicator appearance options."
-msgstr ""
+msgstr "Kevésbé használt tálca- és jelzőfény-megjelenítési beállítások."
 
 #: prefs.js:149
 msgid "Application Behavior"
-msgstr ""
+msgstr "Alkalmazások viselkedése"
 
 #: prefs.js:151 prefs.js:626
 msgid "Choose which applications appear and how they are grouped."
-msgstr ""
+msgstr "Válassza ki, mely alkalmazások jelenjenek meg, és hogyan legyenek csoportosítva."
 
 #: prefs.js:157 prefs.js:953
 msgid "Taskbar Behavior"
-msgstr ""
+msgstr "Tálca viselkedése"
 
 #: prefs.js:159
 msgid "Less commonly used taskbar interaction options."
-msgstr ""
+msgstr "Kevésbé használt tálcainterakciós beállítások."
 
 #: prefs.js:165
 msgid "File Manager"
-msgstr ""
+msgstr "Fájlkezelő"
 
 #: prefs.js:167
 msgid "File manager shortcuts and taskbar menu folders."
-msgstr ""
+msgstr "Fájlkezelő gyorsbillentyűk és tálcamenü mappák."
 
 #: prefs.js:175
 msgid "Less commonly used Start menu options."
-msgstr ""
+msgstr "Kevésbé használt Start menü beállítások."
 
 #: prefs.js:181
 msgid "Grid Alt-Tab"
-msgstr ""
+msgstr "Rácsos Alt-Tab"
 
 #: prefs.js:183
 msgid "Switch directly between open windows using live previews."
-msgstr ""
+msgstr "Váltás közvetlenül a nyitott ablakok között élő előnézettel."
 
 #: prefs.js:189
 msgid "Enable Grid Alt-Tab"
-msgstr ""
+msgstr "Rácsos Alt-Tab engedélyezése"
 
 #: prefs.js:191
 msgid "Replace GNOME’s application switcher with a responsive window grid"
-msgstr ""
+msgstr "A GNOME alkalmazásváltójának lecserélése válaszkész ablakrácsra"
 
 #: prefs.js:208
 msgid "Maximum Card Size"
-msgstr ""
+msgstr "Kártya maximális mérete"
 
 #: prefs.js:210
 msgid "Largest preview height in pixels; widths follow each window’s shape"
-msgstr ""
+msgstr "A legnagyobb előnézet magassága képpontban; a szélesség az ablak alakját követi"
 
 #: prefs.js:218 prefs.js:547
 msgid "Isolate Workspaces"
-msgstr ""
+msgstr "Munkaterületek elkülönítése"
 
 #: prefs.js:220
 msgid "Show windows from the current workspace instead of all workspaces"
-msgstr ""
+msgstr "Ablakok megjelenítése csak az aktuális munkaterületről az összes helyett"
 
 #: prefs.js:234 prefs.js:560
 msgid "Isolate Monitors"
-msgstr ""
+msgstr "Monitorok elkülönítése"
 
 #: prefs.js:236
 msgid "Show only windows from the monitor displaying the switcher"
-msgstr ""
+msgstr "Csak a váltót megjelenítő monitor ablakainak megjelenítése"
 
 #: prefs.js:250
 msgid "Show on Primary Monitor"
-msgstr ""
+msgstr "Megjelenítés az elsődleges monitoron"
 
 #: prefs.js:252
 msgid "Always display the switcher on the primary monitor"
-msgstr ""
+msgstr "A váltó mindig az elsődleges monitoron jelenjen meg"
 
 #: prefs.js:279 prefs.js:1175 prefs.js:1838
 msgid "Start Button"
-msgstr ""
+msgstr "Start gomb"
 
 #: prefs.js:280
 msgid "Configure the Start button position and spacing."
-msgstr ""
+msgstr "A Start gomb pozíciójának és térközének beállítása."
 
 #: prefs.js:285 prefs.js:1270
 msgid "Eleven-style Start Menu"
-msgstr ""
+msgstr "Windows 11 stílusú Start menü"
 
 #: prefs.js:286
 msgid "Configure the optional Eleven-style application menu."
-msgstr ""
+msgstr "Az elhagyható Windows 11 stílusú alkalmazásmenü beállítása."
 
 #: prefs.js:291
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Gyorsbillentyűk"
 
 #: prefs.js:292
 msgid "Configure Start menu shortcuts."
-msgstr ""
+msgstr "Start menü gyorsbillentyűk beállítása."
 
 #: prefs.js:318
 msgid "General"
-msgstr ""
+msgstr "Általános"
 
 #: prefs.js:323
 msgid "Default GNOME Panel"
-msgstr ""
+msgstr "Alapértelmezett GNOME panel"
 
 #: prefs.js:324
 msgid "Hide taskbar applications and use the original Dash in Overview"
-msgstr ""
+msgstr "Tálcaalkalmazások elrejtése és az eredeti Dash használata az Áttekintésben"
 
 #: prefs.js:332
 msgid "Panel Button Padding"
-msgstr ""
+msgstr "Panelgombok térköze"
 
 #: prefs.js:334
 msgid ""
+""
 "Horizontal space around panel buttons. Use -1 for automatic: Just "
 "Perfection’s value when it is configured, otherwise 3 px"
-msgstr ""
+msgstr "Vízszintes térköz a panelgombok körül. Használja a -1 értéket az automatikushoz: a Just Perfection értéke, ha be van állítva, egyébként 3 px"
 
 #: prefs.js:341
 msgid "Application Icons"
-msgstr ""
+msgstr "Alkalmazásikonok"
 
 #: prefs.js:342 prefs.js:623
 msgid "Change the size, spacing, and placement of taskbar icons."
-msgstr ""
+msgstr "A tálcaikonok méretének, térközének és elhelyezkedésének módosítása."
 
 #: prefs.js:348
 msgid "Icon Size"
-msgstr ""
+msgstr "Ikonméret"
 
 #: prefs.js:349
 msgid "The panel grows automatically when larger icons need more room"
-msgstr ""
+msgstr "A panel automatikusan megnő, ha a nagyobb ikonoknak több helyre van szükségük"
 
 #: prefs.js:355
 msgid "Icon Spacing"
-msgstr ""
+msgstr "Ikontérköz"
 
 #: prefs.js:356
 msgid "Space between application buttons"
-msgstr ""
+msgstr "Térköz az alkalmazásgombok között"
 
 #: prefs.js:365
 msgid "Running Indicator Style"
-msgstr ""
+msgstr "Futó alkalmazás jelzőfény stílusa"
 
 #: prefs.js:367
 msgid "Choose the shape of indicators beneath running applications"
-msgstr ""
+msgstr "Válassza ki a futó alkalmazások alatti jelzők alakját"
 
 #: prefs.js:370
 msgid "Rounded"
-msgstr ""
+msgstr "Lekerekített"
 
 #: prefs.js:371
 msgid "Straight"
-msgstr ""
+msgstr "Egyenes"
 
 #: prefs.js:376
 msgid "Match Icon Color"
-msgstr ""
+msgstr "Egyezzen az ikon színével"
 
 #: prefs.js:377
 msgid "Use dominant color of application icon for indicator"
-msgstr ""
+msgstr "Az alkalmazásikon domináns színének használata a jelzőhöz"
 
 #: prefs.js:390
 msgid "Custom Indicator Colors"
-msgstr ""
+msgstr "Egyéni jelzőszínek"
 
 #: prefs.js:391
 msgid "Choose colors for running application indicators"
-msgstr ""
+msgstr "Színek kiválasztása a futó alkalmazások jelzőihez"
 
 #: prefs.js:408
 msgid "Focused Indicator Color"
-msgstr ""
+msgstr "Fókuszált jelző színe"
 
 #: prefs.js:416
 msgid "Unfocused Indicator Color"
-msgstr ""
+msgstr "Nem fókuszált jelző színe"
 
 #: prefs.js:437
 msgid "Icon Alignment"
-msgstr ""
+msgstr "Ikonok igazítása"
 
 #: prefs.js:438
 msgid "Place application icons at the left or center"
-msgstr ""
+msgstr "Alkalmazásikonok elhelyezése balra vagy középre"
 
 #: prefs.js:443
 msgid "Hide Pinned Applications"
-msgstr ""
+msgstr "Rögzített alkalmazások elrejtése"
 
 #: prefs.js:444
 msgid "Show pinned taskbar applications only while they are running"
-msgstr ""
+msgstr "A rögzített tálcaalkalmazások megjelenítése csak futás közben"
 
 #: prefs.js:458
 msgid "Use Pinned Apps as Application Launchers"
-msgstr ""
+msgstr "Rögzített alkalmazások használata indítóként"
 
 #: prefs.js:460
 msgid ""
+""
 "Keep pinned applications as launchers and show running applications "
 "separately"
-msgstr ""
+msgstr "A rögzített alkalmazások megtartása indítóként, és a futó alkalmazások külön megjelenítése"
 
 #: prefs.js:479
 msgid "Combine Application Buttons"
-msgstr ""
+msgstr "Alkalmazásgombok összevonása"
 
 #: prefs.js:480
 msgid "Choose when windows share one taskbar button"
-msgstr ""
+msgstr "Válassza ki, mikor osztozzanak az ablakok egyetlen tálcagombon"
 
 #: prefs.js:482
 msgid "Always"
-msgstr ""
+msgstr "Mindig"
 
 #: prefs.js:483
 msgid "Only When Full"
-msgstr ""
+msgstr "Csak ha megtelt"
 
 #: prefs.js:484
 msgid "Never"
-msgstr ""
+msgstr "Soha"
 
 #: prefs.js:490
 msgid "Application Overflow"
-msgstr ""
+msgstr "Alkalmazások túlfolyása"
 
 #: prefs.js:492
 msgid ""
+""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
-msgstr ""
+msgstr "A nem illeszkedő alkalmazásgombok megjelenítése túlfolyó ablakban a tálca görgetése helyett"
 
 #: prefs.js:511
 msgid "Overflow Style"
-msgstr ""
+msgstr "Túlfolyás stílusa"
 
 #: prefs.js:513
 msgid "Taskbar Flyout"
-msgstr ""
+msgstr "Tálca felbukkanó menü"
 
 #: prefs.js:514
 msgid "Application List"
-msgstr ""
+msgstr "Alkalmazáslista"
 
 #: prefs.js:525
 msgid "Hide App Labels"
-msgstr ""
+msgstr "Alkalmazáscímkék elrejtése"
 
 #: prefs.js:526
 msgid "Show only icons on separate window buttons"
-msgstr ""
+msgstr "Csak ikonok megjelenítése a különálló ablakgombokon"
 
 #: prefs.js:548
 msgid "Show running applications from the current workspace only"
-msgstr ""
+msgstr "Futó alkalmazások megjelenítése csak az aktuális munkaterületről"
 
 #: prefs.js:561
 msgid "Show running applications only on the taskbar for their monitor"
-msgstr ""
+msgstr "Futó alkalmazások megjelenítése csak a saját monitoruk tálcáján"
 
 #: prefs.js:573
 msgid "Spread Multiple Windows"
-msgstr ""
+msgstr "Több ablak szétterítése"
 
 #: prefs.js:574
 msgid ""
+""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
-msgstr ""
+msgstr "Kattintson egy több ablakkal rendelkező alkalmazásra, hogy csak annak ablakai jelenjenek meg az Áttekintésben, az összes munkaterületen"
 
 #: prefs.js:588
 msgid "Nautilus Folder Shortcuts"
-msgstr ""
+msgstr "Nautilus mappa gyorslinkek"
 
 #: prefs.js:589
 msgid "Show common folders in the Files taskbar menu"
-msgstr ""
+msgstr "Gyakori mappák megjelenítése a Fájlok tálcamenüben"
 
 #: prefs.js:622
 msgid "Application icons are unavailable in Default GNOME Panel mode."
-msgstr ""
+msgstr "Az alkalmazásikonok nem érhetők el az Alapértelmezett GNOME panel módban."
 
 #: prefs.js:625
 msgid "Application options are unavailable in Default GNOME Panel mode."
-msgstr ""
+msgstr "Az alkalmazásbeállítások nem érhetők el az Alapértelmezett GNOME panel módban."
 
 #: prefs.js:706
 msgid "Panel Appearance"
-msgstr ""
+msgstr "Panel megjelenése"
 
 #: prefs.js:707
 msgid "Change the taskbar height, colour scheme, and transparency."
-msgstr ""
+msgstr "A tálca magasságának, színskálájának és átlátszóságának módosítása."
 
 #: prefs.js:713
 msgid "Panel Height"
-msgstr ""
+msgstr "Panelmagasság"
 
 #: prefs.js:714
 msgid "Oversized icons shrink automatically when the panel is reduced"
-msgstr ""
+msgstr "A túl nagy ikonok automatikusan csökkennek, ha a panel mérete csökken"
 
 #: prefs.js:720 prefs.js:2302
 msgid "Panel Position"
-msgstr ""
+msgstr "Panel pozíciója"
 
 #: prefs.js:721
 msgid "Place the taskbar at the top or bottom of the screen"
-msgstr ""
+msgstr "A tálca elhelyezése a képernyő tetején vagy alján"
 
 #: prefs.js:723
 msgid "Top"
-msgstr ""
+msgstr "Fent"
 
 #: prefs.js:724
 msgid "Bottom"
-msgstr ""
+msgstr "Lent"
 
 #: prefs.js:755
 msgid "Follow System Theme"
-msgstr ""
+msgstr "Rendszertéma követése"
 
 #: prefs.js:756
 msgid ""
+""
 "Match the active GNOME Shell theme, independently of application colours"
-msgstr ""
+msgstr "Igazodás az aktív GNOME Shell témához, az alkalmazások színeitől függetlenül"
 
 #: prefs.js:772
 msgid "Taskbar Theme"
-msgstr ""
+msgstr "Tálca témája"
 
 #: prefs.js:773
 msgid "Choose the colour scheme when system matching is off"
-msgstr ""
+msgstr "Színskála kiválasztása, ha a rendszerhez igazodás ki van kapcsolva"
 
 #: prefs.js:775 prefs.js:1468
 msgid "Light"
-msgstr ""
+msgstr "Világos"
 
 #: prefs.js:776 prefs.js:1467
 msgid "Dark"
-msgstr ""
+msgstr "Sötét"
 
 #: prefs.js:791
 msgid "Make the taskbar background transparent"
-msgstr ""
+msgstr "Tálca hátterének átlátszóvá tétele"
 
 #: prefs.js:794 prefs.js:1492
 msgid "Disable Blur My Shell panel blur to use this option"
-msgstr ""
+msgstr "A Blur My Shell panel elmosásának kikapcsolása a lehetőség használatához"
 
 #: prefs.js:797
 msgid "Enable Transparency"
-msgstr ""
+msgstr "Átlátszóság engedélyezése"
 
 #: prefs.js:810
 msgid "0% is opaque and 100% is fully transparent"
-msgstr ""
+msgstr "A 0% teljesen fedett, a 100% teljesen átlátszó"
 
 #: prefs.js:817
 msgid "Transparency"
-msgstr ""
+msgstr "Átlátszóság"
 
 #: prefs.js:842
 msgid "Use a chosen color instead of the light or dark theme color"
-msgstr ""
+msgstr "Egyéni szín használata a világos vagy sötét témaszín helyett"
 
 #: prefs.js:845
 msgid "Custom Taskbar Color"
-msgstr ""
+msgstr "Egyéni tálcaszín"
 
 #: prefs.js:863
 msgid "Taskbar Color"
-msgstr ""
+msgstr "Tálca színe"
 
 #: prefs.js:867
 msgid ""
+""
 "White text uses the dark panel theme; black text uses the light panel theme"
-msgstr ""
+msgstr "A fehér szöveg a sötét paneltémát használja; a fekete szöveg a világos paneltémát"
 
 #: prefs.js:874
 msgid "Taskbar Text Color"
-msgstr ""
+msgstr "Tálca szövegszíne"
 
 #: prefs.js:877
 msgid "White"
-msgstr ""
+msgstr "Fehér"
 
 #: prefs.js:878
 msgid "Black"
-msgstr ""
+msgstr "Fekete"
 
 #: prefs.js:925
 msgid "Show Border in Dark Mode"
-msgstr ""
+msgstr "Keret megjelenítése sötét módban"
 
 #: prefs.js:926 prefs.js:939
 msgid "Display a thin border along the panel’s workspace-facing edge"
-msgstr ""
+msgstr "Vékony keret megjelenítése a panel munkaterület felőli szélén"
 
 #: prefs.js:938
 msgid "Show Border in Light Mode"
-msgstr ""
+msgstr "Keret megjelenítése világos módban"
 
 #: prefs.js:958
 msgid "Auto-hide Panel"
-msgstr ""
+msgstr "Panel automatikus elrejtése"
 
 #: prefs.js:959
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
-msgstr ""
+msgstr "Tálca megjelenítése, ha az egérmutató eléri a képernyő szélét"
 
 #: prefs.js:971
 msgid "Bottom Hot Edge"
-msgstr ""
+msgstr "Alsó forró él"
 
 #: prefs.js:972
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr ""
+msgstr "Az egérmutató alsó képernyőszélhez nyomása az Áttekintés váltásához"
 
 #: prefs.js:990
 msgid "Activation Pressure"
-msgstr ""
+msgstr "Aktiválási nyomás"
 
 #: prefs.js:992
 msgid ""
+""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
-msgstr ""
+msgstr "A képpontok száma, amennyit a mutatónak el kell mozdulnia az alsó szélén túl az Áttekintés aktiválásához"
 
 #: prefs.js:1001
 msgid "Hot Edge Animation"
-msgstr ""
+msgstr "Forró él animáció"
 
 #: prefs.js:1002
 msgid "Show a ripple when the bottom hot edge activates"
-msgstr ""
+msgstr "Hullámeffektus megjelenítése az alsó forró él aktiválásakor"
 
 #: prefs.js:1024
 msgid "Workspace Scroll"
-msgstr ""
+msgstr "Görgetés munkaterületek között"
 
 #: prefs.js:1025
 msgid "Scroll over empty taskbar space to switch workspaces"
-msgstr ""
+msgstr "Görgetés a tálca üres részén a munkaterületek közötti váltáshoz"
 
 #: prefs.js:1041
 msgid "Workspace Scroll Delay"
-msgstr ""
+msgstr "Munkaterület-görgetés késleltetése"
 
 #: prefs.js:1042
 msgid "Minimum delay between workspace changes in milliseconds"
-msgstr ""
+msgstr "Munkaterület-váltások közötti minimális késleltetés ezredmásodpercben"
 
 #: prefs.js:1054
 msgid "Middle Click Closes Applications"
-msgstr ""
+msgstr "Középső kattintás bezárja az alkalmazásokat"
 
 #: prefs.js:1055
 msgid "Close all application windows instead of opening a new window"
-msgstr ""
+msgstr "Az összes alkalmazásablak bezárása új ablak nyitása helyett"
 
 #: prefs.js:1067
 msgid "Panel Menus Require Click"
-msgstr ""
+msgstr "A panelmenükhöz kattintás szükséges"
 
 #: prefs.js:1068
 msgid "Switch between clock, system, and tray menus only when clicked"
-msgstr ""
+msgstr "Váltás az óra-, rendszer- és tálcamenük között csak kattintásra"
 
 #: prefs.js:1080
 msgid "Taskbar-aligned Notification Banners"
-msgstr ""
+msgstr "Tálcához igazított értesítési sávok"
 
 #: prefs.js:1081
 msgid "Follow the taskbar edge and the clock’s horizontal position"
-msgstr ""
+msgstr "A tálca szélének és az óra vízszintes pozíciójának követése"
 
 #: prefs.js:1119
 msgid "Automatic Fallback"
-msgstr ""
+msgstr "Automatikus tartalék"
 
 #: prefs.js:1127
 msgid "Task Manager Application"
-msgstr ""
+msgstr "Feladatkezelő alkalmazás"
 
 #: prefs.js:1128
 msgid "Application opened from the taskbar context menu"
-msgstr ""
+msgstr "A tálca helyi menüjéből megnyitott alkalmazás"
 
 #: prefs.js:1143
 msgid "Show Taskbar on All Monitors"
-msgstr ""
+msgstr "Tálca megjelenítése az összes monitoron"
 
 #: prefs.js:1144
 msgid "Show Activities, applications, clock, and system menu on every monitor"
-msgstr ""
+msgstr "Tevékenységek, alkalmazások, óra és rendszermenü megjelenítése minden monitoron"
 
 #: prefs.js:1165
 msgid "Panel Items"
-msgstr ""
+msgstr "Panelelemek"
 
 #: prefs.js:1166
 msgid "Choose which optional panel items appear."
-msgstr ""
+msgstr "Válassza ki, mely opcionális panelelemek jelenjenek meg."
 
 #: prefs.js:1177
 msgid "Place the Start button at the left edge or in the center"
-msgstr ""
+msgstr "A Start gomb elhelyezése a bal szélen vagy középen"
 
 #: prefs.js:1184
 msgid "Follow Application Alignment"
-msgstr ""
+msgstr "Alkalmazások igazításának követése"
 
 #: prefs.js:1185
 msgid "Move the Start button with the application buttons"
-msgstr ""
+msgstr "A Start gomb mozgatása az alkalmazásgombokkal együtt"
 
 #: prefs.js:1217
 msgid "Start Button Padding"
-msgstr ""
+msgstr "Start gomb térköze"
 
 #: prefs.js:1218
 msgid "Horizontal space around the Start icon in pixels"
-msgstr ""
+msgstr "Vízszintes hely a Start ikon körül képpontban"
 
 #: prefs.js:1224
 msgid "Custom Start Button Icon"
-msgstr ""
+msgstr "Egyéni Start gomb ikon"
 
 #: prefs.js:1228
 msgid "Use the built-in icon"
-msgstr ""
+msgstr "Beépített ikon használata"
 
 #: prefs.js:1232 prefs.js:1771
 msgid "Choose…"
-msgstr ""
+msgstr "Kiválasztás…"
 
 #: prefs.js:1248
 msgid "Using the built-in icon"
-msgstr ""
+msgstr "Beépített ikon használatban"
 
 #: prefs.js:1271
 msgid "Replace the GNOME app grid with an Eleven-style menu"
-msgstr ""
+msgstr "A GNOME alkalmazásrács lecserélése Windows 11 stílusú menüre"
 
 #: prefs.js:1283
 msgid "Show Profile Picture"
-msgstr ""
+msgstr "Profilkép megjelenítése"
 
 #: prefs.js:1284
 msgid "Use your account picture in the Start Menu"
-msgstr ""
+msgstr "A fiók képének használata a Start menüben"
 
 #: prefs.js:1305
 msgid "Power Options in Start Menu"
-msgstr ""
+msgstr "Tápellátási lehetőségek a Start menüben"
 
 #: prefs.js:1307
 msgid "Show power actions here instead of in Quick Settings"
-msgstr ""
+msgstr "Kikapcsolási műveletek megjelenítése itt a Gyorsbeállítások helyett"
 
 #: prefs.js:1329
 msgid "Open All Apps by Default"
-msgstr ""
+msgstr "Összes alkalmazás megnyitása alapértelmezés szerint"
 
 #: prefs.js:1330
 msgid "Skip Pinned and open directly to applications and categories"
-msgstr ""
+msgstr "Rögzítettek kihagyása és megnyitás közvetlenül az alkalmazásokhoz és kategóriákhoz"
 
 #: prefs.js:1351
 msgid "Show Recommended Apps"
-msgstr ""
+msgstr "Ajánlott alkalmazások megjelenítése"
 
 #: prefs.js:1352
 msgid "Display frequently used applications below pinned apps"
-msgstr ""
+msgstr "Gyakran használt alkalmazások megjelenítése a rögzített alkalmazások alatt"
 
 #: prefs.js:1364
 msgid "Hide Pinned App Titles"
-msgstr ""
+msgstr "Rögzített alkalmazások címeinek elrejtése"
 
 #: prefs.js:1366
 msgid ""
+""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
-msgstr ""
+msgstr "Név elrejtése a rögzített ikonok alatt, megjelenítés buboréksúgóban föléhúzáskor"
 
 #: prefs.js:1400
 msgid "Organize All Apps into Categories"
-msgstr ""
+msgstr "Összes alkalmazás kategóriákba rendezése"
 
 #: prefs.js:1401
 msgid "Browse applications by category in the Start menu"
-msgstr ""
+msgstr "Alkalmazások böngészése kategóriák szerint a Start menüben"
 
 #: prefs.js:1423
 msgid "Show Original GNOME Button"
-msgstr ""
+msgstr "Eredeti GNOME gomb megjelenítése"
 
 #: prefs.js:1424
 msgid ""
+""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
-msgstr ""
+msgstr "Az Alkalmazások gomb megjelenítése, ha a Windows 11 stílusú Start menü le van tiltva"
 
 #: prefs.js:1445
 msgid "Follow Panel Theme"
-msgstr ""
+msgstr "Panel téma követése"
 
 #: prefs.js:1446
 msgid "Use the panel’s effective light or dark appearance"
-msgstr ""
+msgstr "A panel aktív világos vagy sötét megjelenésének használata"
 
 #: prefs.js:1464
 msgid "Start Menu Theme"
-msgstr ""
+msgstr "Start menü témája"
 
 #: prefs.js:1465
 msgid "Use a custom appearance or follow the GNOME Shell theme"
-msgstr ""
+msgstr "Egyéni megjelenés használata vagy a GNOME Shell téma követése"
 
 #: prefs.js:1469
 msgid "GNOME Shell"
-msgstr ""
+msgstr "GNOME Shell"
 
 #: prefs.js:1489
 msgid "Use the panel’s configured transparency level"
-msgstr ""
+msgstr "A panel beállított átlátszósági szintjének használata"
 
 #: prefs.js:1495
 msgid "Disable Blur My Shell popup blur to use this option"
-msgstr ""
+msgstr "A Blur My Shell felbukkanó elmosásának kikapcsolása a lehetőség használatához"
 
 #: prefs.js:1498
 msgid "Disable Blur My Shell panel and popup blur to use this option"
-msgstr ""
+msgstr "A Blur My Shell panel- és felbukkanó-elmosásának kikapcsolása a lehetőség használatához"
 
 #: prefs.js:1501
 msgid "Follow Panel Transparency"
-msgstr ""
+msgstr "Panel átlátszóságának követése"
 
 #: prefs.js:1542
 msgid "Center Start Menu on Monitor"
-msgstr ""
+msgstr "Start menü középre igazítása a monitoron"
 
 #: prefs.js:1543
 msgid ""
+""
 "Place the menu at the true horizontal center instead of over the Start button"
-msgstr ""
+msgstr "A menü elhelyezése a tényleges vízszintes középpontban a Start gomb feletti helyett"
 
 #: prefs.js:1581
 msgid "Super Opens Start Menu"
-msgstr ""
+msgstr "Super billentyű megnyitja a Start menüt"
 
 #: prefs.js:1582
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
-msgstr ""
+msgstr "Super billentyű használata a Start menühöz, és az Áttekintés áthelyezése a Super+Tab-ra"
 
 #: prefs.js:1594
 msgid "Super+Tab Opens Start Menu"
-msgstr ""
+msgstr "Super+Tab megnyitja a Start menüt"
 
 #: prefs.js:1595
 msgid ""
+""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
-msgstr ""
+msgstr "A GNOME alkalmazásváltó gyorsbillentyűjének használata a Windows 11 stílusú Start menühöz, amíg az engedélyezve van"
 
 #: prefs.js:1622
 msgid "Super+E Opens File Manager"
-msgstr ""
+msgstr "Super+E megnyitja a Fájlkezelőt"
 
 #: prefs.js:1624
 msgid "Open your home folder with the system’s default file manager"
-msgstr ""
+msgstr "A saját mappa megnyitása a rendszer alapértelmezett fájlkezelőjével"
 
 #: prefs.js:1639
 msgid "Not set"
-msgstr ""
+msgstr "Nincs beállítva"
 
 #: prefs.js:1644
 msgid "Set custom shortcut"
-msgstr ""
+msgstr "Egyéni gyorsbillentyű beállítása"
 
 #: prefs.js:1649
 msgid "Clear custom shortcut"
-msgstr ""
+msgstr "Egyéni gyorsbillentyű törlése"
 
 #: prefs.js:1653
 msgid "Custom Start Menu Shortcut"
-msgstr ""
+msgstr "Egyéni Start menü gyorsbillentyű"
 
 #: prefs.js:1672
 msgid "Turn off the Super shortcut to use a custom shortcut"
-msgstr ""
+msgstr "Kapcsolja ki a Super gyorsbillentyűt egyéni billentyűkombináció használatához"
 
 #: prefs.js:1675
 msgid "Turn off Super+Tab to use a custom shortcut"
-msgstr ""
+msgstr "Kapcsolja ki a Super+Tab gyorsbillentyűt egyéni billentyűkombináció használatához"
 
 #: prefs.js:1678
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
-msgstr ""
+msgstr "Válasszon egy szabad gyorsbillentyűt; alapértelmezés szerint nincs hozzárendelve semmi"
 
 #: prefs.js:1701
 msgid "Show Activities Button"
-msgstr ""
+msgstr "Tevékenységek gomb megjelenítése"
 
 #: prefs.js:1702
 msgid "Display GNOME’s workspace overview button on the taskbar"
-msgstr ""
+msgstr "A GNOME munkaterület-áttekintő gombjának megjelenítése a tálcán"
 
 #: prefs.js:1714 prefs.js:1879
 msgid "Show Desktop Button"
-msgstr ""
+msgstr "Asztal megjelenítése gomb"
 
 #: prefs.js:1715
 msgid "Display a button that minimizes or restores all windows"
-msgstr ""
+msgstr "Minden ablakot kis méretűre kicsinyítő vagy visszaállító gomb megjelenítése"
 
 #: prefs.js:1729
 msgid "Application Volume Mixer"
-msgstr ""
+msgstr "Alkalmazások hangerőkeverője"
 
 #: prefs.js:1730
 msgid "Add per-application volume controls to Quick Settings"
-msgstr ""
+msgstr "Alkalmazásonkénti hangerőszabályzók hozzáadása a Gyorsbeállításokhoz"
 
 #: prefs.js:1742
 msgid "Collect Tray Icons"
-msgstr ""
+msgstr "Tálcaikonok összegyűjtése"
 
 #: prefs.js:1743 prefs.js:1863
 msgid "Gather application tray icons behind a panel arrow"
-msgstr ""
+msgstr "Alkalmazás-tálcaikonok összegyűjtése egy panelnyíl mögé"
 
 #: prefs.js:1755
 msgid "Show Folder Menu"
-msgstr ""
+msgstr "Mappamenü megjelenítése"
 
 #: prefs.js:1756
 msgid "Show a selected folder on the taskbar"
-msgstr ""
+msgstr "Kiválasztott mappa megjelenítése a tálcán"
 
 #: prefs.js:1768
 msgid "Folder Menu Location"
-msgstr ""
+msgstr "Mappamenü helye"
 
 #: prefs.js:1786
 msgid "No folder selected"
-msgstr ""
+msgstr "Nincs mappa kiválasztva"
 
 #: prefs.js:1802
 msgid "Left Items"
-msgstr ""
+msgstr "Bal oldali elemek"
 
 #: prefs.js:1804
 msgid "Move items only within their current panel position."
-msgstr ""
+msgstr "Elemek mozgatása csak a jelenlegi panelpozíciójukon belül."
 
 #: prefs.js:1808
 msgid "Center Items"
-msgstr ""
+msgstr "Középső elemek"
 
 #: prefs.js:1811
 msgid "Right Items"
-msgstr ""
+msgstr "Jobb oldali elemek"
 
 #: prefs.js:1819
 msgid "Left Box"
-msgstr ""
+msgstr "Bal doboz"
 
 #: prefs.js:1820 prefs.js:1826 prefs.js:1832
 msgid "Other GNOME Shell and extension items"
-msgstr ""
+msgstr "Egyéb GNOME Shell- és kiterjesztéselemek"
 
 #: prefs.js:1825
 msgid "Center Box"
-msgstr ""
+msgstr "Középső doboz"
 
 #: prefs.js:1831
 msgid "Right Box"
-msgstr ""
+msgstr "Jobb doboz"
 
 #: prefs.js:1839
 msgid "Eleven-style or original GNOME Start button"
-msgstr ""
+msgstr "Windows 11 stílusú vagy eredeti GNOME Start gomb"
 
 #: prefs.js:1844
 msgid "Activities"
-msgstr ""
+msgstr "Tevékenységek"
 
 #: prefs.js:1845
 msgid "GNOME workspace overview button"
-msgstr ""
+msgstr "GNOME munkaterület-áttekintő gomb"
 
 #: prefs.js:1850 startButtonController.js:591
 msgid "Applications"
-msgstr ""
+msgstr "Alkalmazások"
 
 #: prefs.js:1851
 msgid "Taskbar application buttons"
-msgstr ""
+msgstr "Tálca alkalmazásgombok"
 
 #: prefs.js:1856
 msgid "Folder Menu"
-msgstr ""
+msgstr "Mappamenü"
 
 #: prefs.js:1857
 msgid "Selected folder shortcuts"
-msgstr ""
+msgstr "Kiválasztott mappa gyorslinkek"
 
 #: prefs.js:1862 trayOverflowController.js:185
 msgid "Tray icons"
-msgstr ""
+msgstr "Tálcaikonok"
 
 #: prefs.js:1868
 msgid "System Menu"
-msgstr ""
+msgstr "Rendszermenü"
 
 #: prefs.js:1869
 msgid "Quick Settings, volume, network, and power"
-msgstr ""
+msgstr "Gyorsbeállítások, hangerő, hálózat és kikapcsolás"
 
 #: prefs.js:1874
 msgid "Clock"
-msgstr ""
+msgstr "Óra"
 
 #: prefs.js:1880
 msgid "Minimize or restore all windows"
-msgstr ""
+msgstr "Minden ablak kis méretűre kicsinyítése vagy visszaállítása"
 
 #: prefs.js:2060 prefs.js:2087
 msgid "Reset"
-msgstr ""
+msgstr "Visszaállítás"
 
 #: prefs.js:2065
 msgid "Reset All Settings"
-msgstr ""
+msgstr "Minden beállítás visszaállítása"
 
 #: prefs.js:2066
 msgid "Restore defaults without changing pinned taskbar or Start Menu apps"
-msgstr ""
+msgstr "Alapértelmezések visszaállítása a rögzített tálca- vagy Start menü alkalmazások módosítása nélkül"
 
 #: prefs.js:2069
 msgid "Reset…"
-msgstr ""
+msgstr "Visszaállítás…"
 
 #: prefs.js:2083
 msgid "Reset all settings?"
-msgstr ""
+msgstr "Visszaállít minden beállítást?"
 
 #: prefs.js:2084
 msgid ""
+""
 "This will restore taskbar and Start Menu settings. Pinned taskbar and Start "
 "Menu apps, including their order, will be kept."
-msgstr ""
+msgstr "Ez visszaállítja a tálca és a Start menü beállításait. A rögzített tálca- és Start menü alkalmazások, beleértve azok sorrendjét is, megmaradnak."
 
 #: prefs.js:2086 prefs/startIconChooser.js:139
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #: prefs.js:2123
 msgid "Set Custom Shortcut"
-msgstr ""
+msgstr "Egyéni gyorsbillentyű beállítása"
 
 #: prefs.js:2136
 msgid "Press a keyboard shortcut"
-msgstr ""
+msgstr "Nyomjon meg egy gyorsbillentyűt"
 
 #: prefs.js:2137
 msgid "Press Backspace to clear it, or Escape to cancel."
-msgstr ""
+msgstr "Nyomja meg a Backspace-t a törléshez, vagy az Escape-et a megszakításhoz."
 
 #: prefs.js:2181
 msgid "That shortcut needs a modifier key. Try another shortcut."
-msgstr ""
+msgstr "A gyorsbillentyűhöz módosítóbillentyű szükséges. Próbáljon egy másik gyorsbillentyűt."
 
 #: prefs.js:2195
 msgid "That shortcut is already in use. Press a different shortcut."
-msgstr ""
+msgstr "Ez a gyorsbillentyű már használatban van. Nyomjon meg egy másik gyorsbillentyűt."
 
 #: prefs.js:2213
 msgid "Choose a Folder"
-msgstr ""
+msgstr "Mappa kiválasztása"
 
 #: prefs.js:2337
 msgid "Move Up"
-msgstr ""
+msgstr "Mozgatás fel"
 
 #: prefs.js:2342
 msgid "Move Down"
-msgstr ""
+msgstr "Mozgatás le"
 
 #: windowsStartMenu.js:50
 msgid "Internet"
-msgstr ""
+msgstr "Internet"
 
 #: windowsStartMenu.js:55
 msgid "Office"
-msgstr ""
+msgstr "Iroda"
 
 #: windowsStartMenu.js:60
 msgid "Development"
-msgstr ""
+msgstr "Fejlesztés"
 
 #: windowsStartMenu.js:65
 msgid "Games"
-msgstr ""
+msgstr "Játékok"
 
 #: windowsStartMenu.js:70
 msgid "Graphics"
-msgstr ""
+msgstr "Grafika"
 
 #: windowsStartMenu.js:75
 msgid "Sound & Video"
-msgstr ""
+msgstr "Hang és videó"
 
 #: windowsStartMenu.js:80
 msgid "Education"
-msgstr ""
+msgstr "Oktatás"
 
 #: windowsStartMenu.js:85
 msgid "Science"
-msgstr ""
+msgstr "Tudomány"
 
 #: windowsStartMenu.js:90
 msgid "System"
-msgstr ""
+msgstr "Rendszer"
 
 #: windowsStartMenu.js:95
 msgid "Utilities"
-msgstr ""
+msgstr "Kellékek"
 
 #: windowsStartMenu.js:633
 msgid "Type here to search"
-msgstr ""
+msgstr "Gépeljen ide a kereséshez"
 
 #: windowsStartMenu.js:704 windowsStartMenu.js:1084
 msgid "Pinned"
-msgstr ""
+msgstr "Rögzítve"
 
 #: windowsStartMenu.js:709 windowsStartMenu.js:1156
 msgid "All apps"
-msgstr ""
+msgstr "Minden alkalmazás"
 
 #: windowsStartMenu.js:719
 msgid "Back"
-msgstr ""
+msgstr "Vissza"
 
 #: windowsStartMenu.js:832
 msgid "Settings"
-msgstr ""
+msgstr "Beállítások"
 
 #: windowsStartMenu.js:840
 msgid "Power Options"
-msgstr ""
+msgstr "Tápellátási lehetőségek"
 
 #: windowsStartMenu.js:911
 msgid "Suspend"
-msgstr ""
+msgstr "Felfüggesztés"
 
 #: windowsStartMenu.js:918
 msgid "Restart"
-msgstr ""
+msgstr "Újraindítás"
 
 #: windowsStartMenu.js:925
 msgid "Power Off"
-msgstr ""
+msgstr "Kikapcsolás"
 
 #: windowsStartMenu.js:935
 msgid "Lock Screen"
-msgstr ""
+msgstr "Képernyő zárolása"
 
 #: windowsStartMenu.js:942
 msgid "Log Out"
-msgstr ""
+msgstr "Kijelentkezés"
 
 #: windowsStartMenu.js:949
 msgid "Switch User"
-msgstr ""
+msgstr "Felhasználóváltás"
 
 #: windowsStartMenu.js:1132
 msgid "Choose All, then right-click an app to pin it"
-msgstr ""
+msgstr "Válassza az Összes elemet, majd kattintson jobb gombbal egy alkalmazásra a rögzítéshez"
 
 #: windowsStartMenu.js:1140
 msgid "Recommended"
-msgstr ""
+msgstr "Ajánlott"
 
 #: windowsStartMenu.js:1176
 msgid "Search results"
-msgstr ""
+msgstr "Keresési eredmények"
 
 #: windowsStartMenu.js:1206 windowsStartMenu.js:1236
 msgid "No results found"
-msgstr ""
+msgstr "Nincs találat"
 
 #: windowsStartMenu.js:1280
 msgid "All"
-msgstr ""
+msgstr "Összes"
 
 #: windowsStartMenu.js:1293
 msgid "Other"
-msgstr ""
+msgstr "Egyéb"
 
 #: startMenuAppMenu.js:112 startMenuAppMenu.js:265
 msgid "Create Desktop Shortcut"
-msgstr ""
+msgstr "Asztali parancsikon létrehozása"
 
 #: startMenuAppMenu.js:198
 msgid "Unpin from Start"
-msgstr ""
+msgstr "Rögzítés törlése a Start menüből"
 
 #: startMenuAppMenu.js:199
 msgid "Pin to Start"
-msgstr ""
+msgstr "Rögzítés a Start menübe"
 
 #: startMenuAppMenu.js:264
 msgid "Delete Desktop Shortcut"
-msgstr ""
+msgstr "Asztali parancsikon törlése"
 
 #: folderMenuController.js:46 folderMenuController.js:188
 msgid "Folder menu"
-msgstr ""
+msgstr "Mappamenü"
 
 #: folderMenuController.js:65
 msgid "Open to view folder contents"
-msgstr ""
+msgstr "Megnyitás a mappa tartalmának megtekintéséhez"
 
 #: folderMenuController.js:189
 msgid "Choose a folder in Taskbar Settings"
-msgstr ""
+msgstr "Válasszon egy mappát a Tálca beállításaiban"
 
 #: folderMenuController.js:196
 #, javascript-format
 msgid "%s folder"
-msgstr ""
+msgstr "%s mappa"
 
 #: folderMenuController.js:198
 msgid "Selected"
-msgstr ""
+msgstr "Kiválasztva"
 
 #: folderMenuController.js:200
 msgid "Loading…"
-msgstr ""
+msgstr "Betöltés…"
 
 #: folderMenuController.js:298
 msgid "This folder is empty"
-msgstr ""
+msgstr "Ez a mappa üres"
 
 #: fileManagerPlacesSection.js:25
 msgid "Home"
-msgstr ""
+msgstr "Saját mappa"
 
 #: fileManagerPlacesSection.js:30
 msgid "Desktop"
-msgstr ""
+msgstr "Asztal"
 
 #: fileManagerPlacesSection.js:35
 msgid "Documents"
-msgstr ""
+msgstr "Dokumentumok"
 
 #: fileManagerPlacesSection.js:40
 msgid "Downloads"
-msgstr ""
+msgstr "Letöltések"
 
 #: fileManagerPlacesSection.js:45
 msgid "Music"
-msgstr ""
+msgstr "Zenék"
 
 #: fileManagerPlacesSection.js:50
 msgid "Pictures"
-msgstr ""
+msgstr "Képek"
 
 #: fileManagerPlacesSection.js:55
 msgid "Videos"
-msgstr ""
+msgstr "Videók"
 
 #: fileManagerPlacesSection.js:130
 msgid "Unable to open folder"
-msgstr ""
+msgstr "A mappa nem nyitható meg"
 
 #: taskbarAppMenu.js:22
 msgid "Quit"
-msgstr ""
+msgstr "Kilépés"
 
 #: taskbarAppMenu.js:27
 msgid "Close window"
-msgstr ""
+msgstr "Ablak bezárása"
 
 #: taskbarAppMenu.js:95
 msgid "Close all windows"
-msgstr ""
+msgstr "Összes ablak bezárása"
 
 #: taskbarAppMenu.js:117
 msgid "Unpin from Taskbar"
-msgstr ""
+msgstr "Rögzítés törlése a tálcáról"
 
 #: taskbarAppMenu.js:118
 msgid "Pin to Taskbar"
-msgstr ""
+msgstr "Rögzítés a tálcára"
 
 #: startButtonController.js:271
 msgid "Start Menu Settings"
-msgstr ""
+msgstr "Start menü beállításai"
 
 #: startButtonController.js:591
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: prefs/startIconChooser.js:61
 #, javascript-format
 msgid "%s Alternate"
-msgstr ""
+msgstr "%s alternatív"
 
 #: prefs/startIconChooser.js:63
 #, javascript-format
 msgid "%s (Symbolic)"
-msgstr ""
+msgstr "%s (szimbolikus)"
 
 #: prefs/startIconChooser.js:99 prefs/startIconChooser.js:214
 msgid "GNOME"
-msgstr ""
+msgstr "GNOME"
 
 #: prefs/startIconChooser.js:101 prefs/startIconChooser.js:219
 msgid "Eleven-style"
-msgstr ""
+msgstr "Windows 11 stílusú"
 
 #: prefs/startIconChooser.js:118 prefs/startIconChooser.js:337
 msgid "Choose a Start Button Icon"
-msgstr ""
+msgstr "Válasszon Start gomb ikont"
 
 #: prefs/startIconChooser.js:145
 msgid "Select"
-msgstr ""
+msgstr "Kiválasztás"
 
 #: prefs/startIconChooser.js:165
 msgid "Search icons…"
-msgstr ""
+msgstr "Ikonok keresése…"
 
 #: prefs/startIconChooser.js:199
 msgid "Browse Files…"
-msgstr ""
+msgstr "Fájlok tallózása…"
 
 #: prefs/startIconChooser.js:321
 msgid "Image Files"
-msgstr ""
+msgstr "Képfájlok"
 
 #: panelInteractionController.js:93
 msgid "Task Manager"
-msgstr ""
+msgstr "Feladatkezelő"
 
 #: panelInteractionController.js:95
 msgid "Lock the Taskbar"
-msgstr ""
+msgstr "Tálca zárolása"
 
 #: panelInteractionController.js:125
 msgid "Taskbar Settings"
-msgstr ""
+msgstr "Tálca beállításai"
 
 #: taskbarController.js:675 taskbarController.js:677 taskbarController.js:1953
 msgid "running"
-msgstr ""
+msgstr "fut"
 
 #: windowPreviewController.js:608 gridAltTabPopup.js:221 gridAltTabPopup.js:306
 msgid "Untitled Window"
-msgstr ""
+msgstr "Névtelen ablak"
 
 #: windowPreviewController.js:652
 msgid "Close Window"
-msgstr ""
+msgstr "Ablak bezárása"
 
 #: favoritesIntegration.js:36
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
-msgstr ""
+msgstr "A(z) %s rögzítve lett a tálcára."
 
 #: favoritesIntegration.js:59
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
-msgstr ""
+msgstr "A(z) %s rögzítése törölve lett a tálcáról."
 
 #: volumeMixerController.js:98
 msgid "Application"
-msgstr ""
+msgstr "Alkalmazás"
 
 #: volumeMixerController.js:131
 #, javascript-format
 msgid "%s volume"
-msgstr ""
+msgstr "%s hangerő"
 
 #: volumeMixerController.js:272
 msgid "Mixer"
-msgstr ""
+msgstr "Hangerőkeverő"
 
 #: volumeMixerController.js:282
 msgid "Open application volume controls"
-msgstr ""
+msgstr "Alkalmazások hangerőszabályzóinak megnyitása"
 
 #: volumeMixerController.js:285
 msgid "Application Volume"
-msgstr ""
+msgstr "Alkalmazás hangereje"
 
 #: volumeMixerController.js:334
 msgid "No applications are playing audio"
-msgstr ""
+msgstr "Egyetlen alkalmazás sem játszik le hangot"
