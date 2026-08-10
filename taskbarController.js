@@ -34,8 +34,26 @@ const TaskbarItemContainer = GObject.registerClass(
 class TaskbarItemContainer extends Dash.DashItemContainer {
     _init() {
         super._init();
+        this._preserveNaturalWidth = false;
         this.x_expand = false;
         this.y_expand = false;
+    }
+
+    setPreserveNaturalWidth(preserve) {
+        if (preserve === this._preserveNaturalWidth)
+            return;
+
+        this._preserveNaturalWidth = preserve;
+        this.queue_relayout();
+    }
+
+    vfunc_get_preferred_width(forHeight) {
+        const [minimumWidth, naturalWidth] =
+            super.vfunc_get_preferred_width(forHeight);
+        return [
+            this._preserveNaturalWidth ? naturalWidth : minimumWidth,
+            naturalWidth,
+        ];
     }
 
     vfunc_allocate(box) {
@@ -95,6 +113,7 @@ export class TaskbarController {
         this._appSignals = new Map();
         this._appButtons = new Map();
         this._auxiliaryItems = new Set();
+        this._preserveItemWidths = false;
         this._sessionOrder = [];
         this._dragging = false;
         this._dragEnabled = null;
@@ -150,8 +169,13 @@ export class TaskbarController {
         return this.actor.get_children().filter(item => items.has(item));
     }
 
-    getPinnedItemCount() {
-        return this._pinnedApps().length;
+    setPreserveItemWidths(preserve) {
+        if (preserve === this._preserveItemWidths)
+            return;
+
+        this._preserveItemWidths = preserve;
+        for (const item of this._appButtons.values())
+            item.setPreserveNaturalWidth(preserve);
     }
 
     registerAuxiliaryItem(item) {
@@ -159,9 +183,7 @@ export class TaskbarController {
     }
 
     removeAuxiliaryItem(item) {
-        if (!this._auxiliaryItems.delete(item))
-            return;
-
+        this._auxiliaryItems.delete(item);
         this._windowPreviews.removeItem(item);
         this._destroyAppMenu(item._taskbarButton);
     }
@@ -350,6 +372,7 @@ export class TaskbarController {
         this._openNewWindow = null;
         this._sessionOrder = null;
         this._auxiliaryItems = null;
+        this._preserveItemWidths = false;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = null;
         this._shownInitially = false;
@@ -1393,6 +1416,7 @@ export class TaskbarController {
         const slotWidth = this._itemSlotWidth(window);
         const glassHeight = this._glassHeight();
         const item = new TaskbarItemContainer();
+        item.setPreserveNaturalWidth(this._preserveItemWidths);
         item.add_style_class_name('simple-taskbar-app-item');
         item.reactive = true;
         item.track_hover = true;

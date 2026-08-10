@@ -67,6 +67,7 @@ export class ApplicationOverflowController {
         this._section = null;
         this._button = null;
         this._icon = null;
+        this._spacer = new St.Widget({visible: false});
         this._maximumWidth = Number.MAX_SAFE_INTEGER;
         this._syncId = 0;
         this._overflowItems = [];
@@ -80,6 +81,7 @@ export class ApplicationOverflowController {
         });
         this._createButton();
         this.actor.add_child(this._viewport);
+        this.actor.add_child(this._spacer);
         this.actor.add_child(this._button);
     }
 
@@ -123,6 +125,9 @@ export class ApplicationOverflowController {
                 this._queueSync();
             }
         );
+        this._connect(this._settings, 'changed::icon-spacing', () => {
+            this._queueSync();
+        });
         this._connect(this._settings, 'changed::panel-position', () => {
             this.close();
             this._syncPanelPosition();
@@ -192,6 +197,7 @@ export class ApplicationOverflowController {
         this.actor = null;
         this._button = null;
         this._icon = null;
+        this._spacer = null;
         this._viewport = null;
         this._taskbarController = null;
         this._overflowItems = null;
@@ -288,7 +294,9 @@ export class ApplicationOverflowController {
         ) && !this._settings.get_boolean('default-gnome-panel');
         this._viewport.enable_mouse_scrolling = !enabled;
         if (!enabled) {
+            this._taskbarController.setPreserveItemWidths(false);
             this._button.hide();
+            this._spacer.hide();
             this._viewport.setMaximumWidth(this._maximumWidth);
             this._clearOverflow();
             return;
@@ -302,7 +310,9 @@ export class ApplicationOverflowController {
         );
         const taskbarWidth = itemWidths.reduce((sum, width) => sum + width, 0);
         if (taskbarWidth <= this._maximumWidth) {
+            this._taskbarController.setPreserveItemWidths(false);
             this._button.hide();
+            this._spacer.hide();
             this._viewport.setMaximumWidth(this._maximumWidth);
             this._clearOverflow();
             return;
@@ -315,11 +325,8 @@ export class ApplicationOverflowController {
             1,
             this._maximumWidth - buttonWidth
         );
-        let visibleCount = this._taskbarController.getPinnedItemCount();
-        let visibleWidth = itemWidths.slice(0, visibleCount).reduce(
-            (sum, width) => sum + width,
-            0
-        );
+        let visibleCount = 0;
+        let visibleWidth = 0;
         for (let index = visibleCount; index < items.length; index++) {
             if (visibleWidth + itemWidths[index] > availableWidth)
                 break;
@@ -328,14 +335,10 @@ export class ApplicationOverflowController {
             visibleCount++;
         }
 
-        if (visibleCount === items.length) {
-            this._button.hide();
-            this._viewport.setMaximumWidth(this._maximumWidth);
-            this._clearOverflow();
-            return;
-        }
-
+        this._taskbarController.setPreserveItemWidths(true);
         this._viewport.setMaximumWidth(Math.max(1, visibleWidth));
+        this._spacer.set_width(Math.max(0, availableWidth - visibleWidth));
+        this._spacer.show();
         this._setOverflowItems(items.slice(visibleCount));
         this._syncTheme();
     }
@@ -384,17 +387,38 @@ export class ApplicationOverflowController {
         for (const item of items)
             box.add_child(this._createTaskbarItem(item));
 
-        const viewport = new St.Viewport({
-            layout_manager: new Clutter.BinLayout(),
-        });
-        viewport.add_child(box);
         const scrollView = new St.ScrollView({
             style_class: 'simple-taskbar-application-overflow-scroll',
             hscrollbar_policy: St.PolicyType.NEVER,
             vscrollbar_policy: St.PolicyType.NEVER,
             enable_mouse_scrolling: true,
             overlay_scrollbars: false,
-            child: viewport,
+            child: box,
+        });
+        scrollView.connect('scroll-event', (_actor, event) => {
+            const adjustment = scrollView.hadjustment;
+            const increment = Math.max(
+                adjustment.step_increment,
+                this._settings.get_int('panel-height')
+            );
+            let delta = 0;
+            switch (event.get_scroll_direction()) {
+            case Clutter.ScrollDirection.UP:
+            case Clutter.ScrollDirection.LEFT:
+                delta = -increment;
+                break;
+            case Clutter.ScrollDirection.DOWN:
+            case Clutter.ScrollDirection.RIGHT:
+                delta = increment;
+                break;
+            case Clutter.ScrollDirection.SMOOTH: {
+                const [dx, dy] = event.get_scroll_delta();
+                delta = (Math.abs(dx) > Math.abs(dy) ? dx : dy) * increment;
+                break;
+            }
+            }
+            adjustment.set_value(adjustment.get_value() + delta);
+            return Clutter.EVENT_STOP;
         });
         this._section.actor.add_child(scrollView);
     }
@@ -436,7 +460,7 @@ export class ApplicationOverflowController {
             accessible_name: item._taskbarButton.accessible_name,
             child: clone,
         });
-        this._configureAuxiliaryItem(button, item, button);
+        this._configureAuxiliaryItem(button, item, button, true);
         return button;
     }
 
@@ -453,6 +477,8 @@ export class ApplicationOverflowController {
         });
         const content = new St.BoxLayout({
             style_class: 'simple-taskbar-application-overflow-list-content',
+            x_align: Clutter.ActorAlign.START,
+            x_expand: true,
         });
         content.add_child(icon);
         content.add_child(label);
@@ -461,6 +487,7 @@ export class ApplicationOverflowController {
             reactive: true,
             can_focus: true,
             track_hover: true,
+            x_align: Clutter.ActorAlign.FILL,
             x_expand: true,
             accessible_name: item._taskbarButton.accessible_name,
             child: content,
@@ -479,11 +506,16 @@ export class ApplicationOverflowController {
         };
         item.connectObject('notify::style-class', syncState, button);
         syncState();
-        this._configureAuxiliaryItem(button, item, button);
+        this._configureAuxiliaryItem(button, item, button, false);
         return button;
     }
 
-    _configureAuxiliaryItem(auxiliaryItem, sourceItem, styleItem) {
+    _configureAuxiliaryItem(
+        auxiliaryItem,
+        sourceItem,
+        styleItem,
+        previewsEnabled
+    ) {
         auxiliaryItem._taskbarApp = sourceItem._taskbarApp;
         auxiliaryItem._taskbarWindow = sourceItem._taskbarWindow;
         auxiliaryItem._taskbarIsLauncher = sourceItem._taskbarIsLauncher;
@@ -499,14 +531,16 @@ export class ApplicationOverflowController {
             auxiliaryItem
         );
 
-        auxiliaryItem.connect('notify::hover', () => {
-            this._taskbarController.handleItemHover(
-                auxiliaryItem,
-                auxiliaryItem.hover,
-                styleItem,
-                false
-            );
-        });
+        if (previewsEnabled) {
+            auxiliaryItem.connect('notify::hover', () => {
+                this._taskbarController.handleItemHover(
+                    auxiliaryItem,
+                    auxiliaryItem.hover,
+                    styleItem,
+                    false
+                );
+            });
+        }
         auxiliaryItem.connect('clicked', () => {
             const keepOpen = this._taskbarController.activateItem(
                 sourceItem,
@@ -557,12 +591,15 @@ export class ApplicationOverflowController {
                 1,
                 workArea.width - POPUP_MARGIN
             );
-            const viewport = scrollView.get_child_at_index(0);
-            const content = viewport.get_child_at_index(0);
-            const [, contentWidth] = content.get_preferred_width(-1);
+            const panelHeight = this._settings.get_int('panel-height');
+            const contentWidth = this._overflowItems.reduce(
+                (width, item) => width +
+                    item.get_preferred_width(panelHeight)[1],
+                0
+            );
             scrollView.set_policy(
                 contentWidth > maximumWidth
-                    ? St.PolicyType.AUTOMATIC
+                    ? St.PolicyType.ALWAYS
                     : St.PolicyType.NEVER,
                 St.PolicyType.NEVER
             );

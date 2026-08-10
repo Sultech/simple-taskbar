@@ -20,7 +20,7 @@ export class PanelInteractionController {
         settings,
         taskbarController,
         taskbarBin,
-        taskbarContainer = taskbarBin,
+        taskbarContainer,
         previewController,
         openPreferences,
         panelActor = Main.panel,
