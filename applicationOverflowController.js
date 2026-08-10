@@ -58,9 +58,10 @@ class ApplicationOverflowContainer extends St.BoxLayout {
 });
 
 export class ApplicationOverflowController {
-    constructor({settings, taskbarController, viewport}) {
+    constructor({settings, taskbarController, previewController, viewport}) {
         this._settings = settings;
         this._taskbarController = taskbarController;
+        this._previewController = previewController;
         this._viewport = viewport;
         this._signals = [];
         this._grab = null;
@@ -179,7 +180,13 @@ export class ApplicationOverflowController {
     }
 
     close() {
+        this._previewController.hide();
         this._menu.close(BoxPointer.PopupAnimation.NONE);
+    }
+
+    closeWithAnimation() {
+        this._previewController.hide();
+        this._menu.close(BoxPointer.PopupAnimation.FULL);
     }
 
     destroy() {
@@ -208,6 +215,7 @@ export class ApplicationOverflowController {
         this._spacer = null;
         this._viewport = null;
         this._taskbarController = null;
+        this._previewController = null;
         this._overflowItems = null;
         this._auxiliaryItems = null;
         this._layoutSignature = null;
@@ -248,17 +256,20 @@ export class ApplicationOverflowController {
             return Clutter.EVENT_PROPAGATE;
         }
 
-        this._menu.close(BoxPointer.PopupAnimation.FULL);
+        this.closeWithAnimation();
         return Clutter.EVENT_PROPAGATE;
     }
 
     _eventInAuxiliaryMenu(target) {
-
         for (const {auxiliaryItem} of this._auxiliaryItems) {
-            const menu = auxiliaryItem._taskbarMenu;
-            if (menu &&
-                (menu.actor === target || menu.actor.contains(target))) {
-                return true;
+            for (const menu of [
+                auxiliaryItem._taskbarMenu,
+                auxiliaryItem._taskbarPreviewMenu,
+            ]) {
+                if (menu &&
+                    (menu.actor === target || menu.actor.contains(target))) {
+                    return true;
+                }
             }
         }
         return false;

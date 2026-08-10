@@ -22,10 +22,16 @@ const APP_TOOLTIP_SHOW_TIME = 150;
 const APP_TOOLTIP_HIDE_TIME = 100;
 
 export class WindowPreviewController {
-    constructor(getTaskbarItems, getInterestingWindows, settings) {
+    constructor(
+        getTaskbarItems,
+        getInterestingWindows,
+        settings,
+        onPreviewActivated
+    ) {
         this._getTaskbarItems = getTaskbarItems;
         this._getInterestingWindows = getInterestingWindows;
         this._settings = settings;
+        this._onPreviewActivated = onPreviewActivated;
         this._previewItem = null;
         this._previewPendingItem = null;
         this._previewOpenId = 0;
@@ -78,6 +84,7 @@ export class WindowPreviewController {
 
         this._getTaskbarItems = null;
         this._getInterestingWindows = null;
+        this._onPreviewActivated = null;
         this._settings = null;
         this._previewHoverItem = null;
         this._tooltipItem = null;
@@ -623,6 +630,7 @@ export class WindowPreviewController {
         });
         previewButton.connect('clicked', () => {
             this.hide();
+            this._onPreviewActivated();
             Main.activateWindow(window);
             Main.overview.hide();
         });

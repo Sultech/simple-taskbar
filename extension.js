@@ -93,7 +93,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
             app => this._windowController.getInterestingWindows(app),
-            this._settings
+            this._settings,
+            () => this._applicationOverflowController.closeWithAnimation()
         );
         this._taskbarController.setPreviewController(this._windowPreviews);
         this._windowController.setTaskbarController(this._taskbarController);
@@ -265,6 +266,7 @@ export default class SimpleTaskbarExtension extends Extension {
             new ApplicationOverflowController({
                 settings: this._settings,
                 taskbarController: this._taskbarController,
+                previewController: this._windowPreviews,
                 viewport: this._taskbarViewport,
             });
         this._taskbarBin = this._applicationOverflowController.actor;
