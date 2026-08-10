@@ -77,3 +77,9 @@ project.
 
 The `desktop.png` file is copied unchanged from the Luna Blue resources in
 the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc) project.
+
+## Windows XP Luna Quick Settings icons
+
+The files in `icons/taskbar/xp/quick-settings/` are copied unchanged from
+the 16x16 Luna resources in the
+[xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc) project.

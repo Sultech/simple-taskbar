@@ -30,6 +30,9 @@ import {NotificationBannerController} from './notificationBannerController.js';
 import {
     QuickSettingsPowerController,
 } from './quickSettingsPowerController.js';
+import {
+    QuickSettingsXpIconController,
+} from './quickSettingsXpIconController.js';
 import {StartButtonController} from './startButtonController.js';
 import {
     SwitcherKeybindingRouter,
@@ -181,6 +184,13 @@ export default class SimpleTaskbarExtension extends Extension {
                 Main.panel.statusArea.quickSettings
             );
         this._quickSettingsPowerController.enable();
+        this._quickSettingsXpIconController =
+            new QuickSettingsXpIconController(
+                this._settings,
+                this.dir,
+                Main.panel.statusArea.quickSettings
+            );
+        this._quickSettingsXpIconController.enable();
         this._multiMonitorController = new MultiMonitorController({
             extensionDir: this.dir,
             settings: this._settings,
@@ -224,6 +234,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._notificationBannerController = null;
         this._multiMonitorController.destroy();
         this._multiMonitorController = null;
+        this._quickSettingsXpIconController.destroy();
+        this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController.destroy();
         this._quickSettingsPowerController = null;
         this._volumeMixerController.destroy();

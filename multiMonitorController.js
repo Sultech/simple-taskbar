@@ -20,6 +20,9 @@ import {panelArrowSide, panelIsTop} from './panelPosition.js';
 import {
     QuickSettingsPowerController,
 } from './quickSettingsPowerController.js';
+import {
+    QuickSettingsXpIconController,
+} from './quickSettingsXpIconController.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
@@ -297,6 +300,7 @@ class SecondaryTaskbarPanel {
         openPreferences,
     }) {
         this._settings = settings;
+        this._extensionDir = extensionDir;
         this._monitor = monitor;
         this._openPreferencesCallback = openPreferences;
         this._signals = [];
@@ -386,6 +390,7 @@ class SecondaryTaskbarPanel {
         this._indicators = new Map();
         this._volumeMixerController = null;
         this._quickSettingsPowerController = null;
+        this._quickSettingsXpIconController = null;
     }
 
     enable() {
@@ -405,6 +410,13 @@ class SecondaryTaskbarPanel {
                     quickSettings
                 );
             this._quickSettingsPowerController.enable();
+            this._quickSettingsXpIconController =
+                new QuickSettingsXpIconController(
+                    this._settings,
+                    this._extensionDir,
+                    quickSettings
+                );
+            this._quickSettingsXpIconController.enable();
         }
         this._applyLayout();
         this._syncTheme();
@@ -488,6 +500,9 @@ class SecondaryTaskbarPanel {
         if (this._volumeMixerController)
             this._volumeMixerController.destroy();
         this._volumeMixerController = null;
+        if (this._quickSettingsXpIconController)
+            this._quickSettingsXpIconController.destroy();
+        this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController?.destroy();
         this._quickSettingsPowerController = null;
         this._releaseIndicators();
@@ -503,6 +518,7 @@ class SecondaryTaskbarPanel {
         this._rightBox = null;
         this._taskbarBin = null;
         this._monitor = null;
+        this._extensionDir = null;
         this._openPreferencesCallback = null;
         this._settings = null;
     }

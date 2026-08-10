@@ -47,6 +47,7 @@ gnome-extensions pack \
     --extra-source=panelAutoHideController.js \
     --extra-source=panelInteractionController.js \
     --extra-source=quickSettingsPowerController.js \
+    --extra-source=quickSettingsXpIconController.js \
     --extra-source=startButtonController.js \
     --extra-source=windowsXpStartButton.js \
     --extra-source=prefs \
