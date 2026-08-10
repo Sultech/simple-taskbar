@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -249,6 +251,10 @@ export default class SimpleTaskbarExtension extends Extension {
         this._taskbarController = null;
         this._windowController = null;
         this._taskbarViewport.destroy();
+        this._showDesktopButton.child = null;
+        this._showDesktopVisual.destroy();
+        this._showDesktopVisual = null;
+        this._showDesktopIcon = null;
         this._showDesktopButton.destroy();
         this._overviewIntegration.destroy();
         this._overviewIntegration = null;
@@ -285,6 +291,64 @@ export default class SimpleTaskbarExtension extends Extension {
         this._taskbarBin.visible =
             !this._settings.get_boolean('default-gnome-panel');
 
+        this._showDesktopIcon = new St.Icon({
+            gicon: new Gio.FileIcon({
+                file: this.dir
+                    .get_child('icons')
+                    .get_child('taskbar')
+                    .get_child('xp')
+                    .get_child('desktop.png'),
+            }),
+            icon_size: 16,
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        this._showDesktopIcon.translation_y = 1;
+        const showDesktopGlass = new St.Widget({
+            style_class: 'simple-taskbar-show-desktop-glass',
+            x: 2,
+            y: 5,
+            width: 26,
+            height: 21,
+        });
+        const showDesktopTexture = new St.Widget({
+            style_class: 'simple-taskbar-show-desktop-texture',
+            x: 2,
+            y: 5,
+            width: 26,
+            height: 21,
+        });
+        showDesktopTexture.set_style(
+            'background-size: 26px 21px;'
+        );
+        const showDesktopBorder = new St.Widget({
+            style_class: 'simple-taskbar-show-desktop-border',
+            x: 0,
+            y: 3,
+            width: 30,
+            height: 25,
+        });
+        const showDesktopIconHost = new St.Widget({
+            layout_manager: new Clutter.BinLayout(),
+            x: 0,
+            y: 0,
+            width: 30,
+            height: WINDOWS_XP_PANEL_HEIGHT,
+        });
+        showDesktopIconHost.add_child(this._showDesktopIcon);
+        this._showDesktopVisual = new St.Widget({
+            layout_manager: new Clutter.FixedLayout(),
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.FILL,
+            y_expand: true,
+            width: 30,
+            height: WINDOWS_XP_PANEL_HEIGHT,
+            clip_to_allocation: false,
+        });
+        this._showDesktopVisual.add_child(showDesktopGlass);
+        this._showDesktopVisual.add_child(showDesktopTexture);
+        this._showDesktopVisual.add_child(showDesktopBorder);
+        this._showDesktopVisual.add_child(showDesktopIconHost);
         this._showDesktopButton = new St.Button({
             style_class: 'panel-button simple-taskbar-show-desktop',
             reactive: true,
@@ -293,6 +357,7 @@ export default class SimpleTaskbarExtension extends Extension {
             toggle_mode: true,
             accessible_name: _('Show desktop'),
         });
+        this._syncShowDesktopIcon();
         this._windowController.setShowDesktopButton(this._showDesktopButton);
         this._showDesktopButton.connectObject(
             'clicked',
@@ -337,6 +402,13 @@ export default class SimpleTaskbarExtension extends Extension {
         }
         applyWindowsXpThemeAppearance(this._settings);
         applyWindowsXpThemeSettings(this._settings);
+    }
+
+    _syncShowDesktopIcon() {
+        this._showDesktopButton.child =
+            this._settings.get_boolean('windows-xp-theme-enabled')
+                ? this._showDesktopVisual
+                : null;
     }
 
     _connectSignals() {
@@ -396,6 +468,7 @@ export default class SimpleTaskbarExtension extends Extension {
             'changed::windows-xp-theme-enabled',
             () => {
                 this._syncWindowsXpTheme(true);
+                this._syncShowDesktopIcon();
                 this._startButtonController.applyAppearance(
                     this._iconSize,
                     this._settings.get_int('start-button-padding')

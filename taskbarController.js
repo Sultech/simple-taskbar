@@ -680,6 +680,7 @@ export class TaskbarController {
         const focused = hasFocus && !this._startMenuOpen;
         item.set_style_class_name(
             `dash-item-container simple-taskbar-app-item` +
+            `${isLauncher ? ' simple-taskbar-app-launcher' : ''}` +
             `${running ? ' running' : ''}` +
             `${!isLauncher && !window && windowCount > 1
                 ? ' multiple-windows'
