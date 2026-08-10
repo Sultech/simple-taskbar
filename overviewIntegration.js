@@ -511,8 +511,11 @@ export class OverviewIntegration {
             if (!child || !child._delegate || !child._delegate.app)
                 continue;
 
+            if (item.animatingOut) {
+                item.destroy();
+                continue;
+            }
             item.remove_all_transitions();
-            item.animatingOut = false;
             item.show(false);
         }
     }
