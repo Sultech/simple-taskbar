@@ -177,6 +177,10 @@ export class PanelInteractionController {
             this._taskbarController.hasTarget(target);
         if (!this._isFreePanelTarget(target) && !scrollOverOverflowApp)
             return Clutter.EVENT_PROPAGATE;
+        if (scrollOverOverflowApp) {
+            this._previews.hideTooltip(false);
+            this._previews.hide();
+        }
 
         const [previousDirection, nextDirection] =
             global.workspace_manager.layout_columns >
