@@ -372,6 +372,20 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 ],
             }
         );
+        const matchIconColorSwitch = new Adw.SwitchRow({
+            title: _('Match Icon Color'),
+            subtitle: _('Use dominant color of application icon for indicator'),
+            active: window._settings.get_boolean(
+                'indicator-match-icon-color'
+            ),
+        });
+        advancedAppearanceGroup.add(matchIconColorSwitch);
+        window._settings.bind(
+            'indicator-match-icon-color',
+            matchIconColorSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
         const customIndicatorColorsSwitch = new Adw.SwitchRow({
             title: _('Custom Indicator Colors'),
             subtitle: _('Choose colors for running application indicators'),
@@ -403,10 +417,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             }
         );
         const syncIndicatorColorVisibility = () => {
+            const matchIcon = matchIconColorSwitch.active;
             const enabled = customIndicatorColorsSwitch.active;
-            focusedIndicatorColorRow.visible = enabled;
-            unfocusedIndicatorColorRow.visible = enabled;
+            customIndicatorColorsSwitch.set_sensitive(!matchIcon);
+            focusedIndicatorColorRow.visible = enabled && !matchIcon;
+            unfocusedIndicatorColorRow.visible = enabled && !matchIcon;
         };
+        matchIconColorSwitch.connect(
+            'notify::active',
+            syncIndicatorColorVisibility
+        );
         customIndicatorColorsSwitch.connect(
             'notify::active',
             syncIndicatorColorVisibility

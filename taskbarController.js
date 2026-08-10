@@ -19,6 +19,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+import {getIconDominantColor, clearIconColorCache} from './themeUtils.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const INDICATOR_ANIMATION_DURATION = 150;
@@ -304,11 +305,13 @@ export class TaskbarController {
             () => this.applyAppearance()
         );
         for (const key of [
+            'indicator-match-icon-color',
             'custom-indicator-colors-enabled',
             'focused-indicator-color',
             'unfocused-indicator-color',
         ]) {
             this._connect(this._settings, `changed::${key}`, () => {
+                clearIconColorCache();
                 for (const item of this._appButtons.values())
                     this._syncIndicatorColor(item);
             });
@@ -1890,14 +1893,20 @@ export class TaskbarController {
 
     _syncIndicatorColor(item) {
         let style = null;
-        if (item._taskbarRunning &&
-            this._settings.get_boolean('custom-indicator-colors-enabled')) {
-            const key = item._taskbarFocused
-                ? 'focused-indicator-color'
-                : 'unfocused-indicator-color';
-            style = `background-color: ${
-                this._settings.get_string(key)
-            };`;
+        if (item._taskbarRunning) {
+            let color = null;
+            if (this._settings.get_boolean('indicator-match-icon-color'))
+                color = getIconDominantColor(item._taskbarApp);
+
+            if (!color && this._settings.get_boolean('custom-indicator-colors-enabled')) {
+                const key = item._taskbarFocused
+                    ? 'focused-indicator-color'
+                    : 'unfocused-indicator-color';
+                color = this._settings.get_string(key);
+            }
+
+            if (color)
+                style = `background-color: ${color};`;
         }
 
         for (const segment of item._taskbarIndicator.get_children())

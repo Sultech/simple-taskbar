@@ -57,6 +57,10 @@
       <default>'rounded'</default>
       <summary>Running application indicator style</summary>
     </key>
+    <key name="indicator-match-icon-color" type="b">
+      <default>false</default>
+      <summary>Match indicator color with app icon dominant color</summary>
+    </key>
     <key name="custom-indicator-colors-enabled" type="b">
       <default>false</default>
       <summary>Use custom running indicator colors</summary>
