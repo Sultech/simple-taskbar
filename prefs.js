@@ -33,9 +33,8 @@ import {
     STANDARD_MIN_PANEL_HEIGHT,
 } from './panelSizing.js';
 import {
-    applyWindowsXpThemeDimensions,
-    DEFAULT_TASKBAR_ICON_SIZE,
-    DEFAULT_TASKBAR_PANEL_HEIGHT,
+    applyDefaultTaskbarSettings,
+    applyWindowsXpThemeSettings,
     setWindowsXpThemeEnabled,
 } from './windowsXpTheme.js';
 
@@ -437,12 +436,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             syncIndicatorColorVisibility
         );
         syncIndicatorColorVisibility();
-        this._addComboRow(appearanceGroup, window._settings, {
-            key: 'app-alignment',
-            title: _('Icon Alignment'),
-            subtitle: _('Place application icons at the left or center'),
-            choices: panelPositions.slice(0, 2),
-        });
+        const appAlignmentRow = this._addComboRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'app-alignment',
+                title: _('Icon Alignment'),
+                subtitle: _(
+                    'Place application icons at the left or center'
+                ),
+                choices: panelPositions.slice(0, 2),
+            }
+        );
 
         const hidePinnedAppsSwitch = new Adw.SwitchRow({
             title: _('Hide Pinned Applications'),
@@ -659,19 +664,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('panel-border-enabled', false);
                 settings.set_boolean('panel-border-light-enabled', false);
             } else {
-                settings.set_int(
-                    'icon-size',
-                    DEFAULT_TASKBAR_ICON_SIZE
-                );
+                applyDefaultTaskbarSettings(settings);
                 settings.set_int('icon-spacing', 3);
-                settings.set_int(
-                    'panel-height',
-                    DEFAULT_TASKBAR_PANEL_HEIGHT
-                );
                 settings.set_int('panel-button-padding', -1);
                 settings.set_string('panel-position', 'bottom');
-                settings.set_string('app-alignment', 'center');
-                settings.set_string('start-button-position', 'center');
                 settings.set_int('start-button-padding', 3);
                 settings.set_string('clock-position', 'right');
                 settings.set_string('system-menu-position', 'right');
@@ -789,7 +785,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                         false
                     );
                 }
-                applyWindowsXpThemeDimensions(window._settings);
+                applyWindowsXpThemeSettings(window._settings);
             }
             syncingWindowsXpTheme = true;
             windowsXpThemeSwitch.active = enabled;
@@ -798,6 +794,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             );
             iconSizeRow.sensitive = !enabled;
             panelHeightRow.sensitive = !enabled;
+            appAlignmentRow.sensitive = !enabled;
             syncingWindowsXpTheme = false;
         };
         const setWindowsXpTheme = enabled => {
@@ -825,6 +822,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect('changed::icon-size', syncWindowsXpTheme);
         window._settings.connect('changed::panel-height', syncWindowsXpTheme);
+        window._settings.connect('changed::app-alignment', syncWindowsXpTheme);
+        window._settings.connect(
+            'changed::start-button-position',
+            syncWindowsXpTheme
+        );
         syncWindowsXpTheme();
 
         // Normalize any incompatible values written outside preferences.
@@ -1277,9 +1279,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const defaultPanel = window._settings.get_boolean(
                 'default-gnome-panel'
             );
+            const windowsXpTheme = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             startPositionRow.sensitive =
-                !defaultPanel && !followAppAlignmentSwitch.active;
-            followAppAlignmentSwitch.sensitive = !defaultPanel;
+                !defaultPanel && !windowsXpTheme &&
+                !followAppAlignmentSwitch.active;
+            followAppAlignmentSwitch.sensitive =
+                !defaultPanel && !windowsXpTheme;
         };
         followAppAlignmentSwitch.connect(
             'notify::active',
@@ -1287,6 +1294,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::default-gnome-panel',
+            updateStartPositionRow
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updateStartPositionRow
         );
         updateStartPositionRow();
@@ -1984,8 +1995,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             return window._settings.get_string(definition.key);
         };
         const isPanelItemLocked = id => {
-            if (!window._settings.get_boolean('default-gnome-panel'))
+            if (!window._settings.get_boolean('default-gnome-panel') &&
+                !window._settings.get_boolean(
+                    'windows-xp-theme-enabled'
+                )) {
                 return false;
+            }
 
             return id === 'start-button' || id === 'applications';
         };
@@ -2089,10 +2104,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const defaultPanel = window._settings.get_boolean(
                 'default-gnome-panel'
             );
+            const windowsXpTheme = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             panelOrderRows.get('start-button').positionDropDown.sensitive =
-                !defaultPanel && !followAppAlignmentSwitch.active;
+                !defaultPanel && !windowsXpTheme &&
+                !followAppAlignmentSwitch.active;
             panelOrderRows.get('applications').positionDropDown.sensitive =
-                !defaultPanel;
+                !defaultPanel && !windowsXpTheme;
             panelOrderRows.get('activities').positionDropDown.sensitive =
                 activitiesButtonSwitch.active;
             panelOrderRows.get('folder-menu').positionDropDown.sensitive =
@@ -2127,6 +2146,13 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::default-gnome-panel',
+            () => {
+                syncPanelItemOrder();
+                syncPanelPositionSensitivity();
+            }
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             () => {
                 syncPanelItemOrder();
                 syncPanelPositionSensitivity();

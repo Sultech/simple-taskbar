@@ -43,8 +43,8 @@ import {
     STANDARD_MIN_PANEL_HEIGHT,
 } from './panelSizing.js';
 import {
-    applyDefaultTaskbarDimensions,
-    applyWindowsXpThemeDimensions,
+    applyDefaultTaskbarSettings,
+    applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SIZE,
     WINDOWS_XP_PANEL_HEIGHT,
 } from './windowsXpTheme.js';
@@ -303,7 +303,7 @@ export default class SimpleTaskbarExtension extends Extension {
         if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
             if (resetWhenDisabled &&
                 !this._settings.get_boolean('default-gnome-panel')) {
-                applyDefaultTaskbarDimensions(this._settings);
+                applyDefaultTaskbarSettings(this._settings);
                 return;
             }
             if (!this._settings.get_boolean('default-gnome-panel')) {
@@ -323,7 +323,7 @@ export default class SimpleTaskbarExtension extends Extension {
 
         if (this._settings.get_boolean('default-gnome-panel'))
             this._settings.set_boolean('default-gnome-panel', false);
-        applyWindowsXpThemeDimensions(this._settings);
+        applyWindowsXpThemeSettings(this._settings);
     }
 
     _connectSignals() {
@@ -362,6 +362,15 @@ export default class SimpleTaskbarExtension extends Extension {
             () => this._syncWindowsXpTheme(true),
             this
         );
+        for (const key of ['app-alignment', 'start-button-position']) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                if (this._settings.get_boolean(
+                    'windows-xp-theme-enabled'
+                )) {
+                    applyWindowsXpThemeSettings(this._settings);
+                }
+            }, this);
+        }
         this._settings.connectObject(
             'changed::multi-window-click-spread',
             () => {
