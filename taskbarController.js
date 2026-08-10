@@ -26,6 +26,7 @@ const INDICATOR_SEGMENT_GAP = 2;
 const APP_LABEL_WIDTH = 140;
 const APP_LABEL_MIN_WIDTH = 40;
 const APP_LABEL_SPACING = 8;
+const APP_CONTENT_VERTICAL_RESERVE = 14;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -415,6 +416,9 @@ export class TaskbarController {
         this._panelHeight = panelHeight;
         for (const item of this._appButtons.values()) {
             item.set_height(panelHeight);
+            item._taskbarButtonContent.set_height(
+                this._buttonContentHeight()
+            );
             this._updateGlassGeometry(item);
         }
         this.queueIconGeometryUpdate();
@@ -1487,6 +1491,7 @@ export class TaskbarController {
             style_class: 'simple-taskbar-app-button-content',
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
+            height: this._buttonContentHeight(),
         });
         buttonContent.add_child(icon);
         const label = new St.Label({
@@ -1538,6 +1543,7 @@ export class TaskbarController {
         item._taskbarWindow = window;
         item._taskbarIsLauncher = isLauncher;
         item._taskbarButton = button;
+        item._taskbarButtonContent = buttonContent;
         item._taskbarIcon = icon;
         item._taskbarLabel = label;
         item._taskbarSlot = slot;
@@ -1915,6 +1921,13 @@ export class TaskbarController {
         return window && showLabels
             ? iconWidth + APP_LABEL_SPACING + labelWidth
             : iconWidth;
+    }
+
+    _buttonContentHeight() {
+        return Math.max(
+            1,
+            this._panelHeight - APP_CONTENT_VERTICAL_RESERVE
+        );
     }
 
     _itemSlotWidth(window) {
