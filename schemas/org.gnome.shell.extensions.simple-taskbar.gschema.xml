@@ -212,7 +212,7 @@
       <summary>Choose when windows from the same application are combined</summary>
     </key>
     <key name="application-overflow-enabled" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Show application buttons that do not fit in an overflow popup</summary>
     </key>
     <key name="application-overflow-style" type="s">
