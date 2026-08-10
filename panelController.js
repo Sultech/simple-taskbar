@@ -649,7 +649,10 @@ export class PanelController {
         this._connect(
             this._settings,
             'changed::windows-xp-theme-enabled',
-            () => this._applyTheme()
+            () => {
+                this._applyTheme();
+                this._queueBlurMyShellSync();
+            }
         );
         this._connect(this._settings, 'changed::panel-position', () => {
             this._syncPanelEdgeClass();
@@ -801,10 +804,14 @@ export class PanelController {
         const active =
             extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
         const panelBlur = global.blur_my_shell?._panel_blur;
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
         if (active && panelBlur?.enabled) {
-            Main.panel.add_style_class_name(
-                BLUR_MY_SHELL_ACTIVE_CLASS
-            );
+            if (windowsXpThemeEnabled)
+                Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
+            else
+                Main.panel.add_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
             if (!Main.overview.visibleTarget) {
                 panelBlur.panel_hide_blur_dynamically();
                 panelBlur.update_visibility();
@@ -1070,7 +1077,11 @@ export class PanelController {
 
         const originalStyle = this._oldPanelStyle?.trim() ?? '';
         const panelBlur = global.blur_my_shell?._panel_blur;
-        const externalPanelStyle = panelBlur?.enabled &&
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const externalPanelStyle = !windowsXpThemeEnabled &&
+            panelBlur?.enabled &&
             Main.panel.has_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS) &&
             EXTERNAL_PANEL_STYLES.some(style =>
                 Main.panel.has_style_class_name(style)
