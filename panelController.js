@@ -306,6 +306,11 @@ export class PanelController {
             items,
             this._settings.get_strv('panel-item-order')
         );
+        this._notificationAreaController.syncRightBoxActors(
+            rightBox,
+            new Set(items.map(item => item.actor)),
+            windowsXpThemeEnabled
+        );
         this._syncActivitiesVisibility();
         this.updateTaskbarWidth();
     }

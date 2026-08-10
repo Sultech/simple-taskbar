@@ -31,6 +31,7 @@ export class NotificationAreaController {
         this._clockSpacer = null;
         this._clockLabel = null;
         this._clockLabelTranslationY = null;
+        this._rightBoxActorTranslationY = new Map();
     }
 
     sync(actors, clock, enabled) {
@@ -81,8 +82,33 @@ export class NotificationAreaController {
         }
     }
 
+    syncRightBoxActors(rightBox, managedActors, enabled) {
+        if (!enabled) {
+            this._restoreRightBoxActorOffsets();
+            return;
+        }
+
+        const externalActors = rightBox.get_children().filter(actor =>
+            actor !== this.actor && !managedActors.has(actor)
+        );
+        const externalActorSet = new Set(externalActors);
+        for (const [actor, translationY] of this._rightBoxActorTranslationY) {
+            if (!externalActorSet.has(actor)) {
+                actor.translation_y = translationY;
+                this._rightBoxActorTranslationY.delete(actor);
+            }
+        }
+        for (const actor of externalActors) {
+            if (!this._rightBoxActorTranslationY.has(actor))
+                this._rightBoxActorTranslationY.set(actor, actor.translation_y);
+            actor.translation_y =
+                this._rightBoxActorTranslationY.get(actor) + 1;
+        }
+    }
+
     restore(parent) {
         this._restoreClockOffset();
+        this._restoreRightBoxActorOffsets();
         const wrapperParent = this.actor.get_parent();
         if (wrapperParent)
             wrapperParent.remove_child(this.actor);
@@ -101,6 +127,7 @@ export class NotificationAreaController {
 
     destroy() {
         this._restoreClockOffset();
+        this._restoreRightBoxActorOffsets();
         this._clearContent();
         this.actor.destroy();
         this._content = null;
@@ -134,5 +161,11 @@ export class NotificationAreaController {
         this._clockLabel.translation_y = this._clockLabelTranslationY;
         this._clockLabel = null;
         this._clockLabelTranslationY = null;
+    }
+
+    _restoreRightBoxActorOffsets() {
+        for (const [actor, translationY] of this._rightBoxActorTranslationY)
+            actor.translation_y = translationY;
+        this._rightBoxActorTranslationY.clear();
     }
 }

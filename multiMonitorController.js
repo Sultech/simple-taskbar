@@ -746,6 +746,11 @@ class SecondaryTaskbarPanel {
             items,
             this._settings.get_strv('panel-item-order')
         );
+        this._notificationAreaController.syncRightBoxActors(
+            this._rightBox,
+            new Set(items.map(item => item.actor)),
+            windowsXpThemeEnabled
+        );
         this._syncActivitiesVisibility();
         this._applyAppearance();
         this._updateTaskbarWidth();
