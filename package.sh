@@ -31,6 +31,7 @@ gnome-extensions pack \
     --extra-source=panelItemOrder.js \
     --extra-source=panelMenuPositioner.js \
     --extra-source=panelPosition.js \
+    --extra-source=panelSizing.js \
     --extra-source=folderMenuController.js \
     --extra-source=fileManagerPlacesSection.js \
     --extra-source=favoritesIntegration.js \

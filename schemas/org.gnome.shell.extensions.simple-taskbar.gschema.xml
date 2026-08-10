@@ -3,7 +3,7 @@
   <schema id="org.gnome.shell.extensions.simple-taskbar"
           path="/org/gnome/shell/extensions/simple-taskbar/">
     <key name="panel-height" type="i">
-      <range min="32" max="80"/>
+      <range min="30" max="80"/>
       <default>49</default>
       <summary>Taskbar height</summary>
     </key>
@@ -188,6 +188,10 @@
     <key name="default-gnome-panel" type="b">
       <default>false</default>
       <summary>Use a GNOME-style panel without taskbar applications</summary>
+    </key>
+    <key name="windows-xp-theme-enabled" type="b">
+      <default>false</default>
+      <summary>Use Windows XP taskbar dimensions</summary>
     </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>

@@ -27,10 +27,15 @@ import {
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
 import {resolveTaskManagerAppId} from './taskManagerUtils.js';
+import {
+    ICON_VERTICAL_RESERVE,
+    MIN_PANEL_HEIGHT,
+    STANDARD_MIN_PANEL_HEIGHT,
+    WINDOWS_XP_ICON_SIZE,
+    WINDOWS_XP_PANEL_HEIGHT,
+} from './panelSizing.js';
 
-const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
-const ICON_VERTICAL_RESERVE = 17;
 const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -326,6 +331,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         panelModeGroup.add(defaultGnomePanelSwitch);
 
+        const windowsXpThemeSwitch = new Adw.SwitchRow({
+            title: _('Windows XP Theme'),
+            subtitle: _(
+                'Lock the panel height to 30 px and application icons to 16 px'
+            ),
+            active: window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            ),
+        });
+        panelModeGroup.add(windowsXpThemeSwitch);
 
         this._addSpinRow(panelModeGroup, window._settings, {
             key: 'panel-button-padding',
@@ -343,13 +358,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         page.add(appearanceGroup);
 
-        this._addSpinRow(appearanceGroup, window._settings, {
-            key: 'icon-size',
-            title: _('Icon Size'),
-            subtitle: _('The panel grows automatically when larger icons need more room'),
-            lower: 15,
-            upper: MAX_ICON_SIZE,
-        });
+        const iconSizeRow = this._addSpinRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'icon-size',
+                title: _('Icon Size'),
+                subtitle: _(
+                    'The panel grows automatically when larger icons need more room'
+                ),
+                lower: 15,
+                upper: MAX_ICON_SIZE,
+            }
+        );
         this._addSpinRow(appearanceGroup, window._settings, {
             key: 'icon-spacing',
             title: _('Icon Spacing'),
@@ -613,6 +634,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings.delay();
             settings.set_boolean('default-gnome-panel', enabled);
             if (enabled) {
+                settings.set_boolean('windows-xp-theme-enabled', false);
                 settings.set_int('panel-height', 32);
                 settings.set_int('panel-button-padding', 12);
                 settings.set_string('panel-position', 'top');
@@ -688,13 +710,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         page.add(panelAppearanceGroup);
 
-        this._addSpinRow(panelAppearanceGroup, window._settings, {
-            key: 'panel-height',
-            title: _('Panel Height'),
-            subtitle: _('Oversized icons shrink automatically when the panel is reduced'),
-            lower: MIN_PANEL_HEIGHT,
-            upper: 80,
-        });
+        const panelHeightRow = this._addSpinRow(
+            panelAppearanceGroup,
+            window._settings,
+            {
+                key: 'panel-height',
+                title: _('Panel Height'),
+                subtitle: _(
+                    'Oversized icons shrink automatically when the panel is reduced'
+                ),
+                lower: MIN_PANEL_HEIGHT,
+                upper: 80,
+            }
+        );
         this._addComboRow(panelAppearanceGroup, window._settings, {
             key: 'panel-position',
             title: _('Panel Position'),
@@ -706,8 +734,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
 
         const fitPanelToIcons = () => {
-            if (window._settings.get_boolean('default-gnome-panel'))
+            if (window._settings.get_boolean('default-gnome-panel') ||
+                window._settings.get_boolean('windows-xp-theme-enabled')) {
                 return;
+            }
 
             const iconSize = window._settings.get_int('icon-size');
             const panelHeight = window._settings.get_int('panel-height');
@@ -716,17 +746,107 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 window._settings.set_int('panel-height', minimumPanelHeight);
         };
         const fitIconsToPanel = () => {
-            if (window._settings.get_boolean('default-gnome-panel'))
+            if (window._settings.get_boolean('default-gnome-panel') ||
+                window._settings.get_boolean('windows-xp-theme-enabled')) {
                 return;
+            }
 
             const iconSize = window._settings.get_int('icon-size');
             const panelHeight = window._settings.get_int('panel-height');
+            if (panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
+                window._settings.set_int(
+                    'panel-height',
+                    STANDARD_MIN_PANEL_HEIGHT
+                );
+                return;
+            }
             const maximumIconSize = panelHeight - ICON_VERTICAL_RESERVE;
             if (iconSize > maximumIconSize)
                 window._settings.set_int('icon-size', maximumIconSize);
         };
         window._settings.connect('changed::icon-size', fitPanelToIcons);
         window._settings.connect('changed::panel-height', fitIconsToPanel);
+
+        let syncingWindowsXpTheme = false;
+        const syncWindowsXpTheme = () => {
+            const enabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            if (enabled) {
+                if (window._settings.get_boolean('default-gnome-panel')) {
+                    window._settings.set_boolean(
+                        'default-gnome-panel',
+                        false
+                    );
+                }
+                if (window._settings.get_int('panel-height') !==
+                    WINDOWS_XP_PANEL_HEIGHT) {
+                    window._settings.set_int(
+                        'panel-height',
+                        WINDOWS_XP_PANEL_HEIGHT
+                    );
+                }
+                if (window._settings.get_int('icon-size') !==
+                    WINDOWS_XP_ICON_SIZE) {
+                    window._settings.set_int(
+                        'icon-size',
+                        WINDOWS_XP_ICON_SIZE
+                    );
+                }
+            } else if (!window._settings.get_boolean(
+                'default-gnome-panel'
+            )) {
+                const minimumPanelHeight =
+                    window._settings.get_int('icon-size') +
+                    ICON_VERTICAL_RESERVE;
+                if (window._settings.get_int('panel-height') <
+                    minimumPanelHeight) {
+                    window._settings.set_int(
+                        'panel-height',
+                        minimumPanelHeight
+                    );
+                }
+            }
+            syncingWindowsXpTheme = true;
+            windowsXpThemeSwitch.active = enabled;
+            panelHeightRow.get_adjustment().set_lower(
+                enabled ? MIN_PANEL_HEIGHT : STANDARD_MIN_PANEL_HEIGHT
+            );
+            iconSizeRow.sensitive = !enabled;
+            panelHeightRow.sensitive = !enabled;
+            syncingWindowsXpTheme = false;
+        };
+        const setWindowsXpTheme = enabled => {
+            const settings = this.getSettings();
+            settings.delay();
+            settings.set_boolean('windows-xp-theme-enabled', enabled);
+            if (enabled) {
+                settings.set_boolean('default-gnome-panel', false);
+                settings.set_int('panel-height', WINDOWS_XP_PANEL_HEIGHT);
+                settings.set_int('icon-size', WINDOWS_XP_ICON_SIZE);
+            }
+            settings.apply();
+        };
+        windowsXpThemeSwitch.connect('notify::active', () => {
+            if (syncingWindowsXpTheme)
+                return;
+
+            const enabled = windowsXpThemeSwitch.active;
+            if (enabled === window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            )) {
+                return;
+            }
+            setWindowsXpTheme(enabled);
+            syncWindowsXpTheme();
+        });
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect('changed::icon-size', syncWindowsXpTheme);
+        window._settings.connect('changed::panel-height', syncWindowsXpTheme);
+        syncWindowsXpTheme();
 
         // Normalize any incompatible values written outside preferences.
         fitPanelToIcons();

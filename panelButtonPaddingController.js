@@ -4,6 +4,7 @@
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {MIN_PANEL_HEIGHT} from './panelSizing.js';
 
 const AUTOMATIC_PADDING = -1;
 const AUTOMATIC_FALLBACK_PADDING = 3;
@@ -14,7 +15,6 @@ const HOVER_INSET_CLASS_PREFIX =
     'simple-taskbar-panel-button-hover-inset-';
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
     'just-perfection-api-panel-button-padding-size';
-const MINIMUM_PANEL_HEIGHT = 32;
 const REGULAR_PANEL_HEIGHT = 49;
 const MINIMUM_HOVER_INSET = 3;
 const REGULAR_HOVER_INSET = 6;
@@ -121,14 +121,14 @@ export class PanelButtonPaddingController {
         }
 
         const panelHeight = this._settings.get_int('panel-height');
-        const heightRange = REGULAR_PANEL_HEIGHT - MINIMUM_PANEL_HEIGHT;
+        const heightRange = REGULAR_PANEL_HEIGHT - MIN_PANEL_HEIGHT;
         const clampedHeight = Math.clamp(
             panelHeight,
-            MINIMUM_PANEL_HEIGHT,
+            MIN_PANEL_HEIGHT,
             REGULAR_PANEL_HEIGHT
         );
         const progress =
-            (clampedHeight - MINIMUM_PANEL_HEIGHT) / heightRange;
+            (clampedHeight - MIN_PANEL_HEIGHT) / heightRange;
         const insetRange = REGULAR_HOVER_INSET - MINIMUM_HOVER_INSET;
         const inset = Math.round(
             MINIMUM_HOVER_INSET + progress * insetRange
