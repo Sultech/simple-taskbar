@@ -1600,6 +1600,7 @@ export class TaskbarController {
         item._taskbarIndicator = indicator;
         item._taskbarIndicatorPrimary = indicatorPrimary;
         item._taskbarIndicatorSecondary = indicatorSecondary;
+        this._syncLauncherIconPosition(item);
         item._taskbarFocused = false;
         item._taskbarRunning = false;
         item._taskbarMultipleWindows = false;
@@ -1833,6 +1834,7 @@ export class TaskbarController {
         );
         const glassHeight = this._glassHeight();
 
+        this._syncLauncherIconPosition(item);
         item._taskbarButton.set_width(glassWidth);
         item._taskbarSlot.set_size(slotWidth, this._panelHeight);
         item._taskbarVisual.set_size(glassWidth, this._panelHeight);
@@ -2035,6 +2037,14 @@ export class TaskbarController {
             1,
             this._panelHeight - APP_CONTENT_VERTICAL_RESERVE
         );
+    }
+
+    _syncLauncherIconPosition(item) {
+        if (!item._taskbarIsLauncher)
+            return;
+
+        item._taskbarIcon.translation_x =
+            this._settings.get_boolean('windows-xp-theme-enabled') ? -1 : 0;
     }
 
     _iconSpacing(isLauncher) {
