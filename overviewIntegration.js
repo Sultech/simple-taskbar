@@ -313,11 +313,29 @@ export class OverviewIntegration {
     }
 
     _adaptAllocation() {
+        const integration = this;
+        const dash = Main.overview._overview?._controls?.dash ??
+            Main.overview.dash;
+        if (dash) {
+            this._injectionManager.overrideMethod(
+                Object.getPrototypeOf(dash),
+                '_redisplay',
+                originalRedisplay => function () {
+                    if (this === dash &&
+                        !integration._settings.get_boolean(
+                            'default-gnome-panel'
+                        )) {
+                        return;
+                    }
+                    originalRedisplay.call(this);
+                }
+            );
+        }
+
         const controls = Main.overview._overview?._controls;
         if (!controls)
             return;
 
-        const integration = this;
         this._injectionManager.overrideMethod(
             Object.getPrototypeOf(controls),
             'vfunc_allocate',
@@ -511,7 +529,7 @@ export class OverviewIntegration {
             if (!child || !child._delegate || !child._delegate.app)
                 continue;
 
-            if (item.animatingOut) {
+            if (item.animatingOut || !child._delegate.icon.icon) {
                 item.destroy();
                 continue;
             }
