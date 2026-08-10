@@ -374,13 +374,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 upper: MAX_ICON_SIZE,
             }
         );
-        this._addSpinRow(appearanceGroup, window._settings, {
-            key: 'icon-spacing',
-            title: _('Icon Spacing'),
-            subtitle: _('Space between application buttons'),
-            lower: 0,
-            upper: 16,
-        });
+        const iconSpacingRow = this._addSpinRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'icon-spacing',
+                title: _('Icon Spacing'),
+                subtitle: _('Space between application buttons'),
+                lower: 0,
+                upper: 16,
+            }
+        );
         const indicatorStyleRow = this._addComboRow(
             advancedAppearanceGroup,
             window._settings,
@@ -668,7 +672,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('panel-border-light-enabled', false);
             } else {
                 applyDefaultTaskbarSettings(settings);
-                settings.set_int('icon-spacing', 3);
                 settings.set_int('panel-button-padding', -1);
                 settings.set_string('panel-position', 'bottom');
                 settings.set_int('start-button-padding', 3);
@@ -796,6 +799,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 enabled ? MIN_PANEL_HEIGHT : STANDARD_MIN_PANEL_HEIGHT
             );
             iconSizeRow.sensitive = !enabled;
+            iconSpacingRow.sensitive = !enabled;
             panelHeightRow.sensitive = !enabled;
             appAlignmentRow.sensitive = !enabled;
             pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
@@ -828,6 +832,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             syncWindowsXpTheme
         );
         window._settings.connect('changed::icon-size', syncWindowsXpTheme);
+        window._settings.connect('changed::icon-spacing', syncWindowsXpTheme);
         window._settings.connect('changed::panel-height', syncWindowsXpTheme);
         window._settings.connect('changed::app-alignment', syncWindowsXpTheme);
         window._settings.connect(

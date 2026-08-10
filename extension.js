@@ -45,6 +45,7 @@ import {
 import {
     applyDefaultTaskbarSettings,
     applyWindowsXpThemeSettings,
+    WINDOWS_XP_ICON_SPACING,
     WINDOWS_XP_ICON_SIZE,
     WINDOWS_XP_PANEL_HEIGHT,
 } from './windowsXpTheme.js';
@@ -352,6 +353,15 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelController.updateTaskbarWidth();
         }, this);
         this._settings.connectObject('changed::icon-spacing', () => {
+            if (this._settings.get_boolean('windows-xp-theme-enabled') &&
+                this._settings.get_int('icon-spacing') !==
+                WINDOWS_XP_ICON_SPACING) {
+                this._settings.set_int(
+                    'icon-spacing',
+                    WINDOWS_XP_ICON_SPACING
+                );
+                return;
+            }
             this._applyTaskbarAppearance();
         }, this);
         this._settings.connectObject('changed::default-gnome-panel', () => {

@@ -3,10 +3,12 @@
 
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
+export const WINDOWS_XP_ICON_SPACING = 0;
 export const WINDOWS_XP_ALIGNMENT = 'left';
 export const WINDOWS_XP_COMBINE_MODE = 'never';
 export const DEFAULT_TASKBAR_PANEL_HEIGHT = 49;
 export const DEFAULT_TASKBAR_ICON_SIZE = 32;
+export const DEFAULT_TASKBAR_ICON_SPACING = 3;
 export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
 export const DEFAULT_TASKBAR_COMBINE_MODE = 'always';
 
@@ -28,6 +30,7 @@ function setBoolean(settings, key, value) {
 export function applyWindowsXpThemeSettings(settings) {
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
     setInteger(settings, 'icon-size', WINDOWS_XP_ICON_SIZE);
+    setInteger(settings, 'icon-spacing', WINDOWS_XP_ICON_SPACING);
     setString(settings, 'app-alignment', WINDOWS_XP_ALIGNMENT);
     setString(
         settings,
@@ -47,6 +50,7 @@ export function applyWindowsXpThemeSettings(settings) {
 export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'panel-height', DEFAULT_TASKBAR_PANEL_HEIGHT);
     setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);
+    setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
     setString(settings, 'app-alignment', DEFAULT_TASKBAR_ALIGNMENT);
     setString(
         settings,
