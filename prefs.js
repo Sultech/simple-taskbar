@@ -735,15 +735,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 upper: 80,
             }
         );
-        this._addComboRow(panelAppearanceGroup, window._settings, {
-            key: 'panel-position',
-            title: _('Panel Position'),
-            subtitle: _('Place the taskbar at the top or bottom of the screen'),
-            choices: [
-                {value: 'top', label: _('Top')},
-                {value: 'bottom', label: _('Bottom')},
-            ],
-        });
+        const panelPositionRow = this._addComboRow(
+            panelAppearanceGroup,
+            window._settings,
+            {
+                key: 'panel-position',
+                title: _('Panel Position'),
+                subtitle: _(
+                    'Place the taskbar at the top or bottom of the screen'
+                ),
+                choices: [
+                    {value: 'top', label: _('Top')},
+                    {value: 'bottom', label: _('Bottom')},
+                ],
+            }
+        );
 
         const fitPanelToIcons = () => {
             if (window._settings.get_boolean('default-gnome-panel') ||
@@ -801,6 +807,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             iconSizeRow.sensitive = !enabled;
             iconSpacingRow.sensitive = !enabled;
             panelHeightRow.sensitive = !enabled;
+            panelPositionRow.sensitive = !enabled;
+            defaultGnomePanelSwitch.sensitive = !enabled;
             appAlignmentRow.sensitive = !enabled;
             pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
             combineAppButtonsRow.sensitive = !enabled;
@@ -834,6 +842,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         window._settings.connect('changed::icon-size', syncWindowsXpTheme);
         window._settings.connect('changed::icon-spacing', syncWindowsXpTheme);
         window._settings.connect('changed::panel-height', syncWindowsXpTheme);
+        window._settings.connect('changed::panel-position', syncWindowsXpTheme);
         window._settings.connect('changed::app-alignment', syncWindowsXpTheme);
         window._settings.connect(
             'changed::start-button-position',
@@ -2023,14 +2032,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             return window._settings.get_string(definition.key);
         };
         const isPanelItemLocked = id => {
-            if (!window._settings.get_boolean('default-gnome-panel') &&
-                !window._settings.get_boolean(
-                    'windows-xp-theme-enabled'
-                )) {
-                return false;
+            if (window._settings.get_boolean('windows-xp-theme-enabled')) {
+                return [
+                    'start-button',
+                    'applications',
+                    'system-menu',
+                    'clock',
+                ].includes(id);
             }
-
-            return id === 'start-button' || id === 'applications';
+            if (window._settings.get_boolean('default-gnome-panel'))
+                return id === 'start-button' || id === 'applications';
+            return false;
         };
         const syncPanelItemOrder = () => {
             const stored = window._settings.get_strv('panel-item-order');
@@ -2140,6 +2152,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 !followAppAlignmentSwitch.active;
             panelOrderRows.get('applications').positionDropDown.sensitive =
                 !defaultPanel && !windowsXpTheme;
+            panelOrderRows.get('system-menu').positionDropDown.sensitive =
+                !windowsXpTheme;
+            panelOrderRows.get('clock').positionDropDown.sensitive =
+                !windowsXpTheme;
             panelOrderRows.get('activities').positionDropDown.sensitive =
                 activitiesButtonSwitch.active;
             panelOrderRows.get('folder-menu').positionDropDown.sensitive =

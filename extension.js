@@ -375,6 +375,12 @@ export default class SimpleTaskbarExtension extends Extension {
             this._applyTaskbarAppearance();
         }, this);
         this._settings.connectObject('changed::default-gnome-panel', () => {
+            if (this._settings.get_boolean('windows-xp-theme-enabled') &&
+                this._settings.get_boolean('default-gnome-panel')) {
+                applyWindowsXpThemeSettings(this._settings);
+                this._settings.set_boolean('default-gnome-panel', false);
+                return;
+            }
             this._syncTaskbarVisibility();
         }, this);
         this._settings.connectObject(
@@ -389,6 +395,10 @@ export default class SimpleTaskbarExtension extends Extension {
             'combine-app-buttons-mode',
             'application-overflow-enabled',
             'hide-app-labels',
+            'panel-position',
+            'clock-position',
+            'system-menu-position',
+            'panel-item-order',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 if (this._settings.get_boolean(

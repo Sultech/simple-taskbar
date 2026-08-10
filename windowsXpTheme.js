@@ -1,11 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {
+    DEFAULT_PANEL_ITEM_ORDER,
+    getWindowsXpPanelItemOrder,
+} from './panelItemOrder.js';
+
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
 export const WINDOWS_XP_ICON_SPACING = 0;
 export const WINDOWS_XP_ALIGNMENT = 'left';
 export const WINDOWS_XP_COMBINE_MODE = 'never';
+export const WINDOWS_XP_PANEL_POSITION = 'bottom';
+export const WINDOWS_XP_CLOCK_POSITION = 'right';
+export const WINDOWS_XP_SYSTEM_MENU_POSITION = 'right';
 export const DEFAULT_TASKBAR_PANEL_HEIGHT = 49;
 export const DEFAULT_TASKBAR_ICON_SIZE = 32;
 export const DEFAULT_TASKBAR_ICON_SPACING = 3;
@@ -27,11 +35,31 @@ function setBoolean(settings, key, value) {
         settings.set_boolean(key, value);
 }
 
+function setStringArray(settings, key, value) {
+    const current = settings.get_strv(key);
+    if (current.length !== value.length ||
+        current.some((item, index) => item !== value[index])) {
+        settings.set_strv(key, value);
+    }
+}
+
 export function applyWindowsXpThemeSettings(settings) {
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
     setInteger(settings, 'icon-size', WINDOWS_XP_ICON_SIZE);
     setInteger(settings, 'icon-spacing', WINDOWS_XP_ICON_SPACING);
     setString(settings, 'app-alignment', WINDOWS_XP_ALIGNMENT);
+    setString(settings, 'panel-position', WINDOWS_XP_PANEL_POSITION);
+    setString(settings, 'clock-position', WINDOWS_XP_CLOCK_POSITION);
+    setString(
+        settings,
+        'system-menu-position',
+        WINDOWS_XP_SYSTEM_MENU_POSITION
+    );
+    setStringArray(
+        settings,
+        'panel-item-order',
+        getWindowsXpPanelItemOrder(settings.get_strv('panel-item-order'))
+    );
     setString(
         settings,
         'start-button-position',
@@ -52,6 +80,14 @@ export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);
     setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
     setString(settings, 'app-alignment', DEFAULT_TASKBAR_ALIGNMENT);
+    setString(settings, 'panel-position', 'bottom');
+    setString(settings, 'clock-position', 'right');
+    setString(settings, 'system-menu-position', 'right');
+    setStringArray(
+        settings,
+        'panel-item-order',
+        DEFAULT_PANEL_ITEM_ORDER
+    );
     setString(
         settings,
         'start-button-position',
@@ -70,8 +106,7 @@ export function applyDefaultTaskbarSettings(settings) {
 export function setWindowsXpThemeEnabled(settings, enabled) {
     setBoolean(settings, 'windows-xp-theme-enabled', enabled);
     if (enabled) {
-        if (settings.get_boolean('default-gnome-panel'))
-            settings.set_boolean('default-gnome-panel', false);
+        setBoolean(settings, 'default-gnome-panel', false);
         setBoolean(settings, 'activities-button-visible', false);
         applyWindowsXpThemeSettings(settings);
     } else {

@@ -41,6 +41,16 @@ export function normalizePanelItemOrder(order) {
     return normalized;
 }
 
+export function getWindowsXpPanelItemOrder(order) {
+    const normalized = normalizePanelItemOrder(order);
+    return [
+        ...normalized.filter(id =>
+            id !== 'system-menu' && id !== 'clock'),
+        'system-menu',
+        'clock',
+    ];
+}
+
 export function orderPanelItems(items, order) {
     const itemsById = new Map(items.map(item => [item.id, item]));
     return normalizePanelItemOrder(order)
