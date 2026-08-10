@@ -62,7 +62,6 @@ export class ApplicationOverflowController {
         this._taskbarController = taskbarController;
         this._viewport = viewport;
         this._signals = [];
-        this._menuManager = null;
         this._menu = null;
         this._section = null;
         this._button = null;
@@ -86,8 +85,6 @@ export class ApplicationOverflowController {
     }
 
     enable() {
-        this._menuManager = new PopupMenu.PopupMenuManager(this._button);
-        this._overrideOutsideClicks();
         this._menu = new PopupMenu.PopupMenu(
             this._button,
             0.5,
@@ -101,12 +98,12 @@ export class ApplicationOverflowController {
         this._menu.addMenuItem(this._section);
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
-        this._menuManager.addMenu(this._menu);
 
         this._connect(this._menu, 'open-state-changed', (_menu, open) => {
             if (open) {
                 this._button.add_style_pseudo_class('active');
                 this._syncPopupGeometry();
+                this._menu.actor.grab_key_focus();
             } else {
                 this._button.remove_style_pseudo_class('active');
                 this._closeAuxiliaryMenus();
@@ -163,6 +160,8 @@ export class ApplicationOverflowController {
             this._syncTheme();
         });
         this._connect(Main.overview, 'showing', () => this.close());
+        this._connect(global.stage, 'captured-event', (_stage, event) =>
+            this._onCapturedEvent(event));
 
         this._syncPanelPosition();
         this._sync();
@@ -186,10 +185,8 @@ export class ApplicationOverflowController {
         this._signals = [];
 
         this._clearPopupItems();
-        this._menuManager.removeMenu(this._menu);
         this._menu.destroy();
         this._menu = null;
-        this._menuManager = null;
         this._section = null;
 
         this.actor.remove_child(this._viewport);
@@ -218,23 +215,33 @@ export class ApplicationOverflowController {
         );
     }
 
-    _overrideOutsideClicks() {
-        const manager = this._menuManager;
-        const inherited = manager._onCapturedEvent.bind(manager);
-        manager._onCapturedEvent = (actor, event) => {
-            const type = event.type();
-            const isPress = type === Clutter.EventType.BUTTON_PRESS ||
-                type === Clutter.EventType.TOUCH_BEGIN;
-            if (isPress && this._eventInAuxiliaryMenu(event))
-                return Clutter.EVENT_PROPAGATE;
-            return inherited(actor, event);
-        };
+    _onCapturedEvent(event) {
+        if (!this._menu.isOpen)
+            return Clutter.EVENT_PROPAGATE;
+
+        if (event.type() === Clutter.EventType.KEY_PRESS &&
+            event.get_key_symbol() === Clutter.KEY_Escape) {
+            this.close();
+            return Clutter.EVENT_STOP;
+        }
+
+        if (event.type() !== Clutter.EventType.BUTTON_PRESS &&
+            event.type() !== Clutter.EventType.TOUCH_BEGIN) {
+            return Clutter.EVENT_PROPAGATE;
+        }
+
+        const target = global.stage.get_event_actor(event);
+        if (this._button === target || this._button.contains(target) ||
+            this._menu.actor === target || this._menu.actor.contains(target) ||
+            this._eventInAuxiliaryMenu(target)) {
+            return Clutter.EVENT_PROPAGATE;
+        }
+
+        this.close();
+        return Clutter.EVENT_PROPAGATE;
     }
 
-    _eventInAuxiliaryMenu(event) {
-        const target = global.stage.get_event_actor(event);
-        if (!target)
-            return false;
+    _eventInAuxiliaryMenu(target) {
 
         for (const {auxiliaryItem} of this._auxiliaryItems) {
             const menu = auxiliaryItem._taskbarMenu;
