@@ -1496,3 +1496,10 @@
 .simple-taskbar-grid-alt-tab-preview {
     border-radius: 8px;
 }
+
+#panel.simple-taskbar-windows-xp-theme {
+    background-color: #1941a5 !important;
+    background-image: url('xp-panel-gradient.svg') !important;
+    background-repeat: repeat !important;
+    background-position: top left !important;
+}

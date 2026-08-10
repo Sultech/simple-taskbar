@@ -47,6 +47,8 @@ const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
 const BORDER_DISABLED_CLASS =
     'simple-taskbar-border-disabled';
+const XP_PANEL_CLASS =
+    'simple-taskbar-windows-xp-theme';
 
 export class PanelController {
     constructor({
@@ -360,6 +362,7 @@ export class PanelController {
             Main.panel.remove_style_class_name(
                 BLUR_MY_SHELL_ACTIVE_CLASS
             );
+            Main.panel.remove_style_class_name(XP_PANEL_CLASS);
             Main.panel.set_style(this._oldPanelStyle ?? '');
 
             const activities = Main.panel.statusArea.activities?.container;
@@ -643,6 +646,11 @@ export class PanelController {
         this._connect(this._settings, 'changed::panel-theme', () => {
             this._applyTheme();
         });
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => this._applyTheme()
+        );
         this._connect(this._settings, 'changed::panel-position', () => {
             this._syncPanelEdgeClass();
             this.position();
@@ -1036,6 +1044,10 @@ export class PanelController {
         Main.panel.add_style_class_name(
             light ? 'simple-taskbar-theme-light' : 'simple-taskbar-theme-dark'
         );
+        if (this._settings.get_boolean('windows-xp-theme-enabled'))
+            Main.panel.add_style_class_name(XP_PANEL_CLASS);
+        else
+            Main.panel.remove_style_class_name(XP_PANEL_CLASS);
         this._syncPanelBorder();
         this._applyTransparency();
     }

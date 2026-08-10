@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1" height="30" viewBox="0 0 1 30" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3168d5"/>
+      <stop offset="9%" stop-color="#4993e6"/>
+      <stop offset="18%" stop-color="#245dd7"/>
+      <stop offset="50%" stop-color="#245ddb"/>
+      <stop offset="89%" stop-color="#2561de"/>
+      <stop offset="100%" stop-color="#1941a5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1" height="30" fill="url(#panel)"/>
+</svg>

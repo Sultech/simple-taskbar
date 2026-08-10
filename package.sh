@@ -67,6 +67,7 @@ gnome-extensions pack \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
     --extra-source=windowsXpTheme.js \
+    --extra-source=xp-panel-gradient.svg \
     --extra-source=icons \
     --podir=po \
     --out-dir "$OUT_DIR" \
