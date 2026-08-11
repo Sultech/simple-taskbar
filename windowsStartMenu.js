@@ -14,22 +14,22 @@ import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
-import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
+import { showScreenshotUI } from 'resource:///org/gnome/shell/ui/screenshot.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 
-import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
     panelArrowSide,
     panelIsTop,
     syncMenuArrowSide,
 } from './panelPosition.js';
-import {StartMenuAppMenu} from './startMenuAppMenu.js';
-import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
-import {StartMenuSearchController} from './startMenuSearchController.js';
-import {shellMenusUseLightTheme} from './themeUtils.js';
-import {panelTransparencyOpacity} from './transparencyUtils.js';
+import { StartMenuAppMenu } from './startMenuAppMenu.js';
+import { StartMenuPinnedDragController } from './startMenuPinnedDragController.js';
+import { StartMenuSearchController } from './startMenuSearchController.js';
+import { shellMenusUseLightTheme } from './themeUtils.js';
+import { panelTransparencyOpacity } from './transparencyUtils.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
@@ -442,9 +442,9 @@ export class WindowsStartMenu {
             'background: transparent; ' +
             'background-gradient-direction: vertical; ' +
             `background-gradient-start: rgba(${gradientStart}, ` +
-                `${opacity.toFixed(2)}); ` +
+            `${opacity.toFixed(2)}); ` +
             `background-gradient-end: rgba(${gradientEnd}, ` +
-                `${opacity.toFixed(2)});`
+            `${opacity.toFixed(2)});`
         );
     }
 
@@ -1049,8 +1049,8 @@ export class WindowsStartMenu {
 
     _createIconButton(iconSource, accessibleName, callback, params = {}) {
         const iconProperty = typeof iconSource === 'string'
-            ? {icon_name: iconSource}
-            : {gicon: iconSource};
+            ? { icon_name: iconSource }
+            : { gicon: iconSource };
         const icon = new St.Icon({
             ...iconProperty,
             style_class: params.iconStyleClass ?? null,
@@ -1277,7 +1277,7 @@ export class WindowsStartMenu {
     _buildCategorySidebar(allApps, groupedApps) {
         this._categorySidebar.destroy_all_children();
         const categories = [
-            {id: 'all', label: _('All'), apps: allApps},
+            { id: 'all', label: _('All'), apps: allApps },
             ...APP_CATEGORIES
                 .map(category => ({
                     id: category.id,
@@ -1366,7 +1366,7 @@ export class WindowsStartMenu {
             for (const app of rowApps)
                 row.add_child(this._createAppTile(app, grid));
             for (let empty = rowApps.length; empty < GRID_COLUMNS; empty++)
-                row.add_child(new St.Widget({width: APP_TILE_WIDTH}));
+                row.add_child(new St.Widget({ width: APP_TILE_WIDTH }));
             grid.add_child(row);
         }
         return grid;
@@ -1434,7 +1434,7 @@ export class WindowsStartMenu {
             for (const app of rowApps)
                 row.add_child(this._createAppListButton(app, true));
             if (rowApps.length === 1)
-                row.add_child(new St.Widget({x_expand: true}));
+                row.add_child(new St.Widget({ x_expand: true }));
             grid.add_child(row);
         }
         return grid;
@@ -1532,7 +1532,7 @@ export class WindowsStartMenu {
                 return Clutter.EVENT_PROPAGATE;
 
             const [x, y] = event.get_coords();
-            this._openAppContextMenu(button, app, {x, y});
+            this._openAppContextMenu(button, app, { x, y });
             return Clutter.EVENT_STOP;
         });
         button.connect('popup-menu', () => {
@@ -2035,7 +2035,7 @@ export class WindowsStartMenu {
         if (!monitor)
             return;
         const width = Math.min(640, Math.max(420, monitor.width - 32));
-        const height = Math.min(610, Math.max(420, monitor.height - 96));
+        const height = Math.min(620, Math.max(420, monitor.height - 96));
         if (width === this._menuWidth && height === this._menuHeight)
             return;
 
