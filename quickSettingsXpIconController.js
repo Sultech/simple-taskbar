@@ -302,7 +302,7 @@ export class QuickSettingsXpIconController {
         record.visible = [...record.source._client.getDevices()]
             .some(device => device.connected);
         record.syncing = true;
-        record.icon.visible = record.source._client.active;
+        record.icon.visible = record.visible;
         record.syncing = false;
         this._apply(record);
     }
