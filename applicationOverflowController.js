@@ -8,6 +8,7 @@ import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
+import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -82,8 +83,12 @@ export class ApplicationOverflowController {
         this._spacer = new St.Widget({visible: false});
         this._maximumWidth = Number.MAX_SAFE_INTEGER;
         this._syncId = 0;
+        this._dragEndListener = () => this._onTaskbarDragEnd();
+        this._dragEndListenerRegistered = false;
+        this._dragSyncPending = false;
         this._overflowItems = [];
         this._auxiliaryItems = [];
+        this._popupContentBox = null;
         this._style = null;
         this._layoutSignature = null;
         this._buttonTranslationY = null;
@@ -100,6 +105,10 @@ export class ApplicationOverflowController {
     }
 
     enable() {
+        this._taskbarController.addDragEndListener(
+            this._dragEndListener
+        );
+        this._dragEndListenerRegistered = true;
         this._menu = new PopupMenu.PopupMenu(
             this._button,
             0.5,
@@ -230,6 +239,12 @@ export class ApplicationOverflowController {
     }
 
     destroy() {
+        if (this._dragEndListenerRegistered) {
+            this._taskbarController.removeDragEndListener(
+                this._dragEndListener
+            );
+            this._dragEndListenerRegistered = false;
+        }
         if (this._syncId) {
             GLib.Source.remove(this._syncId);
             this._syncId = 0;
@@ -259,6 +274,7 @@ export class ApplicationOverflowController {
         this._previewController = null;
         this._overflowItems = null;
         this._auxiliaryItems = null;
+        this._popupContentBox = null;
         this._layoutSignature = null;
         this._buttonTranslationY = null;
         this._iconTranslationY = null;
@@ -350,6 +366,11 @@ export class ApplicationOverflowController {
     }
 
     _queueSync() {
+        if (this._taskbarController.isDragging) {
+            this._dragSyncPending = true;
+            return;
+        }
+
         if (this._syncId)
             return;
 
@@ -361,6 +382,12 @@ export class ApplicationOverflowController {
     }
 
     _sync() {
+        if (this._taskbarController.isDragging) {
+            this._dragSyncPending = true;
+            return;
+        }
+
+        this._dragSyncPending = false;
         this._syncButtonPosition();
         const enabled = this._settings.get_boolean(
             'application-overflow-enabled'
@@ -414,6 +441,12 @@ export class ApplicationOverflowController {
         this._spacer.show();
         this._setOverflowItems(items.slice(visibleCount));
         this._syncTheme();
+    }
+
+    _onTaskbarDragEnd() {
+        if (this._dragSyncPending)
+            this._dragSyncPending = false;
+        this._queueSync();
     }
 
     _syncButtonPosition() {
@@ -494,6 +527,7 @@ export class ApplicationOverflowController {
         });
         for (const item of items)
             box.add_child(this._createTaskbarItem(item));
+        this._setPopupDropTarget(box);
 
         const scrollView = new St.ScrollView({
             style_class: 'simple-taskbar-application-overflow-scroll',
@@ -538,6 +572,7 @@ export class ApplicationOverflowController {
         });
         for (const item of items)
             box.add_child(this._createListItem(item));
+        this._setPopupDropTarget(box);
 
         const viewport = new St.Viewport({
             layout_manager: new Clutter.BinLayout(),
@@ -552,6 +587,196 @@ export class ApplicationOverflowController {
             child: viewport,
         });
         this._section.actor.add_child(scrollView);
+    }
+
+    _setPopupDropTarget(box) {
+        this._popupContentBox = box;
+        box._delegate = {
+            handleDragOver: (source, _actor, x, y, _time) =>
+                this._handleOverflowDragOver(source, x, y),
+            acceptDrop: (source, _actor, x, y, _time) =>
+                this._acceptOverflowDrop(source, x, y),
+        };
+    }
+
+    _handleOverflowDragOver(source, x, y) {
+        const item = source && source._taskbarItem;
+        if (!item || item._taskbarIsShowDesktop ||
+            !this._taskbarController.isTaskbarItemDraggable(item))
+            return DND.DragMotionResult.NO_DROP;
+
+        const coordinate = this._style === 'taskbar' ? x : y;
+        const target = this._getOverflowTarget(item, coordinate);
+        if (!target)
+            return DND.DragMotionResult.NO_DROP;
+
+        if (!target.sameGroup) {
+            const changed = this._taskbarController.reorderTaskbarItem(
+                item,
+                target.item,
+                target.insertBefore
+            );
+            if (changed)
+                this._reorderAuxiliaryGroup(
+                    item,
+                    target.item,
+                    target.insertBefore
+                );
+        }
+        return DND.DragMotionResult.MOVE_DROP;
+    }
+
+    _acceptOverflowDrop(source, x, y) {
+        const item = source && source._taskbarItem;
+        if (!item || item._taskbarIsShowDesktop ||
+            !this._taskbarController.isTaskbarItemDraggable(item))
+            return false;
+
+        const coordinate = this._style === 'taskbar' ? x : y;
+        const target = this._getOverflowTarget(item, coordinate);
+        if (!target)
+            return false;
+
+        if (!target.sameGroup) {
+            this._taskbarController.reorderTaskbarItem(
+                item,
+                target.item,
+                target.insertBefore
+            );
+            this._reorderAuxiliaryGroup(
+                item,
+                target.item,
+                target.insertBefore
+            );
+        }
+        return this._taskbarController.acceptTaskbarItemDrop(item, source);
+    }
+
+    _getOverflowTarget(sourceItem, coordinate) {
+        const sourceGroup = this._taskbarController.getTaskbarDragGroup(
+            sourceItem
+        );
+        const sourceIsPinned = this._taskbarController.isTaskbarItemPinned(
+            sourceItem
+        );
+        const visualGroups = [];
+
+        for (const auxiliaryItem of this._popupContentBox.get_children()) {
+            const record = this._auxiliaryItems.find(entry =>
+                entry.auxiliaryItem === auxiliaryItem
+            );
+            if (!record || record.sourceItem._taskbarIsShowDesktop)
+                continue;
+
+            const groupItems = this._taskbarController.getTaskbarDragGroup(
+                record.sourceItem
+            );
+            if (groupItems.length === 0)
+                continue;
+
+            let visualGroup = visualGroups.find(group =>
+                groupItems.includes(group.records[0].sourceItem)
+            );
+            if (!visualGroup) {
+                visualGroup = {
+                    records: [],
+                    start: Number.MAX_SAFE_INTEGER,
+                    end: 0,
+                };
+                visualGroups.push(visualGroup);
+            }
+
+            visualGroup.records.push(record);
+            const start = this._style === 'taskbar'
+                ? auxiliaryItem.x
+                : auxiliaryItem.y;
+            const size = this._style === 'taskbar'
+                ? auxiliaryItem.width
+                : auxiliaryItem.height;
+            visualGroup.start = Math.min(visualGroup.start, start);
+            visualGroup.end = Math.max(visualGroup.end, start + size);
+        }
+
+        const sourceVisualGroup = visualGroups.find(group =>
+            sourceGroup.includes(group.records[0].sourceItem)
+        );
+        if (sourceVisualGroup && coordinate >= sourceVisualGroup.start &&
+            coordinate <= sourceVisualGroup.end) {
+            return {sameGroup: true};
+        }
+
+        const targetGroups = visualGroups.filter(group => {
+            const targetItem = group.records[0].sourceItem;
+            return !sourceGroup.includes(targetItem) &&
+                this._taskbarController.isTaskbarItemPinned(targetItem) ===
+                    sourceIsPinned;
+        });
+        if (targetGroups.length === 0)
+            return null;
+
+        let targetGroup = targetGroups.find(group =>
+            coordinate < group.start + (group.end - group.start) / 2
+        );
+        const insertBefore = targetGroup !== undefined;
+        if (!targetGroup)
+            targetGroup = targetGroups.at(-1);
+
+        return {
+            item: insertBefore
+                ? targetGroup.records[0].sourceItem
+                : targetGroup.records.at(-1).sourceItem,
+            insertBefore,
+        };
+    }
+
+    _reorderAuxiliaryGroup(sourceItem, targetItem, insertBefore) {
+        const sourceGroup = new Set(
+            this._taskbarController.getTaskbarDragGroup(sourceItem)
+        );
+        const targetGroup = new Set(
+            this._taskbarController.getTaskbarDragGroup(targetItem)
+        );
+        if (sourceGroup.size === 0 || targetGroup.size === 0)
+            return;
+
+        const children = this._popupContentBox.get_children();
+        const sourceAuxiliaryItems = children.filter(child => {
+            const entry = this._auxiliaryItems.find(record =>
+                record.auxiliaryItem === child
+            );
+            return entry && sourceGroup.has(entry.sourceItem);
+        });
+        if (sourceAuxiliaryItems.length === 0)
+            return;
+
+        const targetAuxiliaryItems = children.filter(child => {
+            const entry = this._auxiliaryItems.find(record =>
+                record.auxiliaryItem === child
+            );
+            return entry && targetGroup.has(entry.sourceItem);
+        });
+        if (targetAuxiliaryItems.length === 0)
+            return;
+
+        const sourceItems = new Set(sourceAuxiliaryItems);
+        const remainingChildren = children.filter(child =>
+            !sourceItems.has(child)
+        );
+        const target = insertBefore
+            ? targetAuxiliaryItems[0]
+            : targetAuxiliaryItems.at(-1);
+        const targetIndex = remainingChildren.indexOf(target);
+        const insertIndex = targetIndex + (insertBefore ? 0 : 1);
+        const desiredChildren = [...remainingChildren];
+        desiredChildren.splice(insertIndex, 0, ...sourceAuxiliaryItems);
+
+        for (let index = 0; index < desiredChildren.length; index++) {
+            const child = desiredChildren[index];
+            if (this._popupContentBox.get_child_at_index(index) === child)
+                continue;
+
+            this._popupContentBox.set_child_at_index(child, index);
+        }
     }
 
     _createTaskbarItem(item) {
@@ -685,6 +910,8 @@ export class ApplicationOverflowController {
             return;
         }
 
+        this._makeAuxiliaryDraggable(auxiliaryItem, sourceItem);
+
         if (previewsEnabled) {
             auxiliaryItem.connect('notify::hover', () => {
                 this._taskbarController.handleItemHover(
@@ -725,9 +952,43 @@ export class ApplicationOverflowController {
         });
     }
 
+    _makeAuxiliaryDraggable(auxiliaryItem, sourceItem) {
+        if (!this._taskbarController.isTaskbarItemDraggable(sourceItem))
+            return;
+
+        const dragSource = {
+            app: sourceItem._taskbarApp,
+            _taskbarItem: sourceItem,
+            _taskbarDropAccepted: false,
+            getDragActor: () => sourceItem._taskbarApp.create_icon_texture(
+                this._settings.get_int('icon-size')
+            ),
+            getDragActorSource: () => sourceItem._taskbarIcon,
+        };
+        auxiliaryItem._delegate = dragSource;
+        const draggable = DND.makeDraggable(auxiliaryItem, {
+            timeoutThreshold: 200,
+            dragActorMaxSize: this._settings.get_int('icon-size'),
+        });
+        auxiliaryItem._taskbarDraggable = draggable;
+        draggable.connect('drag-begin', () => {
+            dragSource._taskbarDropAccepted = false;
+            auxiliaryItem.opacity = 96;
+            this._taskbarController.beginExternalTaskbarDrag(sourceItem);
+        });
+        draggable.connect('drag-end', () => {
+            auxiliaryItem.opacity = 255;
+            this._taskbarController.finishExternalTaskbarDrag(
+                sourceItem,
+                draggable
+            );
+        });
+    }
+
     _clearPopupItems() {
         this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
         this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
+        this._popupContentBox = null;
         for (const {auxiliaryItem, styleItem} of this._auxiliaryItems) {
             if (styleItem._taskbarIsShowDesktop)
                 styleItem._taskbarButton.remove_style_pseudo_class('hover');

@@ -5,6 +5,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Mtk from 'gi://Mtk';
+import Meta from 'gi://Meta';
 import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
@@ -124,6 +125,7 @@ export class TaskbarController {
         this._appSignals = new Map();
         this._appButtons = new Map();
         this._auxiliaryItems = new Set();
+        this._dragEndListeners = new Set();
         this._showDesktopButton = null;
         this._showDesktopItem = null;
         this._showDesktopSlot = null;
@@ -220,6 +222,44 @@ export class TaskbarController {
         this._destroyAppMenu(item._taskbarButton);
     }
 
+    addDragEndListener(listener) {
+        this._dragEndListeners.add(listener);
+    }
+
+    removeDragEndListener(listener) {
+        this._dragEndListeners.delete(listener);
+    }
+
+    isTaskbarItemDraggable(item) {
+        return this._dragIsEnabled(item);
+    }
+
+    isTaskbarItemPinned(item) {
+        return this._isPinnedTaskbarItem(item);
+    }
+
+    getTaskbarDragGroup(item) {
+        const group = this._taskbarDragGroups().find(group =>
+            group.items.includes(item)
+        );
+        return group ? [...group.items] : [];
+    }
+
+    beginExternalTaskbarDrag(item) {
+        this._dragging = true;
+        item.opacity = 96;
+        this._windowPreviews.hideTooltip(false);
+        this._windowPreviews.hide();
+    }
+
+    finishExternalTaskbarDrag(item, draggable) {
+        this._resetDragCursor(draggable);
+        item.opacity = 255;
+        this._dragging = false;
+        this._queueRedisplay();
+        this._notifyDragEnd();
+    }
+
     hasOpenMenu() {
         return this.getItems().some(item =>
             item._taskbarButton?._taskbarMenu?.isOpen
@@ -262,6 +302,8 @@ export class TaskbarController {
         });
         this._connect(this._favorites, 'changed', () => {
             this._queueRedisplay();
+            if (!this._dragging)
+                this._syncDragEnabled(true);
         });
         this._connect(global.display, 'notify::focus-window', () => {
             this.syncButtonStates();
@@ -284,6 +326,7 @@ export class TaskbarController {
             () => {
                 this._sessionOrder = [];
                 this._queueRedisplay();
+                this._syncDragEnabled(true);
             }
         );
         this._connect(
@@ -418,6 +461,7 @@ export class TaskbarController {
         for (const item of [...this._auxiliaryItems])
             this.removeAuxiliaryItem(item);
         this._auxiliaryItems.clear();
+        this._dragEndListeners.clear();
 
         this._removeShowDesktopItem();
 
@@ -652,9 +696,11 @@ export class TaskbarController {
             this._showDesktopDragEndId = draggable.connect(
                 'drag-end',
                 () => {
+                    this._resetDragCursor(draggable);
                     item.opacity = 255;
                     this._dragging = false;
                     this._queueRedisplay();
+                    this._notifyDragEnd();
                 }
             );
             return;
@@ -681,6 +727,21 @@ export class TaskbarController {
         this._showDesktopDragBeginId = 0;
         this._showDesktopDragEndId = 0;
         this._dragging = false;
+    }
+
+    _resetDragCursor(draggable) {
+        if (draggable._updateCursor) {
+            GLib.idle_add_once(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                if (this._dragging)
+                    return;
+
+                const grabActor = global.stage.get_grab_actor() || global.stage;
+                grabActor.set_cursor_type(Clutter.CursorType.DEFAULT);
+            });
+            return;
+        }
+
+        global.display.set_cursor(Meta.Cursor.DEFAULT);
     }
 
     _placeShowDesktopItem() {
@@ -897,6 +958,7 @@ export class TaskbarController {
                 window,
                 isLauncher,
                 isCombined,
+                isPinnedPrimary,
             } = entries[index];
             const pinnedToRunningGap = isLauncher &&
                 index + 1 < entries.length &&
@@ -907,7 +969,8 @@ export class TaskbarController {
                     app,
                     window,
                     isLauncher,
-                    isCombined
+                    isCombined,
+                    isPinnedPrimary
                 );
                 this._trackApp(app);
                 this._appButtons.set(key, item);
@@ -930,6 +993,7 @@ export class TaskbarController {
             } else {
                 this._placeItemAtActiveIndex(item, index);
             }
+            item._taskbarIsPinnedPrimary = isPinnedPrimary;
 
             if (item._taskbarPinnedToRunningGap !== pinnedToRunningGap) {
                 item._taskbarPinnedToRunningGap = pinnedToRunningGap;
@@ -1089,6 +1153,167 @@ export class TaskbarController {
         }
     }
 
+    _sameTaskbarDragGroup(left, right) {
+        return left._taskbarApp === right._taskbarApp &&
+            left._taskbarIsLauncher === right._taskbarIsLauncher &&
+            left._taskbarIsPinnedPrimary === right._taskbarIsPinnedPrimary;
+    }
+
+    _isPinnedTaskbarItem(item) {
+        return item._taskbarIsLauncher ||
+            (item._taskbarIsPinnedPrimary &&
+                this._isPersistentPinned(item._taskbarApp));
+    }
+
+    _isRunningTaskbarItem(item) {
+        return !item._taskbarIsLauncher &&
+            !item._taskbarIsPinnedPrimary;
+    }
+
+    _taskbarDragGroups() {
+        const groups = [];
+        for (const child of this.actor.get_children()) {
+            if (child === this._showDesktopItem ||
+                child === this._externalDragPlaceholder ||
+                !child._taskbarApp || child.animatingOut) {
+                continue;
+            }
+
+            const group = groups.find(existing =>
+                this._sameTaskbarDragGroup(existing.items[0], child)
+            );
+            if (group)
+                group.items.push(child);
+            else
+                groups.push({items: [child]});
+        }
+        return groups;
+    }
+
+    _reorderTaskbarGroup(item, x) {
+        const groups = this._taskbarDragGroups();
+        const sourceGroup = groups.find(group =>
+            group.items.includes(item)
+        );
+        if (!sourceGroup)
+            return false;
+
+        const sourceIsPinned = this._isPinnedTaskbarItem(item);
+        const targetGroups = groups.filter(group => {
+            if (group === sourceGroup)
+                return false;
+
+            const target = group.items[0];
+            return sourceIsPinned
+                ? this._isPinnedTaskbarItem(target)
+                : this._isRunningTaskbarItem(target);
+        });
+        if (targetGroups.length === 0)
+            return false;
+
+        let targetGroup = targetGroups.find(group => {
+            const first = group.items[0];
+            const last = group.items.at(-1);
+            const groupStart = first.x;
+            const groupEnd = last.x + last.width;
+            return x < groupStart + (groupEnd - groupStart) / 2;
+        });
+        const insertBefore = targetGroup !== undefined;
+        if (!targetGroup)
+            targetGroup = targetGroups.at(-1);
+
+        return this._reorderTaskbarGroups(
+            sourceGroup,
+            targetGroup,
+            insertBefore
+        );
+    }
+
+    reorderTaskbarItem(sourceItem, targetItem, insertBefore) {
+        const groups = this._taskbarDragGroups();
+        const sourceGroup = groups.find(group =>
+            group.items.includes(sourceItem)
+        );
+        const targetGroup = groups.find(group =>
+            group.items.includes(targetItem)
+        );
+        if (!sourceGroup || !targetGroup || sourceGroup === targetGroup)
+            return false;
+
+        const sourceIsPinned = this._isPinnedTaskbarItem(sourceGroup.items[0]);
+        const targetIsPinned = this._isPinnedTaskbarItem(targetGroup.items[0]);
+        if (sourceIsPinned !== targetIsPinned)
+            return false;
+
+        return this._reorderTaskbarGroups(
+            sourceGroup,
+            targetGroup,
+            insertBefore
+        );
+    }
+
+    _reorderTaskbarGroups(sourceGroup, targetGroup, insertBefore) {
+        const sourceItems = new Set(sourceGroup.items);
+        const children = this.actor.get_children();
+        const remainingChildren = children.filter(child =>
+            !sourceItems.has(child)
+        );
+        const target = insertBefore
+            ? targetGroup.items[0]
+            : targetGroup.items.at(-1);
+        const targetIndex = remainingChildren.indexOf(target);
+        const insertIndex = targetIndex + (insertBefore ? 0 : 1);
+        const desiredChildren = [...remainingChildren];
+        desiredChildren.splice(insertIndex, 0, ...sourceGroup.items);
+        let changed = false;
+
+        for (let index = 0; index < desiredChildren.length; index++) {
+            const child = desiredChildren[index];
+            if (this.actor.get_child_at_index(index) === child)
+                continue;
+
+            this.actor.set_child_at_index(child, index);
+            changed = true;
+        }
+        return changed;
+    }
+
+    _getRunningTaskbarOrder() {
+        const order = [];
+        const seen = new Set();
+        for (const group of this._taskbarDragGroups()) {
+            const item = group.items[0];
+            if (!this._isRunningTaskbarItem(item))
+                continue;
+
+            const appId = item._taskbarApp.get_id();
+            if (seen.has(appId))
+                continue;
+
+            seen.add(appId);
+            order.push(appId);
+        }
+        return order;
+    }
+
+    _getPinnedTaskbarOrder() {
+        const order = [];
+        const seen = new Set();
+        for (const group of this._taskbarDragGroups()) {
+            const item = group.items[0];
+            if (!this._isPinnedTaskbarItem(item))
+                continue;
+
+            const appId = item._taskbarApp.get_id();
+            if (seen.has(appId))
+                continue;
+
+            seen.add(appId);
+            order.push(appId);
+        }
+        return order;
+    }
+
     handleDragOver(source, _actor, x, _y, _time) {
         if (source && source._startMenuTaskbarApp)
             return this._handleStartMenuDragOver(source, x);
@@ -1104,21 +1329,12 @@ export class TaskbarController {
         if (item._taskbarIsShowDesktop)
             return this._handleShowDesktopDragOver(item, x);
 
-        const children = this.actor.get_children();
-        const sourceIndex = children.indexOf(item);
-        if (sourceIndex < 0)
+        if (!this._isPinnedTaskbarItem(item) &&
+            !this._isRunningTaskbarItem(item)) {
             return DND.DragMotionResult.NO_DROP;
+        }
 
-        // Ignore the dragged item to keep insertion boundaries stable.
-        const stationaryChildren = children.filter(child => child !== item);
-        let targetIndex = stationaryChildren.findIndex(child =>
-            x < child.x + child.width / 2
-        );
-        if (targetIndex < 0)
-            targetIndex = stationaryChildren.length;
-
-        if (targetIndex !== sourceIndex)
-            this.actor.set_child_at_index(item, targetIndex);
+        this._reorderTaskbarGroup(item, x);
 
         return DND.DragMotionResult.MOVE_DROP;
     }
@@ -1137,35 +1353,34 @@ export class TaskbarController {
 
         if (item._taskbarIsShowDesktop) {
             this._saveShowDesktopPinnedPosition();
+            source._taskbarDropAccepted = true;
             return true;
         }
 
-        const order = this.actor.get_children()
-            .map(child => child._taskbarApp?.get_id())
-            .filter(Boolean);
-        const appId = item._taskbarApp.get_id();
-        const sourceIndex = order.indexOf(appId);
-        const showPinned =
-            !this._settings.get_boolean('hide-pinned-taskbar-apps');
-        if (showPinned && sourceIndex >= 0 &&
-            global.settings.is_writable('favorite-apps')) {
-            const wasFavorite = this._favorites.isFavorite(appId);
-            const favoriteCount = this._favorites.getFavorites().length;
-            if (sourceIndex < favoriteCount) {
-                const favoriteIndex = order.slice(0, sourceIndex)
-                    .filter(id => this._favorites.isFavorite(id)).length;
-                if (wasFavorite)
-                    this._favorites.moveFavoriteToPos(appId, favoriteIndex);
-                else
-                    this._favorites.addFavoriteAtPos(appId, favoriteIndex);
-            }
+        return this.acceptTaskbarItemDrop(item, source);
+    }
+
+    acceptTaskbarItemDrop(item, source = null) {
+        if (!this._isPinnedTaskbarItem(item) &&
+            !this._isRunningTaskbarItem(item)) {
+            return false;
         }
 
-        // Only pinned order persists after an application closes.
-        this._sessionOrder = order.filter(id =>
-            !showPinned || !this._favorites.isFavorite(id)
-        );
+        const appId = item._taskbarApp.get_id();
+        if (this._isPinnedTaskbarItem(item)) {
+            if (global.settings.is_writable('favorite-apps')) {
+                const favoriteIndex = this._getPinnedTaskbarOrder()
+                    .indexOf(appId);
+                if (favoriteIndex >= 0)
+                    this._favorites.moveFavoriteToPos(appId, favoriteIndex);
+            }
+        } else {
+            this._sessionOrder = this._getRunningTaskbarOrder();
+        }
+
         this._saveShowDesktopPinnedPosition();
+        if (source)
+            source._taskbarDropAccepted = true;
         return true;
     }
 
@@ -1364,6 +1579,11 @@ export class TaskbarController {
             Main.queueDeferredWork(this._redisplayWorkId);
     }
 
+    _notifyDragEnd() {
+        for (const listener of [...this._dragEndListeners])
+            listener();
+    }
+
     _scheduleStartupSettle() {
         if (!this._startupSettling)
             return;
@@ -1510,7 +1730,10 @@ export class TaskbarController {
             seen.add(id);
             return true;
         });
-        const appsToOrder = this._usePinnedAppLaunchers()
+        const usePinnedAppLaunchers = this._usePinnedAppLaunchers();
+        const orderPinnedRunningApps = usePinnedAppLaunchers ||
+            this._combineMode() !== 'always';
+        const appsToOrder = orderPinnedRunningApps
             ? runningApps
             : unpinnedApps;
         const visibleRunningIds = new Set(
@@ -1536,12 +1759,21 @@ export class TaskbarController {
         const orderedRunningApps = [...appsToOrder].sort((a, b) =>
             positions.get(a.get_id()) - positions.get(b.get_id())
         );
+        if (!usePinnedAppLaunchers)
+            return [
+                ...pinnedApps,
+                ...unpinnedApps.sort((a, b) =>
+                    positions.get(a.get_id()) - positions.get(b.get_id())
+                ),
+            ];
+
         return [...pinnedApps, ...orderedRunningApps];
     }
 
     _orderedEntries(pinnedOnly = false) {
         const apps = this._orderedApps(pinnedOnly);
-        const launcherCount = this._usePinnedAppLaunchers()
+        const usePinnedAppLaunchers = this._usePinnedAppLaunchers();
+        const launcherCount = usePinnedAppLaunchers
             ? this._pinnedApps().length
             : 0;
         if (this._combineAppButtons()) {
@@ -1550,12 +1782,14 @@ export class TaskbarController {
                 return {
                     key: isLauncher
                         ? `launcher:${app.get_id()}`
-                        : this._usePinnedAppLaunchers()
+                        : usePinnedAppLaunchers
                             ? `app:${app.get_id()}`
                             : app.get_id(),
                     app,
                     window: null,
                     isLauncher,
+                    isPinnedPrimary: !usePinnedAppLaunchers &&
+                        this._isPersistentPinned(app),
                 };
             });
         }
@@ -1580,6 +1814,7 @@ export class TaskbarController {
                     app,
                     window: null,
                     isLauncher: true,
+                    isPinnedPrimary: false,
                 });
                 continue;
             }
@@ -1591,6 +1826,7 @@ export class TaskbarController {
                     window: null,
                     isLauncher: false,
                     isCombined: true,
+                    isPinnedPrimary: false,
                 });
                 continue;
             }
@@ -1604,6 +1840,7 @@ export class TaskbarController {
                     app,
                     window: null,
                     isLauncher: false,
+                    isPinnedPrimary: false,
                 });
                 continue;
             }
@@ -1614,6 +1851,7 @@ export class TaskbarController {
                     app,
                     window,
                     isLauncher: false,
+                    isPinnedPrimary: false,
                 });
             }
         }
@@ -1622,11 +1860,12 @@ export class TaskbarController {
 
     _uncombinedWindowEntries(apps, combinedAppIds = new Set()) {
         const pinnedEntries = [];
-        const runningEntries = [];
+        const runningGroups = new Map();
         for (const app of apps) {
             const windows = this._interestingWindows(app).sort((a, b) =>
                 a.get_stable_sequence() - b.get_stable_sequence()
             );
+            const isPinned = this._isPersistentPinned(app);
 
             if (combinedAppIds.has(app.get_id())) {
                 const entry = {
@@ -1635,25 +1874,23 @@ export class TaskbarController {
                     window: null,
                     isLauncher: false,
                     isCombined: true,
-                    sortSequence: windows[0].get_stable_sequence(),
+                    isPinnedPrimary: isPinned,
                 };
-                if (this._isPersistentPinned(app))
+                if (isPinned)
                     pinnedEntries.push(entry);
                 else
-                    runningEntries.push(entry);
+                    runningGroups.set(app.get_id(), [entry]);
                 continue;
             }
 
-            if (!this._isPersistentPinned(app)) {
-                for (const window of windows) {
-                    runningEntries.push({
-                        key: `window:${window.get_stable_sequence()}`,
-                        app,
-                        window,
-                        isLauncher: false,
-                        sortSequence: window.get_stable_sequence(),
-                    });
-                }
+            if (!isPinned) {
+                runningGroups.set(app.get_id(), windows.map(window => ({
+                    key: `window:${window.get_stable_sequence()}`,
+                    app,
+                    window,
+                    isLauncher: false,
+                    isPinnedPrimary: false,
+                })));
                 continue;
             }
 
@@ -1663,6 +1900,7 @@ export class TaskbarController {
                     app,
                     window: null,
                     isLauncher: false,
+                    isPinnedPrimary: true,
                 });
                 continue;
             }
@@ -1673,22 +1911,29 @@ export class TaskbarController {
                 app,
                 window: firstWindow,
                 isLauncher: false,
+                isPinnedPrimary: true,
             });
-            for (const window of remainingWindows) {
-                runningEntries.push({
+            if (remainingWindows.length > 0) {
+                runningGroups.set(app.get_id(), remainingWindows.map(window => ({
                     key: `window:${window.get_stable_sequence()}`,
                     app,
                     window,
                     isLauncher: false,
-                    sortSequence: window.get_stable_sequence(),
-                });
+                    isPinnedPrimary: false,
+                })));
             }
         }
 
-        runningEntries.sort((a, b) =>
-            a.sortSequence - b.sortSequence
+        const positions = new Map(
+            this._sessionOrder.map((id, index) => [id, index])
         );
-        return [...pinnedEntries, ...runningEntries];
+        const orderedRunningGroups = [...runningGroups.entries()]
+            .sort((left, right) =>
+                positions.get(left[0]) - positions.get(right[0])
+            )
+            .map(([, entries]) => entries)
+            .flat();
+        return [...pinnedEntries, ...orderedRunningGroups];
     }
 
     _combineMode() {
@@ -1840,7 +2085,8 @@ export class TaskbarController {
         app,
         window = null,
         isLauncher = false,
-        isCombined = false
+        isCombined = false,
+        isPinnedPrimary = false
     ) {
         const glassWidth = this._buttonWidth(
             window,
@@ -2003,6 +2249,7 @@ export class TaskbarController {
         item._taskbarWindow = window;
         item._taskbarIsLauncher = isLauncher;
         item._taskbarIsCombinedApp = isCombined;
+        item._taskbarIsPinnedPrimary = isPinnedPrimary;
         item._taskbarPinnedToRunningGap = false;
         item._taskbarButton = button;
         item._taskbarButtonContent = buttonContent;
@@ -2078,6 +2325,7 @@ export class TaskbarController {
         });
         item._taskbarDraggable = draggable;
         draggable.connect('drag-begin', () => {
+            dragSource._taskbarDropAccepted = false;
             this._dragging = true;
             item.opacity = 96;
             this._windowPreviews.hideTooltip(false);
@@ -2085,9 +2333,11 @@ export class TaskbarController {
             button._taskbarMenu?.close();
         });
         draggable.connect('drag-end', () => {
+            this._resetDragCursor(draggable);
             item.opacity = 255;
             this._dragging = false;
             this._queueRedisplay();
+            this._notifyDragEnd();
         });
     }
 
@@ -2098,18 +2348,27 @@ export class TaskbarController {
         if (item && item._taskbarIsShowDesktop)
             return this._settings.get_boolean('windows-xp-theme-enabled');
 
-        return this._combineAppButtons() ||
-            this._whenFullCombinedApps.size > 0 ||
-            (this._usePinnedAppLaunchers() &&
-                (!item || item._taskbarIsLauncher));
+        if (!item)
+            return true;
+
+        if (item._taskbarIsLauncher)
+            return true;
+
+        return !item._taskbarIsPinnedPrimary ||
+            this._combineMode() !== 'never';
     }
 
-    _syncDragEnabled() {
-        const enabled = this._dragIsEnabled();
-        if (enabled === this._dragEnabled)
+    _syncDragEnabled(force = false) {
+        const configuration = [
+            this._settings.get_boolean('taskbar-locked'),
+            this._combineMode(),
+            this._usePinnedAppLaunchers(),
+            this._settings.get_boolean('hide-pinned-taskbar-apps'),
+        ].join(':');
+        if (!force && configuration === this._dragEnabled)
             return;
 
-        this._dragEnabled = enabled;
+        this._dragEnabled = configuration;
         const sessionOrder = this._sessionOrder;
         const shownInitially = this._shownInitially;
         this._clearAppButtons();
