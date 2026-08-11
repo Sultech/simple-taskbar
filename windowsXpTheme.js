@@ -86,7 +86,7 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
-    if (settings.get_string('combine-app-buttons-mode') === 'never') {
+    if (settings.get_string('combine-app-buttons-mode') === 'always') {
         setString(
             settings,
             'combine-app-buttons-mode',

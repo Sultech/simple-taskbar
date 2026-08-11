@@ -494,6 +494,7 @@ export default class SimpleTaskbarExtension extends Extension {
             'app-alignment',
             'start-button-position',
             'use-pinned-apps-as-launchers',
+            'combine-app-buttons-mode',
             'application-overflow-enabled',
             'hide-app-labels',
             'custom-indicator-colors-enabled',

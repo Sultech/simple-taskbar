@@ -503,6 +503,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const combineAppButtonsChoices = [
+            {value: 'always', label: _('Always')},
+            {value: 'when-full', label: _('Only When Full')},
+            {value: 'never', label: _('Never')},
+        ];
+        const windowsXpCombineAppButtonsChoices = [
+            {value: 'when-full', label: _('Only When Full')},
+            {value: 'never', label: _('Never')},
+        ];
         const combineAppButtonsRow = this._addComboRow(
             advancedAppBehaviorGroup,
             window._settings,
@@ -510,11 +519,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 key: 'combine-app-buttons-mode',
                 title: _('Combine Application Buttons'),
                 subtitle: _('Choose when windows share one taskbar button'),
-                choices: [
-                    {value: 'always', label: _('Always')},
-                    {value: 'when-full', label: _('Only When Full')},
-                    {value: 'never', label: _('Never')},
-                ],
+                choices: combineAppButtonsChoices,
+                choicesProvider: () =>
+                    window._settings.get_boolean(
+                        'windows-xp-theme-enabled'
+                    )
+                        ? windowsXpCombineAppButtonsChoices
+                        : combineAppButtonsChoices,
+                choicesChangedKey: 'windows-xp-theme-enabled',
             }
         );
 
@@ -891,6 +903,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::use-pinned-apps-as-launchers',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::combine-app-buttons-mode',
             syncWindowsXpTheme
         );
         window._settings.connect(
@@ -2654,30 +2670,57 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         subtitle = '',
         choices,
         initialValue = null,
+        choicesProvider = () => choices,
+        choicesChangedKey = null,
     }) {
-        const model = new Gtk.StringList();
-        for (const choice of choices)
-            model.append(choice.label);
+        const createModel = availableChoices => {
+            const model = new Gtk.StringList();
+            for (const choice of availableChoices)
+                model.append(choice.label);
+            return model;
+        };
+        let currentChoices = choicesProvider();
+        let syncingChoices = false;
 
         const row = new Adw.ComboRow({
             title,
             subtitle,
-            model,
+            model: createModel(currentChoices),
         });
         const currentValue = initialValue ?? settings.get_string(key);
-        const selected = choices.findIndex(choice => choice.value === currentValue);
+        const selected = currentChoices.findIndex(
+            choice => choice.value === currentValue
+        );
         row.set_selected(Math.max(selected, 0));
         row.connect('notify::selected', widget => {
-            const choice = choices[widget.get_selected()];
+            if (syncingChoices)
+                return;
+
+            const choice = currentChoices[widget.get_selected()];
             if (choice)
                 settings.set_string(key, choice.value);
         });
         settings.connect(`changed::${key}`, () => {
             const value = settings.get_string(key);
-            const index = choices.findIndex(choice => choice.value === value);
+            const index = currentChoices.findIndex(
+                choice => choice.value === value
+            );
             if (index >= 0 && row.get_selected() !== index)
                 row.set_selected(index);
         });
+        if (choicesChangedKey) {
+            settings.connect(`changed::${choicesChangedKey}`, () => {
+                currentChoices = choicesProvider();
+                syncingChoices = true;
+                row.set_model(createModel(currentChoices));
+                const value = settings.get_string(key);
+                const index = currentChoices.findIndex(
+                    choice => choice.value === value
+                );
+                row.set_selected(Math.max(index, 0));
+                syncingChoices = false;
+            });
+        }
         group.add(row);
         return row;
     }
