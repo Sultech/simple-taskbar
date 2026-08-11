@@ -2035,7 +2035,7 @@ export class WindowsStartMenu {
         if (!monitor)
             return;
         const width = Math.min(640, Math.max(420, monitor.width - 32));
-        const height = Math.min(620, Math.max(420, monitor.height - 96));
+        const height = Math.min(623, Math.max(420, monitor.height - 96));
         if (width === this._menuWidth && height === this._menuHeight)
             return;
 
