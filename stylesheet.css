@@ -1338,6 +1338,7 @@
     background-image: url('xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;
     background-position: top left !important;
+    background-size: 1px 30px !important;
     border-radius: 8px !important;
 }
 
@@ -1519,6 +1520,7 @@
     background-image: url('xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;
     background-position: top left !important;
+    background-size: 1px 30px !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
