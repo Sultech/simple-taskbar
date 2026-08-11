@@ -90,8 +90,8 @@ export class ApplicationOverflowController {
         });
         this._createButton();
         this.actor.add_child(this._viewport);
-        this.actor.add_child(this._spacer);
         this.actor.add_child(this._button);
+        this.actor.add_child(this._spacer);
     }
 
     enable() {

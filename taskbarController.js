@@ -264,6 +264,7 @@ export class TaskbarController {
                 this._windowPreviews.hide();
                 this._shownInitially = false;
                 this._queueRedisplay();
+                this._syncDragEnabled();
             }
         );
         this._connect(
@@ -767,8 +768,7 @@ export class TaskbarController {
         if (source && source._startMenuTaskbarApp)
             return this._handleStartMenuDragOver(source, x);
 
-        if (this._settings.get_boolean('taskbar-locked') ||
-            !this._combineAppButtons()) {
+        if (!this._dragIsEnabled(source?._taskbarItem)) {
             return DND.DragMotionResult.NO_DROP;
         }
 
@@ -799,8 +799,7 @@ export class TaskbarController {
         if (source && source._startMenuTaskbarApp)
             return this._acceptStartMenuDrop(source);
 
-        if (this._settings.get_boolean('taskbar-locked') ||
-            !this._combineAppButtons()) {
+        if (!this._dragIsEnabled(source?._taskbarItem)) {
             return false;
         }
 
@@ -1653,7 +1652,7 @@ export class TaskbarController {
         };
         button._delegate = dragSource;
 
-        if (!this._dragIsEnabled())
+        if (!this._dragIsEnabled(item))
             return;
 
         const draggable = DND.makeDraggable(button, {
@@ -1675,9 +1674,13 @@ export class TaskbarController {
         });
     }
 
-    _dragIsEnabled() {
-        return !this._settings.get_boolean('taskbar-locked') &&
-            this._combineAppButtons();
+    _dragIsEnabled(item = null) {
+        if (this._settings.get_boolean('taskbar-locked'))
+            return false;
+
+        return this._combineAppButtons() ||
+            (this._usePinnedAppLaunchers() &&
+                (!item || item._taskbarIsLauncher));
     }
 
     _syncDragEnabled() {
