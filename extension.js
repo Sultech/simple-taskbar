@@ -47,8 +47,8 @@ import {
     ICON_VERTICAL_RESERVE,
     STANDARD_MIN_PANEL_HEIGHT,
 } from './panelSizing.js';
+import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
 import {
-    applyDefaultTaskbarSettings,
     applyWindowsXpThemeAppearance,
     applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SPACING,
@@ -409,10 +409,6 @@ export default class SimpleTaskbarExtension extends Extension {
         if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
             if (modeChanged &&
                 !this._settings.get_boolean('default-gnome-panel')) {
-                this._settings.set_boolean(
-                    'activities-button-visible',
-                    true
-                );
                 applyDefaultTaskbarSettings(this._settings);
                 return;
             }
@@ -500,6 +496,10 @@ export default class SimpleTaskbarExtension extends Extension {
                 applyWindowsXpThemeSettings(this._settings);
                 this._settings.set_boolean('default-gnome-panel', false);
                 return;
+            }
+            if (!this._settings.get_boolean('default-gnome-panel') &&
+                !this._settings.get_boolean('windows-xp-theme-enabled')) {
+                applyDefaultTaskbarSettings(this._settings);
             }
             this._syncTaskbarVisibility();
         }, this);

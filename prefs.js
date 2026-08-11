@@ -32,8 +32,8 @@ import {
     MIN_PANEL_HEIGHT,
     STANDARD_MIN_PANEL_HEIGHT,
 } from './panelSizing.js';
+import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
 import {
-    applyDefaultTaskbarSettings,
     applyWindowsXpThemeSettings,
     setWindowsXpThemeEnabled,
     WINDOWS_XP_ICON_SPACING,
@@ -702,24 +702,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('panel-border-light-enabled', false);
             } else {
                 applyDefaultTaskbarSettings(settings);
-                settings.set_int('panel-button-padding', -1);
-                settings.set_string('panel-position', 'bottom');
-                settings.set_int('start-button-padding', 3);
-                settings.set_string('clock-position', 'right');
-                settings.set_string('system-menu-position', 'right');
-                settings.set_string('folder-menu-position', 'right');
-                settings.set_string('tray-overflow-position', 'right');
-                settings.set_strv(
-                    'panel-item-order',
-                    DEFAULT_PANEL_ITEM_ORDER
-                );
-                settings.set_boolean('activities-button-visible', true);
-                settings.set_string('activities-button-position', 'left');
-                settings.set_boolean('multi-monitor-panels', true);
-                settings.set_boolean('windows-start-menu-enabled', true);
-                settings.set_boolean('gnome-start-button-visible', true);
-                settings.set_boolean('show-desktop-button-visible', true);
-                settings.set_boolean('panel-border-enabled', false);
             }
             settings.apply();
         };

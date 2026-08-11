@@ -2,9 +2,9 @@
 // Copyright (C) 2026 sultech
 
 import {
-    DEFAULT_PANEL_ITEM_ORDER,
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
+import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
 
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
@@ -14,11 +14,6 @@ export const WINDOWS_XP_COMBINE_MODE = 'when-full';
 export const WINDOWS_XP_PANEL_POSITION = 'bottom';
 export const WINDOWS_XP_CLOCK_POSITION = 'right';
 export const WINDOWS_XP_SYSTEM_MENU_POSITION = 'right';
-export const DEFAULT_TASKBAR_PANEL_HEIGHT = 49;
-export const DEFAULT_TASKBAR_ICON_SIZE = 32;
-export const DEFAULT_TASKBAR_ICON_SPACING = 3;
-export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
-export const DEFAULT_TASKBAR_COMBINE_MODE = 'always';
 
 function setInteger(settings, key, value) {
     if (settings.get_int(key) !== value)
@@ -110,39 +105,6 @@ export function applyWindowsXpThemeSettings(settings) {
     }
 }
 
-export function applyDefaultTaskbarSettings(settings) {
-    setInteger(settings, 'panel-height', DEFAULT_TASKBAR_PANEL_HEIGHT);
-    setInteger(settings, 'panel-button-padding', -1);
-    setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);
-    setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
-    setString(settings, 'app-alignment', DEFAULT_TASKBAR_ALIGNMENT);
-    setString(settings, 'activities-button-position', 'left');
-    setString(settings, 'panel-position', 'bottom');
-    setString(settings, 'clock-position', 'right');
-    setString(settings, 'system-menu-position', 'right');
-    setString(settings, 'show-desktop-button-position', 'right');
-    setStringArray(
-        settings,
-        'panel-item-order',
-        DEFAULT_PANEL_ITEM_ORDER
-    );
-    setString(
-        settings,
-        'start-button-position',
-        DEFAULT_TASKBAR_ALIGNMENT
-    );
-    setBoolean(settings, 'use-pinned-apps-as-launchers', false);
-    setBoolean(settings, 'windows-start-menu-enabled', true);
-    setBoolean(settings, 'show-desktop-button-visible', true);
-    setBoolean(settings, 'application-overflow-enabled', true);
-    setBoolean(settings, 'hide-app-labels', false);
-    setString(
-        settings,
-        'combine-app-buttons-mode',
-        DEFAULT_TASKBAR_COMBINE_MODE
-    );
-}
-
 export function setWindowsXpThemeEnabled(settings, enabled) {
     setBoolean(settings, 'windows-xp-theme-enabled', enabled);
     if (enabled) {
@@ -157,7 +119,6 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
         applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     } else {
-        setBoolean(settings, 'activities-button-visible', true);
         applyDefaultTaskbarSettings(settings);
     }
 }
