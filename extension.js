@@ -178,7 +178,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._trayOverflowController.enable();
         this._panelController.applyLayout();
         this._taskbarController.setShowDesktopButton(
-            this._showDesktopButton
+            this._showDesktopButton,
+            button => this._replaceShowDesktopButton(button)
         );
         this._panelInteractionController.enable();
         this._startButtonController.enable();
@@ -312,6 +313,10 @@ export default class SimpleTaskbarExtension extends Extension {
         this._taskbarBin.visible =
             !this._settings.get_boolean('default-gnome-panel');
 
+        this._createShowDesktopButton();
+    }
+
+    _createShowDesktopButton() {
         this._showDesktopIcon = new St.Icon({
             gicon: new Gio.FileIcon({
                 file: this.dir
@@ -385,6 +390,19 @@ export default class SimpleTaskbarExtension extends Extension {
             () => this._windowController.toggleDesktop(),
             this
         );
+    }
+
+    _replaceShowDesktopButton(button) {
+        const checked = button.checked;
+        button.disconnectObject(this);
+        button.child = null;
+        this._showDesktopVisual.destroy();
+        button.destroy();
+
+        this._createShowDesktopButton();
+        this._showDesktopButton.checked = checked;
+        this._panelController.setShowDesktopButton(this._showDesktopButton);
+        return this._showDesktopButton;
     }
 
     _syncWindowsXpTheme(modeChanged) {

@@ -253,8 +253,7 @@ export class QuickSettingsXpIconController {
     }
 
     _addTarget(targets, icon, kind, source) {
-        if (icon)
-            targets.set(icon, {kind, source});
+        targets.set(icon, {kind, source});
     }
 
     _capture(record) {

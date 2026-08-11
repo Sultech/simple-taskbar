@@ -146,6 +146,10 @@ export class PanelController {
         this._autoHideController.setMenuOpen(open);
     }
 
+    setShowDesktopButton(button) {
+        this._showDesktopButton = button;
+    }
+
     position() {
         const monitor = Main.layoutManager.primaryMonitor;
         if (!monitor)

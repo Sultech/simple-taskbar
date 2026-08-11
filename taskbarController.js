@@ -130,6 +130,7 @@ export class TaskbarController {
         this._showDesktopDraggable = null;
         this._showDesktopDragBeginId = 0;
         this._showDesktopDragEndId = 0;
+        this._replaceShowDesktopButton = null;
         this._preserveItemWidths = false;
         this._sessionOrder = [];
         this._dragging = false;
@@ -177,8 +178,9 @@ export class TaskbarController {
         this._alignmentActor = actor;
     }
 
-    setShowDesktopButton(button) {
+    setShowDesktopButton(button, replaceButton) {
         this._showDesktopButton = button;
+        this._replaceShowDesktopButton = replaceButton;
         this._syncShowDesktopItem();
     }
 
@@ -445,6 +447,7 @@ export class TaskbarController {
         this._showDesktopItem = null;
         this._showDesktopSlot = null;
         this._showDesktopDraggable = null;
+        this._replaceShowDesktopButton = null;
         this._sessionOrder = null;
         this._auxiliaryItems = null;
         this._preserveItemWidths = false;
@@ -520,7 +523,7 @@ export class TaskbarController {
         if (shouldShow && !this._showDesktopItem)
             this._createShowDesktopItem();
         else if (!shouldShow && this._showDesktopItem)
-            this._removeShowDesktopItem();
+            this._removeShowDesktopItem(true);
 
         if (!this._showDesktopItem) {
             if (hadItem) {
@@ -578,10 +581,11 @@ export class TaskbarController {
         item.show(false);
     }
 
-    _removeShowDesktopItem() {
+    _removeShowDesktopItem(replaceButton = false) {
         if (!this._showDesktopItem)
             return;
 
+        const hadDraggable = this._showDesktopDraggable !== null;
         this._destroyShowDesktopDraggable();
         const item = this._showDesktopItem;
         const slot = this._showDesktopSlot;
@@ -599,6 +603,10 @@ export class TaskbarController {
         button._delegate = null;
         this._showDesktopItem = null;
         this._showDesktopSlot = null;
+        if (replaceButton && hadDraggable) {
+            this._showDesktopButton =
+                this._replaceShowDesktopButton(button);
+        }
     }
 
     _updateShowDesktopItemGeometry() {
@@ -655,7 +663,10 @@ export class TaskbarController {
         if (enabled || !this._showDesktopDraggable)
             return;
 
-        this._destroyShowDesktopDraggable();
+        this._removeShowDesktopItem(true);
+        this._createShowDesktopItem();
+        this._updateShowDesktopItemGeometry();
+        this._placeShowDesktopItem();
     }
 
     _destroyShowDesktopDraggable() {
@@ -665,11 +676,11 @@ export class TaskbarController {
         const draggable = this._showDesktopDraggable;
         draggable.disconnect(this._showDesktopDragBeginId);
         draggable.disconnect(this._showDesktopDragEndId);
-        this._showDesktopButton.remove_action(draggable.startGesture);
         this._showDesktopButton._delegate = null;
         this._showDesktopDraggable = null;
         this._showDesktopDragBeginId = 0;
         this._showDesktopDragEndId = 0;
+        this._dragging = false;
     }
 
     _placeShowDesktopItem() {
