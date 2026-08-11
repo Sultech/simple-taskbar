@@ -21,6 +21,7 @@ import {panelTransparencyOpacity} from './transparencyUtils.js';
 
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
 const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';
+const XP_MENU_CLASS = 'simple-taskbar-application-overflow-xp';
 const POPUP_MARGIN = 32;
 const LIGHT_GRADIENT_START_MAX_OPACITY = 0.62;
 const LIGHT_GRADIENT_END_MAX_OPACITY = 0.54;
@@ -716,14 +717,24 @@ export class ApplicationOverflowController {
         const light = Main.panel.has_style_class_name(
             'simple-taskbar-theme-light'
         );
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
         this._menu.actor.remove_style_class_name(LIGHT_MENU_CLASS);
         this._menu.actor.remove_style_class_name(DARK_MENU_CLASS);
+        this._menu.actor.remove_style_class_name(XP_MENU_CLASS);
         this._menu.actor.add_style_class_name(
             light ? LIGHT_MENU_CLASS : DARK_MENU_CLASS
         );
 
         const radiusDeclaration = (this._menu.box.get_style() ?? '')
             .match(/(?:^|;)\s*(border-radius:\s*[^;]+)/)?.[1] ?? '';
+        if (windowsXpThemeEnabled) {
+            this._menu.actor.add_style_class_name(XP_MENU_CLASS);
+            this._menu.box.set_style(null);
+            return;
+        }
+
         const popupBlurEnabled = global.blur_my_shell?._popup?.enabled;
         if (popupBlurEnabled && !light) {
             this._menu.box.set_style(

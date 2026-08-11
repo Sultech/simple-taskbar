@@ -1328,6 +1328,19 @@
     box-shadow: none !important;
 }
 
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp {
+    border-radius: 8px !important;
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content {
+    background-color: #1941a5 !important;
+    background-image: url('xp-panel-gradient.svg') !important;
+    background-repeat: repeat !important;
+    background-position: top left !important;
+    border-radius: 8px !important;
+}
+
 .simple-taskbar-application-overflow-taskbar {
     spacing: 0;
 }
