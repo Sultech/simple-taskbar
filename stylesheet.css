@@ -1358,6 +1358,55 @@
     background-color: transparent;
 }
 
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content.simple-taskbar-application-overflow-taskbar-scrollbar {
+    background-image: url('xp-overflow-gradient.svg') !important;
+    background-repeat: repeat !important;
+    background-position: top left !important;
+    background-size: 1px 39px !important;
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar {
+    min-height: 9px;
+    background-color: #1941a5;
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar StBin#trough {
+    background-color: #1941a5;
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar > .hhandle,
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar > #hhandle {
+    background-color: rgba(184, 220, 255, 0.94);
+    border: 2px solid rgba(25, 83, 177, 0.88);
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar > .hhandle:hover,
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar > #hhandle:hover {
+    background-color: rgba(214, 236, 255, 0.98);
+}
+
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar > .hhandle:active,
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
+    .simple-taskbar-application-overflow-scroll StScrollBar > #hhandle:active {
+    background-color: rgba(145, 198, 255, 0.98);
+}
+
 .simple-taskbar-application-overflow-list {
     min-width: 240px;
     spacing: 2px;

@@ -24,6 +24,8 @@ const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';
 const XP_MENU_CLASS = 'simple-taskbar-application-overflow-xp';
 const TASKBAR_CONTENT_CLASS =
     'simple-taskbar-application-overflow-taskbar-content';
+const TASKBAR_SCROLLBAR_CLASS =
+    'simple-taskbar-application-overflow-taskbar-scrollbar';
 const POPUP_MARGIN = 32;
 const LIGHT_GRADIENT_START_MAX_OPACITY = 0.62;
 const LIGHT_GRADIENT_END_MAX_OPACITY = 0.54;
@@ -675,6 +677,7 @@ export class ApplicationOverflowController {
 
     _clearPopupItems() {
         this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
+        this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
         for (const {auxiliaryItem, styleItem} of this._auxiliaryItems) {
             styleItem.remove_style_pseudo_class('hover');
             this._taskbarController.removeAuxiliaryItem(auxiliaryItem);
@@ -700,8 +703,18 @@ export class ApplicationOverflowController {
                     item.get_preferred_width(panelHeight)[1],
                 0
             );
+            const hasHorizontalScrollbar = contentWidth > maximumWidth;
+            if (hasHorizontalScrollbar) {
+                this._menu.box.add_style_class_name(
+                    TASKBAR_SCROLLBAR_CLASS
+                );
+            } else {
+                this._menu.box.remove_style_class_name(
+                    TASKBAR_SCROLLBAR_CLASS
+                );
+            }
             scrollView.set_policy(
-                contentWidth > maximumWidth
+                hasHorizontalScrollbar
                     ? St.PolicyType.ALWAYS
                     : St.PolicyType.NEVER,
                 St.PolicyType.NEVER
@@ -710,6 +723,9 @@ export class ApplicationOverflowController {
                 `max-width: ${maximumWidth}px;`
             );
         } else {
+            this._menu.box.remove_style_class_name(
+                TASKBAR_SCROLLBAR_CLASS
+            );
             scrollView.set_style(
                 `max-height: ${Math.max(1, workArea.height - POPUP_MARGIN)}px;`
             );
