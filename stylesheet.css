@@ -1186,6 +1186,10 @@
     margin-bottom: 0;
 }
 
+.popup-menu-boxpointer.simple-taskbar-xp-popup-offset {
+    -boxpointer-gap: 4px;
+}
+
 .simple-taskbar-volume-mixer-row {
     spacing: 12px;
 }
@@ -1970,7 +1974,7 @@
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme
 .simple-taskbar-xp-notification-area .panel-status-indicators-box {
-    spacing: 3px;
+    spacing: 4px;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme

@@ -5,11 +5,14 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {panelArrowSide, panelIsTop} from './panelPosition.js';
 
+const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
+
 export class PanelMenuPositioner {
     constructor(injectionManager, settings) {
         this._injectionManager = injectionManager;
         this._settings = settings;
         this._states = new Map();
+        this._themeChangedId = 0;
     }
 
     enable() {
@@ -23,6 +26,11 @@ export class PanelMenuPositioner {
                     positioner._adjust(indicator);
                 return indicator;
             }
+        );
+
+        this._themeChangedId = this._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            () => this.refresh()
         );
 
         for (const indicator of Object.values(Main.panel.statusArea))
@@ -45,6 +53,7 @@ export class PanelMenuPositioner {
                     'simple-taskbar-bottom-panel-menu'
                 );
             }
+            this._syncXpPopupOffset(menu);
         }
     }
 
@@ -59,6 +68,7 @@ export class PanelMenuPositioner {
         } of this._states.values()) {
             if (destroyId)
                 indicator.disconnect(destroyId);
+            this._removeXpPopupOffset(menu);
             if (menu?._boxPointer)
                 menu._boxPointer._userArrowSide = userArrowSide;
             if ('_arrowSide' in menu)
@@ -67,6 +77,9 @@ export class PanelMenuPositioner {
                 menu?.actor.remove_style_class_name('simple-taskbar-bottom-panel-menu');
         }
 
+        if (this._themeChangedId)
+            this._settings.disconnect(this._themeChangedId);
+        this._themeChangedId = 0;
         this._states.clear();
         this._injectionManager.restoreMethod(
             Object.getPrototypeOf(Main.panel),
@@ -106,5 +119,23 @@ export class PanelMenuPositioner {
             menu._arrowSide = side;
         if (removeTopPanelGap && !panelIsTop(this._settings))
             menu.actor.add_style_class_name('simple-taskbar-bottom-panel-menu');
+        this._syncXpPopupOffset(menu);
+    }
+
+    _syncXpPopupOffset(menu) {
+        const enabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        ) && !panelIsTop(this._settings);
+        if (enabled) {
+            menu.actor.add_style_class_name(XP_POPUP_OFFSET_CLASS);
+            menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);
+        } else {
+            this._removeXpPopupOffset(menu);
+        }
+    }
+
+    _removeXpPopupOffset(menu) {
+        menu.actor.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
+        menu._boxPointer.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
     }
 }
