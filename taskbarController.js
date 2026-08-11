@@ -1458,15 +1458,23 @@ export class TaskbarController {
     }
 
     _entriesWidth(entries, showLabels) {
-        return entries.reduce((width, entry) => {
+        return entries.reduce((width, entry, index) => {
             const entryShowLabels = showLabels &&
                 (Boolean(entry.window) || entry.isCombined);
+            const pinnedToRunningGap = entry.isLauncher &&
+                index + 1 < entries.length &&
+                !entries[index + 1].isLauncher;
+            const transitionGap =
+                this._settings.get_boolean('windows-xp-theme-enabled') &&
+                pinnedToRunningGap
+                    ? WINDOWS_XP_PINNED_TO_RUNNING_GAP
+                    : 0;
             return width + this._buttonWidth(
                 entry.window,
                 entryShowLabels,
                 APP_LABEL_WIDTH,
                 entry.isCombined
-            ) + this._iconSpacing(entry.isLauncher);
+            ) + this._iconSpacing(entry.isLauncher) + transitionGap;
         }, 0);
     }
 

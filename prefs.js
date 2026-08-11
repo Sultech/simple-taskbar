@@ -836,7 +836,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             defaultGnomePanelSwitch.sensitive = !enabled;
             appAlignmentRow.sensitive = !enabled;
             pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
-            combineAppButtonsRow.sensitive = !enabled;
+            combineAppButtonsRow.sensitive = true;
             applicationOverflowSwitch.sensitive = !enabled;
             syncLabelSensitivity();
             syncingWindowsXpTheme = false;
@@ -891,10 +891,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::use-pinned-apps-as-launchers',
-            syncWindowsXpTheme
-        );
-        window._settings.connect(
-            'changed::combine-app-buttons-mode',
             syncWindowsXpTheme
         );
         window._settings.connect(

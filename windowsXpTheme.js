@@ -10,7 +10,7 @@ export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
 export const WINDOWS_XP_ICON_SPACING = -5;
 export const WINDOWS_XP_ALIGNMENT = 'left';
-export const WINDOWS_XP_COMBINE_MODE = 'never';
+export const WINDOWS_XP_COMBINE_MODE = 'when-full';
 export const WINDOWS_XP_PANEL_POSITION = 'bottom';
 export const WINDOWS_XP_CLOCK_POSITION = 'right';
 export const WINDOWS_XP_SYSTEM_MENU_POSITION = 'right';
@@ -86,11 +86,13 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
-    setString(
-        settings,
-        'combine-app-buttons-mode',
-        WINDOWS_XP_COMBINE_MODE
-    );
+    if (settings.get_string('combine-app-buttons-mode') === 'never') {
+        setString(
+            settings,
+            'combine-app-buttons-mode',
+            WINDOWS_XP_COMBINE_MODE
+        );
+    }
 }
 
 export function applyDefaultTaskbarSettings(settings) {
@@ -132,6 +134,11 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
         setBoolean(settings, 'default-gnome-panel', false);
         setBoolean(settings, 'activities-button-visible', false);
         setBoolean(settings, 'tray-overflow-enabled', true);
+        setString(
+            settings,
+            'combine-app-buttons-mode',
+            WINDOWS_XP_COMBINE_MODE
+        );
         applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     } else {
