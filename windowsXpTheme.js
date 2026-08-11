@@ -48,6 +48,21 @@ export function applyWindowsXpThemeAppearance(settings) {
     setString(settings, 'panel-theme', 'dark');
 }
 
+function applyWindowsXpThemeBehaviorDefaults(settings) {
+    setBoolean(settings, 'multi-window-click-spread', true);
+    setBoolean(settings, 'panel-autohide-enabled', false);
+    setBoolean(settings, 'hot-edge-overview-enabled', true);
+    setBoolean(settings, 'workspace-scroll-enabled', true);
+    setBoolean(settings, 'multi-monitor-panels', true);
+    setBoolean(settings, 'show-desktop-button-visible', true);
+    setBoolean(settings, 'tray-overflow-enabled', true);
+    setBoolean(settings, 'folder-menu-enabled', false);
+    setBoolean(settings, 'panel-menu-click-only', true);
+    setBoolean(settings, 'notification-banner-bottom-end', true);
+    setBoolean(settings, 'nautilus-places-enabled', true);
+    setBoolean(settings, 'super-e-file-manager-enabled', true);
+}
+
 export function applyWindowsXpThemeSettings(settings) {
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
     setInteger(settings, 'panel-button-padding', 0);
@@ -133,12 +148,12 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
     if (enabled) {
         setBoolean(settings, 'default-gnome-panel', false);
         setBoolean(settings, 'activities-button-visible', false);
-        setBoolean(settings, 'tray-overflow-enabled', true);
         setString(
             settings,
             'combine-app-buttons-mode',
             WINDOWS_XP_COMBINE_MODE
         );
+        applyWindowsXpThemeBehaviorDefaults(settings);
         applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     } else {
