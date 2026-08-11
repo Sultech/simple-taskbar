@@ -198,6 +198,12 @@ export class PanelController {
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        if (windowsXpThemeEnabled) {
+            for (const box of [leftBox, centerBox, rightBox]) {
+                if (this._showDesktopButton.get_parent() === box)
+                    box.remove_child(this._showDesktopButton);
+            }
+        }
         const trayInNotificationArea = windowsXpThemeEnabled &&
             this._settings.get_string('tray-overflow-position') === 'right';
         const notificationAreaActors = windowsXpThemeEnabled
@@ -291,16 +297,16 @@ export class PanelController {
                 }
             );
         }
-        items.push(
-            {
+        if (!windowsXpThemeEnabled) {
+            items.push({
                 id: 'show-desktop',
                 actor: this._showDesktopButton,
                 position: showDesktopPosition,
                 visible: this._settings.get_boolean(
                     'show-desktop-button-visible'
                 ),
-            }
-        );
+            });
+        }
         placePanelItems(
             boxes,
             items,
@@ -970,7 +976,8 @@ export class PanelController {
             leftBox.insert_child_at_index(this._startButton, 0);
         if (this._settings.get_boolean('folder-menu-enabled'))
             rightBox.add_child(this._folderMenuButton);
-        if (this._settings.get_boolean('show-desktop-button-visible'))
+        if (this._settings.get_boolean('show-desktop-button-visible') &&
+            !this._settings.get_boolean('windows-xp-theme-enabled'))
             rightBox.add_child(this._showDesktopButton);
     }
 

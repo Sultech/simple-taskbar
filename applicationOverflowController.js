@@ -569,6 +569,9 @@ export class ApplicationOverflowController {
     }
 
     _createListItem(item) {
+        if (item._taskbarIsShowDesktop)
+            return this._createShowDesktopListItem(item);
+
         const app = item._taskbarApp;
         const window = item._taskbarWindow;
         const icon = app.create_icon_texture(Math.min(
@@ -614,6 +617,33 @@ export class ApplicationOverflowController {
         return button;
     }
 
+    _createShowDesktopListItem(item) {
+        const panelHeight = this._settings.get_int('panel-height');
+        const clone = new Clutter.Clone({source: item});
+        const label = new St.Label({
+            text: _('Show desktop'),
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        const content = new St.BoxLayout({
+            style_class: 'simple-taskbar-application-overflow-list-content',
+            x_align: Clutter.ActorAlign.START,
+            x_expand: true,
+        });
+        content.add_child(clone);
+        content.add_child(label);
+        const button = new St.Button({
+            style_class: 'simple-taskbar-application-overflow-list-item',
+            reactive: true,
+            can_focus: true,
+            track_hover: true,
+            height: panelHeight,
+            accessible_name: item._taskbarButton.accessible_name,
+            child: content,
+        });
+        this._configureAuxiliaryItem(button, item, item, false);
+        return button;
+    }
+
     _configureAuxiliaryItem(
         auxiliaryItem,
         sourceItem,
@@ -623,6 +653,8 @@ export class ApplicationOverflowController {
         auxiliaryItem._taskbarApp = sourceItem._taskbarApp;
         auxiliaryItem._taskbarWindow = sourceItem._taskbarWindow;
         auxiliaryItem._taskbarIsLauncher = sourceItem._taskbarIsLauncher;
+        auxiliaryItem._taskbarIsShowDesktop =
+            sourceItem._taskbarIsShowDesktop;
         auxiliaryItem._taskbarButton = auxiliaryItem;
         this._auxiliaryItems.push({auxiliaryItem, sourceItem, styleItem});
         this._taskbarController.registerAuxiliaryItem(auxiliaryItem);
@@ -634,6 +666,20 @@ export class ApplicationOverflowController {
             },
             auxiliaryItem
         );
+
+        if (sourceItem._taskbarIsShowDesktop) {
+            auxiliaryItem.connect('notify::hover', () => {
+                if (auxiliaryItem.hover)
+                    sourceItem._taskbarButton.add_style_pseudo_class('hover');
+                else
+                    sourceItem._taskbarButton.remove_style_pseudo_class('hover');
+            });
+            auxiliaryItem.connect('clicked', () => {
+                this._taskbarController.activateShowDesktop(sourceItem);
+                this._menu.close(BoxPointer.PopupAnimation.FULL);
+            });
+            return;
+        }
 
         if (previewsEnabled) {
             auxiliaryItem.connect('notify::hover', () => {
@@ -679,7 +725,10 @@ export class ApplicationOverflowController {
         this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
         this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
         for (const {auxiliaryItem, styleItem} of this._auxiliaryItems) {
-            styleItem.remove_style_pseudo_class('hover');
+            if (styleItem._taskbarIsShowDesktop)
+                styleItem._taskbarButton.remove_style_pseudo_class('hover');
+            else
+                styleItem.remove_style_pseudo_class('hover');
             this._taskbarController.removeAuxiliaryItem(auxiliaryItem);
         }
         this._auxiliaryItems = [];

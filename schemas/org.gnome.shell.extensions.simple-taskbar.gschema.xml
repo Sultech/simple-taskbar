@@ -160,6 +160,10 @@
       <default>'right'</default>
       <summary>Place the Show Desktop button on the left or right</summary>
     </key>
+    <key name="windows-xp-show-desktop-position" type="i">
+      <default>0</default>
+      <summary>Position of Show Desktop among XP pinned applications</summary>
+    </key>
     <key name="folder-menu-enabled" type="b">
       <default>false</default>
       <summary>Show a selected folder menu on the taskbar</summary>

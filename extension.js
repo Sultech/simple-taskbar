@@ -105,6 +105,12 @@ export default class SimpleTaskbarExtension extends Extension {
             onWindowClicked: window =>
                 this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),
+            onShowDesktopClicked: () =>
+                this._windowController.toggleDesktop(),
+            onShowDesktopModeChanged: () => {
+                if (this._panelController)
+                    this._panelController.applyLayout();
+            },
         });
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);
         this._windowPreviews = new WindowPreviewController(
@@ -171,6 +177,9 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController.enable();
         this._trayOverflowController.enable();
         this._panelController.applyLayout();
+        this._taskbarController.setShowDesktopButton(
+            this._showDesktopButton
+        );
         this._panelInteractionController.enable();
         this._startButtonController.enable();
         this._volumeMixerController = new VolumeMixerController(
