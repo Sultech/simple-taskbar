@@ -24,6 +24,8 @@ const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';
 const POPUP_MARGIN = 32;
 const LIGHT_GRADIENT_START_MAX_OPACITY = 0.62;
 const LIGHT_GRADIENT_END_MAX_OPACITY = 0.54;
+const XP_APPLICATION_OVERFLOW_TRANSLATION_Y = 1;
+const XP_APPLICATION_OVERFLOW_ACTIVE_TRANSLATION_Y = 2;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
@@ -79,6 +81,8 @@ export class ApplicationOverflowController {
         this._auxiliaryItems = [];
         this._style = null;
         this._layoutSignature = null;
+        this._buttonTranslationY = null;
+        this._iconTranslationY = null;
 
         this.actor = new ApplicationOverflowContainer(width => {
             this._maximumWidth = width;
@@ -150,6 +154,26 @@ export class ApplicationOverflowController {
         this._connect(this._settings, 'changed::default-gnome-panel', () => {
             this._sync();
         });
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => this._sync()
+        );
+        this._connect(
+            this._button,
+            'notify::hover',
+            () => this._syncButtonPosition()
+        );
+        this._connect(
+            this._button,
+            'key-focus-in',
+            () => this._syncButtonPosition()
+        );
+        this._connect(
+            this._button,
+            'key-focus-out',
+            () => this._syncButtonPosition()
+        );
         for (const item of this._taskbarController.getOrderedItems())
             this._connectTaskbarItem(item);
         this._connect(this._taskbarController.actor, 'child-added',
@@ -204,6 +228,7 @@ export class ApplicationOverflowController {
             GLib.Source.remove(this._syncId);
             this._syncId = 0;
         }
+        this._restoreButtonPosition();
         for (const [object, id] of this._signals)
             object.disconnect(id);
         this._signals = [];
@@ -229,6 +254,8 @@ export class ApplicationOverflowController {
         this._overflowItems = null;
         this._auxiliaryItems = null;
         this._layoutSignature = null;
+        this._buttonTranslationY = null;
+        this._iconTranslationY = null;
         this._settings = null;
     }
 
@@ -328,6 +355,7 @@ export class ApplicationOverflowController {
     }
 
     _sync() {
+        this._syncButtonPosition();
         const enabled = this._settings.get_boolean(
             'application-overflow-enabled'
         ) && !this._settings.get_boolean('default-gnome-panel');
@@ -380,6 +408,37 @@ export class ApplicationOverflowController {
         this._spacer.show();
         this._setOverflowItems(items.slice(visibleCount));
         this._syncTheme();
+    }
+
+    _syncButtonPosition() {
+        if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
+            this._restoreButtonPosition();
+            return;
+        }
+
+        if (this._buttonTranslationY === null)
+            this._buttonTranslationY = this._button.translation_y;
+        if (this._iconTranslationY === null)
+            this._iconTranslationY = this._icon.translation_y;
+
+        const active = this._button.hover ||
+            this._button.has_key_focus();
+        const translationY = active
+            ? XP_APPLICATION_OVERFLOW_ACTIVE_TRANSLATION_Y
+            : XP_APPLICATION_OVERFLOW_TRANSLATION_Y;
+        this._button.translation_y =
+            this._buttonTranslationY + translationY;
+        this._icon.translation_y =
+            this._iconTranslationY -
+            (translationY - XP_APPLICATION_OVERFLOW_TRANSLATION_Y);
+    }
+
+    _restoreButtonPosition() {
+        if (this._buttonTranslationY === null)
+            return;
+
+        this._button.translation_y = this._buttonTranslationY;
+        this._icon.translation_y = this._iconTranslationY;
     }
 
     _clearOverflow() {
