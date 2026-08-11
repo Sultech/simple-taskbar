@@ -22,6 +22,8 @@ import {panelTransparencyOpacity} from './transparencyUtils.js';
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
 const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';
 const XP_MENU_CLASS = 'simple-taskbar-application-overflow-xp';
+const TASKBAR_CONTENT_CLASS =
+    'simple-taskbar-application-overflow-taskbar-content';
 const POPUP_MARGIN = 32;
 const LIGHT_GRADIENT_START_MAX_OPACITY = 0.62;
 const LIGHT_GRADIENT_END_MAX_OPACITY = 0.54;
@@ -480,6 +482,7 @@ export class ApplicationOverflowController {
     }
 
     _buildTaskbarFlyout(items) {
+        this._menu.box.add_style_class_name(TASKBAR_CONTENT_CLASS);
         const box = new St.BoxLayout({
             style_class: 'simple-taskbar-application-overflow-taskbar',
         });
@@ -671,6 +674,7 @@ export class ApplicationOverflowController {
     }
 
     _clearPopupItems() {
+        this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
         for (const {auxiliaryItem, styleItem} of this._auxiliaryItems) {
             styleItem.remove_style_pseudo_class('hover');
             this._taskbarController.removeAuxiliaryItem(auxiliaryItem);

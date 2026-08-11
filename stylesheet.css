@@ -1342,6 +1342,12 @@
     border-radius: 8px !important;
 }
 
+.simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
+    .popup-menu-content.simple-taskbar-application-overflow-taskbar-content {
+    padding: 0 8px;
+    border: 0 !important;
+}
+
 .simple-taskbar-application-overflow-taskbar {
     spacing: 0;
 }
