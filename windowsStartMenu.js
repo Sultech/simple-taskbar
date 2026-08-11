@@ -33,6 +33,16 @@ import { panelTransparencyOpacity } from './transparencyUtils.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
+const START_MENU_MIN_HEIGHT = 420;
+const START_MENU_TASKBAR_MARGIN = 96;
+const START_MENU_HEIGHT_BUFFER = 6;
+// Fixed fallback for the Start menu height, used only when the adaptive
+// measurement cannot run (e.g. the menu is configured to open straight into
+// "All apps"). It was tuned empirically as 610 -> 620 -> 623: at 610 four
+// pinned rows always triggered a scrollbar, 620 fixed fonts whose tile labels
+// wrap to two lines, but Segoe UI and similar fonts whose labels stay on a
+// single line still needed 623.
+const START_MENU_FALLBACK_MAX_HEIGHT = 623;
 const MAX_RECOMMENDED_APPS = 6;
 const APP_TOOLTIP_DELAY = 500;
 const APP_TOOLTIP_SHOW_TIME = 120;
@@ -141,6 +151,7 @@ export class WindowsStartMenu {
         this._selectedAppCategory = 'all';
         this._menuWidth = 0;
         this._menuHeight = 0;
+        this._idealMenuHeight = 0;
         this._systemActions = SystemActions.getDefault();
         this._powerMenu = null;
         this._powerMenuManager = null;
@@ -2035,12 +2046,72 @@ export class WindowsStartMenu {
         if (!monitor)
             return;
         const width = Math.min(640, Math.max(420, monitor.width - 32));
-        const height = Math.min(623, Math.max(420, monitor.height - 96));
+
+        let height = this._measureIdealMenuHeight(width);
+        if (!height)
+            height = this._idealMenuHeight || START_MENU_FALLBACK_MAX_HEIGHT;
+        height = Math.max(START_MENU_MIN_HEIGHT,
+            Math.min(height, monitor.height - START_MENU_TASKBAR_MARGIN));
+
         if (width === this._menuWidth && height === this._menuHeight)
             return;
 
         this._menuWidth = width;
         this._menuHeight = height;
         this._root.set_style(`width: ${width}px; height: ${height}px;`);
+    }
+
+    // Menu height that lets the pinned app grid keep its natural size, so the
+    // rows never trigger a vertical scrollbar, regardless of the font metrics
+    // in use (Cantarell, Segoe UI, ...). Every component is measured through
+    // its real preferred size, which already includes the CSS padding, border
+    // and margins (Clutter adds margins to the preferred size), and the fonts
+    // are resolved first so the values match what the menu renders.
+    _measureIdealMenuHeight(forWidth) {
+        if (this.isOpen || !this._root || !this._searchEntry ||
+            !this._header || !this._footer || !this._scrollView ||
+            !this._pinnedView)
+            return 0;
+        // The menu adapts to the pinned grid; when it is configured to open
+        // straight into "All apps" there is no fixed grid to measure, so the
+        // caller falls back to START_MENU_FALLBACK_MAX_HEIGHT.
+        if (this._settings.get_boolean('start-menu-open-all-apps'))
+            return 0;
+
+        try {
+            this._resolveThemeNodes(this._root);
+
+            // Force a real layout pass on the still-hidden menu tree so the
+            // CSS fonts and the metrics derived from them are applied to the
+            // widgets exactly as they would be after the first paint. Without
+            // this the very first open is measured with the default font and
+            // sized wrongly (it only becomes correct from the second open).
+            const [, primeHeight] = this._root.get_preferred_height(forWidth);
+            const primeBox = new Clutter.ActorBox({
+                x1: 0, y1: 0, x2: forWidth, y2: primeHeight,
+            });
+            this._root.allocate(primeBox, Clutter.AllocationFlags.NONE);
+
+            const [, searchHeight] =
+                this._searchEntry.get_preferred_height(forWidth);
+            const [, headerHeight] =
+                this._header.get_preferred_height(forWidth);
+            const [, footerHeight] =
+                this._footer.get_preferred_height(forWidth);
+            const scrollNode = this._scrollView.get_theme_node();
+            const scrollPadding = scrollNode.get_padding(St.Side.TOP) +
+                scrollNode.get_padding(St.Side.BOTTOM);
+            const [, pinnedHeight] =
+                this._pinnedView.get_preferred_height(forWidth);
+
+            const height = Math.ceil(searchHeight + headerHeight +
+                footerHeight + scrollPadding + pinnedHeight +
+                START_MENU_HEIGHT_BUFFER);
+            this._idealMenuHeight = height;
+            return height;
+        } catch (e) {
+            this._idealMenuHeight = 0;
+            return 0;
+        }
     }
 }
