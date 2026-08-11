@@ -798,7 +798,7 @@ export class ApplicationOverflowController {
 
         const radiusDeclaration = (this._menu.box.get_style() ?? '')
             .match(/(?:^|;)\s*(border-radius:\s*[^;]+)/)?.[1] ?? '';
-        if (windowsXpThemeEnabled) {
+        if (windowsXpThemeEnabled && this._style === 'taskbar') {
             this._menu.actor.add_style_class_name(XP_MENU_CLASS);
             this._menu.box.set_style(null);
             return;
