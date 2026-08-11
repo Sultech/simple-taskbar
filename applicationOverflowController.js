@@ -128,6 +128,7 @@ export class ApplicationOverflowController {
                 this._grab = null;
                 this._button.remove_style_pseudo_class('active');
                 this._closeAuxiliaryMenus();
+                this._syncButtonPosition();
             }
         });
         this._connect(
@@ -420,6 +421,9 @@ export class ApplicationOverflowController {
             this._restoreButtonPosition();
             return;
         }
+
+        if (this._menu.isOpen)
+            return;
 
         if (this._buttonTranslationY === null)
             this._buttonTranslationY = this._button.translation_y;
