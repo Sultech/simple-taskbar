@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import AccountsService from 'gi://AccountsService';
 import Clutter from 'gi://Clutter';
-import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
@@ -16,7 +14,6 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
-import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
@@ -25,76 +22,31 @@ import {
     panelIsTop,
     syncMenuArrowSide,
 } from './panelPosition.js';
-import {StartMenuAppMenu} from './startMenuAppMenu.js';
+import {StartMenuContextMenuController} from './startMenuContextMenuController.js';
+import {StartMenuFooterController} from './startMenuFooterController.js';
+import {StartMenuNavigationController} from './startMenuNavigationController.js';
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
+import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
+import {StartMenuTooltipController} from './startMenuTooltipController.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 import {panelTransparencyOpacity} from './transparencyUtils.js';
+import {
+    APP_CATEGORIES,
+    appShouldShow,
+    getAllApps,
+    getRecommendedApps,
+    groupAppsByCategory,
+} from './startMenuAppModel.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
-const MAX_RECOMMENDED_APPS = 6;
-const APP_TOOLTIP_DELAY = 500;
-const APP_TOOLTIP_SHOW_TIME = 120;
-const APP_TOOLTIP_HIDE_TIME = 100;
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
 const BLUR_MY_SHELL_POPUP_CLASSES = [
     'bms-popup-background-transparent',
     'bms-popup-background-light',
     'bms-popup-background-dark',
-];
-const APP_CATEGORIES = [
-    {
-        id: 'internet',
-        label: () => _('Internet'),
-        desktopCategories: ['Network'],
-    },
-    {
-        id: 'office',
-        label: () => _('Office'),
-        desktopCategories: ['Office'],
-    },
-    {
-        id: 'development',
-        label: () => _('Development'),
-        desktopCategories: ['Development'],
-    },
-    {
-        id: 'games',
-        label: () => _('Games'),
-        desktopCategories: ['Game'],
-    },
-    {
-        id: 'graphics',
-        label: () => _('Graphics'),
-        desktopCategories: ['Graphics'],
-    },
-    {
-        id: 'audio-video',
-        label: () => _('Sound & Video'),
-        desktopCategories: ['AudioVideo', 'Audio', 'Video'],
-    },
-    {
-        id: 'education',
-        label: () => _('Education'),
-        desktopCategories: ['Education'],
-    },
-    {
-        id: 'science',
-        label: () => _('Science'),
-        desktopCategories: ['Science'],
-    },
-    {
-        id: 'system',
-        label: () => _('System'),
-        desktopCategories: ['System', 'Settings'],
-    },
-    {
-        id: 'utilities',
-        label: () => _('Utilities'),
-        desktopCategories: ['Utility'],
-    },
 ];
 
 export class WindowsStartMenu {
@@ -103,19 +55,39 @@ export class WindowsStartMenu {
         this._settings = settings;
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
-        this._closeApp = params.closeApp;
-        this._getInterestingWindows = params.getInterestingWindows;
         this._powerGIcon = params.powerGIcon;
         this._settingsGIcon = params.settingsGIcon;
         this._appSystem = Shell.AppSystem.get_default();
         this._favorites = AppFavorites.getAppFavorites();
         this._searchController = new StartMenuSearchController();
+        this._tooltipController = new StartMenuTooltipController();
+        this._contextMenuController = new StartMenuContextMenuController(
+            settings,
+            {
+                applyTheme: actor => this._applyThemeClass(actor),
+                closeApp: params.closeApp,
+                closeMenu: () => this.close(),
+                getInterestingWindows: params.getInterestingWindows,
+                hideTooltip: instant =>
+                    this._tooltipController.hide(instant),
+                refreshAfterPinChange: () => {
+                    if (this._view === 'pinned' &&
+                        !this._searchEntry.get_text().trim()) {
+                        this.refresh();
+                    }
+                },
+            }
+        );
+        this._powerController = new StartMenuPowerController(settings, {
+            closeMenu: () => this.close(),
+            applyTheme: actor => this._applyThemeClass(actor),
+        });
         this._pinnedDragController = new StartMenuPinnedDragController(
             settings,
             {
                 columns: GRID_COLUMNS,
                 tileWidth: APP_TILE_WIDTH,
-                closeContextMenu: () => this._destroyAppContextMenu(),
+                closeContextMenu: () => this._contextMenuController.close(),
                 onOrderChanged: appIds => {
                     this._pinnedApps = appIds
                         .map(appId => this._appSystem.lookup_app(appId))
@@ -129,8 +101,6 @@ export class WindowsStartMenu {
         this._firstVisibleApp = null;
         this._sourcePressWasOpen = false;
         this._sourcePressResetId = 0;
-        this._powerSourcePressWasOpen = false;
-        this._powerSourcePressResetId = 0;
         this._prepareIdleId = 0;
         this._transparencySyncId = 0;
         this._ignoreSearchChanged = false;
@@ -141,26 +111,6 @@ export class WindowsStartMenu {
         this._selectedAppCategory = 'all';
         this._menuWidth = 0;
         this._menuHeight = 0;
-        this._systemActions = SystemActions.getDefault();
-        this._powerMenu = null;
-        this._powerMenuManager = null;
-        this._powerActionIdleId = 0;
-        this._appContextMenu = null;
-        this._appContextMenuManager = null;
-        this._appContextMenuCursor = new St.Widget({
-            width: 1,
-            height: 1,
-            opacity: 0,
-            reactive: false,
-        });
-        Main.uiGroup.add_child(this._appContextMenuCursor);
-        this._appActionCloseIdleId = 0;
-        this._appTooltipTimeoutId = 0;
-        this._appTooltipSource = null;
-        this._userAvatar = null;
-        this._defaultUserIcon = null;
-        this._userNameLabel = null;
-        this._user = null;
         this._menu = new PopupMenu.PopupMenu(
             sourceActor,
             0.5,
@@ -170,18 +120,6 @@ export class WindowsStartMenu {
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
 
-        this._appTooltip = new St.Label({
-            style_class: 'dash-label simple-taskbar-windows-start-tooltip',
-            reactive: false,
-            opacity: 0,
-        });
-        this._appTooltip.clutter_text.set({
-            ellipsize: Pango.EllipsizeMode.NONE,
-            line_wrap: true,
-            line_wrap_mode: Pango.WrapMode.WORD_CHAR,
-        });
-        this._appTooltip.hide();
-        global.stage.add_child(this._appTooltip);
         this.syncTheme();
 
         this._menuManager = params.menuManager ??
@@ -216,6 +154,20 @@ export class WindowsStartMenu {
             y_expand: true,
         });
         section.actor.add_child(this._root);
+        this._navigationController = new StartMenuNavigationController({
+            getActors: () => ({
+                allAppsButton: this._allAppsButton,
+                backButton: this._backButton,
+                categorySidebar: this._categorySidebar,
+                content: this._content,
+                root: this._root,
+                scrollView: this._scrollView,
+                searchEntry: this._searchEntry,
+            }),
+            getView: () => this._view,
+            setSearchFocusVisible: visible =>
+                this._setSearchFocusVisible(visible),
+        });
 
         this._createSearchEntry();
         this._createHeader();
@@ -256,7 +208,19 @@ export class WindowsStartMenu {
         this._body.add_child(this._scrollView);
         this._root.add_child(this._body);
 
-        this._createFooter();
+        this._footerController = new StartMenuFooterController({
+            appSystem: this._appSystem,
+            powerController: this._powerController,
+            powerGIcon: this._powerGIcon,
+            settings,
+            settingsGIcon: this._settingsGIcon,
+            closeMenu: () => this.close(),
+            enableNavigation: actor =>
+                this._navigationController.enable(actor),
+            syncButtonClasses: actor =>
+                this._syncShellButtonClasses(actor),
+        });
+        this._root.add_child(this._footerController.actor);
         this._showDefaultView();
         this._updateSize();
         this.syncTheme(true);
@@ -264,9 +228,9 @@ export class WindowsStartMenu {
 
         this._menu.connect('open-state-changed', (_menu, open) => {
             if (!open) {
-                this._hideAppTooltip(true);
-                this._destroyAppContextMenu();
-                this._destroyPowerMenu();
+                this._tooltipController.hide(true);
+                this._contextMenuController.close();
+                this._powerController.close();
             }
             this._onOpenStateChanged(open);
         });
@@ -289,9 +253,9 @@ export class WindowsStartMenu {
                 const insideSource = target &&
                     (target === this._sourceActor ||
                         this._sourceActor.contains(target));
-                const insidePowerSource = target && this._powerButton &&
-                    (target === this._powerButton ||
-                        this._powerButton.contains(target));
+                const powerButton = this._powerController.button;
+                const insidePowerSource = target && powerButton &&
+                    (target === powerButton || powerButton.contains(target));
 
                 if ((isButtonPress || isTouchBegin) && insideSource) {
                     this._sourcePressWasOpen = true;
@@ -306,18 +270,8 @@ export class WindowsStartMenu {
                         }
                     );
                 } else if ((isButtonPress || isTouchBegin) &&
-                    insidePowerSource && this._powerMenu) {
-                    this._powerSourcePressWasOpen = true;
-                    if (this._powerSourcePressResetId)
-                        GLib.Source.remove(this._powerSourcePressResetId);
-                    this._powerSourcePressResetId = GLib.idle_add(
-                        GLib.PRIORITY_DEFAULT_IDLE,
-                        () => {
-                            this._powerSourcePressResetId = 0;
-                            this._powerSourcePressWasOpen = false;
-                            return GLib.SOURCE_REMOVE;
-                        }
-                    );
+                    insidePowerSource && this._powerController.isOpen) {
+                    this._powerController.markSourcePress();
                 }
                 return Clutter.EVENT_PROPAGATE;
             }
@@ -361,8 +315,8 @@ export class WindowsStartMenu {
     close(animation = BoxPointer.PopupAnimation.FULL) {
         this._sourcePressWasOpen = false;
         this._searchController.cancel();
-        this._destroyAppContextMenu();
-        this._destroyPowerMenu();
+        this._contextMenuController.close();
+        this._powerController.close();
         this._menu.close(animation);
     }
 
@@ -398,13 +352,13 @@ export class WindowsStartMenu {
         const changed = force || theme !== this._appliedTheme;
         if (changed) {
             this._applyThemeClass(this._menu?.actor, theme);
-            this._applyThemeClass(this._appTooltip, theme);
+            this._applyThemeClass(this._tooltipController.actor, theme);
             this._syncShellButtonClasses(this._root);
             this._appliedTheme = theme;
             this._queuePrepare();
         }
-        this._applyThemeClass(this._appContextMenu?.actor, theme);
-        this._applyThemeClass(this._powerMenu?.actor, theme);
+        this._contextMenuController.syncTheme();
+        this._powerController.syncTheme();
         this.syncTransparency();
     }
 
@@ -562,10 +516,6 @@ export class WindowsStartMenu {
             GLib.Source.remove(this._sourcePressResetId);
             this._sourcePressResetId = 0;
         }
-        if (this._powerSourcePressResetId) {
-            GLib.Source.remove(this._powerSourcePressResetId);
-            this._powerSourcePressResetId = 0;
-        }
         if (this._prepareIdleId) {
             GLib.Source.remove(this._prepareIdleId);
             this._prepareIdleId = 0;
@@ -573,14 +523,6 @@ export class WindowsStartMenu {
         if (this._transparencySyncId) {
             GLib.Source.remove(this._transparencySyncId);
             this._transparencySyncId = 0;
-        }
-        if (this._appActionCloseIdleId) {
-            GLib.Source.remove(this._appActionCloseIdleId);
-            this._appActionCloseIdleId = 0;
-        }
-        if (this._powerActionIdleId) {
-            GLib.Source.remove(this._powerActionIdleId);
-            this._powerActionIdleId = 0;
         }
         if (this._stageCapturedEventId) {
             global.stage.disconnect(this._stageCapturedEventId);
@@ -597,33 +539,30 @@ export class WindowsStartMenu {
         this._pinnedSignature = null;
         this._searchController.destroy();
         this._searchController = null;
-        this._hideAppTooltip(true);
-        this._destroyAppContextMenu();
-        this._appContextMenuCursor.destroy();
-        this._appContextMenuCursor = null;
-        this._destroyPowerMenu();
+        this._contextMenuController.close();
+        this._powerController.close();
         this._menu.destroy();
         this._menu = null;
-        this._userAvatar = null;
-        this._defaultUserIcon = null;
-        this._userNameLabel = null;
-        this._user = null;
-        this._appTooltip.destroy();
-        this._appTooltip = null;
+        this._footerController.destroy();
+        this._footerController = null;
+        this._navigationController.destroy();
+        this._navigationController = null;
+        this._contextMenuController.destroy();
+        this._contextMenuController = null;
+        this._powerController.destroy();
+        this._powerController = null;
+        this._tooltipController.destroy();
+        this._tooltipController = null;
         this._categorySidebar = null;
         this._body = null;
         this._sourceActor = null;
-        this._powerButton = null;
         this._powerGIcon = null;
         this._settingsGIcon = null;
         this._settings = null;
         this._onSourceContextMenu = null;
-        this._closeApp = null;
-        this._getInterestingWindows = null;
         this._firstSearchResult = null;
         this._appSystem = null;
         this._favorites = null;
-        this._systemActions = null;
         this._appliedTheme = null;
     }
 
@@ -673,7 +612,7 @@ export class WindowsStartMenu {
                 this._showPinnedApps();
         });
         this._searchEntry.clutter_text.connect('key-press-event', (_actor, event) => {
-            const navigationResult = this._onKeyNavigation(event);
+            const navigationResult = this._navigationController.handle(event);
             if (navigationResult === Clutter.EVENT_STOP)
                 return navigationResult;
 
@@ -712,7 +651,7 @@ export class WindowsStartMenu {
                 this._view = 'all';
                 this._setSearchText('');
                 this._showAllApps();
-                this._focusAfterViewChange(pointerActivated);
+                this._navigationController.focusAfterViewChange(pointerActivated);
             }
         );
         this._backButton = this._createTextButton(
@@ -722,7 +661,7 @@ export class WindowsStartMenu {
                 this._setSearchText('');
                 this._setSearchFocusVisible(false);
                 this._showDefaultView();
-                this._focusAfterViewChange(pointerActivated);
+                this._navigationController.focusAfterViewChange(pointerActivated);
             }
         );
         this._backButton.hide();
@@ -766,7 +705,7 @@ export class WindowsStartMenu {
             pointerActivated = false;
             return Clutter.EVENT_PROPAGATE;
         });
-        this._enableKeyNavigation(button);
+        this._navigationController.enable(button);
         button.connect('clicked', () => {
             const activatedWithPointer = pointerActivated;
             pointerActivated = false;
@@ -776,304 +715,12 @@ export class WindowsStartMenu {
         return button;
     }
 
-    _createFooter() {
-        this._footer = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-footer',
-            x_expand: true,
-        });
-        const userBox = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-user-content',
-            x_expand: true,
-        });
-        this._defaultUserIcon = new St.Icon({
-            icon_name: 'avatar-default-symbolic',
-            icon_size: 28,
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-        this._user = AccountsService.UserManager
-            .get_default()
-            .get_user(GLib.get_user_name());
-        this._userAvatar = new UserWidget.Avatar(this._user, {
-            styleClass: 'simple-taskbar-windows-start-user-avatar',
-            iconSize: 28,
-        });
-        this._userAvatar.y_align = Clutter.ActorAlign.CENTER;
-        this._userNameLabel = new St.Label({
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-        this._user.connectObject(
-            'notify::is-loaded', () => this._syncUserDetails(),
-            'changed', () => this._syncUserDetails(),
-            this._userAvatar
-        );
-        this._syncUserDetails();
-        userBox.add_child(this._defaultUserIcon);
-        userBox.add_child(this._userAvatar);
-        this.syncUserAvatar();
-        userBox.add_child(this._userNameLabel);
-        const userButton = new St.Button({
-            style_class: 'simple-taskbar-windows-start-footer-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            x_expand: true,
-            x_align: Clutter.ActorAlign.START,
-            child: userBox,
-        });
-        this._enableKeyNavigation(userButton);
-        userButton.connect('clicked', () => {
-            this.close();
-            this._openSettingsPanel('system', ['users']);
-        });
-        this._syncShellButtonClasses(userButton);
-
-        const settingsButton = this._createIconButton(
-            this._settingsGIcon,
-            _('Settings'),
-            () => {
-                this.close();
-                this._openSettings();
-            }
-        );
-        this._powerButton = this._createIconButton(
-            this._powerGIcon,
-            _('Power Options'),
-            () => this._togglePowerMenu(),
-            {
-                iconStyleClass:
-                    'simple-taskbar-windows-start-power-icon',
-            }
-        );
-        this._footer.add_child(userButton);
-        this._footer.add_child(settingsButton);
-        this._footer.add_child(this._powerButton);
-        this._root.add_child(this._footer);
-        this.syncPowerOptions();
-    }
-
     syncPowerOptions() {
-        const enabled = this._settings.get_boolean(
-            'start-menu-power-options-enabled'
-        );
-        this._powerButton.visible = enabled;
-        if (!enabled)
-            this._destroyPowerMenu();
+        this._powerController.syncVisibility();
     }
 
     syncUserAvatar() {
-        const showProfilePicture = this._settings.get_boolean(
-            'start-menu-show-profile-picture'
-        );
-        this._userAvatar.visible = showProfilePicture;
-        this._defaultUserIcon.visible = !showProfilePicture;
-    }
-
-    _syncUserDetails() {
-        this._userAvatar.update();
-        const realName = this._user.get_real_name();
-        this._userNameLabel.text = realName || GLib.get_user_name();
-    }
-
-    _togglePowerMenu() {
-        if (this._powerSourcePressWasOpen) {
-            this._powerSourcePressWasOpen = false;
-            this._destroyPowerMenu();
-            return;
-        }
-
-        if (this._powerMenu) {
-            this._destroyPowerMenu();
-            return;
-        }
-
-        this._openPowerMenu();
-    }
-
-    _openPowerMenu() {
-        this._destroyPowerMenu();
-
-        const menu = new PopupMenu.PopupMenu(
-            this._powerButton,
-            0.5,
-            panelArrowSide(this._settings)
-        );
-        const menuManager = new PopupMenu.PopupMenuManager(this._powerButton);
-
-        menu.actor.add_style_class_name('simple-taskbar-windows-start-context');
-        this._applyThemeClass(menu.actor);
-        menu.actor.hide();
-        Main.uiGroup.add_child(menu.actor);
-        menuManager.addMenu(menu);
-
-        const powerItems = [];
-        powerItems.push(this._addPowerAction(
-            menu,
-            _('Suspend'),
-            'canSuspend',
-            'notify::can-suspend',
-            () => this._systemActions.activateSuspend()
-        ));
-        powerItems.push(this._addPowerAction(
-            menu,
-            _('Restart'),
-            'canRestart',
-            'notify::can-restart',
-            () => this._systemActions.activateRestart()
-        ));
-        powerItems.push(this._addPowerAction(
-            menu,
-            _('Power Off'),
-            'canPowerOff',
-            'notify::can-power-off',
-            () => this._systemActions.activatePowerOff()
-        ));
-        const separator = new PopupMenu.PopupSeparatorMenuItem();
-        menu.addMenuItem(separator);
-        const sessionItems = [];
-        sessionItems.push(this._addPowerAction(
-            menu,
-            _('Lock Screen'),
-            'canLockScreen',
-            'notify::can-lock-screen',
-            () => this._systemActions.activateLockScreen()
-        ));
-        sessionItems.push(this._addPowerAction(
-            menu,
-            _('Log Out'),
-            'canLogout',
-            'notify::can-logout',
-            () => this._systemActions.activateLogout()
-        ));
-        sessionItems.push(this._addPowerAction(
-            menu,
-            _('Switch User'),
-            'canSwitchUser',
-            'notify::can-switch-user',
-            () => this._systemActions.activateSwitchUser()
-        ));
-        const syncSeparator = () => {
-            separator.visible =
-                powerItems.some(item => item.visible) &&
-                sessionItems.some(item => item.visible);
-        };
-        for (const item of [...powerItems, ...sessionItems])
-            item.connectObject('notify::visible', syncSeparator, menu.actor);
-        syncSeparator();
-
-        this._powerMenu = menu;
-        this._powerMenuManager = menuManager;
-        menu.connect('menu-closed', () => {
-            if (this._powerMenu !== menu)
-                return;
-            this._powerMenu = null;
-            this._powerMenuManager = null;
-            menu.destroy();
-        });
-
-        this._systemActions.forceUpdate();
-        menu.open(BoxPointer.PopupAnimation.FULL);
-    }
-
-    _addPowerAction(menu, label, property, signal, activate) {
-        const item = menu.addAction(
-            label,
-            () => this._queuePowerAction(activate)
-        );
-        const syncVisibility = () => {
-            item.visible = this._systemActions[property];
-        };
-        this._systemActions.connectObject(signal, syncVisibility, menu.actor);
-        syncVisibility();
-        return item;
-    }
-
-    _queuePowerAction(activate) {
-        if (this._powerActionIdleId)
-            return;
-
-        this._powerActionIdleId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
-            () => {
-                this._powerActionIdleId = 0;
-                this.close();
-                activate();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _destroyPowerMenu() {
-        const menu = this._powerMenu;
-        this._powerMenu = null;
-        this._powerMenuManager = null;
-        menu?.destroy();
-    }
-
-    _getSettingsApp() {
-        return this._appSystem.lookup_app('org.gnome.Settings.desktop');
-    }
-
-    _openSettings() {
-        this._getSettingsApp()?.activate();
-    }
-
-    _openSettingsPanel(panel, args = []) {
-        const actionParameter = new GLib.Variant('(sav)', [
-            panel,
-            args.map(argument => new GLib.Variant('s', argument)),
-        ]);
-        const parameters = new GLib.Variant('(sava{sv})', [
-            'launch-panel',
-            [actionParameter],
-            {},
-        ]);
-        Gio.DBus.session.call(
-            'org.gnome.Settings',
-            '/org/gnome/Settings',
-            'org.freedesktop.Application',
-            'ActivateAction',
-            parameters,
-            null,
-            Gio.DBusCallFlags.NONE,
-            -1,
-            null,
-            (connection, result) => {
-                try {
-                    connection.call_finish(result);
-                } catch (error) {
-                    console.error(`Failed to open Settings panel: ${error}`);
-                }
-            }
-        );
-    }
-
-    _createIconButton(iconSource, accessibleName, callback, params = {}) {
-        const iconProperty = typeof iconSource === 'string'
-            ? {icon_name: iconSource}
-            : {gicon: iconSource};
-        const icon = new St.Icon({
-            ...iconProperty,
-            style_class: params.iconStyleClass ?? null,
-            icon_size: params.iconSize ?? 18,
-        });
-        const button = new St.Button({
-            style_class: 'simple-taskbar-windows-start-icon-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            accessible_name: accessibleName,
-            child: new St.Bin({
-                width: 20,
-                height: 20,
-                x_align: Clutter.ActorAlign.CENTER,
-                y_align: Clutter.ActorAlign.CENTER,
-                child: icon,
-            }),
-        });
-        this._enableKeyNavigation(button);
-        button.connect('clicked', callback);
-        this._syncShellButtonClasses(button);
-        return button;
+        this._footerController.syncUserAvatar();
     }
 
     _showPinnedApps() {
@@ -1106,8 +753,12 @@ export class WindowsStartMenu {
     _ensurePinnedView() {
         const pinnedApps = this._settings.get_strv('start-menu-pinned-apps')
             .map(id => this._appSystem.lookup_app(id))
-            .filter(app => this._appShouldShow(app));
-        const recommended = this._recommendedApps(pinnedApps);
+            .filter(app => appShouldShow(app));
+        const recommended = getRecommendedApps(
+            this._settings,
+            this._favorites,
+            pinnedApps
+        );
         const hidePinnedAppTitles = this._settings.get_boolean(
             'start-menu-hide-pinned-app-titles'
         );
@@ -1157,10 +808,10 @@ export class WindowsStartMenu {
         this._allAppsButton.hide();
         this._backButton.visible =
             !this._settings.get_boolean('start-menu-open-all-apps');
-        const apps = this._allApps();
+        const apps = getAllApps(this._appSystem);
         if (this._settings.get_boolean('start-menu-app-categories')) {
             this._selectedAppCategory = 'all';
-            const groupedApps = this._groupAppsByCategory(apps);
+            const groupedApps = groupAppsByCategory(apps);
             this._buildCategorySidebar(apps, groupedApps);
             this._setCategorySidebarVisible(true);
             this._displayAppList(apps, true);
@@ -1248,31 +899,6 @@ export class WindowsStartMenu {
         this._content.add_child(list);
     }
 
-    _groupAppsByCategory(apps) {
-        const groupedApps = new Map([
-            ...APP_CATEGORIES.map(category => [category.id, []]),
-            ['other', []],
-        ]);
-        for (const app of apps)
-            groupedApps.get(this._categoryForApp(app)).push(app);
-        return groupedApps;
-    }
-
-    _categoryForApp(app) {
-        const categories = new Set(
-            (app.get_app_info().get_categories() ?? '')
-                .split(';')
-                .filter(Boolean)
-        );
-        for (const category of APP_CATEGORIES) {
-            if (category.desktopCategories.some(name =>
-                categories.has(name)
-            )) {
-                return category.id;
-            }
-        }
-        return 'other';
-    }
 
     _buildCategorySidebar(allApps, groupedApps) {
         this._categorySidebar.destroy_all_children();
@@ -1314,7 +940,7 @@ export class WindowsStartMenu {
                 }),
             });
             button._startMenuCategoryId = category.id;
-            this._enableKeyNavigation(button);
+            this._navigationController.enable(button);
             button.connect('clicked', () => {
                 this._selectedAppCategory = category.id;
                 for (const child of this._categorySidebar.get_children()) {
@@ -1342,7 +968,7 @@ export class WindowsStartMenu {
     }
 
     _clearContent() {
-        this._hideAppTooltip(true);
+        this._tooltipController.hide(true);
         for (const child of this._content.get_children()) {
             if (child === this._pinnedView)
                 this._content.remove_child(child);
@@ -1404,10 +1030,10 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
-        this._enableKeyNavigation(button);
-        this._addAppTooltip(button, app, label, false, hideTitle);
+        this._navigationController.enable(button);
+        this._tooltipController.add(button, app, label, false, hideTitle);
         button.connect('clicked', () => this._launchApp(app));
-        this._addAppContextMenuHandler(button, app);
+        this._contextMenuController.addHandler(button, app);
         if (pinnedGrid) {
             this._pinnedDragController.makeDraggable(
                 button,
@@ -1464,10 +1090,10 @@ export class WindowsStartMenu {
             accessible_name: app.get_name(),
             child: content,
         });
-        this._enableKeyNavigation(button);
-        this._addAppTooltip(button, app, label, !compact);
+        this._navigationController.enable(button);
+        this._tooltipController.add(button, app, label, !compact);
         button.connect('clicked', () => this._launchApp(app));
-        this._addAppContextMenuHandler(button, app);
+        this._contextMenuController.addHandler(button, app);
         if (!compact) {
             this._pinnedDragController.makeTaskbarDraggable(
                 button,
@@ -1498,10 +1124,10 @@ export class WindowsStartMenu {
             accessible_name: result.name,
             child: content,
         });
-        this._enableKeyNavigation(button);
+        this._navigationController.enable(button);
         button.connect('clicked', () => this._activateSearchResult(result));
         if (result.app)
-            this._addAppContextMenuHandler(button, result.app);
+            this._contextMenuController.addHandler(button, result.app);
         this._syncShellButtonClasses(button);
         return button;
     }
@@ -1526,95 +1152,6 @@ export class WindowsStartMenu {
         return icon;
     }
 
-    _addAppContextMenuHandler(button, app) {
-        button.connect('button-press-event', (_actor, event) => {
-            if (event.get_button() !== Clutter.BUTTON_SECONDARY)
-                return Clutter.EVENT_PROPAGATE;
-
-            const [x, y] = event.get_coords();
-            this._openAppContextMenu(button, app, {x, y});
-            return Clutter.EVENT_STOP;
-        });
-        button.connect('popup-menu', () => {
-            this._openAppContextMenu(button, app);
-            return Clutter.EVENT_STOP;
-        });
-    }
-
-    _openAppContextMenu(sourceButton, app, cursorPosition = null) {
-        this._hideAppTooltip(true);
-        this._destroyAppContextMenu();
-
-        let menuSource = sourceButton;
-        if (cursorPosition && this._appContextMenuCursor) {
-            this._appContextMenuCursor.set_position(
-                Math.round(cursorPosition.x),
-                Math.round(cursorPosition.y)
-            );
-            menuSource = this._appContextMenuCursor;
-        }
-
-        const menu = new StartMenuAppMenu(
-            menuSource,
-            panelArrowSide(this._settings),
-            this._settings,
-            {
-                onStartPinsChanged: () => {
-                    refreshAfterClose = true;
-                },
-                onAppAction: () => this._queueCloseAfterAppAction(),
-                closeApp: (app, timestamp) =>
-                    this._closeApp(app, timestamp),
-                getInterestingWindows: app =>
-                    this._getInterestingWindows(app),
-            }
-        );
-        const menuManager = new PopupMenu.PopupMenuManager(sourceButton);
-        let refreshAfterClose = false;
-
-        menu.actor.add_style_class_name('simple-taskbar-windows-start-context');
-        this._applyThemeClass(menu.actor);
-        menu.actor.hide();
-        Main.uiGroup.add_child(menu.actor);
-        menuManager.addMenu(menu);
-        menu.setApp(app);
-        this._appContextMenu = menu;
-        this._appContextMenuManager = menuManager;
-
-        menu.connect('menu-closed', () => {
-            if (this._appContextMenu !== menu)
-                return;
-            this._appContextMenu = null;
-            this._appContextMenuManager = null;
-            menu.destroy();
-            if (refreshAfterClose && this._view === 'pinned' &&
-                !this._searchEntry.get_text().trim()) {
-                this.refresh();
-            }
-        });
-        menu.open(BoxPointer.PopupAnimation.FULL);
-    }
-
-    _queueCloseAfterAppAction() {
-        if (this._appActionCloseIdleId)
-            return;
-
-        this._appActionCloseIdleId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
-            () => {
-                this._appActionCloseIdleId = 0;
-                this.close();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _destroyAppContextMenu() {
-        const menu = this._appContextMenu;
-        this._appContextMenu = null;
-        this._appContextMenuManager = null;
-        menu?.destroy();
-    }
 
     _createAppLabel(text, width) {
         const label = new St.Label({
@@ -1626,170 +1163,7 @@ export class WindowsStartMenu {
         return label;
     }
 
-    _addAppTooltip(
-        button,
-        app,
-        label,
-        alignLeft = false,
-        alwaysShowTitle = false
-    ) {
-        button.connect('notify::hover', () => {
-            if (button.hover)
-                this._queueAppTooltip(
-                    button,
-                    app,
-                    label,
-                    alignLeft,
-                    alwaysShowTitle
-                );
-            else if (this._appTooltipSource === button)
-                this._hideAppTooltip();
-        });
-        button.connect('destroy', () => {
-            if (this._appTooltipSource === button)
-                this._hideAppTooltip(true);
-        });
-    }
 
-    _queueAppTooltip(button, app, label, alignLeft, alwaysShowTitle) {
-        this._hideAppTooltip(true);
-        this._appTooltipSource = button;
-        this._appTooltipTimeoutId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            APP_TOOLTIP_DELAY,
-            () => {
-                this._appTooltipTimeoutId = 0;
-                if (this._appTooltipSource !== button || !button.hover)
-                    return GLib.SOURCE_REMOVE;
-                this._showAppTooltip(
-                    button,
-                    app,
-                    label,
-                    alignLeft,
-                    alwaysShowTitle
-                );
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _showAppTooltip(button, app, label, alignLeft, alwaysShowTitle) {
-        const description = app.get_description()?.trim() ?? '';
-        const showTitle = alwaysShowTitle ||
-            label.clutter_text.get_layout().is_ellipsized();
-        if (!showTitle && !description) {
-            this._appTooltipSource = null;
-            return;
-        }
-
-        if (showTitle) {
-            this._appTooltip.text = '';
-            const titleMarkup = GLib.markup_escape_text(app.get_name(), -1);
-            const descriptionMarkup =
-                GLib.markup_escape_text(description, -1);
-            this._appTooltip.clutter_text.set_markup(
-                description
-                    ? `<b>${titleMarkup}</b>\n${descriptionMarkup}`
-                    : `<b>${titleMarkup}</b>`
-            );
-        } else {
-            this._appTooltip.text = description;
-        }
-        this._appTooltip.opacity = 0;
-        this._appTooltip.show();
-
-        const [buttonX, buttonY] = button.get_transformed_position();
-        const [buttonWidth, buttonHeight] = button.get_transformed_size();
-        const tooltipWidth = this._appTooltip.width;
-        const tooltipHeight = this._appTooltip.height;
-        const monitor = Main.layoutManager.findMonitorForActor(button) ??
-            Main.layoutManager.primaryMonitor;
-        const gap = 6;
-        const minX = monitor.x + gap;
-        const maxX = monitor.x + monitor.width - tooltipWidth - gap;
-        const [labelX] = label.get_transformed_position();
-        const desiredX = alignLeft
-            ? labelX
-            : buttonX + Math.floor((buttonWidth - tooltipWidth) / 2);
-        const x = Math.clamp(
-            desiredX,
-            minX,
-            Math.max(minX, maxX)
-        );
-        const belowY = buttonY + buttonHeight + gap;
-        const aboveY = buttonY - tooltipHeight - gap;
-        const y = belowY + tooltipHeight <= monitor.y + monitor.height - gap
-            ? belowY
-            : Math.max(monitor.y + gap, aboveY);
-
-        this._appTooltip.set_position(Math.round(x), Math.round(y));
-        this._appTooltip.ease({
-            opacity: 255,
-            duration: APP_TOOLTIP_SHOW_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
-    }
-
-    _hideAppTooltip(instant = false) {
-        if (this._appTooltipTimeoutId) {
-            GLib.Source.remove(this._appTooltipTimeoutId);
-            this._appTooltipTimeoutId = 0;
-        }
-        this._appTooltipSource = null;
-        if (!this._appTooltip.visible)
-            return;
-
-        this._appTooltip.remove_all_transitions();
-        if (instant) {
-            this._appTooltip.opacity = 0;
-            this._appTooltip.hide();
-            return;
-        }
-
-        const tooltip = this._appTooltip;
-        this._appTooltip.ease({
-            opacity: 0,
-            duration: APP_TOOLTIP_HIDE_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => tooltip.hide(),
-        });
-    }
-
-    _allApps() {
-        const apps = [];
-        const seen = new Set();
-        for (const appInfo of this._appSystem.get_installed()) {
-            const id = appInfo.get_id();
-            if (!id || seen.has(id) || !appInfo.should_show())
-                continue;
-            const app = this._appSystem.lookup_app(id);
-            if (!app)
-                continue;
-            seen.add(id);
-            apps.push(app);
-        }
-        return apps
-            .sort((a, b) => a.get_name().localeCompare(b.get_name()));
-    }
-
-    _recommendedApps(pinnedApps) {
-        if (!this._settings.get_boolean('start-menu-recommended-apps'))
-            return [];
-
-        const pinnedIds = new Set(pinnedApps.map(app => app.get_id()));
-        return Shell.AppUsage.get_default().get_most_used()
-            .filter(app => {
-                const appId = app.get_id();
-                return this._appShouldShow(app) &&
-                    !pinnedIds.has(appId) &&
-                    !this._favorites.isFavorite(appId);
-            })
-            .slice(0, MAX_RECOMMENDED_APPS);
-    }
-
-    _appShouldShow(app) {
-        return app?.get_app_info()?.should_show() ?? false;
-    }
 
     _launchApp(app) {
         this.close();
@@ -1839,164 +1213,6 @@ export class WindowsStartMenu {
         this._searchEntry.clutter_text.set_cursor_visible(visible);
     }
 
-    _onKeyNavigation(event) {
-        if (event.type() !== Clutter.EventType.KEY_PRESS)
-            return Clutter.EVENT_PROPAGATE;
-
-        const symbol = event.get_key_symbol();
-        const actors = this._focusableActors();
-        if (actors.length === 0)
-            return Clutter.EVENT_PROPAGATE;
-
-        const focus = global.stage.get_key_focus();
-        const current = focus
-            ? actors.find(actor =>
-                actor === focus || actor.contains(focus)
-            ) ?? null
-            : null;
-        let target = null;
-        if (symbol === Clutter.KEY_Tab) {
-            target = this._nextFocusableActor(actors, current, 1);
-        } else if (symbol === Clutter.KEY_ISO_Left_Tab) {
-            target = this._nextFocusableActor(actors, current, -1);
-        } else if (symbol === Clutter.KEY_Down) {
-            target = this._spatialFocusableActor(actors, current, 0, 1);
-        } else if (symbol === Clutter.KEY_Up) {
-            target = this._spatialFocusableActor(actors, current, 0, -1);
-        } else if (current !== this._searchEntry) {
-            if (symbol === Clutter.KEY_Left)
-                target = this._spatialFocusableActor(actors, current, -1, 0);
-            else if (symbol === Clutter.KEY_Right)
-                target = this._spatialFocusableActor(actors, current, 1, 0);
-        }
-
-        if (!target)
-            return Clutter.EVENT_PROPAGATE;
-
-        target.grab_key_focus();
-        if (target === this._searchEntry)
-            this._setSearchFocusVisible(true);
-        else if (!this._searchEntry.get_text())
-            this._setSearchFocusVisible(false);
-        this._ensureFocusedActorVisible();
-        return Clutter.EVENT_STOP;
-    }
-
-    _enableKeyNavigation(actor) {
-        actor.connect('key-press-event', (_actor, event) =>
-            this._onKeyNavigation(event)
-        );
-    }
-
-    _focusableActors() {
-        return this._focusableActorsIn(this._root);
-    }
-
-    _focusableActorsIn(root) {
-        const actors = [];
-        const collect = actor => {
-            const focusable = actor === this._searchEntry ||
-                actor instanceof St.Button;
-            if (focusable && actor.can_focus && actor.reactive && actor.mapped)
-                actors.push(actor);
-            for (const child of actor.get_children())
-                collect(child);
-        };
-        collect(root);
-        return actors;
-    }
-
-    _focusFirstViewControl() {
-        let target = null;
-        if (this._categorySidebar.visible) {
-            target = this._focusableActorsIn(this._categorySidebar)[0] ??
-                null;
-        }
-        if (!target)
-            target = this._focusableActorsIn(this._content)[0] ?? null;
-        if (!target) {
-            target = this._view === 'all'
-                ? this._backButton.visible
-                    ? this._backButton
-                    : this._searchEntry
-                : this._allAppsButton;
-        }
-
-        target.grab_key_focus();
-        this._ensureFocusedActorVisible();
-    }
-
-    _focusAfterViewChange(pointerActivated) {
-        if (!pointerActivated) {
-            this._focusFirstViewControl();
-            return;
-        }
-
-        this._searchEntry.grab_key_focus();
-        this._setSearchFocusVisible(false);
-    }
-
-    _nextFocusableActor(actors, current, step) {
-        const currentIndex = actors.indexOf(current);
-        const nextIndex = currentIndex < 0
-            ? step > 0 ? 0 : actors.length - 1
-            : (currentIndex + step + actors.length) % actors.length;
-        return actors[nextIndex];
-    }
-
-    _spatialFocusableActor(actors, current, horizontal, vertical) {
-        if (!current)
-            return actors[0];
-
-        const [currentX, currentY] = current.get_transformed_position();
-        const [currentWidth, currentHeight] = current.get_transformed_size();
-        const centerX = currentX + currentWidth / 2;
-        const centerY = currentY + currentHeight / 2;
-        let closest = null;
-        let closestScore = Number.POSITIVE_INFINITY;
-        for (const actor of actors) {
-            if (actor === current)
-                continue;
-
-            const [actorX, actorY] = actor.get_transformed_position();
-            const [actorWidth, actorHeight] = actor.get_transformed_size();
-            const deltaX = actorX + actorWidth / 2 - centerX;
-            const deltaY = actorY + actorHeight / 2 - centerY;
-            const primary = horizontal !== 0
-                ? deltaX * horizontal
-                : deltaY * vertical;
-            if (primary <= 0)
-                continue;
-
-            const secondary = horizontal !== 0
-                ? Math.abs(deltaY)
-                : Math.abs(deltaX);
-            const score = primary * 4 + secondary;
-            if (score < closestScore) {
-                closest = actor;
-                closestScore = score;
-            }
-        }
-        return closest;
-    }
-
-    _ensureFocusedActorVisible() {
-        const focus = global.stage.get_key_focus();
-        if (!focus || !this._content.contains(focus))
-            return;
-
-        const [, focusY] = focus.get_transformed_position();
-        const [, focusHeight] = focus.get_transformed_size();
-        const [, viewY] = this._scrollView.get_transformed_position();
-        const [, viewHeight] = this._scrollView.get_transformed_size();
-        const adjustment = this._scrollView.vadjustment;
-        if (focusY < viewY) {
-            adjustment.value -= viewY - focusY;
-        } else if (focusY + focusHeight > viewY + viewHeight) {
-            adjustment.value +=
-                focusY + focusHeight - viewY - viewHeight;
-        }
-    }
 
     _queuePrepare() {
         if (this._prepareIdleId)

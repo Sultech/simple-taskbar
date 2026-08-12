@@ -54,9 +54,15 @@ gnome-extensions pack \
     --extra-source=windowsXpStartButton.js \
     --extra-source=prefs \
     --extra-source=startMenuAppMenu.js \
+    --extra-source=startMenuAppModel.js \
+    --extra-source=startMenuContextMenuController.js \
+    --extra-source=startMenuFooterController.js \
     --extra-source=startMenuKeybindings.js \
+    --extra-source=startMenuNavigationController.js \
     --extra-source=startMenuPinnedDragController.js \
+    --extra-source=startMenuPowerController.js \
     --extra-source=startMenuSearchController.js \
+    --extra-source=startMenuTooltipController.js \
     --extra-source=switcherKeybindingRouter.js \
     --extra-source=taskbarAppMenu.js \
     --extra-source=taskbarDragController.js \

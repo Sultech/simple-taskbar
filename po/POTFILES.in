@@ -10,6 +10,9 @@ prefs/startMenuPage.js
 prefs/windowSwitchingPage.js
 windowsStartMenu.js
 startMenuAppMenu.js
+startMenuAppModel.js
+startMenuFooterController.js
+startMenuPowerController.js
 folderMenuController.js
 fileManagerPlacesSection.js
 taskbarAppMenu.js
