@@ -6,9 +6,9 @@
       <stop offset="18%" stop-color="#245dd7"/>
       <stop offset="50%" stop-color="#245ddb"/>
       <stop offset="89%" stop-color="#2561de"/>
-      <stop offset="100%" stop-color="#1941a5"/>
+      <stop offset="100%" stop-color="#245edb"/>
     </linearGradient>
   </defs>
   <rect width="1" height="30" fill="url(#panel)"/>
-  <rect y="30" width="1" height="9" fill="#1941a5"/>
+  <rect y="30" width="1" height="9" fill="#245edb"/>
 </svg>

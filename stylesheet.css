@@ -1374,13 +1374,13 @@
     .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
     .simple-taskbar-application-overflow-scroll StScrollBar {
     min-height: 9px;
-    background-color: #1941a5;
+    background-color: #245edb;
 }
 
 .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
     .popup-menu-content.simple-taskbar-application-overflow-taskbar-content
     .simple-taskbar-application-overflow-scroll StScrollBar StBin#trough {
-    background-color: #1941a5;
+    background-color: #245edb;
 }
 
 .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
