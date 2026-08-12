@@ -369,6 +369,7 @@ class SecondaryTaskbarPanel {
             new ApplicationOverflowController({
                 settings,
                 taskbarController: this._taskbarController,
+                previewController: this._windowPreviews,
                 viewport: this._taskbarViewport,
             });
         this._taskbarBin = this._applicationOverflowController.actor;
