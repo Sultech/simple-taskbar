@@ -426,14 +426,14 @@ class SecondaryTaskbarPanel {
                 );
             this._quickSettingsXpIconController.enable();
         }
-        this._applyLayout();
-        this._syncTheme();
-        this._buttonPaddingController.enable();
         Main.layoutManager.addChrome(this.actor, {
             affectsStruts: true,
             trackFullscreen: true,
         });
         this._position();
+        this._applyLayout();
+        this._syncTheme();
+        this._buttonPaddingController.enable();
         this._startButtonController.enable();
         this._applicationOverflowController.enable();
         this._taskbarController.enable();
