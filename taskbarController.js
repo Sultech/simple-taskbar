@@ -546,7 +546,7 @@ export class TaskbarController {
             );
             this._updateGlassGeometry(item);
         }
-        this._updateShowDesktopItemGeometry();
+        this._syncTaskbarEdgeSpacing();
         this.queueIconGeometryUpdate();
     }
 
@@ -558,7 +558,7 @@ export class TaskbarController {
             this._syncIndicatorVisibility(item);
             this._updateGlassGeometry(item);
         }
-        this._updateShowDesktopItemGeometry();
+        this._syncTaskbarEdgeSpacing();
         this.actor.queue_relayout();
     }
 
@@ -585,6 +585,7 @@ export class TaskbarController {
         this._updateShowDesktopItemGeometry();
         this._syncShowDesktopDraggable();
         this._placeShowDesktopItem();
+        this._syncTaskbarEdgeSpacing();
         if (!hadItem) {
             this._queueRedisplay();
             this._onShowDesktopModeChanged();
@@ -604,8 +605,7 @@ export class TaskbarController {
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
-            width: WINDOWS_XP_SHOW_DESKTOP_WIDTH +
-                this._settings.get_int('icon-spacing'),
+            width: this._showDesktopSlotWidth(false),
             height: this._panelHeight,
             clip_to_allocation: false,
         });
@@ -658,18 +658,23 @@ export class TaskbarController {
         }
     }
 
-    _updateShowDesktopItemGeometry() {
+    _updateShowDesktopItemGeometry(trailing = false) {
         if (!this._showDesktopItem)
             return;
 
-        const slotWidth = WINDOWS_XP_SHOW_DESKTOP_WIDTH +
-            this._settings.get_int('icon-spacing');
+        const slotWidth = this._showDesktopSlotWidth(trailing);
         this._showDesktopItem.set_height(this._panelHeight);
         this._showDesktopSlot.set_size(slotWidth, this._panelHeight);
         this._showDesktopButton.set_size(
             WINDOWS_XP_SHOW_DESKTOP_WIDTH,
             this._panelHeight
         );
+    }
+
+    _showDesktopSlotWidth(trailing) {
+        const spacing = this._settings.get_int('icon-spacing');
+        return WINDOWS_XP_SHOW_DESKTOP_WIDTH + spacing +
+            (trailing && spacing < 0 ? -spacing : 0);
     }
 
     _syncShowDesktopDraggable() {
@@ -716,8 +721,8 @@ export class TaskbarController {
 
         this._removeShowDesktopItem(true);
         this._createShowDesktopItem();
-        this._updateShowDesktopItemGeometry();
         this._placeShowDesktopItem();
+        this._syncTaskbarEdgeSpacing();
     }
 
     _destroyShowDesktopDraggable() {
@@ -785,6 +790,28 @@ export class TaskbarController {
                 : 0;
         if (children.indexOf(this._showDesktopItem) !== targetIndex)
             this.actor.set_child_at_index(this._showDesktopItem, targetIndex);
+    }
+
+    _syncTaskbarEdgeSpacing() {
+        let trailingItem = null;
+        for (const child of this.actor.get_children()) {
+            if (!child.animatingOut)
+                trailingItem = child;
+        }
+
+        for (const item of this._appButtons.values()) {
+            const trailingSpacing = item === trailingItem &&
+                item._taskbarIsLauncher;
+            if (item._taskbarTrailingSpacing === trailingSpacing)
+                continue;
+
+            item._taskbarTrailingSpacing = trailingSpacing;
+            this._updateGlassGeometry(item);
+        }
+
+        this._updateShowDesktopItemGeometry(
+            this._showDesktopItem === trailingItem
+        );
     }
 
     _saveShowDesktopPinnedPosition() {
@@ -1018,6 +1045,7 @@ export class TaskbarController {
         }
 
         this._placeShowDesktopItem();
+        this._syncTaskbarEdgeSpacing();
         this._shownInitially = true;
         this.syncButtonStates(animateIndicators);
         this.actor.queue_relayout();
@@ -2042,12 +2070,17 @@ export class TaskbarController {
                 pinnedToRunningGap
                     ? WINDOWS_XP_PINNED_TO_RUNNING_GAP
                     : 0;
+            const iconSpacing = this._iconSpacing(entry.isLauncher);
+            const trailingSpacing = index + 1 === entries.length &&
+                iconSpacing < 0
+                ? -iconSpacing
+                : 0;
             return width + this._buttonWidth(
                 entry.window,
                 entryShowLabels,
                 APP_LABEL_WIDTH,
                 entry.isCombined
-            ) + this._iconSpacing(entry.isLauncher) + transitionGap;
+            ) + iconSpacing + transitionGap + trailingSpacing;
         }, 0);
     }
 
@@ -2262,6 +2295,7 @@ export class TaskbarController {
         item._taskbarIsCombinedApp = isCombined;
         item._taskbarIsPinnedPrimary = isPinnedPrimary;
         item._taskbarPinnedToRunningGap = false;
+        item._taskbarTrailingSpacing = false;
         item._taskbarButton = button;
         item._taskbarButtonContent = buttonContent;
         item._taskbarIcon = icon;
@@ -2534,7 +2568,8 @@ export class TaskbarController {
             item._taskbarWindow,
             item._taskbarIsLauncher,
             item._taskbarPinnedToRunningGap,
-            item._taskbarIsCombinedApp
+            item._taskbarIsCombinedApp,
+            item._taskbarTrailingSpacing
         );
         const glassHeight = this._glassHeight();
 
@@ -2774,20 +2809,23 @@ export class TaskbarController {
         window,
         isLauncher = false,
         pinnedToRunningGap = false,
-        isCombined = false
+        isCombined = false,
+        trailing = false
     ) {
         const transitionGap =
             this._settings.get_boolean('windows-xp-theme-enabled') &&
             pinnedToRunningGap
                 ? WINDOWS_XP_PINNED_TO_RUNNING_GAP
                 : 0;
+        const iconSpacing = this._iconSpacing(isLauncher);
         return this._buttonWidth(
             window,
             this._showAppLabels(),
             this._appLabelWidth,
             isCombined
         ) +
-            this._iconSpacing(isLauncher) + transitionGap;
+            iconSpacing + transitionGap +
+            (trailing && iconSpacing < 0 ? -iconSpacing : 0);
     }
 
     _applyCurrentButtonWidths() {
