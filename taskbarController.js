@@ -140,6 +140,7 @@ export class TaskbarController {
         this._suppressMembershipAnimation = false;
         this._iconGeometryUpdateId = 0;
         this._iconGeometryUpdatesEnabled = true;
+        this._dragCursorResetId = 0;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = [];
         this._shownInitially = false;
@@ -446,6 +447,9 @@ export class TaskbarController {
         if (this._startupSettleId)
             GLib.Source.remove(this._startupSettleId);
         this._startupSettleId = 0;
+        if (this._dragCursorResetId)
+            GLib.Source.remove(this._dragCursorResetId);
+        this._dragCursorResetId = 0;
 
         for (const [object, id] of this._signals) {
             if (id)
@@ -731,13 +735,19 @@ export class TaskbarController {
 
     _resetDragCursor(draggable) {
         if (draggable._updateCursor) {
-            GLib.idle_add_once(GLib.PRIORITY_DEFAULT_IDLE, () => {
-                if (this._dragging)
-                    return;
+            if (this._dragCursorResetId)
+                GLib.Source.remove(this._dragCursorResetId);
+            this._dragCursorResetId = GLib.idle_add_once(
+                GLib.PRIORITY_DEFAULT_IDLE,
+                () => {
+                    this._dragCursorResetId = 0;
+                    if (this._dragging)
+                        return;
 
-                const grabActor = global.stage.get_grab_actor() || global.stage;
-                grabActor.set_cursor_type(Clutter.CursorType.DEFAULT);
-            });
+                    const grabActor = global.stage.get_grab_actor() || global.stage;
+                    grabActor.set_cursor_type(Clutter.CursorType.DEFAULT);
+                }
+            );
             return;
         }
 
