@@ -306,10 +306,7 @@ export class OverviewIntegration {
 
         const scaleFactor = St.ThemeContext.get_for_stage(global.stage)
             .scale_factor;
-        return Math.max(
-            this._panelHeight,
-            OVERVIEW_LABEL_MARGIN * scaleFactor
-        );
+        return OVERVIEW_LABEL_MARGIN * scaleFactor;
     }
 
     _adaptAllocation() {
