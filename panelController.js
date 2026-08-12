@@ -81,7 +81,6 @@ export class PanelController {
         this._panelBoxState = [];
         this._panelWasModified = false;
         this._oldPanelGeometry = null;
-        this._oldPanelHeight = null;
         this._oldPanelStyle = null;
         this._activitiesWasVisible = null;
         this._dateMenuIndicatorPad = null;
@@ -434,16 +433,16 @@ export class PanelController {
         const panelBox = Main.layoutManager.panelBox;
         if (this._oldPanelGeometry) {
             const primaryMonitor = Main.layoutManager.primaryMonitor;
-            if (this._oldPanelHeight !== null)
-                Main.panel.set_height(this._oldPanelHeight);
+            Main.panel.set_height(-1);
             panelBox.set_size(
                 primaryMonitor?.width ?? this._oldPanelGeometry.width,
-                this._oldPanelGeometry.height
+                -1
             );
             panelBox.set_position(
                 primaryMonitor?.x ?? this._oldPanelGeometry.x,
                 primaryMonitor?.y ?? this._oldPanelGeometry.y
             );
+            Main.layoutManager._queueUpdateRegions();
         }
 
         if (restoringUnlockPanel)
@@ -463,7 +462,6 @@ export class PanelController {
         this._stSettings = null;
         this._settings = null;
         this._oldPanelGeometry = null;
-        this._oldPanelHeight = null;
         this._oldPanelStyle = null;
         this._activitiesWasVisible = null;
         this._dateMenuIndicatorPad = null;
@@ -945,7 +943,6 @@ export class PanelController {
             width: panelBox.width,
             height: panelBox.height,
         };
-        this._oldPanelHeight = Main.panel.height;
         this._oldPanelStyle = Main.panel.get_style();
         this._activitiesWasVisible = activities?.visible ?? false;
 
