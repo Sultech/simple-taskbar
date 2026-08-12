@@ -55,6 +55,9 @@ gnome-extensions pack \
     --extra-source=panelInteractionController.js \
     --extra-source=quickSettingsPowerController.js \
     --extra-source=quickSettingsXpIconController.js \
+    --extra-source=secondaryPanelActor.js \
+    --extra-source=secondaryPanelIndicatorController.js \
+    --extra-source=secondaryTaskbarPanel.js \
     --extra-source=showDesktopButtonController.js \
     --extra-source=startButtonController.js \
     --extra-source=windowsXpStartButton.js \
