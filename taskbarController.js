@@ -565,6 +565,7 @@ export class TaskbarController {
     _syncShowDesktopItem() {
         const hadItem = this._showDesktopItem !== null;
         const shouldShow =
+            this._showDesktopButton !== null &&
             this._settings.get_boolean('windows-xp-theme-enabled') &&
             this._settings.get_boolean('show-desktop-button-visible') &&
             !this._settings.get_boolean('default-gnome-panel');
