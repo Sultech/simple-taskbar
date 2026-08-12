@@ -24,6 +24,7 @@ import {
 import {placePanelItems} from './panelItemOrder.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelIsTop} from './panelPosition.js';
+import {NotificationAreaController} from './notificationAreaController.js';
 import {TRAY_OVERFLOW_ROLE} from './trayOverflowController.js';
 import {
     allocateAdaptivePanel,
@@ -47,6 +48,8 @@ const LIGHT_BLUR_OVERLAY_CLASS =
     'simple-taskbar-light-blur-overlay';
 const BORDER_DISABLED_CLASS =
     'simple-taskbar-border-disabled';
+const XP_PANEL_CLASS =
+    'simple-taskbar-windows-xp-theme';
 
 export class PanelController {
     constructor({
@@ -78,11 +81,12 @@ export class PanelController {
         this._panelBoxState = [];
         this._panelWasModified = false;
         this._oldPanelGeometry = null;
-        this._oldPanelHeight = null;
         this._oldPanelStyle = null;
         this._activitiesWasVisible = null;
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
+        this._dateMenuDisplayBox = null;
+        this._dateMenuDisplayBoxTranslationY = null;
         this._layoutRepairId = 0;
         this._transparencyRepairId = 0;
         this._blurMyShellSyncId = 0;
@@ -95,6 +99,7 @@ export class PanelController {
             this._injectionManager,
             settings
         );
+        this._notificationAreaController = new NotificationAreaController();
         this._autoHideController = new PanelAutoHideController({
             settings,
             panelActor: Main.panel,
@@ -140,6 +145,10 @@ export class PanelController {
         this._autoHideController.setMenuOpen(open);
     }
 
+    setShowDesktopButton(button) {
+        this._showDesktopButton = button;
+    }
+
     position() {
         const monitor = Main.layoutManager.primaryMonitor;
         if (!monitor)
@@ -147,6 +156,7 @@ export class PanelController {
 
         Main.panel.set_height(this._panelHeight);
         Main.layoutManager.panelBox.set_size(monitor.width, this._panelHeight);
+        this._syncDateMenuVerticalAlignment();
         const panelBox = Main.layoutManager.panelBox;
         panelBox.x = monitor.x;
         if (this._autoHideController)
@@ -187,6 +197,30 @@ export class PanelController {
             Main.panel.statusArea.quickSettings?.container;
         const trayOverflow =
             Main.panel.statusArea[TRAY_OVERFLOW_ROLE]?.container;
+        const dateMenu = Main.panel.statusArea.dateMenu?.container;
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        if (windowsXpThemeEnabled) {
+            for (const box of [leftBox, centerBox, rightBox]) {
+                if (this._showDesktopButton.get_parent() === box)
+                    box.remove_child(this._showDesktopButton);
+            }
+        }
+        const trayInNotificationArea = windowsXpThemeEnabled &&
+            this._settings.get_string('tray-overflow-position') === 'right';
+        const notificationAreaActors = windowsXpThemeEnabled
+            ? [
+                trayInNotificationArea ? trayOverflow : null,
+                quickSettings,
+                dateMenu,
+            ]
+            : [];
+        this._notificationAreaController.sync(
+            notificationAreaActors,
+            dateMenu,
+            windowsXpThemeEnabled
+        );
         const showDesktopPosition = this._settings.get_string(
             'show-desktop-button-position'
         );
@@ -203,7 +237,7 @@ export class PanelController {
             center: centerBox,
             right: rightBox,
         };
-        placePanelItems(boxes, [
+        const items = [
             {
                 id: 'start-button',
                 actor: this._startButton,
@@ -230,35 +264,62 @@ export class PanelController {
                 position: this._settings.get_string('folder-menu-position'),
                 visible: this._settings.get_boolean('folder-menu-enabled'),
             },
-            {
+        ];
+        if (!trayInNotificationArea) {
+            items.push({
                 id: 'tray-overflow',
                 actor: trayOverflow,
                 position: this._settings.get_string(
                     'tray-overflow-position'
                 ),
                 visible: true,
-            },
-            {
-                id: 'system-menu',
-                actor: quickSettings,
-                position: this._settings.get_string('system-menu-position'),
-                visible: true,
-            },
-            {
+            });
+        }
+        if (windowsXpThemeEnabled) {
+            items.push({
                 id: 'clock',
-                actor: Main.panel.statusArea.dateMenu?.container,
+                actor: this._notificationAreaController.actor,
                 position: this._settings.get_string('clock-position'),
                 visible: true,
-            },
-            {
+            });
+        } else {
+            items.push(
+                {
+                    id: 'system-menu',
+                    actor: quickSettings,
+                    position: this._settings.get_string(
+                        'system-menu-position'
+                    ),
+                    visible: true,
+                },
+                {
+                    id: 'clock',
+                    actor: dateMenu,
+                    position: this._settings.get_string('clock-position'),
+                    visible: true,
+                }
+            );
+        }
+        if (!windowsXpThemeEnabled) {
+            items.push({
                 id: 'show-desktop',
                 actor: this._showDesktopButton,
                 position: showDesktopPosition,
                 visible: this._settings.get_boolean(
                     'show-desktop-button-visible'
                 ),
-            },
-        ], this._settings.get_strv('panel-item-order'));
+            });
+        }
+        placePanelItems(
+            boxes,
+            items,
+            this._settings.get_strv('panel-item-order')
+        );
+        this._notificationAreaController.syncRightBoxActors(
+            rightBox,
+            new Set(items.map(item => item.actor)),
+            windowsXpThemeEnabled
+        );
         this._syncActivitiesVisibility();
         this.updateTaskbarWidth();
     }
@@ -330,6 +391,9 @@ export class PanelController {
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
         this._restoreDateMenuIndicatorPadding();
+        this._restoreDateMenuVerticalAlignment();
+        this._notificationAreaController.restore(Main.panel._rightBox);
+        this._notificationAreaController.destroy();
 
         for (const actor of [
             this._startButton,
@@ -356,6 +420,7 @@ export class PanelController {
             Main.panel.remove_style_class_name(
                 BLUR_MY_SHELL_ACTIVE_CLASS
             );
+            Main.panel.remove_style_class_name(XP_PANEL_CLASS);
             Main.panel.set_style(this._oldPanelStyle ?? '');
 
             const activities = Main.panel.statusArea.activities?.container;
@@ -368,16 +433,16 @@ export class PanelController {
         const panelBox = Main.layoutManager.panelBox;
         if (this._oldPanelGeometry) {
             const primaryMonitor = Main.layoutManager.primaryMonitor;
-            if (this._oldPanelHeight !== null)
-                Main.panel.set_height(this._oldPanelHeight);
+            Main.panel.set_height(-1);
             panelBox.set_size(
                 primaryMonitor?.width ?? this._oldPanelGeometry.width,
-                this._oldPanelGeometry.height
+                -1
             );
             panelBox.set_position(
                 primaryMonitor?.x ?? this._oldPanelGeometry.x,
                 primaryMonitor?.y ?? this._oldPanelGeometry.y
             );
+            Main.layoutManager._queueUpdateRegions();
         }
 
         if (restoringUnlockPanel)
@@ -397,11 +462,13 @@ export class PanelController {
         this._stSettings = null;
         this._settings = null;
         this._oldPanelGeometry = null;
-        this._oldPanelHeight = null;
         this._oldPanelStyle = null;
         this._activitiesWasVisible = null;
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = null;
+        this._dateMenuDisplayBox = null;
+        this._dateMenuDisplayBoxTranslationY = null;
+        this._notificationAreaController = null;
         this._applyingLayout = false;
         this._applyingTransparency = false;
         this._panelWasModified = false;
@@ -468,14 +535,15 @@ export class PanelController {
 
     _removeDateMenuIndicatorPadding() {
         const dateMenu = Main.panel.statusArea.dateMenu;
-        const indicatorPad = dateMenu
-            ?.get_first_child()
-            ?.get_first_child();
+        const displayBox = dateMenu?.get_first_child();
+        const indicatorPad = displayBox?.get_first_child();
         if (!indicatorPad?.get_constraints ||
             !indicatorPad?.clear_constraints) {
             return;
         }
 
+        this._dateMenuDisplayBox = displayBox;
+        this._dateMenuDisplayBoxTranslationY = displayBox.translation_y;
         this._dateMenuIndicatorPad = indicatorPad;
         this._dateMenuIndicatorPadConstraints =
             [...indicatorPad.get_constraints()];
@@ -495,6 +563,23 @@ export class PanelController {
         Main.panel.statusArea.dateMenu?.queue_relayout();
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
+    }
+
+    _syncDateMenuVerticalAlignment() {
+        if (!this._dateMenuDisplayBox)
+            return;
+
+        const parityOffset = this._panelHeight % 2 === 0 ? 1 : 0;
+        this._dateMenuDisplayBox.translation_y =
+            this._dateMenuDisplayBoxTranslationY + parityOffset;
+    }
+
+    _restoreDateMenuVerticalAlignment() {
+        if (!this._dateMenuDisplayBox)
+            return;
+
+        this._dateMenuDisplayBox.translation_y =
+            this._dateMenuDisplayBoxTranslationY;
     }
 
     _connectSignals() {
@@ -619,6 +704,15 @@ export class PanelController {
         this._connect(this._settings, 'changed::panel-theme', () => {
             this._applyTheme();
         });
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => {
+                this._applyTheme();
+                this.applyLayout();
+                this._queueBlurMyShellSync();
+            }
+        );
         this._connect(this._settings, 'changed::panel-position', () => {
             this._syncPanelEdgeClass();
             this.position();
@@ -769,10 +863,14 @@ export class PanelController {
         const active =
             extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
         const panelBlur = global.blur_my_shell?._panel_blur;
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
         if (active && panelBlur?.enabled) {
-            Main.panel.add_style_class_name(
-                BLUR_MY_SHELL_ACTIVE_CLASS
-            );
+            if (windowsXpThemeEnabled)
+                Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
+            else
+                Main.panel.add_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
             if (!Main.overview.visibleTarget) {
                 panelBlur.panel_hide_blur_dynamically();
                 panelBlur.update_visibility();
@@ -845,7 +943,6 @@ export class PanelController {
             width: panelBox.width,
             height: panelBox.height,
         };
-        this._oldPanelHeight = Main.panel.height;
         this._oldPanelStyle = Main.panel.get_style();
         this._activitiesWasVisible = activities?.visible ?? false;
 
@@ -880,7 +977,8 @@ export class PanelController {
             leftBox.insert_child_at_index(this._startButton, 0);
         if (this._settings.get_boolean('folder-menu-enabled'))
             rightBox.add_child(this._folderMenuButton);
-        if (this._settings.get_boolean('show-desktop-button-visible'))
+        if (this._settings.get_boolean('show-desktop-button-visible') &&
+            !this._settings.get_boolean('windows-xp-theme-enabled'))
             rightBox.add_child(this._showDesktopButton);
     }
 
@@ -1012,6 +1110,10 @@ export class PanelController {
         Main.panel.add_style_class_name(
             light ? 'simple-taskbar-theme-light' : 'simple-taskbar-theme-dark'
         );
+        if (this._settings.get_boolean('windows-xp-theme-enabled'))
+            Main.panel.add_style_class_name(XP_PANEL_CLASS);
+        else
+            Main.panel.remove_style_class_name(XP_PANEL_CLASS);
         this._syncPanelBorder();
         this._applyTransparency();
     }
@@ -1034,7 +1136,11 @@ export class PanelController {
 
         const originalStyle = this._oldPanelStyle?.trim() ?? '';
         const panelBlur = global.blur_my_shell?._panel_blur;
-        const externalPanelStyle = panelBlur?.enabled &&
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const externalPanelStyle = !windowsXpThemeEnabled &&
+            panelBlur?.enabled &&
             Main.panel.has_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS) &&
             EXTERNAL_PANEL_STYLES.some(style =>
                 Main.panel.has_style_class_name(style)

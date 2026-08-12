@@ -27,10 +27,19 @@ import {
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
 import {resolveTaskManagerAppId} from './taskManagerUtils.js';
+import {
+    ICON_VERTICAL_RESERVE,
+    MIN_PANEL_HEIGHT,
+    STANDARD_MIN_PANEL_HEIGHT,
+} from './panelSizing.js';
+import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
+import {
+    applyWindowsXpThemeSettings,
+    setWindowsXpThemeEnabled,
+    WINDOWS_XP_ICON_SPACING,
+} from './windowsXpTheme.js';
 
-const MIN_PANEL_HEIGHT = 32;
 const MAX_ICON_SIZE = 48;
-const ICON_VERTICAL_RESERVE = 17;
 const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -326,16 +335,28 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         panelModeGroup.add(defaultGnomePanelSwitch);
 
-
-        this._addSpinRow(panelModeGroup, window._settings, {
-            key: 'panel-button-padding',
-            title: _('Panel Button Padding'),
-            subtitle: _(
-                'Horizontal space around panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
+        const windowsXpThemeSwitch = new Adw.SwitchRow({
+            title: _('Windows XP Theme'),
+            subtitle: _('Apply a Windows XP-inspired taskbar style'),
+            active: window._settings.get_boolean(
+                'windows-xp-theme-enabled'
             ),
-            lower: -1,
-            upper: 20,
         });
+        panelModeGroup.add(windowsXpThemeSwitch);
+
+        const panelButtonPaddingRow = this._addSpinRow(
+            panelModeGroup,
+            window._settings,
+            {
+                key: 'panel-button-padding',
+                title: _('Panel Button Padding'),
+                subtitle: _(
+                    'Horizontal space around panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
+                ),
+                lower: -1,
+                upper: 20,
+            }
+        );
 
         const appearanceGroup = new Adw.PreferencesGroup({
             title: _('Application Icons'),
@@ -343,20 +364,30 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         page.add(appearanceGroup);
 
-        this._addSpinRow(appearanceGroup, window._settings, {
-            key: 'icon-size',
-            title: _('Icon Size'),
-            subtitle: _('The panel grows automatically when larger icons need more room'),
-            lower: 15,
-            upper: MAX_ICON_SIZE,
-        });
-        this._addSpinRow(appearanceGroup, window._settings, {
-            key: 'icon-spacing',
-            title: _('Icon Spacing'),
-            subtitle: _('Space between application buttons'),
-            lower: 0,
-            upper: 16,
-        });
+        const iconSizeRow = this._addSpinRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'icon-size',
+                title: _('Icon Size'),
+                subtitle: _(
+                    'The panel grows automatically when larger icons need more room'
+                ),
+                lower: 15,
+                upper: MAX_ICON_SIZE,
+            }
+        );
+        const iconSpacingRow = this._addSpinRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'icon-spacing',
+                title: _('Icon Spacing'),
+                subtitle: _('Space between application buttons'),
+                lower: 0,
+                upper: 16,
+            }
+        );
         const indicatorStyleRow = this._addComboRow(
             advancedAppearanceGroup,
             window._settings,
@@ -402,22 +433,41 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 title: _('Unfocused Indicator Color'),
             }
         );
-        const syncIndicatorColorVisibility = () => {
+        const syncIndicatorControls = () => {
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             const enabled = customIndicatorColorsSwitch.active;
+            indicatorStyleRow.sensitive = !windowsXpThemeEnabled;
+            customIndicatorColorsSwitch.sensitive = !windowsXpThemeEnabled;
             focusedIndicatorColorRow.visible = enabled;
             unfocusedIndicatorColorRow.visible = enabled;
+            focusedIndicatorColorRow.sensitive = !windowsXpThemeEnabled &&
+                enabled;
+            unfocusedIndicatorColorRow.sensitive =
+                !windowsXpThemeEnabled && enabled;
         };
         customIndicatorColorsSwitch.connect(
             'notify::active',
-            syncIndicatorColorVisibility
+            syncIndicatorControls
         );
-        syncIndicatorColorVisibility();
-        this._addComboRow(appearanceGroup, window._settings, {
-            key: 'app-alignment',
-            title: _('Icon Alignment'),
-            subtitle: _('Place application icons at the left or center'),
-            choices: panelPositions.slice(0, 2),
-        });
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncIndicatorControls
+        );
+        syncIndicatorControls();
+        const appAlignmentRow = this._addComboRow(
+            appearanceGroup,
+            window._settings,
+            {
+                key: 'app-alignment',
+                title: _('Icon Alignment'),
+                subtitle: _(
+                    'Place application icons at the left or center'
+                ),
+                choices: panelPositions.slice(0, 2),
+            }
+        );
 
         const hidePinnedAppsSwitch = new Adw.SwitchRow({
             title: _('Hide Pinned Applications'),
@@ -451,6 +501,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
 
+        const combineAppButtonsChoices = [
+            {value: 'always', label: _('Always')},
+            {value: 'when-full', label: _('Only When Full')},
+            {value: 'never', label: _('Never')},
+        ];
+        const windowsXpCombineAppButtonsChoices = [
+            {value: 'when-full', label: _('Only When Full')},
+            {value: 'never', label: _('Never')},
+        ];
         const combineAppButtonsRow = this._addComboRow(
             advancedAppBehaviorGroup,
             window._settings,
@@ -458,11 +517,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 key: 'combine-app-buttons-mode',
                 title: _('Combine Application Buttons'),
                 subtitle: _('Choose when windows share one taskbar button'),
-                choices: [
-                    {value: 'always', label: _('Always')},
-                    {value: 'when-full', label: _('Only When Full')},
-                    {value: 'never', label: _('Never')},
-                ],
+                choices: combineAppButtonsChoices,
+                choicesProvider: () =>
+                    window._settings.get_boolean(
+                        'windows-xp-theme-enabled'
+                    )
+                        ? windowsXpCombineAppButtonsChoices
+                        : combineAppButtonsChoices,
+                choicesChangedKey: 'windows-xp-theme-enabled',
             }
         );
 
@@ -514,9 +576,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const syncLabelSensitivity = () => {
-            hideAppLabelsSwitch.sensitive = window._settings.get_string(
-                'combine-app-buttons-mode'
-            ) !== 'always';
+            hideAppLabelsSwitch.sensitive =
+                !window._settings.get_boolean(
+                    'windows-xp-theme-enabled'
+                ) && window._settings.get_string(
+                    'combine-app-buttons-mode'
+                ) !== 'always';
         };
         combineAppButtonsRow.connect('notify::selected', () => {
             syncLabelSensitivity();
@@ -613,6 +678,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings.delay();
             settings.set_boolean('default-gnome-panel', enabled);
             if (enabled) {
+                settings.set_boolean('windows-xp-theme-enabled', false);
                 settings.set_int('panel-height', 32);
                 settings.set_int('panel-button-padding', 12);
                 settings.set_string('panel-position', 'top');
@@ -633,29 +699,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 settings.set_boolean('panel-border-enabled', false);
                 settings.set_boolean('panel-border-light-enabled', false);
             } else {
-                settings.set_int('icon-size', 32);
-                settings.set_int('icon-spacing', 3);
-                settings.set_int('panel-height', 49);
-                settings.set_int('panel-button-padding', -1);
-                settings.set_string('panel-position', 'bottom');
-                settings.set_string('app-alignment', 'center');
-                settings.set_string('start-button-position', 'center');
-                settings.set_int('start-button-padding', 3);
-                settings.set_string('clock-position', 'right');
-                settings.set_string('system-menu-position', 'right');
-                settings.set_string('folder-menu-position', 'right');
-                settings.set_string('tray-overflow-position', 'right');
-                settings.set_strv(
-                    'panel-item-order',
-                    DEFAULT_PANEL_ITEM_ORDER
-                );
-                settings.set_boolean('activities-button-visible', true);
-                settings.set_string('activities-button-position', 'left');
-                settings.set_boolean('multi-monitor-panels', true);
-                settings.set_boolean('windows-start-menu-enabled', true);
-                settings.set_boolean('gnome-start-button-visible', true);
-                settings.set_boolean('show-desktop-button-visible', true);
-                settings.set_boolean('panel-border-enabled', false);
+                applyDefaultTaskbarSettings(settings);
             }
             settings.apply();
         };
@@ -688,26 +732,40 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         page.add(panelAppearanceGroup);
 
-        this._addSpinRow(panelAppearanceGroup, window._settings, {
-            key: 'panel-height',
-            title: _('Panel Height'),
-            subtitle: _('Oversized icons shrink automatically when the panel is reduced'),
-            lower: MIN_PANEL_HEIGHT,
-            upper: 80,
-        });
-        this._addComboRow(panelAppearanceGroup, window._settings, {
-            key: 'panel-position',
-            title: _('Panel Position'),
-            subtitle: _('Place the taskbar at the top or bottom of the screen'),
-            choices: [
-                {value: 'top', label: _('Top')},
-                {value: 'bottom', label: _('Bottom')},
-            ],
-        });
+        const panelHeightRow = this._addSpinRow(
+            panelAppearanceGroup,
+            window._settings,
+            {
+                key: 'panel-height',
+                title: _('Panel Height'),
+                subtitle: _(
+                    'Oversized icons shrink automatically when the panel is reduced'
+                ),
+                lower: MIN_PANEL_HEIGHT,
+                upper: 80,
+            }
+        );
+        const panelPositionRow = this._addComboRow(
+            panelAppearanceGroup,
+            window._settings,
+            {
+                key: 'panel-position',
+                title: _('Panel Position'),
+                subtitle: _(
+                    'Place the taskbar at the top or bottom of the screen'
+                ),
+                choices: [
+                    {value: 'top', label: _('Top')},
+                    {value: 'bottom', label: _('Bottom')},
+                ],
+            }
+        );
 
         const fitPanelToIcons = () => {
-            if (window._settings.get_boolean('default-gnome-panel'))
+            if (window._settings.get_boolean('default-gnome-panel') ||
+                window._settings.get_boolean('windows-xp-theme-enabled')) {
                 return;
+            }
 
             const iconSize = window._settings.get_int('icon-size');
             const panelHeight = window._settings.get_int('panel-height');
@@ -716,17 +774,130 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 window._settings.set_int('panel-height', minimumPanelHeight);
         };
         const fitIconsToPanel = () => {
-            if (window._settings.get_boolean('default-gnome-panel'))
+            if (window._settings.get_boolean('default-gnome-panel') ||
+                window._settings.get_boolean('windows-xp-theme-enabled')) {
                 return;
+            }
 
             const iconSize = window._settings.get_int('icon-size');
             const panelHeight = window._settings.get_int('panel-height');
+            if (panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
+                window._settings.set_int(
+                    'panel-height',
+                    STANDARD_MIN_PANEL_HEIGHT
+                );
+                return;
+            }
             const maximumIconSize = panelHeight - ICON_VERTICAL_RESERVE;
             if (iconSize > maximumIconSize)
                 window._settings.set_int('icon-size', maximumIconSize);
         };
         window._settings.connect('changed::icon-size', fitPanelToIcons);
         window._settings.connect('changed::panel-height', fitIconsToPanel);
+
+        let syncingWindowsXpTheme = false;
+        const syncWindowsXpTheme = () => {
+            const enabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            if (enabled) {
+                if (window._settings.get_boolean('default-gnome-panel')) {
+                    window._settings.set_boolean(
+                        'default-gnome-panel',
+                        false
+                    );
+                }
+                applyWindowsXpThemeSettings(window._settings);
+            }
+            syncingWindowsXpTheme = true;
+            windowsXpThemeSwitch.active = enabled;
+            panelHeightRow.get_adjustment().set_lower(
+                enabled ? MIN_PANEL_HEIGHT : STANDARD_MIN_PANEL_HEIGHT
+            );
+            iconSpacingRow.get_adjustment().set_lower(
+                enabled ? WINDOWS_XP_ICON_SPACING : 0
+            );
+            const iconSpacing = window._settings.get_int('icon-spacing');
+            if (iconSpacingRow.get_value() !== iconSpacing)
+                iconSpacingRow.set_value(iconSpacing);
+            iconSizeRow.sensitive = !enabled;
+            iconSpacingRow.sensitive = !enabled;
+            panelButtonPaddingRow.sensitive = !enabled;
+            panelHeightRow.sensitive = !enabled;
+            panelPositionRow.sensitive = !enabled;
+            defaultGnomePanelSwitch.sensitive = !enabled;
+            appAlignmentRow.sensitive = !enabled;
+            pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
+            combineAppButtonsRow.sensitive = true;
+            applicationOverflowSwitch.sensitive = !enabled;
+            syncLabelSensitivity();
+            syncingWindowsXpTheme = false;
+        };
+        const setWindowsXpTheme = enabled => {
+            const settings = this.getSettings();
+            settings.delay();
+            setWindowsXpThemeEnabled(settings, enabled);
+            settings.apply();
+        };
+        windowsXpThemeSwitch.connect('notify::active', () => {
+            if (syncingWindowsXpTheme)
+                return;
+
+            const enabled = windowsXpThemeSwitch.active;
+            if (enabled === window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            )) {
+                return;
+            }
+            setWindowsXpTheme(enabled);
+            syncWindowsXpTheme();
+        });
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect('changed::icon-size', syncWindowsXpTheme);
+        window._settings.connect('changed::icon-spacing', syncWindowsXpTheme);
+        window._settings.connect('changed::panel-height', syncWindowsXpTheme);
+        window._settings.connect('changed::panel-position', syncWindowsXpTheme);
+        window._settings.connect(
+            'changed::panel-button-padding',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::custom-indicator-colors-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::custom-panel-color-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::activities-button-position',
+            syncWindowsXpTheme
+        );
+        window._settings.connect('changed::app-alignment', syncWindowsXpTheme);
+        window._settings.connect(
+            'changed::start-button-position',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::use-pinned-apps-as-launchers',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::combine-app-buttons-mode',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::application-overflow-enabled',
+            syncWindowsXpTheme
+        );
+        window._settings.connect(
+            'changed::hide-app-labels',
+            syncWindowsXpTheme
+        );
+        syncWindowsXpTheme();
 
         // Normalize any incompatible values written outside preferences.
         fitPanelToIcons();
@@ -802,11 +973,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         const updatePanelTransparencyControls = () => {
             const blocked = blurMyShellPanelBlurEnabled();
-            transparencySwitch.sensitive = !blocked;
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            transparencySwitch.sensitive = !blocked &&
+                !windowsXpThemeEnabled;
             transparencySwitch.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : transparencySwitchSubtitle;
-            transparencyRow.sensitive = !blocked && transparencySwitch.active;
+            transparencyRow.sensitive = !blocked &&
+                !windowsXpThemeEnabled && transparencySwitch.active;
             transparencyRow.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : transparencyRowSubtitle;
@@ -814,6 +990,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         syncPanelTransparencyControls = updatePanelTransparencyControls;
         transparencySwitch.connect(
             'notify::active',
+            updatePanelTransparencyControls
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updatePanelTransparencyControls
         );
         updatePanelTransparencyControls();
@@ -869,21 +1049,47 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         const updateCustomPanelColorControls = () => {
             const blocked = blurMyShellPanelBlurEnabled();
-            customPanelColorSwitch.sensitive = !blocked;
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            customPanelColorSwitch.sensitive = !blocked &&
+                !windowsXpThemeEnabled;
             customPanelColorSwitch.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : customPanelColorSubtitle;
             customPanelColorRow.visible = customPanelColorSwitch.active;
             customPanelColorRow.sensitive = !blocked &&
+                !windowsXpThemeEnabled &&
                 customPanelColorSwitch.active;
             customPanelTextColorRow.visible = customPanelColorSwitch.active;
             customPanelTextColorRow.sensitive = !blocked &&
+                !windowsXpThemeEnabled &&
                 customPanelColorSwitch.active;
             customPanelTextColorRow.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : customPanelTextColorSubtitle;
         };
         syncCustomPanelColorControls = updateCustomPanelColorControls;
+        const syncPanelThemeControls = () => {
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            followSystemThemeSwitch.sensitive = !windowsXpThemeEnabled;
+            panelThemeRow.sensitive = !windowsXpThemeEnabled &&
+                !followSystemThemeSwitch.active;
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            () => {
+                syncPanelThemeControls();
+                syncCustomPanelColorControls();
+            }
+        );
+        window._settings.connect(
+            'changed::panel-theme-follow-system',
+            syncPanelThemeControls
+        );
+        syncPanelThemeControls();
         customPanelColorSwitch.connect(
             'notify::active',
             widget => {
@@ -928,6 +1134,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        const syncPanelBorderControls = () => {
+            const enabled = !window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            darkPanelBorderSwitch.sensitive = enabled;
+            lightPanelBorderSwitch.sensitive = enabled;
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncPanelBorderControls
+        );
+        syncPanelBorderControls();
 
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Taskbar Behavior'),
@@ -1178,9 +1396,14 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const defaultPanel = window._settings.get_boolean(
                 'default-gnome-panel'
             );
+            const windowsXpTheme = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             startPositionRow.sensitive =
-                !defaultPanel && !followAppAlignmentSwitch.active;
-            followAppAlignmentSwitch.sensitive = !defaultPanel;
+                !defaultPanel && !windowsXpTheme &&
+                !followAppAlignmentSwitch.active;
+            followAppAlignmentSwitch.sensitive =
+                !defaultPanel && !windowsXpTheme;
         };
         followAppAlignmentSwitch.connect(
             'notify::active',
@@ -1190,15 +1413,23 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'changed::default-gnome-panel',
             updateStartPositionRow
         );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            updateStartPositionRow
+        );
         updateStartPositionRow();
 
-        this._addSpinRow(startButtonGroup, window._settings, {
-            key: 'start-button-padding',
-            title: _('Start Button Padding'),
-            subtitle: _('Horizontal space around the Start icon in pixels'),
-            lower: 0,
-            upper: 20,
-        });
+        const startButtonPaddingRow = this._addSpinRow(
+            startButtonGroup,
+            window._settings,
+            {
+                key: 'start-button-padding',
+                title: _('Start Button Padding'),
+                subtitle: _('Horizontal space around the Start icon in pixels'),
+                lower: 0,
+                upper: 20,
+            }
+        );
 
         const customIconRow = new Adw.ActionRow({
             title: _('Custom Start Button Icon'),
@@ -1245,6 +1476,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             updateCustomIconRow
         );
         updateCustomIconRow();
+
+        const syncXpStartButtonControls = () => {
+            const enabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            startButtonPaddingRow.sensitive = !enabled;
+            customIconRow.sensitive = !enabled;
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncXpStartButtonControls
+        );
+        syncXpStartButtonControls();
 
         const windowsStartMenuSwitch = new Adw.SwitchRow({
             title: _('Eleven-style Start Menu'),
@@ -1495,8 +1739,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const panelBlur = blurMyShellPanelBlurEnabled();
             const popupBlur = blurMyShellPopupBlurEnabled();
             const blocked = panelBlur || popupBlur;
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             followPanelTransparencySwitch.sensitive =
-                windowsStartMenuSwitch.active && !blocked;
+                windowsStartMenuSwitch.active && !blocked &&
+                !windowsXpThemeEnabled;
             if (!blocked) {
                 followPanelTransparencySwitch.subtitle =
                     followPanelTransparencySubtitle;
@@ -1514,6 +1762,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         syncStartMenuTransparencyControl = updateStartMenuTransparencyRow;
         windowsStartMenuSwitch.connect(
             'notify::active',
+            updateStartMenuTransparencyRow
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updateStartMenuTransparencyRow
         );
         updateStartMenuTransparencyRow();
@@ -1583,7 +1835,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             Gio.SettingsBindFlags.DEFAULT
         );
         const updateSuperTabRow = () => {
-            superKeyRow.sensitive = windowsStartMenuSwitch.active;
+            const windowsXpTheme = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            superKeyRow.sensitive = windowsStartMenuSwitch.active &&
+                !windowsXpTheme;
             superTabRow.sensitive = windowsStartMenuSwitch.active &&
                 !superKeyRow.active;
         };
@@ -1594,6 +1850,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         windowsStartMenuSwitch.connect(
             'notify::active',
+            updateSuperTabRow
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updateSuperTabRow
         );
         updateSuperTabRow();
@@ -1871,6 +2131,20 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             );
             panelOrderRows.set(id, controls);
         }
+        const activitiesPanelPositions = panelPositions.filter(
+            position => position.value !== 'center'
+        );
+        const syncActivitiesPositionChoices = () => {
+            const choices = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            ) ? activitiesPanelPositions : panelPositions;
+            panelOrderRows.get('activities').setChoices(choices);
+        };
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
+            syncActivitiesPositionChoices
+        );
+        syncActivitiesPositionChoices();
 
         const getPanelItemPosition = id => {
             const definition = panelOrderDefinitions.get(id);
@@ -1885,10 +2159,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             return window._settings.get_string(definition.key);
         };
         const isPanelItemLocked = id => {
-            if (!window._settings.get_boolean('default-gnome-panel'))
-                return false;
-
-            return id === 'start-button' || id === 'applications';
+            if (window._settings.get_boolean('windows-xp-theme-enabled')) {
+                return [
+                    'right-box',
+                    'start-button',
+                    'activities',
+                    'applications',
+                    'show-desktop',
+                    'tray-overflow',
+                    'system-menu',
+                    'clock',
+                ].includes(id);
+            }
+            if (window._settings.get_boolean('default-gnome-panel'))
+                return id === 'start-button' || id === 'applications';
+            return false;
         };
         const syncPanelItemOrder = () => {
             const stored = window._settings.get_strv('panel-item-order');
@@ -1990,18 +2275,27 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const defaultPanel = window._settings.get_boolean(
                 'default-gnome-panel'
             );
+            const windowsXpTheme = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            windowsStartMenuSwitch.sensitive = !windowsXpTheme;
             panelOrderRows.get('start-button').positionDropDown.sensitive =
-                !defaultPanel && !followAppAlignmentSwitch.active;
+                !defaultPanel && !windowsXpTheme &&
+                !followAppAlignmentSwitch.active;
             panelOrderRows.get('applications').positionDropDown.sensitive =
-                !defaultPanel;
+                !defaultPanel && !windowsXpTheme;
+            panelOrderRows.get('system-menu').positionDropDown.sensitive =
+                !windowsXpTheme;
+            panelOrderRows.get('clock').positionDropDown.sensitive =
+                !windowsXpTheme;
             panelOrderRows.get('activities').positionDropDown.sensitive =
                 activitiesButtonSwitch.active;
             panelOrderRows.get('folder-menu').positionDropDown.sensitive =
-                folderMenuSwitch.active;
+                !windowsXpTheme && folderMenuSwitch.active;
             panelOrderRows.get('tray-overflow').positionDropDown.sensitive =
-                trayOverflowSwitch.active;
+                !windowsXpTheme && trayOverflowSwitch.active;
             panelOrderRows.get('show-desktop').positionDropDown.sensitive =
-                showDesktopSwitch.active;
+                !windowsXpTheme && showDesktopSwitch.active;
         };
         followAppAlignmentSwitch.connect(
             'notify::active',
@@ -2028,6 +2322,13 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window._settings.connect(
             'changed::default-gnome-panel',
+            () => {
+                syncPanelItemOrder();
+                syncPanelPositionSensitivity();
+            }
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             () => {
                 syncPanelItemOrder();
                 syncPanelPositionSensitivity();
@@ -2273,18 +2574,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         choices,
         fixedPosition = null,
     }) {
-        const model = new Gtk.StringList();
-        for (const choice of choices)
-            model.append(choice.label);
-
+        let currentChoices = choices;
+        const createModel = availableChoices => {
+            const model = new Gtk.StringList();
+            for (const choice of availableChoices)
+                model.append(choice.label);
+            return model;
+        };
         const positionDropDown = new Gtk.DropDown({
-            model,
+            model: createModel(currentChoices),
             tooltip_text: _('Panel Position'),
             valign: Gtk.Align.CENTER,
         });
         let syncingPosition = false;
         const syncPosition = value => {
-            const index = choices.findIndex(
+            const index = currentChoices.findIndex(
                 choice => choice.value === value
             );
             if (index < 0 || positionDropDown.selected === index)
@@ -2292,6 +2596,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
             syncingPosition = true;
             positionDropDown.selected = index;
+            syncingPosition = false;
+        };
+        const setChoices = availableChoices => {
+            currentChoices = availableChoices;
+            syncingPosition = true;
+            positionDropDown.set_model(createModel(currentChoices));
+            const index = currentChoices.findIndex(
+                choice => choice.value === settings.get_string(key)
+            );
+            positionDropDown.selected = index < 0 ? 0 : index;
             syncingPosition = false;
         };
         if (fixedPosition) {
@@ -2303,7 +2617,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 if (syncingPosition)
                     return;
 
-                const choice = choices[widget.selected];
+                const choice = currentChoices[widget.selected];
                 if (choice)
                     settings.set_string(key, choice.value);
             });
@@ -2342,6 +2656,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             positionDropDown,
             upButton,
             downButton,
+            setChoices,
             syncPosition,
             group: null,
         };
@@ -2353,30 +2668,57 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         subtitle = '',
         choices,
         initialValue = null,
+        choicesProvider = () => choices,
+        choicesChangedKey = null,
     }) {
-        const model = new Gtk.StringList();
-        for (const choice of choices)
-            model.append(choice.label);
+        const createModel = availableChoices => {
+            const model = new Gtk.StringList();
+            for (const choice of availableChoices)
+                model.append(choice.label);
+            return model;
+        };
+        let currentChoices = choicesProvider();
+        let syncingChoices = false;
 
         const row = new Adw.ComboRow({
             title,
             subtitle,
-            model,
+            model: createModel(currentChoices),
         });
         const currentValue = initialValue ?? settings.get_string(key);
-        const selected = choices.findIndex(choice => choice.value === currentValue);
+        const selected = currentChoices.findIndex(
+            choice => choice.value === currentValue
+        );
         row.set_selected(Math.max(selected, 0));
         row.connect('notify::selected', widget => {
-            const choice = choices[widget.get_selected()];
+            if (syncingChoices)
+                return;
+
+            const choice = currentChoices[widget.get_selected()];
             if (choice)
                 settings.set_string(key, choice.value);
         });
         settings.connect(`changed::${key}`, () => {
             const value = settings.get_string(key);
-            const index = choices.findIndex(choice => choice.value === value);
+            const index = currentChoices.findIndex(
+                choice => choice.value === value
+            );
             if (index >= 0 && row.get_selected() !== index)
                 row.set_selected(index);
         });
+        if (choicesChangedKey) {
+            settings.connect(`changed::${choicesChangedKey}`, () => {
+                currentChoices = choicesProvider();
+                syncingChoices = true;
+                row.set_model(createModel(currentChoices));
+                const value = settings.get_string(key);
+                const index = currentChoices.findIndex(
+                    choice => choice.value === value
+                );
+                row.set_selected(Math.max(index, 0));
+                syncingChoices = false;
+            });
+        }
         group.add(row);
         return row;
     }

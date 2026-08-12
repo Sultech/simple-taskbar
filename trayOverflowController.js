@@ -24,6 +24,7 @@ const TRAY_TYPE_NAMES = ['IndicatorStatusIcon', 'IndicatorTrayIcon'];
 const RESCAN_DELAY = 120;
 const GRID_MAX_COLUMNS = 5;
 const LIGHT_MENU_CLASS = 'simple-taskbar-tray-overflow-light';
+const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
 const TRAY_INDICATOR_STYLE =
     '-natural-hpadding: 0px; -minimum-hpadding: 0px;';
 
@@ -85,6 +86,11 @@ export class TrayOverflowController {
             this._menu.close(BoxPointer.PopupAnimation.NONE);
             this._syncPanelPosition();
         });
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => this._syncPanelPosition()
+        );
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
@@ -95,6 +101,7 @@ export class TrayOverflowController {
 
         this._syncPanelPosition();
         this._sync();
+        this._queueRescan();
     }
 
     close() {
@@ -123,6 +130,13 @@ export class TrayOverflowController {
 
     _syncPanelPosition() {
         syncMenuArrowSide(this._menu, this._settings);
+        const xpPopupOffset = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        ) && !panelIsTop(this._settings);
+        if (xpPopupOffset)
+            this._menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);
+        else
+            this._menu._boxPointer.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
         if (panelIsTop(this._settings)) {
             this._icon.icon_name = 'pan-down-symbolic';
             this._menu.actor.remove_style_class_name(
@@ -374,9 +388,15 @@ export class TrayOverflowController {
     _isTrayIndicator(role, indicator) {
         if (role === TRAY_OVERFLOW_ROLE)
             return false;
+        const typeName = indicator.constructor.name;
+        if (typeName === 'IndicatorStatusIcon' &&
+            (!indicator.icon || !indicator.icon._indicator))
+            return false;
+        if (typeName === 'IndicatorTrayIcon' && !indicator.isReady())
+            return false;
         if (TRAY_ROLE_PREFIXES.some(prefix => role.startsWith(prefix)))
             return true;
-        return TRAY_TYPE_NAMES.includes(indicator.constructor.name);
+        return TRAY_TYPE_NAMES.includes(typeName);
     }
 
     _sync() {
@@ -452,6 +472,9 @@ export class TrayOverflowController {
     }
 
     _stash(role, indicator) {
+        if (!this._isTrayIndicator(role, indicator))
+            return;
+
         const container = indicator.container;
         const parent = container.get_parent();
         if (!parent)

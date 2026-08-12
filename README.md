@@ -95,8 +95,13 @@ Application buttons support:
 - **Right click:** open GNOME's application menu. Nautilus additionally shows
   Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts by
   default; these shortcuts can be disabled in the extension settings.
-- **Drag:** while buttons are combined, rearrange favourites or drag a running
-  application into the favourite section to pin it.
+- **Drag:** rearrange pinned applications within the pinned section and move
+  running application groups in every combine mode. In uncombined modes, all
+  windows from one application move together; a pinned application's first
+  window stays in the pinned section while its later windows stay grouped and
+  movable in the running section. When application overflow is enabled, both
+  overflow styles are part of the same ordering surface as the visible
+  taskbar, and the overflow popup remains open while dragging.
 - **Hover:** show live previews for open windows. A preview can activate or
   close its exact window.
 

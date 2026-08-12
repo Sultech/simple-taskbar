@@ -3,6 +3,7 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -38,6 +39,7 @@ export class OverviewIntegration {
         this._tracker = Shell.WindowTracker.get_default();
         this._startupState = null;
         this._startupOverviewId = 0;
+        this._maximizedWindowDrag = null;
     }
 
     enable() {
@@ -56,6 +58,21 @@ export class OverviewIntegration {
             this._settings,
             'changed::panel-autohide-enabled',
             () => this.queueRelayout()
+        );
+        this._connect(
+            Main.overview,
+            'window-drag-begin',
+            (_overview, window) => this._beginMaximizedWindowDrag(window)
+        );
+        this._connect(
+            Main.overview,
+            'window-drag-end',
+            (_overview, window) => this._endMaximizedWindowDrag(window)
+        );
+        this._connect(
+            Main.overview,
+            'window-drag-cancelled',
+            (_overview, window) => this._cancelMaximizedWindowDrag(window)
         );
         this._connect(
             Main.extensionManager,
@@ -156,12 +173,59 @@ export class OverviewIntegration {
         this._restoreStartupOverview();
         this._restoreDash(restoreVisible);
         this.queueRelayout();
+        this._maximizedWindowDrag = null;
         this._tracker = null;
         this._settings = null;
     }
 
     _connect(object, signal, callback) {
         this._signals.push([object, object.connect(signal, callback)]);
+    }
+
+    _beginMaximizedWindowDrag(window) {
+        if (!window.maximized_horizontally || !window.maximized_vertically) {
+            this._maximizedWindowDrag = null;
+            return;
+        }
+
+        this._maximizedWindowDrag = {
+            window,
+            monitorIndex: window.get_monitor(),
+        };
+    }
+
+    _endMaximizedWindowDrag(window) {
+        const drag = this._maximizedWindowDrag;
+        this._maximizedWindowDrag = null;
+        if (!drag || drag.window !== window ||
+            drag.monitorIndex === window.get_monitor()) {
+            return;
+        }
+
+        const monitorIndex = window.get_monitor();
+        this._unmaximizeWindow(window);
+        window.move_to_monitor(monitorIndex);
+        this._maximizeWindow(window);
+    }
+
+    _cancelMaximizedWindowDrag(window) {
+        const drag = this._maximizedWindowDrag;
+        if (drag && drag.window === window)
+            this._maximizedWindowDrag = null;
+    }
+
+    _maximizeWindow(window) {
+        const args = window.maximize.length
+            ? [Meta.MaximizeFlags.BOTH]
+            : [];
+        window.maximize(...args);
+    }
+
+    _unmaximizeWindow(window) {
+        const args = window.unmaximize.length
+            ? [Meta.MaximizeFlags.BOTH]
+            : [];
+        window.unmaximize(...args);
     }
 
     _queueStartupOverview() {
@@ -306,10 +370,7 @@ export class OverviewIntegration {
 
         const scaleFactor = St.ThemeContext.get_for_stage(global.stage)
             .scale_factor;
-        return Math.max(
-            this._panelHeight,
-            OVERVIEW_LABEL_MARGIN * scaleFactor
-        );
+        return OVERVIEW_LABEL_MARGIN * scaleFactor;
     }
 
     _adaptAllocation() {

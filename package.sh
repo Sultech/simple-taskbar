@@ -31,6 +31,7 @@ gnome-extensions pack \
     --extra-source=panelItemOrder.js \
     --extra-source=panelMenuPositioner.js \
     --extra-source=panelPosition.js \
+    --extra-source=panelSizing.js \
     --extra-source=folderMenuController.js \
     --extra-source=fileManagerPlacesSection.js \
     --extra-source=favoritesIntegration.js \
@@ -41,12 +42,15 @@ gnome-extensions pack \
     --extra-source=keybindingUtils.js \
     --extra-source=overviewIntegration.js \
     --extra-source=multiMonitorController.js \
+    --extra-source=notificationAreaController.js \
     --extra-source=notificationBannerController.js \
     --extra-source=panelController.js \
     --extra-source=panelAutoHideController.js \
     --extra-source=panelInteractionController.js \
     --extra-source=quickSettingsPowerController.js \
+    --extra-source=quickSettingsXpIconController.js \
     --extra-source=startButtonController.js \
+    --extra-source=windowsXpStartButton.js \
     --extra-source=prefs \
     --extra-source=startMenuAppMenu.js \
     --extra-source=startMenuKeybindings.js \
@@ -54,6 +58,7 @@ gnome-extensions pack \
     --extra-source=startMenuSearchController.js \
     --extra-source=switcherKeybindingRouter.js \
     --extra-source=taskbarAppMenu.js \
+    --extra-source=taskbarDefaults.js \
     --extra-source=taskbarController.js \
     --extra-source=taskManagerUtils.js \
     --extra-source=trayOverflowController.js \
@@ -65,6 +70,9 @@ gnome-extensions pack \
     --extra-source=windowController.js \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
+    --extra-source=windowsXpTheme.js \
+    --extra-source=xp-panel-gradient.svg \
+    --extra-source=xp-overflow-gradient.svg \
     --extra-source=icons \
     --podir=po \
     --out-dir "$OUT_DIR" \

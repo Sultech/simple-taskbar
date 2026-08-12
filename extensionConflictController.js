@@ -20,6 +20,7 @@ export class ExtensionConflictController {
         this._signals = [];
         this._pendingUuids = new Set();
         this._disableIdleId = 0;
+        this._selfDisableIdleId = 0;
     }
 
     enable() {
@@ -33,6 +34,13 @@ export class ExtensionConflictController {
             'extension-state-changed',
             (_manager, extension) => {
                 const uuid = extension?.uuid;
+                if (ALWAYS_CONFLICTING_UUIDS.includes(uuid) &&
+                    extension.enabled &&
+                    this._extensionIsActive(extension)) {
+                    this._queueSelfDisable();
+                    return;
+                }
+
                 if (!this._shouldDisable(uuid) ||
                     !this._extensionIsActive(extension)) {
                     return;
@@ -117,11 +125,31 @@ export class ExtensionConflictController {
         );
     }
 
+    _queueSelfDisable() {
+        if (this._selfDisableIdleId)
+            return;
+
+        this._selfDisableIdleId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._selfDisableIdleId = 0;
+                Main.extensionManager.disableExtension(
+                    'simple-taskbar@sultech'
+                );
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
     _cancelPendingDisable() {
         if (this._disableIdleId) {
             GLib.Source.remove(this._disableIdleId);
             this._disableIdleId = 0;
         }
         this._pendingUuids.clear();
+        if (this._selfDisableIdleId) {
+            GLib.Source.remove(this._selfDisableIdleId);
+            this._selfDisableIdleId = 0;
+        }
     }
 }

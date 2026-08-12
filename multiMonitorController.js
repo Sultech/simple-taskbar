@@ -16,10 +16,18 @@ import {
 } from './panelButtonPaddingController.js';
 import {placePanelItems} from './panelItemOrder.js';
 import {PanelInteractionController} from './panelInteractionController.js';
-import {panelArrowSide, panelIsTop} from './panelPosition.js';
+import {
+    panelArrowSide,
+    panelIsTop,
+    removeXpPopupOffset,
+    syncXpPopupOffset,
+} from './panelPosition.js';
 import {
     QuickSettingsPowerController,
 } from './quickSettingsPowerController.js';
+import {
+    QuickSettingsXpIconController,
+} from './quickSettingsXpIconController.js';
 import {StartButtonController} from './startButtonController.js';
 import {TaskbarController} from './taskbarController.js';
 import {TaskbarViewport} from './taskbarViewport.js';
@@ -31,6 +39,7 @@ import {
     allocateExpandedSidePanel,
     constrainTaskbarWidth,
 } from './taskbarLayout.js';
+import {NotificationAreaController} from './notificationAreaController.js';
 import {VolumeMixerController} from './volumeMixerController.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
@@ -297,6 +306,7 @@ class SecondaryTaskbarPanel {
         openPreferences,
     }) {
         this._settings = settings;
+        this._extensionDir = extensionDir;
         this._monitor = monitor;
         this._openPreferencesCallback = openPreferences;
         this._signals = [];
@@ -364,6 +374,7 @@ class SecondaryTaskbarPanel {
             new ApplicationOverflowController({
                 settings,
                 taskbarController: this._taskbarController,
+                previewController: this._windowPreviews,
                 viewport: this._taskbarViewport,
             });
         this._taskbarBin = this._applicationOverflowController.actor;
@@ -386,6 +397,8 @@ class SecondaryTaskbarPanel {
         this._indicators = new Map();
         this._volumeMixerController = null;
         this._quickSettingsPowerController = null;
+        this._quickSettingsXpIconController = null;
+        this._notificationAreaController = new NotificationAreaController();
     }
 
     enable() {
@@ -405,15 +418,22 @@ class SecondaryTaskbarPanel {
                     quickSettings
                 );
             this._quickSettingsPowerController.enable();
+            this._quickSettingsXpIconController =
+                new QuickSettingsXpIconController(
+                    this._settings,
+                    this._extensionDir,
+                    quickSettings
+                );
+            this._quickSettingsXpIconController.enable();
         }
-        this._applyLayout();
-        this._syncTheme();
-        this._buttonPaddingController.enable();
         Main.layoutManager.addChrome(this.actor, {
             affectsStruts: true,
             trackFullscreen: true,
         });
         this._position();
+        this._applyLayout();
+        this._syncTheme();
+        this._buttonPaddingController.enable();
         this._startButtonController.enable();
         this._applicationOverflowController.enable();
         this._taskbarController.enable();
@@ -488,8 +508,13 @@ class SecondaryTaskbarPanel {
         if (this._volumeMixerController)
             this._volumeMixerController.destroy();
         this._volumeMixerController = null;
+        if (this._quickSettingsXpIconController)
+            this._quickSettingsXpIconController.destroy();
+        this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController?.destroy();
         this._quickSettingsPowerController = null;
+        this._notificationAreaController.restore(this._rightBox);
+        this._notificationAreaController.destroy();
         this._releaseIndicators();
         this._folderMenuController.destroy();
         this._folderMenuController = null;
@@ -501,8 +526,10 @@ class SecondaryTaskbarPanel {
         this._leftBox = null;
         this._centerBox = null;
         this._rightBox = null;
+        this._notificationAreaController = null;
         this._taskbarBin = null;
         this._monitor = null;
+        this._extensionDir = null;
         this._openPreferencesCallback = null;
         this._settings = null;
     }
@@ -548,6 +575,14 @@ class SecondaryTaskbarPanel {
         this._connect(this._settings, 'changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
         });
+        this._connect(
+            this._settings,
+            'changed::windows-xp-theme-enabled',
+            () => {
+                this._applyLayout();
+                this._syncTheme();
+            }
+        );
         this._connect(this._settings, 'changed::app-alignment', () => {
             this._applyAppearance();
             this._applyLayout();
@@ -645,12 +680,26 @@ class SecondaryTaskbarPanel {
         ])
             actor?.get_parent()?.remove_child(actor);
 
+        const windowsXpThemeEnabled = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        this._notificationAreaController.sync(
+            windowsXpThemeEnabled ? [quickSettings, dateMenu] : [],
+            dateMenu,
+            windowsXpThemeEnabled
+        );
+        for (const indicator of this._indicators.values()) {
+            const menu = indicator.menu;
+            if (menu && menu._boxPointer)
+                syncXpPopupOffset(menu, this._settings);
+        }
+
         const boxes = {
             left: this._leftBox,
             center: this._centerBox,
             right: this._rightBox,
         };
-        placePanelItems(boxes, [
+        const items = [
             {
                 id: 'start-button',
                 actor: startButton,
@@ -677,19 +726,42 @@ class SecondaryTaskbarPanel {
                 position: this._settings.get_string('folder-menu-position'),
                 visible: this._settings.get_boolean('folder-menu-enabled'),
             },
-            {
-                id: 'system-menu',
-                actor: quickSettings,
-                position: this._settings.get_string('system-menu-position'),
-                visible: true,
-            },
-            {
+        ];
+        if (windowsXpThemeEnabled) {
+            items.push({
                 id: 'clock',
-                actor: dateMenu,
+                actor: this._notificationAreaController.actor,
                 position: this._settings.get_string('clock-position'),
                 visible: true,
-            },
-        ], this._settings.get_strv('panel-item-order'));
+            });
+        } else {
+            items.push(
+                {
+                    id: 'system-menu',
+                    actor: quickSettings,
+                    position: this._settings.get_string(
+                        'system-menu-position'
+                    ),
+                    visible: true,
+                },
+                {
+                    id: 'clock',
+                    actor: dateMenu,
+                    position: this._settings.get_string('clock-position'),
+                    visible: true,
+                }
+            );
+        }
+        placePanelItems(
+            boxes,
+            items,
+            this._settings.get_strv('panel-item-order')
+        );
+        this._notificationAreaController.syncRightBoxActors(
+            this._rightBox,
+            new Set(items.map(item => item.actor)),
+            windowsXpThemeEnabled
+        );
         this._syncActivitiesVisibility();
         this._applyAppearance();
         this._updateTaskbarWidth();
@@ -803,6 +875,8 @@ class SecondaryTaskbarPanel {
             const menu = indicator.menu;
             if (menu) {
                 menu.close();
+                if (menu._boxPointer)
+                    removeXpPopupOffset(menu);
                 menu.actor.remove_style_class_name(
                     'simple-taskbar-bottom-panel-menu'
                 );

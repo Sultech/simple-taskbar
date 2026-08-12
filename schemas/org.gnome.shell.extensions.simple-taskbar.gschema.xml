@@ -3,7 +3,7 @@
   <schema id="org.gnome.shell.extensions.simple-taskbar"
           path="/org/gnome/shell/extensions/simple-taskbar/">
     <key name="panel-height" type="i">
-      <range min="32" max="80"/>
+      <range min="30" max="80"/>
       <default>49</default>
       <summary>Taskbar height</summary>
     </key>
@@ -45,7 +45,7 @@
       <summary>Application icon size</summary>
     </key>
     <key name="icon-spacing" type="i">
-      <range min="0" max="16"/>
+      <range min="-5" max="16"/>
       <default>3</default>
       <summary>Space between application buttons</summary>
     </key>
@@ -160,6 +160,10 @@
       <default>'right'</default>
       <summary>Place the Show Desktop button on the left or right</summary>
     </key>
+    <key name="windows-xp-show-desktop-position" type="i">
+      <default>0</default>
+      <summary>Position of Show Desktop among XP pinned applications</summary>
+    </key>
     <key name="folder-menu-enabled" type="b">
       <default>false</default>
       <summary>Show a selected folder menu on the taskbar</summary>
@@ -189,6 +193,10 @@
       <default>false</default>
       <summary>Use a GNOME-style panel without taskbar applications</summary>
     </key>
+    <key name="windows-xp-theme-enabled" type="b">
+      <default>false</default>
+      <summary>Use Windows XP taskbar dimensions</summary>
+    </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>
@@ -208,7 +216,7 @@
       <summary>Choose when windows from the same application are combined</summary>
     </key>
     <key name="application-overflow-enabled" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Show application buttons that do not fit in an overflow popup</summary>
     </key>
     <key name="application-overflow-style" type="s">

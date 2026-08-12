@@ -41,6 +41,31 @@ export function normalizePanelItemOrder(order) {
     return normalized;
 }
 
+export function getWindowsXpPanelItemOrder(order, activitiesPosition) {
+    const normalized = normalizePanelItemOrder(order);
+    const xpOrder = normalized.filter(id =>
+        id !== 'show-desktop');
+    xpOrder.splice(xpOrder.indexOf('right-box'), 1);
+    xpOrder.splice(xpOrder.indexOf('center-box') + 1, 0, 'right-box');
+    xpOrder.splice(xpOrder.indexOf('start-button'), 1);
+    xpOrder.splice(xpOrder.indexOf('left-box'), 0, 'start-button');
+    if (activitiesPosition === 'left') {
+        xpOrder.splice(xpOrder.indexOf('activities'), 1);
+        xpOrder.splice(xpOrder.indexOf('left-box') + 1, 0, 'activities');
+    } else if (activitiesPosition === 'right') {
+        xpOrder.splice(xpOrder.indexOf('activities'), 1);
+        xpOrder.splice(xpOrder.indexOf('right-box'), 0, 'activities');
+    }
+    for (const id of ['tray-overflow', 'system-menu', 'clock'])
+        xpOrder.splice(xpOrder.indexOf(id), 1);
+    const showDesktopIndex = activitiesPosition === 'left'
+        ? xpOrder.indexOf('activities') + 1
+        : xpOrder.indexOf('start-button') + 1;
+    xpOrder.splice(showDesktopIndex, 0, 'show-desktop');
+    xpOrder.push('tray-overflow', 'system-menu', 'clock');
+    return xpOrder;
+}
+
 export function orderPanelItems(items, order) {
     const itemsById = new Map(items.map(item => [item.id, item]));
     return normalizePanelItemOrder(order)
