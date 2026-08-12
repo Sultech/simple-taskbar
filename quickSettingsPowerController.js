@@ -41,15 +41,20 @@ export class QuickSettingsPowerController {
         this._disconnectShutdownItem();
         if (shutdownItem)
             shutdownItem._sync();
-        const panelIndicator = this._systemIndicator._indicator;
+        const panelIndicator = this._systemIndicator?._indicator;
         this._disconnectSystemIndicator();
-        panelIndicator.show();
+        if (panelIndicator)
+            panelIndicator.show();
         this._settings = null;
         this._quickSettings = null;
     }
 
     _sync() {
-        this._setSystemIndicator(this._quickSettings._system);
+        const systemIndicator = this._quickSettings._system;
+        if (!systemIndicator)
+            return;
+
+        this._setSystemIndicator(systemIndicator);
         this._setShutdownItem(this._findShutdownItem());
         if (this._shutdownItem) {
             if (this._shouldReplacePowerMenu()) {
