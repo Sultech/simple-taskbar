@@ -2,6 +2,12 @@ extension.js
 showDesktopButtonController.js
 applicationOverflowController.js
 prefs.js
+prefs/panelAppearancePage.js
+prefs/panelItemsPage.js
+prefs/preferencesDialogs.js
+prefs/preferencesWidgets.js
+prefs/startMenuPage.js
+prefs/windowSwitchingPage.js
 windowsStartMenu.js
 startMenuAppMenu.js
 folderMenuController.js
