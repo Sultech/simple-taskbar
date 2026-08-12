@@ -49,6 +49,7 @@ gnome-extensions pack \
     --extra-source=panelInteractionController.js \
     --extra-source=quickSettingsPowerController.js \
     --extra-source=quickSettingsXpIconController.js \
+    --extra-source=showDesktopButtonController.js \
     --extra-source=startButtonController.js \
     --extra-source=windowsXpStartButton.js \
     --extra-source=prefs \
@@ -58,8 +59,13 @@ gnome-extensions pack \
     --extra-source=startMenuSearchController.js \
     --extra-source=switcherKeybindingRouter.js \
     --extra-source=taskbarAppMenu.js \
+    --extra-source=taskbarDragController.js \
     --extra-source=taskbarDefaults.js \
     --extra-source=taskbarController.js \
+    --extra-source=taskbarItemContainer.js \
+    --extra-source=taskbarItemInteractionController.js \
+    --extra-source=taskbarItemLifecycle.js \
+    --extra-source=taskbarShowDesktopController.js \
     --extra-source=taskManagerUtils.js \
     --extra-source=trayOverflowController.js \
     --extra-source=taskbarLayout.js \
@@ -71,6 +77,7 @@ gnome-extensions pack \
     --extra-source=windowPreviewController.js \
     --extra-source=windowsStartMenu.js \
     --extra-source=windowsXpTheme.js \
+    --extra-source=windowsXpModeController.js \
     --extra-source=xp-panel-gradient.svg \
     --extra-source=xp-overflow-gradient.svg \
     --extra-source=icons \

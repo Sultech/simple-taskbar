@@ -1,17 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Clutter from 'gi://Clutter';
-import Gio from 'gi://Gio';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    Extension,
-    gettext as _,
-} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {ExtensionConflictController} from './extensionConflictController.js';
 import {
@@ -33,6 +28,9 @@ import {
 import {
     QuickSettingsXpIconController,
 } from './quickSettingsXpIconController.js';
+import {
+    ShowDesktopButtonController,
+} from './showDesktopButtonController.js';
 import {StartButtonController} from './startButtonController.js';
 import {
     SwitcherKeybindingRouter,
@@ -43,18 +41,8 @@ import {VolumeMixerController} from './volumeMixerController.js';
 import {WindowController} from './windowController.js';
 import {WindowPreviewController} from './windowPreviewController.js';
 import {OverviewIntegration} from './overviewIntegration.js';
-import {
-    ICON_VERTICAL_RESERVE,
-    STANDARD_MIN_PANEL_HEIGHT,
-} from './panelSizing.js';
-import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
-import {
-    applyWindowsXpThemeAppearance,
-    applyWindowsXpThemeSettings,
-    WINDOWS_XP_ICON_SPACING,
-    WINDOWS_XP_ICON_SIZE,
-    WINDOWS_XP_PANEL_HEIGHT,
-} from './windowsXpTheme.js';
+import {ICON_VERTICAL_RESERVE} from './panelSizing.js';
+import {WindowsXpModeController} from './windowsXpModeController.js';
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
@@ -72,7 +60,37 @@ export default class SimpleTaskbarExtension extends Extension {
         this._notificationBannerController =
             new NotificationBannerController(this._settings);
         this._notificationBannerController.enable();
-        this._syncWindowsXpTheme(false);
+        this._windowsXpModeController = new WindowsXpModeController(
+            this._settings,
+            {
+                onDefaultPanelChanged: () => this._syncTaskbarVisibility(),
+                onIconSizeChanged: iconSize => {
+                    this._iconSize = iconSize;
+                    this._startButtonController.applyAppearance(
+                        this._iconSize,
+                        this._settings.get_int('start-button-padding')
+                    );
+                    this._taskbarController.setIconSize(this._iconSize);
+                    this._panelController.updateTaskbarWidth();
+                },
+                onIconSpacingChanged: () => this._applyTaskbarAppearance(),
+                onModeChanged: () => {
+                    this._applicationOverflowController.clearOverflow();
+                    this._startButtonController.applyAppearance(
+                        this._iconSize,
+                        this._settings.get_int('start-button-padding')
+                    );
+                    this._panelController.updateTaskbarWidth();
+                },
+                onPanelHeightChanged: panelHeight => {
+                    this._panelHeight = panelHeight;
+                    this._taskbarController.setPanelHeight(this._panelHeight);
+                    this._overviewIntegration.setPanelHeight(this._panelHeight);
+                    this._panelController.setPanelHeight(this._panelHeight);
+                },
+            }
+        );
+        this._windowsXpModeController.applyInitialSettings();
         this._iconSize = this._settings.get_int('icon-size');
         this._panelHeight = this._settings.get_int('panel-height');
         if (!this._settings.get_boolean('default-gnome-panel') &&
@@ -179,7 +197,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController.applyLayout();
         this._taskbarController.setShowDesktopButton(
             this._showDesktopButton,
-            button => this._replaceShowDesktopButton(button)
+            button => this._showDesktopButtonController.replace(button)
         );
         this._panelInteractionController.enable();
         this._startButtonController.enable();
@@ -224,6 +242,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._gridAltTabController.enable();
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
+        this._windowsXpModeController.enable();
         this._connectSignals();
         this._startButtonController.syncKeybindings();
         this._panelController.position();
@@ -232,7 +251,8 @@ export default class SimpleTaskbarExtension extends Extension {
 
     disable() {
         this._settings.disconnectObject(this);
-        this._showDesktopButton.disconnectObject(this);
+        this._windowsXpModeController.destroy();
+        this._windowsXpModeController = null;
 
         this._gridAltTabController.destroy();
         this._gridAltTabController = null;
@@ -273,11 +293,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._taskbarController = null;
         this._windowController = null;
         this._taskbarViewport.destroy();
-        this._showDesktopButton.child = null;
-        this._showDesktopVisual.destroy();
-        this._showDesktopVisual = null;
-        this._showDesktopIcon = null;
-        this._showDesktopButton.destroy();
+        this._showDesktopButtonController.destroy();
+        this._showDesktopButtonController = null;
         this._overviewIntegration.destroy();
         this._overviewIntegration = null;
 
@@ -334,243 +351,23 @@ export default class SimpleTaskbarExtension extends Extension {
         this._taskbarBin.visible =
             !this._settings.get_boolean('default-gnome-panel');
 
-        this._createShowDesktopButton();
-    }
-
-    _createShowDesktopButton() {
-        this._showDesktopIcon = new St.Icon({
-            gicon: new Gio.FileIcon({
-                file: this.dir
-                    .get_child('icons')
-                    .get_child('taskbar')
-                    .get_child('xp')
-                    .get_child('desktop.png'),
-            }),
-            icon_size: 16,
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-        this._showDesktopIcon.translation_y = 1;
-        const showDesktopGlass = new St.Widget({
-            style_class: 'simple-taskbar-show-desktop-glass',
-            x: 2,
-            y: 5,
-            width: 26,
-            height: 21,
-        });
-        const showDesktopTexture = new St.Widget({
-            style_class: 'simple-taskbar-show-desktop-texture',
-            x: 2,
-            y: 5,
-            width: 26,
-            height: 21,
-        });
-        showDesktopTexture.set_style(
-            'background-size: 26px 21px;'
-        );
-        const showDesktopBorder = new St.Widget({
-            style_class: 'simple-taskbar-show-desktop-border',
-            x: 0,
-            y: 3,
-            width: 30,
-            height: 25,
-        });
-        const showDesktopIconHost = new St.Widget({
-            layout_manager: new Clutter.BinLayout(),
-            x: 0,
-            y: 0,
-            width: 30,
-            height: WINDOWS_XP_PANEL_HEIGHT,
-        });
-        showDesktopIconHost.add_child(this._showDesktopIcon);
-        this._showDesktopVisual = new St.Widget({
-            layout_manager: new Clutter.FixedLayout(),
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.FILL,
-            y_expand: true,
-            width: 30,
-            height: WINDOWS_XP_PANEL_HEIGHT,
-            clip_to_allocation: false,
-        });
-        this._showDesktopVisual.add_child(showDesktopGlass);
-        this._showDesktopVisual.add_child(showDesktopTexture);
-        this._showDesktopVisual.add_child(showDesktopBorder);
-        this._showDesktopVisual.add_child(showDesktopIconHost);
-        this._showDesktopButton = new St.Button({
-            style_class: 'panel-button simple-taskbar-show-desktop',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            toggle_mode: true,
-            accessible_name: _('Show desktop'),
-        });
-        this._syncShowDesktopIcon();
-        this._windowController.setShowDesktopButton(this._showDesktopButton);
-        this._showDesktopButton.connectObject(
-            'clicked',
-            () => this._windowController.toggleDesktop(),
-            this
-        );
-    }
-
-    _replaceShowDesktopButton(button) {
-        const checked = button.checked;
-        button.disconnectObject(this);
-        button.child = null;
-        this._showDesktopVisual.destroy();
-        button.destroy();
-
-        this._createShowDesktopButton();
-        this._showDesktopButton.checked = checked;
-        this._panelController.setShowDesktopButton(this._showDesktopButton);
-        return this._showDesktopButton;
-    }
-
-    _syncWindowsXpTheme(modeChanged) {
-        if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
-            if (modeChanged &&
-                !this._settings.get_boolean('default-gnome-panel')) {
-                applyDefaultTaskbarSettings(this._settings);
-                return;
-            }
-            if (!this._settings.get_boolean('default-gnome-panel')) {
-                const minimumPanelHeight =
-                    this._settings.get_int('icon-size') +
-                    ICON_VERTICAL_RESERVE;
-                if (this._settings.get_int('panel-height') <
-                    minimumPanelHeight) {
-                    this._settings.set_int(
-                        'panel-height',
-                        minimumPanelHeight
-                    );
+        this._showDesktopButtonController =
+            new ShowDesktopButtonController(
+                this._settings,
+                this.dir,
+                () => this._windowController.toggleDesktop(),
+                button => {
+                    this._showDesktopButton = button;
+                    this._windowController.setShowDesktopButton(button);
+                    this._panelController.setShowDesktopButton(button);
                 }
-            }
-            return;
-        }
-
-        if (this._settings.get_boolean('default-gnome-panel'))
-            this._settings.set_boolean('default-gnome-panel', false);
-        if (modeChanged) {
-            this._settings.set_boolean(
-                'activities-button-visible',
-                false
             );
-        }
-        applyWindowsXpThemeAppearance(this._settings);
-        applyWindowsXpThemeSettings(this._settings);
-    }
-
-    _syncShowDesktopIcon() {
-        this._showDesktopButton.child =
-            this._settings.get_boolean('windows-xp-theme-enabled')
-                ? this._showDesktopVisual
-                : null;
+        this._showDesktopButtonController.enable();
+        this._showDesktopButton = this._showDesktopButtonController.actor;
+        this._windowController.setShowDesktopButton(this._showDesktopButton);
     }
 
     _connectSignals() {
-        this._settings.connectObject('changed::icon-size', () => {
-            this._iconSize = this._settings.get_int('icon-size');
-            if (this._settings.get_boolean('windows-xp-theme-enabled') &&
-                this._iconSize !== WINDOWS_XP_ICON_SIZE) {
-                this._settings.set_int(
-                    'icon-size',
-                    WINDOWS_XP_ICON_SIZE
-                );
-                return;
-            }
-            const minimumPanelHeight =
-                this._iconSize + ICON_VERTICAL_RESERVE;
-            if (!this._settings.get_boolean('default-gnome-panel') &&
-                !this._settings.get_boolean('windows-xp-theme-enabled') &&
-                this._settings.get_int('panel-height') < minimumPanelHeight) {
-                this._settings.set_int('panel-height', minimumPanelHeight);
-            }
-            this._startButtonController.applyAppearance(
-                this._iconSize,
-                this._settings.get_int('start-button-padding')
-            );
-            this._taskbarController.setIconSize(this._iconSize);
-            this._panelController.updateTaskbarWidth();
-        }, this);
-        this._settings.connectObject('changed::icon-spacing', () => {
-            const windowsXpThemeEnabled = this._settings.get_boolean(
-                'windows-xp-theme-enabled'
-            );
-            const iconSpacing = this._settings.get_int('icon-spacing');
-            if (windowsXpThemeEnabled &&
-                iconSpacing !== WINDOWS_XP_ICON_SPACING) {
-                this._settings.set_int(
-                    'icon-spacing',
-                    WINDOWS_XP_ICON_SPACING
-                );
-                return;
-            }
-            if (!windowsXpThemeEnabled && iconSpacing < 0) {
-                this._settings.set_int('icon-spacing', 0);
-                return;
-            }
-            this._applyTaskbarAppearance();
-        }, this);
-        this._settings.connectObject('changed::default-gnome-panel', () => {
-            if (this._settings.get_boolean('windows-xp-theme-enabled') &&
-                this._settings.get_boolean('default-gnome-panel')) {
-                applyWindowsXpThemeSettings(this._settings);
-                this._settings.set_boolean('default-gnome-panel', false);
-                return;
-            }
-            if (!this._settings.get_boolean('default-gnome-panel') &&
-                !this._settings.get_boolean('windows-xp-theme-enabled')) {
-                applyDefaultTaskbarSettings(this._settings);
-            }
-            this._syncTaskbarVisibility();
-        }, this);
-        this._settings.connectObject(
-            'changed::windows-xp-theme-enabled',
-            () => {
-                this._applicationOverflowController.clearOverflow();
-                this._syncWindowsXpTheme(true);
-                this._syncShowDesktopIcon();
-                this._startButtonController.applyAppearance(
-                    this._iconSize,
-                    this._settings.get_int('start-button-padding')
-                );
-                this._panelController.updateTaskbarWidth();
-            },
-            this
-        );
-        for (const key of [
-            'panel-button-padding',
-            'app-alignment',
-            'start-button-position',
-            'use-pinned-apps-as-launchers',
-            'combine-app-buttons-mode',
-            'application-overflow-enabled',
-            'hide-app-labels',
-            'custom-indicator-colors-enabled',
-            'custom-panel-color-enabled',
-            'activities-button-position',
-            'panel-border-enabled',
-            'panel-border-light-enabled',
-            'panel-position',
-            'clock-position',
-            'system-menu-position',
-            'transparency-enabled',
-            'start-menu-follow-panel-transparency',
-            'start-menu-super-key',
-            'show-desktop-button-position',
-            'show-desktop-button-visible',
-            'windows-start-menu-enabled',
-            'folder-menu-position',
-            'panel-item-order',
-        ]) {
-            this._settings.connectObject(`changed::${key}`, () => {
-                if (this._settings.get_boolean(
-                    'windows-xp-theme-enabled'
-                )) {
-                    applyWindowsXpThemeSettings(this._settings);
-                }
-            }, this);
-        }
         this._settings.connectObject(
             'changed::multi-window-click-spread',
             () => {
@@ -582,39 +379,6 @@ export default class SimpleTaskbarExtension extends Extension {
             },
             this
         );
-        this._settings.connectObject('changed::panel-height', () => {
-            this._panelHeight = this._settings.get_int('panel-height');
-            const windowsXpThemeEnabled = this._settings.get_boolean(
-                'windows-xp-theme-enabled'
-            );
-            if (windowsXpThemeEnabled &&
-                this._panelHeight !== WINDOWS_XP_PANEL_HEIGHT) {
-                this._settings.set_int(
-                    'panel-height',
-                    WINDOWS_XP_PANEL_HEIGHT
-                );
-                return;
-            }
-            if (!windowsXpThemeEnabled &&
-                !this._settings.get_boolean('default-gnome-panel') &&
-                this._panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
-                this._settings.set_int(
-                    'panel-height',
-                    STANDARD_MIN_PANEL_HEIGHT
-                );
-                return;
-            }
-            const maximumIconSize =
-                this._panelHeight - ICON_VERTICAL_RESERVE;
-            if (!windowsXpThemeEnabled &&
-                !this._settings.get_boolean('default-gnome-panel') &&
-                this._settings.get_int('icon-size') > maximumIconSize) {
-                this._settings.set_int('icon-size', maximumIconSize);
-            }
-            this._taskbarController.setPanelHeight(this._panelHeight);
-            this._overviewIntegration.setPanelHeight(this._panelHeight);
-            this._panelController.setPanelHeight(this._panelHeight);
-        }, this);
         this._settings.connectObject('changed::start-button-padding', () => {
             this._startButtonController.applyAppearance(
                 this._iconSize,

@@ -1,4 +1,5 @@
 extension.js
+showDesktopButtonController.js
 applicationOverflowController.js
 prefs.js
 windowsStartMenu.js
