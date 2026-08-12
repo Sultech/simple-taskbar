@@ -64,6 +64,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'gnome-start-button-visible', true);
     setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'panel-theme-follow-system', true);
+    setBoolean(settings, 'transparency-enabled', true);
     setBoolean(settings, 'panel-border-enabled', false);
     setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);
@@ -73,6 +74,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'nautilus-places-enabled', true);
     setBoolean(settings, 'start-menu-follow-panel-theme', true);
+    setBoolean(settings, 'start-menu-follow-panel-transparency', false);
     setBoolean(settings, 'super-e-file-manager-enabled', true);
     setString(
         settings,

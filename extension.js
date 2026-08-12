@@ -532,6 +532,8 @@ export default class SimpleTaskbarExtension extends Extension {
             'panel-position',
             'clock-position',
             'system-menu-position',
+            'transparency-enabled',
+            'start-menu-follow-panel-transparency',
             'start-menu-super-key',
             'show-desktop-button-position',
             'show-desktop-button-visible',

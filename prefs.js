@@ -975,11 +975,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         const updatePanelTransparencyControls = () => {
             const blocked = blurMyShellPanelBlurEnabled();
-            transparencySwitch.sensitive = !blocked;
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
+            transparencySwitch.sensitive = !blocked &&
+                !windowsXpThemeEnabled;
             transparencySwitch.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : transparencySwitchSubtitle;
-            transparencyRow.sensitive = !blocked && transparencySwitch.active;
+            transparencyRow.sensitive = !blocked &&
+                !windowsXpThemeEnabled && transparencySwitch.active;
             transparencyRow.subtitle = blocked
                 ? panelBlurTransparencySubtitle
                 : transparencyRowSubtitle;
@@ -987,6 +992,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         syncPanelTransparencyControls = updatePanelTransparencyControls;
         transparencySwitch.connect(
             'notify::active',
+            updatePanelTransparencyControls
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updatePanelTransparencyControls
         );
         updatePanelTransparencyControls();
@@ -1732,8 +1741,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const panelBlur = blurMyShellPanelBlurEnabled();
             const popupBlur = blurMyShellPopupBlurEnabled();
             const blocked = panelBlur || popupBlur;
+            const windowsXpThemeEnabled = window._settings.get_boolean(
+                'windows-xp-theme-enabled'
+            );
             followPanelTransparencySwitch.sensitive =
-                windowsStartMenuSwitch.active && !blocked;
+                windowsStartMenuSwitch.active && !blocked &&
+                !windowsXpThemeEnabled;
             if (!blocked) {
                 followPanelTransparencySwitch.subtitle =
                     followPanelTransparencySubtitle;
@@ -1751,6 +1764,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         syncStartMenuTransparencyControl = updateStartMenuTransparencyRow;
         windowsStartMenuSwitch.connect(
             'notify::active',
+            updateStartMenuTransparencyRow
+        );
+        window._settings.connect(
+            'changed::windows-xp-theme-enabled',
             updateStartMenuTransparencyRow
         );
         updateStartMenuTransparencyRow();

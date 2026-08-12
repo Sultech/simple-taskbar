@@ -99,6 +99,8 @@ export function applyWindowsXpThemeSettings(settings) {
     );
     setBoolean(settings, 'use-pinned-apps-as-launchers', true);
     setBoolean(settings, 'windows-start-menu-enabled', true);
+    setBoolean(settings, 'transparency-enabled', false);
+    setBoolean(settings, 'start-menu-follow-panel-transparency', false);
     setBoolean(settings, 'start-menu-super-key', true);
     setBoolean(settings, 'custom-indicator-colors-enabled', false);
     setBoolean(settings, 'custom-panel-color-enabled', false);
