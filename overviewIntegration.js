@@ -39,7 +39,7 @@ export class OverviewIntegration {
         this._tracker = Shell.WindowTracker.get_default();
         this._startupState = null;
         this._startupOverviewId = 0;
-        this._overviewWorkspaceRebuildPending = false;
+        this._overviewWorkspaceRebuildId = 0;
         this._maximizedWindowDrag = null;
     }
 
@@ -64,11 +64,6 @@ export class OverviewIntegration {
             Main.layoutManager,
             'monitors-changed',
             () => this._queueOverviewWorkspaceRebuild()
-        );
-        this._connect(
-            Main.overview,
-            'showing',
-            () => this._rebuildOverviewWorkspaceViews()
         );
         this._connect(
             Main.overview,
@@ -135,22 +130,33 @@ export class OverviewIntegration {
     }
 
     _queueOverviewWorkspaceRebuild() {
-        this._overviewWorkspaceRebuildPending = true;
-    }
-
-    _rebuildOverviewWorkspaceViews() {
-        if (!this._overviewWorkspaceRebuildPending)
+        if (this._overviewWorkspaceRebuildId ||
+            !Main.overview.visibleTarget) {
             return;
+        }
 
-        this._overviewWorkspaceRebuildPending = false;
-        const workspacesDisplay =
-            Main.overview._overview._controls._workspacesDisplay;
-        workspacesDisplay._updateWorkspacesViews();
-        this.queueRelayout();
+        this._overviewWorkspaceRebuildId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._overviewWorkspaceRebuildId = 0;
+                if (!Main.overview.visibleTarget)
+                    return GLib.SOURCE_REMOVE;
+
+                const workspacesDisplay =
+                    Main.overview._overview._controls._workspacesDisplay;
+                workspacesDisplay._updateWorkspacesViews();
+                this.queueRelayout();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     _cancelOverviewWorkspaceRebuild() {
-        this._overviewWorkspaceRebuildPending = false;
+        if (!this._overviewWorkspaceRebuildId)
+            return;
+
+        GLib.Source.remove(this._overviewWorkspaceRebuildId);
+        this._overviewWorkspaceRebuildId = 0;
     }
 
     showAppWindows(app) {
