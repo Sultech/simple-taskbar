@@ -101,6 +101,7 @@ export class TrayOverflowController {
 
         this._syncPanelPosition();
         this._sync();
+        this._queueRescan();
     }
 
     close() {
@@ -387,9 +388,15 @@ export class TrayOverflowController {
     _isTrayIndicator(role, indicator) {
         if (role === TRAY_OVERFLOW_ROLE)
             return false;
+        const typeName = indicator.constructor.name;
+        if (typeName === 'IndicatorStatusIcon' &&
+            (!indicator.icon || !indicator.icon._indicator))
+            return false;
+        if (typeName === 'IndicatorTrayIcon' && !indicator.isReady())
+            return false;
         if (TRAY_ROLE_PREFIXES.some(prefix => role.startsWith(prefix)))
             return true;
-        return TRAY_TYPE_NAMES.includes(indicator.constructor.name);
+        return TRAY_TYPE_NAMES.includes(typeName);
     }
 
     _sync() {
@@ -465,6 +472,9 @@ export class TrayOverflowController {
     }
 
     _stash(role, indicator) {
+        if (!this._isTrayIndicator(role, indicator))
+            return;
+
         const container = indicator.container;
         const parent = container.get_parent();
         if (!parent)

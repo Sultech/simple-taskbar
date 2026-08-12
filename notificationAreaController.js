@@ -94,17 +94,26 @@ export class NotificationAreaController {
             actor !== this.actor && !managedActors.has(actor)
         );
         const externalActorSet = new Set(externalActors);
-        for (const [actor, translationY] of this._rightBoxActorTranslationY) {
+        for (const [actor, entry] of this._rightBoxActorTranslationY) {
             if (!externalActorSet.has(actor)) {
-                actor.translation_y = translationY;
+                actor.disconnect(entry.destroyId);
+                actor.translation_y = entry.translationY;
                 this._rightBoxActorTranslationY.delete(actor);
             }
         }
         for (const actor of externalActors) {
-            if (!this._rightBoxActorTranslationY.has(actor))
-                this._rightBoxActorTranslationY.set(actor, actor.translation_y);
+            if (!this._rightBoxActorTranslationY.has(actor)) {
+                const entry = {
+                    translationY: actor.translation_y,
+                    destroyId: 0,
+                };
+                entry.destroyId = actor.connect('destroy', () => {
+                    this._rightBoxActorTranslationY.delete(actor);
+                });
+                this._rightBoxActorTranslationY.set(actor, entry);
+            }
             actor.translation_y =
-                this._rightBoxActorTranslationY.get(actor) + 1;
+                this._rightBoxActorTranslationY.get(actor).translationY + 1;
         }
         this._syncRightBoxHoverStates(
             externalActors
@@ -337,8 +346,10 @@ export class NotificationAreaController {
 
     _restoreRightBoxActorOffsets() {
         this._restoreRightBoxHoverStates();
-        for (const [actor, translationY] of this._rightBoxActorTranslationY)
-            actor.translation_y = translationY;
+        for (const [actor, entry] of this._rightBoxActorTranslationY) {
+            actor.disconnect(entry.destroyId);
+            actor.translation_y = entry.translationY;
+        }
         this._rightBoxActorTranslationY.clear();
     }
 }

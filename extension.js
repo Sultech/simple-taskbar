@@ -252,10 +252,10 @@ export default class SimpleTaskbarExtension extends Extension {
         this._volumeMixerController = null;
         this._panelInteractionController.destroy();
         this._panelInteractionController = null;
-        this._trayOverflowController.destroy();
-        this._trayOverflowController = null;
         this._panelController.destroy();
         this._panelController = null;
+        this._trayOverflowController.destroy();
+        this._trayOverflowController = null;
         this._applicationOverflowController.destroy();
         this._applicationOverflowController = null;
         this._folderMenuController.destroy();
