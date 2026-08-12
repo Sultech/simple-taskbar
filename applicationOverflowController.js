@@ -1019,6 +1019,7 @@ export class ApplicationOverflowController {
             app: sourceItem._taskbarApp,
             _taskbarItem: sourceItem,
             _taskbarDropAccepted: false,
+            _taskbarDropTarget: null,
             getDragActor: () => sourceItem._taskbarApp.create_icon_texture(
                 this._settings.get_int('icon-size')
             ),
@@ -1032,6 +1033,7 @@ export class ApplicationOverflowController {
         auxiliaryItem._taskbarDraggable = draggable;
         draggable.connect('drag-begin', () => {
             dragSource._taskbarDropAccepted = false;
+            dragSource._taskbarDropTarget = null;
             auxiliaryItem.opacity = 96;
             this._taskbarController.beginExternalTaskbarDrag(sourceItem);
         });
@@ -1041,6 +1043,11 @@ export class ApplicationOverflowController {
                 sourceItem,
                 draggable
             );
+            if (dragSource._taskbarDropAccepted &&
+                dragSource._taskbarDropTarget === this._taskbarController)
+                this._menu.close(BoxPointer.PopupAnimation.FULL);
+            dragSource._taskbarDropAccepted = false;
+            dragSource._taskbarDropTarget = null;
         });
     }
 

@@ -1393,10 +1393,14 @@ export class TaskbarController {
         if (item._taskbarIsShowDesktop) {
             this._saveShowDesktopPinnedPosition();
             source._taskbarDropAccepted = true;
+            source._taskbarDropTarget = this;
             return true;
         }
 
-        return this.acceptTaskbarItemDrop(item, source);
+        const accepted = this.acceptTaskbarItemDrop(item, source);
+        if (accepted)
+            source._taskbarDropTarget = this;
+        return accepted;
     }
 
     acceptTaskbarItemDrop(item, source = null) {
