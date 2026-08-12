@@ -167,10 +167,8 @@ export class StartButtonController {
     }
 
     destroy() {
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._setActivitiesOverviewState(Main.overview._shown);
 
@@ -216,7 +214,7 @@ export class StartButtonController {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                if (extension?.uuid === BLUR_MY_SHELL_UUID)
+                if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this._startMenuController?.queueTransparencySync();
             }
         );

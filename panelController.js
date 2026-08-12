@@ -177,12 +177,12 @@ export class PanelController {
         const leftBox = Main.panel._leftBox;
         const centerBox = Main.panel._centerBox;
         const rightBox = Main.panel._rightBox;
-        const activities = Main.panel.statusArea.activities?.container;
+        const activities = Main.panel.statusArea.activities.container;
         const quickSettings =
-            Main.panel.statusArea.quickSettings?.container;
+            Main.panel.statusArea.quickSettings.container;
         const trayOverflow =
             Main.panel.statusArea[TRAY_OVERFLOW_ROLE]?.container;
-        const dateMenu = Main.panel.statusArea.dateMenu?.container;
+        const dateMenu = Main.panel.statusArea.dateMenu.container;
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -357,10 +357,8 @@ export class PanelController {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
         }
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
 
         this._autoHideController.destroy();
@@ -400,9 +398,6 @@ export class PanelController {
 
     _configurePanelMenuSwitching() {
         const menuManager = Main.panel.menuManager;
-        if (!menuManager?._changeMenu)
-            return;
-
         const settings = this._settings;
         this._injectionManager.overrideMethod(
             menuManager,
@@ -465,18 +460,16 @@ export class PanelController {
                 }
             });
         }
-        const activities = Main.panel.statusArea.activities?.container;
-        if (activities) {
-            this._connect(activities, 'notify::visible', () => {
-                if (!Main.sessionMode.isLocked &&
-                    activities.visible !== this._settings.get_boolean(
-                        'activities-button-visible'
-                    )) {
-                    this._stateController.syncActivitiesVisibility();
-                    this.updateTaskbarWidth();
-                }
-            });
-        }
+        const activities = Main.panel.statusArea.activities.container;
+        this._connect(activities, 'notify::visible', () => {
+            if (!Main.sessionMode.isLocked &&
+                activities.visible !== this._settings.get_boolean(
+                    'activities-button-visible'
+                )) {
+                this._stateController.syncActivitiesVisibility();
+                this.updateTaskbarWidth();
+            }
+        });
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
@@ -501,7 +494,7 @@ export class PanelController {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                const uuid = extension?.uuid;
+                const uuid = extension.uuid;
                 if (uuid === JUST_PERFECTION_UUID ||
                     uuid === DASH_TO_PANEL_UUID) {
                     this._queueLayoutRepair();
@@ -620,11 +613,6 @@ export class PanelController {
             'child-added',
             Clutter.Actor.$gtype
         );
-        if (!signalId) {
-            callback();
-            return;
-        }
-
         const boxes = [
             Main.panel._leftBox,
             Main.panel._centerBox,

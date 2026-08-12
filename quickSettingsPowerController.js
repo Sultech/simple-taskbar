@@ -41,16 +41,15 @@ export class QuickSettingsPowerController {
         this._disconnectShutdownItem();
         if (shutdownItem)
             shutdownItem._sync();
-        const panelIndicator = this._systemIndicator?._indicator;
+        const panelIndicator = this._systemIndicator._indicator;
         this._disconnectSystemIndicator();
-        if (panelIndicator)
-            panelIndicator.show();
+        panelIndicator.show();
         this._settings = null;
         this._quickSettings = null;
     }
 
     _sync() {
-        this._setSystemIndicator(this._quickSettings._system ?? null);
+        this._setSystemIndicator(this._quickSettings._system);
         this._setShutdownItem(this._findShutdownItem());
         if (this._shutdownItem) {
             if (this._shouldReplacePowerMenu()) {
@@ -64,13 +63,11 @@ export class QuickSettingsPowerController {
     }
 
     _findShutdownItem() {
-        const systemItem = this._quickSettings._system?._systemItem;
-        const shutdownMenu = systemItem?.menu;
-        if (!shutdownMenu)
-            return null;
+        const systemItem = this._quickSettings._system._systemItem;
+        const shutdownMenu = systemItem.menu;
 
         return systemItem.child.get_children()
-            .find(child => child.menu === shutdownMenu) ?? null;
+            .find(child => child.menu === shutdownMenu);
     }
 
     _setShutdownItem(item) {
@@ -112,10 +109,7 @@ export class QuickSettingsPowerController {
         if (oldPanelIndicator)
             oldPanelIndicator.show();
         this._systemIndicator = systemIndicator;
-        this._powerToggle =
-            systemIndicator?._systemItem?.powerToggle ?? null;
-        if (!this._powerToggle)
-            return;
+        this._powerToggle = systemIndicator._systemItem.powerToggle;
 
         this._powerToggleVisibilityId = this._powerToggle.connect(
             'notify::visible',
@@ -132,12 +126,9 @@ export class QuickSettingsPowerController {
     }
 
     _syncPanelIndicator() {
-        const panelIndicator = this._systemIndicator?._indicator;
-        if (!panelIndicator)
-            return;
-
+        const panelIndicator = this._systemIndicator._indicator;
         const hideFallback = this._shouldReplacePowerMenu() &&
-            !this._powerToggle?.visible;
+            !this._powerToggle.visible;
         panelIndicator.visible = !hideFallback;
     }
 

@@ -47,10 +47,8 @@ export class SecondaryPanelManager {
             GLib.Source.remove(this._rebuildId);
             this._rebuildId = 0;
         }
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._destroyPanels();
         this._extensionDir = null;

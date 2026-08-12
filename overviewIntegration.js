@@ -78,7 +78,7 @@ export class OverviewIntegration {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                if (!DESKTOP_DOCK_UUIDS.includes(extension?.uuid))
+                if (!DESKTOP_DOCK_UUIDS.includes(extension.uuid))
                     return;
 
                 this._syncStartupOverview();
@@ -165,10 +165,8 @@ export class OverviewIntegration {
         this._spreadInjectionManager = null;
         this._injectionManager.clear();
         this._injectionManager = null;
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._restoreStartupOverview();
         this._restoreDash(restoreVisible);

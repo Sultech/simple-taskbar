@@ -446,10 +446,8 @@ export class TaskbarController {
             GLib.Source.remove(this._startupSettleId);
         this._startupSettleId = 0;
 
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._disconnectActiveWorkspaceSignals();
 

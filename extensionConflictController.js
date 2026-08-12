@@ -33,7 +33,7 @@ export class ExtensionConflictController {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                const uuid = extension?.uuid;
+                const uuid = extension.uuid;
                 if (ALWAYS_CONFLICTING_UUIDS.includes(uuid) &&
                     extension.enabled &&
                     this._extensionIsActive(extension)) {
@@ -54,10 +54,8 @@ export class ExtensionConflictController {
 
     destroy() {
         this._cancelPendingDisable();
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._settings = null;
     }

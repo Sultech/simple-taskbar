@@ -40,10 +40,8 @@ export class HotEdgeController {
     }
 
     destroy() {
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._destroyEdges();
         this._settings = null;

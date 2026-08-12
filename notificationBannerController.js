@@ -60,7 +60,7 @@ export class NotificationBannerController {
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
-                if (extension?.uuid === JUST_PERFECTION_UUID)
+                if (extension.uuid === JUST_PERFECTION_UUID)
                     this._queueRepair();
             }
         );
@@ -72,10 +72,8 @@ export class NotificationBannerController {
             GLib.Source.remove(this._repairId);
             this._repairId = 0;
         }
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
         this._restore();
 

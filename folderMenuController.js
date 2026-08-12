@@ -119,10 +119,8 @@ export class FolderMenuController {
 
     destroy() {
         this._cancelEnumeration();
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
 
         if (this._menu) {

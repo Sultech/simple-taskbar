@@ -100,10 +100,8 @@ export class PanelAutoHideController {
     destroy() {
         this._clearHideTimeout();
         this._restoreFullscreenVisibility();
-        for (const [object, id] of this._signals) {
-            if (id)
-                object.disconnect(id);
-        }
+        for (const [object, id] of this._signals)
+            object.disconnect(id);
         this._signals = [];
 
         this._hidden = false;
