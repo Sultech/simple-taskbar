@@ -38,6 +38,7 @@ export class OverviewIntegration {
         this._tracker = Shell.WindowTracker.get_default();
         this._startupState = null;
         this._startupOverviewId = 0;
+        this._overviewWorkspaceRebuildId = 0;
     }
 
     enable() {
@@ -56,6 +57,11 @@ export class OverviewIntegration {
             this._settings,
             'changed::panel-autohide-enabled',
             () => this.queueRelayout()
+        );
+        this._connect(
+            Main.layoutManager,
+            'monitors-changed',
+            () => this._queueOverviewWorkspaceRebuild()
         );
         this._connect(
             Main.extensionManager,
@@ -106,6 +112,36 @@ export class OverviewIntegration {
         Main.overview._overview?._controls?.queue_relayout();
     }
 
+    _queueOverviewWorkspaceRebuild() {
+        if (this._overviewWorkspaceRebuildId ||
+            !Main.overview.visibleTarget) {
+            return;
+        }
+
+        this._overviewWorkspaceRebuildId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._overviewWorkspaceRebuildId = 0;
+                if (!Main.overview.visibleTarget)
+                    return GLib.SOURCE_REMOVE;
+
+                const workspacesDisplay =
+                    Main.overview._overview._controls._workspacesDisplay;
+                workspacesDisplay._updateWorkspacesViews();
+                this.queueRelayout();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _cancelOverviewWorkspaceRebuild() {
+        if (!this._overviewWorkspaceRebuildId)
+            return;
+
+        GLib.Source.remove(this._overviewWorkspaceRebuildId);
+        this._overviewWorkspaceRebuildId = 0;
+    }
+
     showAppWindows(app) {
         const overviewShown = Main.overview._shown ?? Main.overview.visible;
         if (this._spreadApp === app) {
@@ -140,6 +176,7 @@ export class OverviewIntegration {
             !this._settings.get_boolean('default-gnome-panel')
         );
         this._cancelStartupOverview();
+        this._cancelOverviewWorkspaceRebuild();
         this._cancelDashVisibilityRepair();
         // If the extension is disabled while the spread is visible, rebuild
         // the live Overview after restoring GNOME's normal window filter.
