@@ -49,7 +49,7 @@ const BLUR_MY_SHELL_POPUP_CLASSES = [
     'bms-popup-background-dark',
 ];
 
-export class WindowsStartMenu {
+export class StartMenuController {
     constructor(sourceActor, settings, params = {}) {
         this._sourceActor = sourceActor;
         this._settings = settings;

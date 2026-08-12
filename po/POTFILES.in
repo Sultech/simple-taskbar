@@ -9,7 +9,7 @@ prefs/preferencesDialogs.js
 prefs/preferencesWidgets.js
 prefs/startMenuPage.js
 prefs/windowSwitchingPage.js
-windowsStartMenu.js
+startMenuController.js
 startMenuAppMenu.js
 startMenuAppModel.js
 startMenuFooterController.js

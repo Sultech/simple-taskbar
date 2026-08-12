@@ -5,9 +5,9 @@ import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {SecondaryTaskbarPanel} from './secondaryTaskbarPanel.js';
+import {SecondaryPanelController} from './secondaryPanelController.js';
 
-export class MultiMonitorController {
+export class SecondaryPanelManager {
     constructor({
         extensionDir,
         settings,
@@ -118,7 +118,7 @@ export class MultiMonitorController {
             if (monitor === primaryMonitor)
                 continue;
 
-            const panel = new SecondaryTaskbarPanel({
+            const panel = new SecondaryPanelController({
                 extensionDir: this._extensionDir,
                 settings: this._settings,
                 appSystem: this._appSystem,

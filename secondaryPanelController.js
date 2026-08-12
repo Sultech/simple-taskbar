@@ -43,7 +43,7 @@ const EXTERNAL_PANEL_STYLES = new Set([
     'contrasted-panel',
 ]);
 
-export class SecondaryTaskbarPanel {
+export class SecondaryPanelController {
     constructor({
         extensionDir,
         settings,
@@ -585,4 +585,3 @@ export class SecondaryTaskbarPanel {
     }
 
 }
-

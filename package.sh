@@ -47,7 +47,6 @@ gnome-extensions pack \
     --extra-source=keybindingRecovery.js \
     --extra-source=keybindingUtils.js \
     --extra-source=overviewIntegration.js \
-    --extra-source=multiMonitorController.js \
     --extra-source=notificationAreaController.js \
     --extra-source=notificationBannerController.js \
     --extra-source=panelController.js \
@@ -56,8 +55,9 @@ gnome-extensions pack \
     --extra-source=quickSettingsPowerController.js \
     --extra-source=quickSettingsXpIconController.js \
     --extra-source=secondaryPanelActor.js \
+    --extra-source=secondaryPanelController.js \
     --extra-source=secondaryPanelIndicatorController.js \
-    --extra-source=secondaryTaskbarPanel.js \
+    --extra-source=secondaryPanelManager.js \
     --extra-source=showDesktopButtonController.js \
     --extra-source=startButtonController.js \
     --extra-source=windowsXpStartButton.js \
@@ -93,7 +93,7 @@ gnome-extensions pack \
     --extra-source=volumeMixerController.js \
     --extra-source=windowController.js \
     --extra-source=windowPreviewController.js \
-    --extra-source=windowsStartMenu.js \
+    --extra-source=startMenuController.js \
     --extra-source=windowsXpTheme.js \
     --extra-source=windowsXpModeController.js \
     --extra-source=xp-panel-gradient.svg \

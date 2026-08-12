@@ -20,7 +20,7 @@ import {HotEdgeController} from './hotEdgeController.js';
 import {restoreOverlayKey} from './keybindingRecovery.js';
 import {PanelController} from './panelController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
-import {MultiMonitorController} from './multiMonitorController.js';
+import {SecondaryPanelManager} from './secondaryPanelManager.js';
 import {NotificationBannerController} from './notificationBannerController.js';
 import {
     QuickSettingsPowerController,
@@ -219,7 +219,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 Main.panel.statusArea.quickSettings
             );
         this._quickSettingsXpIconController.enable();
-        this._multiMonitorController = new MultiMonitorController({
+        this._secondaryPanelManager = new SecondaryPanelManager({
             extensionDir: this.dir,
             settings: this._settings,
             appSystem: this._appSystem,
@@ -229,7 +229,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._overviewIntegration.showAppWindows(app),
             openPreferences: () => this.openPreferences(),
         });
-        this._multiMonitorController.enable();
+        this._secondaryPanelManager.enable();
         this._hotEdgeController = new HotEdgeController(this._settings, {
             isBlocked: () => this._hotEdgeIsBlocked(),
         });
@@ -262,8 +262,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._extensionConflictController = null;
         this._notificationBannerController.destroy();
         this._notificationBannerController = null;
-        this._multiMonitorController.destroy();
-        this._multiMonitorController = null;
+        this._secondaryPanelManager.destroy();
+        this._secondaryPanelManager = null;
         this._quickSettingsXpIconController.destroy();
         this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController.destroy();
@@ -436,16 +436,16 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _toggleStartMenuAtPointer() {
         Main.panel.menuManager.activeMenu?.close();
-        this._multiMonitorController.closePanelMenus();
+        this._secondaryPanelManager.closePanelMenus();
 
         const [x, y] = global.get_pointer();
-        if (this._multiMonitorController.hasPanelAt(x, y)) {
+        if (this._secondaryPanelManager.hasPanelAt(x, y)) {
             this._startButtonController.closeMenus();
-            this._multiMonitorController.toggleStartMenuAt(x, y);
+            this._secondaryPanelManager.toggleStartMenuAt(x, y);
             return;
         }
 
-        this._multiMonitorController.closeStartMenus();
+        this._secondaryPanelManager.closeStartMenus();
         this._startButtonController.toggleStartMenu();
     }
 

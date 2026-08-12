@@ -13,7 +13,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
-import {WindowsStartMenu} from './windowsStartMenu.js';
+import {StartMenuController} from './startMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
 import {
     BLUR_MY_SHELL_UUID,
@@ -47,7 +47,7 @@ export class StartButtonController {
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
         this._signals = [];
         this._startOpenedOverview = false;
-        this._windowsStartMenu = null;
+        this._startMenuController = null;
         this._contextMenu = null;
         this._menuManager = null;
 
@@ -122,7 +122,7 @@ export class StartButtonController {
     }
 
     enable() {
-        this._createWindowsStartMenu();
+        this._createStartMenuController();
         this._createContextMenu();
         this._connectStateSignals();
         this._connectBlurMyShellSignals();
@@ -131,7 +131,7 @@ export class StartButtonController {
 
     get menuIsOpen() {
         return Boolean(
-            this._windowsStartMenu?.isOpen || this._contextMenu?.isOpen
+            this._startMenuController?.isOpen || this._contextMenu?.isOpen
         );
     }
 
@@ -147,11 +147,11 @@ export class StartButtonController {
         this._previews.hide();
         if (Main.overview.visible)
             Main.overview.hide();
-        this._windowsStartMenu?.toggle();
+        this._startMenuController?.toggle();
     }
 
     closeMenus() {
-        this._windowsStartMenu?.close();
+        this._startMenuController?.close();
         this._contextMenu?.close();
     }
 
@@ -180,8 +180,8 @@ export class StartButtonController {
         this._keybindings = null;
         this._contextMenu?.destroy();
         this._contextMenu = null;
-        this._windowsStartMenu?.destroy();
-        this._windowsStartMenu = null;
+        this._startMenuController?.destroy();
+        this._startMenuController = null;
         this._menuManager = null;
         this._windowsXpStartButton.destroy();
         this._windowsXpStartButton = null;
@@ -212,14 +212,14 @@ export class StartButtonController {
 
     _connectBlurMyShellSignals() {
         this._connect(Main.uiGroup, 'notify::style-class', () => {
-            this._windowsStartMenu?.queueTransparencySync();
+            this._startMenuController?.queueTransparencySync();
         });
         this._connect(
             Main.extensionManager,
             'extension-state-changed',
             (_manager, extension) => {
                 if (extension?.uuid === BLUR_MY_SHELL_UUID)
-                    this._windowsStartMenu?.queueTransparencySync();
+                    this._startMenuController?.queueTransparencySync();
             }
         );
 
@@ -242,15 +242,15 @@ export class StartButtonController {
             this._connect(
                 componentSettings,
                 `changed::${key}`,
-                () => this._windowsStartMenu?.queueTransparencySync()
+                () => this._startMenuController?.queueTransparencySync()
             );
         }
     }
 
-    _createWindowsStartMenu() {
+    _createStartMenuController() {
         this._menuManager = new PopupMenu.PopupMenuManager();
         this._menuManager._changeMenu = () => {};
-        this._windowsStartMenu = new WindowsStartMenu(
+        this._startMenuController = new StartMenuController(
             this.actor,
             this._settings,
             {
@@ -322,14 +322,14 @@ export class StartButtonController {
         });
         this._connect(Main.overview, 'hidden', () => {
             this.actor.checked = this._windowsModeEnabled()
-                ? this._windowsStartMenu?.isOpen ?? false
+                ? this._startMenuController?.isOpen ?? false
                 : false;
             this._startOpenedOverview = false;
             this._setActivitiesOverviewState(false);
             this._notifyMenuOpenStateChanged();
         });
         this._connect(this._settings, 'changed::windows-start-menu-enabled', () => {
-            this._windowsStartMenu?.close();
+            this._startMenuController?.close();
             this._contextMenu?.close();
             this._startOpenedOverview = false;
             this._icon.gicon = this._currentGIcon();
@@ -340,7 +340,7 @@ export class StartButtonController {
             this._keybindings?.sync();
         });
         this._connect(this._settings, 'changed::windows-xp-theme-enabled', () => {
-            this._windowsStartMenu?.close();
+            this._startMenuController?.close();
             this._contextMenu?.close();
             this._syncWindowsXpStartButton();
             this.applyAppearance(
@@ -354,32 +354,32 @@ export class StartButtonController {
         this._connect(
             this._settings,
             'changed::start-menu-recommended-apps',
-            () => this._windowsStartMenu.refresh()
+            () => this._startMenuController.refresh()
         );
         this._connect(
             this._settings,
             'changed::start-menu-hide-pinned-app-titles',
-            () => this._windowsStartMenu.refresh()
+            () => this._startMenuController.refresh()
         );
         this._connect(
             this._settings,
             'changed::start-menu-power-options-enabled',
-            () => this._windowsStartMenu.syncPowerOptions()
+            () => this._startMenuController.syncPowerOptions()
         );
         this._connect(
             this._settings,
             'changed::start-menu-show-profile-picture',
-            () => this._windowsStartMenu.syncUserAvatar()
+            () => this._startMenuController.syncUserAvatar()
         );
         this._connect(
             this._settings,
             'changed::start-menu-open-all-apps',
-            () => this._windowsStartMenu.refreshDefaultView()
+            () => this._startMenuController.refreshDefaultView()
         );
         this._connect(
             this._settings,
             'changed::start-menu-app-categories',
-            () => this._windowsStartMenu.refresh()
+            () => this._startMenuController.refresh()
         );
         this._connect(this._settings, 'changed::start-button-custom-icon', () => {
             this._icon.gicon = this._currentGIcon();
@@ -388,7 +388,7 @@ export class StartButtonController {
             this._syncVisibility();
         });
         this._connect(this._settings, 'changed::default-gnome-panel', () => {
-            this._windowsStartMenu?.close();
+            this._startMenuController?.close();
             this._contextMenu?.close();
             this._syncVisibility();
             this._keybindings?.sync();
@@ -413,39 +413,39 @@ export class StartButtonController {
             () => this._keybindings?.sync()
         );
         this._connect(this._settings, 'changed::start-menu-theme', () => {
-            this._windowsStartMenu?.syncTheme();
+            this._startMenuController?.syncTheme();
         });
         this._connect(
             this._settings,
             'changed::start-menu-follow-panel-theme',
-            () => this._windowsStartMenu?.syncTheme()
+            () => this._startMenuController?.syncTheme()
         );
         this._connect(
             this._settings,
             'changed::start-menu-follow-panel-transparency',
-            () => this._windowsStartMenu?.syncTransparency()
+            () => this._startMenuController?.syncTransparency()
         );
         this._connect(
             this._settings,
             'changed::transparency-enabled',
-            () => this._windowsStartMenu?.syncTransparency()
+            () => this._startMenuController?.syncTransparency()
         );
         this._connect(
             this._settings,
             'changed::transparency-level',
-            () => this._windowsStartMenu?.syncTransparency()
+            () => this._startMenuController?.syncTransparency()
         );
         this._connect(Main.panel, 'notify::style-class', () => {
             if (this._settings.get_boolean(
                 'start-menu-follow-panel-theme'
             )) {
-                this._windowsStartMenu?.syncTheme();
+                this._startMenuController?.syncTheme();
             }
         });
     }
 
     _openContextMenu() {
-        this._windowsStartMenu?.close();
+        this._startMenuController?.close();
         this._previews.hideTooltip(false);
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
@@ -496,7 +496,7 @@ export class StartButtonController {
     }
 
     _toggleOverviewFromShortcut() {
-        this._windowsStartMenu?.close();
+        this._startMenuController?.close();
         this._contextMenu?.close();
         this._previews.hideTooltip(false);
         this._previews.hide();
@@ -526,7 +526,7 @@ export class StartButtonController {
             Main.overview.searchController?._showAppsButton;
         const applicationsActive = shellShowAppsButton?.checked ?? false;
         this.actor.checked = this._windowsModeEnabled()
-            ? this._windowsStartMenu?.isOpen ?? false
+            ? this._startMenuController?.isOpen ?? false
             : applicationsActive;
         this._setActivitiesOverviewState(
             !applicationsActive &&
