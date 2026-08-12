@@ -2151,6 +2151,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                     'activities',
                     'applications',
                     'show-desktop',
+                    'tray-overflow',
                     'system-menu',
                     'clock',
                 ].includes(id);
@@ -2275,9 +2276,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             panelOrderRows.get('activities').positionDropDown.sensitive =
                 activitiesButtonSwitch.active;
             panelOrderRows.get('folder-menu').positionDropDown.sensitive =
-                folderMenuSwitch.active;
+                !windowsXpTheme && folderMenuSwitch.active;
             panelOrderRows.get('tray-overflow').positionDropDown.sensitive =
-                trayOverflowSwitch.active;
+                !windowsXpTheme && trayOverflowSwitch.active;
             panelOrderRows.get('show-desktop').positionDropDown.sensitive =
                 !windowsXpTheme && showDesktopSwitch.active;
         };

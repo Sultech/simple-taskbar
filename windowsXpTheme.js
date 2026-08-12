@@ -71,6 +71,16 @@ export function applyWindowsXpThemeSettings(settings) {
         'system-menu-position',
         WINDOWS_XP_SYSTEM_MENU_POSITION
     );
+    setString(
+        settings,
+        'tray-overflow-position',
+        WINDOWS_XP_SYSTEM_MENU_POSITION
+    );
+    setString(
+        settings,
+        'folder-menu-position',
+        WINDOWS_XP_SYSTEM_MENU_POSITION
+    );
     setString(settings, 'show-desktop-button-position', 'left');
     if (settings.get_string('activities-button-position') === 'center')
         setString(settings, 'activities-button-position', 'left');
