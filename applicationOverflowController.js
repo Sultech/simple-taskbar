@@ -245,6 +245,10 @@ export class ApplicationOverflowController {
         this._menu.close(BoxPointer.PopupAnimation.FULL);
     }
 
+    clearOverflow() {
+        this._clearOverflow();
+    }
+
     destroy() {
         if (this._dragEndListenerRegistered) {
             this._taskbarController.removeDragEndListener(
@@ -1044,11 +1048,16 @@ export class ApplicationOverflowController {
         this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
         this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
         this._popupContentBox = null;
+        const taskbarItems = new Set(
+            this._taskbarController.getOrderedItems()
+        );
         for (const {auxiliaryItem, styleItem} of this._auxiliaryItems) {
-            if (styleItem._taskbarIsShowDesktop)
-                styleItem._taskbarButton.remove_style_pseudo_class('hover');
-            else
-                styleItem.remove_style_pseudo_class('hover');
+            if (taskbarItems.has(styleItem)) {
+                if (styleItem._taskbarIsShowDesktop)
+                    styleItem._taskbarButton.remove_style_pseudo_class('hover');
+                else
+                    styleItem.remove_style_pseudo_class('hover');
+            }
             this._taskbarController.removeAuxiliaryItem(auxiliaryItem);
         }
         this._auxiliaryItems = [];

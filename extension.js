@@ -291,6 +291,27 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelHeight = null;
     }
 
+    openPreferences() {
+        const prefsWindow = global.get_window_actors()
+            .map(windowActor => windowActor.meta_window)
+            .find(window => window.wm_class === 'org.gnome.Shell.Extensions');
+        if (!prefsWindow) {
+            super.openPreferences();
+            return;
+        }
+
+        if (prefsWindow.title === this.metadata.name) {
+            Main.activateWindow(prefsWindow);
+            return;
+        }
+
+        prefsWindow.connectObject('unmanaged', () => {
+            super.openPreferences();
+            prefsWindow.disconnectObject(this);
+        }, this);
+        prefsWindow.delete(global.get_current_time());
+    }
+
     _createTaskbarActors() {
         this._taskbarViewport = new TaskbarViewport({
             style_class: 'simple-taskbar-bin',
@@ -506,6 +527,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => {
+                this._applicationOverflowController.clearOverflow();
                 this._syncWindowsXpTheme(true);
                 this._syncShowDesktopIcon();
                 this._startButtonController.applyAppearance(
