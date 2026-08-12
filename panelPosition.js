@@ -3,6 +3,8 @@
 
 import St from 'gi://St';
 
+const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
+
 export function panelIsTop(settings) {
     return settings.get_string('panel-position') === 'top';
 }
@@ -17,4 +19,21 @@ export function syncMenuArrowSide(menu, settings) {
         menu._boxPointer._userArrowSide = side;
     if (menu && '_arrowSide' in menu)
         menu._arrowSide = side;
+}
+
+export function syncXpPopupOffset(menu, settings) {
+    const enabled = settings.get_boolean(
+        'windows-xp-theme-enabled'
+    ) && !panelIsTop(settings);
+    if (enabled) {
+        menu.actor.add_style_class_name(XP_POPUP_OFFSET_CLASS);
+        menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);
+    } else {
+        removeXpPopupOffset(menu);
+    }
+}
+
+export function removeXpPopupOffset(menu) {
+    menu.actor.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
+    menu._boxPointer.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
 }

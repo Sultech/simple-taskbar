@@ -16,7 +16,12 @@ import {
 } from './panelButtonPaddingController.js';
 import {placePanelItems} from './panelItemOrder.js';
 import {PanelInteractionController} from './panelInteractionController.js';
-import {panelArrowSide, panelIsTop} from './panelPosition.js';
+import {
+    panelArrowSide,
+    panelIsTop,
+    removeXpPopupOffset,
+    syncXpPopupOffset,
+} from './panelPosition.js';
 import {
     QuickSettingsPowerController,
 } from './quickSettingsPowerController.js';
@@ -683,6 +688,11 @@ class SecondaryTaskbarPanel {
             dateMenu,
             windowsXpThemeEnabled
         );
+        for (const indicator of this._indicators.values()) {
+            const menu = indicator.menu;
+            if (menu && menu._boxPointer)
+                syncXpPopupOffset(menu, this._settings);
+        }
 
         const boxes = {
             left: this._leftBox,
@@ -865,6 +875,8 @@ class SecondaryTaskbarPanel {
             const menu = indicator.menu;
             if (menu) {
                 menu.close();
+                if (menu._boxPointer)
+                    removeXpPopupOffset(menu);
                 menu.actor.remove_style_class_name(
                     'simple-taskbar-bottom-panel-menu'
                 );

@@ -3,9 +3,12 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {panelArrowSide, panelIsTop} from './panelPosition.js';
-
-const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
+import {
+    panelArrowSide,
+    panelIsTop,
+    removeXpPopupOffset,
+    syncXpPopupOffset,
+} from './panelPosition.js';
 
 export class PanelMenuPositioner {
     constructor(injectionManager, settings) {
@@ -53,7 +56,7 @@ export class PanelMenuPositioner {
                     'simple-taskbar-bottom-panel-menu'
                 );
             }
-            this._syncXpPopupOffset(menu);
+            syncXpPopupOffset(menu, this._settings);
         }
     }
 
@@ -68,7 +71,7 @@ export class PanelMenuPositioner {
         } of this._states.values()) {
             if (destroyId)
                 indicator.disconnect(destroyId);
-            this._removeXpPopupOffset(menu);
+            removeXpPopupOffset(menu);
             if (menu?._boxPointer)
                 menu._boxPointer._userArrowSide = userArrowSide;
             if ('_arrowSide' in menu)
@@ -119,23 +122,6 @@ export class PanelMenuPositioner {
             menu._arrowSide = side;
         if (removeTopPanelGap && !panelIsTop(this._settings))
             menu.actor.add_style_class_name('simple-taskbar-bottom-panel-menu');
-        this._syncXpPopupOffset(menu);
-    }
-
-    _syncXpPopupOffset(menu) {
-        const enabled = this._settings.get_boolean(
-            'windows-xp-theme-enabled'
-        ) && !panelIsTop(this._settings);
-        if (enabled) {
-            menu.actor.add_style_class_name(XP_POPUP_OFFSET_CLASS);
-            menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);
-        } else {
-            this._removeXpPopupOffset(menu);
-        }
-    }
-
-    _removeXpPopupOffset(menu) {
-        menu.actor.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
-        menu._boxPointer.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
+        syncXpPopupOffset(menu, this._settings);
     }
 }
