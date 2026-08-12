@@ -93,6 +93,8 @@ export class ApplicationOverflowController {
         this._layoutSignature = null;
         this._buttonTranslationY = null;
         this._iconTranslationY = null;
+        this._buttonPositionCompensated = false;
+        this._buttonRestoreTimeoutId = 0;
 
         this.actor = new ApplicationOverflowContainer(width => {
             this._maximumWidth = width;
@@ -177,6 +179,11 @@ export class ApplicationOverflowController {
         this._connect(
             this._button,
             'notify::hover',
+            () => this._syncButtonPosition()
+        );
+        this._connect(
+            this._button,
+            'notify::pseudo-class',
             () => this._syncButtonPosition()
         );
         this._connect(
@@ -463,8 +470,21 @@ export class ApplicationOverflowController {
         if (this._iconTranslationY === null)
             this._iconTranslationY = this._icon.translation_y;
 
-        const active = this._button.hover ||
-            this._button.has_key_focus();
+        const active = !this._isButtonResting();
+        if (!active && this._buttonPositionCompensated) {
+            this._scheduleButtonPositionRestore();
+            return;
+        }
+
+        this._cancelButtonPositionRestore();
+        this._setButtonPosition(active);
+    }
+
+    _isButtonResting() {
+        return !this._button.hover && !this._button.has_key_focus();
+    }
+
+    _setButtonPosition(active) {
         const translationY = active
             ? XP_APPLICATION_OVERFLOW_ACTIVE_TRANSLATION_Y
             : XP_APPLICATION_OVERFLOW_TRANSLATION_Y;
@@ -473,14 +493,49 @@ export class ApplicationOverflowController {
         this._icon.translation_y =
             this._iconTranslationY -
             (translationY - XP_APPLICATION_OVERFLOW_TRANSLATION_Y);
+        this._buttonPositionCompensated = active;
+    }
+
+    _scheduleButtonPositionRestore() {
+        if (this._buttonRestoreTimeoutId)
+            return;
+
+        const duration = this._button.mapped && St.Settings.get().enable_animations
+            ? this._button.get_theme_node().get_transition_duration()
+            : 0;
+        if (duration === 0) {
+            this._setButtonPosition(false);
+            return;
+        }
+
+        this._buttonRestoreTimeoutId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            duration,
+            () => {
+                this._buttonRestoreTimeoutId = 0;
+                if (this._isButtonResting() && !this._menu.isOpen)
+                    this._setButtonPosition(false);
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _cancelButtonPositionRestore() {
+        if (!this._buttonRestoreTimeoutId)
+            return;
+
+        GLib.Source.remove(this._buttonRestoreTimeoutId);
+        this._buttonRestoreTimeoutId = 0;
     }
 
     _restoreButtonPosition() {
+        this._cancelButtonPositionRestore();
         if (this._buttonTranslationY === null)
             return;
 
         this._button.translation_y = this._buttonTranslationY;
         this._icon.translation_y = this._iconTranslationY;
+        this._buttonPositionCompensated = false;
     }
 
     _clearOverflow() {
