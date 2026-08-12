@@ -8,7 +8,6 @@ import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
-import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -18,20 +17,24 @@ import {
     panelIsTop,
     syncMenuArrowSide,
 } from './panelPosition.js';
-import {panelTransparencyOpacity} from './transparencyUtils.js';
+import {
+    ApplicationOverflowButtonController,
+} from './applicationOverflowButtonController.js';
+import {
+    ApplicationOverflowDragController,
+} from './applicationOverflowDragController.js';
+import {
+    ApplicationOverflowItemController,
+} from './applicationOverflowItemController.js';
+import {
+    ApplicationOverflowThemeController,
+} from './applicationOverflowThemeController.js';
 
-const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
-const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';
-const XP_MENU_CLASS = 'simple-taskbar-application-overflow-xp';
 const TASKBAR_CONTENT_CLASS =
     'simple-taskbar-application-overflow-taskbar-content';
 const TASKBAR_SCROLLBAR_CLASS =
     'simple-taskbar-application-overflow-taskbar-scrollbar';
 const POPUP_MARGIN = 32;
-const LIGHT_GRADIENT_START_MAX_OPACITY = 0.62;
-const LIGHT_GRADIENT_END_MAX_OPACITY = 0.54;
-const XP_APPLICATION_OVERFLOW_TRANSLATION_Y = 1;
-const XP_APPLICATION_OVERFLOW_ACTIVE_TRANSLATION_Y = 2;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
@@ -87,14 +90,12 @@ export class ApplicationOverflowController {
         this._dragEndListenerRegistered = false;
         this._dragSyncPending = false;
         this._overflowItems = [];
-        this._auxiliaryItems = [];
-        this._popupContentBox = null;
+        this._itemController = null;
+        this._dragController = null;
         this._style = null;
         this._layoutSignature = null;
-        this._buttonTranslationY = null;
-        this._iconTranslationY = null;
-        this._buttonPositionCompensated = false;
-        this._buttonRestoreTimeoutId = 0;
+        this._buttonController = null;
+        this._themeController = null;
 
         this.actor = new ApplicationOverflowContainer(width => {
             this._maximumWidth = width;
@@ -122,13 +123,35 @@ export class ApplicationOverflowController {
         );
         this._section = new PopupMenu.PopupMenuSection();
         this._menu.addMenuItem(this._section);
+        this._itemController = new ApplicationOverflowItemController(
+            this._settings,
+            this._taskbarController,
+            this._menu,
+            this._section
+        );
+        this._dragController = new ApplicationOverflowDragController(
+            this._taskbarController,
+            () => this._itemController.records,
+            () => this._style
+        );
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
+        this._buttonController = new ApplicationOverflowButtonController(
+            this._settings,
+            this._button,
+            this._icon,
+            this._menu
+        );
+        this._themeController = new ApplicationOverflowThemeController(
+            this._settings,
+            this._menu,
+            () => this._style
+        );
 
         this._connect(this._menu, 'open-state-changed', (_menu, open) => {
             if (open) {
                 this._button.add_style_pseudo_class('active');
-                this._syncTheme();
+                this._themeController.sync();
                 this._syncPopupGeometry();
                 this._grab = Main.pushModal(global.stage, {
                     actionMode: Shell.ActionMode.POPUP,
@@ -139,7 +162,7 @@ export class ApplicationOverflowController {
                 this._grab = null;
                 this._button.remove_style_pseudo_class('active');
                 this._closeAuxiliaryMenus();
-                this._syncButtonPosition();
+                this._buttonController.sync();
             }
         });
         this._connect(
@@ -159,10 +182,10 @@ export class ApplicationOverflowController {
             this._queueSync();
         });
         this._connect(this._settings, 'changed::transparency-enabled', () => {
-            this._syncTheme();
+            this._themeController.sync();
         });
         this._connect(this._settings, 'changed::transparency-level', () => {
-            this._syncTheme();
+            this._themeController.sync();
         });
         this._connect(this._settings, 'changed::panel-position', () => {
             this.close();
@@ -179,22 +202,22 @@ export class ApplicationOverflowController {
         this._connect(
             this._button,
             'notify::hover',
-            () => this._syncButtonPosition()
+            () => this._buttonController.sync()
         );
         this._connect(
             this._button,
             'notify::pseudo-class',
-            () => this._syncButtonPosition()
+            () => this._buttonController.sync()
         );
         this._connect(
             this._button,
             'key-focus-in',
-            () => this._syncButtonPosition()
+            () => this._buttonController.sync()
         );
         this._connect(
             this._button,
             'key-focus-out',
-            () => this._syncButtonPosition()
+            () => this._buttonController.sync()
         );
         for (const item of this._taskbarController.getOrderedItems())
             this._connectTaskbarItem(item);
@@ -221,7 +244,7 @@ export class ApplicationOverflowController {
             }
         });
         this._connect(Main.panel, 'notify::style-class', () => {
-            this._syncTheme();
+            this._themeController.sync();
         });
         this._connect(Main.overview, 'showing', () => this.close());
         this._connect(global.stage, 'captured-event', (_stage, event) =>
@@ -260,7 +283,6 @@ export class ApplicationOverflowController {
             GLib.Source.remove(this._syncId);
             this._syncId = 0;
         }
-        this._restoreButtonPosition();
         for (const [object, id] of this._signals)
             object.disconnect(id);
         this._signals = [];
@@ -269,7 +291,17 @@ export class ApplicationOverflowController {
             this._grab = null;
         }
 
-        this._clearPopupItems();
+        this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
+        this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
+        this._dragController.clearContentBox();
+        this._dragController.destroy();
+        this._dragController = null;
+        this._itemController.destroy();
+        this._itemController = null;
+        this._buttonController.destroy();
+        this._buttonController = null;
+        this._themeController.destroy();
+        this._themeController = null;
         this._menu.destroy();
         this._menu = null;
         this._section = null;
@@ -284,11 +316,7 @@ export class ApplicationOverflowController {
         this._taskbarController = null;
         this._previewController = null;
         this._overflowItems = null;
-        this._auxiliaryItems = null;
-        this._popupContentBox = null;
         this._layoutSignature = null;
-        this._buttonTranslationY = null;
-        this._iconTranslationY = null;
         this._settings = null;
     }
 
@@ -331,7 +359,7 @@ export class ApplicationOverflowController {
     }
 
     _eventInAuxiliaryMenu(target) {
-        for (const {auxiliaryItem} of this._auxiliaryItems) {
+        for (const {auxiliaryItem} of this._itemController.records) {
             for (const menu of [
                 auxiliaryItem._taskbarMenu,
                 auxiliaryItem._taskbarPreviewMenu,
@@ -346,7 +374,7 @@ export class ApplicationOverflowController {
     }
 
     _closeAuxiliaryMenus() {
-        for (const {auxiliaryItem} of this._auxiliaryItems) {
+        for (const {auxiliaryItem} of this._itemController.records) {
             const menu = auxiliaryItem._taskbarMenu;
             if (menu)
                 menu.close(BoxPointer.PopupAnimation.NONE);
@@ -399,7 +427,7 @@ export class ApplicationOverflowController {
         }
 
         this._dragSyncPending = false;
-        this._syncButtonPosition();
+        this._buttonController.sync();
         const enabled = this._settings.get_boolean(
             'application-overflow-enabled'
         ) && !this._settings.get_boolean('default-gnome-panel');
@@ -451,7 +479,7 @@ export class ApplicationOverflowController {
         this._spacer.set_width(Math.max(0, availableWidth - visibleWidth));
         this._spacer.show();
         this._setOverflowItems(items.slice(visibleCount));
-        this._syncTheme();
+        this._themeController.sync();
     }
 
     _onTaskbarDragEnd() {
@@ -460,87 +488,6 @@ export class ApplicationOverflowController {
         this._queueSync();
     }
 
-    _syncButtonPosition() {
-        if (!this._settings.get_boolean('windows-xp-theme-enabled')) {
-            this._restoreButtonPosition();
-            return;
-        }
-
-        if (this._menu.isOpen)
-            return;
-
-        if (this._buttonTranslationY === null)
-            this._buttonTranslationY = this._button.translation_y;
-        if (this._iconTranslationY === null)
-            this._iconTranslationY = this._icon.translation_y;
-
-        const active = !this._isButtonResting();
-        if (!active && this._buttonPositionCompensated) {
-            this._scheduleButtonPositionRestore();
-            return;
-        }
-
-        this._cancelButtonPositionRestore();
-        this._setButtonPosition(active);
-    }
-
-    _isButtonResting() {
-        return !this._button.hover && !this._button.has_key_focus();
-    }
-
-    _setButtonPosition(active) {
-        const translationY = active
-            ? XP_APPLICATION_OVERFLOW_ACTIVE_TRANSLATION_Y
-            : XP_APPLICATION_OVERFLOW_TRANSLATION_Y;
-        this._button.translation_y =
-            this._buttonTranslationY + translationY;
-        this._icon.translation_y =
-            this._iconTranslationY -
-            (translationY - XP_APPLICATION_OVERFLOW_TRANSLATION_Y);
-        this._buttonPositionCompensated = active;
-    }
-
-    _scheduleButtonPositionRestore() {
-        if (this._buttonRestoreTimeoutId)
-            return;
-
-        const duration = this._button.mapped && St.Settings.get().enable_animations
-            ? this._button.get_theme_node().get_transition_duration()
-            : 0;
-        if (duration === 0) {
-            this._setButtonPosition(false);
-            return;
-        }
-
-        this._buttonRestoreTimeoutId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            duration,
-            () => {
-                this._buttonRestoreTimeoutId = 0;
-                if (this._isButtonResting() && !this._menu.isOpen)
-                    this._setButtonPosition(false);
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _cancelButtonPositionRestore() {
-        if (!this._buttonRestoreTimeoutId)
-            return;
-
-        GLib.Source.remove(this._buttonRestoreTimeoutId);
-        this._buttonRestoreTimeoutId = 0;
-    }
-
-    _restoreButtonPosition() {
-        this._cancelButtonPositionRestore();
-        if (this._buttonTranslationY === null)
-            return;
-
-        this._button.translation_y = this._buttonTranslationY;
-        this._icon.translation_y = this._iconTranslationY;
-        this._buttonPositionCompensated = false;
-    }
 
     _clearOverflow() {
         this.close();
@@ -585,8 +532,8 @@ export class ApplicationOverflowController {
             style_class: 'simple-taskbar-application-overflow-taskbar',
         });
         for (const item of items)
-            box.add_child(this._createTaskbarItem(item));
-        this._setPopupDropTarget(box);
+            box.add_child(this._itemController.createTaskbarItem(item));
+        this._dragController.setContentBox(box);
 
         const scrollView = new St.ScrollView({
             style_class: 'simple-taskbar-application-overflow-scroll',
@@ -630,8 +577,8 @@ export class ApplicationOverflowController {
             orientation: Clutter.Orientation.VERTICAL,
         });
         for (const item of items)
-            box.add_child(this._createListItem(item));
-        this._setPopupDropTarget(box);
+            box.add_child(this._itemController.createListItem(item));
+        this._dragController.setContentBox(box);
 
         const viewport = new St.Viewport({
             layout_manager: new Clutter.BinLayout(),
@@ -648,427 +595,12 @@ export class ApplicationOverflowController {
         this._section.actor.add_child(scrollView);
     }
 
-    _setPopupDropTarget(box) {
-        this._popupContentBox = box;
-        box._delegate = {
-            handleDragOver: (source, _actor, x, y, _time) =>
-                this._handleOverflowDragOver(source, x, y),
-            acceptDrop: (source, _actor, x, y, _time) =>
-                this._acceptOverflowDrop(source, x, y),
-        };
-    }
-
-    _handleOverflowDragOver(source, x, y) {
-        const item = source && source._taskbarItem;
-        if (!item || item._taskbarIsShowDesktop ||
-            !this._taskbarController.isTaskbarItemDraggable(item))
-            return DND.DragMotionResult.NO_DROP;
-
-        const coordinate = this._style === 'taskbar' ? x : y;
-        const target = this._getOverflowTarget(item, coordinate);
-        if (!target)
-            return DND.DragMotionResult.NO_DROP;
-
-        if (!target.sameGroup) {
-            const changed = this._taskbarController.reorderTaskbarItem(
-                item,
-                target.item,
-                target.insertBefore
-            );
-            if (changed)
-                this._reorderAuxiliaryGroup(
-                    item,
-                    target.item,
-                    target.insertBefore
-                );
-        }
-        return DND.DragMotionResult.MOVE_DROP;
-    }
-
-    _acceptOverflowDrop(source, x, y) {
-        const item = source && source._taskbarItem;
-        if (!item || item._taskbarIsShowDesktop ||
-            !this._taskbarController.isTaskbarItemDraggable(item))
-            return false;
-
-        const coordinate = this._style === 'taskbar' ? x : y;
-        const target = this._getOverflowTarget(item, coordinate);
-        if (!target)
-            return false;
-
-        if (!target.sameGroup) {
-            this._taskbarController.reorderTaskbarItem(
-                item,
-                target.item,
-                target.insertBefore
-            );
-            this._reorderAuxiliaryGroup(
-                item,
-                target.item,
-                target.insertBefore
-            );
-        }
-        return this._taskbarController.acceptTaskbarItemDrop(item, source);
-    }
-
-    _getOverflowTarget(sourceItem, coordinate) {
-        const sourceGroup = this._taskbarController.getTaskbarDragGroup(
-            sourceItem
-        );
-        const sourceIsPinned = this._taskbarController.isTaskbarItemPinned(
-            sourceItem
-        );
-        const visualGroups = [];
-
-        for (const auxiliaryItem of this._popupContentBox.get_children()) {
-            const record = this._auxiliaryItems.find(entry =>
-                entry.auxiliaryItem === auxiliaryItem
-            );
-            if (!record || record.sourceItem._taskbarIsShowDesktop)
-                continue;
-
-            const groupItems = this._taskbarController.getTaskbarDragGroup(
-                record.sourceItem
-            );
-            if (groupItems.length === 0)
-                continue;
-
-            let visualGroup = visualGroups.find(group =>
-                groupItems.includes(group.records[0].sourceItem)
-            );
-            if (!visualGroup) {
-                visualGroup = {
-                    records: [],
-                    start: Number.MAX_SAFE_INTEGER,
-                    end: 0,
-                };
-                visualGroups.push(visualGroup);
-            }
-
-            visualGroup.records.push(record);
-            const start = this._style === 'taskbar'
-                ? auxiliaryItem.x
-                : auxiliaryItem.y;
-            const size = this._style === 'taskbar'
-                ? auxiliaryItem.width
-                : auxiliaryItem.height;
-            visualGroup.start = Math.min(visualGroup.start, start);
-            visualGroup.end = Math.max(visualGroup.end, start + size);
-        }
-
-        const sourceVisualGroup = visualGroups.find(group =>
-            sourceGroup.includes(group.records[0].sourceItem)
-        );
-        if (sourceVisualGroup && coordinate >= sourceVisualGroup.start &&
-            coordinate <= sourceVisualGroup.end) {
-            return {sameGroup: true};
-        }
-
-        const targetGroups = visualGroups.filter(group => {
-            const targetItem = group.records[0].sourceItem;
-            return !sourceGroup.includes(targetItem) &&
-                this._taskbarController.isTaskbarItemPinned(targetItem) ===
-                    sourceIsPinned;
-        });
-        if (targetGroups.length === 0)
-            return null;
-
-        let targetGroup = targetGroups.find(group =>
-            coordinate < group.start + (group.end - group.start) / 2
-        );
-        const insertBefore = targetGroup !== undefined;
-        if (!targetGroup)
-            targetGroup = targetGroups.at(-1);
-
-        return {
-            item: insertBefore
-                ? targetGroup.records[0].sourceItem
-                : targetGroup.records.at(-1).sourceItem,
-            insertBefore,
-        };
-    }
-
-    _reorderAuxiliaryGroup(sourceItem, targetItem, insertBefore) {
-        const sourceGroup = new Set(
-            this._taskbarController.getTaskbarDragGroup(sourceItem)
-        );
-        const targetGroup = new Set(
-            this._taskbarController.getTaskbarDragGroup(targetItem)
-        );
-        if (sourceGroup.size === 0 || targetGroup.size === 0)
-            return;
-
-        const children = this._popupContentBox.get_children();
-        const sourceAuxiliaryItems = children.filter(child => {
-            const entry = this._auxiliaryItems.find(record =>
-                record.auxiliaryItem === child
-            );
-            return entry && sourceGroup.has(entry.sourceItem);
-        });
-        if (sourceAuxiliaryItems.length === 0)
-            return;
-
-        const targetAuxiliaryItems = children.filter(child => {
-            const entry = this._auxiliaryItems.find(record =>
-                record.auxiliaryItem === child
-            );
-            return entry && targetGroup.has(entry.sourceItem);
-        });
-        if (targetAuxiliaryItems.length === 0)
-            return;
-
-        const sourceItems = new Set(sourceAuxiliaryItems);
-        const remainingChildren = children.filter(child =>
-            !sourceItems.has(child)
-        );
-        const target = insertBefore
-            ? targetAuxiliaryItems[0]
-            : targetAuxiliaryItems.at(-1);
-        const targetIndex = remainingChildren.indexOf(target);
-        const insertIndex = targetIndex + (insertBefore ? 0 : 1);
-        const desiredChildren = [...remainingChildren];
-        desiredChildren.splice(insertIndex, 0, ...sourceAuxiliaryItems);
-
-        for (let index = 0; index < desiredChildren.length; index++) {
-            const child = desiredChildren[index];
-            if (this._popupContentBox.get_child_at_index(index) === child)
-                continue;
-
-            this._popupContentBox.set_child_at_index(child, index);
-        }
-    }
-
-    _createTaskbarItem(item) {
-        const panelHeight = this._settings.get_int('panel-height');
-        const [, width] = item.get_preferred_width(panelHeight);
-        const clone = new Clutter.Clone({source: item});
-        const button = new St.Button({
-            style_class: 'simple-taskbar-app-item simple-taskbar-application-overflow-taskbar-item',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            width,
-            height: panelHeight,
-            accessible_name: item._taskbarButton.accessible_name,
-            child: clone,
-        });
-        this._configureAuxiliaryItem(button, item, item, true);
-        return button;
-    }
-
-    _createListItem(item) {
-        if (item._taskbarIsShowDesktop)
-            return this._createShowDesktopListItem(item);
-
-        const app = item._taskbarApp;
-        const window = item._taskbarWindow;
-        const icon = app.create_icon_texture(Math.min(
-            32,
-            this._settings.get_int('icon-size')
-        ));
-        const label = new St.Label({
-            text: window ? window.get_title() || app.get_name() : app.get_name(),
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-application-overflow-list-content',
-            x_align: Clutter.ActorAlign.START,
-            x_expand: true,
-        });
-        content.add_child(icon);
-        content.add_child(label);
-        const button = new St.Button({
-            style_class: 'simple-taskbar-application-overflow-list-item',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            x_align: Clutter.ActorAlign.FILL,
-            x_expand: true,
-            accessible_name: item._taskbarButton.accessible_name,
-            child: content,
-        });
-        if (window) {
-            window.connectObject('notify::title', () => {
-                label.text = window.get_title() || app.get_name();
-            }, button);
-        }
-        const syncState = () => {
-            button.set_style_class_name(
-                'simple-taskbar-application-overflow-list-item' +
-                `${item.has_style_class_name('running') ? ' running' : ''}` +
-                `${item.has_style_class_name('focused') ? ' focused' : ''}`
-            );
-        };
-        item.connectObject('notify::style-class', syncState, button);
-        syncState();
-        this._configureAuxiliaryItem(button, item, button, false);
-        return button;
-    }
-
-    _createShowDesktopListItem(item) {
-        const panelHeight = this._settings.get_int('panel-height');
-        const clone = new Clutter.Clone({source: item});
-        const label = new St.Label({
-            text: _('Show desktop'),
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-application-overflow-list-content',
-            x_align: Clutter.ActorAlign.START,
-            x_expand: true,
-        });
-        content.add_child(clone);
-        content.add_child(label);
-        const button = new St.Button({
-            style_class: 'simple-taskbar-application-overflow-list-item',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            height: panelHeight,
-            accessible_name: item._taskbarButton.accessible_name,
-            child: content,
-        });
-        this._configureAuxiliaryItem(button, item, item, false);
-        return button;
-    }
-
-    _configureAuxiliaryItem(
-        auxiliaryItem,
-        sourceItem,
-        styleItem,
-        previewsEnabled
-    ) {
-        auxiliaryItem._taskbarApp = sourceItem._taskbarApp;
-        auxiliaryItem._taskbarWindow = sourceItem._taskbarWindow;
-        auxiliaryItem._taskbarIsLauncher = sourceItem._taskbarIsLauncher;
-        auxiliaryItem._taskbarIsShowDesktop =
-            sourceItem._taskbarIsShowDesktop;
-        auxiliaryItem._taskbarButton = auxiliaryItem;
-        this._auxiliaryItems.push({auxiliaryItem, sourceItem, styleItem});
-        this._taskbarController.registerAuxiliaryItem(auxiliaryItem);
-        sourceItem._taskbarButton.connectObject(
-            'notify::accessible-name',
-            () => {
-                auxiliaryItem.accessible_name =
-                    sourceItem._taskbarButton.accessible_name;
-            },
-            auxiliaryItem
-        );
-
-        if (sourceItem._taskbarIsShowDesktop) {
-            auxiliaryItem.connect('notify::hover', () => {
-                if (auxiliaryItem.hover)
-                    sourceItem._taskbarButton.add_style_pseudo_class('hover');
-                else
-                    sourceItem._taskbarButton.remove_style_pseudo_class('hover');
-            });
-            auxiliaryItem.connect('clicked', () => {
-                this._taskbarController.activateShowDesktop(sourceItem);
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
-            });
-            return;
-        }
-
-        this._makeAuxiliaryDraggable(auxiliaryItem, sourceItem);
-
-        if (previewsEnabled) {
-            auxiliaryItem.connect('notify::hover', () => {
-                this._taskbarController.handleItemHover(
-                    auxiliaryItem,
-                    auxiliaryItem.hover,
-                    styleItem,
-                    false
-                );
-            });
-        }
-        auxiliaryItem.connect('clicked', () => {
-            const keepOpen = this._taskbarController.activateItem(
-                sourceItem,
-                auxiliaryItem
-            );
-            if (!keepOpen)
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
-        });
-        auxiliaryItem.connect('button-press-event', (_button, event) => {
-            const mouseButton = event.get_button();
-            if (mouseButton === Clutter.BUTTON_MIDDLE) {
-                this._taskbarController.handleItemMiddleClick(sourceItem);
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
-                return Clutter.EVENT_STOP;
-            }
-            if (mouseButton === Clutter.BUTTON_SECONDARY) {
-                this._taskbarController.popupItemMenu(
-                    sourceItem,
-                    auxiliaryItem
-                );
-                return Clutter.EVENT_STOP;
-            }
-            return Clutter.EVENT_PROPAGATE;
-        });
-        auxiliaryItem.connect('popup-menu', () => {
-            this._taskbarController.popupItemMenu(sourceItem, auxiliaryItem);
-            return Clutter.EVENT_STOP;
-        });
-    }
-
-    _makeAuxiliaryDraggable(auxiliaryItem, sourceItem) {
-        if (!this._taskbarController.isTaskbarItemDraggable(sourceItem))
-            return;
-
-        const dragSource = {
-            app: sourceItem._taskbarApp,
-            _taskbarItem: sourceItem,
-            _taskbarDropAccepted: false,
-            _taskbarDropTarget: null,
-            getDragActor: () => sourceItem._taskbarApp.create_icon_texture(
-                this._settings.get_int('icon-size')
-            ),
-            getDragActorSource: () => sourceItem._taskbarIcon,
-        };
-        auxiliaryItem._delegate = dragSource;
-        const draggable = DND.makeDraggable(auxiliaryItem, {
-            timeoutThreshold: 200,
-            dragActorMaxSize: this._settings.get_int('icon-size'),
-        });
-        auxiliaryItem._taskbarDraggable = draggable;
-        draggable.connect('drag-begin', () => {
-            dragSource._taskbarDropAccepted = false;
-            dragSource._taskbarDropTarget = null;
-            auxiliaryItem.opacity = 96;
-            this._taskbarController.beginExternalTaskbarDrag(sourceItem);
-        });
-        draggable.connect('drag-end', () => {
-            auxiliaryItem.opacity = 255;
-            this._taskbarController.finishExternalTaskbarDrag(
-                sourceItem,
-                draggable
-            );
-            if (dragSource._taskbarDropAccepted &&
-                dragSource._taskbarDropTarget === this._taskbarController)
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
-            dragSource._taskbarDropAccepted = false;
-            dragSource._taskbarDropTarget = null;
-        });
-    }
 
     _clearPopupItems() {
         this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
         this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
-        this._popupContentBox = null;
-        const taskbarItems = new Set(
-            this._taskbarController.getOrderedItems()
-        );
-        for (const {auxiliaryItem, styleItem} of this._auxiliaryItems) {
-            if (taskbarItems.has(styleItem)) {
-                if (styleItem._taskbarIsShowDesktop)
-                    styleItem._taskbarButton.remove_style_pseudo_class('hover');
-                else
-                    styleItem.remove_style_pseudo_class('hover');
-            }
-            this._taskbarController.removeAuxiliaryItem(auxiliaryItem);
-        }
-        this._auxiliaryItems = [];
-        this._section.actor.destroy_all_children();
+        this._dragController.clearContentBox();
+        this._itemController.clear();
     }
 
     _syncPopupGeometry() {
@@ -1118,58 +650,6 @@ export class ApplicationOverflowController {
         this._menu.actor.queue_relayout();
     }
 
-    _syncTheme() {
-        const light = Main.panel.has_style_class_name(
-            'simple-taskbar-theme-light'
-        );
-        const windowsXpThemeEnabled = this._settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        this._menu.actor.remove_style_class_name(LIGHT_MENU_CLASS);
-        this._menu.actor.remove_style_class_name(DARK_MENU_CLASS);
-        this._menu.actor.remove_style_class_name(XP_MENU_CLASS);
-        this._menu.actor.add_style_class_name(
-            light ? LIGHT_MENU_CLASS : DARK_MENU_CLASS
-        );
-
-        const radiusDeclaration = (this._menu.box.get_style() ?? '')
-            .match(/(?:^|;)\s*(border-radius:\s*[^;]+)/)?.[1] ?? '';
-        if (windowsXpThemeEnabled && this._style === 'taskbar') {
-            this._menu.actor.add_style_class_name(XP_MENU_CLASS);
-            this._menu.box.set_style(null);
-            return;
-        }
-
-        const popupBlurEnabled = global.blur_my_shell?._popup?.enabled;
-        if (popupBlurEnabled && !light) {
-            this._menu.box.set_style(
-                'background: transparent !important; ' +
-                radiusDeclaration
-            );
-            return;
-        }
-
-        const panelOpacity = popupBlurEnabled
-            ? 1
-            : panelTransparencyOpacity(this._settings);
-        const gradientStart = light ? '249, 250, 253' : '42, 42, 47';
-        const gradientEnd = light ? '230, 234, 242' : '30, 30, 34';
-        const startOpacity = light
-            ? Math.min(panelOpacity, LIGHT_GRADIENT_START_MAX_OPACITY)
-            : panelOpacity;
-        const endOpacity = light
-            ? Math.min(panelOpacity, LIGHT_GRADIENT_END_MAX_OPACITY)
-            : panelOpacity;
-        this._menu.box.set_style(
-            'background: transparent !important; ' +
-            'background-gradient-direction: vertical !important; ' +
-            `background-gradient-start: rgba(${gradientStart}, ` +
-                `${startOpacity.toFixed(2)}) !important; ` +
-            `background-gradient-end: rgba(${gradientEnd}, ` +
-                `${endOpacity.toFixed(2)}) !important; ` +
-            radiusDeclaration
-        );
-    }
 
     _syncPanelPosition() {
         syncMenuArrowSide(this._menu, this._settings);

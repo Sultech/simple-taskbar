@@ -1,6 +1,7 @@
 extension.js
 showDesktopButtonController.js
 applicationOverflowController.js
+applicationOverflowItemController.js
 prefs.js
 prefs/panelAppearancePage.js
 prefs/panelItemsPage.js

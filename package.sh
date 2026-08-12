@@ -25,7 +25,11 @@ gnome-extensions pack \
     --extra-source=COPYING \
     --extra-source=ASSET-CREDITS.md \
     --extra-source=blurMyShellUtils.js \
+    --extra-source=applicationOverflowButtonController.js \
     --extra-source=applicationOverflowController.js \
+    --extra-source=applicationOverflowDragController.js \
+    --extra-source=applicationOverflowItemController.js \
+    --extra-source=applicationOverflowThemeController.js \
     --extra-source=extensionConflictController.js \
     --extra-source=panelButtonPaddingController.js \
     --extra-source=panelItemOrder.js \
