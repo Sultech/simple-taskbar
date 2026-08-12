@@ -337,9 +337,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const windowsXpThemeSwitch = new Adw.SwitchRow({
             title: _('Windows XP Theme'),
-            subtitle: _(
-                'Lock the panel height to 30 px and application icons to 16 px'
-            ),
+            subtitle: _('Apply a Windows XP-inspired taskbar style'),
             active: window._settings.get_boolean(
                 'windows-xp-theme-enabled'
             ),
