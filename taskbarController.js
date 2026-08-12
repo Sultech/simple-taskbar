@@ -658,11 +658,11 @@ export class TaskbarController {
         }
     }
 
-    _updateShowDesktopItemGeometry(trailing = false) {
+    _updateShowDesktopItemGeometry(trailing = false, runningGap = false) {
         if (!this._showDesktopItem)
             return;
 
-        const slotWidth = this._showDesktopSlotWidth(trailing);
+        const slotWidth = this._showDesktopSlotWidth(trailing, runningGap);
         this._showDesktopItem.set_height(this._panelHeight);
         this._showDesktopSlot.set_size(slotWidth, this._panelHeight);
         this._showDesktopButton.set_size(
@@ -671,9 +671,10 @@ export class TaskbarController {
         );
     }
 
-    _showDesktopSlotWidth(trailing) {
+    _showDesktopSlotWidth(trailing, runningGap = false) {
         const spacing = this._settings.get_int('icon-spacing');
         return WINDOWS_XP_SHOW_DESKTOP_WIDTH + spacing +
+            (runningGap ? WINDOWS_XP_PINNED_TO_RUNNING_GAP : 0) +
             (trailing && spacing < 0 ? -spacing : 0);
     }
 
@@ -793,6 +794,21 @@ export class TaskbarController {
     }
 
     _syncTaskbarEdgeSpacing() {
+        const activeChildren = this.actor.get_children().filter(child =>
+            !child.animatingOut
+        );
+        const showDesktopIndex = activeChildren.indexOf(
+            this._showDesktopItem
+        );
+        const showDesktopNextItem = showDesktopIndex >= 0
+            ? activeChildren[showDesktopIndex + 1]
+            : null;
+        const showDesktopRunningGap = showDesktopIndex >= 0 &&
+            showDesktopNextItem !== undefined &&
+            !showDesktopNextItem._taskbarIsLauncher;
+        const showDesktopPreviousItem = showDesktopRunningGap
+            ? activeChildren[showDesktopIndex - 1]
+            : null;
         let trailingItem = null;
         for (const child of this.actor.get_children()) {
             if (!child.animatingOut)
@@ -800,17 +816,23 @@ export class TaskbarController {
         }
 
         for (const item of this._appButtons.values()) {
+            const pinnedToRunningGap = item._taskbarPinnedToRunningGap &&
+                item !== showDesktopPreviousItem;
             const trailingSpacing = item === trailingItem &&
                 item._taskbarIsLauncher;
-            if (item._taskbarTrailingSpacing === trailingSpacing)
+            if (item._taskbarPinnedToRunningGap === pinnedToRunningGap &&
+                item._taskbarTrailingSpacing === trailingSpacing) {
                 continue;
+            }
 
+            item._taskbarPinnedToRunningGap = pinnedToRunningGap;
             item._taskbarTrailingSpacing = trailingSpacing;
             this._updateGlassGeometry(item);
         }
 
         this._updateShowDesktopItemGeometry(
-            this._showDesktopItem === trailingItem
+            this._showDesktopItem === trailingItem,
+            showDesktopRunningGap
         );
     }
 
