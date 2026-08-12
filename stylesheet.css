@@ -1339,7 +1339,7 @@
 .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
     .popup-menu-content {
     background-color: #1941a5 !important;
-    background-image: url('xp-panel-gradient.svg') !important;
+    background-image: url('icons/taskbar/xp/xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;
     background-position: top left !important;
     background-size: 1px 30px !important;
@@ -1364,7 +1364,7 @@
 
 .simple-taskbar-application-overflow-menu.simple-taskbar-application-overflow-xp
     .popup-menu-content.simple-taskbar-application-overflow-taskbar-content.simple-taskbar-application-overflow-taskbar-scrollbar {
-    background-image: url('xp-overflow-gradient.svg') !important;
+    background-image: url('icons/taskbar/xp/xp-overflow-gradient.svg') !important;
     background-repeat: repeat !important;
     background-position: top left !important;
     background-size: 1px 39px !important;
@@ -1576,7 +1576,7 @@
 #panel.simple-taskbar-windows-xp-theme.dark-panel,
 #panel.simple-taskbar-windows-xp-theme.contrasted-panel {
     background-color: #1941a5 !important;
-    background-image: url('xp-panel-gradient.svg') !important;
+    background-image: url('icons/taskbar/xp/xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;
     background-position: top left !important;
     background-size: 1px 30px !important;

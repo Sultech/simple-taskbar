@@ -96,8 +96,6 @@ gnome-extensions pack \
     --extra-source=startMenuController.js \
     --extra-source=windowsXpTheme.js \
     --extra-source=windowsXpModeController.js \
-    --extra-source=xp-panel-gradient.svg \
-    --extra-source=xp-overflow-gradient.svg \
     --extra-source=icons \
     --podir=po \
     --out-dir "$OUT_DIR" \
