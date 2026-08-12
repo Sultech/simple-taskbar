@@ -16,6 +16,7 @@ startMenuPowerController.js
 folderMenuController.js
 fileManagerPlacesSection.js
 taskbarAppMenu.js
+taskbarAppearanceController.js
 startButtonController.js
 prefs/startIconChooser.js
 panelInteractionController.js

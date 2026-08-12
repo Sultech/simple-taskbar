@@ -65,8 +65,11 @@ gnome-extensions pack \
     --extra-source=startMenuTooltipController.js \
     --extra-source=switcherKeybindingRouter.js \
     --extra-source=taskbarAppMenu.js \
+    --extra-source=taskbarAppItemFactory.js \
+    --extra-source=taskbarAppearanceController.js \
     --extra-source=taskbarDragController.js \
     --extra-source=taskbarDefaults.js \
+    --extra-source=taskbarEntryModel.js \
     --extra-source=taskbarController.js \
     --extra-source=taskbarItemContainer.js \
     --extra-source=taskbarItemInteractionController.js \
