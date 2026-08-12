@@ -2,35 +2,18 @@
 // Copyright (C) 2026 sultech
 
 import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
+import {
+    setBoolean,
+    setInteger,
+    setString,
+    setStringArray,
+} from './settingsUtils.js';
 
 export const DEFAULT_TASKBAR_PANEL_HEIGHT = 49;
 export const DEFAULT_TASKBAR_ICON_SIZE = 32;
 export const DEFAULT_TASKBAR_ICON_SPACING = 3;
 export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
 export const DEFAULT_TASKBAR_COMBINE_MODE = 'always';
-
-function setInteger(settings, key, value) {
-    if (settings.get_int(key) !== value)
-        settings.set_int(key, value);
-}
-
-function setString(settings, key, value) {
-    if (settings.get_string(key) !== value)
-        settings.set_string(key, value);
-}
-
-function setBoolean(settings, key, value) {
-    if (settings.get_boolean(key) !== value)
-        settings.set_boolean(key, value);
-}
-
-function setStringArray(settings, key, value) {
-    const current = settings.get_strv(key);
-    if (current.length !== value.length ||
-        current.some((item, index) => item !== value[index])) {
-        settings.set_strv(key, value);
-    }
-}
 
 export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'panel-height', DEFAULT_TASKBAR_PANEL_HEIGHT);

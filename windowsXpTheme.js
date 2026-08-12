@@ -5,6 +5,12 @@ import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
 import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
+import {
+    setBoolean,
+    setInteger,
+    setString,
+    setStringArray,
+} from './settingsUtils.js';
 
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
@@ -14,29 +20,6 @@ export const WINDOWS_XP_COMBINE_MODE = 'when-full';
 export const WINDOWS_XP_PANEL_POSITION = 'bottom';
 export const WINDOWS_XP_CLOCK_POSITION = 'right';
 export const WINDOWS_XP_SYSTEM_MENU_POSITION = 'right';
-
-function setInteger(settings, key, value) {
-    if (settings.get_int(key) !== value)
-        settings.set_int(key, value);
-}
-
-function setString(settings, key, value) {
-    if (settings.get_string(key) !== value)
-        settings.set_string(key, value);
-}
-
-function setBoolean(settings, key, value) {
-    if (settings.get_boolean(key) !== value)
-        settings.set_boolean(key, value);
-}
-
-function setStringArray(settings, key, value) {
-    const current = settings.get_strv(key);
-    if (current.length !== value.length ||
-        current.some((item, index) => item !== value[index])) {
-        settings.set_strv(key, value);
-    }
-}
 
 export function applyWindowsXpThemeAppearance(settings) {
     setBoolean(settings, 'panel-theme-follow-system', false);

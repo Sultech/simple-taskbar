@@ -4,6 +4,7 @@
 import St from 'gi://St';
 
 const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
+const BOTTOM_PANEL_MENU_CLASS = 'simple-taskbar-bottom-panel-menu';
 
 export function panelIsTop(settings) {
     return settings.get_string('panel-position') === 'top';
@@ -19,6 +20,14 @@ export function syncMenuArrowSide(menu, settings) {
         menu._boxPointer._userArrowSide = side;
     if (menu && '_arrowSide' in menu)
         menu._arrowSide = side;
+}
+
+export function syncPanelMenuPosition(menu, settings) {
+    syncMenuArrowSide(menu, settings);
+    if (panelIsTop(settings))
+        menu.actor.remove_style_class_name(BOTTOM_PANEL_MENU_CLASS);
+    else
+        menu.actor.add_style_class_name(BOTTOM_PANEL_MENU_CLASS);
 }
 
 export function syncXpPopupOffset(menu, settings) {

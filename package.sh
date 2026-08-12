@@ -33,6 +33,7 @@ gnome-extensions pack \
     --extra-source=extensionConflictController.js \
     --extra-source=panelButtonPaddingController.js \
     --extra-source=panelItemOrder.js \
+    --extra-source=panelItems.js \
     --extra-source=panelMenuPositioner.js \
     --extra-source=panelPosition.js \
     --extra-source=panelSizing.js \
@@ -58,6 +59,8 @@ gnome-extensions pack \
     --extra-source=secondaryPanelController.js \
     --extra-source=secondaryPanelIndicatorController.js \
     --extra-source=secondaryPanelManager.js \
+    --extra-source=scrollUtils.js \
+    --extra-source=settingsUtils.js \
     --extra-source=showDesktopButtonController.js \
     --extra-source=startButtonController.js \
     --extra-source=windowsXpStartButton.js \

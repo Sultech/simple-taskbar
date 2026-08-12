@@ -13,8 +13,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {shellMenusUseLightTheme} from './themeUtils.js';
 import {
     panelArrowSide,
-    panelIsTop,
-    syncMenuArrowSide,
+    syncPanelMenuPosition,
 } from './panelPosition.js';
 
 const FILE_ATTRIBUTES = [
@@ -148,16 +147,7 @@ export class FolderMenuController {
     }
 
     _syncPanelPosition() {
-        syncMenuArrowSide(this._menu, this._settings);
-        if (panelIsTop(this._settings)) {
-            this._menu.actor.remove_style_class_name(
-                'simple-taskbar-bottom-panel-menu'
-            );
-        } else {
-            this._menu.actor.add_style_class_name(
-                'simple-taskbar-bottom-panel-menu'
-            );
-        }
+        syncPanelMenuPosition(this._menu, this._settings);
     }
 
     _syncTheme() {

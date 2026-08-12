@@ -14,6 +14,7 @@ import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
 import {placePanelItems} from './panelItemOrder.js';
+import {createPanelItems} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelIsTop} from './panelPosition.js';
 import {PanelStateController} from './panelStateController.js';
@@ -222,79 +223,23 @@ export class PanelController {
             center: centerBox,
             right: rightBox,
         };
-        const items = [
-            {
-                id: 'start-button',
-                actor: this._startButton,
-                position: this._startButtonPosition(),
-                visible: this._startButtonShouldBeVisible(),
+        const items = createPanelItems({
+            settings: this._settings,
+            windowsXpThemeEnabled,
+            actors: {
+                startButton: this._startButton,
+                activities,
+                taskbar: this._taskbarBin,
+                folderMenu: this._folderMenuButton,
+                trayOverflow,
+                quickSettings,
+                dateMenu,
+                notificationArea: this._notificationAreaController.actor,
+                showDesktop: this._showDesktopButton,
             },
-            {
-                id: 'activities',
-                actor: activities,
-                position: this._settings.get_string(
-                    'activities-button-position'
-                ),
-                visible: true,
-            },
-            {
-                id: 'applications',
-                actor: this._taskbarBin,
-                position: this._settings.get_string('app-alignment'),
-                visible: true,
-            },
-            {
-                id: 'folder-menu',
-                actor: this._folderMenuButton,
-                position: this._settings.get_string('folder-menu-position'),
-                visible: this._settings.get_boolean('folder-menu-enabled'),
-            },
-        ];
-        if (!trayInNotificationArea) {
-            items.push({
-                id: 'tray-overflow',
-                actor: trayOverflow,
-                position: this._settings.get_string(
-                    'tray-overflow-position'
-                ),
-                visible: true,
-            });
-        }
-        if (windowsXpThemeEnabled) {
-            items.push({
-                id: 'clock',
-                actor: this._notificationAreaController.actor,
-                position: this._settings.get_string('clock-position'),
-                visible: true,
-            });
-        } else {
-            items.push(
-                {
-                    id: 'system-menu',
-                    actor: quickSettings,
-                    position: this._settings.get_string(
-                        'system-menu-position'
-                    ),
-                    visible: true,
-                },
-                {
-                    id: 'clock',
-                    actor: dateMenu,
-                    position: this._settings.get_string('clock-position'),
-                    visible: true,
-                }
-            );
-        }
-        if (!windowsXpThemeEnabled) {
-            items.push({
-                id: 'show-desktop',
-                actor: this._showDesktopButton,
-                position: showDesktopPosition,
-                visible: this._settings.get_boolean(
-                    'show-desktop-button-visible'
-                ),
-            });
-        }
+            includeTrayOverflow: !trayInNotificationArea,
+            includeShowDesktop: true,
+        });
         placePanelItems(
             boxes,
             items,
@@ -335,20 +280,6 @@ export class PanelController {
 
     appsAreCentered() {
         return this._settings.get_string('app-alignment') === 'center';
-    }
-
-    _startButtonPosition() {
-        return this._settings.get_boolean(
-            'start-button-follow-app-alignment'
-        )
-            ? this._settings.get_string('app-alignment')
-            : this._settings.get_string('start-button-position');
-    }
-
-    _startButtonShouldBeVisible() {
-        return !this._settings.get_boolean('default-gnome-panel') &&
-            (this._settings.get_boolean('windows-start-menu-enabled') ||
-                this._settings.get_boolean('gnome-start-button-visible'));
     }
 
     destroy() {

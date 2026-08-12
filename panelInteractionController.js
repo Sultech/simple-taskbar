@@ -13,6 +13,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+import {getScrollDelta} from './scrollUtils.js';
 import {taskManagerCandidates} from './taskManagerUtils.js';
 
 export class PanelInteractionController {
@@ -229,22 +230,7 @@ export class PanelInteractionController {
             return false;
 
         const increment = Math.max(stepIncrement, 48);
-        let delta = 0;
-        switch (event.get_scroll_direction()) {
-        case Clutter.ScrollDirection.UP:
-        case Clutter.ScrollDirection.LEFT:
-            delta = -increment;
-            break;
-        case Clutter.ScrollDirection.DOWN:
-        case Clutter.ScrollDirection.RIGHT:
-            delta = increment;
-            break;
-        case Clutter.ScrollDirection.SMOOTH: {
-            const [dx, dy] = event.get_scroll_delta();
-            delta = (Math.abs(dx) > Math.abs(dy) ? dx : dy) * increment;
-            break;
-        }
-        }
+        const delta = getScrollDelta(event, increment);
 
         if (delta === 0)
             return false;

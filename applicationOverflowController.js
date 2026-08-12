@@ -14,9 +14,9 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {
     panelArrowSide,
-    panelIsTop,
-    syncMenuArrowSide,
+    syncPanelMenuPosition,
 } from './panelPosition.js';
+import {getScrollDelta} from './scrollUtils.js';
 import {
     ApplicationOverflowButtonController,
 } from './applicationOverflowButtonController.js';
@@ -549,22 +549,7 @@ export class ApplicationOverflowController {
                 adjustment.step_increment,
                 this._settings.get_int('panel-height')
             );
-            let delta = 0;
-            switch (event.get_scroll_direction()) {
-            case Clutter.ScrollDirection.UP:
-            case Clutter.ScrollDirection.LEFT:
-                delta = -increment;
-                break;
-            case Clutter.ScrollDirection.DOWN:
-            case Clutter.ScrollDirection.RIGHT:
-                delta = increment;
-                break;
-            case Clutter.ScrollDirection.SMOOTH: {
-                const [dx, dy] = event.get_scroll_delta();
-                delta = (Math.abs(dx) > Math.abs(dy) ? dx : dy) * increment;
-                break;
-            }
-            }
+            const delta = getScrollDelta(event, increment);
             adjustment.set_value(adjustment.get_value() + delta);
             return Clutter.EVENT_STOP;
         });
@@ -652,15 +637,6 @@ export class ApplicationOverflowController {
 
 
     _syncPanelPosition() {
-        syncMenuArrowSide(this._menu, this._settings);
-        if (panelIsTop(this._settings)) {
-            this._menu.actor.remove_style_class_name(
-                'simple-taskbar-bottom-panel-menu'
-            );
-        } else {
-            this._menu.actor.add_style_class_name(
-                'simple-taskbar-bottom-panel-menu'
-            );
-        }
+        syncPanelMenuPosition(this._menu, this._settings);
     }
 }

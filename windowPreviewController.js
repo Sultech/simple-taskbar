@@ -12,6 +12,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, panelIsTop} from './panelPosition.js';
+import {getScrollDelta} from './scrollUtils.js';
 
 const PREVIEW_OPEN_DELAY = 320;
 const PREVIEW_CLOSE_DELAY = 180;
@@ -293,23 +294,7 @@ export class WindowPreviewController {
                 adjustment.step_increment,
                 PREVIEW_WIDTH / 2
             );
-            let delta = 0;
-
-            switch (event.get_scroll_direction()) {
-            case Clutter.ScrollDirection.UP:
-            case Clutter.ScrollDirection.LEFT:
-                delta = -increment;
-                break;
-            case Clutter.ScrollDirection.DOWN:
-            case Clutter.ScrollDirection.RIGHT:
-                delta = increment;
-                break;
-            case Clutter.ScrollDirection.SMOOTH: {
-                const [dx, dy] = event.get_scroll_delta();
-                delta = (Math.abs(dx) > Math.abs(dy) ? dx : dy) * increment;
-                break;
-            }
-            }
+            const delta = getScrollDelta(event, increment);
 
             adjustment.set_value(adjustment.get_value() + delta);
             return Clutter.EVENT_STOP;

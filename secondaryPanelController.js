@@ -17,6 +17,7 @@ import {
 } from './panelButtonPaddingController.js';
 import {PanelInteractionController} from './panelInteractionController.js';
 import {placePanelItems} from './panelItemOrder.js';
+import {createPanelItems} from './panelItems.js';
 import {panelIsTop} from './panelPosition.js';
 import {
     QuickSettingsPowerController,
@@ -448,59 +449,21 @@ export class SecondaryPanelController {
             center: this._centerBox,
             right: this._rightBox,
         };
-        const items = [
-            {
-                id: 'start-button',
-                actor: startButton,
-                position: this._startButtonPosition(),
-                visible: this._startButtonShouldBeVisible(),
+        const items = createPanelItems({
+            settings: this._settings,
+            windowsXpThemeEnabled,
+            actors: {
+                startButton,
+                activities,
+                taskbar: this._taskbarBin,
+                folderMenu: folderMenuButton,
+                quickSettings,
+                dateMenu,
+                notificationArea: this._notificationAreaController.actor,
             },
-            {
-                id: 'activities',
-                actor: activities,
-                position: this._settings.get_string(
-                    'activities-button-position'
-                ),
-                visible: true,
-            },
-            {
-                id: 'applications',
-                actor: this._taskbarBin,
-                position: this._settings.get_string('app-alignment'),
-                visible: true,
-            },
-            {
-                id: 'folder-menu',
-                actor: folderMenuButton,
-                position: this._settings.get_string('folder-menu-position'),
-                visible: this._settings.get_boolean('folder-menu-enabled'),
-            },
-        ];
-        if (windowsXpThemeEnabled) {
-            items.push({
-                id: 'clock',
-                actor: this._notificationAreaController.actor,
-                position: this._settings.get_string('clock-position'),
-                visible: true,
-            });
-        } else {
-            items.push(
-                {
-                    id: 'system-menu',
-                    actor: quickSettings,
-                    position: this._settings.get_string(
-                        'system-menu-position'
-                    ),
-                    visible: true,
-                },
-                {
-                    id: 'clock',
-                    actor: dateMenu,
-                    position: this._settings.get_string('clock-position'),
-                    visible: true,
-                }
-            );
-        }
+            includeTrayOverflow: false,
+            includeShowDesktop: false,
+        });
         placePanelItems(
             boxes,
             items,
@@ -518,20 +481,6 @@ export class SecondaryPanelController {
 
     _appsAreCentered() {
         return this._settings.get_string('app-alignment') === 'center';
-    }
-
-    _startButtonPosition() {
-        return this._settings.get_boolean(
-            'start-button-follow-app-alignment'
-        )
-            ? this._settings.get_string('app-alignment')
-            : this._settings.get_string('start-button-position');
-    }
-
-    _startButtonShouldBeVisible() {
-        return !this._settings.get_boolean('default-gnome-panel') &&
-            (this._settings.get_boolean('windows-start-menu-enabled') ||
-                this._settings.get_boolean('gnome-start-button-visible'));
     }
 
     _position() {
