@@ -172,9 +172,7 @@ export class StartButtonController {
                 object.disconnect(id);
         }
         this._signals = [];
-        this._setActivitiesOverviewState(
-            Main.overview._shown ?? Main.overview.visible
-        );
+        this._setActivitiesOverviewState(Main.overview._shown);
 
         this._keybindings?.destroy();
         this._keybindings = null;
@@ -308,16 +306,13 @@ export class StartButtonController {
     }
 
     _connectStateSignals() {
-        const shellShowAppsButton =
-            Main.overview.searchController?._showAppsButton;
-        if (shellShowAppsButton) {
-            this._connect(shellShowAppsButton, 'notify::checked', () => {
-                this._syncState();
-                this._notifyMenuOpenStateChanged();
-            });
-        }
+        const shellShowAppsButton = Main.overview.dash.showAppsButton;
+        this._connect(shellShowAppsButton, 'notify::checked', () => {
+            this._syncState();
+            this._notifyMenuOpenStateChanged();
+        });
         this._connect(Main.overview, 'showing', () => {
-            if (shellShowAppsButton?.checked)
+            if (shellShowAppsButton.checked)
                 this._setActivitiesOverviewState(false);
         });
         this._connect(Main.overview, 'hidden', () => {
@@ -453,11 +448,10 @@ export class StartButtonController {
     }
 
     _notifyMenuOpenStateChanged() {
-        const shellShowAppsButton =
-            Main.overview.searchController?._showAppsButton;
+        const shellShowAppsButton = Main.overview.dash.showAppsButton;
         const open = this._windowsModeEnabled()
             ? this.menuIsOpen
-            : Boolean(shellShowAppsButton?.checked);
+            : shellShowAppsButton.checked;
         this._onMenuOpenStateChanged(open);
     }
 
@@ -467,19 +461,18 @@ export class StartButtonController {
             return;
         }
 
-        const shellShowAppsButton =
-            Main.overview.searchController?._showAppsButton;
+        const shellShowAppsButton = Main.overview.dash.showAppsButton;
 
         if (this.actor.checked) {
             this._startOpenedOverview = !Main.overview.visible;
-            if (shellShowAppsButton && !shellShowAppsButton.checked)
+            if (!shellShowAppsButton.checked)
                 shellShowAppsButton.checked = true;
             Main.overview.show(OverviewControls.ControlsState.APP_GRID);
         } else if (this._startOpenedOverview) {
             this._startOpenedOverview = false;
             Main.overview.hide();
         } else {
-            if (shellShowAppsButton?.checked)
+            if (shellShowAppsButton.checked)
                 shellShowAppsButton.checked = false;
             else
                 Main.overview.show(OverviewControls.ControlsState.WINDOW_PICKER);
@@ -522,15 +515,13 @@ export class StartButtonController {
         if (!this.actor)
             return;
 
-        const shellShowAppsButton =
-            Main.overview.searchController?._showAppsButton;
-        const applicationsActive = shellShowAppsButton?.checked ?? false;
+        const shellShowAppsButton = Main.overview.dash.showAppsButton;
+        const applicationsActive = shellShowAppsButton.checked;
         this.actor.checked = this._windowsModeEnabled()
             ? this._startMenuController?.isOpen ?? false
             : applicationsActive;
         this._setActivitiesOverviewState(
-            !applicationsActive &&
-            (Main.overview._shown ?? Main.overview.visible)
+            !applicationsActive && Main.overview._shown
         );
     }
 

@@ -120,11 +120,11 @@ export class OverviewIntegration {
     }
 
     queueRelayout() {
-        Main.overview._overview?._controls?.queue_relayout();
+        Main.overview._overview.controls.queue_relayout();
     }
 
     showAppWindows(app) {
-        const overviewShown = Main.overview._shown ?? Main.overview.visible;
+        const overviewShown = Main.overview._shown;
         if (this._spreadApp === app) {
             if (overviewShown)
                 Main.overview.hide();
@@ -145,7 +145,7 @@ export class OverviewIntegration {
         if (!this._spreadApp)
             return;
 
-        if (Main.overview._shown ?? Main.overview.visible)
+        if (Main.overview._shown)
             Main.overview.hide();
         else
             this._restoreAppSpread(false);
@@ -238,7 +238,7 @@ export class OverviewIntegration {
             () => {
                 this._startupOverviewId = 0;
                 if (this._shouldStartInOverview() &&
-                    !(Main.overview._shown ?? Main.overview.visible)) {
+                    !Main.overview._shown) {
                     Main.overview.show();
                 }
                 return GLib.SOURCE_REMOVE;
@@ -299,10 +299,7 @@ export class OverviewIntegration {
     }
 
     _watchDashVisibility() {
-        const dash = Main.overview._overview?._controls?.dash ??
-            Main.overview.dash;
-        if (!dash)
-            return;
+        const dash = Main.overview.dash;
 
         this._connect(dash, 'notify::visible', () => {
             if (dash.visible)
@@ -326,13 +323,10 @@ export class OverviewIntegration {
                     return GLib.SOURCE_REMOVE;
                 }
 
-                const dash = Main.overview._overview?._controls?.dash ??
-                    Main.overview.dash;
-                if (dash) {
-                    dash.hide();
-                    dash.set_height(this._getDashHeight());
-                    this.queueRelayout();
-                }
+                const dash = Main.overview.dash;
+                dash.hide();
+                dash.set_height(this._getDashHeight());
+                this.queueRelayout();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -374,9 +368,7 @@ export class OverviewIntegration {
     }
 
     _adaptAllocation() {
-        const controls = Main.overview._overview?._controls;
-        if (!controls)
-            return;
+        const controls = Main.overview._overview.controls;
 
         const integration = this;
         this._injectionManager.overrideMethod(
@@ -469,8 +461,7 @@ export class OverviewIntegration {
         }
         this._spreadApp = null;
 
-        if (rebuildOverview &&
-            (Main.overview._shown ?? Main.overview.visible)) {
+        if (rebuildOverview && Main.overview._shown) {
             this._rebuildOverviewWorkspaces();
         }
     }
@@ -498,8 +489,8 @@ export class OverviewIntegration {
     }
 
     _getOverviewWorkspaces() {
-        const views = Main.overview._overview?._controls
-            ?._workspacesDisplay?._workspacesViews ?? [];
+        const views = Main.overview._overview.controls
+            ._workspacesDisplay._workspacesViews;
         const workspaces = [];
         for (const view of views) {
             workspaces.push(...(view._workspaces ?? []));
@@ -544,16 +535,12 @@ export class OverviewIntegration {
 
         const hiddenDash = this._dashState?.dash ?? Main.overview.dash;
         const visible = forceVisible || this._dashState?.visible;
-        const dash = Main.overview._overview?._controls?.dash ?? hiddenDash;
-        if (!dash) {
-            this._dashState = null;
-            return;
-        }
+        const dash = Main.overview.dash;
         // `dash.height` is its current allocation, not its preferred-height
         // setting. Restoring that value would force a fixed-size dash and can
         // leave it partly outside the overview. GNOME's stock dash uses its
         // natural height, represented by -1.
-        hiddenDash?.set_height(-1);
+        hiddenDash.set_height(-1);
         dash.set_height(-1);
         if (visible) {
             this._resetDashItems(dash);

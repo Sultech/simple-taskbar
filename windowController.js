@@ -62,7 +62,7 @@ export class WindowController {
 
     activateApp(app) {
         const windows = this.getInterestingWindows(app);
-        const overviewShown = Main.overview._shown ?? Main.overview.visible;
+        const overviewShown = Main.overview._shown;
         if (windows.length === 0) {
             const isolateWorkspaces =
                 this._settings?.get_boolean('isolate-workspaces') ?? false;
@@ -106,7 +106,7 @@ export class WindowController {
             return;
         }
 
-        if (Main.overview._shown ?? Main.overview.visible) {
+        if (Main.overview._shown) {
             this._previews?.hide();
             this.activateApp(app);
             return;
@@ -125,7 +125,7 @@ export class WindowController {
         if (!window || window.skip_taskbar)
             return;
 
-        const overviewShown = Main.overview._shown ?? Main.overview.visible;
+        const overviewShown = Main.overview._shown;
         if (overviewShown) {
             Main.activateWindow(window);
             Main.overview.hide();
@@ -147,7 +147,7 @@ export class WindowController {
             app.open_new_window(-1);
         else
             app.activate();
-        if (Main.overview._shown ?? Main.overview.visible)
+        if (Main.overview._shown)
             Main.overview.hide();
     }
 
