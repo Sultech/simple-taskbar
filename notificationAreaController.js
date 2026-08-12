@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 import St from 'gi://St';
 
 const XP_PANEL_HEIGHT = 30;
@@ -195,11 +196,17 @@ export class NotificationAreaController {
 
     _addRightBoxHoverState(button) {
         const state = {
+            compensated: false,
+            restoreTimeoutId: 0,
             translationY: button.translation_y,
             childTranslations: new Map(),
         };
         state.hoverId = button.connect(
             'notify::hover',
+            () => this._syncRightBoxHoverState(button)
+        );
+        state.pseudoClassId = button.connect(
+            'notify::pseudo-class',
             () => this._syncRightBoxHoverState(button)
         );
         state.focusInId = button.connect(
@@ -212,7 +219,10 @@ export class NotificationAreaController {
         );
         state.destroyId = button.connect(
             'destroy',
-            () => this._rightBoxHoverStates.delete(button)
+            () => {
+                this._cancelRightBoxHoverRestore(state);
+                this._rightBoxHoverStates.delete(button);
+            }
         );
         this._rightBoxHoverStates.set(button, state);
     }
@@ -224,10 +234,58 @@ export class NotificationAreaController {
 
         this._restoreRightBoxHoverState(button, state);
         button.disconnect(state.hoverId);
+        button.disconnect(state.pseudoClassId);
         button.disconnect(state.focusInId);
         button.disconnect(state.focusOutId);
         button.disconnect(state.destroyId);
         this._rightBoxHoverStates.delete(button);
+    }
+
+    _isRightBoxPanelButtonActive(button) {
+        return button.has_style_pseudo_class('active') ||
+            button.has_style_pseudo_class('checked');
+    }
+
+    _isRightBoxPanelButtonResting(button) {
+        return !button.hover && !button.has_key_focus() &&
+            !this._isRightBoxPanelButtonActive(button);
+    }
+
+    _isRightBoxPanelButtonAlwaysCompensated(button) {
+        return button.has_style_class_name('screen-recording-indicator') ||
+            button.has_style_class_name('screen-sharing-indicator');
+    }
+
+    _cancelRightBoxHoverRestore(state) {
+        if (!state.restoreTimeoutId)
+            return;
+
+        GLib.source_remove(state.restoreTimeoutId);
+        state.restoreTimeoutId = 0;
+    }
+
+    _scheduleRightBoxHoverRestore(button, state) {
+        if (state.restoreTimeoutId)
+            return;
+
+        const duration = button.mapped && St.Settings.get().enable_animations
+            ? button.get_theme_node().get_transition_duration()
+            : 0;
+        if (duration === 0) {
+            this._restoreRightBoxHoverState(button, state);
+            return;
+        }
+
+        state.restoreTimeoutId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            duration,
+            () => {
+                state.restoreTimeoutId = 0;
+                if (this._isRightBoxPanelButtonResting(button))
+                    this._restoreRightBoxHoverState(button, state);
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     _syncRightBoxHoverState(button) {
@@ -235,11 +293,16 @@ export class NotificationAreaController {
         if (!state)
             return;
 
-        if (!button.hover && !button.has_key_focus()) {
-            this._restoreRightBoxHoverState(button, state);
+        const alwaysCompensated =
+            this._isRightBoxPanelButtonAlwaysCompensated(button);
+        if (!alwaysCompensated &&
+            this._isRightBoxPanelButtonResting(button)) {
+            if (state.compensated)
+                this._scheduleRightBoxHoverRestore(button, state);
             return;
         }
 
+        this._cancelRightBoxHoverRestore(state);
         button.translation_y = state.translationY + 1;
         const children = button.get_children();
         const childSet = new Set(children);
@@ -255,13 +318,16 @@ export class NotificationAreaController {
             child.translation_y =
                 state.childTranslations.get(child) - 1;
         }
+        state.compensated = true;
     }
 
     _restoreRightBoxHoverState(button, state) {
+        this._cancelRightBoxHoverRestore(state);
         button.translation_y = state.translationY;
         for (const [child, translationY] of state.childTranslations)
             child.translation_y = translationY;
         state.childTranslations.clear();
+        state.compensated = false;
     }
 
     _restoreRightBoxHoverStates() {
