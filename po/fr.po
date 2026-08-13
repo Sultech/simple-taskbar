@@ -25,7 +25,7 @@ msgstr "Afficher le bureau"
 
 #: applicationOverflowController.js:385
 msgid "Application overflow"
-msgstr ""
+msgstr "Débordement des applications"
 
 #: prefs.js:111
 msgid "Left"
@@ -109,11 +109,11 @@ msgstr ""
 
 #: prefs.js:206
 msgid "Windows XP Theme"
-msgstr ""
+msgstr "Thème Windows XP"
 
 #: prefs.js:207
 msgid "Apply a Windows XP-inspired taskbar style"
-msgstr ""
+msgstr "Appliquer un style de barre des tâches inspiré de Windows XP"
 
 #: prefs.js:219
 msgid "Panel Button Padding"
@@ -211,15 +211,16 @@ msgstr ""
 "d’exécution"
 
 #: prefs.js:355
-#, fuzzy
 msgid "Use Pinned Apps as Application Launchers"
-msgstr "Masquer les applications épinglées"
+msgstr "Utiliser les applications épinglées comme lanceurs"
 
 #: prefs.js:357
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr ""
+"Conserver les applications épinglées comme lanceurs et afficher séparément "
+"les applications en cours d’exécution"
 
 #: prefs.js:372
 msgid "Always"
@@ -243,25 +244,27 @@ msgstr "Choisir quand les fenêtres se partagent un bouton de barre des tâches"
 
 #: prefs.js:399
 msgid "Application Overflow"
-msgstr ""
+msgstr "Débordement des applications"
 
 #: prefs.js:401
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr ""
+"Afficher dans une fenêtre de débordement les boutons d’application qui ne "
+"tiennent pas, au lieu de faire défiler la barre des tâches"
 
 #: prefs.js:420
 msgid "Overflow Style"
-msgstr ""
+msgstr "Style de débordement"
 
 #: prefs.js:422
 msgid "Taskbar Flyout"
-msgstr ""
+msgstr "Menu volant de la barre des tâches"
 
 #: prefs.js:423
 msgid "Application List"
-msgstr ""
+msgstr "Liste des applications"
 
 #: prefs.js:434
 msgid "Hide App Labels"

@@ -23,7 +23,7 @@ msgstr "Desktop anzeigen"
 
 #: applicationOverflowController.js:385
 msgid "Application overflow"
-msgstr ""
+msgstr "Anwendungsüberlauf"
 
 #: prefs.js:111
 msgid "Left"
@@ -104,11 +104,11 @@ msgstr ""
 
 #: prefs.js:206
 msgid "Windows XP Theme"
-msgstr ""
+msgstr "Windows-XP-Thema"
 
 #: prefs.js:207
 msgid "Apply a Windows XP-inspired taskbar style"
-msgstr ""
+msgstr "Einen von Windows XP inspirierten Taskleistenstil anwenden"
 
 #: prefs.js:219
 msgid "Panel Button Padding"
@@ -199,15 +199,16 @@ msgstr ""
 "werden"
 
 #: prefs.js:355
-#, fuzzy
 msgid "Use Pinned Apps as Application Launchers"
-msgstr "Angeheftete Anwendungen ausblenden"
+msgstr "Angeheftete Anwendungen als Starter verwenden"
 
 #: prefs.js:357
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr ""
+"Angeheftete Anwendungen als Starter beibehalten und laufende Anwendungen "
+"separat anzeigen"
 
 #: prefs.js:372
 msgid "Always"
@@ -231,25 +232,27 @@ msgstr "Wählen Sie, wann sich Fenster eine Taskleisten-Schaltfläche teilen"
 
 #: prefs.js:399
 msgid "Application Overflow"
-msgstr ""
+msgstr "Anwendungsüberlauf"
 
 #: prefs.js:401
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr ""
+"Anwendungsschaltflächen, die nicht in das Überlaufmenü passen, anzeigen, "
+"anstatt die Taskleiste zu scrollen"
 
 #: prefs.js:420
 msgid "Overflow Style"
-msgstr ""
+msgstr "Überlaufstil"
 
 #: prefs.js:422
 msgid "Taskbar Flyout"
-msgstr ""
+msgstr "Taskleisten-Flyout"
 
 #: prefs.js:423
 msgid "Application List"
-msgstr ""
+msgstr "Anwendungsliste"
 
 #: prefs.js:434
 msgid "Hide App Labels"

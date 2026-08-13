@@ -23,7 +23,7 @@ msgstr "Mostra desktop"
 
 #: applicationOverflowController.js:385
 msgid "Application overflow"
-msgstr ""
+msgstr "Overflow delle applicazioni"
 
 #: prefs.js:111
 msgid "Left"
@@ -108,11 +108,11 @@ msgstr ""
 
 #: prefs.js:206
 msgid "Windows XP Theme"
-msgstr ""
+msgstr "Tema Windows XP"
 
 #: prefs.js:207
 msgid "Apply a Windows XP-inspired taskbar style"
-msgstr ""
+msgstr "Applica uno stile della barra delle applicazioni ispirato a Windows XP"
 
 #: prefs.js:219
 msgid "Panel Button Padding"
@@ -206,15 +206,16 @@ msgstr ""
 "sono in esecuzione"
 
 #: prefs.js:355
-#, fuzzy
 msgid "Use Pinned Apps as Application Launchers"
-msgstr "Nascondi applicazioni bloccate"
+msgstr "Usa le applicazioni bloccate come lanciatori"
 
 #: prefs.js:357
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr ""
+"Mantieni le applicazioni bloccate come lanciatori e mostra separatamente "
+"quelle in esecuzione"
 
 #: prefs.js:372
 msgid "Always"
@@ -240,25 +241,27 @@ msgstr ""
 
 #: prefs.js:399
 msgid "Application Overflow"
-msgstr ""
+msgstr "Overflow delle applicazioni"
 
 #: prefs.js:401
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr ""
+"Mostra i pulsanti delle applicazioni che non trovano spazio in un popup di "
+"overflow invece di scorrere la barra delle applicazioni"
 
 #: prefs.js:420
 msgid "Overflow Style"
-msgstr ""
+msgstr "Stile dell’overflow"
 
 #: prefs.js:422
 msgid "Taskbar Flyout"
-msgstr ""
+msgstr "Menu a comparsa della barra delle applicazioni"
 
 #: prefs.js:423
 msgid "Application List"
-msgstr ""
+msgstr "Elenco delle applicazioni"
 
 #: prefs.js:434
 msgid "Hide App Labels"
