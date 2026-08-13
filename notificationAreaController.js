@@ -32,24 +32,24 @@ export class NotificationAreaController {
         this._clockSpacer = null;
         this._clockLabel = null;
         this._clockLabelTranslationY = null;
+        this._actorOrigins = new Map();
         this._rightBoxActorTranslationY = new Map();
         this._rightBoxHoverStates = new Map();
     }
 
     sync(actors, clock, enabled) {
         if (!enabled) {
-            this._restoreClockOffset();
-            this._clearContent();
-
-            const parent = this.actor.get_parent();
-            if (parent)
-                parent.remove_child(this.actor);
+            this._restoreContent();
             return;
         }
 
+        const selectedActors = actors.filter(actor => actor);
+        for (const actor of selectedActors)
+            this._captureActorOrigin(actor);
+
         this._applyClockOffset(clock);
         const children = [];
-        for (const actor of actors.filter(actor => actor)) {
+        for (const actor of selectedActors) {
             if (actor === clock) {
                 if (!this._clockSpacer) {
                     this._clockSpacer = new St.Widget({
@@ -64,8 +64,16 @@ export class NotificationAreaController {
         }
         const childSet = new Set(children);
         for (const actor of this._content.get_children()) {
-            if (!childSet.has(actor))
-                this._content.remove_child(actor);
+            if (childSet.has(actor))
+                continue;
+
+            this._content.remove_child(actor);
+            if (actor === this._clockSpacer) {
+                actor.destroy();
+                this._clockSpacer = null;
+            } else {
+                this._restoreActor(actor);
+            }
         }
 
         for (let index = 0; index < children.length; index++) {
@@ -122,42 +130,72 @@ export class NotificationAreaController {
         );
     }
 
-    restore(parent) {
-        this._restoreClockOffset();
-        this._restoreRightBoxActorOffsets();
-        const wrapperParent = this.actor.get_parent();
-        if (wrapperParent)
-            wrapperParent.remove_child(this.actor);
-
-        for (const actor of this._content.get_children()) {
-            if (actor === this._clockSpacer) {
-                this._content.remove_child(actor);
-                actor.destroy();
-                this._clockSpacer = null;
-                continue;
-            }
-            this._content.remove_child(actor);
-            parent.add_child(actor);
-        }
-    }
-
     destroy() {
-        this._restoreClockOffset();
         this._restoreRightBoxActorOffsets();
-        this._clearContent();
+        this._restoreContent();
         this.actor.destroy();
         this._content = null;
         this.actor = null;
     }
 
-    _clearContent() {
-        for (const actor of this._content.get_children()) {
+    _captureActorOrigin(actor) {
+        if (this._actorOrigins.has(actor))
+            return;
+
+        const parent = actor.get_parent();
+        this._actorOrigins.set(actor, {
+            parent,
+            index: parent ? parent.get_children().indexOf(actor) : -1,
+        });
+    }
+
+    _restoreActor(actor) {
+        const origin = this._actorOrigins.get(actor);
+        if (origin.parent)
+            origin.parent.insert_child_at_index(
+                actor,
+                Math.min(origin.index, origin.parent.get_n_children())
+            );
+        this._actorOrigins.delete(actor);
+    }
+
+    _restoreContent() {
+        this._restoreClockOffset();
+        const wrapperParent = this.actor.get_parent();
+        if (wrapperParent)
+            wrapperParent.remove_child(this.actor);
+
+        const actors = this._content.get_children()
+            .filter(actor => actor !== this._clockSpacer);
+        for (const actor of actors)
             this._content.remove_child(actor);
-            if (actor === this._clockSpacer) {
-                actor.destroy();
-                this._clockSpacer = null;
+
+        if (this._clockSpacer) {
+            this._content.remove_child(this._clockSpacer);
+            this._clockSpacer.destroy();
+            this._clockSpacer = null;
+        }
+
+        const actorsByParent = new Map();
+        for (const actor of actors) {
+            const origin = this._actorOrigins.get(actor);
+            if (!origin.parent)
+                continue;
+
+            const parentActors = actorsByParent.get(origin.parent) ?? [];
+            parentActors.push({actor, index: origin.index});
+            actorsByParent.set(origin.parent, parentActors);
+        }
+        for (const [parent, parentActors] of actorsByParent) {
+            parentActors.sort((a, b) => a.index - b.index);
+            for (const {actor, index} of parentActors) {
+                parent.insert_child_at_index(
+                    actor,
+                    Math.min(index, parent.get_n_children())
+                );
             }
         }
+        this._actorOrigins.clear();
     }
 
     _applyClockOffset(clock) {

@@ -263,7 +263,6 @@ export class SecondaryPanelController {
         this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController.destroy();
         this._quickSettingsPowerController = null;
-        this._notificationAreaController.restore(this._rightBox);
         this._notificationAreaController.destroy();
         this._indicatorController.destroy();
         this._indicatorController = null;
@@ -417,15 +416,6 @@ export class SecondaryPanelController {
         const quickSettings = this._indicatorController.get('quickSettings').container;
         const dateMenu = this._indicatorController.get('dateMenu').container;
         const folderMenuButton = this._folderMenuController.actor;
-        for (const actor of [
-            startButton,
-            this._taskbarBin,
-            activities,
-            quickSettings,
-            dateMenu,
-            folderMenuButton,
-        ])
-            actor.get_parent()?.remove_child(actor);
 
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'

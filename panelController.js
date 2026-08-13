@@ -290,7 +290,6 @@ export class PanelController {
         this._autoHideController = null;
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
-        this._notificationAreaController.restore(Main.panel._rightBox);
         this._notificationAreaController.destroy();
 
         this._menuPositioner.destroy();
