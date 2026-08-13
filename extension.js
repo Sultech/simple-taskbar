@@ -158,7 +158,6 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._trayOverflowController.close();
                 }
             },
-            onVisibilityChanged: () => this._panelController.applyLayout(),
         });
 
         this._createTaskbarActors();

@@ -190,7 +190,7 @@ export class PanelButtonPaddingController {
             return;
 
         actor.set_style(stripped === '' ? null : stripped);
-        this._queueRelayout(actor);
+        actor.queue_relayout();
     }
 
     _trackActor(actor, onStyleChanged) {
@@ -243,7 +243,7 @@ export class PanelButtonPaddingController {
             `-minimum-hpadding: ${padding}px;`;
         this._styledActors.set(actor, state);
         actor.set_style(state.appliedStyle);
-        this._queueRelayout(actor);
+        actor.queue_relayout();
     }
 
     _restoreSubtree(actor) {
@@ -263,14 +263,9 @@ export class PanelButtonPaddingController {
             actor.set_style(state.originalStyle === ''
                 ? null
                 : state.originalStyle);
-            this._queueRelayout(actor);
+            actor.queue_relayout();
         }
         this._styledActors.delete(actor);
-    }
-
-    _queueRelayout(actor) {
-        if (actor.get_stage())
-            actor.queue_relayout();
     }
 
     _restoreAll() {
