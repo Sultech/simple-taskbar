@@ -28,6 +28,7 @@ import {
 import {addPanelAppearancePage} from './prefs/panelAppearancePage.js';
 import {addPanelItemsPage} from './prefs/panelItemsPage.js';
 import {addStartMenuPage} from './prefs/startMenuPage.js';
+import {SettingsSignalTracker} from './prefs/settingsSignalTracker.js';
 import {addWindowSwitchingPage} from './prefs/windowSwitchingPage.js';
 
 const MAX_ICON_SIZE = 48;
@@ -36,6 +37,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         window.set_default_size(820, 740);
         window._settings = this.getSettings();
+        const settingsSignalTracker = new SettingsSignalTracker();
+        window.connect('close-request', () => settingsSignalTracker.destroy());
+        const connectSettings = (settings, signal, callback) =>
+            settingsSignalTracker.connect(settings, signal, callback);
         const shellSettings = new Gio.Settings({
             schema_id: GNOME_SHELL_SCHEMA,
         });
@@ -86,14 +91,16 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         };
         if (blurMyShellPanelSettings &&
             blurMyShellHasKey(blurMyShellPanelSettings, 'blur')) {
-            blurMyShellPanelSettings.connect(
+            connectSettings(
+                blurMyShellPanelSettings,
                 'changed::blur',
                 syncBlurMyShellTransparencyState
             );
         }
         if (blurMyShellPopupSettings &&
             blurMyShellHasKey(blurMyShellPopupSettings, 'blur')) {
-            blurMyShellPopupSettings.connect(
+            connectSettings(
+                blurMyShellPopupSettings,
                 'changed::blur',
                 syncBlurMyShellTransparencyState
             );
@@ -102,7 +109,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'enabled-extensions',
             'disabled-extensions',
         ]) {
-            shellSettings.connect(
+            connectSettings(
+                shellSettings,
                 `changed::${key}`,
                 syncBlurMyShellTransparencyState
             );
@@ -119,7 +127,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         window.add(page);
 
-        addWindowSwitchingPage(window, window._settings);
+        addWindowSwitchingPage(
+            window,
+            window._settings,
+            connectSettings
+        );
 
         const startMenuPage = new Adw.PreferencesPage({
             title: _('Start Menu'),
@@ -183,6 +195,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             advancedFileManagerGroup,
             blurMyShellPanelBlurEnabled,
             blurMyShellPopupBlurEnabled,
+            connectSettings,
         });
         const followAppAlignmentSwitch =
             startMenu.followAppAlignmentSwitch;
@@ -222,7 +235,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 ),
                 lower: -1,
                 upper: 20,
-            }
+            },
+            connectSettings
         );
 
         const appearanceGroup = new Adw.PreferencesGroup({
@@ -242,7 +256,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 ),
                 lower: 15,
                 upper: MAX_ICON_SIZE,
-            }
+            },
+            connectSettings
         );
         const iconSpacingRow = addSpinRow(
             appearanceGroup,
@@ -253,7 +268,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 subtitle: _('Space between application buttons'),
                 lower: 0,
                 upper: 16,
-            }
+            },
+            connectSettings
         );
         const indicatorStyleRow = addComboRow(
             advancedAppearanceGroup,
@@ -268,7 +284,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                     {value: 'rounded', label: _('Rounded')},
                     {value: 'straight', label: _('Straight')},
                 ],
-            }
+            },
+            connectSettings
         );
         const customIndicatorColorsSwitch = new Adw.SwitchRow({
             title: _('Custom Indicator Colors'),
@@ -290,7 +307,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             {
                 key: 'focused-indicator-color',
                 title: _('Focused Indicator Color'),
-            }
+            },
+            connectSettings
         );
         const unfocusedIndicatorColorRow = addColorRow(
             advancedAppearanceGroup,
@@ -298,7 +316,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             {
                 key: 'unfocused-indicator-color',
                 title: _('Unfocused Indicator Color'),
-            }
+            },
+            connectSettings
         );
         const syncIndicatorControls = () => {
             const windowsXpThemeEnabled = window._settings.get_boolean(
@@ -318,7 +337,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'notify::active',
             syncIndicatorControls
         );
-        window._settings.connect(
+        connectSettings(
+            window._settings,
             'changed::windows-xp-theme-enabled',
             syncIndicatorControls
         );
@@ -333,7 +353,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                     'Place application icons at the left or center'
                 ),
                 choices: panelPositions.slice(0, 2),
-            }
+            },
+            connectSettings
         );
 
         const hidePinnedAppsSwitch = new Adw.SwitchRow({
@@ -392,7 +413,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                         ? windowsXpCombineAppButtonsChoices
                         : combineAppButtonsChoices,
                 choicesChangedKey: 'windows-xp-theme-enabled',
-            }
+            },
+            connectSettings
         );
 
         const applicationOverflowSwitch = new Adw.SwitchRow({
@@ -422,7 +444,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                     {value: 'taskbar', label: _('Taskbar Flyout')},
                     {value: 'list', label: _('Application List')},
                 ],
-            }
+            },
+            connectSettings
         );
         applicationOverflowStyleRow.sensitive =
             applicationOverflowSwitch.active;
@@ -586,7 +609,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 syncDefaultGnomePanel();
             }
         );
-        window._settings.connect(
+        connectSettings(
+            window._settings,
             'changed::default-gnome-panel',
             syncDefaultGnomePanel
         );
@@ -595,6 +619,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const panelAppearance = addPanelAppearancePage({
             page,
             settings: window._settings,
+            connectSettings,
             createSettings: () => this.getSettings(),
             advancedAppearanceGroup,
             blurMyShellPanelBlurEnabled,
@@ -659,7 +684,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 lower: 0,
                 upper: 500,
                 step: 25,
-            }
+            },
+            connectSettings
         );
 
         const hotEdgeAnimationSwitch = new Adw.SwitchRow({
@@ -708,7 +734,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 lower: 5,
                 upper: 250,
                 step: 5,
-            }
+            },
+            connectSettings
         );
         workspaceScrollDelayRow.sensitive = workspaceScrollSwitch.active;
         workspaceScrollSwitch.connect('notify::active', widget => {
@@ -793,7 +820,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
                 subtitle: _('Application opened from the taskbar context menu'),
                 choices: taskManagerApps,
                 initialValue: effectiveTaskManager ?? configuredTaskManager,
-            }
+            },
+            connectSettings
         );
         taskManagerAppRow.expression = Gtk.PropertyExpression.new(
             Gtk.StringObject.$gtype,
@@ -820,7 +848,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             isolateMonitorsSwitch.sensitive =
                 window._settings.get_boolean('multi-monitor-panels');
         };
-        window._settings.connect(
+        connectSettings(
+            window._settings,
             'changed::multi-monitor-panels',
             syncMonitorIsolationSensitivity
         );
@@ -829,6 +858,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         addPanelItemsPage({
             window,
             settings: window._settings,
+            connectSettings,
             page,
             panelPositions,
             windowsStartMenuSwitch,

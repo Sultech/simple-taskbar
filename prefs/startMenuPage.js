@@ -18,6 +18,7 @@ export function addStartMenuPage({
     window,
     page: startMenuPage,
     settings,
+    connectSettings,
     extensionPath,
     panelPositions,
     advancedStartMenuGroup,
@@ -51,17 +52,11 @@ export function addStartMenuPage({
         if (target)
             settings.set_string('target-prefs-page', '');
     };
-    let targetPageChangedId = settings.connect(
+    connectSettings(
+        settings,
         'changed::target-prefs-page',
         showRequestedPage
     );
-    window.connect('close-request', () => {
-        if (!targetPageChangedId)
-            return;
-
-        settings.disconnect(targetPageChangedId);
-        targetPageChangedId = 0;
-    });
     showRequestedPage();
 
     const startPositionRow = addComboRow(
@@ -74,7 +69,8 @@ export function addStartMenuPage({
                 'Place the Start button at the left edge or in the center'
             ),
             choices: panelPositions.slice(0, 2),
-        }
+        },
+        connectSettings
     );
 
     const followAppAlignmentSwitch = new Adw.SwitchRow({
@@ -108,11 +104,13 @@ export function addStartMenuPage({
         'notify::active',
         updateStartPositionRow
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::default-gnome-panel',
         updateStartPositionRow
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         updateStartPositionRow
     );
@@ -127,7 +125,8 @@ export function addStartMenuPage({
             subtitle: _('Horizontal space around the Start icon in pixels'),
             lower: 0,
             upper: 20,
-        }
+        },
+        connectSettings
     );
 
     const customIconRow = new Adw.ActionRow({
@@ -170,7 +169,8 @@ export function addStartMenuPage({
     clearCustomIconButton.connect('clicked', () => {
         settings.set_string('start-button-custom-icon', '');
     });
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::start-button-custom-icon',
         updateCustomIconRow
     );
@@ -183,7 +183,8 @@ export function addStartMenuPage({
         startButtonPaddingRow.sensitive = !enabled;
         customIconRow.sensitive = !enabled;
     };
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         syncXpStartButtonControls
     );
@@ -391,7 +392,8 @@ export function addStartMenuPage({
                 {value: 'light', label: _('Light')},
                 {value: 'shell', label: _('GNOME Shell')},
             ],
-        }
+        },
+        connectSettings
     );
     const updateStartMenuThemeRows = () => {
         followPanelThemeSwitch.sensitive = windowsStartMenuSwitch.active;
@@ -462,7 +464,8 @@ export function addStartMenuPage({
         'notify::active',
         updateStartMenuTransparencyRow
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         updateStartMenuTransparencyRow
     );
@@ -491,7 +494,8 @@ export function addStartMenuPage({
         centerStartMenuRow.sensitive =
             windowsStartMenuSwitch.active && centered;
     };
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::start-button-position',
         updateCenterStartMenuRow
     );
@@ -499,7 +503,8 @@ export function addStartMenuPage({
         'notify::active',
         updateCenterStartMenuRow
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::app-alignment',
         updateCenterStartMenuRow
     );
@@ -554,7 +559,8 @@ export function addStartMenuPage({
         'notify::active',
         updateSuperTabRow
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         updateSuperTabRow
     );
@@ -627,7 +633,8 @@ export function addStartMenuPage({
     clearCustomShortcutButton.connect('clicked', () => {
         settings.set_strv('start-menu-custom-hotkey', []);
     });
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::start-menu-custom-hotkey',
         updateCustomShortcutRow
     );

@@ -115,6 +115,7 @@ export class StartMenuFooterController {
     }
 
     destroy() {
+        this.actor.destroy();
         this._userAvatar = null;
         this._defaultUserIcon = null;
         this._userNameLabel = null;

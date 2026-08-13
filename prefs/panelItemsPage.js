@@ -17,6 +17,7 @@ import {createPanelOrderRow} from './preferencesWidgets.js';
 export function addPanelItemsPage({
     window,
     settings,
+    connectSettings,
     page,
     panelPositions,
     windowsStartMenuSwitch,
@@ -121,7 +122,8 @@ export function addPanelItemsPage({
     chooseFolderButton.connect('clicked', () => {
         selectFolderMenuLocation(window);
     });
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::folder-menu-uri',
         updateFolderMenuRow
     );
@@ -218,7 +220,8 @@ export function addPanelItemsPage({
     for (const id of DEFAULT_PANEL_ITEM_ORDER) {
         const controls = createPanelOrderRow(
             settings,
-            panelOrderDefinitions.get(id)
+            panelOrderDefinitions.get(id),
+            connectSettings
         );
         panelOrderRows.set(id, controls);
     }
@@ -231,7 +234,8 @@ export function addPanelItemsPage({
         ) ? activitiesPanelPositions : panelPositions;
         panelOrderRows.get('activities').setChoices(choices);
     };
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         syncActivitiesPositionChoices
     );
@@ -348,7 +352,8 @@ export function addPanelItemsPage({
             movePanelItem(id, 1);
         });
     }
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::panel-item-order',
         syncPanelItemOrder
     );
@@ -356,7 +361,8 @@ export function addPanelItemsPage({
         if (definition.fixedPosition)
             continue;
 
-        settings.connect(
+        connectSettings(
+            settings,
             `changed::${definition.key}`,
             syncPanelItemOrder
         );
@@ -411,14 +417,16 @@ export function addPanelItemsPage({
         'notify::active',
         syncPanelPositionSensitivity
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::default-gnome-panel',
         () => {
             syncPanelItemOrder();
             syncPanelPositionSensitivity();
         }
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         () => {
             syncPanelItemOrder();

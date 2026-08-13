@@ -8,7 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {addSpinRow} from './preferencesWidgets.js';
 
-export function addWindowSwitchingPage(window, settings) {
+export function addWindowSwitchingPage(window, settings, connectSettings) {
     const page = new Adw.PreferencesPage({
         title: _('Window Switching'),
         icon_name: 'focus-windows-symbolic',
@@ -47,7 +47,7 @@ export function addWindowSwitchingPage(window, settings) {
         lower: 120,
         upper: 500,
         step: 10,
-    });
+    }, connectSettings);
     const workspaceSwitch = new Adw.SwitchRow({
         title: _('Isolate Workspaces'),
         subtitle: _(

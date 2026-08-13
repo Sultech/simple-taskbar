@@ -25,6 +25,7 @@ import {
 export function addPanelAppearancePage({
     page,
     settings,
+    connectSettings,
     createSettings,
     advancedAppearanceGroup,
     blurMyShellPanelBlurEnabled,
@@ -56,7 +57,8 @@ export function addPanelAppearancePage({
             ),
             lower: MIN_PANEL_HEIGHT,
             upper: 80,
-        }
+        },
+        connectSettings
     );
     const panelPositionRow = addComboRow(
         panelAppearanceGroup,
@@ -71,7 +73,8 @@ export function addPanelAppearancePage({
                 {value: 'top', label: _('Top')},
                 {value: 'bottom', label: _('Bottom')},
             ],
-        }
+        },
+        connectSettings
     );
 
     const fitPanelToIcons = () => {
@@ -105,8 +108,8 @@ export function addPanelAppearancePage({
         if (iconSize > maximumIconSize)
             settings.set_int('icon-size', maximumIconSize);
     };
-    settings.connect('changed::icon-size', fitPanelToIcons);
-    settings.connect('changed::panel-height', fitIconsToPanel);
+    connectSettings(settings, 'changed::icon-size', fitPanelToIcons);
+    connectSettings(settings, 'changed::panel-height', fitIconsToPanel);
 
     let syncingWindowsXpTheme = false;
     const syncWindowsXpTheme = () => {
@@ -165,48 +168,58 @@ export function addPanelAppearancePage({
         setWindowsXpTheme(enabled);
         syncWindowsXpTheme();
     });
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         syncWindowsXpTheme
     );
-    settings.connect('changed::icon-size', syncWindowsXpTheme);
-    settings.connect('changed::icon-spacing', syncWindowsXpTheme);
-    settings.connect('changed::panel-height', syncWindowsXpTheme);
-    settings.connect('changed::panel-position', syncWindowsXpTheme);
-    settings.connect(
+    connectSettings(settings, 'changed::icon-size', syncWindowsXpTheme);
+    connectSettings(settings, 'changed::icon-spacing', syncWindowsXpTheme);
+    connectSettings(settings, 'changed::panel-height', syncWindowsXpTheme);
+    connectSettings(settings, 'changed::panel-position', syncWindowsXpTheme);
+    connectSettings(
+        settings,
         'changed::panel-button-padding',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::custom-indicator-colors-enabled',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::custom-panel-color-enabled',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::activities-button-position',
         syncWindowsXpTheme
     );
-    settings.connect('changed::app-alignment', syncWindowsXpTheme);
-    settings.connect(
+    connectSettings(settings, 'changed::app-alignment', syncWindowsXpTheme);
+    connectSettings(
+        settings,
         'changed::start-button-position',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::use-pinned-apps-as-launchers',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::combine-app-buttons-mode',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::application-overflow-enabled',
         syncWindowsXpTheme
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::hide-app-labels',
         syncWindowsXpTheme
     );
@@ -237,7 +250,8 @@ export function addPanelAppearancePage({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
-        }
+        },
+        connectSettings
     );
     panelThemeRow.sensitive = !followSystemThemeSwitch.active;
     followSystemThemeSwitch.connect('notify::active', widget => {
@@ -280,7 +294,8 @@ export function addPanelAppearancePage({
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
-        }
+        },
+        connectSettings
     );
     const updatePanelTransparencyControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
@@ -302,7 +317,8 @@ export function addPanelAppearancePage({
         'notify::active',
         updatePanelTransparencyControls
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         updatePanelTransparencyControls
     );
@@ -331,7 +347,8 @@ export function addPanelAppearancePage({
         {
             key: 'custom-panel-color',
             title: _('Taskbar Color'),
-        }
+        },
+        connectSettings
     );
     const customPanelTextColorSubtitle = _(
         'White text uses the dark panel theme; black text uses the light panel theme'
@@ -347,7 +364,8 @@ export function addPanelAppearancePage({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
-        }
+        },
+        connectSettings
     );
     customPanelTextColorRow.connect('notify::selected', () => {
         if (settings.get_boolean('panel-theme-follow-system')) {
@@ -387,14 +405,16 @@ export function addPanelAppearancePage({
         panelThemeRow.sensitive = !windowsXpThemeEnabled &&
             !followSystemThemeSwitch.active;
     };
-    settings.connect(
-            'changed::windows-xp-theme-enabled',
-            () => {
-                syncPanelThemeControls();
-                updateCustomPanelColorControls();
-            }
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        () => {
+            syncPanelThemeControls();
+            updateCustomPanelColorControls();
+        }
     );
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::panel-theme-follow-system',
         syncPanelThemeControls
     );
@@ -450,7 +470,8 @@ export function addPanelAppearancePage({
         darkPanelBorderSwitch.sensitive = enabled;
         lightPanelBorderSwitch.sensitive = enabled;
     };
-    settings.connect(
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         syncPanelBorderControls
     );

@@ -19,6 +19,7 @@ export class SecondaryPanelIndicatorController {
     constructor(settings, menuManager) {
         this._settings = settings;
         this._menuManager = menuManager;
+        this._originalChangeMenu = null;
         this._indicators = new Map();
     }
 
@@ -46,7 +47,8 @@ export class SecondaryPanelIndicatorController {
             }
         }
 
-        const originalChangeMenu = this._menuManager._changeMenu;
+        this._originalChangeMenu = this._menuManager._changeMenu;
+        const originalChangeMenu = this._originalChangeMenu;
         const settings = this._settings;
         this._menuManager._changeMenu = function (menu) {
             if (!settings.get_boolean('panel-menu-click-only'))
@@ -72,6 +74,8 @@ export class SecondaryPanelIndicatorController {
     }
 
     destroy() {
+        this._menuManager._changeMenu = this._originalChangeMenu;
+        this._originalChangeMenu = null;
         for (const [role, indicator] of this._indicators) {
             const menu = indicator.menu;
             if (menu) {

@@ -545,10 +545,10 @@ export class StartMenuController {
         this._searchController = null;
         this._contextMenuController.close();
         this._powerController.close();
-        this._menu.destroy();
-        this._menu = null;
         this._footerController.destroy();
         this._footerController = null;
+        this._menu.destroy();
+        this._menu = null;
         this._navigationController.destroy();
         this._navigationController = null;
         this._contextMenuController.destroy();

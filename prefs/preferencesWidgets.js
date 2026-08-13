@@ -14,7 +14,7 @@ export function addSpinRow(group, settings, {
     lower,
     upper,
     step = 1,
-}) {
+}, connectSettings) {
     const row = Adw.SpinRow.new_with_range(lower, upper, step);
     row.title = title;
     row.subtitle = subtitle;
@@ -22,7 +22,7 @@ export function addSpinRow(group, settings, {
     row.connect('notify::value', widget => {
         settings.set_int(key, Math.round(widget.get_value()));
     });
-    settings.connect(`changed::${key}`, () => {
+    connectSettings(settings, `changed::${key}`, () => {
         const value = settings.get_int(key);
         if (row.get_value() !== value)
             row.set_value(value);
@@ -37,7 +37,7 @@ export function createPanelOrderRow(settings, {
     subtitle = '',
     choices,
     fixedPosition = null,
-}) {
+}, connectSettings) {
     let currentChoices = choices;
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
@@ -85,7 +85,7 @@ export function createPanelOrderRow(settings, {
             if (choice)
                 settings.set_string(key, choice.value);
         });
-        settings.connect(`changed::${key}`, () => {
+        connectSettings(settings, `changed::${key}`, () => {
             syncPosition(settings.get_string(key));
         });
     }
@@ -134,7 +134,7 @@ export function addComboRow(group, settings, {
     initialValue = null,
     choicesProvider = () => choices,
     choicesChangedKey = null,
-}) {
+}, connectSettings) {
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
         for (const choice of availableChoices)
@@ -162,7 +162,7 @@ export function addComboRow(group, settings, {
         if (choice)
             settings.set_string(key, choice.value);
     });
-    settings.connect(`changed::${key}`, () => {
+    connectSettings(settings, `changed::${key}`, () => {
         const value = settings.get_string(key);
         const index = currentChoices.findIndex(
             choice => choice.value === value
@@ -171,7 +171,7 @@ export function addComboRow(group, settings, {
             row.set_selected(index);
     });
     if (choicesChangedKey) {
-        settings.connect(`changed::${choicesChangedKey}`, () => {
+        connectSettings(settings, `changed::${choicesChangedKey}`, () => {
             currentChoices = choicesProvider();
             syncingChoices = true;
             row.set_model(createModel(currentChoices));
@@ -187,7 +187,7 @@ export function addComboRow(group, settings, {
     return row;
 }
 
-export function addColorRow(group, settings, {key, title}) {
+export function addColorRow(group, settings, {key, title}, connectSettings) {
     const dialog = new Gtk.ColorDialog({title});
     const button = new Gtk.ColorDialogButton({
         dialog,
@@ -209,7 +209,7 @@ export function addColorRow(group, settings, {key, title}) {
         if (!syncing)
             settings.set_string(key, button.rgba.to_string());
     });
-    settings.connect(`changed::${key}`, syncColor);
+    connectSettings(settings, `changed::${key}`, syncColor);
     syncColor();
     group.add(row);
     return row;
