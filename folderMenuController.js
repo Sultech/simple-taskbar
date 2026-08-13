@@ -105,7 +105,7 @@ export class FolderMenuController {
         this._signalHolder = null;
 
         this._menuManager.removeMenu(this._menu);
-        this._menu.destroy();
+        this._button.setMenu(null);
         this._menu = null;
         this._menuManager = null;
         this._button.destroy();
