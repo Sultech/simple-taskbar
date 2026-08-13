@@ -39,6 +39,7 @@ export class StartButtonController {
         toggleFromShortcut = null,
         switcherKeybindings = null,
         onMenuOpenStateChanged,
+        onVisibilityChanged,
     }) {
         this._extensionDir = extensionDir;
         this._settings = settings;
@@ -48,6 +49,7 @@ export class StartButtonController {
         this._getInterestingWindows = getInterestingWindows;
         this._toggleFromShortcut = toggleFromShortcut;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
+        this._onVisibilityChanged = onVisibilityChanged;
         this._signalHolder = new TransientSignalHolder();
         this._startOpenedOverview = false;
         this._startMenuController = null;
@@ -212,6 +214,7 @@ export class StartButtonController {
         this._getInterestingWindows = null;
         this._toggleFromShortcut = null;
         this._onMenuOpenStateChanged = null;
+        this._onVisibilityChanged = null;
         this._settings = null;
         this._startOpenedOverview = false;
     }
@@ -341,6 +344,7 @@ export class StartButtonController {
             this._syncState();
             this._notifyMenuOpenStateChanged();
             this._keybindings?.sync();
+            this._onVisibilityChanged();
         }, this._signalHolder);
         this._settings.connectObject('changed::windows-xp-theme-enabled', () => {
             this._startMenuController.close();
@@ -398,6 +402,7 @@ export class StartButtonController {
         }, this._signalHolder);
         this._settings.connectObject('changed::gnome-start-button-visible', () => {
             this._syncVisibility();
+            this._onVisibilityChanged();
         }, this._signalHolder);
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._startMenuController.close();

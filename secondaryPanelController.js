@@ -111,6 +111,7 @@ export class SecondaryPanelController {
                 if (open)
                     this._applicationOverflowController.close();
             },
+            onVisibilityChanged: () => this._applyLayout(),
         });
         this._folderMenuController = new FolderMenuController(settings);
 
@@ -341,14 +342,6 @@ export class SecondaryPanelController {
             () => this._applyLayout(),
             this._signalHolder
         );
-        for (const key of [
-            'windows-start-menu-enabled',
-            'gnome-start-button-visible',
-        ]) {
-            this._settings.connectObject(`changed::${key}`, () => {
-                this._applyLayout();
-            }, this._signalHolder);
-        }
         this._settings.connectObject('changed::activities-button-visible', () => {
             this._indicatorController.syncActivitiesVisibility();
             this._updateTaskbarWidth();
