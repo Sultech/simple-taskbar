@@ -35,7 +35,7 @@ export class WindowController {
             window => !window.skip_taskbar
         );
         const isolateWorkspaces =
-            this._settings?.get_boolean('isolate-workspaces') ?? false;
+            this._settings.get_boolean('isolate-workspaces');
         const isolateMonitors = this._isolatesMonitors(isolateWorkspaces);
         if (!isolateWorkspaces && !isolateMonitors)
             return windows;
@@ -52,7 +52,7 @@ export class WindowController {
 
     _isolatesMonitors(isolateWorkspaces = false) {
         return Boolean(
-            this._settings?.get_boolean('multi-monitor-panels') &&
+            this._settings.get_boolean('multi-monitor-panels') &&
             Main.layoutManager.monitors.length > 1 &&
             (this._settings.get_boolean('isolate-monitors') ||
                 isolateWorkspaces &&
@@ -65,7 +65,7 @@ export class WindowController {
         const overviewShown = Main.overview._shown;
         if (windows.length === 0) {
             const isolateWorkspaces =
-                this._settings?.get_boolean('isolate-workspaces') ?? false;
+                this._settings.get_boolean('isolate-workspaces');
             const runningOutsideScope =
                 (isolateWorkspaces ||
                     this._isolatesMonitors(isolateWorkspaces)) &&
@@ -99,7 +99,7 @@ export class WindowController {
     handleAppClicked(item, app) {
         const windows = this.getInterestingWindows(app);
         if (windows.length > 1 &&
-            this._settings?.get_boolean('multi-window-click-spread')) {
+            this._settings.get_boolean('multi-window-click-spread')) {
             this._previews?.hideTooltip(false);
             this._previews?.hide();
             this._spreadAppWindows(app);

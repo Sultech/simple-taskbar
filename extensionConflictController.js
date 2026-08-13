@@ -3,8 +3,9 @@
 
 import GLib from 'gi://GLib';
 
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
+import {extensionStateIsActive} from './extensionState.js';
 
 const ALWAYS_CONFLICTING_UUIDS = [
     'dash-to-panel@jderose9.github.com',
@@ -36,13 +37,13 @@ export class ExtensionConflictController {
                 const uuid = extension.uuid;
                 if (ALWAYS_CONFLICTING_UUIDS.includes(uuid) &&
                     extension.enabled &&
-                    this._extensionIsActive(extension)) {
+                    extensionStateIsActive(extension)) {
                     this._queueSelfDisable();
                     return;
                 }
 
                 if (!this._shouldDisable(uuid) ||
-                    !this._extensionIsActive(extension)) {
+                    !extensionStateIsActive(extension)) {
                     return;
                 }
 
@@ -72,7 +73,7 @@ export class ExtensionConflictController {
 
         for (const uuid of conflictingUuids) {
             const extension = Main.extensionManager.lookup(uuid);
-            if (this._extensionIsActive(extension))
+            if (extensionStateIsActive(extension))
                 Main.extensionManager.disableExtension(uuid);
         }
     }
@@ -89,10 +90,6 @@ export class ExtensionConflictController {
             ALWAYS_CONFLICTING_UUIDS.includes(uuid) ||
             this._taskbarModeActive() && TASKBAR_DOCK_UUIDS.includes(uuid)
         );
-    }
-
-    _extensionIsActive(extension) {
-        return extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
     }
 
     _queueDisable(uuid) {
@@ -112,7 +109,7 @@ export class ExtensionConflictController {
 
                     const extension =
                         Main.extensionManager.lookup(pendingUuid);
-                    if (this._extensionIsActive(extension)) {
+                    if (extensionStateIsActive(extension)) {
                         Main.extensionManager.disableExtension(
                             pendingUuid
                         );

@@ -540,7 +540,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         };
 
         const setDefaultGnomePanel = enabled => {
-            // Apply the mode and layout together.
             const settings = this.getSettings();
             settings.delay();
             settings.set_boolean('default-gnome-panel', enabled);

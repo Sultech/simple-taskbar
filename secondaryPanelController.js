@@ -104,7 +104,7 @@ export class SecondaryPanelController {
             manageKeybindings: false,
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
-                this._autoHideController?.setMenuOpen(open);
+                this._autoHideController.setMenuOpen(open);
                 if (open)
                     this._applicationOverflowController.close();
             },
@@ -161,26 +161,23 @@ export class SecondaryPanelController {
             );
         this._indicatorController.acquire();
         const quickSettings = this._indicatorController.get('quickSettings');
-        if (quickSettings) {
-            this._volumeMixerController = new VolumeMixerController(
+        this._volumeMixerController = new VolumeMixerController(
+            this._settings,
+            quickSettings
+        );
+        this._volumeMixerController.enable();
+        this._quickSettingsPowerController = new QuickSettingsPowerController(
+            this._settings,
+            quickSettings
+        );
+        this._quickSettingsPowerController.enable();
+        this._quickSettingsXpIconController =
+            new QuickSettingsXpIconController(
                 this._settings,
+                this._extensionDir,
                 quickSettings
             );
-            this._volumeMixerController.enable();
-            this._quickSettingsPowerController =
-                new QuickSettingsPowerController(
-                    this._settings,
-                    quickSettings
-                );
-            this._quickSettingsPowerController.enable();
-            this._quickSettingsXpIconController =
-                new QuickSettingsXpIconController(
-                    this._settings,
-                    this._extensionDir,
-                    quickSettings
-                );
-            this._quickSettingsXpIconController.enable();
-        }
+        this._quickSettingsXpIconController.enable();
         Main.layoutManager.addChrome(this.actor, {
             affectsStruts: true,
             trackFullscreen: true,
@@ -231,7 +228,7 @@ export class SecondaryPanelController {
     }
 
     closePanelMenu() {
-        this._menuManager?.activeMenu?.close();
+        this._menuManager.activeMenu?.close();
         this._applicationOverflowController.close();
     }
 
@@ -240,9 +237,9 @@ export class SecondaryPanelController {
             object.disconnect(id);
         this._signals = [];
 
-        this._autoHideController?.destroy();
+        this._autoHideController.destroy();
         this._autoHideController = null;
-        this._interactionController?.destroy();
+        this._interactionController.destroy();
         this._interactionController = null;
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
@@ -258,13 +255,11 @@ export class SecondaryPanelController {
         this._windowController = null;
         this._taskbarViewport.destroy();
         this._taskbarViewport = null;
-        if (this._volumeMixerController)
-            this._volumeMixerController.destroy();
+        this._volumeMixerController.destroy();
         this._volumeMixerController = null;
-        if (this._quickSettingsXpIconController)
-            this._quickSettingsXpIconController.destroy();
+        this._quickSettingsXpIconController.destroy();
         this._quickSettingsXpIconController = null;
-        this._quickSettingsPowerController?.destroy();
+        this._quickSettingsPowerController.destroy();
         this._quickSettingsPowerController = null;
         this._notificationAreaController.restore(this._rightBox);
         this._notificationAreaController.destroy();
@@ -420,9 +415,9 @@ export class SecondaryPanelController {
         this.actor.expandedSide =
             this._taskbarBin.visible && !this._appsAreCentered();
         const startButton = this._startButtonController.actor;
-        const activities = this._indicatorController.get('activities')?.container;
-        const quickSettings = this._indicatorController.get('quickSettings')?.container;
-        const dateMenu = this._indicatorController.get('dateMenu')?.container;
+        const activities = this._indicatorController.get('activities').container;
+        const quickSettings = this._indicatorController.get('quickSettings').container;
+        const dateMenu = this._indicatorController.get('dateMenu').container;
         const folderMenuButton = this._folderMenuController.actor;
         for (const actor of [
             startButton,
@@ -432,7 +427,7 @@ export class SecondaryPanelController {
             dateMenu,
             folderMenuButton,
         ])
-            actor?.get_parent()?.remove_child(actor);
+            actor.get_parent()?.remove_child(actor);
 
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
@@ -497,14 +492,14 @@ export class SecondaryPanelController {
 
     _autoHideIsBlocked() {
         return Boolean(
-            this._interactionController?.menuIsOpen ||
-            this._startButtonController?.menuIsOpen ||
-            this._folderMenuController?.menuIsOpen ||
+            this._interactionController.menuIsOpen ||
+            this._startButtonController.menuIsOpen ||
+            this._folderMenuController.menuIsOpen ||
             this._applicationOverflowController.menuIsOpen ||
-            this._windowPreviews?.isOpen ||
-            this._taskbarController?.isDragging ||
-            this._taskbarController?.hasOpenMenu() ||
-            this._menuManager?.activeMenu?.isOpen
+            this._windowPreviews.isOpen ||
+            this._taskbarController.isDragging ||
+            this._taskbarController.hasOpenMenu() ||
+            this._menuManager.activeMenu?.isOpen
         );
     }
 

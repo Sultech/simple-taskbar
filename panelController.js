@@ -6,9 +6,9 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {extensionIsActive} from './extensionState.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
@@ -533,10 +533,7 @@ export class PanelController {
     }
 
     _isJustPerfectionActive() {
-        const extension = Main.extensionManager.lookup(
-            JUST_PERFECTION_UUID
-        );
-        return extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
+        return extensionIsActive(JUST_PERFECTION_UUID);
     }
 
     _withPanelChildAddedSignalsBlocked(callback) {

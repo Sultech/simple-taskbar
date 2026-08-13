@@ -145,7 +145,7 @@ export class PanelAutoHideController {
     syncPosition() {
         const monitor = this._getMonitor();
         const actor = this._positionActor;
-        if (!monitor || !actor)
+        if (!monitor)
             return;
 
         actor.remove_transition('y');
@@ -173,7 +173,7 @@ export class PanelAutoHideController {
     }
 
     _enabled() {
-        return this._settings?.get_boolean('panel-autohide-enabled') ?? false;
+        return this._settings.get_boolean('panel-autohide-enabled');
     }
 
     _syncEnabled() {
@@ -387,7 +387,7 @@ export class PanelAutoHideController {
         const focus = global.stage.get_key_focus();
         return Boolean(
             focus && (focus === this._panelActor ||
-                this._panelActor?.contains(focus))
+                this._panelActor.contains(focus))
         );
     }
 
@@ -415,7 +415,7 @@ export class PanelAutoHideController {
 
     _visibleY(monitor) {
         if (!monitor)
-            return this._positionActor?.y ?? 0;
+            return this._positionActor.y;
         const panelHeight = this._getPanelHeight();
         return panelIsTop(this._settings)
             ? monitor.y
@@ -424,7 +424,7 @@ export class PanelAutoHideController {
 
     _hiddenY(monitor) {
         if (!monitor)
-            return this._positionActor?.y ?? 0;
+            return this._positionActor.y;
         const panelHeight = this._getPanelHeight();
         return panelIsTop(this._settings)
             ? monitor.y - panelHeight + REVEAL_EDGE_SIZE

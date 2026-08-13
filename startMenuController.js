@@ -103,6 +103,7 @@ export class StartMenuController {
         this._sourcePressResetId = 0;
         this._prepareIdleId = 0;
         this._transparencySyncId = 0;
+        this._menuOpenStateId = 0;
         this._ignoreSearchChanged = false;
         this._appliedTheme = null;
         this._pinnedView = null;
@@ -226,14 +227,17 @@ export class StartMenuController {
         this.syncTheme(true);
         this._prepareHiddenMenu();
 
-        this._menu.connect('open-state-changed', (_menu, open) => {
-            if (!open) {
-                this._tooltipController.hide(true);
-                this._contextMenuController.close();
-                this._powerController.close();
+        this._menuOpenStateId = this._menu.connect(
+            'open-state-changed',
+            (_menu, open) => {
+                if (!open) {
+                    this._tooltipController.hide(true);
+                    this._contextMenuController.close();
+                    this._powerController.close();
+                }
+                this._onOpenStateChanged(open);
             }
-            this._onOpenStateChanged(open);
-        });
+        );
 
         this._stageCapturedEventId = global.stage.connect(
             'captured-event',
@@ -528,6 +532,8 @@ export class StartMenuController {
             global.stage.disconnect(this._stageCapturedEventId);
             this._stageCapturedEventId = 0;
         }
+        this._menu.disconnect(this._menuOpenStateId);
+        this._menuOpenStateId = 0;
         this._searchClearIcon.destroy();
         this._searchClearIcon = null;
         this._pinnedView?.destroy();

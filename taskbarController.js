@@ -702,7 +702,7 @@ export class TaskbarController {
                 this._appButtons.set(key, item);
                 this._syncButtonState(
                     item,
-                    this._tracker?.focus_app,
+                    this._tracker.focus_app,
                     global.display.focus_window,
                     false
                 );
@@ -783,7 +783,7 @@ export class TaskbarController {
     }
 
     syncButtonStates(animate = true) {
-        const focusedApp = this._tracker?.focus_app;
+        const focusedApp = this._tracker.focus_app;
         const focusedWindow = global.display.focus_window;
         for (const item of this._appButtons.values())
             this._syncButtonState(item, focusedApp, focusedWindow, animate);

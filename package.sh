@@ -31,6 +31,7 @@ gnome-extensions pack \
     --extra-source=applicationOverflowItemController.js \
     --extra-source=applicationOverflowThemeController.js \
     --extra-source=extensionConflictController.js \
+    --extra-source=extensionState.js \
     --extra-source=panelButtonPaddingController.js \
     --extra-source=panelItemOrder.js \
     --extra-source=panelItems.js \

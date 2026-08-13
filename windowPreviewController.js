@@ -390,7 +390,7 @@ export class WindowPreviewController {
 
         this._closingPreviewMenus.add(menu);
         menu.connect('menu-closed', () => {
-            if (this._closingPreviewMenus?.delete(menu))
+            if (this._closingPreviewMenus.delete(menu))
                 menu.destroy();
         });
         menu.close(BoxPointer.PopupAnimation.FULL);

@@ -91,7 +91,7 @@ export class NotificationBannerController {
     }
 
     _sync() {
-        if (!this._settings?.get_boolean(
+        if (!this._settings.get_boolean(
             'notification-banner-bottom-end'
         )) {
             this._restore();
@@ -121,7 +121,7 @@ export class NotificationBannerController {
     }
 
     _restore() {
-        if (!this._applied || !this._messageTray || !this._bannerBin)
+        if (!this._applied)
             return;
 
         this._messageTray.bannerAlignment = this._originalAlignmentX;
@@ -132,7 +132,7 @@ export class NotificationBannerController {
     }
 
     _queueRepair() {
-        if (!this._settings?.get_boolean(
+        if (!this._settings.get_boolean(
             'notification-banner-bottom-end'
         ) || this._repairId)
             return;
@@ -141,8 +141,7 @@ export class NotificationBannerController {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._repairId = 0;
-                if (this._settings)
-                    this._sync();
+                this._sync();
                 return GLib.SOURCE_REMOVE;
             }
         );

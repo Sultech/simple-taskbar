@@ -154,10 +154,10 @@ export default class SimpleTaskbarExtension extends Extension {
             switcherKeybindings: this._switcherKeybindings,
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
-                this._panelController?.setStartMenuOpen(open);
+                this._panelController.setStartMenuOpen(open);
                 if (open) {
                     this._applicationOverflowController.close();
-                    this._trayOverflowController?.close();
+                    this._trayOverflowController.close();
                 }
             },
         });

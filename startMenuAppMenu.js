@@ -4,11 +4,10 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {extensionIsActive} from './extensionState.js';
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
 
 const DESKTOP_ICON_EXTENSIONS = [
@@ -216,10 +215,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
     }
 
     _desktopIconsActive() {
-        return DESKTOP_ICON_EXTENSIONS.some(uuid => {
-            const extension = Main.extensionManager.lookup(uuid);
-            return extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
-        });
+        return DESKTOP_ICON_EXTENSIONS.some(extensionIsActive);
     }
 
     async _fileExists(file, cancellable = null) {

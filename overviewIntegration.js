@@ -8,13 +8,13 @@ import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import {Workspace} from 'resource:///org/gnome/shell/ui/workspace.js';
 import {
     SecondaryMonitorDisplay,
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {extensionWillBeActive} from './extensionState.js';
 import {panelIsTop} from './panelPosition.js';
 
 const OVERVIEW_LABEL_MARGIN = 60;
@@ -254,19 +254,13 @@ export class OverviewIntegration {
 
     _shouldStartInOverview() {
         return Boolean(
-            this._settings?.get_boolean('default-gnome-panel') &&
+            this._settings.get_boolean('default-gnome-panel') &&
             !this._desktopDockIsEnabled()
         );
     }
 
     _desktopDockIsEnabled() {
-        return DESKTOP_DOCK_UUIDS.some(uuid => {
-            const extension = Main.extensionManager.lookup(uuid);
-            return Boolean(
-                extension?.enabled ||
-                extension?.state === ExtensionUtils.ExtensionState.ACTIVE
-            );
-        });
+        return DESKTOP_DOCK_UUIDS.some(extensionWillBeActive);
     }
 
     _syncStartupOverview() {
@@ -307,7 +301,6 @@ export class OverviewIntegration {
 
     _queueDashVisibilityRepair() {
         if (this._dashVisibilityRepairId ||
-            !this._settings ||
             this._settings.get_boolean('default-gnome-panel')) {
             return;
         }
@@ -316,10 +309,8 @@ export class OverviewIntegration {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._dashVisibilityRepairId = 0;
-                if (!this._settings ||
-                    this._settings.get_boolean('default-gnome-panel')) {
+                if (this._settings.get_boolean('default-gnome-panel'))
                     return GLib.SOURCE_REMOVE;
-                }
 
                 const dash = Main.overview.dash;
                 dash.hide();

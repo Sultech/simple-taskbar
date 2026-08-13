@@ -5,7 +5,6 @@ import Cogl from 'gi://Cogl';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
-import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
@@ -14,6 +13,7 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from './blurMyShellUtils.js';
+import {extensionIsActive} from './extensionState.js';
 import {panelIsTop} from './panelPosition.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 import {panelTransparencyOpacity} from './transparencyUtils.js';
@@ -293,11 +293,7 @@ export class PanelThemeController {
     }
 
     _syncBlurMyShell() {
-        const extension = Main.extensionManager.lookup(
-            BLUR_MY_SHELL_UUID
-        );
-        const active =
-            extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
+        const active = extensionIsActive(BLUR_MY_SHELL_UUID);
         const panelBlur = global.blur_my_shell?._panel_blur;
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'

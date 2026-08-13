@@ -291,9 +291,6 @@ export class ApplicationOverflowController {
             this._grab = null;
         }
 
-        this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
-        this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
-        this._dragController.clearContentBox();
         this._dragController.destroy();
         this._dragController = null;
         this._itemController.destroy();
