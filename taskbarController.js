@@ -278,7 +278,7 @@ export class TaskbarController {
 
     hasOpenMenu() {
         return this.getItems().some(item =>
-            item._taskbarButton?._taskbarMenu?.isOpen
+            item._taskbarButton._taskbarMenu?.isOpen
         );
     }
 
@@ -863,8 +863,8 @@ export class TaskbarController {
     }
 
     _updateItemIconGeometry(item) {
-        const icon = item?._taskbarIcon;
-        if (!icon?.get_stage() || !icon.has_allocation())
+        const icon = item._taskbarIcon;
+        if (!icon.get_stage() || !icon.has_allocation())
             return;
 
         const [x, y] = icon.get_transformed_position();
@@ -958,10 +958,8 @@ export class TaskbarController {
     }
 
     _disconnectActiveWorkspaceSignals() {
-        for (const id of this._activeWorkspaceSignalIds ?? []) {
-            if (id)
-                this._activeWorkspace?.disconnect(id);
-        }
+        for (const id of this._activeWorkspaceSignalIds)
+            this._activeWorkspace.disconnect(id);
         this._activeWorkspaceSignalIds = [];
         this._activeWorkspace = null;
     }

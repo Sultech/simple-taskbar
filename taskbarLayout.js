@@ -6,7 +6,7 @@ import Clutter from 'gi://Clutter';
 const PANEL_ITEM_GAP = 8;
 
 function naturalWidth(actor, height) {
-    if (!actor?.visible)
+    if (!actor.visible)
         return 0;
 
     const [, width] = actor.get_preferred_width(height);
@@ -136,7 +136,7 @@ export function constrainTaskbarWidth({
     panelHeight,
     centered,
 }) {
-    if (!taskbarBin?.visible || !leftBox || !centerBox ||
+    if (!taskbarBin.visible || !leftBox || !centerBox ||
         !rightBox || panelWidth <= 0)
         return;
 

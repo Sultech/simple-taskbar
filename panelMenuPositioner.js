@@ -43,16 +43,14 @@ export class PanelMenuPositioner {
     refresh() {
         for (const {menu, removeTopPanelGap} of this._states.values()) {
             const side = panelArrowSide(this._settings);
-            if (menu?._boxPointer)
-                menu._boxPointer._userArrowSide = side;
-            if ('_arrowSide' in menu)
-                menu._arrowSide = side;
+            menu._boxPointer._userArrowSide = side;
+            menu._arrowSide = side;
             if (removeTopPanelGap && !panelIsTop(this._settings)) {
-                menu?.actor.add_style_class_name(
+                menu.actor.add_style_class_name(
                     'simple-taskbar-bottom-panel-menu'
                 );
             } else if (removeTopPanelGap) {
-                menu?.actor.remove_style_class_name(
+                menu.actor.remove_style_class_name(
                     'simple-taskbar-bottom-panel-menu'
                 );
             }
@@ -72,12 +70,10 @@ export class PanelMenuPositioner {
             if (destroyId)
                 indicator.disconnect(destroyId);
             removeXpPopupOffset(menu);
-            if (menu?._boxPointer)
-                menu._boxPointer._userArrowSide = userArrowSide;
-            if ('_arrowSide' in menu)
-                menu._arrowSide = arrowSide;
+            menu._boxPointer._userArrowSide = userArrowSide;
+            menu._arrowSide = arrowSide;
             if (removeTopPanelGap)
-                menu?.actor.remove_style_class_name('simple-taskbar-bottom-panel-menu');
+                menu.actor.remove_style_class_name('simple-taskbar-bottom-panel-menu');
         }
 
         if (this._themeChangedId)
@@ -93,7 +89,7 @@ export class PanelMenuPositioner {
     }
 
     _adjust(indicator) {
-        const menu = indicator?.menu;
+        const menu = indicator.menu;
         const boxPointer = menu?._boxPointer;
         if (!boxPointer || this._states.has(indicator))
             return;
@@ -118,8 +114,7 @@ export class PanelMenuPositioner {
 
         const side = panelArrowSide(this._settings);
         boxPointer._userArrowSide = side;
-        if ('_arrowSide' in menu)
-            menu._arrowSide = side;
+        menu._arrowSide = side;
         if (removeTopPanelGap && !panelIsTop(this._settings))
             menu.actor.add_style_class_name('simple-taskbar-bottom-panel-menu');
         syncXpPopupOffset(menu, this._settings);

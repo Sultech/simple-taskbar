@@ -248,7 +248,7 @@ export class WindowPreviewController {
             return;
 
         if (this._previewItem === item &&
-            item._taskbarButton?._taskbarPreviewMenu?.isOpen)
+            item._taskbarButton._taskbarPreviewMenu?.isOpen)
             return;
 
         this.hide();
@@ -377,7 +377,7 @@ export class WindowPreviewController {
             return;
 
         const button = item._taskbarButton;
-        const menu = button?._taskbarPreviewMenu;
+        const menu = button._taskbarPreviewMenu;
         button._taskbarPreviewMenu = null;
         button._taskbarPreviewBox = null;
         if (!menu)
@@ -443,12 +443,12 @@ export class WindowPreviewController {
     }
 
     _pointerIsOverPreview(item) {
-        if (!item?.mapped)
+        if (!item.mapped)
             return false;
 
         const [x, y] = global.get_pointer();
         const actor = global.stage.get_actor_at_pos(Clutter.PickMode.ALL, x, y);
-        const menuActor = item._taskbarButton?._taskbarPreviewMenu?.actor;
+        const menuActor = item._taskbarButton._taskbarPreviewMenu?.actor;
         return item.contains(actor) || menuActor?.contains(actor) === true;
     }
 
@@ -539,7 +539,7 @@ export class WindowPreviewController {
 
     _refresh(item) {
         const button = item._taskbarButton;
-        const previewBox = button?._taskbarPreviewBox;
+        const previewBox = button._taskbarPreviewBox;
         const windows = this._windowsForItem(item)
             .sort((a, b) => b.get_user_time() - a.get_user_time());
         if (!previewBox || windows.length === 0) {
@@ -553,7 +553,7 @@ export class WindowPreviewController {
             if (preview)
                 previewBox.add_child(preview);
         }
-        button._taskbarPreviewMenu?.actor.queue_relayout();
+        button._taskbarPreviewMenu.actor.queue_relayout();
     }
 
     _createWindowPreview(window) {

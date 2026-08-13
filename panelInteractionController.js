@@ -100,7 +100,7 @@ export class PanelInteractionController {
             );
         });
         const ornamentIcon = lockItem._ornamentIcon;
-        ornamentIcon.get_parent()?.remove_child(ornamentIcon);
+        ornamentIcon.get_parent().remove_child(ornamentIcon);
         const rightOrnament = new St.Bin({
             x_expand: true,
             x_align: Clutter.ActorAlign.END,

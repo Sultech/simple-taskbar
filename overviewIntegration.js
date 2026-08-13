@@ -449,9 +449,7 @@ export class OverviewIntegration {
             .map(actor => actor.meta_window);
 
         for (const workspace of this._getOverviewWorkspaces()) {
-            const previews = workspace?._container?.layout_manager?._windows;
-            if (!previews || !workspace?._doAddWindow)
-                continue;
+            const previews = workspace._container.layout_manager._windows;
 
             for (const preview of [...previews.keys()])
                 preview.destroy();

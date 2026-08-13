@@ -16,10 +16,8 @@ export function panelArrowSide(settings) {
 
 export function syncMenuArrowSide(menu, settings) {
     const side = panelArrowSide(settings);
-    if (menu?._boxPointer)
-        menu._boxPointer._userArrowSide = side;
-    if (menu && '_arrowSide' in menu)
-        menu._arrowSide = side;
+    menu._boxPointer._userArrowSide = side;
+    menu._arrowSide = side;
 }
 
 export function syncPanelMenuPosition(menu, settings) {

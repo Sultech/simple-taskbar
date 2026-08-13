@@ -231,7 +231,7 @@ class HotEdge {
     _toggleOverview() {
         if (this._isBlocked() || this._mouseButtonIsHeld())
             return;
-        if (this._monitor?.inFullscreen && !Main.overview.visible)
+        if (this._monitor.inFullscreen && !Main.overview.visible)
             return;
         if (!Main.overview.shouldToggleByCornerOrButton())
             return;

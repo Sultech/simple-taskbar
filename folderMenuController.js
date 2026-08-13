@@ -111,7 +111,7 @@ export class FolderMenuController {
     }
 
     get menuIsOpen() {
-        return this._menu?.isOpen ?? false;
+        return this._menu.isOpen;
     }
 
     destroy() {
@@ -119,10 +119,8 @@ export class FolderMenuController {
         this._signalHolder.destroy();
         this._signalHolder = null;
 
-        if (this._menu) {
-            this._menuManager?.removeMenu(this._menu);
-            this._menu.destroy();
-        }
+        this._menuManager.removeMenu(this._menu);
+        this._menu.destroy();
         this._menu = null;
         this._menuManager = null;
         this.actor.destroy();
