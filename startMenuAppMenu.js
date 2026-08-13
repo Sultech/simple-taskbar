@@ -166,7 +166,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
     }
 
     _toggleStartFavorite() {
-        if (!this._app || !this._settings)
+        if (!this._app)
             return;
 
         const appId = this._app.get_id();

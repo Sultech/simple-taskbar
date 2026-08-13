@@ -73,7 +73,6 @@ export class TaskbarController {
         this._dragEnabled = null;
         this._suppressMembershipAnimation = false;
         this._iconGeometryUpdateId = 0;
-        this._iconGeometryUpdatesEnabled = true;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = [];
         this._shownInitially = false;
@@ -434,11 +433,6 @@ export class TaskbarController {
     }
 
     destroy() {
-        this._iconGeometryUpdatesEnabled = false;
-        this._showDesktopController.destroy();
-        this._showDesktopController = null;
-        this._dragController.destroy();
-        this._dragController = null;
         if (this._iconGeometryUpdateId)
             GLib.Source.remove(this._iconGeometryUpdateId);
         this._iconGeometryUpdateId = 0;
@@ -453,6 +447,11 @@ export class TaskbarController {
         for (const [app, id] of this._appSignals)
             app.disconnect(id);
         this._appSignals.clear();
+
+        this._showDesktopController.destroy();
+        this._showDesktopController = null;
+        this._dragController.destroy();
+        this._dragController = null;
 
         for (const item of [...this._auxiliaryItems])
             this.removeAuxiliaryItem(item);
@@ -834,7 +833,7 @@ export class TaskbarController {
     }
 
     queueIconGeometryUpdate() {
-        if (!this._iconGeometryUpdatesEnabled || this._iconGeometryUpdateId)
+        if (this._iconGeometryUpdateId)
             return;
 
         this._iconGeometryUpdateId = GLib.idle_add(

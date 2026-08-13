@@ -144,21 +144,19 @@ export class OverviewIntegration {
     }
 
     destroy() {
-        const restoreVisible = Boolean(
-            this._settings &&
-            !this._settings.get_boolean('default-gnome-panel')
+        const restoreVisible = !this._settings.get_boolean(
+            'default-gnome-panel'
         );
         this._cancelStartupOverview();
         this._cancelDashVisibilityRepair();
-        // If the extension is disabled while the spread is visible, rebuild
-        // the live Overview after restoring GNOME's normal window filter.
-        this._restoreAppSpread(true);
+        this._disconnectAppSpreadSignal();
+        this._signalHolder.destroy();
+        this._signalHolder = null;
+        this._restoreAppSpreadState(true);
         this._spreadInjectionManager.clear();
         this._spreadInjectionManager = null;
         this._injectionManager.clear();
         this._injectionManager = null;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
         this._restoreStartupOverview();
         this._restoreDash(restoreVisible);
         this.queueRelayout();
@@ -423,10 +421,18 @@ export class OverviewIntegration {
     }
 
     _restoreAppSpread(rebuildOverview) {
+        this._disconnectAppSpreadSignal();
+        this._restoreAppSpreadState(rebuildOverview);
+    }
+
+    _disconnectAppSpreadSignal() {
         if (this._spreadHiddenId) {
             Main.overview.disconnect(this._spreadHiddenId);
             this._spreadHiddenId = 0;
         }
+    }
+
+    _restoreAppSpreadState(rebuildOverview) {
         this._spreadInjectionManager.restoreMethod(
             Workspace.prototype,
             '_isMyWindow'

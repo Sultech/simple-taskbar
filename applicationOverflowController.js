@@ -276,15 +276,15 @@ export class ApplicationOverflowController {
     }
 
     destroy() {
+        if (this._syncId) {
+            GLib.Source.remove(this._syncId);
+            this._syncId = 0;
+        }
         if (this._dragEndListenerRegistered) {
             this._taskbarController.removeDragEndListener(
                 this._dragEndListener
             );
             this._dragEndListenerRegistered = false;
-        }
-        if (this._syncId) {
-            GLib.Source.remove(this._syncId);
-            this._syncId = 0;
         }
         this._signalHolder.destroy();
         this._signalHolder = null;

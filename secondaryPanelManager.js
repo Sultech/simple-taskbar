@@ -97,8 +97,7 @@ export class SecondaryPanelManager {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._rebuildId = 0;
-                if (this._settings)
-                    this._rebuild();
+                this._rebuild();
                 return GLib.SOURCE_REMOVE;
             }
         );

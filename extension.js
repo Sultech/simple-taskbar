@@ -127,10 +127,8 @@ export default class SimpleTaskbarExtension extends Extension {
             openNewWindow: app => this._windowController.openNewWindow(app),
             onShowDesktopClicked: () =>
                 this._windowController.toggleDesktop(),
-            onShowDesktopModeChanged: () => {
-                if (this._panelController)
-                    this._panelController.applyLayout();
-            },
+            onShowDesktopModeChanged: () =>
+                this._panelController.applyLayout(),
             getPreviewController: () => this._windowPreviews,
         });
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);

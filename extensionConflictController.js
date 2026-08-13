@@ -77,10 +77,7 @@ export class ExtensionConflictController {
     }
 
     _taskbarModeActive() {
-        return Boolean(
-            this._settings &&
-            !this._settings.get_boolean('default-gnome-panel')
-        );
+        return !this._settings.get_boolean('default-gnome-panel');
     }
 
     _shouldDisable(uuid) {

@@ -105,10 +105,11 @@ export class PanelAutoHideController {
 
     destroy() {
         this._clearHideTimeout();
-        this._restoreFullscreenVisibility();
+        this._stopFullscreenWatch();
         this._signalHolder.destroy();
         this._signalHolder = null;
 
+        this._restoreFullscreenVisibilityState();
         this._hidden = false;
         this._overviewSuspended = false;
         this._positionActor.remove_transition('y');
@@ -255,6 +256,10 @@ export class PanelAutoHideController {
 
     _restoreFullscreenVisibility() {
         this._stopFullscreenWatch();
+        this._restoreFullscreenVisibilityState();
+    }
+
+    _restoreFullscreenVisibilityState() {
         if (!this._fullscreenVisibilityHeld)
             return;
 

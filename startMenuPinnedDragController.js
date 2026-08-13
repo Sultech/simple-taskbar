@@ -105,7 +105,7 @@ export class StartMenuPinnedDragController {
     }
 
     _acceptDrop(grid, source, x, y) {
-        if (!this._settings || !this._validSource(grid, source))
+        if (!this._validSource(grid, source))
             return false;
 
         this._moveTileToPointer(grid, source, x, y);

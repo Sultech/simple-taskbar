@@ -70,11 +70,12 @@ export class WindowPreviewController {
     }
 
     destroy() {
+        this._clearTimeouts();
+        this._clearTimeout('_tooltipTimeoutId');
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
-        this.hideTooltip(false);
-        this.hide();
-        this._clearTimeouts();
+        this._hideTooltip(false);
+        this._hidePreview(false);
         this._appTooltip?.destroy();
         this._appTooltip = null;
 
@@ -187,9 +188,11 @@ export class WindowPreviewController {
     }
 
     hideTooltip(animate = true) {
-        if (this._tooltipTimeoutId)
-            GLib.Source.remove(this._tooltipTimeoutId);
-        this._tooltipTimeoutId = 0;
+        this._clearTimeout('_tooltipTimeoutId');
+        this._hideTooltip(animate);
+    }
+
+    _hideTooltip(animate) {
         this._tooltipItem = null;
 
         const label = this._appTooltip;
@@ -370,6 +373,10 @@ export class WindowPreviewController {
 
     hide(animate = false) {
         this._clearTimeouts();
+        this._hidePreview(animate);
+    }
+
+    _hidePreview(animate) {
         this._releaseHoverItem();
         const item = this._previewItem;
         this._previewItem = null;

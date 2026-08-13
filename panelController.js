@@ -148,18 +148,13 @@ export class PanelController {
         );
         const panelBox = Main.layoutManager.panelBox;
         panelBox.x = monitor.x;
-        if (this._autoHideController)
-            this._autoHideController.syncPosition();
-        else
-            panelBox.y = panelIsTop(this._settings)
-                ? monitor.y
-                : monitor.y + monitor.height - this._panelHeight;
+        this._autoHideController.syncPosition();
         this._queueOverviewRelayout();
         this.updateTaskbarWidth();
     }
 
     applyLayout() {
-        if (!this._settings || this._applyingLayout)
+        if (this._applyingLayout)
             return;
 
         this._applyingLayout = true;
@@ -258,9 +253,6 @@ export class PanelController {
     }
 
     updateTaskbarWidth() {
-        if (!this._taskbarBin || !this._settings)
-            return;
-
         const monitor = Main.layoutManager.primaryMonitor;
         const leftBox = Main.panel._leftBox;
         const centerBox = Main.panel._centerBox;
@@ -510,16 +502,13 @@ export class PanelController {
     }
 
     _queueLayoutRepair() {
-        if (!this._settings || this._applyingLayout || this._layoutRepairId)
+        if (this._applyingLayout || this._layoutRepairId)
             return;
 
         this._layoutRepairId = GLib.idle_add(
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._layoutRepairId = 0;
-                if (!this._settings)
-                    return GLib.SOURCE_REMOVE;
-
                 this.applyLayout();
                 this._stateController.syncActivitiesVisibility();
                 this._themeController.applyTheme();
