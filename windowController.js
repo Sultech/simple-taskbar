@@ -6,24 +6,22 @@ import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 export class WindowController {
-    constructor(tracker, {settings, spreadAppWindows, getMonitor}) {
+    constructor(tracker, {
+        settings,
+        spreadAppWindows,
+        getMonitor,
+        getTaskbarController,
+        getPreviewController,
+    }) {
         this._tracker = tracker;
         this._settings = settings;
         this._spreadAppWindows = spreadAppWindows;
         this._getMonitor = getMonitor;
-        this._taskbar = null;
-        this._previews = null;
+        this._getTaskbar = getTaskbarController;
+        this._getPreviews = getPreviewController;
         this._showDesktopButton = null;
         this._minimizedWindows = [];
         this._desktopFocusWindow = null;
-    }
-
-    setTaskbarController(controller) {
-        this._taskbar = controller;
-    }
-
-    setPreviewController(controller) {
-        this._previews = controller;
     }
 
     setShowDesktopButton(button) {
@@ -87,7 +85,7 @@ export class WindowController {
         }
 
         if (this._tracker.focus_app === app) {
-            this._taskbar?.updateAppIconGeometry(app);
+            this._getTaskbar().updateAppIconGeometry(app);
             for (const window of windows)
                 window.minimize();
             return;
@@ -100,24 +98,24 @@ export class WindowController {
         const windows = this.getInterestingWindows(app);
         if (windows.length > 1 &&
             this._settings.get_boolean('multi-window-click-spread')) {
-            this._previews?.hideTooltip(false);
-            this._previews?.hide();
+            this._getPreviews().hideTooltip(false);
+            this._getPreviews().hide();
             this._spreadAppWindows(app);
             return;
         }
 
         if (Main.overview._shown) {
-            this._previews?.hide();
+            this._getPreviews().hide();
             this.activateApp(app);
             return;
         }
 
         if (windows.length > 1) {
-            this._previews?.show(item);
+            this._getPreviews().show(item);
             return;
         }
 
-        this._previews?.hide();
+        this._getPreviews().hide();
         this.activateApp(app);
     }
 
@@ -134,7 +132,7 @@ export class WindowController {
 
         if (global.display.focus_window === window) {
             const app = this._tracker.get_window_app(window);
-            this._taskbar?.updateAppIconGeometry(app);
+            this._getTaskbar().updateAppIconGeometry(app);
             window.minimize();
             return;
         }
@@ -167,7 +165,7 @@ export class WindowController {
         this._desktopFocusWindow = this._minimizedWindows.includes(focusWindow)
             ? focusWindow
             : this._minimizedWindows.at(-1) ?? null;
-        this._taskbar?.updateWindowIconGeometries();
+        this._getTaskbar().updateWindowIconGeometries();
         for (const window of this._minimizedWindows)
             window.minimize();
         if (this._showDesktopButton)
@@ -194,8 +192,8 @@ export class WindowController {
     destroy() {
         this.restoreDesktop();
         this._showDesktopButton = null;
-        this._previews = null;
-        this._taskbar = null;
+        this._getPreviews = null;
+        this._getTaskbar = null;
         this._spreadAppWindows = null;
         this._getMonitor = null;
         this._settings = null;

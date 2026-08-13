@@ -108,6 +108,8 @@ export default class SimpleTaskbarExtension extends Extension {
             spreadAppWindows: app =>
                 this._overviewIntegration.showAppWindows(app),
             getMonitor: () => Main.layoutManager.primaryMonitor,
+            getTaskbarController: () => this._taskbarController,
+            getPreviewController: () => this._windowPreviews,
         });
         this._taskbarController = new TaskbarController({
             settings: this._settings,
@@ -129,6 +131,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 if (this._panelController)
                     this._panelController.applyLayout();
             },
+            getPreviewController: () => this._windowPreviews,
         });
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);
         this._windowPreviews = new WindowPreviewController(
@@ -137,9 +140,6 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings,
             () => this._applicationOverflowController.closeWithAnimation()
         );
-        this._taskbarController.setPreviewController(this._windowPreviews);
-        this._windowController.setTaskbarController(this._taskbarController);
-        this._windowController.setPreviewController(this._windowPreviews);
         this._startButtonController = new StartButtonController({
             extensionDir: this.dir,
             settings: this._settings,

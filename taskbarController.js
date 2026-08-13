@@ -46,6 +46,7 @@ export class TaskbarController {
         openNewWindow,
         onShowDesktopClicked,
         onShowDesktopModeChanged,
+        getPreviewController,
     }) {
         this._settings = settings;
         this._appSystem = appSystem;
@@ -59,7 +60,7 @@ export class TaskbarController {
         this._openNewWindow = openNewWindow;
         this._onShowDesktopClicked = onShowDesktopClicked;
         this._onShowDesktopModeChanged = onShowDesktopModeChanged;
-        this._windowPreviews = null;
+        this._getPreviews = getPreviewController;
         this._alignmentActor = null;
         this._signals = [];
         this._appSignals = new Map();
@@ -116,8 +117,8 @@ export class TaskbarController {
             getIconSize: () => this._iconSize,
             getPanelHeight: () => this._panelHeight,
             hidePreviews: () => {
-                this._windowPreviews.hideTooltip(false);
-                this._windowPreviews.hide();
+                this._getPreviews().hideTooltip(false);
+                this._getPreviews().hide();
             },
             isPersistentPinned: app => this._isPersistentPinned(app),
             queueRedisplay: () => this._queueRedisplay(),
@@ -147,7 +148,7 @@ export class TaskbarController {
                 animatePinnedLaunch: item => animatePinnedLaunch(item),
                 closeApp: (app, timestamp) => this.closeApp(app, timestamp),
                 getInterestingWindows: app => this._interestingWindows(app),
-                getPreviewController: () => this._windowPreviews,
+                getPreviewController: () => this._getPreviews(),
                 isDragging: () => this.isDragging,
                 onAppClicked: (item, app) => this._onAppClicked(item, app),
                 onWindowClicked: window => this._onWindowClicked(window),
@@ -200,10 +201,6 @@ export class TaskbarController {
         return this._showDesktopController.item;
     }
 
-    setPreviewController(controller) {
-        this._windowPreviews = controller;
-    }
-
     setAlignmentActor(actor) {
         this._alignmentActor = actor;
         this._dragController.setAlignmentActor(actor);
@@ -244,7 +241,7 @@ export class TaskbarController {
 
     removeAuxiliaryItem(item) {
         this._auxiliaryItems.delete(item);
-        this._windowPreviews.removeItem(item);
+        this._getPreviews().removeItem(item);
         this._destroyAppMenu(item._taskbarButton);
     }
 
@@ -349,8 +346,8 @@ export class TaskbarController {
             this._settings,
             'changed::use-pinned-apps-as-launchers',
             () => {
-                this._windowPreviews.hideTooltip(false);
-                this._windowPreviews.hide();
+                this._getPreviews().hideTooltip(false);
+                this._getPreviews().hide();
                 this._shownInitially = false;
                 this._queueRedisplay();
                 this._syncDragEnabled();
@@ -374,8 +371,8 @@ export class TaskbarController {
             this._settings,
             'changed::combine-app-buttons-mode',
             () => {
-                this._windowPreviews?.hideTooltip(false);
-                this._windowPreviews?.hide();
+                this._getPreviews().hideTooltip(false);
+                this._getPreviews().hide();
                 this._syncCombineWhenFull();
                 this._shownInitially = false;
                 this._queueRedisplay();
@@ -386,8 +383,8 @@ export class TaskbarController {
             const {combinationChanged} = this._syncCombineWhenFull();
             if (combinationChanged) {
                 this._shownInitially = false;
-                this._windowPreviews.hideTooltip(false);
-                this._windowPreviews.hide();
+                this._getPreviews().hideTooltip(false);
+                this._getPreviews().hide();
                 this._queueRedisplay();
                 this._syncDragEnabled();
             }
@@ -460,7 +457,7 @@ export class TaskbarController {
         this._auxiliaryItems.clear();
 
         for (const item of this._appButtons.values()) {
-            this._windowPreviews?.removeItem(item);
+            this._getPreviews().removeItem(item);
             this._destroyAppMenu(item._taskbarButton);
             item.destroy();
         }
@@ -477,7 +474,7 @@ export class TaskbarController {
         this.actor = null;
         this._redisplayWorkId = 0;
 
-        this._windowPreviews = null;
+        this._getPreviews = null;
         this._alignmentActor = null;
         this._settings = null;
         this._appSystem = null;
@@ -505,8 +502,8 @@ export class TaskbarController {
         this._availableWidth = Math.max(0, Math.floor(width));
         if (this._syncCombineWhenFull().combinationChanged) {
             this._shownInitially = false;
-            this._windowPreviews?.hideTooltip(false);
-            this._windowPreviews?.hide();
+            this._getPreviews().hideTooltip(false);
+            this._getPreviews().hide();
             this._queueRedisplay();
             this._syncDragEnabled();
         }
@@ -645,8 +642,8 @@ export class TaskbarController {
             this._syncCombineWhenFull();
         if (combinationChanged) {
             this._shownInitially = false;
-            this._windowPreviews?.hideTooltip(false);
-            this._windowPreviews?.hide();
+            this._getPreviews().hideTooltip(false);
+            this._getPreviews().hide();
             this._syncDragEnabled();
         }
         const entries = this._orderedEntries(this._startupSettling);
@@ -662,7 +659,7 @@ export class TaskbarController {
 
         for (const [key, item] of this._appButtons) {
             if (!wantedKeys.has(key)) {
-                this._windowPreviews.removeItem(item);
+                this._getPreviews().removeItem(item);
                 this._destroyAppMenu(item._taskbarButton);
                 this._appButtons.delete(key);
                 if (this._isPinnedPlaceholder(
@@ -754,8 +751,8 @@ export class TaskbarController {
         const visible = !this._settings.get_boolean('default-gnome-panel');
         this.actor.visible = visible;
         if (!visible) {
-            this._windowPreviews?.hideTooltip(false);
-            this._windowPreviews?.hide();
+            this._getPreviews().hideTooltip(false);
+            this._getPreviews().hide();
             this._clearAppButtons();
             return;
         }
@@ -765,7 +762,7 @@ export class TaskbarController {
 
     _clearAppButtons() {
         for (const item of this._appButtons.values()) {
-            this._windowPreviews?.removeItem(item);
+            this._getPreviews().removeItem(item);
             this._untrackApp(item._taskbarApp);
             this._destroyAppMenu(item._taskbarButton);
             item.remove_all_transitions();
@@ -978,8 +975,8 @@ export class TaskbarController {
             return;
         }
 
-        this._windowPreviews?.hideTooltip(false);
-        this._windowPreviews?.hide();
+        this._getPreviews().hideTooltip(false);
+        this._getPreviews().hide();
         if (suppressAnimations)
             this._shownInitially = false;
         for (const item of this.getItems())
@@ -1260,7 +1257,7 @@ export class TaskbarController {
             return;
 
         const id = app.connect('windows-changed', () => {
-            this._windowPreviews.windowsChanged(app);
+            this._getPreviews().windowsChanged(app);
             if (this._combineMode() === 'always' &&
                 !this._usePinnedAppLaunchers() &&
                 this._isPersistentPinned(app)) {

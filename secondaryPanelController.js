@@ -67,6 +67,8 @@ export class SecondaryPanelController {
             settings,
             spreadAppWindows,
             getMonitor: () => this._monitor,
+            getTaskbarController: () => this._taskbarController,
+            getPreviewController: () => this._windowPreviews,
         });
         this._taskbarController = new TaskbarController({
             settings,
@@ -82,15 +84,13 @@ export class SecondaryPanelController {
             onWindowClicked: window =>
                 this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),
+            getPreviewController: () => this._windowPreviews,
         });
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
             app => this._windowController.getInterestingWindows(app),
             settings
         );
-        this._taskbarController.setPreviewController(this._windowPreviews);
-        this._windowController.setTaskbarController(this._taskbarController);
-        this._windowController.setPreviewController(this._windowPreviews);
         this._startButtonController = new StartButtonController({
             extensionDir,
             settings,

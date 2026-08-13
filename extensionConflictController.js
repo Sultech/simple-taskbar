@@ -4,6 +4,9 @@
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionStateIsActive} from './extensionState.js';
 
@@ -18,20 +21,19 @@ const TASKBAR_DOCK_UUIDS = [
 export class ExtensionConflictController {
     constructor(settings) {
         this._settings = settings;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._pendingUuids = new Set();
         this._disableIdleId = 0;
         this._selfDisableIdleId = 0;
     }
 
     enable() {
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::default-gnome-panel',
-            () => this._sync()
+            () => this._sync(),
+            this._signalHolder
         );
-        this._connect(
-            Main.extensionManager,
+        Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 const uuid = extension.uuid;
@@ -48,21 +50,17 @@ export class ExtensionConflictController {
                 }
 
                 this._queueDisable(uuid);
-            }
+            },
+            this._signalHolder
         );
         this._sync();
     }
 
     destroy() {
         this._cancelPendingDisable();
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         this._settings = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _sync() {
