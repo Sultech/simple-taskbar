@@ -7,6 +7,7 @@ import St from 'gi://St';
 
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {
@@ -39,46 +40,30 @@ export class FolderMenuController {
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
         this._stSettings = St.Settings.get();
 
-        this.actor = new St.Button({
-            style_class: 'panel-button simple-taskbar-folder-menu-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            toggle_mode: true,
-            accessible_name: _('Folder menu'),
-            child: new St.Icon({
-                icon_name: 'folder-documents-symbolic',
-                style_class: 'system-status-icon',
-            }),
-        });
+        this._button = new PanelMenu.Button(0.5, _('Folder menu'), true);
+        this._button.add_style_class_name('simple-taskbar-folder-menu-button');
+        this._button.add_child(new St.Icon({
+            icon_name: 'folder-documents-symbolic',
+            style_class: 'system-status-icon',
+        }));
+        this.actor = this._button.container;
     }
 
     enable(menuManager = Main.panel.menuManager) {
         this._menuManager = menuManager;
         this._menu = new PopupMenu.PopupMenu(
-            this.actor,
+            this._button,
             0.5,
             panelArrowSide(this._settings)
         );
-        this._menu.actor.add_style_class_name('panel-menu');
         this._menu.actor.add_style_class_name('simple-taskbar-folder-menu');
         // PopupMenu refuses to open while empty. Keep an initial placeholder;
         // the open-state handler replaces it with the selected folder entries.
         this._showMessage(_('Open to view folder contents'));
-        this._menu.actor.hide();
-        Main.uiGroup.add_child(this._menu.actor);
+        this._button.setMenu(this._menu);
         this._menuManager.addMenu(this._menu);
 
-        this.actor.connectObject('clicked', () => {
-            if (this._menu.isOpen)
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
-            else {
-                this._syncPanelPosition();
-                this._menu.open(BoxPointer.PopupAnimation.FULL);
-            }
-        }, this._signalHolder);
         this._menu.connectObject('open-state-changed', (_menu, open) => {
-            this.actor.checked = open;
             if (open)
                 this._reloadMenu();
             else
@@ -123,7 +108,8 @@ export class FolderMenuController {
         this._menu.destroy();
         this._menu = null;
         this._menuManager = null;
-        this.actor.destroy();
+        this._button.destroy();
+        this._button = null;
         this.actor = null;
         this._themeContext = null;
         this._stSettings = null;
@@ -164,7 +150,7 @@ export class FolderMenuController {
 
         const location = this._settings.get_string('folder-menu-uri');
         if (!location) {
-            this.actor.accessible_name = _('Folder menu');
+            this._button.accessible_name = _('Folder menu');
             this._showMessage(_('Choose a folder in Taskbar Settings'));
             return;
         }
@@ -172,7 +158,7 @@ export class FolderMenuController {
         const folder = location.includes('://')
             ? Gio.File.new_for_uri(location)
             : Gio.File.new_for_path(location);
-        this.actor.accessible_name = _('%s folder').replace(
+        this._button.accessible_name = _('%s folder').replace(
             '%s',
             folder.get_basename() ?? _('Selected')
         );
