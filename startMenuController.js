@@ -309,6 +309,7 @@ export class StartMenuController {
         syncMenuArrowSide(this._menu, this._settings);
         this._syncPositionSource();
         this._menu.open(BoxPointer.PopupAnimation.FULL);
+        Main.uiGroup.set_child_below_sibling(this._menu.actor, Main.layoutManager.keyboardBox);
         this._syncPositionSource();
         if (this.isOpen) {
             this._searchEntry.grab_key_focus();
