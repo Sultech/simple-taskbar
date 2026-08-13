@@ -92,7 +92,8 @@ export class SecondaryPanelController {
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
             app => this._windowController.getInterestingWindows(app),
-            settings
+            settings,
+            () => this._applicationOverflowController.closeWithAnimation()
         );
         this._startButtonController = new StartButtonController({
             extensionDir,
