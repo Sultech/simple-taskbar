@@ -164,9 +164,21 @@ export class StartButtonController {
         const width = this._settings.get_boolean('windows-xp-theme-enabled')
             ? this._windowsXpStartButton.width
             : iconSize + padding * 2;
+        const startButtonPosition = this._settings.get_boolean(
+            'start-button-follow-app-alignment'
+        )
+            ? this._settings.get_string('app-alignment')
+            : this._settings.get_string('start-button-position');
+        const leftMargin = !this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        ) && startButtonPosition === 'left'
+            ? padding
+            : 0;
         this._content.set_width(width);
         this.actor.set_width(width);
-        this.actor.set_style('min-width: 0; padding: 0;');
+        this.actor.set_style(
+            `min-width: 0; padding: 0; margin-left: ${leftMargin}px;`
+        );
     }
 
     destroy() {
@@ -342,6 +354,15 @@ export class StartButtonController {
             this._syncState();
             this._notifyMenuOpenStateChanged();
         }, this._signalHolder);
+        const syncPosition = () => this.applyAppearance(
+            this._icon.icon_size,
+            this._settings.get_int('start-button-padding')
+        );
+        this._settings.connectObject(
+            'changed::start-button-position', syncPosition,
+            'changed::start-button-follow-app-alignment', syncPosition,
+            this._signalHolder
+        );
         this._settings.connectObject(
             'changed::start-menu-recommended-apps',
             () => this._startMenuController.refresh(),
