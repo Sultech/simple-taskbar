@@ -137,7 +137,7 @@ export function constrainTaskbarWidth({
     centered,
 }) {
     if (!taskbarBin.visible || !leftBox || !centerBox ||
-        !rightBox || panelWidth <= 0)
+        !rightBox || !leftBox.get_stage() || panelWidth <= 0)
         return;
 
     let availableWidth;
