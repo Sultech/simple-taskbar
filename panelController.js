@@ -246,6 +246,7 @@ export class PanelController {
         this._notificationAreaController.syncRightBoxActors(
             rightBox,
             new Set(items.map(item => item.actor)),
+            new Set([this._folderMenuButton]),
             windowsXpThemeEnabled
         );
         this._stateController.syncActivitiesVisibility();

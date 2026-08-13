@@ -92,14 +92,15 @@ export class NotificationAreaController {
         }
     }
 
-    syncRightBoxActors(rightBox, managedActors, enabled) {
+    syncRightBoxActors(rightBox, managedActors, offsetActors, enabled) {
         if (!enabled) {
             this._restoreRightBoxActorOffsets();
             return;
         }
 
         const externalActors = rightBox.get_children().filter(actor =>
-            actor !== this.actor && !managedActors.has(actor)
+            actor !== this.actor &&
+            (!managedActors.has(actor) || offsetActors.has(actor))
         );
         const externalActorSet = new Set(externalActors);
         for (const [actor, entry] of this._rightBoxActorTranslationY) {

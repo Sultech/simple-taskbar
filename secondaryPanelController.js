@@ -455,6 +455,7 @@ export class SecondaryPanelController {
         this._notificationAreaController.syncRightBoxActors(
             this._rightBox,
             new Set(items.map(item => item.actor)),
+            new Set([folderMenuButton]),
             windowsXpThemeEnabled
         );
         this._indicatorController.syncActivitiesVisibility();
