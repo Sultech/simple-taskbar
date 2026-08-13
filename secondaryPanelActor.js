@@ -41,9 +41,6 @@ class SecondaryPanelActor extends St.Widget {
     }
 
     vfunc_allocate(box) {
-        if (!this.get_stage())
-            return;
-
         if (this.adaptiveCenter) {
             allocateAdaptivePanel(
                 this,
