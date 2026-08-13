@@ -509,6 +509,9 @@ export class StartMenuController {
     }
 
     _getSourceMonitor() {
+        if (!this._sourceActor.get_stage())
+            return Main.layoutManager.primaryMonitor;
+
         return Main.layoutManager.findMonitorForActor(this._sourceActor) ??
             Main.layoutManager.primaryMonitor;
     }
