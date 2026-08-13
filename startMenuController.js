@@ -283,7 +283,7 @@ export class StartMenuController {
     }
 
     get isOpen() {
-        return this._menu?.isOpen ?? false;
+        return this._menu.isOpen;
     }
 
     toggle() {
@@ -355,7 +355,7 @@ export class StartMenuController {
         const theme = this._effectiveTheme();
         const changed = force || theme !== this._appliedTheme;
         if (changed) {
-            this._applyThemeClass(this._menu?.actor, theme);
+            this._applyThemeClass(this._menu.actor, theme);
             this._applyThemeClass(this._tooltipController.actor, theme);
             this._syncShellButtonClasses(this._root);
             this._appliedTheme = theme;
@@ -381,8 +381,6 @@ export class StartMenuController {
     }
 
     syncTransparency() {
-        if (!this._menu)
-            return;
         if (!this._settings.get_boolean(
             'start-menu-follow-panel-transparency'
         ) || this._blurMyShellOwnsTransparency()) {
@@ -1234,7 +1232,7 @@ export class StartMenuController {
     }
 
     _prepareHiddenMenu() {
-        if (!this._menu || this.isOpen)
+        if (this.isOpen)
             return;
 
         this._updateSize();
