@@ -6,6 +6,9 @@ import GLib from 'gi://GLib';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     BLUR_MY_SHELL_UUID,
@@ -37,7 +40,7 @@ export class PanelThemeController {
     constructor(settings, oldPanelStyle) {
         this._settings = settings;
         this._oldPanelStyle = oldPanelStyle;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._transparencyRepairId = 0;
         this._blurMyShellSyncId = 0;
         this._applyingTransparency = false;
@@ -46,20 +49,21 @@ export class PanelThemeController {
     }
 
     connectSignals(onWindowsXpThemeChanged, onPanelPositionChanged) {
-        this._connect(Main.panel, 'notify::style-class', () => {
-            this.applyTransparency();
-        });
-        this._connect(Main.panel, 'notify::style', () => {
-            if (!this._applyingTransparency)
-                this._queueTransparencyRepair();
-        });
-        this._connect(
-            Main.extensionManager,
+        Main.panel.connectObject(
+            'notify::style-class', () => this.applyTransparency(),
+            'notify::style', () => {
+                if (!this._applyingTransparency)
+                    this._queueTransparencyRepair();
+            },
+            this._signalHolder
+        );
+        Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this.queueBlurMyShellSync();
-            }
+            },
+            this._signalHolder
         );
         const blurMyShellSettings = getBlurMyShellSettings();
         if (blurMyShellSettings) {
@@ -68,77 +72,49 @@ export class PanelThemeController {
                 'panel'
             );
             if (panelSettings && blurMyShellHasKey(panelSettings, 'blur')) {
-                this._connect(
-                    panelSettings,
-                    'changed::blur',
-                    () => this.queueBlurMyShellSync()
+                panelSettings.connectObject(
+                    'changed::blur', () => this.queueBlurMyShellSync(),
+                    this._signalHolder
                 );
             }
         }
-        this._connect(this._settings, 'changed::transparency-enabled', () => {
-            this.applyTransparency();
-        });
-        this._connect(this._settings, 'changed::transparency-level', () => {
-            this.applyTransparency();
-        });
-        for (const key of [
-            'custom-panel-color-enabled',
-            'custom-panel-color',
-        ]) {
-            this._connect(this._settings, `changed::${key}`, () => {
-                this.applyTransparency();
-            });
-        }
-        this._connect(this._settings, 'changed::panel-border-enabled', () => {
-            this.syncBorder();
-            this.applyTransparency();
-        });
-        this._connect(
-            this._settings,
-            'changed::panel-border-light-enabled',
-            () => {
+        this._settings.connectObject(
+            'changed::transparency-enabled', () => this.applyTransparency(),
+            'changed::transparency-level', () => this.applyTransparency(),
+            'changed::custom-panel-color-enabled',
+            () => this.applyTransparency(),
+            'changed::custom-panel-color', () => this.applyTransparency(),
+            'changed::panel-border-enabled', () => {
                 this.syncBorder();
                 this.applyTransparency();
-            }
-        );
-        this._connect(
-            this._settings,
-            'changed::panel-theme-follow-system',
-            () => this.applyTheme()
-        );
-        this._connect(this._settings, 'changed::panel-theme', () => {
-            this.applyTheme();
-        });
-        this._connect(
-            this._settings,
-            'changed::windows-xp-theme-enabled',
-            () => {
+            },
+            'changed::panel-border-light-enabled', () => {
+                this.syncBorder();
+                this.applyTransparency();
+            },
+            'changed::panel-theme-follow-system', () => this.applyTheme(),
+            'changed::panel-theme', () => this.applyTheme(),
+            'changed::windows-xp-theme-enabled', () => {
                 this.applyTheme();
                 onWindowsXpThemeChanged();
                 this.queueBlurMyShellSync();
-            }
+            },
+            'changed::panel-position', () => {
+                this.syncEdgeClass();
+                onPanelPositionChanged();
+                this.applyTransparency();
+            },
+            this._signalHolder
         );
-        this._connect(this._settings, 'changed::panel-position', () => {
-            this.syncEdgeClass();
-            onPanelPositionChanged();
-            this.applyTransparency();
-        });
-        this._connect(this._themeContext, 'changed', () => {
-            if (this._settings.get_boolean('panel-theme-follow-system'))
-                this.applyTheme();
-        });
-        for (const signal of [
-            'notify::color-scheme',
-            'notify::shell-color-scheme',
-        ]) {
-            this._connect(this._stSettings, signal, () => {
-                if (this._settings.get_boolean(
-                    'panel-theme-follow-system'
-                )) {
-                    this.applyTheme();
-                }
-            });
-        }
+        this._themeContext.connectObject(
+            'changed', () => this._applySystemTheme(),
+            this._signalHolder
+        );
+        this._stSettings.connectObject(
+            'notify::color-scheme', () => this._applySystemTheme(),
+            'notify::shell-color-scheme', () => this._applySystemTheme(),
+            this._signalHolder
+        );
     }
 
     syncEdgeClass() {
@@ -264,9 +240,8 @@ export class PanelThemeController {
             GLib.Source.remove(this._blurMyShellSyncId);
             this._blurMyShellSyncId = 0;
         }
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         this.restore();
         this._themeContext = null;
         this._stSettings = null;
@@ -274,8 +249,9 @@ export class PanelThemeController {
         this._settings = null;
     }
 
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
+    _applySystemTheme() {
+        if (this._settings.get_boolean('panel-theme-follow-system'))
+            this.applyTheme();
     }
 
     _queueTransparencyRepair() {

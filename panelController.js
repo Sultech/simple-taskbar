@@ -7,6 +7,9 @@ import GObject from 'gi://GObject';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionIsActive} from './extensionState.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
@@ -55,7 +58,7 @@ export class PanelController {
             onTaskbarAvailableWidthChanged;
         this._queueOverviewRelayout = queueOverviewRelayout;
         this._isAutoHideBlocked = isAutoHideBlocked;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._layoutRepairId = 0;
         this._applyingLayout = false;
         this._stateController = null;
@@ -288,9 +291,8 @@ export class PanelController {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
         }
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
 
         this._autoHideController.destroy();
         this._autoHideController = null;
@@ -321,10 +323,6 @@ export class PanelController {
         this._settings = null;
         this._notificationAreaController = null;
         this._applyingLayout = false;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _configurePanelMenuSwitching() {
@@ -380,19 +378,19 @@ export class PanelController {
     }
 
     _connectSignals() {
-        this._connect(Main.layoutManager, 'monitors-changed', () => {
+        Main.layoutManager.connectObject('monitors-changed', () => {
             this.position();
-        });
+        }, this._signalHolder);
         if (Main.screenShield) {
-            this._connect(Main.screenShield, 'locked-changed', () => {
+            Main.screenShield.connectObject('locked-changed', () => {
                 if (!Main.screenShield.locked) {
                     this._stateController.syncActivitiesVisibility();
                     this.updateTaskbarWidth();
                 }
-            });
+            }, this._signalHolder);
         }
         const activities = Main.panel.statusArea.activities.container;
-        this._connect(activities, 'notify::visible', () => {
+        activities.connectObject('notify::visible', () => {
             if (!Main.sessionMode.isLocked &&
                 activities.visible !== this._settings.get_boolean(
                     'activities-button-visible'
@@ -400,29 +398,28 @@ export class PanelController {
                 this._stateController.syncActivitiesVisibility();
                 this.updateTaskbarWidth();
             }
-        });
+        }, this._signalHolder);
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
             Main.panel._rightBox,
         ]) {
-            this._connect(box, 'notify::width', () => {
+            box.connectObject('notify::width', () => {
                 this.updateTaskbarWidth();
-            });
+            }, this._signalHolder);
         }
         for (const signal of ['child-added', 'child-removed']) {
-            this._connect(this._taskbarActor, signal, () => {
+            this._taskbarActor.connectObject(signal, () => {
                 this.updateTaskbarWidth();
-            });
+            }, this._signalHolder);
         }
-        this._connect(this._settings, 'changed::hide-app-labels', () => {
+        this._settings.connectObject('changed::hide-app-labels', () => {
             this.updateTaskbarWidth();
-        });
-        this._connect(this._startButton, 'notify::visible', () => {
+        }, this._signalHolder);
+        this._startButton.connectObject('notify::visible', () => {
             this.updateTaskbarWidth();
-        });
-        this._connect(
-            Main.extensionManager,
+        }, this._signalHolder);
+        Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 const uuid = extension.uuid;
@@ -430,78 +427,79 @@ export class PanelController {
                     uuid === DASH_TO_PANEL_UUID) {
                     this._queueLayoutRepair();
                 }
-            }
+            },
+            this._signalHolder
         );
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
             Main.panel._rightBox,
         ]) {
-            this._connect(box, 'child-added', () => {
+            box.connectObject('child-added', () => {
                 this._onPanelBoxChildChanged();
-            });
-            this._connect(box, 'child-removed', () => {
+            }, this._signalHolder);
+            box.connectObject('child-removed', () => {
                 this._onPanelBoxChildChanged();
-            });
+            }, this._signalHolder);
         }
-        this._connect(this._settings, 'changed::app-alignment', () => {
+        this._settings.connectObject('changed::app-alignment', () => {
             this._onAppAlignmentChanged();
             this.applyLayout();
-        });
-        this._connect(this._settings, 'changed::start-button-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::start-button-position', () => {
             this.applyLayout();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::start-button-follow-app-alignment',
-            () => this.applyLayout()
+            () => this.applyLayout(),
+            this._signalHolder
         );
         for (const key of [
             'windows-start-menu-enabled',
             'gnome-start-button-visible',
         ]) {
-            this._connect(this._settings, `changed::${key}`, () => {
+            this._settings.connectObject(`changed::${key}`, () => {
                 this.applyLayout();
-            });
+            }, this._signalHolder);
         }
-        this._connect(this._settings, 'changed::activities-button-visible', () => {
+        this._settings.connectObject('changed::activities-button-visible', () => {
             this._stateController.syncActivitiesVisibility();
             this.updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::activities-button-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::activities-button-position', () => {
             this.applyLayout();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::show-desktop-button-position',
-            () => this.applyLayout()
+            () => this.applyLayout(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::show-desktop-button-visible',
-            () => this.applyLayout()
+            () => this.applyLayout(),
+            this._signalHolder
         );
-        this._connect(this._settings, 'changed::start-button-padding', () => {
+        this._settings.connectObject('changed::start-button-padding', () => {
             this.updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::clock-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::clock-position', () => {
             this.applyLayout();
-        });
-        this._connect(this._settings, 'changed::system-menu-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::system-menu-position', () => {
             this.applyLayout();
-        });
-        this._connect(this._settings, 'changed::folder-menu-enabled', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::folder-menu-enabled', () => {
             this.applyLayout();
-        });
-        this._connect(this._settings, 'changed::folder-menu-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::folder-menu-position', () => {
             this.applyLayout();
-        });
-        this._connect(this._settings, 'changed::tray-overflow-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::tray-overflow-position', () => {
             this.applyLayout();
-        });
-        this._connect(this._settings, 'changed::panel-item-order', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::panel-item-order', () => {
             this.applyLayout();
-        });
+        }, this._signalHolder);
     }
 
     _onPanelBoxChildChanged() {

@@ -11,6 +11,9 @@ import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     panelArrowSide,
@@ -77,7 +80,7 @@ export class ApplicationOverflowController {
         this._taskbarController = taskbarController;
         this._previewController = previewController;
         this._viewport = viewport;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._grab = null;
         this._menu = null;
         this._section = null;
@@ -148,7 +151,7 @@ export class ApplicationOverflowController {
             () => this._style
         );
 
-        this._connect(this._menu, 'open-state-changed', (_menu, open) => {
+        this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open) {
                 this._button.add_style_pseudo_class('active');
                 this._themeController.sync();
@@ -164,91 +167,91 @@ export class ApplicationOverflowController {
                 this._closeAuxiliaryMenus();
                 this._buttonController.sync();
             }
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::application-overflow-enabled',
-            () => this._sync()
+            () => this._sync(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::application-overflow-style',
             () => {
                 this._style = null;
                 this._queueSync();
-            }
+            },
+            this._signalHolder
         );
-        this._connect(this._settings, 'changed::icon-spacing', () => {
+        this._settings.connectObject('changed::icon-spacing', () => {
             this._queueSync();
-        });
-        this._connect(this._settings, 'changed::transparency-enabled', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::transparency-enabled', () => {
             this._themeController.sync();
-        });
-        this._connect(this._settings, 'changed::transparency-level', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::transparency-level', () => {
             this._themeController.sync();
-        });
-        this._connect(this._settings, 'changed::panel-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::panel-position', () => {
             this.close();
             this._syncPanelPosition();
-        });
-        this._connect(this._settings, 'changed::default-gnome-panel', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::default-gnome-panel', () => {
             this._sync();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
-            () => this._sync()
+            () => this._sync(),
+            this._signalHolder
         );
-        this._connect(
-            this._button,
+        this._button.connectObject(
             'notify::hover',
-            () => this._buttonController.sync()
+            () => this._buttonController.sync(),
+            this._signalHolder
         );
-        this._connect(
-            this._button,
+        this._button.connectObject(
             'notify::pseudo-class',
-            () => this._buttonController.sync()
+            () => this._buttonController.sync(),
+            this._signalHolder
         );
-        this._connect(
-            this._button,
+        this._button.connectObject(
             'key-focus-in',
-            () => this._buttonController.sync()
+            () => this._buttonController.sync(),
+            this._signalHolder
         );
-        this._connect(
-            this._button,
+        this._button.connectObject(
             'key-focus-out',
-            () => this._buttonController.sync()
+            () => this._buttonController.sync(),
+            this._signalHolder
         );
         for (const item of this._taskbarController.getOrderedItems())
             this._connectTaskbarItem(item);
-        this._connect(this._taskbarController.actor, 'child-added',
+        this._taskbarController.actor.connectObject('child-added',
             (_actor, item) => {
                 this._connectTaskbarItem(item);
                 this._queueSync();
-            });
-        this._connect(this._taskbarController.actor, 'child-removed', () => {
+            }, this._signalHolder);
+        this._taskbarController.actor.connectObject('child-removed', () => {
             this._queueSync();
-        });
-        this._connect(
-            this._taskbarController.actor,
+        }, this._signalHolder);
+        this._taskbarController.actor.connectObject(
             'notify::allocation',
-            () => this._queueSync()
+            () => this._queueSync(),
+            this._signalHolder
         );
-        this._connect(this._viewport, 'notify::allocation', () => {
+        this._viewport.connectObject('notify::allocation', () => {
             this._queueSync();
-        });
-        this._connect(this._viewport.hadjustment, 'notify::value', () => {
+        }, this._signalHolder);
+        this._viewport.hadjustment.connectObject('notify::value', () => {
             if (this._settings.get_boolean('application-overflow-enabled') &&
                 this._viewport.hadjustment.get_value() !== 0) {
                 this._viewport.hadjustment.set_value(0);
             }
-        });
-        this._connect(Main.panel, 'notify::style-class', () => {
+        }, this._signalHolder);
+        Main.panel.connectObject('notify::style-class', () => {
             this._themeController.sync();
-        });
-        this._connect(Main.overview, 'showing', () => this.close());
-        this._connect(global.stage, 'captured-event', (_stage, event) =>
-            this._onCapturedEvent(event));
+        }, this._signalHolder);
+        Main.overview.connectObject('showing', () => this.close(), this._signalHolder);
+        global.stage.connectObject('captured-event', (_stage, event) =>
+            this._onCapturedEvent(event), this._signalHolder);
 
         this._syncPanelPosition();
         this._sync();
@@ -283,9 +286,8 @@ export class ApplicationOverflowController {
             GLib.Source.remove(this._syncId);
             this._syncId = 0;
         }
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         if (this._grab) {
             Main.popModal(this._grab);
             this._grab = null;
@@ -315,10 +317,6 @@ export class ApplicationOverflowController {
         this._overflowItems = null;
         this._layoutSignature = null;
         this._settings = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _connectTaskbarItem(item) {

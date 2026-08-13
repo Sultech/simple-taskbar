@@ -11,6 +11,9 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as OverviewControls from 'resource:///org/gnome/shell/ui/overviewControls.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
@@ -45,7 +48,7 @@ export class StartButtonController {
         this._getInterestingWindows = getInterestingWindows;
         this._toggleFromShortcut = toggleFromShortcut;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._startOpenedOverview = false;
         this._startMenuController = null;
         this._contextMenu = null;
@@ -105,7 +108,7 @@ export class StartButtonController {
                 ? this._windowsXpStartButton.actor
                 : this._content,
         });
-        this._connect(this.actor, 'clicked', () => this._toggleApplications());
+        this.actor.connectObject('clicked', () => this._toggleApplications(), this._signalHolder);
         this._syncWindowsXpStartButton();
         this._syncVisibility();
 
@@ -167,9 +170,8 @@ export class StartButtonController {
     }
 
     destroy() {
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         this._setActivitiesOverviewState(Main.overview._shown);
 
         this._keybindings?.destroy();
@@ -202,21 +204,17 @@ export class StartButtonController {
         this._startOpenedOverview = false;
     }
 
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
-    }
-
     _connectBlurMyShellSignals() {
-        this._connect(Main.uiGroup, 'notify::style-class', () => {
+        Main.uiGroup.connectObject('notify::style-class', () => {
             this._startMenuController.queueTransparencySync();
-        });
-        this._connect(
-            Main.extensionManager,
+        }, this._signalHolder);
+        Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this._startMenuController.queueTransparencySync();
-            }
+            },
+            this._signalHolder
         );
 
         const settings = getBlurMyShellSettings();
@@ -235,10 +233,10 @@ export class StartButtonController {
                 !blurMyShellHasKey(componentSettings, key)) {
                 continue;
             }
-            this._connect(
-                componentSettings,
+            componentSettings.connectObject(
                 `changed::${key}`,
-                () => this._startMenuController.queueTransparencySync()
+                () => this._startMenuController.queueTransparencySync(),
+                this._signalHolder
             );
         }
     }
@@ -281,11 +279,11 @@ export class StartButtonController {
         Main.uiGroup.add_child(menu.actor);
         this._menuManager.addMenu(menu);
         this._contextMenu = menu;
-        this._connect(menu, 'open-state-changed', () => {
+        menu.connectObject('open-state-changed', () => {
             this._notifyMenuOpenStateChanged();
-        });
+        }, this._signalHolder);
 
-        this._connect(this.actor, 'event', (_actor, event) => {
+        this.actor.connectObject('event', (_actor, event) => {
             if (event.type() !== Clutter.EventType.BUTTON_PRESS ||
                 event.get_button() !== Clutter.BUTTON_SECONDARY ||
                 !this._windowsModeEnabled())
@@ -293,35 +291,35 @@ export class StartButtonController {
 
             this._openContextMenu();
             return Clutter.EVENT_STOP;
-        });
-        this._connect(this.actor, 'popup-menu', () => {
+        }, this._signalHolder);
+        this.actor.connectObject('popup-menu', () => {
             if (!this._windowsModeEnabled())
                 return Clutter.EVENT_PROPAGATE;
 
             this._openContextMenu();
             return Clutter.EVENT_STOP;
-        });
+        }, this._signalHolder);
     }
 
     _connectStateSignals() {
         const shellShowAppsButton = Main.overview.dash.showAppsButton;
-        this._connect(shellShowAppsButton, 'notify::checked', () => {
+        shellShowAppsButton.connectObject('notify::checked', () => {
             this._syncState();
             this._notifyMenuOpenStateChanged();
-        });
-        this._connect(Main.overview, 'showing', () => {
+        }, this._signalHolder);
+        Main.overview.connectObject('showing', () => {
             if (shellShowAppsButton.checked)
                 this._setActivitiesOverviewState(false);
-        });
-        this._connect(Main.overview, 'hidden', () => {
+        }, this._signalHolder);
+        Main.overview.connectObject('hidden', () => {
             this.actor.checked = this._windowsModeEnabled()
                 ? this._startMenuController.isOpen
                 : false;
             this._startOpenedOverview = false;
             this._setActivitiesOverviewState(false);
             this._notifyMenuOpenStateChanged();
-        });
-        this._connect(this._settings, 'changed::windows-start-menu-enabled', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::windows-start-menu-enabled', () => {
             this._startMenuController.close();
             this._contextMenu.close();
             this._startOpenedOverview = false;
@@ -331,8 +329,8 @@ export class StartButtonController {
             this._syncState();
             this._notifyMenuOpenStateChanged();
             this._keybindings?.sync();
-        });
-        this._connect(this._settings, 'changed::windows-xp-theme-enabled', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::windows-xp-theme-enabled', () => {
             this._startMenuController.close();
             this._contextMenu.close();
             this._syncWindowsXpStartButton();
@@ -343,98 +341,98 @@ export class StartButtonController {
             this._syncVisibility();
             this._syncState();
             this._notifyMenuOpenStateChanged();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::start-menu-recommended-apps',
-            () => this._startMenuController.refresh()
+            () => this._startMenuController.refresh(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::start-menu-hide-pinned-app-titles',
-            () => this._startMenuController.refresh()
+            () => this._startMenuController.refresh(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::start-menu-power-options-enabled',
-            () => this._startMenuController.syncPowerOptions()
+            () => this._startMenuController.syncPowerOptions(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::start-menu-show-profile-picture',
-            () => this._startMenuController.syncUserAvatar()
+            () => this._startMenuController.syncUserAvatar(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::start-menu-open-all-apps',
-            () => this._startMenuController.refreshDefaultView()
+            () => this._startMenuController.refreshDefaultView(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::start-menu-app-categories',
-            () => this._startMenuController.refresh()
+            () => this._startMenuController.refresh(),
+            this._signalHolder
         );
-        this._connect(this._settings, 'changed::start-button-custom-icon', () => {
+        this._settings.connectObject('changed::start-button-custom-icon', () => {
             this._icon.gicon = this._currentGIcon();
-        });
-        this._connect(this._settings, 'changed::gnome-start-button-visible', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::gnome-start-button-visible', () => {
             this._syncVisibility();
-        });
-        this._connect(this._settings, 'changed::default-gnome-panel', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::default-gnome-panel', () => {
             this._startMenuController.close();
             this._contextMenu.close();
             this._syncVisibility();
             this._keybindings?.sync();
-        });
-        this._connect(this._settings, 'changed::start-menu-super-key', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::start-menu-super-key', () => {
             this._keybindings?.sync();
-        });
-        this._connect(this._settings, 'changed::start-menu-super-tab', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::start-menu-super-tab', () => {
             this._keybindings?.sync();
-        });
-        this._connect(this._settings, 'changed::start-menu-custom-hotkey', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::start-menu-custom-hotkey', () => {
             this._keybindings?.customAcceleratorChanged();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::super-e-file-manager-enabled',
-            () => this._keybindings?.sync()
+            () => this._keybindings?.sync(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::grid-alt-tab-enabled',
-            () => this._keybindings?.sync()
+            () => this._keybindings?.sync(),
+            this._signalHolder
         );
-        this._connect(this._settings, 'changed::start-menu-theme', () => {
+        this._settings.connectObject('changed::start-menu-theme', () => {
             this._startMenuController.syncTheme();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::start-menu-follow-panel-theme',
-            () => this._startMenuController.syncTheme()
+            () => this._startMenuController.syncTheme(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::start-menu-follow-panel-transparency',
-            () => this._startMenuController.syncTransparency()
+            () => this._startMenuController.syncTransparency(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::transparency-enabled',
-            () => this._startMenuController.syncTransparency()
+            () => this._startMenuController.syncTransparency(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
+        this._settings.connectObject(
             'changed::transparency-level',
-            () => this._startMenuController.syncTransparency()
+            () => this._startMenuController.syncTransparency(),
+            this._signalHolder
         );
-        this._connect(Main.panel, 'notify::style-class', () => {
+        Main.panel.connectObject('notify::style-class', () => {
             if (this._settings.get_boolean(
                 'start-menu-follow-panel-theme'
             )) {
                 this._startMenuController.syncTheme();
             }
-        });
+        }, this._signalHolder);
     }
 
     _openContextMenu() {

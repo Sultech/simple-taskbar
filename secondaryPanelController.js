@@ -5,6 +5,9 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     ApplicationOverflowController,
@@ -59,7 +62,7 @@ export class SecondaryPanelController {
         this._extensionDir = extensionDir;
         this._monitor = monitor;
         this._openPreferencesCallback = openPreferences;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._panelHeight = settings.get_int('panel-height');
         this._iconSize = settings.get_int('icon-size');
 
@@ -233,9 +236,8 @@ export class SecondaryPanelController {
     }
 
     destroy() {
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
 
         this._autoHideController.destroy();
         this._autoHideController = null;
@@ -283,27 +285,23 @@ export class SecondaryPanelController {
         this._settings = null;
     }
 
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
-    }
-
     _connectSignals() {
-        this._connect(Main.panel, 'notify::style-class', () => {
+        Main.panel.connectObject('notify::style-class', () => {
             this._syncTheme();
-        });
-        this._connect(Main.panel, 'notify::style', () => {
+        }, this._signalHolder);
+        Main.panel.connectObject('notify::style', () => {
             this._syncTheme();
-        });
+        }, this._signalHolder);
         for (const box of [
             this._leftBox,
             this._centerBox,
             this._rightBox,
         ]) {
-            this._connect(box, 'notify::width', () => {
+            box.connectObject('notify::width', () => {
                 this._updateTaskbarWidth();
-            });
+            }, this._signalHolder);
         }
-        this._connect(this._settings, 'changed::icon-size', () => {
+        this._settings.connectObject('changed::icon-size', () => {
             this._iconSize = this._settings.get_int('icon-size');
             this._startButtonController.applyAppearance(
                 this._iconSize,
@@ -311,84 +309,84 @@ export class SecondaryPanelController {
             );
             this._taskbarController.setIconSize(this._iconSize);
             this._updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::panel-height', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::panel-height', () => {
             this._panelHeight = this._settings.get_int('panel-height');
             this._taskbarController.setPanelHeight(this._panelHeight);
             this._position();
-        });
-        this._connect(this._settings, 'changed::icon-spacing', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::icon-spacing', () => {
             this._applyAppearance();
             this._updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::default-gnome-panel', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => {
                 this._applyLayout();
                 this._syncTheme();
-            }
+            },
+            this._signalHolder
         );
-        this._connect(this._settings, 'changed::app-alignment', () => {
+        this._settings.connectObject('changed::app-alignment', () => {
             this._applyAppearance();
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::start-button-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::start-button-position', () => {
             this._applyLayout();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
             'changed::start-button-follow-app-alignment',
-            () => this._applyLayout()
+            () => this._applyLayout(),
+            this._signalHolder
         );
         for (const key of [
             'windows-start-menu-enabled',
             'gnome-start-button-visible',
         ]) {
-            this._connect(this._settings, `changed::${key}`, () => {
+            this._settings.connectObject(`changed::${key}`, () => {
                 this._applyLayout();
-            });
+            }, this._signalHolder);
         }
-        this._connect(this._settings, 'changed::activities-button-visible', () => {
+        this._settings.connectObject('changed::activities-button-visible', () => {
             this._indicatorController.syncActivitiesVisibility();
             this._updateTaskbarWidth();
-        });
-        this._connect(this._settings, 'changed::activities-button-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::activities-button-position', () => {
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::clock-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::clock-position', () => {
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::system-menu-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::system-menu-position', () => {
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::folder-menu-enabled', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::folder-menu-enabled', () => {
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::folder-menu-position', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::folder-menu-position', () => {
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::panel-item-order', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::panel-item-order', () => {
             this._applyLayout();
-        });
-        this._connect(this._settings, 'changed::start-button-padding', () => {
+        }, this._signalHolder);
+        this._settings.connectObject('changed::start-button-padding', () => {
             this._startButtonController.applyAppearance(
                 this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
             this._updateTaskbarWidth();
-        });
+        }, this._signalHolder);
         for (const signal of ['child-added', 'child-removed']) {
-            this._connect(this._taskbarController.actor, signal, () => {
+            this._taskbarController.actor.connectObject(signal, () => {
                 this._updateTaskbarWidth();
-            });
+            }, this._signalHolder);
         }
-        this._connect(this._settings, 'changed::hide-app-labels', () => {
+        this._settings.connectObject('changed::hide-app-labels', () => {
             this._updateTaskbarWidth();
-        });
+        }, this._signalHolder);
     }
 
     _applyAppearance() {
