@@ -67,20 +67,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             return enabledExtensions.includes(BLUR_MY_SHELL_UUID) &&
                 !disabledExtensions.includes(BLUR_MY_SHELL_UUID);
         };
-        const blurMyShellPanelBlurEnabled = () => {
-            if (!blurMyShellPanelSettings ||
-                !blurMyShellHasKey(blurMyShellPanelSettings, 'blur') ||
+        const blurMyShellBlurEnabled = settings => {
+            if (!settings ||
+                !blurMyShellHasKey(settings, 'blur') ||
                 !blurMyShellExtensionEnabled())
                 return false;
-            return blurMyShellPanelSettings.get_boolean('blur');
+            return settings.get_boolean('blur');
         };
-        const blurMyShellPopupBlurEnabled = () => {
-            if (!blurMyShellPopupSettings ||
-                !blurMyShellHasKey(blurMyShellPopupSettings, 'blur') ||
-                !blurMyShellExtensionEnabled())
-                return false;
-            return blurMyShellPopupSettings.get_boolean('blur');
-        };
+        const blurMyShellPanelBlurEnabled = () =>
+            blurMyShellBlurEnabled(blurMyShellPanelSettings);
+        const blurMyShellPopupBlurEnabled = () =>
+            blurMyShellBlurEnabled(blurMyShellPopupSettings);
         let syncPanelTransparencyControls = () => {};
         let syncCustomPanelColorControls = () => {};
         let syncStartMenuTransparencyControl = () => {};
