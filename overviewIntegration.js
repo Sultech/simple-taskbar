@@ -13,6 +13,9 @@ import {
     SecondaryMonitorDisplay,
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionWillBeActive} from './extensionState.js';
 import {panelIsTop} from './panelPosition.js';
@@ -35,7 +38,7 @@ export class OverviewIntegration {
         this._spreadApp = null;
         this._spreadHiddenId = 0;
         this._oldHasWorkspaces = null;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._tracker = Shell.WindowTracker.get_default();
         this._startupState = null;
         this._startupOverviewId = 0;
@@ -46,36 +49,24 @@ export class OverviewIntegration {
         this._startupState = {
             hasOverview: Main.sessionMode.hasOverview,
         };
-        this._connect(
-            this._settings,
-            'changed::default-gnome-panel',
-            () => {
+        this._settings.connectObject(
+            'changed::default-gnome-panel', () => {
                 this._syncStartupOverview();
                 this._syncDashVisibility();
-            }
+            },
+            'changed::panel-autohide-enabled', () => this.queueRelayout(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
-            'changed::panel-autohide-enabled',
-            () => this.queueRelayout()
-        );
-        this._connect(
-            Main.overview,
+        Main.overview.connectObject(
             'window-drag-begin',
-            (_overview, window) => this._beginMaximizedWindowDrag(window)
-        );
-        this._connect(
-            Main.overview,
+            (_overview, window) => this._beginMaximizedWindowDrag(window),
             'window-drag-end',
-            (_overview, window) => this._endMaximizedWindowDrag(window)
-        );
-        this._connect(
-            Main.overview,
+            (_overview, window) => this._endMaximizedWindowDrag(window),
             'window-drag-cancelled',
-            (_overview, window) => this._cancelMaximizedWindowDrag(window)
+            (_overview, window) => this._cancelMaximizedWindowDrag(window),
+            this._signalHolder
         );
-        this._connect(
-            Main.extensionManager,
+        Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 if (!DESKTOP_DOCK_UUIDS.includes(extension.uuid))
@@ -84,10 +75,11 @@ export class OverviewIntegration {
                 this._syncStartupOverview();
                 if (this._desktopDockIsEnabled())
                     this._cancelStartupOverview();
-            }
+            },
+            this._signalHolder
         );
         if (Main.layoutManager._startingUp) {
-            this._connect(Main.layoutManager, 'startup-complete', () => {
+            Main.layoutManager.connectObject('startup-complete', () => {
                 if (this._startupState) {
                     const startInOverview =
                         this._shouldStartInOverview();
@@ -98,7 +90,7 @@ export class OverviewIntegration {
                     else
                         Main.overview.hide();
                 }
-            });
+            }, this._signalHolder);
         }
         this._syncStartupOverview();
         this._syncDashVisibility();
@@ -165,19 +157,14 @@ export class OverviewIntegration {
         this._spreadInjectionManager = null;
         this._injectionManager.clear();
         this._injectionManager = null;
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         this._restoreStartupOverview();
         this._restoreDash(restoreVisible);
         this.queueRelayout();
         this._maximizedWindowDrag = null;
         this._tracker = null;
         this._settings = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _beginMaximizedWindowDrag(window) {
@@ -293,10 +280,10 @@ export class OverviewIntegration {
     _watchDashVisibility() {
         const dash = Main.overview.dash;
 
-        this._connect(dash, 'notify::visible', () => {
+        dash.connectObject('notify::visible', () => {
             if (dash.visible)
                 this._queueDashVisibilityRepair();
-        });
+        }, this._signalHolder);
     }
 
     _queueDashVisibilityRepair() {

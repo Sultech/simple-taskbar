@@ -5,6 +5,9 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelIsTop} from './panelPosition.js';
 
@@ -32,7 +35,7 @@ export class PanelAutoHideController {
         this._getMonitor = getMonitor;
         this._getPanelHeight = getPanelHeight;
         this._isBlockedCallback = isBlocked;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._hideTimeoutId = 0;
         this._fullscreenWatchId = 0;
         this._fullscreenReleasePending = false;
@@ -47,48 +50,51 @@ export class PanelAutoHideController {
     }
 
     enable() {
-        this._connect(this._panelActor, 'enter-event', () => {
-            this.show();
-            return Clutter.EVENT_PROPAGATE;
-        });
-        this._connect(this._panelActor, 'leave-event', () => {
-            this._scheduleHide();
-            return Clutter.EVENT_PROPAGATE;
-        });
-        this._connect(global.stage, 'captured-event', (_stage, event) => {
-            if (!this._enabled() || !this._hidden ||
-                event.type() !== Clutter.EventType.MOTION) {
+        this._panelActor.connectObject(
+            'enter-event', () => {
+                this.show();
                 return Clutter.EVENT_PROPAGATE;
-            }
-
-            const [x, y] = event.get_coords();
-            if (this._pointerIsAtRevealEdge(x, y))
-                this.show();
-            return Clutter.EVENT_PROPAGATE;
-        });
-        this._connect(global.stage, 'notify::key-focus', () => {
-            if (this._focusIsInsidePanel())
-                this.show();
-            else
+            },
+            'leave-event', () => {
                 this._scheduleHide();
-        });
-        this._connect(
-            this._settings,
-            'changed::panel-autohide-enabled',
-            () => this._syncEnabled()
+                return Clutter.EVENT_PROPAGATE;
+            },
+            this._signalHolder
         );
-        this._connect(Main.overview, 'showing', () => {
-            this._suspendForOverview();
-        });
-        this._connect(Main.overview, 'hiding', () => {
-            this._restoreFullscreenVisibility();
-        });
-        this._connect(Main.overview, 'hidden', () => {
-            this._resumeAfterOverview();
-        });
-        this._connect(global.display, 'in-fullscreen-changed', () => {
-            this._fullscreenChanged();
-        });
+        global.stage.connectObject(
+            'captured-event', (_stage, event) => {
+                if (!this._enabled() || !this._hidden ||
+                    event.type() !== Clutter.EventType.MOTION) {
+                    return Clutter.EVENT_PROPAGATE;
+                }
+
+                const [x, y] = event.get_coords();
+                if (this._pointerIsAtRevealEdge(x, y))
+                    this.show();
+                return Clutter.EVENT_PROPAGATE;
+            },
+            'notify::key-focus', () => {
+                if (this._focusIsInsidePanel())
+                    this.show();
+                else
+                    this._scheduleHide();
+            },
+            this._signalHolder
+        );
+        this._settings.connectObject(
+            'changed::panel-autohide-enabled', () => this._syncEnabled(),
+            this._signalHolder
+        );
+        Main.overview.connectObject(
+            'showing', () => this._suspendForOverview(),
+            'hiding', () => this._restoreFullscreenVisibility(),
+            'hidden', () => this._resumeAfterOverview(),
+            this._signalHolder
+        );
+        global.display.connectObject(
+            'in-fullscreen-changed', () => this._fullscreenChanged(),
+            this._signalHolder
+        );
 
         this._overviewSuspended = Main.overview.visibleTarget;
         this._captureStrutTracking();
@@ -100,9 +106,8 @@ export class PanelAutoHideController {
     destroy() {
         this._clearHideTimeout();
         this._restoreFullscreenVisibility();
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
 
         this._hidden = false;
         this._overviewSuspended = false;
@@ -166,10 +171,6 @@ export class PanelAutoHideController {
 
         this._hidden = false;
         this._moveTo(this._visibleY(this._getMonitor()), animate);
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _enabled() {

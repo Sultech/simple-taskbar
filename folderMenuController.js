@@ -9,6 +9,9 @@ import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {shellMenusUseLightTheme} from './themeUtils.js';
 import {
@@ -28,7 +31,7 @@ const ENUMERATION_BATCH_SIZE = 50;
 export class FolderMenuController {
     constructor(settings) {
         this._settings = settings;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._menuManager = null;
         this._menu = null;
         this._enumerationCancellable = null;
@@ -66,47 +69,42 @@ export class FolderMenuController {
         Main.uiGroup.add_child(this._menu.actor);
         this._menuManager.addMenu(this._menu);
 
-        this._connect(this.actor, 'clicked', () => {
+        this.actor.connectObject('clicked', () => {
             if (this._menu.isOpen)
                 this._menu.close(BoxPointer.PopupAnimation.FULL);
             else {
                 this._syncPanelPosition();
                 this._menu.open(BoxPointer.PopupAnimation.FULL);
             }
-        });
-        this._connect(this._menu, 'open-state-changed', (_menu, open) => {
+        }, this._signalHolder);
+        this._menu.connectObject('open-state-changed', (_menu, open) => {
             this.actor.checked = open;
             if (open)
                 this._reloadMenu();
             else
                 this._cancelEnumeration();
-        });
-        this._connect(this._settings, 'changed::folder-menu-enabled', () => {
-            this._syncVisibility();
-        });
-        this._connect(this._settings, 'changed::folder-menu-uri', () => {
-            if (this._menu.isOpen)
-                this._reloadMenu();
-        });
-        this._connect(this._settings, 'changed::panel-position', () => {
-            this._menu.close(BoxPointer.PopupAnimation.NONE);
-            this._syncPanelPosition();
-        });
-        this._connect(
-            this._themeContext,
-            'changed',
-            () => this._syncTheme()
+        }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::folder-menu-enabled', () => this._syncVisibility(),
+            'changed::folder-menu-uri', () => {
+                if (this._menu.isOpen)
+                    this._reloadMenu();
+            },
+            'changed::panel-position', () => {
+                this._menu.close(BoxPointer.PopupAnimation.NONE);
+                this._syncPanelPosition();
+            },
+            this._signalHolder
         );
-        for (const signal of [
-            'notify::color-scheme',
-            'notify::shell-color-scheme',
-        ]) {
-            this._connect(
-                this._stSettings,
-                signal,
-                () => this._syncTheme()
-            );
-        }
+        this._themeContext.connectObject(
+            'changed', () => this._syncTheme(),
+            this._signalHolder
+        );
+        this._stSettings.connectObject(
+            'notify::color-scheme', () => this._syncTheme(),
+            'notify::shell-color-scheme', () => this._syncTheme(),
+            this._signalHolder
+        );
         this._syncTheme();
         this._syncPanelPosition();
         this._syncVisibility();
@@ -118,9 +116,8 @@ export class FolderMenuController {
 
     destroy() {
         this._cancelEnumeration();
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
 
         if (this._menu) {
             this._menuManager?.removeMenu(this._menu);
@@ -133,10 +130,6 @@ export class FolderMenuController {
         this._themeContext = null;
         this._stSettings = null;
         this._settings = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _syncVisibility() {

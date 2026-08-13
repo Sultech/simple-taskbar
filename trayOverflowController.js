@@ -10,6 +10,9 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     panelArrowSide,
@@ -31,7 +34,7 @@ const TRAY_INDICATOR_STYLE =
 export class TrayOverflowController {
     constructor(settings) {
         this._settings = settings;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._menuManager = null;
         this._menu = null;
         this._grid = null;
@@ -70,7 +73,7 @@ export class TrayOverflowController {
         Main.uiGroup.add_child(this._menu.actor);
         this._menuManager.addMenu(this._menu);
 
-        this._connect(this._menu, 'open-state-changed', (_menu, open) => {
+        this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open) {
                 this._button.add_style_pseudo_class('active');
                 this._syncTheme();
@@ -78,26 +81,28 @@ export class TrayOverflowController {
                 this._button.remove_style_pseudo_class('active');
                 this._closeStashedMenus();
             }
-        });
-        this._connect(this._settings, 'changed::tray-overflow-enabled', () => {
-            this._sync();
-        });
-        this._connect(this._settings, 'changed::panel-position', () => {
-            this._menu.close(BoxPointer.PopupAnimation.NONE);
-            this._syncPanelPosition();
-        });
-        this._connect(
-            this._settings,
+        }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::tray-overflow-enabled', () => this._sync(),
+            'changed::panel-position', () => {
+                this._menu.close(BoxPointer.PopupAnimation.NONE);
+                this._syncPanelPosition();
+            },
             'changed::windows-xp-theme-enabled',
-            () => this._syncPanelPosition()
+            () => this._syncPanelPosition(),
+            this._signalHolder
         );
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
             Main.panel._rightBox,
-        ])
-            this._connect(box, 'child-added',
-                (_box, container) => this._onPanelChildAdded(container));
+        ]) {
+            box.connectObject(
+                'child-added',
+                (_box, container) => this._onPanelChildAdded(container),
+                this._signalHolder
+            );
+        }
 
         this._syncPanelPosition();
         this._sync();
@@ -168,9 +173,8 @@ export class TrayOverflowController {
             this._activationCloseId = 0;
         }
         this._menuRaiseIndicator = null;
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
 
         this._releaseAll();
 
@@ -189,10 +193,6 @@ export class TrayOverflowController {
         this._button = null;
         this._icon = null;
         this._settings = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _createButton() {
