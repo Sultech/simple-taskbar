@@ -119,8 +119,10 @@ export function placePanelItems(boxes, items, order) {
 
         managedActors.add(actor);
         const parent = actor.get_parent();
-        if (parent && (!visible || parent !== boxes[position]))
+        if (parent && (!visible || parent !== boxes[position])) {
+            actor.ensure_style();
             parent.remove_child(actor);
+        }
     }
 
     for (const [position, {leading, trailing}] of targets) {
