@@ -4,6 +4,10 @@
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
+
 import {MIN_PANEL_HEIGHT} from './panelSizing.js';
 
 const AUTOMATIC_PADDING = -1;
@@ -24,36 +28,31 @@ export class PanelButtonPaddingController {
         this._settings = settings;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._styledActors = new Map();
         this._hoverInsetClass = null;
     }
 
     enable() {
-        this._connect(
-            this._settings,
-            'changed::panel-button-padding',
-            () => this.sync()
+        this._settings.connectObject(
+            'changed::panel-button-padding', () => this.sync(),
+            'changed::panel-height', () => this._syncHoverInset(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
-            'changed::panel-height',
-            () => this._syncHoverInset()
-        );
-        this._connect(
-            Main.layoutManager.uiGroup,
-            'notify::style-class',
-            () => this.sync()
+        Main.layoutManager.uiGroup.connectObject(
+            'notify::style-class', () => this.sync(),
+            this._signalHolder
         );
         for (const box of this._panelBoxes) {
-            this._connect(box, 'child-added', (_box, actor) => {
-                const padding = this._effectivePadding();
-                if (padding !== null)
-                    this._applyToSubtree(actor, padding);
-            });
-            this._connect(box, 'child-removed', (_box, actor) => {
-                this._restoreSubtree(actor);
-            });
+            box.connectObject(
+                'child-added', (_box, actor) => {
+                    const padding = this._effectivePadding();
+                    if (padding !== null)
+                        this._applyToSubtree(actor, padding);
+                },
+                'child-removed', (_box, actor) => this._restoreSubtree(actor),
+                this._signalHolder
+            );
         }
         this._syncHoverInset();
         this.sync();
@@ -82,9 +81,8 @@ export class PanelButtonPaddingController {
     }
 
     destroy() {
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
 
         this._panelActor.remove_style_class_name(
             DEFAULT_BUTTON_PADDING_CLASS
@@ -99,10 +97,6 @@ export class PanelButtonPaddingController {
         this._panelBoxes = null;
         this._panelActor = null;
         this._settings = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _externalPaddingIsActive() {

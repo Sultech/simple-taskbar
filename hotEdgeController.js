@@ -10,6 +10,9 @@ import St from 'gi://St';
 import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Ripples from 'resource:///org/gnome/shell/ui/ripples.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 const PRESSURE_TIMEOUT = 1000;
 const FALLBACK_TIMEOUT = 250;
@@ -18,38 +21,29 @@ export class HotEdgeController {
     constructor(settings, {isBlocked}) {
         this._settings = settings;
         this._isBlocked = isBlocked;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._edges = [];
     }
 
     enable() {
-        this._connect(
-            this._settings,
-            'changed::hot-edge-overview-enabled',
-            () => this._rebuild()
+        this._settings.connectObject(
+            'changed::hot-edge-overview-enabled', () => this._rebuild(),
+            'changed::hot-edge-pressure-threshold', () => this._rebuild(),
+            this._signalHolder
         );
-        this._connect(
-            this._settings,
-            'changed::hot-edge-pressure-threshold',
-            () => this._rebuild()
+        Main.layoutManager.connectObject(
+            'monitors-changed', () => this._rebuild(),
+            this._signalHolder
         );
-        this._connect(Main.layoutManager, 'monitors-changed', () => {
-            this._rebuild();
-        });
         this._rebuild();
     }
 
     destroy() {
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         this._destroyEdges();
         this._settings = null;
         this._isBlocked = null;
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _rebuild() {

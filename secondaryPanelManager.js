@@ -4,6 +4,9 @@
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {
+    TransientSignalHolder,
+} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {SecondaryPanelController} from './secondaryPanelController.js';
 
@@ -24,21 +27,21 @@ export class SecondaryPanelManager {
         this._favorites = favorites;
         this._spreadAppWindows = spreadAppWindows;
         this._openPreferences = openPreferences;
-        this._signals = [];
+        this._signalHolder = new TransientSignalHolder();
         this._panels = [];
         this._rebuildId = 0;
     }
 
     enable() {
-        this._connect(this._settings, 'changed::multi-monitor-panels', () => {
-            this._queueRebuild();
-        });
-        this._connect(this._settings, 'changed::panel-position', () => {
-            this._queueRebuild();
-        });
-        this._connect(Main.layoutManager, 'monitors-changed', () => {
-            this._queueRebuild();
-        });
+        this._settings.connectObject(
+            'changed::multi-monitor-panels', () => this._queueRebuild(),
+            'changed::panel-position', () => this._queueRebuild(),
+            this._signalHolder
+        );
+        Main.layoutManager.connectObject(
+            'monitors-changed', () => this._queueRebuild(),
+            this._signalHolder
+        );
         this._rebuild();
     }
 
@@ -47,9 +50,8 @@ export class SecondaryPanelManager {
             GLib.Source.remove(this._rebuildId);
             this._rebuildId = 0;
         }
-        for (const [object, id] of this._signals)
-            object.disconnect(id);
-        this._signals = [];
+        this._signalHolder.destroy();
+        this._signalHolder = null;
         this._destroyPanels();
         this._extensionDir = null;
         this._settings = null;
@@ -85,10 +87,6 @@ export class SecondaryPanelManager {
     closePanelMenus() {
         for (const panel of this._panels)
             panel.closePanelMenu();
-    }
-
-    _connect(object, signal, callback) {
-        this._signals.push([object, object.connect(signal, callback)]);
     }
 
     _queueRebuild() {
