@@ -10,26 +10,26 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
+import {DEFAULT_PANEL_ITEM_ORDER} from './src/panelItemOrder.js';
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
-} from './blurMyShellUtils.js';
-import {resolveTaskManagerAppId} from './taskManagerUtils.js';
-import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
-import {confirmReset} from './prefs/preferencesDialogs.js';
+} from './src/blurMyShellUtils.js';
+import {resolveTaskManagerAppId} from './src/taskManagerUtils.js';
+import {applyDefaultTaskbarSettings} from './src/taskbarDefaults.js';
+import {confirmReset} from './src/prefs/preferencesDialogs.js';
 import {
     addColorRow,
     addComboRow,
     addSpinRow,
-} from './prefs/preferencesWidgets.js';
-import {addPanelAppearancePage} from './prefs/panelAppearancePage.js';
-import {addPanelItemsPage} from './prefs/panelItemsPage.js';
-import {addStartMenuPage} from './prefs/startMenuPage.js';
-import {SettingsSignalTracker} from './prefs/settingsSignalTracker.js';
-import {addWindowSwitchingPage} from './prefs/windowSwitchingPage.js';
+} from './src/prefs/preferencesWidgets.js';
+import {addPanelAppearancePage} from './src/prefs/panelAppearancePage.js';
+import {addPanelItemsPage} from './src/prefs/panelItemsPage.js';
+import {addStartMenuPage} from './src/prefs/startMenuPage.js';
+import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
+import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
 
 const MAX_ICON_SIZE = 48;
 const GNOME_SHELL_SCHEMA = 'org.gnome.shell';
