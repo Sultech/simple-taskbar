@@ -1,12 +1,17 @@
 # <img src="docs/images/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
 
 <p>
-  <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/">
-    <img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" width="180" align="middle">
-  </a>
-  <a href="https://www.buymeacoffee.com/sultech">
-    <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee" width="174" height="41" align="middle">
-  </a>
+  <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/"><img
+    src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"
+    alt="Get it on GNOME Extensions"
+    width="180"
+    align="middle"></a>
+  <a href="https://www.buymeacoffee.com/sultech"><img
+    src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
+    alt="Buy Me a Coffee"
+    width="174"
+    height="41"
+    align="middle"></a>
 </p>
 
 Simple Taskbar turns GNOME Shell's native panel into a configurable desktop
