@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+import GObject from 'gi://GObject';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -46,6 +48,25 @@ const EXTERNAL_PANEL_STYLES = new Set([
     'dark-panel',
     'contrasted-panel',
 ]);
+
+const SecondaryPanelBox = GObject.registerClass(
+    class SecondaryPanelBox extends St.Widget {
+        _init() {
+            super._init({name: 'panelBox'});
+        }
+
+        vfunc_allocate(box) {
+            this.set_allocation(box);
+            const childBox = new Clutter.ActorBox();
+            childBox.x1 = 0;
+            childBox.y1 = 0;
+            childBox.x2 = box.x2 - box.x1;
+            childBox.y2 = box.y2 - box.y1;
+            for (const child of this.get_children())
+                child.allocate(childBox);
+        }
+    }
+);
 
 export class SecondaryPanelController {
     constructor({
@@ -135,7 +156,9 @@ export class SecondaryPanelController {
         this._taskbarBin.visible =
             !settings.get_boolean('default-gnome-panel');
 
+        this._panelBox = new SecondaryPanelBox();
         this.actor = new SecondaryPanelActor();
+        this._panelBox.add_child(this.actor);
         this._leftBox = this.actor.leftBox;
         this._centerBox = this.actor.centerBox;
         this._rightBox = this.actor.rightBox;
@@ -182,7 +205,7 @@ export class SecondaryPanelController {
                 quickSettings
             );
         this._quickSettingsXpIconController.enable();
-        Main.layoutManager.addChrome(this.actor, {
+        Main.layoutManager.addChrome(this._panelBox, {
             affectsStruts: true,
             trackFullscreen: true,
         });
@@ -207,7 +230,7 @@ export class SecondaryPanelController {
         this._autoHideController = new PanelAutoHideController({
             settings: this._settings,
             panelActor: this.actor,
-            positionActor: this.actor,
+            positionActor: this._panelBox,
             getMonitor: () => this._monitor,
             getPanelHeight: () => this._panelHeight,
             isBlocked: () => this._autoHideIsBlocked(),
@@ -271,8 +294,9 @@ export class SecondaryPanelController {
         this._folderMenuController = null;
         this._menuManager = null;
 
-        Main.layoutManager.removeChrome(this.actor);
-        this.actor.destroy();
+        Main.layoutManager.removeChrome(this._panelBox);
+        this._panelBox.destroy();
+        this._panelBox = null;
         this.actor = null;
         this._leftBox = null;
         this._centerBox = null;
@@ -469,12 +493,13 @@ export class SecondaryPanelController {
     }
 
     _position() {
+        this._panelBox.set_size(this._monitor.width, this._panelHeight);
         this.actor.set_size(this._monitor.width, this._panelHeight);
-        this.actor.x = this._monitor.x;
+        this._panelBox.x = this._monitor.x;
         if (this._autoHideController)
             this._autoHideController.syncPosition();
         else
-            this.actor.y = panelIsTop(this._settings)
+            this._panelBox.y = panelIsTop(this._settings)
                 ? this._monitor.y
                 : this._monitor.y + this._monitor.height - this._panelHeight;
         this._updateTaskbarWidth();
@@ -511,6 +536,10 @@ export class SecondaryPanelController {
         const classes = Main.panel.get_style_class_name()
             .split(/\s+/)
             .filter(style => style && !EXTERNAL_PANEL_STYLES.has(style));
+        const externalStyles = this.actor.get_style_class_name()
+            .split(/\s+/)
+            .filter(style => EXTERNAL_PANEL_STYLES.has(style));
+        classes.push(...externalStyles);
         classes.push('simple-taskbar-panel', 'simple-taskbar-secondary-panel');
         this.actor.set_style_class_name([...new Set(classes)].join(' '));
         this.actor.set_style(Main.panel.get_style());

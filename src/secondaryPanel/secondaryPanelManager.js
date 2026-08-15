@@ -30,6 +30,7 @@ export class SecondaryPanelManager {
         this._signalHolder = new TransientSignalHolder();
         this._panels = [];
         this._rebuildId = 0;
+        this._blurMyShellSyncId = 0;
     }
 
     enable() {
@@ -49,6 +50,10 @@ export class SecondaryPanelManager {
         if (this._rebuildId) {
             GLib.Source.remove(this._rebuildId);
             this._rebuildId = 0;
+        }
+        if (this._blurMyShellSyncId) {
+            GLib.Source.remove(this._blurMyShellSyncId);
+            this._blurMyShellSyncId = 0;
         }
         this._signalHolder.destroy();
         this._signalHolder = null;
@@ -126,11 +131,40 @@ export class SecondaryPanelManager {
             this._panels.push(panel);
             panel.enable();
         }
+        this._queueBlurMyShellSync();
     }
 
     _destroyPanels() {
         for (const panel of this._panels)
             panel.destroy();
         this._panels = [];
+    }
+
+    _queueBlurMyShellSync() {
+        if (this._blurMyShellSyncId)
+            return;
+
+        this._blurMyShellSyncId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._blurMyShellSyncId = 0;
+                this._syncBlurMyShell();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _syncBlurMyShell() {
+        const panelBlur = global.blur_my_shell?._panel_blur;
+        if (!panelBlur?.enabled)
+            return;
+
+        for (const panel of this._panels)
+            panelBlur.maybe_blur_panel(panel.actor);
+
+        if (!Main.overview.visibleTarget) {
+            panelBlur.panel_hide_blur_dynamically();
+            panelBlur.update_visibility();
+        }
     }
 }
