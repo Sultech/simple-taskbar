@@ -78,11 +78,17 @@ export function getRecommendedApps(settings, favorites, pinnedApps) {
     if (!settings.get_boolean('start-menu-recommended-apps'))
         return [];
 
-    const pinnedIds = new Set(pinnedApps.map(app => app.get_id()));
-    return Shell.AppUsage.get_default().get_most_used()
+    const pinnedIds = new Set(
+        pinnedApps.filter(Boolean).map(app => app.get_id())
+    );
+    const mostUsed = Shell.AppUsage.get_default().get_most_used() ?? [];
+    return mostUsed
         .filter(app => {
+            if (!app)
+                return false;
             const appId = app.get_id();
-            return appShouldShow(app) &&
+            return appId &&
+                appShouldShow(app) &&
                 !pinnedIds.has(appId) &&
                 !favorites.isFavorite(appId);
         })
@@ -94,14 +100,22 @@ export function groupAppsByCategory(apps) {
         ...APP_CATEGORIES.map(category => [category.id, []]),
         ['other', []],
     ]);
-    for (const app of apps)
+    for (const app of apps) {
+        if (!app)
+            continue;
         groupedApps.get(categoryForApp(app)).push(app);
+    }
     return groupedApps;
 }
 
 function categoryForApp(app) {
+    if (!app)
+        return 'other';
+    const appInfo = app.get_app_info?.();
+    if (!appInfo)
+        return 'other';
     const categories = new Set(
-        (app.get_app_info().get_categories() ?? '')
+        (appInfo.get_categories?.() ?? '')
             .split(';')
             .filter(Boolean)
     );
@@ -113,6 +127,8 @@ function categoryForApp(app) {
 }
 
 export function appShouldShow(app) {
-    const appInfo = app.get_app_info();
+    if (!app)
+        return false;
+    const appInfo = app.get_app_info?.();
     return appInfo ? appInfo.should_show() : false;
 }
