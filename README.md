@@ -15,11 +15,11 @@
 </p>
 
 Simple Taskbar turns GNOME Shell's native panel into a configurable desktop
-taskbar. It combines pinned and running applications with GNOME's Activities,
-clock, calendar, Quick Settings and extension indicators, without replacing
-those Shell components.
+taskbar. It keeps GNOME's Activities, clock, calendar, Quick Settings and
+extension indicators while adding pinned applications, running applications,
+window previews and an optional Eleven-style Start Menu.
 
-> Simple Taskbar currently supports GNOME Shell 48, 49 and 50.
+> Simple Taskbar supports GNOME Shell 48, 49 and 50 only.
 
 ## Preview
 
@@ -28,301 +28,269 @@ those Shell components.
 </p>
 
 <p align="center">
-  <img src="docs/images/taskbar-light-20260726.png" alt="Simple Taskbar using its light theme" width="100%">
-</p>
-
-<p align="center"><sub>Taskbar mode using the dark and light themes.</sub></p>
-
-## Blurred appearance
-
-Simple Taskbar integrates with Blur My Shell for an optional translucent,
-blurred panel appearance.
-
-<p align="center">
-  <img src="docs/images/taskbar-blurred-20260726.png" alt="Simple Taskbar with a blurred translucent panel" width="100%">
-</p>
-
-<p align="center">
-  <img src="docs/images/start-menu-blurred-20260726.png" alt="Eleven-style Start Menu with a blurred translucent theme" width="100%">
-</p>
-
-<p align="center"><sub>The taskbar and Eleven-style Start Menu using a blurred appearance.</sub></p>
-
-## At a glance
-
-- See pinned and running applications together on the panel.
-- Combine application windows always, only when the taskbar is full, or never; buttons are always combined by default.
-- Launch, focus, minimize and open new application windows from their icons.
-- Preview open windows by hovering over an application.
-- Optionally replace Alt+Tab with a responsive grid of live window previews.
-- Use the taskbar on every monitor.
-- Place the panel at the top or bottom of the screen.
-- Align applications and the Start button to the left or center, independently or together.
-- Move the clock and Quick Settings between the left, center and right.
-- Mix application audio directly from Quick Settings.
-- Adjust panel height, icon size, spacing, transparency and colour scheme.
-- Use auto-hide, workspace scrolling and current-workspace isolation.
-- Push against the bottom screen edge to toggle Overview.
-- Open an Eleven-style Start Menu with pinned apps, search and recommendations.
-- Switch to a native GNOME-style panel whenever taskbar applications are not
-  wanted.
-
-## Choose your panel style
-
-| Mode | Behaviour |
-| --- | --- |
-| Taskbar | Shows GNOME favourites and running applications, starts on the desktop and hides the original Overview Dash. |
-| Default GNOME Panel | Hides taskbar applications, restores the original Overview Dash and places a native-style panel on every monitor. |
-
-Default GNOME Panel mode normally keeps GNOME's startup Overview. When Ubuntu
-Dock or Dash to Dock is active, it starts on the desktop instead.
-
-Both modes remain customizable after being enabled. Panel position, height,
-theme, item placement, multi-monitor support and other appearance settings
-continue to work. Because Default GNOME Panel mode hides taskbar applications
-and Start buttons, their placement controls and ordering arrows are disabled
-until Taskbar mode is restored.
-
-<p align="center">
-  <img src="docs/images/gnome-panel-dark.png" alt="Default GNOME Panel mode using its dark theme" width="100%">
-</p>
-
-<p align="center">
-  <img src="docs/images/gnome-panel-light.png" alt="Default GNOME Panel mode using its light theme" width="100%">
-</p>
-
-<p align="center"><sub>Default GNOME Panel mode using dark and light themes.</sub></p>
-
-## Application taskbar
-
-Simple Taskbar uses the same favourites and ordering as GNOME's original Dash.
-Pinning, unpinning or rearranging a favourite updates the Dash as well.
-
-Application buttons support:
-
-- **Left click:** launch, focus or minimize the application.
-- **Middle click:** open a new window, or close all application windows when
-  the **Middle Click Closes Applications** setting on the **Advanced** page
-  is enabled.
-- **Right click:** open GNOME's application menu. Nautilus additionally shows
-  Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts by
-  default; these shortcuts can be disabled in the extension settings.
-- **Drag:** rearrange pinned applications within the pinned section and move
-  running application groups in every combine mode. In uncombined modes, all
-  windows from one application move together; a pinned application's first
-  window stays in the pinned section while its later windows stay grouped and
-  movable in the running section. When application overflow is enabled, both
-  overflow styles are part of the same ordering surface as the visible
-  taskbar, and the overflow popup remains open while dragging.
-- **Hover:** show live previews for open windows. A preview can activate or
-  close its exact window.
-
-Running, focused and multi-window applications have dedicated indicators,
-with a choice of rounded or straight indicator ends.
-Clicking an application with multiple windows can spread only that
-application's windows across the Overview, including windows on other
-workspaces. The preview flyout remains available as an alternative.
-
-The **Combine Application Buttons** setting provides three modes:
-
-- **Always:** use one button for every application. This is the default.
-- **Only When Full:** show a separate button for every window until they no
-  longer fit. Visible window labels shrink evenly from 140px to a minimum of
-  40px before buttons are combined.
-- **Never:** keep every window in a separate button regardless of available
-  space.
-
-Window labels are shown by default in **Only When Full** and **Never** modes
-and can be hidden to use separate icon-only buttons. If the resulting button
-list is wider than the available panel area, scroll over the applications with
-a mouse wheel or touchpad to reach buttons outside the visible area. Scrolling
-over applications does not trigger workspace switching.
-
-Optional controls can:
-
-- Show running applications from only the current workspace.
-- Show running applications only on the taskbar for their monitor.
-- Hide favourite applications that are not running.
-- Use pinned applications as launchers while showing their running windows in separate buttons.
-- Lock the taskbar against accidental rearrangement.
-- Show the desktop from a narrow button at either panel edge, or hide the
-  button.
-
-## Grid Alt-Tab
-
-The Grid Alt-Tab window switcher is enabled by default and shows every open
-window as a live preview in a responsive grid. It preserves normal Alt+Tab and
-Shift+Alt+Tab selection behavior, supports pointer and arrow-key navigation,
-and activates the selected window when Alt is released.
-
-All workspaces are included by default. Enable **Isolate Workspaces** on the
-**Window Switching** settings page to show windows from only the current
-workspace. **Isolate Monitors** limits the window list to the monitor where
-the switcher appears, while **Show on Primary Monitor** always places it on the
-primary display. **Maximum Card Size** limits how tall previews can grow while
-the grid continues to shrink them automatically as more windows are opened.
-
-<p align="center">
-  <img src="docs/images/settings-window-switching-20260730.png" alt="Grid Alt-Tab controls on the Window Switching settings page" width="100%">
-</p>
-
-<p align="center"><sub>Grid Alt-Tab size, workspace and monitor controls.</sub></p>
-
-## Panel customization
-
-Less commonly used controls live on the **Advanced** settings page, grouped by
-the area they affect.
-
-The settings provide control over:
-
-- Top or bottom panel placement.
-- Panels on secondary monitors.
-- 32–80px panel height.
-- 15–48px application icons with 0–16px spacing.
-- Automatic or explicit 0–20px horizontal padding around panel buttons.
-  Automatic follows Just Perfection's button padding when that extension
-  supplies it and otherwise uses a 3px fallback. An explicit value always takes
-  precedence, without changing Just Perfection's own setting. Default GNOME
-  Panel mode applies 12px and restores Automatic when Taskbar mode returns.
-- Left or centered application alignment.
-- Left or centered Start button placement, adjustable padding with a 3px
-  default, and an icon
-  selected from bundled GNOME and distribution designs or a personal image
-  file. By default, the Start button follows the application alignment and
-  appears immediately before centered applications.
-- Separate Left, Center and Right lists for Start, Activities, applications,
-  Folder Menu, Quick Settings, clock and Show Desktop.
-- Each list includes a fixed-position box row representing other GNOME Shell
-  and extension items. Managed items can be placed before or after that row,
-  while the box itself cannot move to another list.
-- Per-item placement where supported, with Move Up/Move Down restricted to
-  neighbors in the same position list. Show Desktop remains limited to the
-  Left and Right lists.
-- The Icon Alignment and Start Button position controls remain available in
-  their original sections and stay synchronized with their list rows.
-- Visibility toggles for Activities, Show Desktop and Folder Menu above the
-  order list.
-- Light, dark or Shell-following themes.
-- Adjustable transparency and Blur My Shell integration on the primary panel.
-- Separate panel-border controls for the light and dark themes, both off by
-  default.
-- Animated auto-hide on every panel.
-- A bottom hot edge that toggles Overview, with an optional ripple animation.
-- Workspace switching by scrolling over empty panel space.
-- Notification banners that follow the panel edge and clock alignment.
-- Click-only switching between open panel menus.
-- An application volume mixer in Quick Settings, enabled by default. Expand
-  **Mixer** to adjust individual application streams or open GNOME's Volume
-  Levels settings.
-- A configurable Task Manager entry in the empty-panel context menu. Its
-  searchable application selector defaults to Resources; if unavailable, the
-  launcher falls back to GNOME System Monitor and then Mission Center.
-
-**Theme note:** **Follow system theme** follows the GNOME Shell theme rather
-than the application colour preference alone. It switches to the light taskbar
-only when GNOME Shell itself uses a light theme after dark mode is disabled in
-Control Center. Ubuntu supports this through its light Yaru Shell theme. Stock
-GNOME installations, including Fedora's default configuration, keep the Shell
-dark when applications use light mode; select **Light** manually in the
-extension settings to use a light taskbar in that situation.
-
-<p align="center">
-  <img src="docs/images/quick-settings-mixer-20260726.png" alt="Application volume mixer expanded in GNOME Quick Settings" width="100%">
-</p>
-
-<p align="center"><sub>Adjust individual application volume from Quick Settings.</sub></p>
-
-<p align="center">
-  <img src="docs/images/settings-taskbar-20260730.png" alt="General, application icon and panel appearance settings" width="100%">
-</p>
-
-<p align="center"><sub>General, application icon and panel appearance controls.</sub></p>
-
-<p align="center">
-  <img src="docs/images/settings-taskbar-items-20260730.png" alt="Taskbar behavior, panel item and reset settings" width="100%">
-</p>
-
-<p align="center"><sub>Taskbar behavior, panel item and reset controls.</sub></p>
-
-### Optional folder menu
-
-Add a folder button to the panel for quickly opening files from a selected
-directory with their default applications.
-
-<p align="center">
-  <img src="docs/images/folder-menu-demo.gif" alt="Opening the custom folder menu and selecting one of its files" width="370">
-</p>
-
-<p align="center"><sub>Open files quickly from the optional custom folder menu.</sub></p>
-
-## Eleven-style Start Menu
-
-The Eleven-style Start Menu is enabled by default and includes:
-
-- A separately configurable pinned-app grid with drag-and-drop reordering.
-- GNOME global search, including system providers and results contributed by
-  compatible extensions.
-- An All Apps view organized into selectable categories by default. Categories
-  can be disabled to use a single alphabetical list.
-- An option to open the Start Menu directly in All Apps instead of the pinned
-  applications page.
-- Optional recommended applications based on frequently used apps, excluding
-  applications already pinned to the Start Menu or taskbar.
-- Scrollbars when the pinned or All Apps lists are taller than the available
-  menu space.
-- Delayed hover tooltips with the full application name and description.
-- Keyboard navigation through applications and menu controls using Tab and the
-  arrow keys.
-- GNOME application context menus with open-window, launcher-action, App
-  Details, Quit, Pin to Start and Pin to Taskbar actions. When a supported
-  desktop-icons extension is active, applications can also add or remove a
-  desktop shortcut.
-- Dragging an application from All Apps onto the taskbar to pin it at the
-  chosen position.
-- An optional account profile picture in place of the generic footer avatar.
-- An optional footer power menu with the system-available Suspend, Restart,
-  Power Off, Lock Screen, Log Out and Switch User actions. It is enabled by
-  default and replaces the original Quick Settings power menu while active.
-- Dark, light and GNOME Shell theme options.
-- Optional true monitor centering.
-- Super opens the Start Menu by default and moves Overview to Super+Tab. The
-  shortcut can instead use Super+Tab, a custom binding or be disabled.
-- Super+E opens the home folder with the system’s default file manager by
-  default and can be disabled.
-
-Start Menu keyboard bindings are grouped in their own **Keyboard Shortcuts**
-section in the extension settings. Grid Alt-Tab and Super+Tab replace GNOME’s
-window-switcher handlers only while their owning options are enabled, without
-changing GNOME’s saved shortcuts. Super+E and custom Start Menu shortcuts must
-be unassigned elsewhere. The custom Start Menu shortcut cannot duplicate
-another enabled Simple Taskbar shortcut. Bare Super uses Mutter’s dedicated
-overlay key and restores its previous value when disabled.
-
-The bottom hot edge is enabled by default, providing another quick way to use
-Overview after its Super shortcut has moved. Its ripple animation is optional
-and disabled by default.
-
-The original GNOME Applications button can be restored instead, or both Start
-buttons can be hidden. Right-clicking the Eleven-style Start button opens its
-settings page.
-
-<p align="center">
   <img src="docs/images/start-menu-dark-20260726.png" alt="Eleven-style Start Menu using its dark theme" width="100%">
 </p>
 
+## Choose a panel style
+
+| Style | What it does |
+| --- | --- |
+| **Taskbar** | Shows GNOME favourites and running applications on the panel, starts on the desktop, and hides GNOME's original Overview Dash. |
+| **Default GNOME Panel** | Hides taskbar applications and Start buttons, restores GNOME's original Dash in Overview, and keeps the panel customisation options. |
+| **Windows XP Theme** | Applies a Windows XP-inspired appearance with a 30px panel, 16px application icons, fixed spacing, XP artwork and a classic taskbar layout. |
+
+Default GNOME Panel mode normally keeps GNOME's usual startup Overview. Dash to
+Dock and Ubuntu Dock can change that startup behaviour when they are active.
+
+Windows XP Theme applies its own dimensions and layout. Controls that conflict
+with the XP appearance are disabled while it is active, and standard Taskbar
+defaults are applied when it is turned off.
+Default GNOME Panel mode keeps panel position, height, themes, item order and
+multi-monitor settings available, while taskbar application and Start button
+controls remain disabled until Taskbar mode is restored.
+
+## Taskbar
+
+### General
+
+Simple Taskbar uses GNOME's application favourites and their order. Changes to
+favourites are reflected in the taskbar and GNOME's original Dash.
+
+The panel can be placed at the top or bottom of the screen. Applications and
+the Start button can be aligned left or centre independently, or the Start
+button can follow the application alignment.
+
+### Application Icons
+
+Application buttons support:
+
+- Left click to launch, focus or minimise an application.
+- Middle click to open a new window, or close all its windows when **Middle
+  Click Closes Applications** is enabled.
+- Right click to open GNOME's application menu.
+- Dragging to reorder pinned applications and move running application groups.
+- Hovering to preview open windows. A preview can focus or close its exact
+  window.
+
+Click an application with multiple windows to spread only those windows in
+Overview, including windows on other workspaces.
+
+### Panel Appearance
+
+- Standard panel height: 32–80px.
+- Application icons: 15–48px.
+- Application spacing: 0–16px.
+- Panel button padding: automatic or an explicit 0–20px value. Automatic uses
+  Just Perfection's padding when available, otherwise 3px. An explicit value
+  takes precedence without changing Just Perfection's setting.
+- Default GNOME Panel mode uses 12px padding and restores Automatic when
+  Taskbar mode returns.
+- Light, dark or GNOME Shell-following panel themes.
+- Adjustable transparency.
+- Separate borders for light and dark themes.
+- Optional translucent and blurred styling through Blur My Shell on the
+  primary panel. Secondary panels use Simple Taskbar's own background.
+
 <p align="center">
-  <img src="docs/images/start-menu-light-20260726.png" alt="Eleven-style Start Menu using its light theme" width="100%">
+  <img src="docs/images/settings-taskbar.png" alt="Taskbar settings showing general, application icon and panel appearance options" width="100%">
 </p>
 
-<p align="center"><sub>The Eleven-style Start Menu using dark and light themes.</sub></p>
+<p align="center"><sub>Taskbar settings: general, application icons and panel appearance.</sub></p>
+
+### Taskbar Behaviour
+
+- Animated auto-hide on every panel.
+- A bottom hot edge that toggles Overview, enabled by default, with adjustable
+  activation pressure and an optional ripple animation.
+- Workspace switching by scrolling over empty panel space, with an adjustable
+  delay between workspace changes.
+- An application volume mixer inside Quick Settings, enabled by default, for
+  adjusting individual streams or opening GNOME's Volume Levels settings.
+- Tray icons collected behind a panel arrow, enabled by default.
+- A Task Manager action in the empty-panel context menu. It opens the selected
+  installed application; the default is Resources, followed by GNOME System
+  Monitor and Mission Center when the selected application is unavailable.
+- The taskbar can be shown on every connected monitor.
+
+### Panel Items
+
+The panel has separate **Left**, **Center** and **Right** item lists. These can
+contain:
+
+- Start and Activities buttons.
+- Applications.
+- Folder Menu.
+- Tray icons.
+- Quick Settings.
+- Clock.
+- Show Desktop.
+
+Activities and Show Desktop can be shown or hidden, and Folder Menu is
+optional. The Folder Menu opens files from a selected directory with their
+default applications. Show Desktop is a narrow button that minimizes or
+restores all windows and is limited to the Left and Right lists.
+
+Each list also has a fixed box row for other GNOME Shell and extension items.
+Managed items can be placed before or after that row. Move Up and Move Down
+keep each item within its current list.
+
+**Reset All Settings** restores the extension defaults without changing the
+taskbar favourites or Start Menu pins, including their order.
 
 <p align="center">
-  <img src="docs/images/settings-start-menu-20260730.png" alt="Start button, Eleven-style Start Menu and keyboard shortcut settings" width="100%">
+  <img src="docs/images/settings-taskbar-behaviour.png" alt="Taskbar settings showing taskbar behaviour and panel item options" width="100%">
 </p>
 
-<p align="center"><sub>Start button, Eleven-style Start Menu and keyboard shortcut controls.</sub></p>
+<p align="center"><sub>Taskbar settings: behaviour and optional panel items.</sub></p>
 
-## Install
+<p align="center">
+  <img src="docs/images/settings-panel-items.png" alt="Taskbar settings showing panel item placement and reset options" width="100%">
+</p>
+
+<p align="center"><sub>Taskbar settings: panel item placement and reset.</sub></p>
+
+## Window Switching
+
+Grid Alt-Tab is enabled by default. It replaces the normal application switcher
+with a responsive grid of live window previews while preserving normal
+Alt+Tab and Shift+Alt+Tab selection.
+
+It supports pointer and arrow-key navigation and activates the selected window
+when Alt is released. Configure:
+
+- Maximum preview card height.
+- All workspaces or only the current workspace.
+- All monitors or only the monitor showing the switcher.
+- The current monitor or always the primary monitor for the popup.
+
+<p align="center">
+  <img src="docs/images/settings-window-switching.png" alt="Window Switching settings showing Grid Alt-Tab options" width="100%">
+</p>
+
+<p align="center"><sub>Window Switching settings: Grid Alt-Tab options.</sub></p>
+
+## Start Menu
+
+The Eleven-style Start Menu is enabled by default. It provides:
+
+- A separate pinned-app grid with drag-and-drop ordering.
+- GNOME global search, including compatible system and extension providers.
+- An All Apps view with selectable categories, or one alphabetical list.
+- Scrollbars for long pinned and All Apps views.
+- Delayed tooltips with application names and descriptions.
+- Keyboard navigation with Tab and the arrow keys.
+- Application menus with open-window, launcher-action, App Details, Quit,
+  Pin to Start and Pin to Taskbar actions.
+- Dragging an application from All Apps onto the taskbar to pin it.
+- Dark, light or GNOME Shell-following themes.
+- Optional monitor-centred positioning.
+
+### Start Button
+
+The Start button can use the Eleven-style button or the original GNOME
+Applications button. It can follow application alignment, use a custom
+padding value and use a bundled or personal icon. Both Start buttons can be
+hidden. Right-click the Eleven-style button to open its settings.
+
+### Keyboard shortcuts
+
+- **Super** opens the Start Menu by default and moves Overview to **Super+Tab**.
+- Turn off the Super shortcut to use **Super+Tab** for the Start Menu instead.
+- When both built-in shortcuts are off, a custom shortcut can open the Start
+  Menu.
+
+Shortcuts can be disabled, and the extension checks for conflicts between its
+own shortcuts. It does not change GNOME's saved shortcuts. When the Start Menu
+uses the Super key, the previous Mutter overlay-key setting is restored when
+the extension is disabled.
+
+Global search results can request that provider-supplied text be copied to the
+clipboard when a result is activated.
+
+<p align="center">
+  <img src="docs/images/settings-start-menu.png" alt="Start Menu settings showing Start button, menu and keyboard shortcut options" width="100%">
+</p>
+
+<p align="center"><sub>Start Menu settings: Start button, menu and keyboard shortcuts.</sub></p>
+
+## Advanced
+
+Less commonly used taskbar, file manager and Start Menu options are on the
+Advanced page.
+
+### Appearance
+
+Running, focused and multi-window applications have separate indicators. Use
+rounded or straight indicator ends and optionally choose custom focused and
+unfocused colours.
+
+The Advanced page also provides a custom panel colour and light or dark panel
+text.
+
+### Application Behaviour
+
+Applications can be displayed in three grouping modes:
+
+| Mode | Behaviour |
+| --- | --- |
+| **Always** | One button per application. This is the default. |
+| **Only When Full** | Separate buttons while they fit, then combine them. |
+| **Never** | One button for every window. |
+
+When buttons are not combined, window labels can be hidden so that the buttons
+show icons only. If the taskbar is full, application overflow can show extra
+buttons in a popup. When overflow is disabled, a taskbar wider than the
+available panel area can be scrolled horizontally. The overflow popup has a
+taskbar-style flyout and an application-list style. Dragging works across the
+visible and overflow buttons, and the overflow popup remains open while
+dragging. With overflow disabled, scrolling over an overfull taskbar moves
+through its buttons instead of switching workspaces.
+
+Other taskbar options include:
+
+- Show or hide favourite applications that are not running.
+- Use pinned applications as launchers while showing their running windows in
+  separate buttons.
+- Show applications from only the current workspace.
+- Show applications only on the monitor where their taskbar is displayed.
+- Lock the taskbar against accidental rearrangement.
+
+### Behaviour
+
+- Panel menus switch only after a click, instead of on hover.
+- Notification banners align with the panel edge and clock position.
+
+### File Manager
+
+- **Super+E** opens the home folder with the default file manager.
+- Nautilus can show Home, Desktop, Documents, Downloads, Music, Pictures and
+  Videos shortcuts in its application menu; they are enabled by default.
+
+### Start Menu Options
+
+- Recommended applications can be based on frequently used apps, excluding
+  apps already pinned to the Start Menu or taskbar.
+- Open the Start Menu directly in All Apps.
+- Show an account profile picture.
+- Use an optional footer power menu with available Suspend, Restart, Power Off,
+  Lock Screen, Log Out and Switch User actions. It replaces the Quick Settings
+  power menu while enabled.
+- Follow the panel's transparency in the Start Menu.
+- Hide titles below pinned application icons.
+
+<p align="center">
+  <img src="docs/images/settings-advanced-appearance.png" alt="Advanced settings showing indicator and application behaviour options" width="100%">
+</p>
+
+<p align="center"><sub>Advanced settings: indicator appearance and application behaviour.</sub></p>
+
+<p align="center">
+  <img src="docs/images/settings-advanced-behaviour.png" alt="Advanced settings showing behaviour, file manager and Start Menu options" width="100%">
+</p>
+
+<p align="center"><sub>Advanced settings: behaviour, file manager and Start Menu options.</sub></p>
+
+## Installation
 
 Install Simple Taskbar from
 [GNOME Extensions](https://extensions.gnome.org/extension/10448/simple-taskbar/)
@@ -330,16 +298,13 @@ or Extension Manager.
 
 To install the current source version:
 
-```sh
-git clone https://github.com/Sultech/simple-taskbar.git
-cd simple-taskbar
-./package.sh
-gnome-extensions install --force \
-    dist/simple-taskbar@sultech.shell-extension.zip
-gnome-extensions enable simple-taskbar@sultech
-```
+    git clone https://github.com/Sultech/simple-taskbar.git
+    cd simple-taskbar
+    ./package.sh
+    gnome-extensions install --force dist/simple-taskbar@sultech.shell-extension.zip
+    gnome-extensions enable simple-taskbar@sultech
 
-Log out and back in if the running Shell does not discover a newly installed
+Log out and back in if GNOME Shell does not discover a newly installed
 extension immediately.
 
 ## Open the settings
@@ -347,108 +312,85 @@ extension immediately.
 Use Extension Manager, right-click empty taskbar space and choose **Taskbar
 Settings**, or run:
 
-```sh
-gnome-extensions prefs simple-taskbar@sultech
-```
+    gnome-extensions prefs simple-taskbar@sultech
 
-**Reset All Settings** restores the extension defaults without changing
-GNOME's taskbar favourites or Eleven Start Menu pins, including their order.
-
-## Compatibility
+## Compatibility and integrations
 
 Simple Taskbar supports GNOME Shell 48, 49 and 50. Other GNOME versions are
-deliberately not declared until they have been tested.
+not declared until they have been tested.
 
-Because Simple Taskbar and Dash to Panel both restructure GNOME's main panel,
-Dash to Panel remains disabled while Simple Taskbar is active. Dash to Dock and
-Ubuntu Dock are disabled only while Taskbar mode is active so that two docks do
-not compete for the same screen edge. Both docks remain available in Default
+Dash to Panel is disabled while Simple Taskbar is active because both
+extensions restructure GNOME's main panel. Dash to Dock and Ubuntu Dock are
+disabled only while Taskbar mode is active; both remain available in Default
 GNOME Panel mode.
 
-Blur My Shell styles are supported on the primary panel. Secondary panels use
-Simple Taskbar's own background and transparency.
+Blur My Shell panel styling is supported on the primary panel. When a supported
+desktop-icons extension is active, Start Menu application menus can also add or
+remove desktop shortcuts.
 
 ## Development
 
 GNOME Shell caches imported extension modules for the lifetime of the Shell
-process. Disabling and re-enabling an extension cannot load edited JavaScript
-into that same process.
+process. Disable and re-enable is not enough to load edited JavaScript into the
+same process.
 
-On Ubuntu, install the development dependencies:
+On Ubuntu, install:
 
-```sh
-sudo apt install mutter-dev-bin gettext
-```
+    sudo apt install mutter-dev-bin gettext
 
 Then run:
 
-```sh
-./dev.sh
-```
+    ./dev.sh
 
-The helper compiles the GSettings schema, creates this development symlink and
-starts a fresh nested GNOME Shell session in a window:
+The helper compiles the schema, creates a development symlink under
+<code>~/.local/share/gnome-shell/extensions/</code> and starts a fresh GNOME
+Shell 50 development session in a window. Close that window and run
+<code>./dev.sh</code> again after changing JavaScript. The real desktop session
+remains running.
 
-```text
-~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
-    -> /path/to/simple-taskbar
-```
+If a copied installation already occupies the destination, disable the
+extension and move or remove that directory before running the helper. Do not
+keep backup extension directories under
+<code>~/.local/share/gnome-shell/extensions</code>, because GNOME Shell still
+scans them.
 
-Close the nested Shell and run `./dev.sh` again after changing JavaScript. The
-real desktop session remains running.
+For runtime problems, use Looking Glass or the journal:
 
-If a copied installation already occupies the destination, disable it and move
-or remove that directory before running the helper. Backup extension
-directories should not be kept under
-`~/.local/share/gnome-shell/extensions`, because GNOME Shell still scans
-them.
-
-Use Looking Glass or the journal when diagnosing runtime problems:
-
-```sh
-journalctl -f -o cat /usr/bin/gnome-shell
-```
+    journalctl -f -o cat /usr/bin/gnome-shell
 
 ## Build a package
 
-Building requires `msgfmt` from GNU gettext, `glib-compile-schemas` and
-`gnome-extensions`. Create the complete installable archive with:
+Building requires <code>msgfmt</code> from GNU gettext,
+<code>glib-compile-schemas</code> and <code>gnome-extensions</code>:
 
-```sh
-./package.sh
-```
+    ./package.sh
 
-The resulting archive is:
+The package is written to:
 
-```text
-dist/simple-taskbar@sultech.shell-extension.zip
-```
+    dist/simple-taskbar@sultech.shell-extension.zip
 
-The package contains the runtime modules, preferences, schema, licence,
-bundled Start and distribution icons, their attribution notices and the
-compiled translations. Development scripts, translation sources and generated
-schema binaries are not included. An alternative output directory can be
-supplied:
+An alternative output directory can be supplied:
 
-```sh
-./package.sh /tmp/simple-taskbar-package
-```
+    ./package.sh /tmp/simple-taskbar-package
+
+The archive contains the runtime modules, preferences, schema, licence,
+bundled artwork, attribution notices and compiled translations. Development
+scripts, translation sources and generated schema binaries are left out.
 
 ## Privacy
 
 Simple Taskbar does not collect telemetry, access the network or run bundled
-external programs.
+external programs. GNOME's global search providers remain responsible for
+their own results. Some providers can ask Simple Taskbar to copy result text
+to the clipboard when that result is activated.
 
 ## Uninstall
 
-```sh
-gnome-extensions disable simple-taskbar@sultech
-rm -rf ~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
-```
+    gnome-extensions disable simple-taskbar@sultech
+    rm -rf ~/.local/share/gnome-shell/extensions/simple-taskbar@sultech
 
 ## Licence
 
 Simple Taskbar is distributed under
-[GPL-2.0-or-later](COPYING).
-Bundled third-party icon credits and trademark notices are listed in
-[ASSET-CREDITS.md](ASSET-CREDITS.md).
+[GPL-2.0-or-later](COPYING). Bundled third-party icon credits and trademark
+notices are listed in [ASSET-CREDITS.md](ASSET-CREDITS.md).
