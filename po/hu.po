@@ -1342,13 +1342,3 @@ msgstr "Alkalmazás hangereje"
 #: src/integration/volumeMixerController.js:334
 msgid "No applications are playing audio"
 msgstr "Egyetlen alkalmazás sem játszik le hangot"
-
-#: prefs.js:323
-msgid "Match Icon Color"
-msgstr "Egyezzen az ikon színével"
-
-#: prefs.js:320
-msgid ""
-"Match active taskbar indicator to the application icon’s dominant color"
-msgstr ""
-"Az aktív tálcajelző illesztése az alkalmazásikon domináns színéhez"
