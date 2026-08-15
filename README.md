@@ -24,7 +24,7 @@ window previews and an optional Eleven-style Start Menu.
 ## Preview
 
 <p align="center">
-  <img src="docs/images/taskbars1.png" alt="Simple Taskbar showing light, dark and Windows XP taskbar styles" width="100%">
+  <img src="docs/images/taskbars3.png" alt="Simple Taskbar showing light, dark and Windows XP taskbar styles" width="100%">
 </p>
 
 <p align="center"><sub>Taskbar mode and Windows XP Theme.</sub></p>
@@ -32,7 +32,7 @@ window previews and an optional Eleven-style Start Menu.
 <br>
 
 <p align="center">
-  <img src="docs/images/start-menus.png" alt="Eleven-style Start Menu in dark and light themes" width="100%">
+  <img src="docs/images/start-menus1.png" alt="Eleven-style Start Menu in dark and light themes" width="100%">
 </p>
 
 <p align="center"><sub>Hide pinned titles enabled; show recommendations off.</sub></p>
