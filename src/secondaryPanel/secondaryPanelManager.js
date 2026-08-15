@@ -8,6 +8,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {getPanelBlur} from '../integration/blurMyShellRuntime.js';
 import {SecondaryPanelController} from './secondaryPanelController.js';
 
 export class SecondaryPanelManager {
@@ -155,8 +156,8 @@ export class SecondaryPanelManager {
     }
 
     _syncBlurMyShell() {
-        const panelBlur = global.blur_my_shell?._panel_blur;
-        if (!panelBlur?.enabled)
+        const panelBlur = getPanelBlur();
+        if (!panelBlur)
             return;
 
         for (const panel of this._panels)

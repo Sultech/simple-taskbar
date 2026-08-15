@@ -38,6 +38,10 @@ import {
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
 import {
+    getPanelBlur,
+    getPopupBlur,
+} from '../integration/blurMyShellRuntime.js';
+import {
     APP_CATEGORIES,
     appShouldShow,
     getAllApps,
@@ -409,7 +413,7 @@ export class StartMenuController {
     }
 
     _blurMyShellCornerStyle() {
-        if (!global.blur_my_shell?._popup?.enabled)
+        if (!getPopupBlur())
             return null;
 
         if (!blurMyShellHasKey(
@@ -425,15 +429,9 @@ export class StartMenuController {
     }
 
     _blurMyShellOwnsTransparency() {
-        const blurMyShell = global.blur_my_shell;
-        if (blurMyShell && blurMyShell._popup &&
-            blurMyShell._popup.enabled) {
+        if (getPopupBlur() || getPanelBlur())
             return true;
-        }
-        if (blurMyShell && blurMyShell._panel_blur &&
-            blurMyShell._panel_blur.enabled) {
-            return true;
-        }
+
         return BLUR_MY_SHELL_POPUP_CLASSES.some(styleClass =>
             Main.uiGroup.has_style_class_name(styleClass)
         );

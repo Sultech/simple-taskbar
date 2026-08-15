@@ -17,6 +17,7 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
+import {getPanelBlur} from '../integration/blurMyShellRuntime.js';
 import {extensionIsActive} from '../extensionState.js';
 import {panelIsTop} from './panelPosition.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
@@ -150,12 +151,11 @@ export class PanelThemeController {
             return;
 
         const originalStyle = this._oldPanelStyle?.trim() ?? '';
-        const panelBlur = global.blur_my_shell?._panel_blur;
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
         const externalPanelStyle = !windowsXpThemeEnabled &&
-            panelBlur?.enabled &&
+            Boolean(getPanelBlur()) &&
             Main.panel.has_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS) &&
             BLUR_MY_SHELL_PANEL_STYLES.some(style =>
                 Main.panel.has_style_class_name(style)
@@ -265,11 +265,11 @@ export class PanelThemeController {
 
     _syncBlurMyShell() {
         const active = extensionIsActive(BLUR_MY_SHELL_UUID);
-        const panelBlur = global.blur_my_shell?._panel_blur;
+        const panelBlur = getPanelBlur();
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        if (active && panelBlur?.enabled) {
+        if (active && panelBlur) {
             if (windowsXpThemeEnabled)
                 Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
             else

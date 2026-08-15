@@ -3,6 +3,7 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {getPopupBlur} from '../integration/blurMyShellRuntime.js';
 import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
@@ -43,10 +44,7 @@ export class ApplicationOverflowThemeController {
             return;
         }
 
-        const blurMyShell = global.blur_my_shell;
-        const popupBlurEnabled = Boolean(
-            blurMyShell && blurMyShell._popup && blurMyShell._popup.enabled
-        );
+        const popupBlurEnabled = Boolean(getPopupBlur());
         if (popupBlurEnabled && !light) {
             this._menu.box.set_style(
                 'background: transparent !important; ' + radiusDeclaration
