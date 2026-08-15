@@ -24,11 +24,11 @@ window previews and an optional Eleven-style Start Menu.
 ## Preview
 
 <p align="center">
-  <img src="docs/images/taskbar-dark-20260726.png" alt="Simple Taskbar using its dark theme" width="100%">
+  <img src="docs/images/taskbars.png" alt="Simple Taskbar showing light, dark and Windows XP taskbar styles" width="100%">
 </p>
 
 <p align="center">
-  <img src="docs/images/start-menu-dark-20260726.png" alt="Eleven-style Start Menu using its dark theme" width="100%">
+  <img src="docs/images/start-menus.png" alt="Eleven-style Start Menu in dark and light themes" width="100%">
 </p>
 
 ## Choose a panel style
