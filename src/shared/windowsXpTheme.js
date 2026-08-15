@@ -86,6 +86,7 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'start-menu-follow-panel-transparency', false);
     setBoolean(settings, 'start-menu-super-key', true);
     setBoolean(settings, 'custom-indicator-colors-enabled', false);
+    setBoolean(settings, 'match-icon-color', false);
     setBoolean(settings, 'custom-panel-color-enabled', false);
     setBoolean(settings, 'panel-border-enabled', false);
     setBoolean(settings, 'panel-border-light-enabled', false);

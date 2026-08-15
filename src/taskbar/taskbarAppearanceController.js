@@ -5,6 +5,8 @@ import Clutter from 'gi://Clutter';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {getIconDominantColor} from '../themeUtils.js';
+
 const INDICATOR_ANIMATION_DURATION = 150;
 const INDICATOR_SEGMENT_GAP = 2;
 const APP_LABEL_SPACING = 8;
@@ -208,12 +210,27 @@ export class TaskbarAppearanceController {
 
     syncIndicatorColor(item) {
         let style = null;
-        if (item._taskbarRunning &&
-            this._settings.get_boolean('custom-indicator-colors-enabled')) {
-            const key = item._taskbarFocused
-                ? 'focused-indicator-color'
-                : 'unfocused-indicator-color';
-            style = `background-color: ${this._settings.get_string(key)};`;
+        if (item._taskbarRunning) {
+            if (item._taskbarFocused &&
+                this._settings.get_boolean('match-icon-color')) {
+                const dominantColor = getIconDominantColor(item._taskbarApp);
+                if (dominantColor) {
+                    style = `background-color: ${dominantColor};`;
+                } else if (this._settings.get_boolean(
+                    'custom-indicator-colors-enabled'
+                )) {
+                    style = `background-color: ${this._settings.get_string(
+                        'focused-indicator-color'
+                    )};`;
+                }
+            } else if (this._settings.get_boolean(
+                'custom-indicator-colors-enabled'
+            )) {
+                const key = item._taskbarFocused
+                    ? 'focused-indicator-color'
+                    : 'unfocused-indicator-color';
+                style = `background-color: ${this._settings.get_string(key)};`;
+            }
         }
 
         for (const segment of item._taskbarIndicator.get_children())

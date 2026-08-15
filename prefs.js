@@ -316,6 +316,21 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             },
             connectSettings
         );
+        const matchIconColorSubtitle = _(
+            'Match active taskbar indicator to the application icon’s dominant color'
+        );
+        const matchIconColorSwitch = new Adw.SwitchRow({
+            title: _('Match Icon Color'),
+            subtitle: matchIconColorSubtitle,
+            active: window._settings.get_boolean('match-icon-color'),
+        });
+        advancedAppearanceGroup.add(matchIconColorSwitch);
+        window._settings.bind(
+            'match-icon-color',
+            matchIconColorSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
         const syncIndicatorControls = () => {
             const windowsXpThemeEnabled = window._settings.get_boolean(
                 'windows-xp-theme-enabled'
@@ -323,6 +338,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const enabled = customIndicatorColorsSwitch.active;
             indicatorStyleRow.sensitive = !windowsXpThemeEnabled;
             customIndicatorColorsSwitch.sensitive = !windowsXpThemeEnabled;
+            matchIconColorSwitch.sensitive = !windowsXpThemeEnabled;
             focusedIndicatorColorRow.visible = enabled;
             unfocusedIndicatorColorRow.visible = enabled;
             focusedIndicatorColorRow.sensitive = !windowsXpThemeEnabled &&

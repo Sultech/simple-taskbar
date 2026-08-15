@@ -413,6 +413,7 @@ export class TaskbarController {
         );
         for (const key of [
             'custom-indicator-colors-enabled',
+            'match-icon-color',
             'focused-indicator-color',
             'unfocused-indicator-color',
         ]) {

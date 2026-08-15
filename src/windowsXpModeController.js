@@ -23,6 +23,7 @@ const LOCKED_SETTING_KEYS = [
     'application-overflow-enabled',
     'hide-app-labels',
     'custom-indicator-colors-enabled',
+    'match-icon-color',
     'custom-panel-color-enabled',
     'activities-button-position',
     'panel-border-enabled',

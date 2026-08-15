@@ -189,6 +189,11 @@ export function addPanelAppearancePage({
     );
     connectSettings(
         settings,
+        'changed::match-icon-color',
+        syncWindowsXpTheme
+    );
+    connectSettings(
+        settings,
         'changed::custom-panel-color-enabled',
         syncWindowsXpTheme
     );
