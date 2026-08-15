@@ -33,6 +33,11 @@ import {SourcePressGuard} from './sourcePressGuard.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {panelTransparencyOpacity} from '../transparencyUtils.js';
 import {
+    blurMyShellHasKey,
+    getBlurMyShellChildSettings,
+    getBlurMyShellSettings,
+} from '../shared/blurMyShellUtils.js';
+import {
     APP_CATEGORIES,
     appShouldShow,
     getAllApps,
@@ -101,6 +106,10 @@ export class StartMenuController {
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePress = new SourcePressGuard();
+        this._blurMyShellPopupSettings = getBlurMyShellChildSettings(
+            getBlurMyShellSettings(),
+            'popup'
+        );
         this._prepareIdleId = 0;
         this._transparencySyncId = 0;
         this._menuOpenStateId = 0;
@@ -371,9 +380,14 @@ export class StartMenuController {
     }
 
     syncTransparency() {
+        if (this._blurMyShellOwnsTransparency()) {
+            this._menu.box.set_style(this._blurMyShellCornerStyle());
+            return;
+        }
+
         if (!this._settings.get_boolean(
             'start-menu-follow-panel-transparency'
-        ) || this._blurMyShellOwnsTransparency()) {
+        )) {
             this._menu.box.set_style(null);
             return;
         }
@@ -392,6 +406,19 @@ export class StartMenuController {
             `background-gradient-end: rgba(${gradientEnd}, ` +
                 `${opacity.toFixed(2)});`
         );
+    }
+
+    _blurMyShellCornerStyle() {
+        if (!blurMyShellHasKey(
+            this._blurMyShellPopupSettings,
+            'menu-corner-radius'
+        ))
+            return null;
+
+        const radius = this._blurMyShellPopupSettings.get_int(
+            'menu-corner-radius'
+        );
+        return `border-radius: ${radius}px;`;
     }
 
     _blurMyShellOwnsTransparency() {
@@ -509,6 +536,7 @@ export class StartMenuController {
     destroy() {
         this._sourcePress.destroy();
         this._sourcePress = null;
+        this._blurMyShellPopupSettings = null;
         if (this._prepareIdleId) {
             GLib.Source.remove(this._prepareIdleId);
             this._prepareIdleId = 0;

@@ -239,6 +239,7 @@ export class StartButtonController {
             [popupSettings, 'blur'],
             [popupSettings, 'override-background'],
             [popupSettings, 'style-popup'],
+            [popupSettings, 'menu-corner-radius'],
             [panelSettings, 'blur'],
         ]) {
             if (!componentSettings ||
