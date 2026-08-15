@@ -18,8 +18,8 @@ import {
 import {
     panelArrowSide,
     syncPanelMenuPosition,
-} from './panelPosition.js';
-import {getScrollDelta} from './scrollUtils.js';
+} from '../panel/panelPosition.js';
+import {getScrollDelta} from '../scrollUtils.js';
 import {
     ApplicationOverflowButtonController,
 } from './applicationOverflowButtonController.js';

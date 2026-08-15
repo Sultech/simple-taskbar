@@ -6,7 +6,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
-import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 
 export class TaskbarItemInteractionController {
     constructor({

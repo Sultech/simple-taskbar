@@ -10,7 +10,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelIsTop} from './panelPosition.js';
+import {panelIsTop} from '../panel/panelPosition.js';
 
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 

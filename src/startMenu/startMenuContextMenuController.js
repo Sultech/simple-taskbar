@@ -9,7 +9,7 @@ import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import {panelArrowSide} from './panelPosition.js';
+import {panelArrowSide} from '../panel/panelPosition.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 

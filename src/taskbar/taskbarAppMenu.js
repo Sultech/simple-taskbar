@@ -7,7 +7,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {
     FileManagerPlacesSection,
     supportsFileManagerPlaces,
-} from './fileManagerPlacesSection.js';
+} from '../integration/fileManagerPlacesSection.js';
 
 export class TaskbarAppMenu extends AppMenu {
     constructor(sourceActor, side, params = {}) {

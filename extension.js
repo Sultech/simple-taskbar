@@ -8,40 +8,40 @@ import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {ExtensionConflictController} from './src/extensionConflictController.js';
+import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
 import {
     ApplicationOverflowController,
-} from './src/applicationOverflowController.js';
+} from './src/overflow/applicationOverflowController.js';
 import {FolderMenuController} from './src/folderMenuController.js';
-import {TrayOverflowController} from './src/trayOverflowController.js';
-import {FavoritesIntegration} from './src/favoritesIntegration.js';
-import {GridAltTabController} from './src/gridAltTabController.js';
+import {TrayOverflowController} from './src/overflow/trayOverflowController.js';
+import {FavoritesIntegration} from './src/integration/favoritesIntegration.js';
+import {GridAltTabController} from './src/windowSwitching/gridAltTabController.js';
 import {HotEdgeController} from './src/hotEdgeController.js';
 import {restoreOverlayKey} from './src/keybindingRecovery.js';
-import {PanelController} from './src/panelController.js';
-import {PanelInteractionController} from './src/panelInteractionController.js';
-import {SecondaryPanelManager} from './src/secondaryPanelManager.js';
-import {NotificationBannerController} from './src/notificationBannerController.js';
+import {PanelController} from './src/panel/panelController.js';
+import {PanelInteractionController} from './src/panel/panelInteractionController.js';
+import {SecondaryPanelManager} from './src/secondaryPanel/secondaryPanelManager.js';
+import {NotificationBannerController} from './src/integration/notificationBannerController.js';
 import {
     QuickSettingsPowerController,
-} from './src/quickSettingsPowerController.js';
+} from './src/integration/quickSettingsPowerController.js';
 import {
     QuickSettingsXpIconController,
-} from './src/quickSettingsXpIconController.js';
+} from './src/integration/quickSettingsXpIconController.js';
 import {
     ShowDesktopButtonController,
-} from './src/showDesktopButtonController.js';
-import {StartButtonController} from './src/startButtonController.js';
+} from './src/taskbar/showDesktopButtonController.js';
+import {StartButtonController} from './src/startMenu/startButtonController.js';
 import {
     SwitcherKeybindingRouter,
-} from './src/switcherKeybindingRouter.js';
-import {TaskbarController} from './src/taskbarController.js';
-import {TaskbarViewport} from './src/taskbarViewport.js';
-import {VolumeMixerController} from './src/volumeMixerController.js';
-import {WindowController} from './src/windowController.js';
-import {WindowPreviewController} from './src/windowPreviewController.js';
-import {OverviewIntegration} from './src/overviewIntegration.js';
-import {ICON_VERTICAL_RESERVE} from './src/panelSizing.js';
+} from './src/windowSwitching/switcherKeybindingRouter.js';
+import {TaskbarController} from './src/taskbar/taskbarController.js';
+import {TaskbarViewport} from './src/taskbar/taskbarViewport.js';
+import {VolumeMixerController} from './src/integration/volumeMixerController.js';
+import {WindowController} from './src/taskbar/windowController.js';
+import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
+import {OverviewIntegration} from './src/integration/overviewIntegration.js';
+import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
 
 export default class SimpleTaskbarExtension extends Extension {

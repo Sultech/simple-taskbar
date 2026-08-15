@@ -11,8 +11,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide, panelIsTop} from './panelPosition.js';
-import {getScrollDelta} from './scrollUtils.js';
+import {panelArrowSide, panelIsTop} from '../panel/panelPosition.js';
+import {getScrollDelta} from '../scrollUtils.js';
 
 const PREVIEW_OPEN_DELAY = 320;
 const PREVIEW_CLOSE_DELAY = 180;

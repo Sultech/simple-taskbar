@@ -3,7 +3,7 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {panelTransparencyOpacity} from './transparencyUtils.js';
+import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
 const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';

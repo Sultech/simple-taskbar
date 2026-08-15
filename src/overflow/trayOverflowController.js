@@ -18,8 +18,8 @@ import {
     panelArrowSide,
     panelIsTop,
     syncMenuArrowSide,
-} from './panelPosition.js';
-import {shellMenusUseLightTheme} from './themeUtils.js';
+} from '../panel/panelPosition.js';
+import {shellMenusUseLightTheme} from '../themeUtils.js';
 
 export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
 const TRAY_ROLE_PREFIXES = ['appindicator-', 'ubuntu-appindicator-'];

@@ -11,24 +11,24 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {extensionIsActive} from './extensionState.js';
+import {extensionIsActive} from '../extensionState.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
-import {placePanelItems} from './panelItemOrder.js';
+import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelIsTop} from './panelPosition.js';
 import {PanelStateController} from './panelStateController.js';
 import {PanelThemeController} from './panelThemeController.js';
-import {NotificationAreaController} from './notificationAreaController.js';
-import {TRAY_OVERFLOW_ROLE} from './trayOverflowController.js';
+import {NotificationAreaController} from '../integration/notificationAreaController.js';
+import {TRAY_OVERFLOW_ROLE} from '../overflow/trayOverflowController.js';
 import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
     constrainTaskbarWidth,
-} from './taskbarLayout.js';
+} from '../taskbar/taskbarLayout.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 

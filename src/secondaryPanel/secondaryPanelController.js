@@ -11,34 +11,34 @@ import {
 
 import {
     ApplicationOverflowController,
-} from './applicationOverflowController.js';
-import {FolderMenuController} from './folderMenuController.js';
-import {NotificationAreaController} from './notificationAreaController.js';
-import {PanelAutoHideController} from './panelAutoHideController.js';
+} from '../overflow/applicationOverflowController.js';
+import {FolderMenuController} from '../folderMenuController.js';
+import {NotificationAreaController} from '../integration/notificationAreaController.js';
+import {PanelAutoHideController} from '../panel/panelAutoHideController.js';
 import {
     PanelButtonPaddingController,
-} from './panelButtonPaddingController.js';
-import {PanelInteractionController} from './panelInteractionController.js';
-import {placePanelItems} from './panelItemOrder.js';
-import {createPanelItems} from './panelItems.js';
-import {panelIsTop} from './panelPosition.js';
+} from '../panel/panelButtonPaddingController.js';
+import {PanelInteractionController} from '../panel/panelInteractionController.js';
+import {placePanelItems} from '../shared/panelItemOrder.js';
+import {createPanelItems} from '../panel/panelItems.js';
+import {panelIsTop} from '../panel/panelPosition.js';
 import {
     QuickSettingsPowerController,
-} from './quickSettingsPowerController.js';
+} from '../integration/quickSettingsPowerController.js';
 import {
     QuickSettingsXpIconController,
-} from './quickSettingsXpIconController.js';
+} from '../integration/quickSettingsXpIconController.js';
 import {SecondaryPanelActor} from './secondaryPanelActor.js';
 import {
     SecondaryPanelIndicatorController,
 } from './secondaryPanelIndicatorController.js';
-import {StartButtonController} from './startButtonController.js';
-import {TaskbarController} from './taskbarController.js';
-import {constrainTaskbarWidth} from './taskbarLayout.js';
-import {TaskbarViewport} from './taskbarViewport.js';
-import {VolumeMixerController} from './volumeMixerController.js';
-import {WindowController} from './windowController.js';
-import {WindowPreviewController} from './windowPreviewController.js';
+import {StartButtonController} from '../startMenu/startButtonController.js';
+import {TaskbarController} from '../taskbar/taskbarController.js';
+import {constrainTaskbarWidth} from '../taskbar/taskbarLayout.js';
+import {TaskbarViewport} from '../taskbar/taskbarViewport.js';
+import {VolumeMixerController} from '../integration/volumeMixerController.js';
+import {WindowController} from '../taskbar/windowController.js';
+import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
 
 const EXTERNAL_PANEL_STYLES = new Set([
     'transparent-panel',

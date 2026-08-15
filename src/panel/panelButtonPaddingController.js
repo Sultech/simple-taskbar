@@ -8,7 +8,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {MIN_PANEL_HEIGHT} from './panelSizing.js';
+import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 
 const AUTOMATIC_PADDING = -1;
 const AUTOMATIC_FALLBACK_PADDING = 3;

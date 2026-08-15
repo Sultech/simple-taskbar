@@ -10,12 +10,12 @@ import {
     ICON_VERTICAL_RESERVE,
     MIN_PANEL_HEIGHT,
     STANDARD_MIN_PANEL_HEIGHT,
-} from '../panelSizing.js';
+} from '../shared/panelSizing.js';
 import {
     applyWindowsXpThemeSettings,
     setWindowsXpThemeEnabled,
     WINDOWS_XP_ICON_SPACING,
-} from '../windowsXpTheme.js';
+} from '../shared/windowsXpTheme.js';
 import {
     addColorRow,
     addComboRow,

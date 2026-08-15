@@ -10,7 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
-} from '../panelItemOrder.js';
+} from '../shared/panelItemOrder.js';
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
 

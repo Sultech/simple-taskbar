@@ -9,7 +9,7 @@ import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.j
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide} from './panelPosition.js';
+import {panelArrowSide} from '../panel/panelPosition.js';
 import {SourcePressGuard} from './sourcePressGuard.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 

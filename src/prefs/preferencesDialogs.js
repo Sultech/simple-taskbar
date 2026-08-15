@@ -8,7 +8,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {normalizeAccelerator} from '../keybindingUtils.js';
+import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 
 export function confirmReset(window, createSettings) {
     const dialog = new Adw.AlertDialog({

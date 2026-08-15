@@ -8,7 +8,7 @@ import {
     panelIsTop,
     removeXpPopupOffset,
     syncXpPopupOffset,
-} from './panelPosition.js';
+} from '../panel/panelPosition.js';
 
 const INDICATOR_ROLES = ['activities', 'quickSettings', 'dateMenu'];
 const INDICATOR_POOL = new Map(

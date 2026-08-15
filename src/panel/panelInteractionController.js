@@ -13,8 +13,8 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
-import {getScrollDelta} from './scrollUtils.js';
-import {taskManagerCandidates} from './taskManagerUtils.js';
+import {getScrollDelta} from '../scrollUtils.js';
+import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 export class PanelInteractionController {
     constructor({

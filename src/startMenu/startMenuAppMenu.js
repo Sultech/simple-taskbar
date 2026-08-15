@@ -7,8 +7,8 @@ import GLib from 'gi://GLib';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {extensionIsActive} from './extensionState.js';
-import {TaskbarAppMenu} from './taskbarAppMenu.js';
+import {extensionIsActive} from '../extensionState.js';
+import {TaskbarAppMenu} from '../taskbar/taskbarAppMenu.js';
 
 const DESKTOP_ICON_EXTENSIONS = [
     'ding@rastersoft.com',

@@ -17,8 +17,8 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {extensionWillBeActive} from './extensionState.js';
-import {panelIsTop} from './panelPosition.js';
+import {extensionWillBeActive} from '../extensionState.js';
+import {panelIsTop} from '../panel/panelPosition.js';
 
 const OVERVIEW_LABEL_MARGIN = 60;
 const STARTUP_OVERVIEW_DELAY = 600;

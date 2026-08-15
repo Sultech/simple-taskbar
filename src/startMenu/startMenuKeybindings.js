@@ -8,7 +8,7 @@ import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {normalizeAccelerator} from './keybindingUtils.js';
+import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 
 const SUPER_KEY_SETTING = 'start-menu-super-key';
 const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';

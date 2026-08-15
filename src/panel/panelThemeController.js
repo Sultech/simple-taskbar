@@ -15,11 +15,11 @@ import {
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
-} from './blurMyShellUtils.js';
-import {extensionIsActive} from './extensionState.js';
+} from '../shared/blurMyShellUtils.js';
+import {extensionIsActive} from '../extensionState.js';
 import {panelIsTop} from './panelPosition.js';
-import {shellMenusUseLightTheme} from './themeUtils.js';
-import {panelTransparencyOpacity} from './transparencyUtils.js';
+import {shellMenusUseLightTheme} from '../themeUtils.js';
+import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
 const EXTERNAL_PANEL_STYLES = [
     'transparent-panel',

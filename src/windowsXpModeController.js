@@ -4,15 +4,15 @@
 import {
     ICON_VERTICAL_RESERVE,
     STANDARD_MIN_PANEL_HEIGHT,
-} from './panelSizing.js';
-import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
+} from './shared/panelSizing.js';
+import {applyDefaultTaskbarSettings} from './shared/taskbarDefaults.js';
 import {
     applyWindowsXpThemeAppearance,
     applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SPACING,
     WINDOWS_XP_ICON_SIZE,
     WINDOWS_XP_PANEL_HEIGHT,
-} from './windowsXpTheme.js';
+} from './shared/windowsXpTheme.js';
 
 const LOCKED_SETTING_KEYS = [
     'panel-button-padding',

@@ -23,8 +23,8 @@ import {
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
-} from './blurMyShellUtils.js';
-import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
+} from '../shared/blurMyShellUtils.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 
 export class StartButtonController {
     constructor({

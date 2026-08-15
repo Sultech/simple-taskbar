@@ -3,7 +3,7 @@
 
 import Gio from 'gi://Gio';
 
-import {isSuperOverlayKey} from './keybindingUtils.js';
+import {isSuperOverlayKey} from './shared/keybindingUtils.js';
 
 const OVERLAY_RECOVERY_KEY = 'start-menu-displaced-overlay-key';
 

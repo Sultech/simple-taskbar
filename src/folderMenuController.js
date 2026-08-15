@@ -18,7 +18,7 @@ import {shellMenusUseLightTheme} from './themeUtils.js';
 import {
     panelArrowSide,
     syncPanelMenuPosition,
-} from './panelPosition.js';
+} from './panel/panelPosition.js';
 
 const FILE_ATTRIBUTES = [
     Gio.FILE_ATTRIBUTE_STANDARD_NAME,

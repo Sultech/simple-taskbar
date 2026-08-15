@@ -21,7 +21,7 @@ import {
     panelArrowSide,
     panelIsTop,
     syncMenuArrowSide,
-} from './panelPosition.js';
+} from '../panel/panelPosition.js';
 import {StartMenuContextMenuController} from './startMenuContextMenuController.js';
 import {StartMenuFooterController} from './startMenuFooterController.js';
 import {StartMenuNavigationController} from './startMenuNavigationController.js';
@@ -30,8 +30,8 @@ import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 import {StartMenuTooltipController} from './startMenuTooltipController.js';
 import {SourcePressGuard} from './sourcePressGuard.js';
-import {shellMenusUseLightTheme} from './themeUtils.js';
-import {panelTransparencyOpacity} from './transparencyUtils.js';
+import {shellMenusUseLightTheme} from '../themeUtils.js';
+import {panelTransparencyOpacity} from '../transparencyUtils.js';
 import {
     APP_CATEGORIES,
     appShouldShow,

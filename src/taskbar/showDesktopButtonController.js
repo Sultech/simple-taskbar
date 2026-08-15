@@ -7,7 +7,7 @@ import St from 'gi://St';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {WINDOWS_XP_PANEL_HEIGHT} from './windowsXpTheme.js';
+import {WINDOWS_XP_PANEL_HEIGHT} from '../shared/windowsXpTheme.js';
 
 export class ShowDesktopButtonController {
     constructor(settings, extensionDir, onClicked, onReplaced) {

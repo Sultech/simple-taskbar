@@ -10,15 +10,15 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {DEFAULT_PANEL_ITEM_ORDER} from './src/panelItemOrder.js';
+import {DEFAULT_PANEL_ITEM_ORDER} from './src/shared/panelItemOrder.js';
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
-} from './src/blurMyShellUtils.js';
-import {resolveTaskManagerAppId} from './src/taskManagerUtils.js';
-import {applyDefaultTaskbarSettings} from './src/taskbarDefaults.js';
+} from './src/shared/blurMyShellUtils.js';
+import {resolveTaskManagerAppId} from './src/shared/taskManagerUtils.js';
+import {applyDefaultTaskbarSettings} from './src/shared/taskbarDefaults.js';
 import {confirmReset} from './src/prefs/preferencesDialogs.js';
 import {
     addColorRow,

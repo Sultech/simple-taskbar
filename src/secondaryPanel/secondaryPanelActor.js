@@ -8,7 +8,7 @@ import St from 'gi://St';
 import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
-} from './taskbarLayout.js';
+} from '../taskbar/taskbarLayout.js';
 
 export const SecondaryPanelActor = GObject.registerClass(
 class SecondaryPanelActor extends St.Widget {
