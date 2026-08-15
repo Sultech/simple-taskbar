@@ -298,6 +298,20 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
+        const matchIconColorSwitch = new Adw.SwitchRow({
+            title: _('Match Icon Color'),
+            subtitle: _(
+                'Color the focused indicator from the application icon'
+            ),
+            active: window._settings.get_boolean('match-icon-color'),
+        });
+        advancedAppearanceGroup.add(matchIconColorSwitch);
+        window._settings.bind(
+            'match-icon-color',
+            matchIconColorSwitch,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
         const focusedIndicatorColorRow = addColorRow(
             advancedAppearanceGroup,
             window._settings,
@@ -323,6 +337,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             const enabled = customIndicatorColorsSwitch.active;
             indicatorStyleRow.sensitive = !windowsXpThemeEnabled;
             customIndicatorColorsSwitch.sensitive = !windowsXpThemeEnabled;
+            matchIconColorSwitch.sensitive = !windowsXpThemeEnabled;
             focusedIndicatorColorRow.visible = enabled;
             unfocusedIndicatorColorRow.visible = enabled;
             focusedIndicatorColorRow.sensitive = !windowsXpThemeEnabled &&
@@ -330,10 +345,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             unfocusedIndicatorColorRow.sensitive =
                 !windowsXpThemeEnabled && enabled;
         };
-        customIndicatorColorsSwitch.connect(
-            'notify::active',
-            syncIndicatorControls
-        );
+        customIndicatorColorsSwitch.connect('notify::active', () => {
+            if (customIndicatorColorsSwitch.active)
+                matchIconColorSwitch.active = false;
+            syncIndicatorControls();
+        });
+        matchIconColorSwitch.connect('notify::active', () => {
+            if (matchIconColorSwitch.active)
+                customIndicatorColorsSwitch.active = false;
+        });
         connectSettings(
             window._settings,
             'changed::windows-xp-theme-enabled',

@@ -61,6 +61,10 @@
       <default>false</default>
       <summary>Use custom running indicator colors</summary>
     </key>
+    <key name="match-icon-color" type="b">
+      <default>false</default>
+      <summary>Match the running indicator to the application icon color</summary>
+    </key>
     <key name="focused-indicator-color" type="s">
       <default>'#60aef7'</default>
       <summary>Focused application indicator color</summary>

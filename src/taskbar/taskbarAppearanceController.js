@@ -5,6 +5,8 @@ import Clutter from 'gi://Clutter';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {IconDominantColorCache} from './iconDominantColor.js';
+
 const INDICATOR_ANIMATION_DURATION = 150;
 const INDICATOR_SEGMENT_GAP = 2;
 const APP_LABEL_SPACING = 8;
@@ -33,6 +35,7 @@ export class TaskbarAppearanceController {
         this._getIconSize = getIconSize;
         this._getPanelHeight = getPanelHeight;
         this._showAppLabels = showAppLabels;
+        this._iconColors = new IconDominantColorCache();
     }
 
     updateGlassGeometry(item) {
@@ -207,17 +210,31 @@ export class TaskbarAppearanceController {
     }
 
     syncIndicatorColor(item) {
-        let style = null;
-        if (item._taskbarRunning &&
-            this._settings.get_boolean('custom-indicator-colors-enabled')) {
-            const key = item._taskbarFocused
-                ? 'focused-indicator-color'
-                : 'unfocused-indicator-color';
-            style = `background-color: ${this._settings.get_string(key)};`;
-        }
+        const color = item._taskbarRunning
+            ? this._indicatorColor(item)
+            : null;
+        const style = color ? `background-color: ${color};` : null;
 
         for (const segment of item._taskbarIndicator.get_children())
             segment.set_style(style);
+    }
+
+    _indicatorColor(item) {
+        if (item._taskbarFocused &&
+            this._settings.get_boolean('match-icon-color')) {
+            const iconColor = this._iconColors.getColor(item._taskbarApp);
+            if (iconColor)
+                return iconColor;
+        }
+
+        if (!this._settings.get_boolean('custom-indicator-colors-enabled'))
+            return null;
+
+        return this._settings.get_string(
+            item._taskbarFocused
+                ? 'focused-indicator-color'
+                : 'unfocused-indicator-color'
+        );
     }
 
     syncIndicatorVisibility(item) {
@@ -323,6 +340,8 @@ export class TaskbarAppearanceController {
     }
 
     destroy() {
+        this._iconColors.destroy();
+        this._iconColors = null;
         this._showAppLabels = null;
         this._getPanelHeight = null;
         this._getIconSize = null;
