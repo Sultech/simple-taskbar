@@ -11,6 +11,14 @@ import {
 } from '../panel/panelPosition.js';
 
 const INDICATOR_ROLES = ['activities', 'quickSettings', 'dateMenu'];
+
+// Shell's QuickSettings builds its own system-status children (network,
+// bluetooth and power among them) and defines no teardown for any of them,
+// so destroying one leaves its D-Bus handlers live against a dead actor.
+// Retired indicators are unparented and kept here for the next panel to
+// claim. The pool outlives disable() because Shell imports an extension
+// module once per session; that is the cost of reusing real Shell
+// indicators rather than destroying them.
 const INDICATOR_POOL = new Map(
     INDICATOR_ROLES.map(role => [role, []])
 );
