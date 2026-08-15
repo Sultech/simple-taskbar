@@ -4,7 +4,6 @@
 import GLib from 'gi://GLib';
 
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 
@@ -12,16 +11,15 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelArrowSide} from './panelPosition.js';
 import {SourcePressGuard} from './sourcePressGuard.js';
+import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
 export class StartMenuPowerController {
     constructor(settings, {closeMenu, applyTheme}) {
         this._settings = settings;
         this._closeMenu = closeMenu;
-        this._applyTheme = applyTheme;
         this._systemActions = SystemActions.getDefault();
         this._button = null;
-        this._menu = null;
-        this._menuManager = null;
+        this._transientMenu = new StartMenuTransientMenu(applyTheme);
         this._actionIdleId = 0;
         this._sourcePress = new SourcePressGuard();
     }
@@ -31,7 +29,7 @@ export class StartMenuPowerController {
     }
 
     get isOpen() {
-        return Boolean(this._menu);
+        return this._transientMenu.isOpen;
     }
 
     setButton(button) {
@@ -45,7 +43,7 @@ export class StartMenuPowerController {
             return;
         }
 
-        if (this._menu) {
+        if (this._transientMenu.isOpen) {
             this.close();
             return;
         }
@@ -67,16 +65,11 @@ export class StartMenuPowerController {
     }
 
     syncTheme() {
-        if (this._menu)
-            this._applyTheme(this._menu.actor);
+        this._transientMenu.syncTheme();
     }
 
     close() {
-        const menu = this._menu;
-        this._menu = null;
-        this._menuManager = null;
-        if (menu)
-            menu.destroy();
+        this._transientMenu.close();
     }
 
     destroy() {
@@ -86,10 +79,10 @@ export class StartMenuPowerController {
             GLib.Source.remove(this._actionIdleId);
             this._actionIdleId = 0;
         }
-        this.close();
+        this._transientMenu.destroy();
+        this._transientMenu = null;
         this._button = null;
         this._systemActions = null;
-        this._applyTheme = null;
         this._closeMenu = null;
         this._settings = null;
     }
@@ -103,12 +96,7 @@ export class StartMenuPowerController {
             panelArrowSide(this._settings)
         );
         const menuManager = new PopupMenu.PopupMenuManager(this._button);
-
-        menu.actor.add_style_class_name('simple-taskbar-windows-start-context');
-        this._applyTheme(menu.actor);
-        menu.actor.hide();
-        Main.uiGroup.add_child(menu.actor);
-        menuManager.addMenu(menu);
+        this._transientMenu.adopt(menu, menuManager);
 
         const powerItems = [
             this._addAction(
@@ -166,16 +154,6 @@ export class StartMenuPowerController {
         for (const item of [...powerItems, ...sessionItems])
             item.connectObject('notify::visible', syncSeparator, menu.actor);
         syncSeparator();
-
-        this._menu = menu;
-        this._menuManager = menuManager;
-        menu.connect('menu-closed', () => {
-            if (this._menu !== menu)
-                return;
-            this._menu = null;
-            this._menuManager = null;
-            menu.destroy();
-        });
 
         this._systemActions.forceUpdate();
         menu.open(BoxPointer.PopupAnimation.FULL);

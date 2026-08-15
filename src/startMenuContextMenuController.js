@@ -11,6 +11,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {panelArrowSide} from './panelPosition.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
+import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
 export class StartMenuContextMenuController {
     constructor(settings, {
@@ -22,14 +23,12 @@ export class StartMenuContextMenuController {
         refreshAfterPinChange,
     }) {
         this._settings = settings;
-        this._applyTheme = applyTheme;
         this._closeApp = closeApp;
         this._closeMenu = closeMenu;
         this._getInterestingWindows = getInterestingWindows;
         this._hideTooltip = hideTooltip;
         this._refreshAfterPinChange = refreshAfterPinChange;
-        this._menu = null;
-        this._menuManager = null;
+        this._transientMenu = new StartMenuTransientMenu(applyTheme);
         this._actionCloseIdleId = 0;
         this._cursor = new St.Widget({
             width: 1,
@@ -85,39 +84,21 @@ export class StartMenuContextMenuController {
             }
         );
         const menuManager = new PopupMenu.PopupMenuManager(sourceButton);
-
-        menu.actor.add_style_class_name('simple-taskbar-windows-start-context');
-        this._applyTheme(menu.actor);
-        menu.actor.hide();
-        Main.uiGroup.add_child(menu.actor);
-        menuManager.addMenu(menu);
-        menu.setApp(app);
-        this._menu = menu;
-        this._menuManager = menuManager;
-
-        menu.connect('menu-closed', () => {
-            if (this._menu !== menu)
-                return;
-            this._menu = null;
-            this._menuManager = null;
-            menu.destroy();
+        this._transientMenu.adopt(menu, menuManager, () => {
             if (refreshAfterClose)
                 this._refreshAfterPinChange();
         });
+
+        menu.setApp(app);
         menu.open(BoxPointer.PopupAnimation.FULL);
     }
 
     syncTheme() {
-        if (this._menu)
-            this._applyTheme(this._menu.actor);
+        this._transientMenu.syncTheme();
     }
 
     close() {
-        const menu = this._menu;
-        this._menu = null;
-        this._menuManager = null;
-        if (menu)
-            menu.destroy();
+        this._transientMenu.close();
     }
 
     destroy() {
@@ -125,7 +106,8 @@ export class StartMenuContextMenuController {
             GLib.Source.remove(this._actionCloseIdleId);
             this._actionCloseIdleId = 0;
         }
-        this.close();
+        this._transientMenu.destroy();
+        this._transientMenu = null;
         this._cursor.destroy();
         this._cursor = null;
         this._refreshAfterPinChange = null;
@@ -133,7 +115,6 @@ export class StartMenuContextMenuController {
         this._getInterestingWindows = null;
         this._closeMenu = null;
         this._closeApp = null;
-        this._applyTheme = null;
         this._settings = null;
     }
 
