@@ -22,13 +22,13 @@ function childrenNaturalWidth(box, excludedActor, height) {
     }, 0);
 }
 
-export function allocateAdaptivePanel(
+function allocatePanelBoxes(
     panel,
     box,
     leftBox,
     centerBox,
     rightBox,
-    centerOffset = 0
+    resolveCenterX
 ) {
     panel.set_allocation(box);
 
@@ -39,21 +39,6 @@ export function allocateAdaptivePanel(
     const [, rightNaturalWidth] = rightBox.get_preferred_width(height);
     const rtl =
         panel.get_text_direction() === Clutter.TextDirection.RTL;
-    const physicalLeftWidth = rtl
-        ? rightNaturalWidth
-        : leftNaturalWidth;
-    const physicalRightWidth = rtl
-        ? leftNaturalWidth
-        : rightNaturalWidth;
-    const centeredX = (width - centerNaturalWidth + centerOffset) / 2;
-    const minimumCenterX = physicalLeftWidth + PANEL_ITEM_GAP;
-    const maximumCenterX = width - physicalRightWidth -
-        PANEL_ITEM_GAP - centerNaturalWidth;
-    const centerX = Math.clamp(
-        centeredX,
-        minimumCenterX,
-        Math.max(minimumCenterX, maximumCenterX)
-    );
     const childBox = new Clutter.ActorBox();
     childBox.y1 = 0;
     childBox.y2 = height;
@@ -67,7 +52,13 @@ export function allocateAdaptivePanel(
     }
     leftBox.allocate(childBox);
 
-    childBox.x1 = Math.round(centerX);
+    childBox.x1 = resolveCenterX(
+        width,
+        centerNaturalWidth,
+        leftNaturalWidth,
+        rightNaturalWidth,
+        rtl
+    );
     childBox.x2 = childBox.x1 + centerNaturalWidth;
     centerBox.allocate(childBox);
 
@@ -81,6 +72,48 @@ export function allocateAdaptivePanel(
     rightBox.allocate(childBox);
 }
 
+export function allocateAdaptivePanel(
+    panel,
+    box,
+    leftBox,
+    centerBox,
+    rightBox,
+    centerOffset = 0
+) {
+    allocatePanelBoxes(
+        panel,
+        box,
+        leftBox,
+        centerBox,
+        rightBox,
+        (
+            width,
+            centerNaturalWidth,
+            leftNaturalWidth,
+            rightNaturalWidth,
+            rtl
+        ) => {
+            const physicalLeftWidth = rtl
+                ? rightNaturalWidth
+                : leftNaturalWidth;
+            const physicalRightWidth = rtl
+                ? leftNaturalWidth
+                : rightNaturalWidth;
+            const centeredX =
+                (width - centerNaturalWidth + centerOffset) / 2;
+            const minimumCenterX = physicalLeftWidth + PANEL_ITEM_GAP;
+            const maximumCenterX = width - physicalRightWidth -
+                PANEL_ITEM_GAP - centerNaturalWidth;
+            const centerX = Math.clamp(
+                centeredX,
+                minimumCenterX,
+                Math.max(minimumCenterX, maximumCenterX)
+            );
+            return Math.round(centerX);
+        }
+    );
+}
+
 export function allocateExpandedSidePanel(
     panel,
     box,
@@ -89,42 +122,16 @@ export function allocateExpandedSidePanel(
     rightBox,
     centerOffset = 0
 ) {
-    panel.set_allocation(box);
-
-    const width = box.x2 - box.x1;
-    const height = box.y2 - box.y1;
-    const [, leftNaturalWidth] = leftBox.get_preferred_width(height);
-    const [, centerNaturalWidth] = centerBox.get_preferred_width(height);
-    const [, rightNaturalWidth] = rightBox.get_preferred_width(height);
-    const rtl =
-        panel.get_text_direction() === Clutter.TextDirection.RTL;
-    const childBox = new Clutter.ActorBox();
-    childBox.y1 = 0;
-    childBox.y2 = height;
-
-    if (rtl) {
-        childBox.x1 = Math.max(width - leftNaturalWidth, 0);
-        childBox.x2 = width;
-    } else {
-        childBox.x1 = 0;
-        childBox.x2 = Math.min(leftNaturalWidth, width);
-    }
-    leftBox.allocate(childBox);
-
-    childBox.x1 = Math.ceil(
-        (width - centerNaturalWidth + centerOffset) / 2
+    allocatePanelBoxes(
+        panel,
+        box,
+        leftBox,
+        centerBox,
+        rightBox,
+        (width, centerNaturalWidth) => Math.ceil(
+            (width - centerNaturalWidth + centerOffset) / 2
+        )
     );
-    childBox.x2 = childBox.x1 + centerNaturalWidth;
-    centerBox.allocate(childBox);
-
-    if (rtl) {
-        childBox.x1 = 0;
-        childBox.x2 = Math.min(rightNaturalWidth, width);
-    } else {
-        childBox.x1 = Math.max(width - rightNaturalWidth, 0);
-        childBox.x2 = width;
-    }
-    rightBox.allocate(childBox);
 }
 
 export function constrainTaskbarWidth({
