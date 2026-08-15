@@ -5,6 +5,14 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
 export const BLUR_MY_SHELL_UUID = 'blur-my-shell@aunetx';
+export const BLUR_MY_SHELL_PANEL_STYLES = [
+    'transparent-panel',
+    'light-panel',
+    'dark-panel',
+    'contrasted-panel',
+    'gradient-panel',
+    'gradient-panel-reverse',
+];
 const BLUR_MY_SHELL_SCHEMA =
     'org.gnome.shell.extensions.blur-my-shell';
 

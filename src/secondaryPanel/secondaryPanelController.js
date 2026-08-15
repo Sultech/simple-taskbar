@@ -14,6 +14,7 @@ import {
 import {
     ApplicationOverflowController,
 } from '../overflow/applicationOverflowController.js';
+import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {FolderMenuController} from '../folderMenuController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {PanelAutoHideController} from '../panel/panelAutoHideController.js';
@@ -42,12 +43,7 @@ import {VolumeMixerController} from '../integration/volumeMixerController.js';
 import {WindowController} from '../taskbar/windowController.js';
 import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
 
-const EXTERNAL_PANEL_STYLES = new Set([
-    'transparent-panel',
-    'light-panel',
-    'dark-panel',
-    'contrasted-panel',
-]);
+const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 
 const SecondaryPanelBox = GObject.registerClass(
     class SecondaryPanelBox extends St.Widget {

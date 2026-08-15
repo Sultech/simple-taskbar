@@ -11,6 +11,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
+    BLUR_MY_SHELL_PANEL_STYLES,
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
@@ -21,12 +22,6 @@ import {panelIsTop} from './panelPosition.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
-const EXTERNAL_PANEL_STYLES = [
-    'transparent-panel',
-    'light-panel',
-    'dark-panel',
-    'contrasted-panel',
-];
 const BLUR_MY_SHELL_ACTIVE_CLASS =
     'simple-taskbar-blur-my-shell-active';
 const LIGHT_BLUR_OVERLAY_CLASS =
@@ -162,7 +157,7 @@ export class PanelThemeController {
         const externalPanelStyle = !windowsXpThemeEnabled &&
             panelBlur?.enabled &&
             Main.panel.has_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS) &&
-            EXTERNAL_PANEL_STYLES.some(style =>
+            BLUR_MY_SHELL_PANEL_STYLES.some(style =>
                 Main.panel.has_style_class_name(style)
             );
         const light = this._usesLightTheme();
