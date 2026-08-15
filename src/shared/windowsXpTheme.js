@@ -26,7 +26,7 @@ export function applyWindowsXpThemeAppearance(settings) {
     setString(settings, 'panel-theme', 'dark');
 }
 
-function applyWindowsXpThemeBehaviorDefaults(settings) {
+export function applyWindowsXpThemeBehaviorDefaults(settings) {
     setBoolean(settings, 'multi-window-click-spread', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'hot-edge-overview-enabled', true);

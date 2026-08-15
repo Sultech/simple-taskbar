@@ -8,6 +8,7 @@ import {
 import {applyDefaultTaskbarSettings} from './shared/taskbarDefaults.js';
 import {
     applyWindowsXpThemeAppearance,
+    applyWindowsXpThemeBehaviorDefaults,
     applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SPACING,
     WINDOWS_XP_ICON_SIZE,
@@ -34,7 +35,6 @@ const LOCKED_SETTING_KEYS = [
     'start-menu-follow-panel-transparency',
     'start-menu-super-key',
     'show-desktop-button-position',
-    'show-desktop-button-visible',
     'windows-start-menu-enabled',
     'folder-menu-position',
     'panel-item-order',
@@ -123,8 +123,10 @@ export class WindowsXpModeController {
 
         if (this._settings.get_boolean('default-gnome-panel'))
             this._settings.set_boolean('default-gnome-panel', false);
-        if (modeChanged)
+        if (modeChanged) {
             this._settings.set_boolean('activities-button-visible', false);
+            applyWindowsXpThemeBehaviorDefaults(this._settings);
+        }
         applyWindowsXpThemeAppearance(this._settings);
         applyWindowsXpThemeSettings(this._settings);
     }
