@@ -11,6 +11,7 @@ import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.j
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide} from './panelPosition.js';
+import {SourcePressGuard} from './sourcePressGuard.js';
 
 export class StartMenuPowerController {
     constructor(settings, {closeMenu, applyTheme}) {
@@ -22,8 +23,7 @@ export class StartMenuPowerController {
         this._menu = null;
         this._menuManager = null;
         this._actionIdleId = 0;
-        this._sourcePressWasOpen = false;
-        this._sourcePressResetId = 0;
+        this._sourcePress = new SourcePressGuard();
     }
 
     get button() {
@@ -40,8 +40,7 @@ export class StartMenuPowerController {
     }
 
     toggle() {
-        if (this._sourcePressWasOpen) {
-            this._sourcePressWasOpen = false;
+        if (this._sourcePress.consume()) {
             this.close();
             return;
         }
@@ -55,17 +54,7 @@ export class StartMenuPowerController {
     }
 
     markSourcePress() {
-        this._sourcePressWasOpen = true;
-        if (this._sourcePressResetId)
-            GLib.Source.remove(this._sourcePressResetId);
-        this._sourcePressResetId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
-            () => {
-                this._sourcePressResetId = 0;
-                this._sourcePressWasOpen = false;
-                return GLib.SOURCE_REMOVE;
-            }
-        );
+        this._sourcePress.mark();
     }
 
     syncVisibility() {
@@ -91,10 +80,8 @@ export class StartMenuPowerController {
     }
 
     destroy() {
-        if (this._sourcePressResetId) {
-            GLib.Source.remove(this._sourcePressResetId);
-            this._sourcePressResetId = 0;
-        }
+        this._sourcePress.destroy();
+        this._sourcePress = null;
         if (this._actionIdleId) {
             GLib.Source.remove(this._actionIdleId);
             this._actionIdleId = 0;

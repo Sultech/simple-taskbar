@@ -29,6 +29,7 @@ import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js'
 import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 import {StartMenuTooltipController} from './startMenuTooltipController.js';
+import {SourcePressGuard} from './sourcePressGuard.js';
 import {shellMenusUseLightTheme} from './themeUtils.js';
 import {panelTransparencyOpacity} from './transparencyUtils.js';
 import {
@@ -99,8 +100,7 @@ export class StartMenuController {
         this._firstSearchResult = null;
         this._view = 'pinned';
         this._firstVisibleApp = null;
-        this._sourcePressWasOpen = false;
-        this._sourcePressResetId = 0;
+        this._sourcePress = new SourcePressGuard();
         this._prepareIdleId = 0;
         this._transparencySyncId = 0;
         this._menuOpenStateId = 0;
@@ -262,17 +262,7 @@ export class StartMenuController {
                     (target === powerButton || powerButton.contains(target));
 
                 if ((isButtonPress || isTouchBegin) && insideSource) {
-                    this._sourcePressWasOpen = true;
-                    if (this._sourcePressResetId)
-                        GLib.Source.remove(this._sourcePressResetId);
-                    this._sourcePressResetId = GLib.idle_add(
-                        GLib.PRIORITY_DEFAULT_IDLE,
-                        () => {
-                            this._sourcePressResetId = 0;
-                            this._sourcePressWasOpen = false;
-                            return GLib.SOURCE_REMOVE;
-                        }
-                    );
+                    this._sourcePress.mark();
                 } else if ((isButtonPress || isTouchBegin) &&
                     insidePowerSource && this._powerController.isOpen) {
                     this._powerController.markSourcePress();
@@ -287,8 +277,7 @@ export class StartMenuController {
     }
 
     toggle() {
-        if (this._sourcePressWasOpen) {
-            this._sourcePressWasOpen = false;
+        if (this._sourcePress.consume()) {
             this.close();
             return;
         }
@@ -300,7 +289,7 @@ export class StartMenuController {
     }
 
     open() {
-        this._sourcePressWasOpen = false;
+        this._sourcePress.clear();
         this._setSearchText('');
         this._searchEntry.add_style_class_name(PASSIVE_SEARCH_CLASS);
         this._showDefaultView();
@@ -318,7 +307,7 @@ export class StartMenuController {
     }
 
     close(animation = BoxPointer.PopupAnimation.FULL) {
-        this._sourcePressWasOpen = false;
+        this._sourcePress.clear();
         this._searchController.cancel();
         this._contextMenuController.close();
         this._powerController.close();
@@ -518,10 +507,8 @@ export class StartMenuController {
     }
 
     destroy() {
-        if (this._sourcePressResetId) {
-            GLib.Source.remove(this._sourcePressResetId);
-            this._sourcePressResetId = 0;
-        }
+        this._sourcePress.destroy();
+        this._sourcePress = null;
         if (this._prepareIdleId) {
             GLib.Source.remove(this._prepareIdleId);
             this._prepareIdleId = 0;
