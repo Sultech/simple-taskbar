@@ -428,11 +428,7 @@ export class ApplicationOverflowController {
         ) && !this._settings.get_boolean('default-gnome-panel');
         this._viewport.enable_mouse_scrolling = !enabled;
         if (!enabled) {
-            this._taskbarController.setPreserveItemWidths(false);
-            this._button.hide();
-            this._spacer.hide();
-            this._viewport.setMaximumWidth(this._maximumWidth);
-            this._clearOverflow();
+            this._showAllItems();
             return;
         }
 
@@ -444,11 +440,7 @@ export class ApplicationOverflowController {
         );
         const taskbarWidth = itemWidths.reduce((sum, width) => sum + width, 0);
         if (taskbarWidth <= this._maximumWidth) {
-            this._taskbarController.setPreserveItemWidths(false);
-            this._button.hide();
-            this._spacer.hide();
-            this._viewport.setMaximumWidth(this._maximumWidth);
-            this._clearOverflow();
+            this._showAllItems();
             return;
         }
 
@@ -483,6 +475,13 @@ export class ApplicationOverflowController {
         this._queueSync();
     }
 
+    _showAllItems() {
+        this._taskbarController.setPreserveItemWidths(false);
+        this._button.hide();
+        this._spacer.hide();
+        this._viewport.setMaximumWidth(this._maximumWidth);
+        this._clearOverflow();
+    }
 
     _clearOverflow() {
         this.close();

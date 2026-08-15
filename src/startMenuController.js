@@ -841,17 +841,21 @@ export class StartMenuController {
             this._scrollView.vadjustment.value = 0;
     }
 
+    _showEmptyMessage() {
+        this._content.add_child(new St.Label({
+            style_class: 'simple-taskbar-windows-start-empty',
+            text: _('No results found'),
+            x_align: Clutter.ActorAlign.CENTER,
+        }));
+    }
+
     _displaySearchResults(groups, complete) {
         this._clearContent();
         this._firstSearchResult = groups[0]?.results[0] ?? null;
         if (groups.length === 0) {
             if (!complete)
                 return;
-            this._content.add_child(new St.Label({
-                style_class: 'simple-taskbar-windows-start-empty',
-                text: _('No results found'),
-                x_align: Clutter.ActorAlign.CENTER,
-            }));
+            this._showEmptyMessage();
             return;
         }
 
@@ -877,11 +881,7 @@ export class StartMenuController {
         this._firstVisibleApp = apps[0] ?? null;
         this._firstSearchResult = null;
         if (apps.length === 0) {
-            this._content.add_child(new St.Label({
-                style_class: 'simple-taskbar-windows-start-empty',
-                text: _('No results found'),
-                x_align: Clutter.ActorAlign.CENTER,
-            }));
+            this._showEmptyMessage();
             return;
         }
 
