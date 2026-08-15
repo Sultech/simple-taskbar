@@ -409,6 +409,9 @@ export class StartMenuController {
     }
 
     _blurMyShellCornerStyle() {
+        if (!global.blur_my_shell?._popup?.enabled)
+            return null;
+
         if (!blurMyShellHasKey(
             this._blurMyShellPopupSettings,
             'menu-corner-radius'
