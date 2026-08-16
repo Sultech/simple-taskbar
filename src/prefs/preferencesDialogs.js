@@ -49,6 +49,29 @@ export function confirmReset(window, createSettings) {
     });
 }
 
+export function addResetGroup(page, window, createSettings) {
+    const resetGroup = new Adw.PreferencesGroup({
+        title: _('Reset'),
+    });
+    page.add(resetGroup);
+
+    const resetRow = new Adw.ActionRow({
+        title: _('Reset All Settings'),
+        subtitle: _('Restore defaults without changing pinned taskbar or Start Menu apps'),
+    });
+    const resetButton = new Gtk.Button({
+        label: _('Reset…'),
+        valign: Gtk.Align.CENTER,
+    });
+    resetButton.add_css_class('destructive-action');
+    resetButton.connect('clicked', () => {
+        confirmReset(window, createSettings);
+    });
+    resetRow.add_suffix(resetButton);
+    resetRow.activatable_widget = resetButton;
+    resetGroup.add(resetRow);
+}
+
 export function openCustomShortcutDialog(window) {
     const dialog = new Adw.Window({
         title: _('Set Custom Shortcut'),
