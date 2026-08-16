@@ -181,6 +181,7 @@ export function addApplicationIconsGroup({
         appAlignmentRow,
         indicatorStyleRow,
         customIndicatorColorsSwitch,
+        matchIconColorSwitch,
         focusedIndicatorColorRow,
         unfocusedIndicatorColorRow,
     };

@@ -109,6 +109,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const appAlignmentRow = icons.appAlignmentRow;
         const indicatorStyleRow = icons.indicatorStyleRow;
         const customIndicatorColorsSwitch = icons.customIndicatorColorsSwitch;
+        const matchIconColorSwitch = icons.matchIconColorSwitch;
         const focusedIndicatorColorRow = icons.focusedIndicatorColorRow;
         const unfocusedIndicatorColorRow = icons.unfocusedIndicatorColorRow;
 
@@ -138,6 +139,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             advancedStartMenuGroup,
             indicatorStyleRow,
             customIndicatorColorsSwitch,
+            matchIconColorSwitch,
             focusedIndicatorColorRow,
             unfocusedIndicatorColorRow,
             nautilusPlacesSwitch,

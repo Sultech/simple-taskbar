@@ -64,6 +64,7 @@ export function connectDefaultGnomePanelSync({
     advancedStartMenuGroup,
     indicatorStyleRow,
     customIndicatorColorsSwitch,
+    matchIconColorSwitch,
     focusedIndicatorColorRow,
     unfocusedIndicatorColorRow,
     nautilusPlacesSwitch,
@@ -82,6 +83,7 @@ export function connectDefaultGnomePanelSync({
         for (const row of [
             indicatorStyleRow,
             customIndicatorColorsSwitch,
+            matchIconColorSwitch,
             focusedIndicatorColorRow,
             unfocusedIndicatorColorRow,
             nautilusPlacesSwitch,
