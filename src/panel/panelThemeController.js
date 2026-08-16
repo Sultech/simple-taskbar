@@ -17,7 +17,10 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
-import {getPanelBlur} from '../integration/blurMyShellRuntime.js';
+import {
+    getPanelBlur,
+    refreshPanelBlurVisibility,
+} from '../integration/blurMyShellRuntime.js';
 import {extensionIsActive} from '../extensionState.js';
 import {panelIsTop} from './panelPosition.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
@@ -274,10 +277,8 @@ export class PanelThemeController {
                 Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
             else
                 Main.panel.add_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
-            if (!Main.overview.visibleTarget) {
-                panelBlur.panel_hide_blur_dynamically();
-                panelBlur.update_visibility();
-            }
+            if (!Main.overview.visibleTarget)
+                refreshPanelBlurVisibility(panelBlur);
         } else {
             Main.panel.remove_style_class_name(
                 BLUR_MY_SHELL_ACTIVE_CLASS

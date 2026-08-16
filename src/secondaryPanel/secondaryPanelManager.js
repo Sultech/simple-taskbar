@@ -9,7 +9,10 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {BLUR_MY_SHELL_UUID} from '../shared/blurMyShellUtils.js';
-import {getPanelBlur} from '../integration/blurMyShellRuntime.js';
+import {
+    getPanelBlur,
+    refreshPanelBlurVisibility,
+} from '../integration/blurMyShellRuntime.js';
 import {SecondaryPanelController} from './secondaryPanelController.js';
 
 export class SecondaryPanelManager {
@@ -172,9 +175,7 @@ export class SecondaryPanelManager {
         for (const panel of this._panels)
             panelBlur.maybe_blur_panel(panel.actor);
 
-        if (!Main.overview.visibleTarget) {
-            panelBlur.panel_hide_blur_dynamically();
-            panelBlur.update_visibility();
-        }
+        if (!Main.overview.visibleTarget)
+            refreshPanelBlurVisibility(panelBlur);
     }
 }
