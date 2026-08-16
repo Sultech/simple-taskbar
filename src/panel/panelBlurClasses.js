@@ -4,7 +4,6 @@
 import {
     blurMyShellPanelStyleIsTransparent,
 } from '../shared/blurMyShellUtils.js';
-import {setStyleClass} from '../styleClassUtils.js';
 
 export const BLUR_MY_SHELL_ACTIVE_CLASS =
     'simple-taskbar-blur-my-shell-active';
@@ -21,6 +20,16 @@ export const PANEL_BLUR_CLASSES = [
     BLUR_TINTED_CLASS,
     LIGHT_BLUR_OVERLAY_CLASS,
 ];
+
+function setStyleClass(actor, styleClass, present) {
+    if (present === actor.has_style_class_name(styleClass))
+        return;
+
+    if (present)
+        actor.add_style_class_name(styleClass);
+    else
+        actor.remove_style_class_name(styleClass);
+}
 
 export function syncPanelBlurClasses(panel, active, light) {
     const transparent = active && blurMyShellPanelStyleIsTransparent();
