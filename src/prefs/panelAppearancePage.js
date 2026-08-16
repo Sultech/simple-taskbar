@@ -377,6 +377,11 @@ export function addPanelAppearancePage({
     });
     const updateCustomPanelColorControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
+        if (blocked && settings.get_boolean('custom-panel-color-enabled'))
+            settings.set_boolean('custom-panel-color-enabled', false);
+        const customPanelColorEnabled = settings.get_boolean(
+            'custom-panel-color-enabled'
+        );
         const windowsXpThemeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -385,14 +390,14 @@ export function addPanelAppearancePage({
         customPanelColorSwitch.subtitle = blocked
             ? panelBlurTransparencySubtitle
             : customPanelColorSubtitle;
-        customPanelColorRow.visible = customPanelColorSwitch.active;
+        customPanelColorRow.visible = customPanelColorEnabled;
         customPanelColorRow.sensitive = !blocked &&
             !windowsXpThemeEnabled &&
-            customPanelColorSwitch.active;
-        customPanelTextColorRow.visible = customPanelColorSwitch.active;
+            customPanelColorEnabled;
+        customPanelTextColorRow.visible = customPanelColorEnabled;
         customPanelTextColorRow.sensitive = !blocked &&
             !windowsXpThemeEnabled &&
-            customPanelColorSwitch.active;
+            customPanelColorEnabled;
         customPanelTextColorRow.subtitle = blocked
             ? panelBlurTransparencySubtitle
             : customPanelTextColorSubtitle;
