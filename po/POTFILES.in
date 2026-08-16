@@ -3,11 +3,16 @@ src/taskbar/showDesktopButtonController.js
 src/overflow/applicationOverflowController.js
 src/overflow/applicationOverflowItemController.js
 prefs.js
+src/prefs/advancedPage.js
+src/prefs/appBehaviorGroup.js
+src/prefs/applicationIconsGroup.js
 src/prefs/panelAppearancePage.js
 src/prefs/panelItemsPage.js
+src/prefs/panelModeGroup.js
 src/prefs/preferencesDialogs.js
 src/prefs/preferencesWidgets.js
 src/prefs/startMenuPage.js
+src/prefs/taskbarBehaviorGroup.js
 src/prefs/windowSwitchingPage.js
 src/startMenu/startMenuController.js
 src/startMenu/startMenuAppMenu.js

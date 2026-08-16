@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 23:16+0100\n"
+"POT-Creation-Date: 2026-08-16 04:24+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -17,193 +17,93 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/showDesktopButtonController.js:116
-#: src/applicationOverflowItemController.js:127
+#: src/taskbar/showDesktopButtonController.js:116
+#: src/overflow/applicationOverflowItemController.js:127
 msgid "Show desktop"
 msgstr "Desktop anzeigen"
 
-#: src/applicationOverflowController.js:385
+#: src/overflow/applicationOverflowController.js:385
 msgid "Application overflow"
 msgstr "Anwendungsüberlauf"
 
-#: prefs.js:116
+#: prefs.js:41
 msgid "Left"
 msgstr "Links"
 
-#: prefs.js:117
+#: prefs.js:42
 msgid "Center"
 msgstr "Mitte"
 
-#: prefs.js:118
+#: prefs.js:43
 msgid "Right"
 msgstr "Rechts"
 
-#: prefs.js:122
+#: prefs.js:47
 msgid "Taskbar"
 msgstr "Taskleiste"
 
-#: prefs.js:134 prefs.js:178
+#: prefs.js:59 src/prefs/advancedPage.js:48
 msgid "Start Menu"
 msgstr "Startmenü"
 
-#: prefs.js:140
+#: src/prefs/advancedPage.js:10
 msgid "Advanced"
 msgstr "Erweitert"
 
-#: prefs.js:146
+#: src/prefs/advancedPage.js:16
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
-#: prefs.js:148
+#: src/prefs/advancedPage.js:18
 msgid "Less commonly used taskbar and indicator appearance options."
 msgstr ""
 "Weniger häufig verwendete Optionen für das Erscheinungsbild von Taskleiste "
 "und Indikatoren."
 
-#: prefs.js:154
+#: src/prefs/advancedPage.js:24
 msgid "Application Behavior"
 msgstr "Anwendungsverhalten"
 
-#: prefs.js:156 prefs.js:558
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:97
 msgid "Choose which applications appear and how they are grouped."
 msgstr ""
 "Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
 
-#: prefs.js:162 prefs.js:640
+#: src/prefs/advancedPage.js:32 src/prefs/taskbarBehaviorGroup.js:24
 msgid "Taskbar Behavior"
 msgstr "Taskleistenverhalten"
 
-#: prefs.js:164
+#: src/prefs/advancedPage.js:34
 msgid "Less commonly used taskbar interaction options."
 msgstr "Weniger häufig verwendete Interaktionsoptionen der Taskleiste."
 
-#: prefs.js:170
+#: src/prefs/advancedPage.js:40
 msgid "File Manager"
 msgstr "Dateimanager"
 
-#: prefs.js:172
+#: src/prefs/advancedPage.js:42
 msgid "File manager shortcuts and taskbar menu folders."
 msgstr "Verknüpfungen des Dateimanagers und Ordner im Taskleistenmenü."
 
-#: prefs.js:180
+#: src/prefs/advancedPage.js:50
 msgid "Less commonly used Start menu options."
 msgstr "Weniger häufig verwendete Optionen des Startmenüs."
 
-#: prefs.js:204
-msgid "General"
-msgstr "Allgemein"
-
-#: prefs.js:209
-msgid "Default GNOME Panel"
-msgstr "Standard-GNOME-Panel"
-
-#: prefs.js:210
-msgid "Hide taskbar applications and use the original Dash in Overview"
-msgstr ""
-"Blendet Taskleisten-Anwendungen aus und verwendet das ursprüngliche Dash in "
-"der Übersicht"
-
-#: prefs.js:216
-msgid "Windows XP Theme"
-msgstr "Windows-XP-Thema"
-
-#: prefs.js:217
-msgid "Apply a Windows XP-inspired taskbar style"
-msgstr "Einen von Windows XP inspirierten Taskleistenstil anwenden"
-
-#: prefs.js:229
-msgid "Panel Button Padding"
-msgstr "Innenabstand der Panel-Schaltflächen"
-
-#: prefs.js:231
-msgid ""
-"Horizontal space around panel buttons. Use -1 for automatic: Just "
-"Perfection’s value when it is configured, otherwise 3 px"
-msgstr ""
-"Horizontaler Abstand um die Panel-Schaltflächen. Verwenden Sie -1 für "
-"automatisch: der Wert von Just Perfection, wenn konfiguriert, sonst 3 px"
-
-#: prefs.js:240
-msgid "Application Icons"
-msgstr "Anwendungssymbole"
-
-#: prefs.js:241 prefs.js:555
-msgid "Change the size, spacing, and placement of taskbar icons."
-msgstr "Ändern Sie Größe, Abstand und Platzierung der Taskleistensymbole."
-
-#: prefs.js:250
-msgid "Icon Size"
-msgstr "Symbolgröße"
-
-#: prefs.js:252
-msgid "The panel grows automatically when larger icons need more room"
-msgstr ""
-"Das Panel vergrößert sich automatisch, wenn größere Symbole mehr Platz "
-"benötigen"
-
-#: prefs.js:264
-msgid "Icon Spacing"
-msgstr "Symbolabstand"
-
-#: prefs.js:265
-msgid "Space between application buttons"
-msgstr "Abstand zwischen Anwendungsschaltflächen"
-
-#: prefs.js:276
-msgid "Running Indicator Style"
-msgstr "Stil der Ausführungsanzeige"
-
-#: prefs.js:278
-msgid "Choose the shape of indicators beneath running applications"
-msgstr "Wählen Sie die Form der Anzeigen unter laufenden Anwendungen"
-
-#: prefs.js:281
-msgid "Rounded"
-msgstr "Abgerundet"
-
-#: prefs.js:282
-msgid "Straight"
-msgstr "Gerade"
-
-#: prefs.js:288
-msgid "Custom Indicator Colors"
-msgstr "Benutzerdefinierte Anzeigefarben"
-
-#: prefs.js:289
-msgid "Choose colors for running application indicators"
-msgstr "Wählen Sie Farben für die Anzeigen laufender Anwendungen"
-
-#: prefs.js:306
-msgid "Focused Indicator Color"
-msgstr "Farbe der Anzeige für fokussierte Fenster"
-
-#: prefs.js:315
-msgid "Unfocused Indicator Color"
-msgstr "Farbe der Anzeige für nicht fokussierte Fenster"
-
-#: prefs.js:348
-msgid "Icon Alignment"
-msgstr "Symbolausrichtung"
-
-#: prefs.js:350
-msgid "Place application icons at the left or center"
-msgstr "Platzieren Sie Anwendungssymbole links oder mittig"
-
-#: prefs.js:358
+#: src/prefs/appBehaviorGroup.js:18
 msgid "Hide Pinned Applications"
 msgstr "Angeheftete Anwendungen ausblenden"
 
-#: prefs.js:359
+#: src/prefs/appBehaviorGroup.js:19
 msgid "Show pinned taskbar applications only while they are running"
 msgstr ""
 "Zeigt angeheftete Taskleisten-Anwendungen nur an, während sie ausgeführt "
 "werden"
 
-#: prefs.js:373
+#: src/prefs/appBehaviorGroup.js:33
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "Angeheftete Anwendungen als Starter verwenden"
 
-#: prefs.js:375
+#: src/prefs/appBehaviorGroup.js:35
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
@@ -211,31 +111,31 @@ msgstr ""
 "Angeheftete Anwendungen als Starter beibehalten und laufende Anwendungen "
 "separat anzeigen"
 
-#: prefs.js:390
+#: src/prefs/appBehaviorGroup.js:50
 msgid "Always"
 msgstr "Immer"
 
-#: prefs.js:391 prefs.js:395
+#: src/prefs/appBehaviorGroup.js:51 src/prefs/appBehaviorGroup.js:55
 msgid "Only When Full"
 msgstr "Nur wenn voll"
 
-#: prefs.js:392 prefs.js:396
+#: src/prefs/appBehaviorGroup.js:52 src/prefs/appBehaviorGroup.js:56
 msgid "Never"
 msgstr "Nie"
 
-#: prefs.js:403
+#: src/prefs/appBehaviorGroup.js:63
 msgid "Combine Application Buttons"
 msgstr "Anwendungsschaltflächen zusammenfassen"
 
-#: prefs.js:404
+#: src/prefs/appBehaviorGroup.js:64
 msgid "Choose when windows share one taskbar button"
 msgstr "Wählen Sie, wann sich Fenster eine Taskleisten-Schaltfläche teilen"
 
-#: prefs.js:418
+#: src/prefs/appBehaviorGroup.js:78
 msgid "Application Overflow"
 msgstr "Anwendungsüberlauf"
 
-#: prefs.js:420
+#: src/prefs/appBehaviorGroup.js:80
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -243,185 +143,143 @@ msgstr ""
 "Anwendungsschaltflächen, die nicht in das Überlaufmenü passen, anzeigen, "
 "anstatt die Taskleiste zu scrollen"
 
-#: prefs.js:439
+#: src/prefs/appBehaviorGroup.js:99
 msgid "Overflow Style"
 msgstr "Überlaufstil"
 
-#: prefs.js:441
+#: src/prefs/appBehaviorGroup.js:101
 msgid "Taskbar Flyout"
 msgstr "Taskleisten-Flyout"
 
-#: prefs.js:442
+#: src/prefs/appBehaviorGroup.js:102
 msgid "Application List"
 msgstr "Anwendungsliste"
 
-#: prefs.js:454
+#: src/prefs/appBehaviorGroup.js:114
 msgid "Hide App Labels"
 msgstr "App-Beschriftungen ausblenden"
 
-#: prefs.js:455
+#: src/prefs/appBehaviorGroup.js:115
 msgid "Show only icons on separate window buttons"
 msgstr "Zeigt nur Symbole auf separaten Fensterschaltflächen"
 
-#: prefs.js:479 src/prefs/windowSwitchingPage.js:52
+#: src/prefs/appBehaviorGroup.js:139 src/prefs/windowSwitchingPage.js:52
 msgid "Isolate Workspaces"
 msgstr "Arbeitsflächen isolieren"
 
-#: prefs.js:480
+#: src/prefs/appBehaviorGroup.js:140
 msgid "Show running applications from the current workspace only"
 msgstr "Zeigt nur laufende Anwendungen der aktuellen Arbeitsfläche"
 
-#: prefs.js:492 src/prefs/windowSwitchingPage.js:66
+#: src/prefs/appBehaviorGroup.js:152 src/prefs/windowSwitchingPage.js:66
 msgid "Isolate Monitors"
 msgstr "Monitore isolieren"
 
-#: prefs.js:493
+#: src/prefs/appBehaviorGroup.js:153
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Zeigt laufende Anwendungen nur auf der Taskleiste ihres Monitors"
 
-#: prefs.js:505
+#: src/prefs/appBehaviorGroup.js:165
+msgid "Nautilus Folder Shortcuts"
+msgstr "Nautilus-Ordnerverknüpfungen"
+
+#: src/prefs/appBehaviorGroup.js:166
+msgid "Show common folders in the Files taskbar menu"
+msgstr "Zeigt häufig verwendete Ordner im Dateien-Menü der Taskleiste"
+
+#: src/prefs/appBehaviorGroup.js:180
+msgid "Middle Click Closes Applications"
+msgstr "Mittelklick schließt Anwendungen"
+
+#: src/prefs/appBehaviorGroup.js:181
+msgid "Close all application windows instead of opening a new window"
+msgstr "Schließt alle Anwendungsfenster, anstatt ein neues Fenster zu öffnen"
+
+#: src/prefs/applicationIconsGroup.js:25
+msgid "Application Icons"
+msgstr "Anwendungssymbole"
+
+#: src/prefs/applicationIconsGroup.js:26 src/prefs/panelModeGroup.js:94
+msgid "Change the size, spacing, and placement of taskbar icons."
+msgstr "Ändern Sie Größe, Abstand und Platzierung der Taskleistensymbole."
+
+#: src/prefs/applicationIconsGroup.js:35
+msgid "Icon Size"
+msgstr "Symbolgröße"
+
+#: src/prefs/applicationIconsGroup.js:37
+msgid "The panel grows automatically when larger icons need more room"
+msgstr ""
+"Das Panel vergrößert sich automatisch, wenn größere Symbole mehr Platz "
+"benötigen"
+
+#: src/prefs/applicationIconsGroup.js:49
+msgid "Icon Spacing"
+msgstr "Symbolabstand"
+
+#: src/prefs/applicationIconsGroup.js:50
+msgid "Space between application buttons"
+msgstr "Abstand zwischen Anwendungsschaltflächen"
+
+#: src/prefs/applicationIconsGroup.js:61
+msgid "Running Indicator Style"
+msgstr "Stil der Ausführungsanzeige"
+
+#: src/prefs/applicationIconsGroup.js:63
+msgid "Choose the shape of indicators beneath running applications"
+msgstr "Wählen Sie die Form der Anzeigen unter laufenden Anwendungen"
+
+#: src/prefs/applicationIconsGroup.js:66
+msgid "Rounded"
+msgstr "Abgerundet"
+
+#: src/prefs/applicationIconsGroup.js:67
+msgid "Straight"
+msgstr "Gerade"
+
+#: src/prefs/applicationIconsGroup.js:73
+msgid "Custom Indicator Colors"
+msgstr "Benutzerdefinierte Anzeigefarben"
+
+#: src/prefs/applicationIconsGroup.js:74
+msgid "Choose colors for running application indicators"
+msgstr "Wählen Sie Farben für die Anzeigen laufender Anwendungen"
+
+#: src/prefs/applicationIconsGroup.js:87
+msgid "Match Icon Color"
+msgstr "Symbolfarbe übernehmen"
+
+#: src/prefs/applicationIconsGroup.js:89
+msgid "Color the focused indicator from the application icon"
+msgstr "Die fokussierte Anzeige mit der Farbe des Anwendungssymbols einfärben"
+
+#: src/prefs/applicationIconsGroup.js:105
+msgid "Focused Indicator Color"
+msgstr "Farbe der Anzeige für fokussierte Fenster"
+
+#: src/prefs/applicationIconsGroup.js:114
+msgid "Unfocused Indicator Color"
+msgstr "Farbe der Anzeige für nicht fokussierte Fenster"
+
+#: src/prefs/applicationIconsGroup.js:153
+msgid "Icon Alignment"
+msgstr "Symbolausrichtung"
+
+#: src/prefs/applicationIconsGroup.js:155
+msgid "Place application icons at the left or center"
+msgstr "Platzieren Sie Anwendungssymbole links oder mittig"
+
+#: src/prefs/applicationIconsGroup.js:163
 msgid "Spread Multiple Windows"
 msgstr "Mehrere Fenster verteilen"
 
-#: prefs.js:506
+#: src/prefs/applicationIconsGroup.js:164
 msgid ""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
 msgstr ""
 "Klicken Sie auf eine App mit mehreren Fenstern, um in der Übersicht nur "
 "deren Fenster über alle Arbeitsflächen hinweg anzuzeigen"
-
-#: prefs.js:520
-msgid "Nautilus Folder Shortcuts"
-msgstr "Nautilus-Ordnerverknüpfungen"
-
-#: prefs.js:521
-msgid "Show common folders in the Files taskbar menu"
-msgstr "Zeigt häufig verwendete Ordner im Dateien-Menü der Taskleiste"
-
-#: prefs.js:554
-msgid "Application icons are unavailable in Default GNOME Panel mode."
-msgstr "Anwendungssymbole sind im Standard-GNOME-Panel-Modus nicht verfügbar."
-
-#: prefs.js:557
-msgid "Application options are unavailable in Default GNOME Panel mode."
-msgstr "Anwendungsoptionen sind im Standard-GNOME-Panel-Modus nicht verfügbar."
-
-#: prefs.js:645
-msgid "Auto-hide Panel"
-msgstr "Panel automatisch ausblenden"
-
-#: prefs.js:646
-msgid "Reveal the taskbar when the pointer reaches its screen edge"
-msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
-
-#: prefs.js:658
-msgid "Bottom Hot Edge"
-msgstr "Unterer Aktivbereich"
-
-#: prefs.js:659
-msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr ""
-"Drücken Sie den Zeiger gegen den unteren Bildschirmrand, um die Übersicht "
-"umzuschalten"
-
-#: prefs.js:677
-msgid "Activation Pressure"
-msgstr "Aktivierungsdruck"
-
-#: prefs.js:679
-msgid ""
-"Pixels the pointer must travel past the bottom edge before Overview activates"
-msgstr ""
-"Pixel, die der Zeiger über den unteren Rand hinaus zurücklegen muss, bevor "
-"die Übersicht aktiviert wird"
-
-#: prefs.js:689
-msgid "Hot Edge Animation"
-msgstr "Aktivbereich-Animation"
-
-#: prefs.js:690
-msgid "Show a ripple when the bottom hot edge activates"
-msgstr "Zeigt einen Welleneffekt, wenn der untere Aktivbereich aktiviert wird"
-
-#: prefs.js:712
-msgid "Workspace Scroll"
-msgstr "Arbeitsflächen-Scrollen"
-
-#: prefs.js:713
-msgid "Scroll over empty taskbar space to switch workspaces"
-msgstr ""
-"Scrollen Sie über leeren Taskleistenbereich, um die Arbeitsfläche zu wechseln"
-
-#: prefs.js:729
-msgid "Workspace Scroll Delay"
-msgstr "Verzögerung beim Arbeitsflächen-Scrollen"
-
-#: prefs.js:730
-msgid "Minimum delay between workspace changes in milliseconds"
-msgstr "Mindestverzögerung zwischen Arbeitsflächenwechseln in Millisekunden"
-
-#: prefs.js:743
-msgid "Middle Click Closes Applications"
-msgstr "Mittelklick schließt Anwendungen"
-
-#: prefs.js:744
-msgid "Close all application windows instead of opening a new window"
-msgstr "Schließt alle Anwendungsfenster, anstatt ein neues Fenster zu öffnen"
-
-#: prefs.js:756
-msgid "Panel Menus Require Click"
-msgstr "Panel-Menüs erfordern Klick"
-
-#: prefs.js:757
-msgid "Switch between clock, system, and tray menus only when clicked"
-msgstr "Wechselt nur bei Klick zwischen Uhr-, System- und Tray-Menüs"
-
-#: prefs.js:769
-msgid "Taskbar-aligned Notification Banners"
-msgstr "An der Taskleiste ausgerichtete Benachrichtigungsbanner"
-
-#: prefs.js:770
-msgid "Follow the taskbar edge and the clock’s horizontal position"
-msgstr "Folgt der Taskleistenkante und der horizontalen Position der Uhr"
-
-#: prefs.js:808
-msgid "Automatic Fallback"
-msgstr "Automatischer Rückgriff"
-
-#: prefs.js:816
-msgid "Task Manager Application"
-msgstr "Task-Manager-Anwendung"
-
-#: prefs.js:817
-msgid "Application opened from the taskbar context menu"
-msgstr "Anwendung, die über das Kontextmenü der Taskleiste geöffnet wird"
-
-#: prefs.js:833
-msgid "Show Taskbar on All Monitors"
-msgstr "Taskleiste auf allen Monitoren anzeigen"
-
-#: prefs.js:834
-msgid "Show Activities, applications, clock, and system menu on every monitor"
-msgstr "Zeigt Aktivitäten, Anwendungen, Uhr und Systemmenü auf jedem Monitor"
-
-#: prefs.js:866 src/prefs/preferencesDialogs.js:21
-msgid "Reset"
-msgstr "Zurücksetzen"
-
-#: prefs.js:871
-msgid "Reset All Settings"
-msgstr "Alle Einstellungen zurücksetzen"
-
-#: prefs.js:872
-msgid "Restore defaults without changing pinned taskbar or Start Menu apps"
-msgstr ""
-"Stellt die Standardeinstellungen wieder her, ohne angeheftete Taskleisten- "
-"oder Startmenü-Apps zu ändern"
-
-#: prefs.js:875
-msgid "Reset…"
-msgstr "Zurücksetzen…"
 
 #: src/prefs/panelAppearancePage.js:44
 msgid "Panel Appearance"
@@ -668,7 +526,7 @@ msgstr "Aktivitäten"
 msgid "GNOME workspace overview button"
 msgstr "GNOME-Schaltfläche für die Arbeitsflächenübersicht"
 
-#: src/prefs/panelItemsPage.js:183 src/startButtonController.js:631
+#: src/prefs/panelItemsPage.js:183 src/startMenu/startButtonController.js:632
 msgid "Applications"
 msgstr "Anwendungen"
 
@@ -684,7 +542,7 @@ msgstr "Ordnermenü"
 msgid "Selected folder shortcuts"
 msgstr "Verknüpfungen des ausgewählten Ordners"
 
-#: src/prefs/panelItemsPage.js:195 src/trayOverflowController.js:199
+#: src/prefs/panelItemsPage.js:195 src/overflow/trayOverflowController.js:199
 msgid "Tray icons"
 msgstr "Tray-Symbole"
 
@@ -704,6 +562,48 @@ msgstr "Uhr"
 msgid "Minimize or restore all windows"
 msgstr "Minimiert oder stellt alle Fenster wieder her"
 
+#: src/prefs/panelModeGroup.js:14
+msgid "General"
+msgstr "Allgemein"
+
+#: src/prefs/panelModeGroup.js:19
+msgid "Default GNOME Panel"
+msgstr "Standard-GNOME-Panel"
+
+#: src/prefs/panelModeGroup.js:20
+msgid "Hide taskbar applications and use the original Dash in Overview"
+msgstr ""
+"Blendet Taskleisten-Anwendungen aus und verwendet das ursprüngliche Dash in "
+"der Übersicht"
+
+#: src/prefs/panelModeGroup.js:26
+msgid "Windows XP Theme"
+msgstr "Windows-XP-Thema"
+
+#: src/prefs/panelModeGroup.js:27
+msgid "Apply a Windows XP-inspired taskbar style"
+msgstr "Einen von Windows XP inspirierten Taskleistenstil anwenden"
+
+#: src/prefs/panelModeGroup.js:39
+msgid "Panel Button Padding"
+msgstr "Innenabstand der Panel-Schaltflächen"
+
+#: src/prefs/panelModeGroup.js:41
+msgid ""
+"Horizontal space around panel buttons. Use -1 for automatic: Just "
+"Perfection’s value when it is configured, otherwise 3 px"
+msgstr ""
+"Horizontaler Abstand um die Panel-Schaltflächen. Verwenden Sie -1 für "
+"automatisch: der Wert von Just Perfection, wenn konfiguriert, sonst 3 px"
+
+#: src/prefs/panelModeGroup.js:93
+msgid "Application icons are unavailable in Default GNOME Panel mode."
+msgstr "Anwendungssymbole sind im Standard-GNOME-Panel-Modus nicht verfügbar."
+
+#: src/prefs/panelModeGroup.js:96
+msgid "Application options are unavailable in Default GNOME Panel mode."
+msgstr "Anwendungsoptionen sind im Standard-GNOME-Panel-Modus nicht verfügbar."
+
 #: src/prefs/preferencesDialogs.js:15
 msgid "Reset all settings?"
 msgstr "Alle Einstellungen zurücksetzen?"
@@ -721,31 +621,49 @@ msgstr ""
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/prefs/preferencesDialogs.js:54
+#: src/prefs/preferencesDialogs.js:21 src/prefs/preferencesDialogs.js:54
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: src/prefs/preferencesDialogs.js:59
+msgid "Reset All Settings"
+msgstr "Alle Einstellungen zurücksetzen"
+
+#: src/prefs/preferencesDialogs.js:60
+msgid "Restore defaults without changing pinned taskbar or Start Menu apps"
+msgstr ""
+"Stellt die Standardeinstellungen wieder her, ohne angeheftete Taskleisten- "
+"oder Startmenü-Apps zu ändern"
+
+#: src/prefs/preferencesDialogs.js:63
+msgid "Reset…"
+msgstr "Zurücksetzen…"
+
+#: src/prefs/preferencesDialogs.js:77
 msgid "Set Custom Shortcut"
 msgstr "Benutzerdefinierte Tastenkombination festlegen"
 
-#: src/prefs/preferencesDialogs.js:67
+#: src/prefs/preferencesDialogs.js:90
 msgid "Press a keyboard shortcut"
 msgstr "Drücken Sie eine Tastenkombination"
 
-#: src/prefs/preferencesDialogs.js:68
+#: src/prefs/preferencesDialogs.js:91
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "Drücken Sie die Rücktaste, um sie zu löschen, oder Esc zum Abbrechen."
 
-#: src/prefs/preferencesDialogs.js:108
+#: src/prefs/preferencesDialogs.js:131
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 "Diese Tastenkombination benötigt eine Zusatztaste. Versuchen Sie eine andere "
 "Kombination."
 
-#: src/prefs/preferencesDialogs.js:122
+#: src/prefs/preferencesDialogs.js:145
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr ""
 "Diese Tastenkombination wird bereits verwendet. Drücken Sie eine andere "
 "Kombination."
 
-#: src/prefs/preferencesDialogs.js:140
+#: src/prefs/preferencesDialogs.js:163
 msgid "Choose a Folder"
 msgstr "Ordner auswählen"
 
@@ -992,6 +910,96 @@ msgstr ""
 "Wählen Sie eine beliebige nicht verwendete Tastenkombination; standardmäßig "
 "ist keine zugewiesen"
 
+#: src/prefs/taskbarBehaviorGroup.js:29
+msgid "Auto-hide Panel"
+msgstr "Panel automatisch ausblenden"
+
+#: src/prefs/taskbarBehaviorGroup.js:30
+msgid "Reveal the taskbar when the pointer reaches its screen edge"
+msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
+
+#: src/prefs/taskbarBehaviorGroup.js:42
+msgid "Bottom Hot Edge"
+msgstr "Unterer Aktivbereich"
+
+#: src/prefs/taskbarBehaviorGroup.js:43
+msgid "Push the pointer against the bottom screen edge to toggle Overview"
+msgstr ""
+"Drücken Sie den Zeiger gegen den unteren Bildschirmrand, um die Übersicht "
+"umzuschalten"
+
+#: src/prefs/taskbarBehaviorGroup.js:61
+msgid "Activation Pressure"
+msgstr "Aktivierungsdruck"
+
+#: src/prefs/taskbarBehaviorGroup.js:63
+msgid ""
+"Pixels the pointer must travel past the bottom edge before Overview activates"
+msgstr ""
+"Pixel, die der Zeiger über den unteren Rand hinaus zurücklegen muss, bevor "
+"die Übersicht aktiviert wird"
+
+#: src/prefs/taskbarBehaviorGroup.js:73
+msgid "Hot Edge Animation"
+msgstr "Aktivbereich-Animation"
+
+#: src/prefs/taskbarBehaviorGroup.js:74
+msgid "Show a ripple when the bottom hot edge activates"
+msgstr "Zeigt einen Welleneffekt, wenn der untere Aktivbereich aktiviert wird"
+
+#: src/prefs/taskbarBehaviorGroup.js:96
+msgid "Workspace Scroll"
+msgstr "Arbeitsflächen-Scrollen"
+
+#: src/prefs/taskbarBehaviorGroup.js:97
+msgid "Scroll over empty taskbar space to switch workspaces"
+msgstr ""
+"Scrollen Sie über leeren Taskleistenbereich, um die Arbeitsfläche zu wechseln"
+
+#: src/prefs/taskbarBehaviorGroup.js:113
+msgid "Workspace Scroll Delay"
+msgstr "Verzögerung beim Arbeitsflächen-Scrollen"
+
+#: src/prefs/taskbarBehaviorGroup.js:114
+msgid "Minimum delay between workspace changes in milliseconds"
+msgstr "Mindestverzögerung zwischen Arbeitsflächenwechseln in Millisekunden"
+
+#: src/prefs/taskbarBehaviorGroup.js:127
+msgid "Panel Menus Require Click"
+msgstr "Panel-Menüs erfordern Klick"
+
+#: src/prefs/taskbarBehaviorGroup.js:128
+msgid "Switch between clock, system, and tray menus only when clicked"
+msgstr "Wechselt nur bei Klick zwischen Uhr-, System- und Tray-Menüs"
+
+#: src/prefs/taskbarBehaviorGroup.js:140
+msgid "Taskbar-aligned Notification Banners"
+msgstr "An der Taskleiste ausgerichtete Benachrichtigungsbanner"
+
+#: src/prefs/taskbarBehaviorGroup.js:141
+msgid "Follow the taskbar edge and the clock’s horizontal position"
+msgstr "Folgt der Taskleistenkante und der horizontalen Position der Uhr"
+
+#: src/prefs/taskbarBehaviorGroup.js:179
+msgid "Automatic Fallback"
+msgstr "Automatischer Rückgriff"
+
+#: src/prefs/taskbarBehaviorGroup.js:187
+msgid "Task Manager Application"
+msgstr "Task-Manager-Anwendung"
+
+#: src/prefs/taskbarBehaviorGroup.js:188
+msgid "Application opened from the taskbar context menu"
+msgstr "Anwendung, die über das Kontextmenü der Taskleiste geöffnet wird"
+
+#: src/prefs/taskbarBehaviorGroup.js:204
+msgid "Show Taskbar on All Monitors"
+msgstr "Taskleiste auf allen Monitoren anzeigen"
+
+#: src/prefs/taskbarBehaviorGroup.js:205
+msgid "Show Activities, applications, clock, and system menu on every monitor"
+msgstr "Zeigt Aktivitäten, Anwendungen, Uhr und Systemmenü auf jedem Monitor"
+
 #: src/prefs/windowSwitchingPage.js:13
 msgid "Window Switching"
 msgstr "Fensterwechsel"
@@ -1040,133 +1048,135 @@ msgstr "Auf Hauptmonitor anzeigen"
 msgid "Always display the switcher on the primary monitor"
 msgstr "Zeigt den Wechsler immer auf dem Hauptmonitor an"
 
-#: src/startMenuController.js:580
+#: src/startMenu/startMenuController.js:602
 msgid "Type here to search"
 msgstr "Hier tippen, um zu suchen"
 
-#: src/startMenuController.js:651 src/startMenuController.js:739
+#: src/startMenu/startMenuController.js:673
+#: src/startMenu/startMenuController.js:761
 msgid "Pinned"
 msgstr "Angeheftet"
 
-#: src/startMenuController.js:656 src/startMenuController.js:815
+#: src/startMenu/startMenuController.js:678
+#: src/startMenu/startMenuController.js:838
 msgid "All apps"
 msgstr "Alle Apps"
 
-#: src/startMenuController.js:666
+#: src/startMenu/startMenuController.js:688
 msgid "Back"
 msgstr "Zurück"
 
-#: src/startMenuController.js:791
+#: src/startMenu/startMenuController.js:814
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Wählen Sie Alle und klicken Sie dann mit der rechten Maustaste auf eine App, "
 "um sie anzuheften"
 
-#: src/startMenuController.js:799
+#: src/startMenu/startMenuController.js:822
 msgid "Recommended"
 msgstr "Empfohlen"
 
-#: src/startMenuController.js:835
+#: src/startMenu/startMenuController.js:858
 msgid "Search results"
 msgstr "Suchergebnisse"
 
-#: src/startMenuController.js:865 src/startMenuController.js:895
+#: src/startMenu/startMenuController.js:883
 msgid "No results found"
 msgstr "Keine Ergebnisse gefunden"
 
-#: src/startMenuController.js:914
+#: src/startMenu/startMenuController.js:937
 msgid "All"
 msgstr "Alle"
 
-#: src/startMenuController.js:927
+#: src/startMenu/startMenuController.js:950
 msgid "Other"
 msgstr "Andere"
 
-#: src/startMenuAppMenu.js:111 src/startMenuAppMenu.js:261
+#: src/startMenu/startMenuAppMenu.js:111 src/startMenu/startMenuAppMenu.js:261
 msgid "Create Desktop Shortcut"
 msgstr "Desktop-Verknüpfung erstellen"
 
-#: src/startMenuAppMenu.js:197
+#: src/startMenu/startMenuAppMenu.js:197
 msgid "Unpin from Start"
 msgstr "Von Start lösen"
 
-#: src/startMenuAppMenu.js:198
+#: src/startMenu/startMenuAppMenu.js:198
 msgid "Pin to Start"
 msgstr "An Start anheften"
 
-#: src/startMenuAppMenu.js:260
+#: src/startMenu/startMenuAppMenu.js:260
 msgid "Delete Desktop Shortcut"
 msgstr "Desktop-Verknüpfung löschen"
 
-#: src/startMenuAppModel.js:11
+#: src/startMenu/startMenuAppModel.js:11
 msgid "Internet"
 msgstr "Internet"
 
-#: src/startMenuAppModel.js:16
+#: src/startMenu/startMenuAppModel.js:16
 msgid "Office"
 msgstr "Büro"
 
-#: src/startMenuAppModel.js:21
+#: src/startMenu/startMenuAppModel.js:21
 msgid "Development"
 msgstr "Entwicklung"
 
-#: src/startMenuAppModel.js:26
+#: src/startMenu/startMenuAppModel.js:26
 msgid "Games"
 msgstr "Spiele"
 
-#: src/startMenuAppModel.js:31
+#: src/startMenu/startMenuAppModel.js:31
 msgid "Graphics"
 msgstr "Grafik"
 
-#: src/startMenuAppModel.js:36
+#: src/startMenu/startMenuAppModel.js:36
 msgid "Sound & Video"
 msgstr "Audio & Video"
 
-#: src/startMenuAppModel.js:41
+#: src/startMenu/startMenuAppModel.js:41
 msgid "Education"
 msgstr "Bildung"
 
-#: src/startMenuAppModel.js:46
+#: src/startMenu/startMenuAppModel.js:46
 msgid "Science"
 msgstr "Wissenschaft"
 
-#: src/startMenuAppModel.js:51
+#: src/startMenu/startMenuAppModel.js:51
 msgid "System"
 msgstr "System"
 
-#: src/startMenuAppModel.js:56
+#: src/startMenu/startMenuAppModel.js:56
 msgid "Utilities"
 msgstr "Zubehör"
 
-#: src/startMenuFooterController.js:88
+#: src/startMenu/startMenuFooterController.js:88
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: src/startMenuFooterController.js:96
+#: src/startMenu/startMenuFooterController.js:96
 msgid "Power Options"
 msgstr "Energieoptionen"
 
-#: src/startMenuPowerController.js:129
+#: src/startMenu/startMenuPowerController.js:104
 msgid "Suspend"
 msgstr "Bereitschaft"
 
-#: src/startMenuPowerController.js:136
+#: src/startMenu/startMenuPowerController.js:111
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/startMenuPowerController.js:143
+#: src/startMenu/startMenuPowerController.js:118
 msgid "Power Off"
 msgstr "Ausschalten"
 
-#: src/startMenuPowerController.js:154
+#: src/startMenu/startMenuPowerController.js:129
 msgid "Lock Screen"
 msgstr "Bildschirm sperren"
 
-#: src/startMenuPowerController.js:161
+#: src/startMenu/startMenuPowerController.js:136
 msgid "Log Out"
 msgstr "Abmelden"
 
-#: src/startMenuPowerController.js:168
+#: src/startMenu/startMenuPowerController.js:143
 msgid "Switch User"
 msgstr "Benutzer wechseln"
 
@@ -1199,68 +1209,68 @@ msgstr "Wird geladen…"
 msgid "This folder is empty"
 msgstr "Dieser Ordner ist leer"
 
-#: src/fileManagerPlacesSection.js:25
+#: src/integration/fileManagerPlacesSection.js:25
 msgid "Home"
 msgstr "Persönlicher Ordner"
 
-#: src/fileManagerPlacesSection.js:30
+#: src/integration/fileManagerPlacesSection.js:30
 msgid "Desktop"
 msgstr "Schreibtisch"
 
-#: src/fileManagerPlacesSection.js:35
+#: src/integration/fileManagerPlacesSection.js:35
 msgid "Documents"
 msgstr "Dokumente"
 
-#: src/fileManagerPlacesSection.js:40
+#: src/integration/fileManagerPlacesSection.js:40
 msgid "Downloads"
 msgstr "Downloads"
 
-#: src/fileManagerPlacesSection.js:45
+#: src/integration/fileManagerPlacesSection.js:45
 msgid "Music"
 msgstr "Musik"
 
-#: src/fileManagerPlacesSection.js:50
+#: src/integration/fileManagerPlacesSection.js:50
 msgid "Pictures"
 msgstr "Bilder"
 
-#: src/fileManagerPlacesSection.js:55
+#: src/integration/fileManagerPlacesSection.js:55
 msgid "Videos"
 msgstr "Videos"
 
-#: src/fileManagerPlacesSection.js:130
+#: src/integration/fileManagerPlacesSection.js:130
 msgid "Unable to open folder"
 msgstr "Ordner kann nicht geöffnet werden"
 
-#: src/taskbarAppMenu.js:22
+#: src/taskbar/taskbarAppMenu.js:22
 msgid "Quit"
 msgstr "Beenden"
 
-#: src/taskbarAppMenu.js:27
+#: src/taskbar/taskbarAppMenu.js:27
 msgid "Close window"
 msgstr "Fenster schließen"
 
-#: src/taskbarAppMenu.js:95
+#: src/taskbar/taskbarAppMenu.js:95
 msgid "Close all windows"
 msgstr "Alle Fenster schließen"
 
-#: src/taskbarAppMenu.js:117
+#: src/taskbar/taskbarAppMenu.js:117
 msgid "Unpin from Taskbar"
 msgstr "Von Taskleiste lösen"
 
-#: src/taskbarAppMenu.js:118
+#: src/taskbar/taskbarAppMenu.js:118
 msgid "Pin to Taskbar"
 msgstr "An Taskleiste anheften"
 
-#: src/taskbarAppearanceController.js:322 src/taskbarController.js:823
-#: src/taskbarController.js:825
+#: src/taskbar/taskbarAppearanceController.js:339
+#: src/taskbar/taskbarController.js:824 src/taskbar/taskbarController.js:826
 msgid "running"
 msgstr "läuft"
 
-#: src/startButtonController.js:286
+#: src/startMenu/startButtonController.js:287
 msgid "Start Menu Settings"
 msgstr "Startmenü-Einstellungen"
 
-#: src/startButtonController.js:631
+#: src/startMenu/startButtonController.js:632
 msgid "Start"
 msgstr "Start"
 
@@ -1302,58 +1312,59 @@ msgstr "Dateien durchsuchen…"
 msgid "Image Files"
 msgstr "Bilddateien"
 
-#: src/panelInteractionController.js:94
+#: src/panel/panelInteractionController.js:94
 msgid "Task Manager"
 msgstr "Task-Manager"
 
-#: src/panelInteractionController.js:96
+#: src/panel/panelInteractionController.js:96
 msgid "Lock the Taskbar"
 msgstr "Taskleiste sperren"
 
-#: src/panelInteractionController.js:126
+#: src/panel/panelInteractionController.js:126
 msgid "Taskbar Settings"
 msgstr "Taskleisten-Einstellungen"
 
-#: src/windowPreviewController.js:600 src/gridAltTabPopup.js:221
-#: src/gridAltTabPopup.js:306
+#: src/taskbar/windowPreviewController.js:600
+#: src/windowSwitching/gridAltTabPopup.js:221
+#: src/windowSwitching/gridAltTabPopup.js:306
 msgid "Untitled Window"
 msgstr "Unbenanntes Fenster"
 
-#: src/windowPreviewController.js:644
+#: src/taskbar/windowPreviewController.js:644
 msgid "Close Window"
 msgstr "Fenster schließen"
 
-#: src/favoritesIntegration.js:36
+#: src/integration/favoritesIntegration.js:36
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr "%s wurde an die Taskleiste angeheftet."
 
-#: src/favoritesIntegration.js:59
+#: src/integration/favoritesIntegration.js:59
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "%s wurde von der Taskleiste gelöst."
 
-#: src/volumeMixerController.js:98
+#: src/integration/volumeMixerController.js:98
 msgid "Application"
 msgstr "Anwendung"
 
-#: src/volumeMixerController.js:131
+#: src/integration/volumeMixerController.js:131
 #, javascript-format
 msgid "%s volume"
 msgstr "Lautstärke von %s"
 
-#: src/volumeMixerController.js:272
+#: src/integration/volumeMixerController.js:272
 msgid "Mixer"
 msgstr "Mixer"
 
-#: src/volumeMixerController.js:282
+#: src/integration/volumeMixerController.js:282
 msgid "Open application volume controls"
 msgstr "Öffnet die Lautstärkeregler der Anwendungen"
 
-#: src/volumeMixerController.js:285
+#: src/integration/volumeMixerController.js:285
 msgid "Application Volume"
 msgstr "Anwendungslautstärke"
 
-#: src/volumeMixerController.js:334
+#: src/integration/volumeMixerController.js:334
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
