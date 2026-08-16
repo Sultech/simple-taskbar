@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Clutter from 'gi://Clutter';
-import GObject from 'gi://GObject';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -44,25 +42,6 @@ import {WindowController} from '../taskbar/windowController.js';
 import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
-
-const SecondaryPanelBox = GObject.registerClass(
-    class SecondaryPanelBox extends St.Widget {
-        _init() {
-            super._init({name: 'panelBox'});
-        }
-
-        vfunc_allocate(box) {
-            this.set_allocation(box);
-            const childBox = new Clutter.ActorBox();
-            childBox.x1 = 0;
-            childBox.y1 = 0;
-            childBox.x2 = box.x2 - box.x1;
-            childBox.y2 = box.y2 - box.y1;
-            for (const child of this.get_children())
-                child.allocate(childBox);
-        }
-    }
-);
 
 export class SecondaryPanelController {
     constructor({
@@ -152,7 +131,7 @@ export class SecondaryPanelController {
         this._taskbarBin.visible =
             !settings.get_boolean('default-gnome-panel');
 
-        this._panelBox = new SecondaryPanelBox();
+        this._panelBox = new St.Widget({name: 'panelBox'});
         this.actor = new SecondaryPanelActor();
         this._panelBox.add_child(this.actor);
         this._leftBox = this.actor.leftBox;
