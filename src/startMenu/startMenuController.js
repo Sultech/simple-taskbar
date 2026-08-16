@@ -51,6 +51,10 @@ import {
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
+const MENU_MIN_HEIGHT = 420;
+const MENU_BASE_HEIGHT = 610;
+const MENU_MAX_HEIGHT = 810;
+const MENU_MONITOR_MARGIN = 96;
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
 const BLUR_MY_SHELL_POPUP_CLASSES = [
@@ -243,7 +247,9 @@ export class StartMenuController {
         this._menuOpenStateId = this._menu.connect(
             'open-state-changed',
             (_menu, open) => {
-                if (!open) {
+                if (open) {
+                    this._updateSize();
+                } else {
                     this._tooltipController.hide(true);
                     this._contextMenuController.close();
                     this._powerController.close();
@@ -760,11 +766,11 @@ export class StartMenuController {
         this._firstSearchResult = null;
 
         const children = this._content.get_children();
-        if (children.length === 1 && children[0] === this._pinnedView)
-            return;
-
-        this._clearContent();
-        this._content.add_child(this._pinnedView);
+        if (children.length !== 1 || children[0] !== this._pinnedView) {
+            this._clearContent();
+            this._content.add_child(this._pinnedView);
+        }
+        this._updateSize();
     }
 
     _showDefaultView() {
@@ -1276,12 +1282,51 @@ export class StartMenuController {
         if (!monitor)
             return;
         const width = Math.min(640, Math.max(420, monitor.width - 32));
-        const height = Math.min(610, Math.max(420, monitor.height - 96));
+        const available = Math.max(
+            MENU_MIN_HEIGHT,
+            monitor.height - MENU_MONITOR_MARGIN
+        );
+        const height = Math.min(
+            Math.max(MENU_BASE_HEIGHT, this._preferredHeight(width)),
+            MENU_MAX_HEIGHT,
+            available
+        );
         if (width === this._menuWidth && height === this._menuHeight)
             return;
 
         this._menuWidth = width;
         this._menuHeight = height;
         this._root.set_style(`width: ${width}px; height: ${height}px;`);
+    }
+
+    _preferredHeight(width) {
+        this._resolveThemeNodes(this._searchEntry);
+        this._resolveThemeNodes(this._header);
+        this._resolveThemeNodes(this._footerController.actor);
+
+        const scale = St.ThemeContext.get_for_stage(global.stage).scale_factor;
+        const forWidth = width * scale;
+        const scrollNode = this._scrollView.get_theme_node();
+        const chrome =
+            this._searchEntry.get_preferred_height(forWidth)[1] +
+            this._header.get_preferred_height(forWidth)[1] +
+            this._footerController.actor.get_preferred_height(forWidth)[1] +
+            scrollNode.get_padding(St.Side.TOP) +
+            scrollNode.get_padding(St.Side.BOTTOM);
+
+        const contentWidth = forWidth -
+            scrollNode.get_padding(St.Side.LEFT) -
+            scrollNode.get_padding(St.Side.RIGHT);
+        return Math.ceil(
+            (chrome + this._pinnedContentHeight(contentWidth)) / scale
+        );
+    }
+
+    _pinnedContentHeight(forWidth) {
+        if (!this._pinnedView)
+            return 0;
+
+        this._resolveThemeNodes(this._pinnedView);
+        return this._pinnedView.get_preferred_height(forWidth)[1];
     }
 }
