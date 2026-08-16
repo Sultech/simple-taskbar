@@ -31,6 +31,13 @@ import {panelIsTop} from './panelPosition.js';
 import {panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
+const BLUR_MY_SHELL_PANEL_KEYS = [
+    'blur',
+    'override-background',
+    'override-background-dynamically',
+    'style-panel',
+    'gradient-panel',
+];
 const BORDER_DISABLED_CLASS =
     'simple-taskbar-border-disabled';
 const XP_PANEL_CLASS =
@@ -65,18 +72,18 @@ export class PanelThemeController {
             },
             this._signalHolder
         );
-        const blurMyShellSettings = getBlurMyShellSettings();
-        if (blurMyShellSettings) {
-            const panelSettings = getBlurMyShellChildSettings(
-                blurMyShellSettings,
-                'panel'
+        const panelSettings = getBlurMyShellChildSettings(
+            getBlurMyShellSettings(),
+            'panel'
+        );
+        for (const key of BLUR_MY_SHELL_PANEL_KEYS) {
+            if (!blurMyShellHasKey(panelSettings, key))
+                continue;
+
+            panelSettings.connectObject(
+                `changed::${key}`, () => this.queueBlurMyShellSync(),
+                this._signalHolder
             );
-            if (panelSettings && blurMyShellHasKey(panelSettings, 'blur')) {
-                panelSettings.connectObject(
-                    'changed::blur', () => this.queueBlurMyShellSync(),
-                    this._signalHolder
-                );
-            }
         }
         this._settings.connectObject(
             'changed::transparency-enabled', () => this.applyTransparency(),
