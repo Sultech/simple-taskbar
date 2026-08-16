@@ -777,6 +777,7 @@ export class StartMenuController {
     _ensurePinnedView() {
         const pinnedApps = this._settings.get_strv('start-menu-pinned-apps')
             .map(id => this._appSystem.lookup_app(id))
+            .filter(Boolean)
             .filter(app => appShouldShow(app));
         const recommended = getRecommendedApps(
             this._settings,
