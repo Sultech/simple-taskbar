@@ -168,6 +168,9 @@ export class SecondaryPanelManager {
     }
 
     _syncBlurMyShell() {
+        if (this._panels.length === 0)
+            return;
+
         const panelBlur = getPanelBlur();
         if (!panelBlur)
             return;
