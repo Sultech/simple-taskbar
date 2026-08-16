@@ -118,6 +118,7 @@ export class SecondaryPanelController {
             enable_mouse_scrolling: true,
             clip_to_allocation: true,
             x_expand: false,
+            y_expand: true,
         });
         this._taskbarViewport.add_child(this._taskbarController.actor);
         this._applicationOverflowController =
