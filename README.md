@@ -230,6 +230,11 @@ Running, focused and multi-window applications have separate indicators. Use
 rounded or straight indicator ends and optionally choose custom focused and
 unfocused colours.
 
+**Match Icon Color** instead takes the focused indicator colour from the
+dominant colour of the application's own icon, so the indicator matches
+whichever application is in focus. It is off by default, and it is mutually
+exclusive with custom indicator colours: turning one on turns the other off.
+
 The Advanced page also provides a custom panel colour and light or dark panel
 text.
 
