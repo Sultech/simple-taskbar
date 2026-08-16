@@ -8,6 +8,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {BLUR_MY_SHELL_UUID} from '../shared/blurMyShellUtils.js';
 import {getPanelBlur} from '../integration/blurMyShellRuntime.js';
 import {SecondaryPanelController} from './secondaryPanelController.js';
 
@@ -42,6 +43,14 @@ export class SecondaryPanelManager {
         );
         Main.layoutManager.connectObject(
             'monitors-changed', () => this._queueRebuild(),
+            this._signalHolder
+        );
+        Main.extensionManager.connectObject(
+            'extension-state-changed',
+            (_manager, extension) => {
+                if (extension.uuid === BLUR_MY_SHELL_UUID)
+                    this._queueBlurMyShellSync();
+            },
             this._signalHolder
         );
         this._rebuild();
