@@ -1,17 +1,23 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Gio from 'gi://Gio';
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
+const CLOCK_SHOW_DATE_SETTING = 'clock-show-date';
 
 export class PanelStateController {
     constructor({
         settings,
+        panelHeight,
         startButton,
         taskbarBin,
         folderMenuButton,
         showDesktopButton,
     }) {
         this._settings = settings;
+        this._panelHeight = panelHeight;
         this._startButton = startButton;
         this._taskbarBin = taskbarBin;
         this._folderMenuButton = folderMenuButton;
@@ -24,6 +30,10 @@ export class PanelStateController {
         this._dateMenuIndicatorPadConstraints = [];
         this._dateMenuDisplayBox = null;
         this._dateMenuDisplayBoxTranslationY = null;
+        this._desktopSettings = new Gio.Settings({
+            schema_id: 'org.gnome.desktop.interface',
+        });
+        this._clockShowDateChangedId = 0;
     }
 
     get oldPanelStyle() {
@@ -31,6 +41,10 @@ export class PanelStateController {
     }
 
     enable() {
+        this._clockShowDateChangedId = this._desktopSettings.connect(
+            `changed::${CLOCK_SHOW_DATE_SETTING}`,
+            () => this.syncDateMenuVerticalAlignment(this._panelHeight)
+        );
         const panelBox = Main.layoutManager.panelBox;
         const activities = Main.panel.statusArea.activities.container;
         this._oldPanelGeometry = {
@@ -86,6 +100,7 @@ export class PanelStateController {
         indicatorPad.clear_constraints();
         indicatorPad.queue_relayout();
         dateMenu.queue_relayout();
+        this.syncDateMenuVerticalAlignment(this._panelHeight);
     }
 
     setShowDesktopButton(button) {
@@ -96,7 +111,11 @@ export class PanelStateController {
         if (!this._dateMenuDisplayBox)
             return;
 
-        const parityOffset = panelHeight % 2 === 0 ? 1 : 0;
+        this._panelHeight = panelHeight;
+        const dateShown = this._desktopSettings.get_boolean(
+            CLOCK_SHOW_DATE_SETTING
+        );
+        const parityOffset = dateShown ? 0 : panelHeight % 2 === 0 ? 1 : 0;
         this._dateMenuDisplayBox.translation_y =
             this._dateMenuDisplayBoxTranslationY + parityOffset;
     }
@@ -107,6 +126,7 @@ export class PanelStateController {
     }
 
     destroy(restoringUnlockPanel) {
+        this._desktopSettings.disconnect(this._clockShowDateChangedId);
         this._restoreDateMenuIndicatorPadding();
         this._restoreDateMenuVerticalAlignment();
 
@@ -151,6 +171,8 @@ export class PanelStateController {
         this._dateMenuIndicatorPadConstraints = null;
         this._dateMenuDisplayBox = null;
         this._dateMenuDisplayBoxTranslationY = null;
+        this._clockShowDateChangedId = 0;
+        this._desktopSettings = null;
         this._showDesktopButton = null;
         this._folderMenuButton = null;
         this._taskbarBin = null;

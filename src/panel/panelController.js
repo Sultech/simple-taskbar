@@ -91,6 +91,7 @@ export class PanelController {
     enable() {
         this._stateController = new PanelStateController({
             settings: this._settings,
+            panelHeight: this._panelHeight,
             startButton: this._startButton,
             taskbarBin: this._taskbarBin,
             folderMenuButton: this._folderMenuButton,
