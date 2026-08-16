@@ -75,6 +75,17 @@ export function getBlurMyShellChildSettings(settings, childName) {
     return settings.get_child(childName);
 }
 
+export function blurMyShellDynamicPanelOverride() {
+    const panelSettings = getBlurMyShellChildSettings(
+        getBlurMyShellSettings(),
+        'panel'
+    );
+    if (!blurMyShellHasKey(panelSettings, 'override-background-dynamically'))
+        return false;
+
+    return panelSettings.get_boolean('override-background-dynamically');
+}
+
 export function blurMyShellHasKey(settings, key) {
     return Boolean(
         settings && settings.settings_schema.list_keys().includes(key)
