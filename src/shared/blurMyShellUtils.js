@@ -75,15 +75,28 @@ export function getBlurMyShellChildSettings(settings, childName) {
     return settings.get_child(childName);
 }
 
-export function blurMyShellDynamicPanelOverride() {
-    const panelSettings = getBlurMyShellChildSettings(
-        getBlurMyShellSettings(),
-        'panel'
-    );
-    if (!blurMyShellHasKey(panelSettings, 'override-background-dynamically'))
+function blurMyShellPanelSettings() {
+    return getBlurMyShellChildSettings(getBlurMyShellSettings(), 'panel');
+}
+
+export function blurMyShellOverridesPanelBackground() {
+    const panelSettings = blurMyShellPanelSettings();
+    if (!blurMyShellHasKey(panelSettings, 'override-background'))
         return false;
 
-    return panelSettings.get_boolean('override-background-dynamically');
+    return panelSettings.get_boolean('override-background');
+}
+
+export function blurMyShellPanelStyleIsTransparent() {
+    const panelSettings = blurMyShellPanelSettings();
+    if (blurMyShellHasKey(panelSettings, 'gradient-panel') &&
+        panelSettings.get_boolean('gradient-panel'))
+        return false;
+
+    if (!blurMyShellHasKey(panelSettings, 'style-panel'))
+        return true;
+
+    return panelSettings.get_int('style-panel') === 0;
 }
 
 export function blurMyShellHasKey(settings, key) {

@@ -13,6 +13,12 @@ import {
     ApplicationOverflowController,
 } from '../overflow/applicationOverflowController.js';
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
+import {panelBlurIsActive} from '../integration/blurMyShellRuntime.js';
+import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
+import {
+    PANEL_BLUR_CLASSES,
+    syncPanelBlurClasses,
+} from '../panel/panelBlurClasses.js';
 import {FolderMenuController} from '../folderMenuController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {PanelAutoHideController} from '../panel/panelAutoHideController.js';
@@ -42,6 +48,7 @@ import {WindowController} from '../taskbar/windowController.js';
 import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
+const OWN_BLUR_CLASSES = new Set(PANEL_BLUR_CLASSES);
 
 export class SecondaryPanelController {
     constructor({
@@ -187,7 +194,7 @@ export class SecondaryPanelController {
         });
         this._position();
         this._applyLayout();
-        this._syncTheme();
+        this.syncTheme();
         this._buttonPaddingController.enable();
         this._startButtonController.enable();
         this._applicationOverflowController.enable();
@@ -287,10 +294,10 @@ export class SecondaryPanelController {
 
     _connectSignals() {
         Main.panel.connectObject('notify::style-class', () => {
-            this._syncTheme();
+            this.syncTheme();
         }, this._signalHolder);
         Main.panel.connectObject('notify::style', () => {
-            this._syncTheme();
+            this.syncTheme();
         }, this._signalHolder);
         for (const box of [
             this._leftBox,
@@ -326,7 +333,7 @@ export class SecondaryPanelController {
             'changed::windows-xp-theme-enabled',
             () => {
                 this._applyLayout();
-                this._syncTheme();
+                this.syncTheme();
             },
             this._signalHolder
         );
@@ -508,17 +515,36 @@ export class SecondaryPanelController {
             this._taskbarController.setAvailableWidth(availableWidth);
     }
 
-    _syncTheme() {
+    syncTheme() {
         const classes = Main.panel.get_style_class_name()
             .split(/\s+/)
-            .filter(style => style && !EXTERNAL_PANEL_STYLES.has(style));
+            .filter(style => style && !EXTERNAL_PANEL_STYLES.has(style) &&
+                !OWN_BLUR_CLASSES.has(style));
         const externalStyles = this.actor.get_style_class_name()
             .split(/\s+/)
             .filter(style => EXTERNAL_PANEL_STYLES.has(style));
         classes.push(...externalStyles);
         classes.push('simple-taskbar-panel', 'simple-taskbar-secondary-panel');
         this.actor.set_style_class_name([...new Set(classes)].join(' '));
-        this.actor.set_style(Main.panel.get_style());
+        if (this._settings.get_boolean('windows-xp-theme-enabled')) {
+            this.actor.set_style(Main.panel.get_style());
+            return;
+        }
+
+        const light = Main.panel.has_style_class_name(
+            'simple-taskbar-theme-light'
+        );
+        const blurActive = panelBlurIsActive(this.actor);
+        syncPanelBlurClasses(this.actor, blurActive, light);
+        if (blurActive) {
+            this.actor.set_style('');
+            return;
+        }
+        this.actor.set_style(panelBackgroundStyle(
+            this._settings,
+            light,
+            !Main.panel.has_style_class_name('simple-taskbar-border-disabled')
+        ));
     }
 
 }

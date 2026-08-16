@@ -180,5 +180,8 @@ export class SecondaryPanelManager {
 
         if (!Main.overview.visibleTarget)
             refreshPanelBlurVisibility(panelBlur);
+
+        for (const panel of this._panels)
+            panel.syncTheme();
     }
 }

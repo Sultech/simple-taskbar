@@ -13,25 +13,21 @@
     box-shadow: none;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.transparent-panel {
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-transparent {
     background-color: transparent;
     border-top-color: transparent;
     box-shadow: none;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.transparent-panel {
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-transparent {
     border-bottom-color: transparent;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.light-panel,
-#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.dark-panel,
-#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.contrasted-panel {
+#panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-tinted {
     border-top-color: transparent;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.light-panel,
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.dark-panel,
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.contrasted-panel {
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-tinted {
     border-bottom-color: transparent;
 }
 
@@ -1571,10 +1567,8 @@
 }
 
 #panel.simple-taskbar-windows-xp-theme,
-#panel.simple-taskbar-windows-xp-theme.transparent-panel,
-#panel.simple-taskbar-windows-xp-theme.light-panel,
-#panel.simple-taskbar-windows-xp-theme.dark-panel,
-#panel.simple-taskbar-windows-xp-theme.contrasted-panel {
+#panel.simple-taskbar-windows-xp-theme.simple-taskbar-blur-transparent,
+#panel.simple-taskbar-windows-xp-theme.simple-taskbar-blur-tinted {
     background-color: #1941a5 !important;
     background-image: url('icons/taskbar/xp/xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Cogl from 'gi://Cogl';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
@@ -11,7 +10,6 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
-    BLUR_MY_SHELL_PANEL_STYLES,
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
@@ -19,17 +17,20 @@ import {
 } from '../shared/blurMyShellUtils.js';
 import {
     getPanelBlur,
+    panelBlurIsActive,
     refreshPanelBlurVisibility,
 } from '../integration/blurMyShellRuntime.js';
-import {extensionIsActive} from '../extensionState.js';
+import {
+    BLUR_MY_SHELL_ACTIVE_CLASS,
+    BLUR_TINTED_CLASS,
+    BLUR_TRANSPARENT_CLASS,
+    LIGHT_BLUR_OVERLAY_CLASS,
+    syncPanelBlurClasses,
+} from './panelBlurClasses.js';
 import {panelIsTop} from './panelPosition.js';
+import {panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
-import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
-const BLUR_MY_SHELL_ACTIVE_CLASS =
-    'simple-taskbar-blur-my-shell-active';
-const LIGHT_BLUR_OVERLAY_CLASS =
-    'simple-taskbar-light-blur-overlay';
 const BORDER_DISABLED_CLASS =
     'simple-taskbar-border-disabled';
 const XP_PANEL_CLASS =
@@ -158,48 +159,20 @@ export class PanelThemeController {
             'windows-xp-theme-enabled'
         );
         const externalPanelStyle = !windowsXpThemeEnabled &&
-            Boolean(getPanelBlur()) &&
-            Main.panel.has_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS) &&
-            BLUR_MY_SHELL_PANEL_STYLES.some(style =>
-                Main.panel.has_style_class_name(style)
-            );
+            panelBlurIsActive(Main.panel);
         const light = this._usesLightTheme();
+        syncPanelBlurClasses(Main.panel, externalPanelStyle, light);
         if (externalPanelStyle) {
-            if (light)
-                Main.panel.add_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
-            else
-                Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
             this._setPanelStyle(originalStyle);
             return;
         }
-        Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
 
-        const opacity = panelTransparencyOpacity(this._settings);
-        const background = this._panelBackground(light);
-        const border = '255, 255, 255';
-        const borderOpacity = 0.20;
-        const top = panelIsTop(this._settings);
-        const borderEnabled = this._panelBorderEnabled();
-        let borderStyle = 'border-top: 0; border-bottom: 0; ';
-        if (borderEnabled) {
-            borderStyle = top
-                ? `border-top: 0; border-bottom: 1px solid ` +
-                    `rgba(${border}, ${borderOpacity.toFixed(3)}); `
-                : `border-top: 1px solid ` +
-                    `rgba(${border}, ${borderOpacity.toFixed(3)}); ` +
-                    'border-bottom: 0; ';
-        }
-        const transparencyStyle =
-            `background-color: rgba(${background}, ` +
-            `${opacity.toFixed(2)}) !important; ` +
-            borderStyle +
-            'box-shadow: none;';
-        const separator = originalStyle.endsWith(';') ? ' ' : '; ';
-        this._setPanelStyle(
+        this._setPanelStyle(panelBackgroundStyle(
+            this._settings,
+            light,
+            this._panelBorderEnabled(),
             originalStyle
-                ? `${originalStyle}${separator}${transparencyStyle}`
-                : transparencyStyle
-        );
+        ));
     }
 
     queueBlurMyShellSync() {
@@ -225,6 +198,8 @@ export class PanelThemeController {
         Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
         Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
         Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
+        Main.panel.remove_style_class_name(BLUR_TRANSPARENT_CLASS);
+        Main.panel.remove_style_class_name(BLUR_TINTED_CLASS);
         Main.panel.remove_style_class_name(XP_PANEL_CLASS);
         Main.panel.set_style(this._oldPanelStyle ?? '');
     }
@@ -267,23 +242,10 @@ export class PanelThemeController {
     }
 
     _syncBlurMyShell() {
-        const active = extensionIsActive(BLUR_MY_SHELL_UUID);
         const panelBlur = getPanelBlur();
-        const windowsXpThemeEnabled = this._settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        if (active && panelBlur) {
-            if (windowsXpThemeEnabled)
-                Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
-            else
-                Main.panel.add_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);
-            if (!Main.overview.visibleTarget)
-                refreshPanelBlurVisibility(panelBlur);
-        } else {
-            Main.panel.remove_style_class_name(
-                BLUR_MY_SHELL_ACTIVE_CLASS
-            );
-        }
+        if (panelBlur && !Main.overview.visibleTarget)
+            refreshPanelBlurVisibility(panelBlur);
+
         this.applyTransparency();
     }
 
@@ -299,16 +261,6 @@ export class PanelThemeController {
             ? 'panel-border-light-enabled'
             : 'panel-border-enabled';
         return this._settings.get_boolean(key);
-    }
-
-    _panelBackground(light) {
-        if (!this._settings.get_boolean('custom-panel-color-enabled'))
-            return light ? '224, 229, 238' : '24, 24, 27';
-
-        const [, color] = Cogl.Color.from_string(
-            this._settings.get_string('custom-panel-color')
-        );
-        return `${color.red}, ${color.green}, ${color.blue}`;
     }
 
     _setPanelStyle(style) {

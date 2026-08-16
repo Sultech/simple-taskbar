@@ -2,8 +2,18 @@
 // Copyright (C) 2026 sultech
 
 import {
-    blurMyShellDynamicPanelOverride,
+    blurMyShellOverridesPanelBackground,
 } from '../shared/blurMyShellUtils.js';
+
+export function panelBlurIsActive(panel) {
+    const panelBlur = getPanelBlur();
+    if (!panelBlur || !blurMyShellOverridesPanelBackground())
+        return false;
+
+    return panelBlur.actors_list.some(
+        actors => actors.widgets.panel === panel
+    );
+}
 
 export function getPanelBlur() {
     const panelBlur = global.blur_my_shell?._panel_blur;
@@ -20,11 +30,5 @@ export function getPopupBlur() {
 // left freshly blurred panels invisible until Blur My Shell was toggled.
 export function refreshPanelBlurVisibility(panelBlur) {
     panelBlur.panel_hide_blur_dynamically?.();
-    if (blurMyShellDynamicPanelOverride()) {
-        panelBlur.update_visibility();
-        return;
-    }
-
-    for (const actors of panelBlur.actors_list)
-        panelBlur.set_should_override_panel(actors, true);
+    panelBlur.update_visibility();
 }
