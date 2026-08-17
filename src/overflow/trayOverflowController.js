@@ -105,6 +105,7 @@ export class TrayOverflowController {
         }
 
         this._syncPanelPosition();
+        this._hidePanelTrayIndicators();
         this._syncButtonVisibility(false);
         this._queueRescan();
     }
@@ -273,6 +274,17 @@ export class TrayOverflowController {
             }
         }
         this._queueRescan();
+    }
+
+    _hidePanelTrayIndicators() {
+        for (const box of [
+            Main.panel._leftBox,
+            Main.panel._centerBox,
+            Main.panel._rightBox,
+        ]) {
+            for (const container of box.get_children())
+                this._onPanelChildAdded(container);
+        }
     }
 
     _queueRelayout() {
