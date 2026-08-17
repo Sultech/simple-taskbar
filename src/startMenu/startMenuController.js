@@ -8,7 +8,6 @@ import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
@@ -22,6 +21,10 @@ import {
     panelIsTop,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
+import {
+    closePopupMenu,
+    openPopupMenu,
+} from '../shared/popupMenuUtils.js';
 import {StartMenuContextMenuController} from './startMenuContextMenuController.js';
 import {StartMenuFooterController} from './startMenuFooterController.js';
 import {StartMenuNavigationController} from './startMenuNavigationController.js';
@@ -322,8 +325,13 @@ export class StartMenuController {
         this._updateSize();
         syncMenuArrowSide(this._menu, this._settings);
         this._syncPositionSource();
-        this._menu.open(BoxPointer.PopupAnimation.FULL);
-        Main.uiGroup.set_child_below_sibling(this._menu.actor, Main.layoutManager.keyboardBox);
+        openPopupMenu(this._menu);
+        const keyboardBox = Main.layoutManager.keyboardBox;
+        const keyboardBoxParent = keyboardBox.get_parent();
+        const stackingSibling = keyboardBoxParent === Main.uiGroup
+            ? keyboardBox
+            : keyboardBoxParent;
+        Main.uiGroup.set_child_below_sibling(this._menu.actor, stackingSibling);
         this._syncPositionSource();
         if (this.isOpen) {
             this._searchEntry.grab_key_focus();
@@ -331,12 +339,12 @@ export class StartMenuController {
         }
     }
 
-    close(animation = BoxPointer.PopupAnimation.FULL) {
+    close(animate = true) {
         this._sourcePress.clear();
         this._searchController.cancel();
         this._contextMenuController.close();
         this._powerController.close();
-        this._menu.close(animation);
+        closePopupMenu(this._menu, animate);
     }
 
     refresh() {
@@ -1240,9 +1248,7 @@ export class StartMenuController {
         const isScreenshot = result.id === 'open-screenshot-ui';
         const isSystemAction = result.provider.id === 'applications' &&
             !result.id.endsWith('.desktop');
-        this.close(isScreenshot
-            ? BoxPointer.PopupAnimation.NONE
-            : BoxPointer.PopupAnimation.FULL);
+        this.close(!isScreenshot);
         if (isScreenshot) {
             showScreenshotUI();
             return;

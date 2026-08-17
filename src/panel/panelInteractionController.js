@@ -7,13 +7,13 @@ import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
+import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 export class PanelInteractionController {
@@ -267,7 +267,7 @@ export class PanelInteractionController {
         this._previews.hideTooltip(false);
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
-        this._contextMenu.open(BoxPointer.PopupAnimation.FULL);
+        openPopupMenu(this._contextMenu);
     }
 
     _isFreePanelTarget(target) {

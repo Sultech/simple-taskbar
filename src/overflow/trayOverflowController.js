@@ -5,7 +5,6 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -19,6 +18,7 @@ import {
     panelIsTop,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
+import {closePopupMenu} from '../shared/popupMenuUtils.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
 export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
@@ -85,7 +85,7 @@ export class TrayOverflowController {
         this._settings.connectObject(
             'changed::tray-overflow-enabled', () => this._sync(),
             'changed::panel-position', () => {
-                this._menu.close(BoxPointer.PopupAnimation.NONE);
+                closePopupMenu(this._menu, false);
                 this._syncPanelPosition();
             },
             'changed::windows-xp-theme-enabled',
@@ -110,7 +110,7 @@ export class TrayOverflowController {
     }
 
     close() {
-        this._menu.close(BoxPointer.PopupAnimation.NONE);
+        closePopupMenu(this._menu, false);
     }
 
     get menuIsOpen() {
@@ -243,7 +243,7 @@ export class TrayOverflowController {
 
     _closeStashedMenus() {
         for (const {indicator} of this._stashed.values())
-            indicator.menu.close(BoxPointer.PopupAnimation.NONE);
+            closePopupMenu(indicator.menu, false);
     }
 
     _queueRescan() {
@@ -295,7 +295,7 @@ export class TrayOverflowController {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._activationCloseId = 0;
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
+                closePopupMenu(this._menu);
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -315,7 +315,7 @@ export class TrayOverflowController {
         const [x, y] = event.get_coords();
         const time = event.get_time();
         const {doubleClickDistance, doubleClickTime} =
-            Clutter.Settings.get_default();
+            global.stage.context.get_settings();
         if (time > entry.lastClickTime + doubleClickTime ||
             Math.abs(x - entry.lastClickX) > doubleClickDistance ||
             Math.abs(y - entry.lastClickY) > doubleClickDistance)
@@ -381,7 +381,7 @@ export class TrayOverflowController {
              event.get_button() === Clutter.BUTTON_SECONDARY))
             return Clutter.EVENT_PROPAGATE;
 
-        this._menu.close(BoxPointer.PopupAnimation.FULL);
+        closePopupMenu(this._menu);
         return Clutter.EVENT_PROPAGATE;
     }
 
@@ -526,7 +526,7 @@ export class TrayOverflowController {
         indicator.menu.connectObject(
             'open-state-changed',
             (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
-            'activate', () => this._menu.close(BoxPointer.PopupAnimation.FULL),
+            'activate', () => closePopupMenu(this._menu),
             this
         );
         indicator.menu.actor.connectObject(
@@ -559,7 +559,7 @@ export class TrayOverflowController {
         this._syncIndicatorMenuStacking(indicator, false);
         indicator.menu.actor.disconnectObject(this);
         indicator.menu.disconnectObject(this);
-        indicator.menu.close(BoxPointer.PopupAnimation.NONE);
+        closePopupMenu(indicator.menu, false);
         indicator.set_style(entry.originalStyle || null);
         indicator.queue_relayout();
 

@@ -5,7 +5,6 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -15,6 +14,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {shellMenusUseLightTheme} from './themeUtils.js';
+import {closePopupMenu} from './shared/popupMenuUtils.js';
 import {
     panelArrowSide,
     syncPanelMenuPosition,
@@ -76,7 +76,7 @@ export class FolderMenuController {
                     this._reloadMenu();
             },
             'changed::panel-position', () => {
-                this._menu.close(BoxPointer.PopupAnimation.NONE);
+                closePopupMenu(this._menu, false);
                 this._syncPanelPosition();
             },
             this._signalHolder
@@ -120,7 +120,7 @@ export class FolderMenuController {
         const visible = this._settings.get_boolean('folder-menu-enabled');
         this.actor.visible = visible;
         if (!visible)
-            this._menu.close(BoxPointer.PopupAnimation.NONE);
+            closePopupMenu(this._menu, false);
     }
 
     _syncPanelPosition() {

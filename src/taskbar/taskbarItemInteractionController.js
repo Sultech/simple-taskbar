@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
+import {openPopupMenu} from '../shared/popupMenuUtils.js';
 
 export class TaskbarItemInteractionController {
     constructor({
@@ -118,7 +118,7 @@ export class TaskbarItemInteractionController {
 
         const menu = button._taskbarMenu;
         syncMenuArrowSide(menu, this._settings);
-        menu.open(BoxPointer.PopupAnimation.FULL);
+        openPopupMenu(menu);
     }
 
     syncFileManagerPlaces(items) {

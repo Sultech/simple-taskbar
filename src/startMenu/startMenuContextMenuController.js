@@ -5,11 +5,11 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {panelArrowSide} from '../panel/panelPosition.js';
+import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
@@ -90,7 +90,7 @@ export class StartMenuContextMenuController {
         });
 
         menu.setApp(app);
-        menu.open(BoxPointer.PopupAnimation.FULL);
+        openPopupMenu(menu);
     }
 
     syncTheme() {

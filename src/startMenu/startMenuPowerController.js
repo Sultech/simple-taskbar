@@ -3,13 +3,13 @@
 
 import GLib from 'gi://GLib';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide} from '../panel/panelPosition.js';
+import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {SourcePressGuard} from './sourcePressGuard.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
@@ -156,7 +156,7 @@ export class StartMenuPowerController {
         syncSeparator();
 
         this._systemActions.forceUpdate();
-        menu.open(BoxPointer.PopupAnimation.FULL);
+        openPopupMenu(menu);
     }
 
     _addAction(menu, label, property, signal, activate) {

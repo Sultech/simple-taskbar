@@ -4,10 +4,11 @@
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
+import {closePopupMenu} from '../shared/popupMenuUtils.js';
 
 export class ApplicationOverflowItemController {
     constructor(settings, taskbarController, menu, section) {
@@ -177,7 +178,7 @@ export class ApplicationOverflowItemController {
             });
             auxiliaryItem.connect('clicked', () => {
                 this._taskbarController.activateShowDesktop(sourceItem);
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
+                closePopupMenu(this._menu);
             });
             return;
         }
@@ -199,13 +200,13 @@ export class ApplicationOverflowItemController {
                 auxiliaryItem
             );
             if (!keepOpen)
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
+                closePopupMenu(this._menu);
         });
         auxiliaryItem.connect('button-press-event', (_button, event) => {
             const mouseButton = event.get_button();
             if (mouseButton === Clutter.BUTTON_MIDDLE) {
                 this._taskbarController.handleItemMiddleClick(sourceItem);
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
+                closePopupMenu(this._menu);
                 return Clutter.EVENT_STOP;
             }
             if (mouseButton === Clutter.BUTTON_SECONDARY) {
@@ -263,7 +264,7 @@ export class ApplicationOverflowItemController {
                     if (dragSource._taskbarDropAccepted &&
                         dragSource._taskbarDropTarget ===
                             this._taskbarController) {
-                        this._menu.close(BoxPointer.PopupAnimation.FULL);
+                        closePopupMenu(this._menu);
                     }
                     dragSource._taskbarDropAccepted = false;
                     dragSource._taskbarDropTarget = null;

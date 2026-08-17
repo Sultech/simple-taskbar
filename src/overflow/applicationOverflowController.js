@@ -7,7 +7,6 @@ import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -32,6 +31,7 @@ import {
 import {
     ApplicationOverflowThemeController,
 } from './applicationOverflowThemeController.js';
+import {closePopupMenu} from '../shared/popupMenuUtils.js';
 
 const TASKBAR_CONTENT_CLASS =
     'simple-taskbar-application-overflow-taskbar-content';
@@ -263,12 +263,12 @@ export class ApplicationOverflowController {
 
     close() {
         this._previewController.hide();
-        this._menu.close(BoxPointer.PopupAnimation.NONE);
+        closePopupMenu(this._menu, false);
     }
 
     closeWithAnimation() {
         this._previewController.hide();
-        this._menu.close(BoxPointer.PopupAnimation.FULL);
+        closePopupMenu(this._menu);
     }
 
     clearOverflow() {
@@ -372,7 +372,7 @@ export class ApplicationOverflowController {
         for (const {auxiliaryItem} of this._itemController.records) {
             const menu = auxiliaryItem._taskbarMenu;
             if (menu)
-                menu.close(BoxPointer.PopupAnimation.NONE);
+                closePopupMenu(menu, false);
         }
     }
 

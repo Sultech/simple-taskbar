@@ -6,12 +6,15 @@ import GLib from 'gi://GLib';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelArrowSide, panelIsTop} from '../panel/panelPosition.js';
+import {
+    closePopupMenu,
+    openPopupMenu,
+} from '../shared/popupMenuUtils.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
@@ -372,7 +375,7 @@ export class WindowPreviewController {
                 this.scheduleClose();
         });
 
-        menu.open(BoxPointer.PopupAnimation.FULL);
+        openPopupMenu(menu);
     }
 
     hide(animate = false) {
@@ -404,7 +407,7 @@ export class WindowPreviewController {
             if (this._closingPreviewMenus.delete(menu))
                 menu.destroy();
         });
-        menu.close(BoxPointer.PopupAnimation.FULL);
+        closePopupMenu(menu);
     }
 
     _interestingWindows(app) {

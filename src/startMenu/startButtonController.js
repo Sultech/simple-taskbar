@@ -6,7 +6,6 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
-import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as OverviewControls from 'resource:///org/gnome/shell/ui/overviewControls.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -18,6 +17,7 @@ import {
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
+import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
@@ -462,7 +462,7 @@ export class StartButtonController {
         this._previews.hideTooltip(false);
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
-        this._contextMenu.open(BoxPointer.PopupAnimation.FULL);
+        openPopupMenu(this._contextMenu);
     }
 
     _notifyMenuOpenStateChanged() {
