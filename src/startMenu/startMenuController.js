@@ -244,6 +244,12 @@ export class StartMenuController {
         this.syncTheme(true);
         this._prepareHiddenMenu();
 
+        this._refreshIdleId = 0;
+        this._installedChangedId = this._appSystem.connect(
+            'installed-changed',
+            () => this._queueRefresh()
+        );
+
         this._menuOpenStateId = this._menu.connect(
             'open-state-changed',
             (_menu, open) => {
@@ -341,9 +347,23 @@ export class StartMenuController {
         if (query)
             this._showSearchResults(query);
         else if (this._view === 'all')
-            this._showAllApps();
+            this._showAllApps(true);
         else
             this._showPinnedApps();
+    }
+
+    _queueRefresh() {
+        if (this._refreshIdleId)
+            return;
+
+        this._refreshIdleId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._refreshIdleId = 0;
+                this.refresh();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     refreshDefaultView() {
@@ -552,6 +572,12 @@ export class StartMenuController {
             GLib.Source.remove(this._transparencySyncId);
             this._transparencySyncId = 0;
         }
+        if (this._refreshIdleId) {
+            GLib.Source.remove(this._refreshIdleId);
+            this._refreshIdleId = 0;
+        }
+        this._appSystem.disconnect(this._installedChangedId);
+        this._installedChangedId = 0;
         if (this._stageCapturedEventId) {
             global.stage.disconnect(this._stageCapturedEventId);
             this._stageCapturedEventId = 0;
@@ -831,7 +857,7 @@ export class StartMenuController {
         this._queuePrepare();
     }
 
-    _showAllApps() {
+    _showAllApps(keepCategory = false) {
         this._searchController.cancel();
         this._setScrollbarPolicy(true);
         this._view = 'all';
@@ -841,11 +867,12 @@ export class StartMenuController {
             !this._settings.get_boolean('start-menu-open-all-apps');
         const apps = getAllApps(this._appSystem);
         if (this._settings.get_boolean('start-menu-app-categories')) {
-            this._selectedAppCategory = 'all';
+            if (!keepCategory)
+                this._selectedAppCategory = 'all';
             const groupedApps = groupAppsByCategory(apps);
-            this._buildCategorySidebar(apps, groupedApps);
+            const selected = this._buildCategorySidebar(apps, groupedApps);
             this._setCategorySidebarVisible(true);
-            this._displayAppList(apps, true);
+            this._displayAppList(selected.apps, true);
         } else {
             this._setCategorySidebarVisible(false);
             this._displayAppList(apps);
@@ -951,6 +978,10 @@ export class StartMenuController {
                 apps: otherApps,
             });
         }
+        if (!categories.some(
+            category => category.id === this._selectedAppCategory
+        ))
+            this._selectedAppCategory = 'all';
 
         for (const category of categories) {
             const button = new St.Button({
@@ -984,6 +1015,10 @@ export class StartMenuController {
             this._syncShellButtonClasses(button);
             this._categorySidebar.add_child(button);
         }
+
+        return categories.find(
+            category => category.id === this._selectedAppCategory
+        );
     }
 
     _setCategorySidebarVisible(visible) {
