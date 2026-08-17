@@ -20,13 +20,23 @@ export class WindowController {
         this._getTaskbar = getTaskbarController;
         this._getPreviews = getPreviewController;
         this._showDesktopButton = null;
-        this._minimizedWindows = [];
+        this._desktopStates = new Map();
         this._minimizedWindowSignals = new Map();
-        this._desktopFocusWindow = null;
+        this._workspaceSignalIds = [
+            global.workspace_manager.connect(
+                'active-workspace-changed',
+                () => this._syncShowDesktopButton()
+            ),
+            global.workspace_manager.connect(
+                'workspace-removed',
+                () => this._dropRemovedWorkspaceStates()
+            ),
+        ];
     }
 
     setShowDesktopButton(button) {
         this._showDesktopButton = button;
+        this._syncShowDesktopButton();
     }
 
     getInterestingWindows(app) {
@@ -151,75 +161,112 @@ export class WindowController {
     }
 
     toggleDesktop() {
-        if (this._minimizedWindows.length > 0) {
-            this.restoreDesktop(true);
+        const workspace = global.workspace_manager.get_active_workspace();
+        if (this._desktopStates.has(workspace)) {
+            this.restoreDesktop(workspace, true);
             return;
         }
 
-        const activeWorkspace = global.workspace_manager.get_active_workspace();
-        const visibleWindows = activeWorkspace.list_windows().filter(window =>
+        const visibleWindows = workspace.list_windows().filter(window =>
             !window.skip_taskbar && window.showing_on_its_workspace() &&
             window.can_minimize()
         );
-        this._minimizedWindows =
+        const windows =
             global.display.sort_windows_by_stacking(visibleWindows);
+        if (windows.length === 0)
+            return;
+
         const focusWindow = global.display.focus_window;
-        this._desktopFocusWindow = this._minimizedWindows.includes(focusWindow)
-            ? focusWindow
-            : this._minimizedWindows.at(-1) ?? null;
+        this._desktopStates.set(workspace, {
+            windows,
+            focusWindow: windows.includes(focusWindow)
+                ? focusWindow
+                : windows.at(-1),
+        });
         this._getTaskbar().updateWindowIconGeometries();
-        for (const window of this._minimizedWindows) {
+        for (const window of windows) {
             this._minimizedWindowSignals.set(
                 window,
                 window.connect(
                     'unmanaged',
-                    () => this._onMinimizedWindowUnmanaged(window)
+                    () => this._onMinimizedWindowUnmanaged(workspace, window)
                 )
             );
             window.minimize();
         }
-        if (this._showDesktopButton)
-            this._showDesktopButton.checked = this._minimizedWindows.length > 0;
+        this._syncShowDesktopButton();
     }
 
-    _onMinimizedWindowUnmanaged(window) {
-        window.disconnect(this._minimizedWindowSignals.get(window));
-        this._minimizedWindowSignals.delete(window);
-        this._minimizedWindows = this._minimizedWindows.filter(
-            candidate => candidate !== window
-        );
-        if (window === this._desktopFocusWindow)
-            this._desktopFocusWindow = null;
-        if (this._minimizedWindows.length === 0 && this._showDesktopButton)
-            this._showDesktopButton.checked = false;
-    }
-
-    _disconnectMinimizedWindows() {
-        for (const [window, signalId] of this._minimizedWindowSignals)
-            window.disconnect(signalId);
-        this._minimizedWindowSignals.clear();
-    }
-
-    restoreDesktop(activateWindow = false) {
-        this._disconnectMinimizedWindows();
-        const windows = this._minimizedWindows.filter(
+    restoreDesktop(workspace, activateWindow = false) {
+        const state = this._desktopStates.get(workspace);
+        this._forgetDesktopState(workspace);
+        const windows = state.windows.filter(
             window => window.get_compositor_private() !== null
         );
-        const focusWindow = windows.includes(this._desktopFocusWindow)
-            ? this._desktopFocusWindow
+        const focusWindow = windows.includes(state.focusWindow)
+            ? state.focusWindow
             : windows.at(-1) ?? null;
-        this._minimizedWindows = [];
-        this._desktopFocusWindow = null;
-        if (this._showDesktopButton)
-            this._showDesktopButton.checked = false;
         for (const window of windows)
             window.unminimize();
         if (activateWindow && focusWindow)
             Main.activateWindow(focusWindow);
+        this._syncShowDesktopButton();
+    }
+
+    restoreAllDesktops() {
+        for (const workspace of [...this._desktopStates.keys()])
+            this.restoreDesktop(workspace);
+    }
+
+    _onMinimizedWindowUnmanaged(workspace, window) {
+        window.disconnect(this._minimizedWindowSignals.get(window));
+        this._minimizedWindowSignals.delete(window);
+        const state = this._desktopStates.get(workspace);
+        state.windows = state.windows.filter(
+            candidate => candidate !== window
+        );
+        if (window === state.focusWindow)
+            state.focusWindow = null;
+        if (state.windows.length === 0)
+            this._desktopStates.delete(workspace);
+        this._syncShowDesktopButton();
+    }
+
+    _forgetDesktopState(workspace) {
+        const state = this._desktopStates.get(workspace);
+        for (const window of state.windows) {
+            window.disconnect(this._minimizedWindowSignals.get(window));
+            this._minimizedWindowSignals.delete(window);
+        }
+        this._desktopStates.delete(workspace);
+    }
+
+    _dropRemovedWorkspaceStates() {
+        const workspaceManager = global.workspace_manager;
+        const workspaces = new Set();
+        for (let index = 0; index < workspaceManager.n_workspaces; index++)
+            workspaces.add(workspaceManager.get_workspace_by_index(index));
+        for (const workspace of [...this._desktopStates.keys()]) {
+            if (!workspaces.has(workspace))
+                this._forgetDesktopState(workspace);
+        }
+        this._syncShowDesktopButton();
+    }
+
+    _syncShowDesktopButton() {
+        if (!this._showDesktopButton)
+            return;
+
+        this._showDesktopButton.checked = this._desktopStates.has(
+            global.workspace_manager.get_active_workspace()
+        );
     }
 
     destroy() {
-        this.restoreDesktop();
+        for (const id of this._workspaceSignalIds)
+            global.workspace_manager.disconnect(id);
+        this._workspaceSignalIds = [];
+        this.restoreAllDesktops();
         this._showDesktopButton = null;
         this._getPreviews = null;
         this._getTaskbar = null;
