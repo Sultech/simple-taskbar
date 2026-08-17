@@ -21,6 +21,7 @@ export class WindowController {
         this._getPreviews = getPreviewController;
         this._showDesktopButton = null;
         this._minimizedWindows = [];
+        this._minimizedWindowSignals = new Map();
         this._desktopFocusWindow = null;
     }
 
@@ -157,7 +158,8 @@ export class WindowController {
 
         const activeWorkspace = global.workspace_manager.get_active_workspace();
         const visibleWindows = activeWorkspace.list_windows().filter(window =>
-            !window.skip_taskbar && window.showing_on_its_workspace()
+            !window.skip_taskbar && window.showing_on_its_workspace() &&
+            window.can_minimize()
         );
         this._minimizedWindows =
             global.display.sort_windows_by_stacking(visibleWindows);
@@ -166,13 +168,40 @@ export class WindowController {
             ? focusWindow
             : this._minimizedWindows.at(-1) ?? null;
         this._getTaskbar().updateWindowIconGeometries();
-        for (const window of this._minimizedWindows)
+        for (const window of this._minimizedWindows) {
+            this._minimizedWindowSignals.set(
+                window,
+                window.connect(
+                    'unmanaged',
+                    () => this._onMinimizedWindowUnmanaged(window)
+                )
+            );
             window.minimize();
+        }
         if (this._showDesktopButton)
             this._showDesktopButton.checked = this._minimizedWindows.length > 0;
     }
 
+    _onMinimizedWindowUnmanaged(window) {
+        window.disconnect(this._minimizedWindowSignals.get(window));
+        this._minimizedWindowSignals.delete(window);
+        this._minimizedWindows = this._minimizedWindows.filter(
+            candidate => candidate !== window
+        );
+        if (window === this._desktopFocusWindow)
+            this._desktopFocusWindow = null;
+        if (this._minimizedWindows.length === 0 && this._showDesktopButton)
+            this._showDesktopButton.checked = false;
+    }
+
+    _disconnectMinimizedWindows() {
+        for (const [window, signalId] of this._minimizedWindowSignals)
+            window.disconnect(signalId);
+        this._minimizedWindowSignals.clear();
+    }
+
     restoreDesktop(activateWindow = false) {
+        this._disconnectMinimizedWindows();
         const windows = this._minimizedWindows.filter(
             window => window.get_compositor_private() !== null
         );
