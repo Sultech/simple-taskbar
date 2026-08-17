@@ -173,8 +173,10 @@ export class WindowController {
         );
         const windows =
             global.display.sort_windows_by_stacking(visibleWindows);
-        if (windows.length === 0)
+        if (windows.length === 0) {
+            this._syncShowDesktopButton();
             return;
+        }
 
         const focusWindow = global.display.focus_window;
         this._desktopStates.set(workspace, {
