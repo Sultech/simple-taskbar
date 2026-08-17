@@ -10,16 +10,13 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelIsTop} from './panelPosition.js';
+import {pointerButtonIsPressed} from '../pointerUtils.js';
 
 const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
 const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
-const POINTER_BUTTON_MASK = Clutter.ModifierType.BUTTON1_MASK |
-    Clutter.ModifierType.BUTTON2_MASK |
-    Clutter.ModifierType.BUTTON3_MASK;
-
 export class PanelAutoHideController {
     constructor({
         settings,
@@ -289,12 +286,12 @@ export class PanelAutoHideController {
             return;
 
         this._fullscreenReleasePending = false;
-        this._pointerButtonPressed = this._mouseButtonIsPressed();
+        this._pointerButtonPressed = pointerButtonIsPressed();
         this._fullscreenWatchId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
             FULLSCREEN_POINTER_POLL_INTERVAL,
             () => {
-                const pointerPressed = this._mouseButtonIsPressed();
+                const pointerPressed = pointerButtonIsPressed();
                 if (pointerPressed && !this._pointerButtonPressed) {
                     this._fullscreenReleasePending =
                         !this._pointerIsInsidePanel();
@@ -319,11 +316,6 @@ export class PanelAutoHideController {
         this._fullscreenWatchId = 0;
         this._fullscreenReleasePending = false;
         this._pointerButtonPressed = false;
-    }
-
-    _mouseButtonIsPressed() {
-        const [, , modifiers] = global.get_pointer();
-        return Boolean(modifiers & POINTER_BUTTON_MASK);
     }
 
     _scheduleHide(delay = HIDE_DELAY) {

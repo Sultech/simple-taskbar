@@ -476,6 +476,11 @@
     background-color: rgba(255, 255, 255, 0.80);
 }
 
+.simple-taskbar-preview-menu.simple-taskbar-preview-dark
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle:active {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
 .simple-taskbar-preview-menu.simple-taskbar-preview-light
     .simple-taskbar-preview-scroll StScrollBar > .hhandle {
     border: 1px solid transparent;
@@ -488,6 +493,11 @@
 .simple-taskbar-preview-menu.simple-taskbar-preview-light
     .simple-taskbar-preview-scroll StScrollBar > .hhandle:focus {
     background-color: rgba(24, 28, 34, 0.78);
+}
+
+.simple-taskbar-preview-menu.simple-taskbar-preview-light
+    .simple-taskbar-preview-scroll StScrollBar > .hhandle:active {
+    background-color: rgba(24, 28, 34, 0.92);
 }
 
 .simple-taskbar-preview-menu.simple-taskbar-preview-light

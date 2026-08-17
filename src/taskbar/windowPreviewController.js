@@ -13,6 +13,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelArrowSide, panelIsTop} from '../panel/panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
+import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 
 const PREVIEW_OPEN_DELAY = 320;
@@ -330,7 +331,7 @@ export class WindowPreviewController {
                 return;
             if (actor.hover)
                 this._clearTimeout('_previewCloseId');
-            else if (!item.hover)
+            else if (!item.hover && !pointerButtonIsPressed())
                 this.scheduleClose();
         });
         menu.actor.connect('captured-event', (_actor, event) => {
@@ -340,6 +341,8 @@ export class WindowPreviewController {
             if (event.type() === Clutter.EventType.SCROLL)
                 return scrollPreviews(event);
             if (event.type() !== Clutter.EventType.MOTION)
+                return Clutter.EVENT_PROPAGATE;
+            if (pointerButtonIsPressed())
                 return Clutter.EVENT_PROPAGATE;
 
             const hoveredItem = this._taskbarItemAtPointer();
