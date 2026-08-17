@@ -12,6 +12,7 @@ export class StartMenuPinnedDragController {
         this._tileWidth = params.tileWidth;
         this._closeContextMenu = params.closeContextMenu;
         this._onOrderChanged = params.onOrderChanged;
+        this._draggables = new Map();
     }
 
     attachGrid(grid) {
@@ -41,20 +42,22 @@ export class StartMenuPinnedDragController {
             dragActorMaxSize: 48,
         });
         button._startMenuDraggable = draggable;
-        draggable.connect('drag-begin', () => {
-            dragSource._originalOrder = this._gridTiles(grid)
-                .map(tile => tile._startMenuPinnedAppId);
-            dragSource._dropAccepted = false;
-            button.opacity = 96;
-            this._closeContextMenu();
-        });
-        draggable.connect('drag-end', () => {
-            button.opacity = 255;
-            if (!dragSource._dropAccepted)
-                this._restoreOrder(grid, dragSource);
-            dragSource._originalOrder = null;
-            dragSource._dropAccepted = false;
-        });
+        this._trackDraggable(button, draggable, [
+            draggable.connect('drag-begin', () => {
+                dragSource._originalOrder = this._gridTiles(grid)
+                    .map(tile => tile._startMenuPinnedAppId);
+                dragSource._dropAccepted = false;
+                button.opacity = 96;
+                this._closeContextMenu();
+            }),
+            draggable.connect('drag-end', () => {
+                button.opacity = 255;
+                if (!dragSource._dropAccepted)
+                    this._restoreOrder(grid, dragSource);
+                dragSource._originalOrder = null;
+                dragSource._dropAccepted = false;
+            }),
+        ]);
     }
 
     makeTaskbarDraggable(button, icon, app, onDropAccepted) {
@@ -74,23 +77,46 @@ export class StartMenuPinnedDragController {
             dragActorMaxSize: 48,
         });
         button._startMenuTaskbarDraggable = draggable;
-        draggable.connect('drag-begin', () => {
-            dragSource._taskbarDropAccepted = false;
-            button.opacity = 96;
-            this._closeContextMenu();
-        });
-        draggable.connect('drag-end', () => {
-            dragSource._clearTaskbarDropTarget();
-            dragSource._taskbarDropTarget = null;
-            dragSource._clearTaskbarDropTarget = () => {};
-            button.opacity = 255;
-            if (dragSource._taskbarDropAccepted)
-                onDropAccepted();
-            dragSource._taskbarDropAccepted = false;
-        });
+        this._trackDraggable(button, draggable, [
+            draggable.connect('drag-begin', () => {
+                dragSource._taskbarDropAccepted = false;
+                button.opacity = 96;
+                this._closeContextMenu();
+            }),
+            draggable.connect('drag-end', () => {
+                dragSource._clearTaskbarDropTarget();
+                dragSource._taskbarDropTarget = null;
+                dragSource._clearTaskbarDropTarget = () => {};
+                button.opacity = 255;
+                if (dragSource._taskbarDropAccepted)
+                    onDropAccepted();
+                dragSource._taskbarDropAccepted = false;
+            }),
+        ]);
+    }
+
+    _trackDraggable(button, draggable, handlerIds) {
+        const entry = {draggable, handlerIds, destroyId: 0};
+        entry.destroyId = button.connect(
+            'destroy',
+            () => this._releaseDraggable(button)
+        );
+        this._draggables.set(button, entry);
+    }
+
+    _releaseDraggable(button) {
+        const entry = this._draggables.get(button);
+        for (const handlerId of entry.handlerIds)
+            entry.draggable.disconnect(handlerId);
+        button.disconnect(entry.destroyId);
+        button._delegate = null;
+        this._draggables.delete(button);
     }
 
     destroy() {
+        for (const button of [...this._draggables.keys()])
+            this._releaseDraggable(button);
+        this._draggables = null;
         this._settings = null;
         this._closeContextMenu = null;
         this._onOrderChanged = null;

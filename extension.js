@@ -2,16 +2,12 @@
 // Copyright (C) 2026 sultech
 
 import Shell from 'gi://Shell';
-import St from 'gi://St';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
-import {
-    ApplicationOverflowController,
-} from './src/overflow/applicationOverflowController.js';
 import {FolderMenuController} from './src/folderMenuController.js';
 import {TrayOverflowController} from './src/overflow/trayOverflowController.js';
 import {FavoritesIntegration} from './src/integration/favoritesIntegration.js';
@@ -36,7 +32,7 @@ import {
     SwitcherKeybindingRouter,
 } from './src/windowSwitching/switcherKeybindingRouter.js';
 import {TaskbarController} from './src/taskbar/taskbarController.js';
-import {TaskbarViewport} from './src/taskbar/taskbarViewport.js';
+import {createTaskbarViewport} from './src/taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from './src/integration/volumeMixerController.js';
 import {WindowController} from './src/taskbar/windowController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
@@ -328,26 +324,14 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _createTaskbarActors() {
-        this._taskbarViewport = new TaskbarViewport({
-            style_class: 'simple-taskbar-bin',
-            hscrollbar_policy: St.PolicyType.NEVER,
-            vscrollbar_policy: St.PolicyType.NEVER,
-            enable_mouse_scrolling: true,
-            clip_to_allocation: true,
-            x_expand: false,
-            y_expand: true,
+        const {viewport, overflowController} = createTaskbarViewport({
+            settings: this._settings,
+            taskbarController: this._taskbarController,
+            previewController: this._windowPreviews,
         });
-        this._taskbarViewport.add_child(this._taskbarController.actor);
-        this._applicationOverflowController =
-            new ApplicationOverflowController({
-                settings: this._settings,
-                taskbarController: this._taskbarController,
-                previewController: this._windowPreviews,
-                viewport: this._taskbarViewport,
-            });
-        this._taskbarBin = this._applicationOverflowController.actor;
-        this._taskbarBin.visible =
-            !this._settings.get_boolean('default-gnome-panel');
+        this._taskbarViewport = viewport;
+        this._applicationOverflowController = overflowController;
+        this._taskbarBin = overflowController.actor;
 
         this._showDesktopButtonController =
             new ShowDesktopButtonController(

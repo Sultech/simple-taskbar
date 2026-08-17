@@ -39,8 +39,6 @@ export class SecondaryPanelIndicatorController {
             const indicator = pool.pop() ?? new IndicatorConstructor();
             this._indicators.set(role, indicator);
             const menu = indicator.menu;
-            if (!menu)
-                continue;
             this._menuManager.addMenu(menu);
             const side = panelArrowSide(this._settings);
             const boxPointer = menu._boxPointer;
@@ -71,7 +69,7 @@ export class SecondaryPanelIndicatorController {
     syncPopupOffsets() {
         for (const indicator of this._indicators.values()) {
             const menu = indicator.menu;
-            if (menu && menu._boxPointer)
+            if (menu._boxPointer)
                 syncXpPopupOffset(menu, this._settings);
         }
     }
@@ -86,15 +84,13 @@ export class SecondaryPanelIndicatorController {
         this._originalChangeMenu = null;
         for (const [role, indicator] of this._indicators) {
             const menu = indicator.menu;
-            if (menu) {
-                menu.close();
-                if (menu._boxPointer)
-                    removeXpPopupOffset(menu);
-                menu.actor.remove_style_class_name(
-                    'simple-taskbar-bottom-panel-menu'
-                );
-                this._menuManager.removeMenu(menu);
-            }
+            menu.close();
+            if (menu._boxPointer)
+                removeXpPopupOffset(menu);
+            menu.actor.remove_style_class_name(
+                'simple-taskbar-bottom-panel-menu'
+            );
+            this._menuManager.removeMenu(menu);
             const parent = indicator.container.get_parent();
             if (parent)
                 parent.remove_child(indicator.container);

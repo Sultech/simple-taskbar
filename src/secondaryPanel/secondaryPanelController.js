@@ -9,9 +9,6 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {
-    ApplicationOverflowController,
-} from '../overflow/applicationOverflowController.js';
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {panelBlurIsActive} from '../integration/blurMyShellRuntime.js';
 import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
@@ -42,7 +39,7 @@ import {
 import {StartButtonController} from '../startMenu/startButtonController.js';
 import {TaskbarController} from '../taskbar/taskbarController.js';
 import {constrainTaskbarWidth} from '../taskbar/taskbarLayout.js';
-import {TaskbarViewport} from '../taskbar/taskbarViewport.js';
+import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
 import {WindowController} from '../taskbar/windowController.js';
 import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
@@ -118,26 +115,14 @@ export class SecondaryPanelController {
         });
         this._folderMenuController = new FolderMenuController(settings);
 
-        this._taskbarViewport = new TaskbarViewport({
-            style_class: 'simple-taskbar-bin',
-            hscrollbar_policy: St.PolicyType.NEVER,
-            vscrollbar_policy: St.PolicyType.NEVER,
-            enable_mouse_scrolling: true,
-            clip_to_allocation: true,
-            x_expand: false,
-            y_expand: true,
+        const {viewport, overflowController} = createTaskbarViewport({
+            settings,
+            taskbarController: this._taskbarController,
+            previewController: this._windowPreviews,
         });
-        this._taskbarViewport.add_child(this._taskbarController.actor);
-        this._applicationOverflowController =
-            new ApplicationOverflowController({
-                settings,
-                taskbarController: this._taskbarController,
-                previewController: this._windowPreviews,
-                viewport: this._taskbarViewport,
-            });
-        this._taskbarBin = this._applicationOverflowController.actor;
-        this._taskbarBin.visible =
-            !settings.get_boolean('default-gnome-panel');
+        this._taskbarViewport = viewport;
+        this._applicationOverflowController = overflowController;
+        this._taskbarBin = overflowController.actor;
 
         this._panelBox = new St.Widget({name: 'panelBox'});
         this.actor = new SecondaryPanelActor();

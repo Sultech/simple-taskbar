@@ -13,6 +13,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelArrowSide, panelIsTop} from '../panel/panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
+import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 
 const PREVIEW_OPEN_DELAY = 320;
 const PREVIEW_CLOSE_DELAY = 180;
@@ -412,16 +413,10 @@ export class WindowPreviewController {
     }
 
     _windowsForItem(item) {
-        if (item._taskbarIsLauncher)
-            return [];
-
-        const window = item._taskbarWindow;
-        if (!window)
-            return this._interestingWindows(item._taskbarApp);
-
-        return this._interestingWindows(item._taskbarApp).includes(window)
-            ? [window]
-            : [];
+        return windowsForTaskbarItem(
+            item,
+            app => this._interestingWindows(app)
+        );
     }
 
     _clearTimeout(name) {

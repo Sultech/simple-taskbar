@@ -16,6 +16,7 @@ export class ApplicationOverflowItemController {
         this._menu = menu;
         this._section = section;
         this._records = [];
+        this._draggables = new Map();
     }
 
     get records() {
@@ -96,6 +97,7 @@ export class ApplicationOverflowItemController {
             this._taskbarController.getOrderedItems()
         );
         for (const {auxiliaryItem, styleItem} of this._records) {
+            this._releaseDraggable(auxiliaryItem);
             if (taskbarItems.has(styleItem)) {
                 if (styleItem._taskbarIsShowDesktop) {
                     styleItem._taskbarButton.remove_style_pseudo_class(
@@ -113,6 +115,7 @@ export class ApplicationOverflowItemController {
 
     destroy() {
         this.clear();
+        this._draggables = null;
         this._records = null;
         this._section = null;
         this._menu = null;
@@ -240,24 +243,43 @@ export class ApplicationOverflowItemController {
             dragActorMaxSize: this._settings.get_int('icon-size'),
         });
         auxiliaryItem._taskbarDraggable = draggable;
-        draggable.connect('drag-begin', () => {
-            dragSource._taskbarDropAccepted = false;
-            dragSource._taskbarDropTarget = null;
-            auxiliaryItem.opacity = 96;
-            this._taskbarController.beginExternalTaskbarDrag(sourceItem);
+        this._draggables.set(auxiliaryItem, {
+            draggable,
+            handlerIds: [
+                draggable.connect('drag-begin', () => {
+                    dragSource._taskbarDropAccepted = false;
+                    dragSource._taskbarDropTarget = null;
+                    auxiliaryItem.opacity = 96;
+                    this._taskbarController.beginExternalTaskbarDrag(
+                        sourceItem
+                    );
+                }),
+                draggable.connect('drag-end', () => {
+                    auxiliaryItem.opacity = 255;
+                    this._taskbarController.finishExternalTaskbarDrag(
+                        sourceItem,
+                        draggable
+                    );
+                    if (dragSource._taskbarDropAccepted &&
+                        dragSource._taskbarDropTarget ===
+                            this._taskbarController) {
+                        this._menu.close(BoxPointer.PopupAnimation.FULL);
+                    }
+                    dragSource._taskbarDropAccepted = false;
+                    dragSource._taskbarDropTarget = null;
+                }),
+            ],
         });
-        draggable.connect('drag-end', () => {
-            auxiliaryItem.opacity = 255;
-            this._taskbarController.finishExternalTaskbarDrag(
-                sourceItem,
-                draggable
-            );
-            if (dragSource._taskbarDropAccepted &&
-                dragSource._taskbarDropTarget === this._taskbarController) {
-                this._menu.close(BoxPointer.PopupAnimation.FULL);
-            }
-            dragSource._taskbarDropAccepted = false;
-            dragSource._taskbarDropTarget = null;
-        });
+    }
+
+    _releaseDraggable(auxiliaryItem) {
+        const entry = this._draggables.get(auxiliaryItem);
+        if (!entry)
+            return;
+
+        for (const handlerId of entry.handlerIds)
+            entry.draggable.disconnect(handlerId);
+        auxiliaryItem._delegate = null;
+        this._draggables.delete(auxiliaryItem);
     }
 }

@@ -26,6 +26,7 @@ import {
     animateTaskbarItemOutAndDestroy,
     placeTaskbarItemAtIndex,
 } from './taskbarItemLifecycle.js';
+import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {
     TaskbarShowDesktopController,
 } from './taskbarShowDesktopController.js';
@@ -1007,16 +1008,10 @@ export class TaskbarController {
     }
 
     _windowsForItem(item) {
-        if (item._taskbarIsLauncher)
-            return [];
-
-        const window = item._taskbarWindow;
-        if (!window)
-            return this._interestingWindows(item._taskbarApp);
-
-        return this._interestingWindows(item._taskbarApp).includes(window)
-            ? [window]
-            : [];
+        return windowsForTaskbarItem(
+            item,
+            app => this._interestingWindows(app)
+        );
     }
 
     _isPinnedPlaceholder(app, window, isLauncher = false) {
