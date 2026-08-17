@@ -37,12 +37,14 @@ export class StartMenuPinnedDragController {
         button._delegate = dragSource;
         button._startMenuPinnedAppId = app.get_id();
 
+        const entry = this._trackDraggable(button);
         const draggable = DND.makeDraggable(button, {
             timeoutThreshold: 200,
             dragActorMaxSize: 48,
         });
         button._startMenuDraggable = draggable;
-        this._trackDraggable(button, draggable, [
+        entry.draggable = draggable;
+        entry.handlerIds = [
             draggable.connect('drag-begin', () => {
                 dragSource._originalOrder = this._gridTiles(grid)
                     .map(tile => tile._startMenuPinnedAppId);
@@ -57,7 +59,7 @@ export class StartMenuPinnedDragController {
                 dragSource._originalOrder = null;
                 dragSource._dropAccepted = false;
             }),
-        ]);
+        ];
     }
 
     makeTaskbarDraggable(button, icon, app, onDropAccepted) {
@@ -72,12 +74,14 @@ export class StartMenuPinnedDragController {
         };
         button._delegate = dragSource;
 
+        const entry = this._trackDraggable(button);
         const draggable = DND.makeDraggable(button, {
             timeoutThreshold: 200,
             dragActorMaxSize: 48,
         });
         button._startMenuTaskbarDraggable = draggable;
-        this._trackDraggable(button, draggable, [
+        entry.draggable = draggable;
+        entry.handlerIds = [
             draggable.connect('drag-begin', () => {
                 dragSource._taskbarDropAccepted = false;
                 button.opacity = 96;
@@ -92,16 +96,17 @@ export class StartMenuPinnedDragController {
                     onDropAccepted();
                 dragSource._taskbarDropAccepted = false;
             }),
-        ]);
+        ];
     }
 
-    _trackDraggable(button, draggable, handlerIds) {
-        const entry = {draggable, handlerIds, destroyId: 0};
+    _trackDraggable(button) {
+        const entry = {draggable: null, handlerIds: [], destroyId: 0};
         entry.destroyId = button.connect(
             'destroy',
             () => this._releaseDraggable(button)
         );
         this._draggables.set(button, entry);
+        return entry;
     }
 
     _releaseDraggable(button) {
