@@ -37,6 +37,8 @@ export class TaskbarDragController {
         this._showDesktopController = null;
         this._alignmentActor = null;
         this._dragging = false;
+        this._draggingItem = null;
+        this._draggables = new Map();
         this._listeners = new Set();
         this._externalPlaceholder = null;
         this._externalFavoriteIndex = -1;
@@ -78,6 +80,7 @@ export class TaskbarDragController {
 
     begin(item) {
         this._dragging = true;
+        this._draggingItem = item;
         item.opacity = 96;
         this._hidePreviews();
     }
@@ -85,6 +88,7 @@ export class TaskbarDragController {
     finish(item) {
         item.opacity = 255;
         this._dragging = false;
+        this._draggingItem = null;
         this._queueRedisplay();
         for (const listener of [...this._listeners])
             listener();
@@ -92,6 +96,7 @@ export class TaskbarDragController {
 
     cancel() {
         this._dragging = false;
+        this._draggingItem = null;
     }
 
     makeDraggable(item, button, icon, app) {
@@ -111,12 +116,30 @@ export class TaskbarDragController {
             dragActorMaxSize: this._getIconSize(),
         });
         item._taskbarDraggable = draggable;
-        draggable.connect('drag-begin', () => {
-            dragSource._taskbarDropAccepted = false;
-            this.begin(item);
-            button._taskbarMenu?.close();
+        this._draggables.set(item, {
+            draggable,
+            button,
+            beginId: draggable.connect('drag-begin', () => {
+                dragSource._taskbarDropAccepted = false;
+                this.begin(item);
+                button._taskbarMenu?.close();
+            }),
+            endId: draggable.connect('drag-end', () => this.finish(item)),
         });
-        draggable.connect('drag-end', () => this.finish(item));
+    }
+
+    releaseDraggable(item) {
+        const entry = this._draggables.get(item);
+        if (!entry)
+            return;
+
+        entry.draggable.disconnect(entry.beginId);
+        entry.draggable.disconnect(entry.endId);
+        entry.button._delegate = null;
+        item._taskbarDraggable = null;
+        this._draggables.delete(item);
+        if (this._draggingItem === item)
+            this.cancel();
     }
 
     isPinnedItem(item) {
@@ -294,9 +317,13 @@ export class TaskbarDragController {
     destroy() {
         DND.removeDragMonitor(this._dragMonitor);
         this._dragMonitor = null;
+        for (const item of [...this._draggables.keys()])
+            this.releaseDraggable(item);
+        this._draggables = null;
         this._clearExternalPlaceholder();
         this._listeners.clear();
         this._dragging = false;
+        this._draggingItem = null;
         this._alignmentActor = null;
         this._showDesktopController = null;
         this._usePinnedAppLaunchers = null;

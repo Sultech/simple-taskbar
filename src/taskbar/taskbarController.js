@@ -35,6 +35,13 @@ const APP_LABEL_WIDTH = 140;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
+function taskbarFocusWindow() {
+    let window = global.display.focus_window;
+    while (window && window.skip_taskbar)
+        window = window.get_transient_for();
+    return window;
+}
+
 export class TaskbarController {
     constructor({
         settings,
@@ -662,6 +669,7 @@ export class TaskbarController {
         for (const [key, item] of this._appButtons) {
             if (!wantedKeys.has(key)) {
                 this._getPreviews().removeItem(item);
+                this._dragController.releaseDraggable(item);
                 this._destroyAppMenu(item._taskbarButton);
                 this._appButtons.delete(key);
                 if (this._isPinnedPlaceholder(
@@ -702,7 +710,7 @@ export class TaskbarController {
                 this._syncButtonState(
                     item,
                     this._tracker.focus_app,
-                    global.display.focus_window,
+                    taskbarFocusWindow(),
                     false
                 );
                 placeTaskbarItemAtIndex(
@@ -765,6 +773,7 @@ export class TaskbarController {
     _clearAppButtons() {
         for (const item of this._appButtons.values()) {
             this._getPreviews().removeItem(item);
+            this._dragController.releaseDraggable(item);
             this._untrackApp(item._taskbarApp);
             this._destroyAppMenu(item._taskbarButton);
             item.remove_all_transitions();
@@ -783,7 +792,7 @@ export class TaskbarController {
 
     syncButtonStates(animate = true) {
         const focusedApp = this._tracker.focus_app;
-        const focusedWindow = global.display.focus_window;
+        const focusedWindow = taskbarFocusWindow();
         for (const item of this._appButtons.values())
             this._syncButtonState(item, focusedApp, focusedWindow, animate);
     }
