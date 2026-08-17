@@ -105,7 +105,7 @@ export class TrayOverflowController {
         }
 
         this._syncPanelPosition();
-        this._sync();
+        this._syncButtonVisibility(false);
         this._queueRescan();
     }
 
