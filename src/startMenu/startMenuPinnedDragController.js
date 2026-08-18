@@ -99,6 +99,12 @@ export class StartMenuPinnedDragController {
         ];
     }
 
+    // GNOME 48's _Draggable connects its own actor 'destroy' handler that
+    // calls disconnectAll(). Destroy handlers run in connection order, so
+    // this must be connected before DND.makeDraggable(); otherwise
+    // _releaseDraggable() disconnects ids that are already gone and throws
+    // during teardown, which left the extension unable to enable again.
+    // GNOME 49 and 50 attach a gesture action and connect nothing.
     _trackDraggable(button) {
         const entry = {draggable: null, handlerIds: [], destroyId: 0};
         entry.destroyId = button.connect(
