@@ -107,11 +107,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const iconSizeRow = icons.iconSizeRow;
         const iconSpacingRow = icons.iconSpacingRow;
         const appAlignmentRow = icons.appAlignmentRow;
-        const indicatorStyleRow = icons.indicatorStyleRow;
-        const customIndicatorColorsSwitch = icons.customIndicatorColorsSwitch;
-        const matchIconColorSwitch = icons.matchIconColorSwitch;
-        const focusedIndicatorColorRow = icons.focusedIndicatorColorRow;
-        const unfocusedIndicatorColorRow = icons.unfocusedIndicatorColorRow;
 
         const appBehavior = addAppBehaviorGroup({
             settings: window._settings,
@@ -137,11 +132,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             startMenuPage,
             advancedAppBehaviorGroup,
             advancedStartMenuGroup,
-            indicatorStyleRow,
-            customIndicatorColorsSwitch,
-            matchIconColorSwitch,
-            focusedIndicatorColorRow,
-            unfocusedIndicatorColorRow,
             nautilusPlacesSwitch,
         });
 

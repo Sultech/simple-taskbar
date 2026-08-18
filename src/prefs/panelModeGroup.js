@@ -62,11 +62,6 @@ export function connectDefaultGnomePanelSync({
     startMenuPage,
     advancedAppBehaviorGroup,
     advancedStartMenuGroup,
-    indicatorStyleRow,
-    customIndicatorColorsSwitch,
-    matchIconColorSwitch,
-    focusedIndicatorColorRow,
-    unfocusedIndicatorColorRow,
     nautilusPlacesSwitch,
 }) {
     let syncingDefaultGnomePanel = false;
@@ -80,15 +75,7 @@ export function connectDefaultGnomePanelSync({
         startMenuPage.sensitive = !enabled;
         advancedAppBehaviorGroup.sensitive = !enabled;
         advancedStartMenuGroup.sensitive = !enabled;
-        for (const row of [
-            indicatorStyleRow,
-            customIndicatorColorsSwitch,
-            matchIconColorSwitch,
-            focusedIndicatorColorRow,
-            unfocusedIndicatorColorRow,
-            nautilusPlacesSwitch,
-        ])
-            row.sensitive = !enabled;
+        nautilusPlacesSwitch.sensitive = !enabled;
         appearanceGroup.description = enabled
             ? _('Application icons are unavailable in Default GNOME Panel mode.')
             : _('Change the size, spacing, and placement of taskbar icons.');

@@ -253,9 +253,8 @@ export function addPanelAppearancePage({
         },
         connectSettings
     );
-    panelThemeRow.sensitive = !followSystemThemeSwitch.active;
     followSystemThemeSwitch.connect('notify::active', widget => {
-        panelThemeRow.sensitive = !widget.active;
+        syncPanelThemeControls();
         if (widget.active)
             settings.set_boolean(
                 'custom-panel-color-enabled',

@@ -116,19 +116,16 @@ export function addApplicationIconsGroup({
         connectSettings
     );
     const syncIndicatorControls = () => {
-        const windowsXpThemeEnabled = settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
+        const blocked = settings.get_boolean('windows-xp-theme-enabled') ||
+            settings.get_boolean('default-gnome-panel');
         const enabled = customIndicatorColorsSwitch.active;
-        indicatorStyleRow.sensitive = !windowsXpThemeEnabled;
-        customIndicatorColorsSwitch.sensitive = !windowsXpThemeEnabled;
-        matchIconColorSwitch.sensitive = !windowsXpThemeEnabled;
+        indicatorStyleRow.sensitive = !blocked;
+        customIndicatorColorsSwitch.sensitive = !blocked;
+        matchIconColorSwitch.sensitive = !blocked;
         focusedIndicatorColorRow.visible = enabled;
         unfocusedIndicatorColorRow.visible = enabled;
-        focusedIndicatorColorRow.sensitive = !windowsXpThemeEnabled &&
-            enabled;
-        unfocusedIndicatorColorRow.sensitive =
-            !windowsXpThemeEnabled && enabled;
+        focusedIndicatorColorRow.sensitive = !blocked && enabled;
+        unfocusedIndicatorColorRow.sensitive = !blocked && enabled;
     };
     customIndicatorColorsSwitch.connect('notify::active', () => {
         if (customIndicatorColorsSwitch.active)
@@ -139,11 +136,16 @@ export function addApplicationIconsGroup({
         if (matchIconColorSwitch.active)
             customIndicatorColorsSwitch.active = false;
     });
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncIndicatorControls
-    );
+    for (const key of [
+        'windows-xp-theme-enabled',
+        'default-gnome-panel',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncIndicatorControls
+        );
+    }
     syncIndicatorControls();
     const appAlignmentRow = addComboRow(
         appearanceGroup,
@@ -179,10 +181,5 @@ export function addApplicationIconsGroup({
         iconSizeRow,
         iconSpacingRow,
         appAlignmentRow,
-        indicatorStyleRow,
-        customIndicatorColorsSwitch,
-        matchIconColorSwitch,
-        focusedIndicatorColorRow,
-        unfocusedIndicatorColorRow,
     };
 }
