@@ -67,6 +67,7 @@ export default class SimpleTaskbarExtension extends Extension {
                         this._settings.get_int('start-button-padding')
                     );
                     this._taskbarController.setIconSize(this._iconSize);
+                    this._panelController.syncVerticalItems();
                     this._panelController.updateTaskbarWidth();
                 },
                 onIconSpacingChanged: () => this._applyTaskbarAppearance(),
@@ -76,6 +77,7 @@ export default class SimpleTaskbarExtension extends Extension {
                         this._iconSize,
                         this._settings.get_int('start-button-padding')
                     );
+                    this._panelController.syncVerticalItems();
                     this._panelController.updateTaskbarWidth();
                 },
                 onPanelHeightChanged: panelHeight => {
@@ -366,6 +368,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
+            this._panelController.syncVerticalItems();
             this._panelController.updateTaskbarWidth();
         }, this);
         this._settings.connectObject('changed::panel-position', () => {
@@ -379,6 +382,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings.get_int('start-button-padding')
         );
         this._taskbarController.applyAppearance();
+        this._panelController.syncVerticalItems();
         this._panelController.updateTaskbarWidth();
     }
 

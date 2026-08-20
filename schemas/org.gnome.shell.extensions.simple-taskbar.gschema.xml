@@ -11,6 +11,8 @@
       <choices>
         <choice value="top"/>
         <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
       </choices>
       <default>'bottom'</default>
       <summary>Taskbar screen edge</summary>

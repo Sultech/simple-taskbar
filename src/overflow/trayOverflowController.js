@@ -15,7 +15,7 @@ import {
 
 import {
     panelArrowSide,
-    panelIsTop,
+    panelPosition,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
 import {closePopupMenu} from '../shared/popupMenuUtils.js';
@@ -44,6 +44,7 @@ export class TrayOverflowController {
         this._relayoutId = 0;
         this._menuRaiseId = 0;
         this._activationCloseId = 0;
+        this._alignId = 0;
         this._menuRaiseIndicator = null;
         this._stashed = new Map();
     }
@@ -77,6 +78,7 @@ export class TrayOverflowController {
             if (open) {
                 this._button.add_style_pseudo_class('active');
                 this._syncTheme();
+                this._queueMenuArrowAlignment();
             } else {
                 this._button.remove_style_pseudo_class('active');
                 this._closeStashedMenus();
@@ -134,23 +136,70 @@ export class TrayOverflowController {
             this._menu.actor.add_style_class_name(LIGHT_MENU_CLASS);
     }
 
+    _queueMenuArrowAlignment() {
+        if (this._alignId)
+            return;
+
+        this._alignId = GLib.idle_add(GLib.PRIORITY_LOW, () => {
+            this._alignId = 0;
+            this._alignMenuArrow();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _alignMenuArrow() {
+        const boxPointer = this._menu._boxPointer;
+        if (boxPointer._arrowSide !== St.Side.LEFT &&
+            boxPointer._arrowSide !== St.Side.RIGHT)
+            return;
+
+        const allocation = boxPointer.get_allocation_box();
+        const height = allocation.y2 - allocation.y1;
+        const [, , , naturalHeight] = boxPointer.get_preferred_size();
+        if (height === naturalHeight)
+            return;
+
+        const themeNode = boxPointer.get_theme_node();
+        const margin = 4 * themeNode.get_length('-arrow-border-radius') +
+            themeNode.get_length('-arrow-border-width') +
+            themeNode.get_length('-arrow-base');
+        const span = naturalHeight - margin;
+        if (span <= 0)
+            return;
+
+        const alignment = Math.clamp((height - margin) / (2 * span), 0, 1);
+        if (alignment === boxPointer._arrowAlignment)
+            return;
+
+        boxPointer.setPosition(this._button, alignment);
+    }
+
     _syncPanelPosition() {
         syncMenuArrowSide(this._menu, this._settings);
+        this._menu._boxPointer.setPosition(this._button, 0.5);
         const xpPopupOffset = this._settings.get_boolean(
             'windows-xp-theme-enabled'
-        ) && !panelIsTop(this._settings);
+        ) && panelPosition(this._settings) === 'bottom';
         if (xpPopupOffset)
             this._menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);
         else
             this._menu._boxPointer.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
-        if (panelIsTop(this._settings)) {
+        const position = panelPosition(this._settings);
+        if (position === 'top') {
             this._icon.icon_name = 'pan-down-symbolic';
             this._menu.actor.remove_style_class_name(
                 'simple-taskbar-bottom-panel-menu'
             );
-        } else {
+        } else if (position === 'bottom') {
             this._icon.icon_name = 'pan-up-symbolic';
             this._menu.actor.add_style_class_name(
+                'simple-taskbar-bottom-panel-menu'
+            );
+        } else {
+            this._icon.icon_name = position === 'left'
+                ? 'pan-end-symbolic'
+                : 'pan-start-symbolic';
+            this._menu.actor.remove_style_class_name(
                 'simple-taskbar-bottom-panel-menu'
             );
         }
@@ -172,6 +221,10 @@ export class TrayOverflowController {
         if (this._activationCloseId) {
             GLib.Source.remove(this._activationCloseId);
             this._activationCloseId = 0;
+        }
+        if (this._alignId) {
+            GLib.Source.remove(this._alignId);
+            this._alignId = 0;
         }
         this._menuRaiseIndicator = null;
         this._signalHolder.destroy();
@@ -618,6 +671,8 @@ export class TrayOverflowController {
                 row.add_child(cell);
             this._grid.add_child(row);
         }
+        this._menu.actor.set_width(-1);
+        this._menu.actor.set_height(-1);
         this._syncButtonVisibility(cells.length > 0);
     }
 

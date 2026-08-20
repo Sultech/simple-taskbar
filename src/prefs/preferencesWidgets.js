@@ -66,8 +66,9 @@ export function createPanelOrderRow(settings, {
         currentChoices = availableChoices;
         syncingPosition = true;
         positionDropDown.set_model(createModel(currentChoices));
+        const value = fixedPosition ?? settings.get_string(key);
         const index = currentChoices.findIndex(
-            choice => choice.value === settings.get_string(key)
+            choice => choice.value === value
         );
         positionDropDown.selected = index < 0 ? 0 : index;
         syncingPosition = false;

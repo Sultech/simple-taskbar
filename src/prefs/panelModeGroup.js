@@ -41,7 +41,7 @@ export function addPanelModeGroup({page, settings, connectSettings}) {
             key: 'panel-button-padding',
             title: _('Panel Button Padding'),
             subtitle: _(
-                'Horizontal space around panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
+                'Space between panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
             ),
             lower: -1,
             upper: 20,

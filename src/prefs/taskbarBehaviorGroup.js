@@ -138,7 +138,7 @@ export function addTaskbarBehaviorGroup({
 
     const notificationBannerSwitch = new Adw.SwitchRow({
         title: _('Taskbar-aligned Notification Banners'),
-        subtitle: _('Follow the taskbar edge and the clock’s horizontal position'),
+        subtitle: _('Follow the taskbar edge and the clock position'),
         active: settings.get_boolean(
             'notification-banner-bottom-end'
         ),

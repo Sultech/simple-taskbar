@@ -55,7 +55,7 @@ export function addPanelAppearancePage({
         settings,
         {
             key: 'panel-height',
-            title: _('Panel Height'),
+            title: _('Panel Thickness'),
             subtitle: _(
                 'Oversized icons shrink automatically when the panel is reduced'
             ),
@@ -71,11 +71,13 @@ export function addPanelAppearancePage({
             key: 'panel-position',
             title: _('Panel Position'),
             subtitle: _(
-                'Place the taskbar at the top or bottom of the screen'
+                'Place the taskbar at a screen edge'
             ),
             choices: [
                 {value: 'top', label: _('Top')},
                 {value: 'bottom', label: _('Bottom')},
+                {value: 'left', label: _('Left')},
+                {value: 'right', label: _('Right')},
             ],
         },
         connectSettings

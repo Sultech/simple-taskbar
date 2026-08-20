@@ -11,6 +11,7 @@ import {
     getStartIconDisplayName,
     StartIconChooserDialog,
 } from './startIconChooser.js';
+import {axisPanelPositions} from './panelAxis.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
 import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 
@@ -65,10 +66,11 @@ export function addStartMenuPage({
         {
             key: 'start-button-position',
             title: _('Start Button'),
-            subtitle: _(
-                'Place the Start button at the left edge or in the center'
-            ),
+            subtitle: _('Choose the Start button alignment'),
             choices: panelPositions.slice(0, 2),
+            choicesProvider: () =>
+                axisPanelPositions(settings, panelPositions).slice(0, 2),
+            choicesChangedKey: 'panel-position',
         },
         connectSettings
     );
