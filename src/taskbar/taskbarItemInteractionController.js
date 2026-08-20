@@ -91,7 +91,7 @@ export class TaskbarItemInteractionController {
                 if (windowCount > 0)
                     previews.scheduleSwitch(item);
                 else
-                    previews.hide(true);
+                    previews.scheduleClose();
             } else {
                 previews.schedule(item);
             }

@@ -20,9 +20,11 @@ import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 
 const PREVIEW_OPEN_DELAY = 320;
-const PREVIEW_CLOSE_DELAY = 180;
+const PREVIEW_CLOSE_DELAY = 300;
 const PREVIEW_WIDTH = 260;
 const PREVIEW_HEIGHT = 146;
+const PREVIEW_PEEK_OPACITY = 40;
+const PREVIEW_PEEK_DURATION = 250;
 const APP_TOOLTIP_DELAY = 300;
 const APP_TOOLTIP_SHOW_TIME = 150;
 const APP_TOOLTIP_HIDE_TIME = 100;
@@ -46,6 +48,8 @@ export class WindowPreviewController {
         this._previewSwitchItem = null;
         this._previewRefreshId = 0;
         this._previewHoverItem = null;
+        this._peekedWindow = null;
+        this._peekedWindowStack = null;
         this._closingPreviewMenus = new Set();
         this._appTooltip = null;
         this._tooltipItem = null;
@@ -334,8 +338,11 @@ export class WindowPreviewController {
                 return;
             if (actor.hover)
                 this._clearTimeout('_previewCloseId');
-            else if (!item.hover && !pointerButtonIsPressed())
-                this.scheduleClose();
+            else {
+                this._restorePeek();
+                if (!item.hover && !pointerButtonIsPressed())
+                    this.scheduleClose();
+            }
         });
         menu.actor.connect('captured-event', (_actor, event) => {
             if (this._previewItem !== item)
@@ -363,10 +370,6 @@ export class WindowPreviewController {
 
             if (this._previewSwitchId)
                 this._clearSwitch();
-            if (pointerInsidePreview)
-                this._clearTimeout('_previewCloseId');
-            else if (!this._previewCloseId)
-                this.scheduleClose();
 
             return Clutter.EVENT_PROPAGATE;
         });
@@ -384,6 +387,7 @@ export class WindowPreviewController {
     }
 
     _hidePreview(animate) {
+        this._restorePeek();
         this._releaseHoverItem();
         const item = this._previewItem;
         this._previewItem = null;
@@ -439,6 +443,111 @@ export class WindowPreviewController {
             GLib.Source.remove(this._previewSwitchId);
         this._previewSwitchId = 0;
         this._previewSwitchItem = null;
+    }
+
+    _peekWindow(window) {
+        if (this._peekedWindow === window)
+            return;
+
+        const currentWorkspace =
+            global.workspace_manager.get_active_workspace();
+
+        if (Main.sessionMode.hasWorkspaces &&
+            window.get_workspace() !== currentWorkspace)
+            return;
+
+        this._restorePeekedWindowStack();
+        this._peekedWindow = window;
+        this._focusMetaWindow(PREVIEW_PEEK_OPACITY, window);
+    }
+
+    _focusMetaWindow(dimOpacity, window, ignoreFocus = false) {
+        const isAppSpread = !Main.sessionMode.hasWorkspaces;
+        const currentWorkspace =
+            global.workspace_manager.get_active_workspace();
+        const windows = isAppSpread
+            ? global.get_window_actors().map(actor => actor.meta_window)
+            : currentWorkspace.list_windows();
+
+        for (const metaWindow of windows) {
+            const windowActor = metaWindow.get_compositor_private();
+            const isFocused = !ignoreFocus && metaWindow === window;
+            if (!windowActor)
+                continue;
+
+            if (isFocused) {
+                const parent = windowActor.get_parent();
+                this._peekedWindowStack = {
+                    parent,
+                    index: parent.get_children().indexOf(windowActor),
+                };
+                parent.set_child_above_sibling(windowActor, null);
+            }
+
+            if (isFocused && metaWindow.minimized)
+                windowActor.show();
+
+            this._animateWindowOpacity(
+                metaWindow,
+                windowActor,
+                isFocused ? 255 : dimOpacity
+            );
+        }
+    }
+
+    _animateWindowOpacity(metaWindow, windowActor, opacity) {
+        if (metaWindow.minimized)
+            return;
+
+        const visible = opacity > 0;
+        const visual = windowActor.get_first_child() || windowActor;
+        const initialOpacity = visual.opacity;
+        let targetOpacity = opacity;
+
+        if (!windowActor.visible && visible) {
+            visual.opacity = 0;
+            windowActor.visible = visible;
+            targetOpacity = Math.min(initialOpacity, targetOpacity);
+        }
+
+        const options = {
+            opacity: targetOpacity,
+            duration: PREVIEW_PEEK_DURATION,
+            mode: Clutter.AnimationMode.EASE_IN_OUT_QUAD,
+        };
+        if (!visible) {
+            options.onComplete = () => {
+                windowActor.visible = visible;
+                visual.opacity = initialOpacity;
+            };
+        }
+
+        visual.ease(options);
+    }
+
+    _restorePeekedWindowStack() {
+        if (!this._peekedWindow)
+            return;
+
+        const windowActor = this._peekedWindow.get_compositor_private();
+        if (windowActor && this._peekedWindowStack) {
+            windowActor.get_parent().set_child_at_index(
+                windowActor,
+                this._peekedWindowStack.index
+            );
+            if (this._peekedWindow.minimized)
+                windowActor.hide();
+        }
+        this._peekedWindowStack = null;
+    }
+
+    _restorePeek() {
+        if (!this._peekedWindow)
+            return;
+
+        this._restorePeekedWindowStack();
+        this._focusMetaWindow(255, this._peekedWindow, true);
+        this._peekedWindow = null;
     }
 
     _clearTimeouts() {
@@ -555,6 +664,7 @@ export class WindowPreviewController {
             return;
         }
 
+        this._restorePeek();
         previewBox.destroy_all_children();
         for (const window of windows) {
             const preview = this._createWindowPreview(window);
@@ -635,6 +745,10 @@ export class WindowPreviewController {
             track_hover: true,
         });
         preview.add_child(previewButton);
+        preview.connect('notify::hover', actor => {
+            if (actor.hover)
+                this._peekWindow(window);
+        });
 
         if (window.can_close()) {
             const closeButton = new St.Button({
