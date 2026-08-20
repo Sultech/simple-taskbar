@@ -135,6 +135,7 @@ export function addComboRow(group, settings, {
     initialValue = null,
     choicesProvider = () => choices,
     choicesChangedKey = null,
+    setValue = value => settings.set_string(key, value),
 }, connectSettings) {
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
@@ -161,7 +162,7 @@ export function addComboRow(group, settings, {
 
         const choice = currentChoices[widget.get_selected()];
         if (choice)
-            settings.set_string(key, choice.value);
+            setValue(choice.value);
     });
     connectSettings(settings, `changed::${key}`, () => {
         const value = settings.get_string(key);

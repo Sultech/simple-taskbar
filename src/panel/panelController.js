@@ -21,10 +21,8 @@ import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
 import {PanelClockController} from './panelClockController.js';
-import {
-    normalizePanelItemOrder,
-    placePanelItems,
-} from '../shared/panelItemOrder.js';
+import {placePanelItems} from '../shared/panelItemOrder.js';
+import {synchronizePanelPosition} from '../shared/panelModeProfiles.js';
 import {createPanelItems} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelGeometry} from './panelGeometry.js';
@@ -39,11 +37,6 @@ import {
 } from './panelVerticalItemsController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {TRAY_OVERFLOW_ROLE} from '../overflow/trayOverflowController.js';
-import {
-    setInteger,
-    setString,
-    setStringArray,
-} from '../shared/settingsUtils.js';
 import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
@@ -94,7 +87,6 @@ export class PanelController {
         this._activitiesDotWidthOverride = null;
         this._activitiesController = null;
         this._clockController = null;
-        this._panelWasVertical = panelIsVertical(settings);
         this._verticalItemsController = new PanelVerticalItemsController(
             settings,
             [
@@ -166,7 +158,7 @@ export class PanelController {
         this._themeController.connectSignals(
             () => this.applyLayout(),
             () => {
-                this._syncPanelPositionDefaults();
+                synchronizePanelPosition(this._settings);
                 this.position();
                 this._onAppAlignmentChanged();
                 this._menuPositioner.refresh();
@@ -401,7 +393,6 @@ export class PanelController {
         this._isAutoHideBlocked = null;
         this._settings = null;
         this._notificationAreaController = null;
-        this._panelWasVertical = null;
         this._applyingLayout = false;
     }
 
@@ -517,50 +508,6 @@ export class PanelController {
             Main.panel.add_style_class_name('simple-taskbar-panel-vertical');
         else
             Main.panel.remove_style_class_name('simple-taskbar-panel-vertical');
-    }
-
-    _syncPanelPositionDefaults() {
-        const vertical = panelIsVertical(this._settings);
-        if (vertical === this._panelWasVertical)
-            return;
-
-        setString(
-            this._settings,
-            'app-alignment',
-            vertical ? 'left' : 'center'
-        );
-        setInteger(
-            this._settings,
-            'icon-spacing',
-            vertical ? 6 : 3
-        );
-        setInteger(
-            this._settings,
-            'start-button-padding',
-            vertical ? 8 : 3
-        );
-        if (!this._settings.get_boolean('default-gnome-panel')) {
-            setString(
-                this._settings,
-                'activities-button-position',
-                vertical ? 'right' : 'left'
-            );
-            this._syncActivitiesPanelItemOrder(vertical);
-        }
-        this._panelWasVertical = vertical;
-    }
-
-    _syncActivitiesPanelItemOrder(vertical) {
-        const order = normalizePanelItemOrder(
-            this._settings.get_strv('panel-item-order')
-        );
-        order.splice(order.indexOf('activities'), 1);
-        if (vertical) {
-            order.splice(order.indexOf('right-box'), 0, 'activities');
-        } else {
-            order.splice(order.indexOf('left-box') + 1, 0, 'activities');
-        }
-        setStringArray(this._settings, 'panel-item-order', order);
     }
 
     _restoreNativeLayouts() {

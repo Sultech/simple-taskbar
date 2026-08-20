@@ -19,6 +19,7 @@ import {
     PANEL_MODE_TASKBAR,
     PANEL_MODE_WINDOWS_XP,
     setPanelMode,
+    setPanelPosition,
 } from '../shared/panelModeProfiles.js';
 import {
     addColorRow,
@@ -79,6 +80,12 @@ export function addPanelAppearancePage({
                 {value: 'left', label: _('Left')},
                 {value: 'right', label: _('Right')},
             ],
+            setValue: position => {
+                const settings = createSettings();
+                settings.delay();
+                setPanelPosition(settings, position);
+                settings.apply();
+            },
         },
         connectSettings
     );
