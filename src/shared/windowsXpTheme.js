@@ -11,6 +11,10 @@ import {
     setString,
     setStringArray,
 } from './settingsUtils.js';
+import {
+    restoreTaskbarModeSettings,
+    saveTaskbarModeSettings,
+} from './taskbarModeSettings.js';
 
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
@@ -103,8 +107,9 @@ export function applyWindowsXpThemeSettings(settings) {
 }
 
 export function setWindowsXpThemeEnabled(settings, enabled) {
-    setBoolean(settings, 'windows-xp-theme-enabled', enabled);
     if (enabled) {
+        saveTaskbarModeSettings(settings);
+        setBoolean(settings, 'windows-xp-theme-enabled', true);
         setBoolean(settings, 'default-gnome-panel', false);
         setBoolean(settings, 'activities-button-visible', false);
         setString(
@@ -116,6 +121,10 @@ export function setWindowsXpThemeEnabled(settings, enabled) {
         applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     } else {
-        applyDefaultTaskbarSettings(settings);
+        setBoolean(settings, 'windows-xp-theme-enabled', false);
+        if (!settings.get_boolean('default-gnome-panel') &&
+            !restoreTaskbarModeSettings(settings)) {
+            applyDefaultTaskbarSettings(settings);
+        }
     }
 }

@@ -5,7 +5,10 @@ import {
     ICON_VERTICAL_RESERVE,
     STANDARD_MIN_PANEL_HEIGHT,
 } from './shared/panelSizing.js';
-import {applyDefaultTaskbarSettings} from './shared/taskbarDefaults.js';
+import {
+    restoreTaskbarModeSettings,
+    saveTaskbarModeSettings,
+} from './shared/taskbarModeSettings.js';
 import {
     applyWindowsXpThemeAppearance,
     applyWindowsXpThemeBehaviorDefaults,
@@ -104,7 +107,7 @@ export class WindowsXpModeController {
         if (!this._windowsXpModeEnabled()) {
             if (modeChanged &&
                 !this._settings.get_boolean('default-gnome-panel')) {
-                applyDefaultTaskbarSettings(this._settings);
+                restoreTaskbarModeSettings(this._settings);
                 return;
             }
             if (!this._settings.get_boolean('default-gnome-panel')) {
@@ -122,6 +125,8 @@ export class WindowsXpModeController {
             return;
         }
 
+        if (modeChanged)
+            saveTaskbarModeSettings(this._settings);
         if (this._settings.get_boolean('default-gnome-panel'))
             this._settings.set_boolean('default-gnome-panel', false);
         if (modeChanged) {
@@ -133,6 +138,8 @@ export class WindowsXpModeController {
     }
 
     _syncDefaultPanel() {
+        if (this._settings.get_boolean('default-gnome-panel'))
+            saveTaskbarModeSettings(this._settings);
         if (this._windowsXpModeEnabled() &&
             this._settings.get_boolean('default-gnome-panel')) {
             applyWindowsXpThemeSettings(this._settings);
@@ -141,7 +148,7 @@ export class WindowsXpModeController {
         }
         if (!this._settings.get_boolean('default-gnome-panel') &&
             !this._windowsXpModeEnabled()) {
-            applyDefaultTaskbarSettings(this._settings);
+            restoreTaskbarModeSettings(this._settings);
         }
         this._onDefaultPanelChanged();
     }

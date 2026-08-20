@@ -7,6 +7,10 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {DEFAULT_PANEL_ITEM_ORDER} from '../shared/panelItemOrder.js';
 import {applyDefaultTaskbarSettings} from '../shared/taskbarDefaults.js';
+import {
+    restoreTaskbarModeSettings,
+    saveTaskbarModeSettings,
+} from '../shared/taskbarModeSettings.js';
 import {addSpinRow} from './preferencesWidgets.js';
 
 export function addPanelModeGroup({page, settings, connectSettings}) {
@@ -88,8 +92,9 @@ export function connectDefaultGnomePanelSync({
     const setDefaultGnomePanel = enabled => {
         const settings = createSettings();
         settings.delay();
-        settings.set_boolean('default-gnome-panel', enabled);
         if (enabled) {
+            saveTaskbarModeSettings(settings);
+            settings.set_boolean('default-gnome-panel', true);
             settings.set_boolean('windows-xp-theme-enabled', false);
             settings.set_int('panel-height', 32);
             settings.set_int('panel-button-padding', 12);
@@ -111,7 +116,9 @@ export function connectDefaultGnomePanelSync({
             settings.set_boolean('panel-border-enabled', false);
             settings.set_boolean('panel-border-light-enabled', false);
         } else {
-            applyDefaultTaskbarSettings(settings);
+            settings.set_boolean('default-gnome-panel', false);
+            if (!restoreTaskbarModeSettings(settings))
+                applyDefaultTaskbarSettings(settings);
         }
         settings.apply();
     };

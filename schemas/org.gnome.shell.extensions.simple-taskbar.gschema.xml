@@ -201,6 +201,14 @@
       <default>false</default>
       <summary>Use Windows XP taskbar dimensions</summary>
     </key>
+    <key name="taskbar-mode-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Taskbar settings saved while another panel mode is active</summary>
+    </key>
+    <key name="taskbar-mode-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether Taskbar settings are saved for mode restoration</summary>
+    </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>
