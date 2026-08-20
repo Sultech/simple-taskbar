@@ -54,6 +54,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'hide-app-labels', false);
     setBoolean(settings, 'hide-pinned-taskbar-apps', false);
     setBoolean(settings, 'multi-window-click-spread', true);
+    setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'nautilus-places-enabled', true);
     setBoolean(settings, 'start-menu-follow-panel-theme', true);

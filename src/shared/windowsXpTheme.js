@@ -28,6 +28,7 @@ export function applyWindowsXpThemeAppearance(settings) {
 
 export function applyWindowsXpThemeBehaviorDefaults(settings) {
     setBoolean(settings, 'multi-window-click-spread', true);
+    setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'hot-edge-overview-enabled', true);
     setBoolean(settings, 'workspace-scroll-enabled', true);

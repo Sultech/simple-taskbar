@@ -161,6 +161,19 @@ export function addApplicationIconsGroup({
         connectSettings
     );
 
+    const windowPreviewsSwitch = new Adw.SwitchRow({
+        title: _('Window Previews'),
+        subtitle: _('Show live window previews when hovering application icons'),
+        active: settings.get_boolean('window-previews-enabled'),
+    });
+    appearanceGroup.add(windowPreviewsSwitch);
+    settings.bind(
+        'window-previews-enabled',
+        windowPreviewsSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+
     const multiWindowSpreadSwitch = new Adw.SwitchRow({
         title: _('Spread Multiple Windows'),
         subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),

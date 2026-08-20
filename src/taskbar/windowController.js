@@ -106,27 +106,34 @@ export class WindowController {
     }
 
     handleAppClicked(item, app) {
+        const previews = this._getPreviews();
         const windows = this.getInterestingWindows(app);
         if (windows.length > 1 &&
             this._settings.get_boolean('multi-window-click-spread')) {
-            this._getPreviews().hideTooltip(false);
-            this._getPreviews().hide();
+            previews.hideTooltip(false);
+            previews.hide();
             this._spreadAppWindows(app);
             return;
         }
 
         if (Main.overview._shown) {
-            this._getPreviews().hide();
+            previews.hide();
             this.activateApp(app);
             return;
         }
 
         if (windows.length > 1) {
-            this._getPreviews().show(item);
+            if (previews.previewsEnabled) {
+                previews.show(item);
+                return;
+            }
+
+            previews.hide();
+            this.activateApp(app);
             return;
         }
 
-        this._getPreviews().hide();
+        previews.hide();
         this.activateApp(app);
     }
 

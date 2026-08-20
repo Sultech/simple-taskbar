@@ -58,7 +58,8 @@ export class TaskbarItemInteractionController {
         }
 
         const keepOpen = this._getInterestingWindows(app).length > 1 &&
-            !this._settings.get_boolean('multi-window-click-spread');
+            !this._settings.get_boolean('multi-window-click-spread') &&
+            previews.previewsEnabled;
         this._onAppClicked(interactionItem, app);
         return keepOpen;
     }
@@ -87,6 +88,11 @@ export class TaskbarItemInteractionController {
             const windowCount = item._taskbarIsLauncher
                 ? 0
                 : this._windowsForItem(item).length;
+            if (!previews.previewsEnabled) {
+                previews.hide();
+                previews.scheduleTooltip(item);
+                return;
+            }
             if (previews.currentItem && previews.currentItem !== item) {
                 if (windowCount > 0)
                     previews.scheduleSwitch(item);

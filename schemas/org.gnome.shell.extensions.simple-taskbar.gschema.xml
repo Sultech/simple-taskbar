@@ -247,6 +247,10 @@
       <default>true</default>
       <summary>Show an application window spread when its taskbar icon is clicked</summary>
     </key>
+    <key name="window-previews-enabled" type="b">
+      <default>true</default>
+      <summary>Show live window previews when hovering application icons</summary>
+    </key>
     <key name="grid-alt-tab-enabled" type="b">
       <default>true</default>
       <summary>Replace the application switcher with a grid of open windows</summary>
