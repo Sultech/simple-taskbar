@@ -266,6 +266,14 @@ msgstr "Выравнивание значков"
 msgid "Place application icons at the left or center"
 msgstr "Расположить значки приложений слева или по центру"
 
+#: src/prefs/applicationIconsGroup.js:165
+msgid "Window Previews"
+msgstr "Предпросмотр окон"
+
+#: src/prefs/applicationIconsGroup.js:166
+msgid "Show live window previews when hovering application icons"
+msgstr "Показывать интерактивные миниатюры окон при наведении на значки приложений"
+
 #: src/prefs/applicationIconsGroup.js:163
 msgid "Spread Multiple Windows"
 msgstr "Развернуть несколько окон"

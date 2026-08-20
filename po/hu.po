@@ -264,6 +264,14 @@ msgstr "Ikonok igazítása"
 msgid "Place application icons at the left or center"
 msgstr "Alkalmazásikonok elhelyezése balra vagy középre"
 
+#: src/prefs/applicationIconsGroup.js:165
+msgid "Window Previews"
+msgstr "Ablakelőnézetek"
+
+#: src/prefs/applicationIconsGroup.js:166
+msgid "Show live window previews when hovering application icons"
+msgstr "Élő ablak-előnézetek megjelenítése, amikor az egérmutatót az alkalmazásikonok fölé viszi"
+
 #: src/prefs/applicationIconsGroup.js:163
 msgid "Spread Multiple Windows"
 msgstr "Több ablak szétterítése"

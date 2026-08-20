@@ -258,6 +258,14 @@ msgstr "图标对齐方式"
 msgid "Place application icons at the left or center"
 msgstr "将应用图标放置在左侧或居中"
 
+#: src/prefs/applicationIconsGroup.js:165
+msgid "Window Previews"
+msgstr "窗口预览"
+
+#: src/prefs/applicationIconsGroup.js:166
+msgid "Show live window previews when hovering application icons"
+msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
+
 #: src/prefs/applicationIconsGroup.js:163
 msgid "Spread Multiple Windows"
 msgstr "展开多窗口"

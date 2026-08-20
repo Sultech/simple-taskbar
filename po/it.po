@@ -280,6 +280,14 @@ msgstr "Allineamento icone"
 msgid "Place application icons at the left or center"
 msgstr "Posiziona le icone delle applicazioni a sinistra o al centro"
 
+#: src/prefs/applicationIconsGroup.js:165
+msgid "Window Previews"
+msgstr "Anteprime delle finestre"
+
+#: src/prefs/applicationIconsGroup.js:166
+msgid "Show live window previews when hovering application icons"
+msgstr "Mostra le anteprime in tempo reale delle finestre quando passi il mouse sulle icone delle applicazioni"
+
 #: src/prefs/applicationIconsGroup.js:163
 msgid "Spread Multiple Windows"
 msgstr "Distribuisci finestre multiple"
