@@ -25,6 +25,8 @@ export class PanelClockController {
         this._originalUseMarkup = null;
         this._clockFormat = null;
         this._formatted = false;
+        this._vertical = null;
+        this._clockAllocationId = 0;
     }
 
     enable() {
@@ -33,7 +35,7 @@ export class PanelClockController {
             this._signalHolder
         );
         this._settings.connectObject(
-            'changed::panel-position', () => this.sync(),
+            'changed::panel-position', () => this._syncPanelPosition(),
             this._signalHolder
         );
         this._desktopSettings.connectObject(
@@ -43,7 +45,7 @@ export class PanelClockController {
             },
             this._signalHolder
         );
-        this.sync();
+        this._syncPanelPosition();
     }
 
     sync() {
@@ -102,6 +104,10 @@ export class PanelClockController {
     }
 
     destroy() {
+        if (this._clockAllocationId) {
+            this._dateMenu._clockDisplay.disconnect(this._clockAllocationId);
+            this._clockAllocationId = 0;
+        }
         this._signalHolder.destroy();
         this._signalHolder = null;
         if (this._formatted)
@@ -110,6 +116,32 @@ export class PanelClockController {
         this._settings = null;
         this._dateMenu = null;
         this._getPanelThickness = null;
+    }
+
+    _syncPanelPosition() {
+        const vertical = panelIsVertical(this._settings);
+        if (vertical === this._vertical)
+            return;
+
+        this._vertical = vertical;
+        if (this._clockAllocationId) {
+            this._dateMenu._clockDisplay.disconnect(this._clockAllocationId);
+            this._clockAllocationId = 0;
+        }
+        if (!vertical) {
+            this.sync();
+            return;
+        }
+
+        this._clockAllocationId = this._dateMenu._clockDisplay.connect(
+            'notify::allocation', () => {
+                this._dateMenu._clockDisplay.disconnect(
+                    this._clockAllocationId
+                );
+                this._clockAllocationId = 0;
+                this.sync();
+            }
+        );
     }
 
     _restoreClockText() {
