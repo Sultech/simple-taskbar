@@ -13,9 +13,13 @@ import {
 } from '../shared/panelSizing.js';
 import {
     applyWindowsXpThemeSettings,
-    setWindowsXpThemeEnabled,
     WINDOWS_XP_ICON_SPACING,
 } from '../shared/windowsXpTheme.js';
+import {
+    PANEL_MODE_TASKBAR,
+    PANEL_MODE_WINDOWS_XP,
+    setPanelMode,
+} from '../shared/panelModeProfiles.js';
 import {
     addColorRow,
     addComboRow,
@@ -152,7 +156,10 @@ export function addPanelAppearancePage({
     const setWindowsXpTheme = enabled => {
         const settings = createSettings();
         settings.delay();
-        setWindowsXpThemeEnabled(settings, enabled);
+        setPanelMode(
+            settings,
+            enabled ? PANEL_MODE_WINDOWS_XP : PANEL_MODE_TASKBAR
+        );
         settings.apply();
     };
     windowsXpThemeSwitch.connect('notify::active', () => {

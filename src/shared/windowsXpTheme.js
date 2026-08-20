@@ -4,17 +4,12 @@
 import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
-import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
 import {
     setBoolean,
     setInteger,
     setString,
     setStringArray,
 } from './settingsUtils.js';
-import {
-    restoreTaskbarModeSettings,
-    saveTaskbarModeSettings,
-} from './taskbarModeSettings.js';
 
 export const WINDOWS_XP_PANEL_HEIGHT = 30;
 export const WINDOWS_XP_ICON_SIZE = 16;
@@ -103,28 +98,5 @@ export function applyWindowsXpThemeSettings(settings) {
             'combine-app-buttons-mode',
             WINDOWS_XP_COMBINE_MODE
         );
-    }
-}
-
-export function setWindowsXpThemeEnabled(settings, enabled) {
-    if (enabled) {
-        saveTaskbarModeSettings(settings);
-        setBoolean(settings, 'windows-xp-theme-enabled', true);
-        setBoolean(settings, 'default-gnome-panel', false);
-        setBoolean(settings, 'activities-button-visible', false);
-        setString(
-            settings,
-            'combine-app-buttons-mode',
-            WINDOWS_XP_COMBINE_MODE
-        );
-        applyWindowsXpThemeBehaviorDefaults(settings);
-        applyWindowsXpThemeAppearance(settings);
-        applyWindowsXpThemeSettings(settings);
-    } else {
-        setBoolean(settings, 'windows-xp-theme-enabled', false);
-        if (!settings.get_boolean('default-gnome-panel') &&
-            !restoreTaskbarModeSettings(settings)) {
-            applyDefaultTaskbarSettings(settings);
-        }
     }
 }

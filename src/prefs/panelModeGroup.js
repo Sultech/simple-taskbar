@@ -5,12 +5,11 @@ import Adw from 'gi://Adw';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {DEFAULT_PANEL_ITEM_ORDER} from '../shared/panelItemOrder.js';
-import {applyDefaultTaskbarSettings} from '../shared/taskbarDefaults.js';
 import {
-    restoreTaskbarModeSettings,
-    saveTaskbarModeSettings,
-} from '../shared/taskbarModeSettings.js';
+    PANEL_MODE_DEFAULT,
+    PANEL_MODE_TASKBAR,
+    setPanelMode,
+} from '../shared/panelModeProfiles.js';
 import {addSpinRow} from './preferencesWidgets.js';
 
 export function addPanelModeGroup({page, settings, connectSettings}) {
@@ -92,34 +91,10 @@ export function connectDefaultGnomePanelSync({
     const setDefaultGnomePanel = enabled => {
         const settings = createSettings();
         settings.delay();
-        if (enabled) {
-            saveTaskbarModeSettings(settings);
-            settings.set_boolean('default-gnome-panel', true);
-            settings.set_boolean('windows-xp-theme-enabled', false);
-            settings.set_int('panel-height', 32);
-            settings.set_int('panel-button-padding', 12);
-            settings.set_string('panel-position', 'top');
-            settings.set_boolean('activities-button-visible', true);
-            settings.set_string('activities-button-position', 'left');
-            settings.set_string('clock-position', 'center');
-            settings.set_string('system-menu-position', 'right');
-            settings.set_string('folder-menu-position', 'right');
-            settings.set_string('tray-overflow-position', 'right');
-            settings.set_strv(
-                'panel-item-order',
-                DEFAULT_PANEL_ITEM_ORDER
-            );
-            settings.set_boolean('multi-monitor-panels', true);
-            settings.set_boolean('windows-start-menu-enabled', false);
-            settings.set_boolean('gnome-start-button-visible', false);
-            settings.set_boolean('show-desktop-button-visible', false);
-            settings.set_boolean('panel-border-enabled', false);
-            settings.set_boolean('panel-border-light-enabled', false);
-        } else {
-            settings.set_boolean('default-gnome-panel', false);
-            if (!restoreTaskbarModeSettings(settings))
-                applyDefaultTaskbarSettings(settings);
-        }
+        setPanelMode(
+            settings,
+            enabled ? PANEL_MODE_DEFAULT : PANEL_MODE_TASKBAR
+        );
         settings.apply();
     };
 

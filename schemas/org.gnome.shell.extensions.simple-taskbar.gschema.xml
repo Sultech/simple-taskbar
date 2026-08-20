@@ -203,11 +203,40 @@
     </key>
     <key name="taskbar-mode-settings" type="a{sv}">
       <default>{}</default>
-      <summary>Taskbar settings saved while another panel mode is active</summary>
+      <summary>Settings saved for Taskbar mode</summary>
     </key>
     <key name="taskbar-mode-settings-saved" type="b">
       <default>false</default>
-      <summary>Whether Taskbar settings are saved for mode restoration</summary>
+      <summary>Whether Taskbar mode settings are saved</summary>
+    </key>
+    <key name="default-panel-mode-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for Default GNOME Panel mode</summary>
+    </key>
+    <key name="default-panel-mode-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether Default GNOME Panel mode settings are saved</summary>
+    </key>
+    <key name="windows-xp-mode-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for Windows XP mode</summary>
+    </key>
+    <key name="windows-xp-mode-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether Windows XP mode settings are saved</summary>
+    </key>
+    <key name="active-panel-mode" type="s">
+      <choices>
+        <choice value="taskbar"/>
+        <choice value="default-panel"/>
+        <choice value="windows-xp"/>
+      </choices>
+      <default>'taskbar'</default>
+      <summary>Panel mode whose settings are currently active</summary>
+    </key>
+    <key name="panel-mode-profiles-initialized" type="b">
+      <default>false</default>
+      <summary>Whether panel mode profiles have been initialized</summary>
     </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>

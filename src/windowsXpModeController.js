@@ -6,12 +6,11 @@ import {
     STANDARD_MIN_PANEL_HEIGHT,
 } from './shared/panelSizing.js';
 import {
-    restoreTaskbarModeSettings,
-    saveTaskbarModeSettings,
-} from './shared/taskbarModeSettings.js';
+    initializePanelModeProfiles,
+    synchronizePanelMode,
+} from './shared/panelModeProfiles.js';
 import {
     applyWindowsXpThemeAppearance,
-    applyWindowsXpThemeBehaviorDefaults,
     applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SPACING,
     WINDOWS_XP_ICON_SIZE,
@@ -61,18 +60,23 @@ export class WindowsXpModeController {
     }
 
     applyInitialSettings() {
-        this._syncMode(false);
+        initializePanelModeProfiles(this._settings);
+        this._syncMode();
     }
 
     enable() {
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => {
-                this._syncMode(true);
+                synchronizePanelMode(this._settings);
+                this._syncMode();
                 this._onModeChanged();
             },
             'changed::default-gnome-panel',
-            () => this._syncDefaultPanel(),
+            () => {
+                synchronizePanelMode(this._settings);
+                this._onDefaultPanelChanged();
+            },
             'changed::icon-size',
             () => this._syncIconSize(),
             'changed::icon-spacing',
@@ -103,13 +107,8 @@ export class WindowsXpModeController {
         return this._settings.get_boolean('windows-xp-theme-enabled');
     }
 
-    _syncMode(modeChanged) {
+    _syncMode() {
         if (!this._windowsXpModeEnabled()) {
-            if (modeChanged &&
-                !this._settings.get_boolean('default-gnome-panel')) {
-                restoreTaskbarModeSettings(this._settings);
-                return;
-            }
             if (!this._settings.get_boolean('default-gnome-panel')) {
                 const minimumPanelHeight =
                     this._settings.get_int('icon-size') +
@@ -125,32 +124,8 @@ export class WindowsXpModeController {
             return;
         }
 
-        if (modeChanged)
-            saveTaskbarModeSettings(this._settings);
-        if (this._settings.get_boolean('default-gnome-panel'))
-            this._settings.set_boolean('default-gnome-panel', false);
-        if (modeChanged) {
-            this._settings.set_boolean('activities-button-visible', false);
-            applyWindowsXpThemeBehaviorDefaults(this._settings);
-        }
         applyWindowsXpThemeAppearance(this._settings);
         applyWindowsXpThemeSettings(this._settings);
-    }
-
-    _syncDefaultPanel() {
-        if (this._settings.get_boolean('default-gnome-panel'))
-            saveTaskbarModeSettings(this._settings);
-        if (this._windowsXpModeEnabled() &&
-            this._settings.get_boolean('default-gnome-panel')) {
-            applyWindowsXpThemeSettings(this._settings);
-            this._settings.set_boolean('default-gnome-panel', false);
-            return;
-        }
-        if (!this._settings.get_boolean('default-gnome-panel') &&
-            !this._windowsXpModeEnabled()) {
-            restoreTaskbarModeSettings(this._settings);
-        }
-        this._onDefaultPanelChanged();
     }
 
     _syncIconSize() {
