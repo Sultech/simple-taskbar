@@ -45,7 +45,7 @@ export class TrayOverflowController {
         this._relayoutId = 0;
         this._menuRaiseId = 0;
         this._activationCloseId = 0;
-        this._alignAfterUpdateId = 0;
+        this._alignId = 0;
         this._menuRaiseIndicator = null;
         this._stashed = new Map();
     }
@@ -138,13 +138,13 @@ export class TrayOverflowController {
     }
 
     _queueMenuArrowAlignment() {
-        if (this._alignAfterUpdateId)
+        if (this._alignId)
             return;
 
-        this._alignAfterUpdateId = global.stage.connect('after-update', () => {
-            global.stage.disconnect(this._alignAfterUpdateId);
-            this._alignAfterUpdateId = 0;
+        this._alignId = GLib.idle_add(GLib.PRIORITY_LOW, () => {
+            this._alignId = 0;
             this._alignMenuArrow();
+            return GLib.SOURCE_REMOVE;
         });
     }
 
@@ -223,9 +223,9 @@ export class TrayOverflowController {
             GLib.Source.remove(this._activationCloseId);
             this._activationCloseId = 0;
         }
-        if (this._alignAfterUpdateId) {
-            global.stage.disconnect(this._alignAfterUpdateId);
-            this._alignAfterUpdateId = 0;
+        if (this._alignId) {
+            GLib.Source.remove(this._alignId);
+            this._alignId = 0;
         }
         this._menuRaiseIndicator = null;
         this._signalHolder.destroy();
