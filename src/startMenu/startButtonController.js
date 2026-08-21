@@ -17,10 +17,7 @@ import {
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
-import {
-    openPopupMenu,
-    registerPopupMenu,
-} from '../shared/popupMenuUtils.js';
+import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
@@ -312,9 +309,6 @@ export class StartButtonController {
         Main.uiGroup.add_child(menu.actor);
         this._menuManager.addMenu(menu);
         this._contextMenu = menu;
-        registerPopupMenu(menu, () => {
-            syncMenuArrowSide(menu, this._settings);
-        });
         menu.connectObject('open-state-changed', () => {
             this._notifyMenuOpenStateChanged();
         }, this._signalHolder);
