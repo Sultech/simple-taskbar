@@ -14,7 +14,10 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {shellMenusUseLightTheme} from './themeUtils.js';
-import {closePopupMenu} from './shared/popupMenuUtils.js';
+import {
+    closePopupMenu,
+    registerPopupMenu,
+} from './shared/popupMenuUtils.js';
 import {
     panelArrowSide,
     syncPanelMenuPosition,
@@ -62,6 +65,9 @@ export class FolderMenuController {
         this._showMessage(_('Open to view folder contents'));
         this._button.setMenu(this._menu);
         this._menuManager.addMenu(this._menu);
+        registerPopupMenu(this._menu, () => {
+            this._syncPanelPosition();
+        });
 
         this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open)

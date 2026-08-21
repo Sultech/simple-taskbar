@@ -19,7 +19,10 @@ import {
     panelPosition,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
-import {closePopupMenu} from '../shared/popupMenuUtils.js';
+import {
+    closePopupMenu,
+    registerPopupMenu,
+} from '../shared/popupMenuUtils.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
 export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
@@ -74,6 +77,10 @@ export class TrayOverflowController {
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
         this._menuManager.addMenu(this._menu);
+        registerPopupMenu(this._menu, () => {
+            this._syncPanelPosition();
+            this._queueMenuArrowAlignment();
+        });
 
         this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open) {

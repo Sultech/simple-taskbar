@@ -33,7 +33,10 @@ import {
 import {
     ApplicationOverflowThemeController,
 } from './applicationOverflowThemeController.js';
-import {closePopupMenu} from '../shared/popupMenuUtils.js';
+import {
+    closePopupMenu,
+    registerPopupMenu,
+} from '../shared/popupMenuUtils.js';
 
 const TASKBAR_CONTENT_CLASS =
     'simple-taskbar-application-overflow-taskbar-content';
@@ -146,6 +149,9 @@ export class ApplicationOverflowController {
         );
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
+        registerPopupMenu(this._menu, () => {
+            syncPanelMenuPosition(this._menu, this._settings);
+        });
         this._buttonController = new ApplicationOverflowButtonController(
             this._settings,
             this._button,

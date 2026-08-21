@@ -17,7 +17,10 @@ import {
     syncMenuArrowSide,
 } from './panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
-import {openPopupMenu} from '../shared/popupMenuUtils.js';
+import {
+    openPopupMenu,
+    registerPopupMenu,
+} from '../shared/popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 export class PanelInteractionController {
@@ -134,6 +137,9 @@ export class PanelInteractionController {
 
         this._contextMenu = menu;
         this._contextMenuManager = menuManager;
+        registerPopupMenu(menu, () => {
+            syncMenuArrowSide(menu, this._settings);
+        });
     }
 
     _openTaskManager() {

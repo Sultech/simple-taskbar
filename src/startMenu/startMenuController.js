@@ -25,6 +25,7 @@ import {panelGeometry} from '../panel/panelGeometry.js';
 import {
     closePopupMenu,
     openPopupMenu,
+    registerPopupMenu,
 } from '../shared/popupMenuUtils.js';
 import {StartMenuContextMenuController} from './startMenuContextMenuController.js';
 import {StartMenuFooterController} from './startMenuFooterController.js';
@@ -141,6 +142,10 @@ export class StartMenuController {
         this._menu.actor.add_style_class_name('simple-taskbar-windows-start-menu');
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
+        registerPopupMenu(this._menu, () => {
+            syncMenuArrowSide(this._menu, this._settings);
+            this._syncPositionSource();
+        });
 
         this.syncTheme();
 
