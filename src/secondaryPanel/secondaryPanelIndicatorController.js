@@ -47,7 +47,7 @@ export class SecondaryPanelIndicatorController {
             if ('_arrowSide' in menu)
                 menu._arrowSide = side;
             if (role !== 'quickSettings' &&
-                panelPosition(this._settings) === 'bottom') {
+                panelPosition(this._settings) !== 'top') {
                 menu.actor.add_style_class_name(
                     'simple-taskbar-bottom-panel-menu'
                 );
