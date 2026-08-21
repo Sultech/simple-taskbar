@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import GLib from 'gi://GLib';
 import Shell from 'gi://Shell';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
@@ -42,6 +43,7 @@ import {WindowsXpModeController} from './src/windowsXpModeController.js';
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
+        this._rebuildId = 0;
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
@@ -246,6 +248,10 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     disable() {
+        if (this._rebuildId) {
+            GLib.Source.remove(this._rebuildId);
+            this._rebuildId = 0;
+        }
         this._settings.disconnectObject(this);
         this._windowsXpModeController.destroy();
         this._windowsXpModeController = null;
@@ -302,6 +308,18 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appSystem = null;
         this._settings = null;
         this._panelHeight = null;
+    }
+
+    _queueRebuild() {
+        if (this._rebuildId)
+            return;
+
+        this._rebuildId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this._rebuildId = 0;
+            this.disable();
+            this.enable();
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     openPreferences() {
@@ -373,6 +391,7 @@ export default class SimpleTaskbarExtension extends Extension {
         }, this);
         this._settings.connectObject('changed::panel-position', () => {
             this._overviewIntegration.syncPanelPosition();
+            this._queueRebuild();
         }, this);
     }
 
