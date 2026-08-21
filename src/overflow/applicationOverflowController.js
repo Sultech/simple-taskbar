@@ -200,10 +200,6 @@ export class ApplicationOverflowController {
         this._settings.connectObject('changed::transparency-level', () => {
             this._themeController.sync();
         }, this._signalHolder);
-        this._settings.connectObject('changed::panel-position', () => {
-            this.close();
-            this._syncPanelPosition();
-        }, this._signalHolder);
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._sync();
         }, this._signalHolder);

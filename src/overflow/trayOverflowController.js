@@ -87,10 +87,6 @@ export class TrayOverflowController {
         }, this._signalHolder);
         this._settings.connectObject(
             'changed::tray-overflow-enabled', () => this._sync(),
-            'changed::panel-position', () => {
-                closePopupMenu(this._menu, false);
-                this._syncPanelPosition();
-            },
             'changed::windows-xp-theme-enabled',
             () => this._syncPanelPosition(),
             this._signalHolder

@@ -22,7 +22,6 @@ import {
 } from './panelButtonPaddingController.js';
 import {PanelClockController} from './panelClockController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
-import {synchronizePanelPosition} from '../shared/panelModeProfiles.js';
 import {createPanelItems} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelGeometry} from './panelGeometry.js';
@@ -161,15 +160,7 @@ export class PanelController {
         this._menuPositioner.enable();
         this._configurePanelMenuSwitching();
         this._connectSignals();
-        this._themeController.connectSignals(
-            () => this.applyLayout(),
-            () => {
-                synchronizePanelPosition(this._settings);
-                this.position();
-                this._onAppAlignmentChanged();
-                this._menuPositioner.refresh();
-            }
-        );
+        this._themeController.connectSignals(() => this.applyLayout());
         this._themeController.queueBlurMyShellSync();
         this._autoHideController.enable();
     }

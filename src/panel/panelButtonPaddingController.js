@@ -43,10 +43,6 @@ export class PanelButtonPaddingController {
         this._settings.connectObject(
             'changed::panel-button-padding', () => this.sync(),
             'changed::panel-height', () => this._syncHoverInset(),
-            'changed::panel-position', () => {
-                this._syncHoverInset();
-                this.sync();
-            },
             this._signalHolder
         );
         Main.layoutManager.uiGroup.connectObject(

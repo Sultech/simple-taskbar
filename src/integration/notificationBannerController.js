@@ -39,7 +39,6 @@ export class NotificationBannerController {
         this._settings.connectObject(
             'changed::notification-banner-bottom-end', () => this._sync(),
             'changed::clock-position', () => this._sync(),
-            'changed::panel-position', () => this._sync(),
             this._signalHolder
         );
         this._bannerBin.connectObject(

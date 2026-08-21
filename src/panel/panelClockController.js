@@ -34,10 +34,6 @@ export class PanelClockController {
             'notify::clock', () => this.sync(),
             this._signalHolder
         );
-        this._settings.connectObject(
-            'changed::panel-position', () => this._syncPanelPosition(),
-            this._signalHolder
-        );
         this._desktopSettings.connectObject(
             'changed::clock-format', () => {
                 this._clockFormat = null;

@@ -39,6 +39,7 @@ import {WindowController} from './src/taskbar/windowController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
 import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
+import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
 
 export default class SimpleTaskbarExtension extends Extension {
@@ -390,7 +391,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelController.updateTaskbarWidth();
         }, this);
         this._settings.connectObject('changed::panel-position', () => {
-            this._overviewIntegration.syncPanelPosition();
+            synchronizePanelPosition(this._settings);
             this._queueRebuild();
         }, this);
     }

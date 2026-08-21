@@ -55,7 +55,7 @@ export class PanelThemeController {
         this._stSettings = St.Settings.get();
     }
 
-    connectSignals(onWindowsXpThemeChanged, onPanelPositionChanged) {
+    connectSignals(onWindowsXpThemeChanged) {
         Main.panel.connectObject(
             'notify::style-class', () => this.applyTransparency(),
             'notify::style', () => {
@@ -105,11 +105,6 @@ export class PanelThemeController {
                 this.applyTheme();
                 onWindowsXpThemeChanged();
                 this.queueBlurMyShellSync();
-            },
-            'changed::panel-position', () => {
-                this.syncEdgeClass();
-                onPanelPositionChanged();
-                this.applyTransparency();
             },
             this._signalHolder
         );

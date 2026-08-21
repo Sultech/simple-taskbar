@@ -108,12 +108,6 @@ export class OverviewIntegration {
         this.queueRelayout();
     }
 
-    syncPanelPosition() {
-        if (this._dashState)
-            this._syncHiddenDashSize(this._dashState.dash);
-        this.queueRelayout();
-    }
-
     queueRelayout() {
         Main.overview._overview.controls.queue_relayout();
     }

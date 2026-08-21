@@ -25,7 +25,6 @@ export class PanelActivitiesController {
 
     enable() {
         this._settings.connectObject(
-            'changed::panel-position', () => this.sync(),
             'changed::panel-height', () => this.sync(),
             this._signalHolder
         );
