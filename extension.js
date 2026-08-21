@@ -39,7 +39,7 @@ import {WindowController} from './src/taskbar/windowController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
 import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
-import {resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
+import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
 import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
 
@@ -394,6 +394,8 @@ export default class SimpleTaskbarExtension extends Extension {
         }, this);
         this._settings.connectObject('changed::panel-position', () => {
             synchronizePanelPosition(this._settings);
+            hidePanelBlur();
+            this._panelController.position();
             this._queueRebuild();
         }, this);
     }

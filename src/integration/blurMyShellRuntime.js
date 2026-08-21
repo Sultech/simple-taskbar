@@ -36,3 +36,7 @@ export function refreshPanelBlurVisibility(panelBlur) {
 export function resetPanelBlur() {
     getPanelBlur()?.reset();
 }
+
+export function hidePanelBlur() {
+    getPanelBlur()?.hide();
+}
