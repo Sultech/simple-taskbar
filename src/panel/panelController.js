@@ -77,7 +77,6 @@ export class PanelController {
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signalHolder = new TransientSignalHolder();
         this._layoutRepairId = 0;
-        this._panelLayoutRepairId = 0;
         this._applyingLayout = false;
         this._stateController = null;
         this._themeController = null;
@@ -220,7 +219,6 @@ export class PanelController {
         this._autoHideController.syncPosition();
         this._queueOverviewRelayout();
         this.updateTaskbarWidth();
-        this._queuePanelLayoutRepair();
     }
 
     applyLayout() {
@@ -360,10 +358,6 @@ export class PanelController {
         if (this._layoutRepairId) {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
-        }
-        if (this._panelLayoutRepairId) {
-            global.stage.disconnect(this._panelLayoutRepairId);
-            this._panelLayoutRepairId = 0;
         }
         this._signalHolder.destroy();
         this._signalHolder = null;
@@ -686,21 +680,6 @@ export class PanelController {
                 this.position();
                 this._menuPositioner.refresh();
                 return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _queuePanelLayoutRepair() {
-        if (this._panelLayoutRepairId)
-            return;
-
-        this._panelLayoutRepairId = global.stage.connect(
-            'after-update',
-            () => {
-                global.stage.disconnect(this._panelLayoutRepairId);
-                this._panelLayoutRepairId = 0;
-                Main.panel.queue_relayout();
-                Main.layoutManager.panelBox.queue_relayout();
             }
         );
     }
