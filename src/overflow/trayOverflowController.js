@@ -15,6 +15,7 @@ import {
 
 import {
     panelArrowSide,
+    panelIsVertical,
     panelPosition,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
@@ -410,12 +411,15 @@ export class TrayOverflowController {
         if (!open || indicator.menu.actor.get_parent() !== Main.uiGroup)
             return;
 
-        const [overflowX] = this._menu.actor.get_transformed_position();
-        const [overflowWidth] = this._menu.actor.get_transformed_size();
-        const [indicatorX] = indicator.get_transformed_position();
-        const [indicatorWidth] = indicator.get_transformed_size();
-        const sourceAlignment =
-            (indicatorX + indicatorWidth / 2 - overflowX) / overflowWidth;
+        const [overflowX, overflowY] =
+            this._menu.actor.get_transformed_position();
+        const [overflowWidth, overflowHeight] =
+            this._menu.actor.get_transformed_size();
+        const [indicatorX, indicatorY] = indicator.get_transformed_position();
+        const [indicatorWidth, indicatorHeight] = indicator.get_transformed_size();
+        const sourceAlignment = panelIsVertical(this._settings)
+            ? (indicatorY + indicatorHeight / 2 - overflowY) / overflowHeight
+            : (indicatorX + indicatorWidth / 2 - overflowX) / overflowWidth;
         indicator.menu._boxPointer.setPosition(this._menu.actor, 0.5);
         indicator.menu.setSourceAlignment(sourceAlignment);
 

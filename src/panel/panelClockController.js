@@ -26,7 +26,7 @@ export class PanelClockController {
         this._clockFormat = null;
         this._formatted = false;
         this._vertical = null;
-        this._clockAllocationId = 0;
+        this._clockAfterUpdateId = 0;
     }
 
     enable() {
@@ -104,9 +104,9 @@ export class PanelClockController {
     }
 
     destroy() {
-        if (this._clockAllocationId) {
-            this._dateMenu._clockDisplay.disconnect(this._clockAllocationId);
-            this._clockAllocationId = 0;
+        if (this._clockAfterUpdateId) {
+            global.stage.disconnect(this._clockAfterUpdateId);
+            this._clockAfterUpdateId = 0;
         }
         this._signalHolder.destroy();
         this._signalHolder = null;
@@ -124,24 +124,23 @@ export class PanelClockController {
             return;
 
         this._vertical = vertical;
-        if (this._clockAllocationId) {
-            this._dateMenu._clockDisplay.disconnect(this._clockAllocationId);
-            this._clockAllocationId = 0;
+        if (this._clockAfterUpdateId) {
+            global.stage.disconnect(this._clockAfterUpdateId);
+            this._clockAfterUpdateId = 0;
         }
         if (!vertical) {
             this.sync();
             return;
         }
 
-        this._clockAllocationId = this._dateMenu._clockDisplay.connect(
-            'notify::allocation', () => {
-                this._dateMenu._clockDisplay.disconnect(
-                    this._clockAllocationId
-                );
-                this._clockAllocationId = 0;
+        this._clockAfterUpdateId = global.stage.connect(
+            'after-update', () => {
+                global.stage.disconnect(this._clockAfterUpdateId);
+                this._clockAfterUpdateId = 0;
                 this.sync();
             }
         );
+        this._dateMenu._clockDisplay.queue_relayout();
     }
 
     _restoreClockText() {

@@ -35,6 +35,9 @@ import {PanelThemeController} from './panelThemeController.js';
 import {
     PanelVerticalItemsController,
 } from './panelVerticalItemsController.js';
+import {
+    VerticalPanelCompatibilityController,
+} from './verticalPanelCompatibilityController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {TRAY_OVERFLOW_ROLE} from '../overflow/trayOverflowController.js';
 import {
@@ -87,6 +90,8 @@ export class PanelController {
         this._activitiesDotWidthOverride = null;
         this._activitiesController = null;
         this._clockController = null;
+        this._verticalPanelCompatibilityController =
+            new VerticalPanelCompatibilityController(settings);
         this._verticalItemsController = new PanelVerticalItemsController(
             settings,
             [
@@ -117,6 +122,7 @@ export class PanelController {
     }
 
     enable() {
+        this._verticalPanelCompatibilityController.enable();
         this._stateController = new PanelStateController({
             settings: this._settings,
             panelHeight: this._panelHeight,
@@ -380,6 +386,8 @@ export class PanelController {
         this._themeController = null;
         this._stateController.destroy(restoringUnlockPanel);
         this._stateController = null;
+        this._verticalPanelCompatibilityController.destroy();
+        this._verticalPanelCompatibilityController = null;
         this._restoreHotCornerSizing();
 
         this._startButton = null;
