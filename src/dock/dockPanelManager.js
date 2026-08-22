@@ -187,6 +187,9 @@ export class DockPanelManager {
                 visiblePanelItemIds: DOCK_PANEL_ITEM_IDS,
                 panelHeightFromIconSize: true,
                 dockPanelSizing: true,
+                mainPanelPosition: this._settings.get_string(
+                    'panel-position'
+                ),
             });
             this._panels.push(panel);
             panel.enable();

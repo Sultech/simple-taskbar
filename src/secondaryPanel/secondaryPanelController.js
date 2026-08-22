@@ -102,6 +102,7 @@ export class SecondaryPanelController {
         visiblePanelItemIds = null,
         panelHeightFromIconSize = false,
         dockPanelSizing = false,
+        mainPanelPosition = null,
     }) {
         this._settings = settings;
         this._extensionDir = extensionDir;
@@ -110,6 +111,7 @@ export class SecondaryPanelController {
         this._visiblePanelItemIds = visiblePanelItemIds;
         this._panelHeightFromIconSize = panelHeightFromIconSize;
         this._dockPanelSizing = dockPanelSizing;
+        this._mainPanelPosition = mainPanelPosition;
         this._dockPanelLength = null;
         this._dockStrutActor = null;
         this._signalHolder = new TransientSignalHolder();
@@ -402,6 +404,7 @@ export class SecondaryPanelController {
         this._visiblePanelItemIds = null;
         this._panelHeightFromIconSize = false;
         this._dockPanelSizing = false;
+        this._mainPanelPosition = null;
         this._dockPanelLength = null;
         this._settings = null;
     }
@@ -454,6 +457,12 @@ export class SecondaryPanelController {
             this._updateTaskbarWidth();
         }, this._signalHolder);
         if (this._dockPanelSizing) {
+            if (this._settings.get_boolean('dock-panel-mode')) {
+                Main.layoutManager.panelBox.connectObject(
+                    'notify::allocation', () => this._position(),
+                    this._signalHolder
+                );
+            }
             for (const key of [
                 'transparency-enabled',
                 'transparency-level',
@@ -672,6 +681,7 @@ export class SecondaryPanelController {
             this._panelLengthOverride(),
             this._panelEdgeGap()
         );
+        this._connectToMainPanel(geometry);
         this._panelBox.set_size(geometry.width, geometry.height);
         this.actor.set_size(geometry.width, geometry.height);
         this._panelBox.set_position(geometry.x, geometry.y);
@@ -703,6 +713,47 @@ export class SecondaryPanelController {
         if (this._autoHideController)
             this._autoHideController.syncPosition();
         this._updateTaskbarWidth();
+    }
+
+    _connectToMainPanel(geometry) {
+        if (!this._dockPanelSizing ||
+            !this._settings.get_boolean('dock-panel-mode') ||
+            !this._mainPanelPosition ||
+            this._monitor !== Main.layoutManager.primaryMonitor) {
+            return;
+        }
+
+        const panelBox = Main.layoutManager.panelBox;
+        const [panelX, panelY] = panelBox.get_position();
+        const panelWidth = panelBox.width;
+        const panelHeight = panelBox.height;
+        if (geometry.vertical &&
+            (this._mainPanelPosition === 'top' ||
+                this._mainPanelPosition === 'bottom')) {
+            const panelEdge = this._mainPanelPosition === 'top'
+                ? panelY + panelHeight
+                : panelY;
+            const maximumLength = this._mainPanelPosition === 'top'
+                ? this._monitor.y + this._monitor.height - panelEdge
+                : panelEdge - this._monitor.y;
+            geometry.height = Math.min(geometry.height, maximumLength);
+            geometry.y = this._mainPanelPosition === 'top'
+                ? panelEdge
+                : panelEdge - geometry.height;
+        } else if (!geometry.vertical &&
+            (this._mainPanelPosition === 'left' ||
+                this._mainPanelPosition === 'right')) {
+            const panelEdge = this._mainPanelPosition === 'left'
+                ? panelX + panelWidth
+                : panelX;
+            const maximumLength = this._mainPanelPosition === 'left'
+                ? this._monitor.x + this._monitor.width - panelEdge
+                : panelEdge - this._monitor.x;
+            geometry.width = Math.min(geometry.width, maximumLength);
+            geometry.x = this._mainPanelPosition === 'left'
+                ? panelEdge
+                : panelEdge - geometry.width;
+        }
     }
 
     _syncQuickSettingsIndicators() {
@@ -741,6 +792,7 @@ export class SecondaryPanelController {
             0,
             this._panelLengthPercentage()
         );
+        this._connectToMainPanel(geometry);
         const availableWidth = constrainTaskbarSize({
             taskbarBin: this._taskbarBin,
             leftBox: this._leftBox,
