@@ -18,6 +18,7 @@ import {restoreOverlayKey} from './src/keybindingRecovery.js';
 import {PanelController} from './src/panel/panelController.js';
 import {PanelInteractionController} from './src/panel/panelInteractionController.js';
 import {SecondaryPanelManager} from './src/secondaryPanel/secondaryPanelManager.js';
+import {DockPanelManager} from './src/dock/dockPanelManager.js';
 import {NotificationBannerController} from './src/integration/notificationBannerController.js';
 import {
     QuickSettingsPowerController,
@@ -230,6 +231,17 @@ export default class SimpleTaskbarExtension extends Extension {
             openPreferences: () => this.openPreferences(),
         });
         this._secondaryPanelManager.enable();
+        this._dockPanelManager = new DockPanelManager({
+            extensionDir: this.dir,
+            settings: this._settings,
+            appSystem: this._appSystem,
+            tracker: this._tracker,
+            favorites: this._favorites,
+            spreadAppWindows: app =>
+                this._overviewIntegration.showAppWindows(app),
+            openPreferences: () => this.openPreferences(),
+        });
+        this._dockPanelManager.enable();
         this._hotEdgeController = new HotEdgeController(this._settings, {
             isBlocked: () => this._hotEdgeIsBlocked(),
         });
@@ -268,6 +280,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._notificationBannerController = null;
         this._secondaryPanelManager.destroy();
         this._secondaryPanelManager = null;
+        this._dockPanelManager.destroy();
+        this._dockPanelManager = null;
         this._quickSettingsXpIconController.destroy();
         this._quickSettingsXpIconController = null;
         this._quickSettingsPowerController.destroy();
@@ -447,15 +461,24 @@ export default class SimpleTaskbarExtension extends Extension {
     _toggleStartMenuAtPointer() {
         Main.panel.menuManager.activeMenu?.close();
         this._secondaryPanelManager.closePanelMenus();
+        this._dockPanelManager.closePanelMenus();
 
         const [x, y] = global.get_pointer();
+        if (this._dockPanelManager.hasPanelAt(x, y)) {
+            this._startButtonController.closeMenus();
+            this._secondaryPanelManager.closeStartMenus();
+            this._dockPanelManager.toggleStartMenuAt(x, y);
+            return;
+        }
         if (this._secondaryPanelManager.hasPanelAt(x, y)) {
             this._startButtonController.closeMenus();
+            this._dockPanelManager.closeStartMenus();
             this._secondaryPanelManager.toggleStartMenuAt(x, y);
             return;
         }
 
         this._secondaryPanelManager.closeStartMenus();
+        this._dockPanelManager.closeStartMenus();
         this._startButtonController.toggleStartMenu();
     }
 

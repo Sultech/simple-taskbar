@@ -65,6 +65,24 @@ const MODE_SETTING_KEYS = new Set([
     'active-panel-axis',
     'active-panel-mode',
     'default-gnome-panel',
+    'dock-item-order',
+    'dock-mode',
+    'dock-mode-initialized',
+    'dock-autohide-enabled',
+    'dock-multi-monitor-panels',
+    'dock-max-length',
+    'dock-transparency-enabled',
+    'dock-transparency-level',
+    'dock-custom-panel-color-enabled',
+    'dock-custom-panel-color',
+    'dock-panel-theme-follow-system',
+    'dock-panel-theme',
+    'dock-panel-border-enabled',
+    'dock-panel-border-light-enabled',
+    'dock-workspace-scroll-enabled',
+    'dock-workspace-scroll-delay',
+    'dock-panel-mode',
+    'dock-position',
     'panel-axis-profiles-initialized',
     'panel-mode-profiles-initialized',
     'panel-profile-transition',
@@ -242,6 +260,8 @@ function setModeFlags(settings, mode) {
         'windows-xp-theme-enabled',
         mode === PANEL_MODE_WINDOWS_XP
     );
+    if (mode === PANEL_MODE_WINDOWS_XP)
+        settings.set_boolean('dock-mode', false);
 }
 
 export function setPanelMode(settings, mode) {

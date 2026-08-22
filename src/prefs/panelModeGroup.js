@@ -10,13 +10,24 @@ import {
     PANEL_MODE_TASKBAR,
     setPanelMode,
 } from '../shared/panelModeProfiles.js';
-import {addSpinRow} from './preferencesWidgets.js';
+import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
+import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 
-export function addPanelModeGroup({page, settings, connectSettings}) {
+export function addPanelModeGroup({
+    page,
+    dockPage,
+    settings,
+    connectSettings,
+}) {
     const panelModeGroup = new Adw.PreferencesGroup({
         title: _('General'),
     });
     page.add(panelModeGroup);
+
+    const dockModeGroup = new Adw.PreferencesGroup({
+        title: _('General'),
+    });
+    dockPage.add(dockModeGroup);
 
     const defaultGnomePanelSwitch = new Adw.SwitchRow({
         title: _('Default GNOME Panel'),
@@ -24,6 +35,88 @@ export function addPanelModeGroup({page, settings, connectSettings}) {
         active: settings.get_boolean('default-gnome-panel'),
     });
     panelModeGroup.add(defaultGnomePanelSwitch);
+
+    const dockModeSwitch = new Adw.SwitchRow({
+        title: _('Dock mode'),
+        subtitle: _('Enable Default GNOME Panel mode when switched on'),
+        active: settings.get_boolean('dock-mode'),
+    });
+    dockModeGroup.add(dockModeSwitch);
+
+    const dockPositionChoices = [
+        {value: 'top', label: _('Top')},
+        {value: 'bottom', label: _('Bottom')},
+        {value: 'left', label: _('Left')},
+        {value: 'right', label: _('Right')},
+    ];
+    const syncDockPositionConflict = () => {
+        if (!settings.get_boolean('dock-mode'))
+            return;
+
+        const panelPosition = settings.get_string('panel-position');
+        if (settings.get_string('dock-position') !== panelPosition)
+            return;
+
+        settings.set_string(
+            'dock-position',
+            alternativePanelPosition(panelPosition)
+        );
+    };
+    syncDockPositionConflict();
+    const dockPositionRow = addComboRow(
+        dockModeGroup,
+        settings,
+        {
+            key: 'dock-position',
+            title: _('Dock Position'),
+            subtitle: _('Place the Dock at a different screen edge from the main panel'),
+            choices: dockPositionChoices,
+            choicesProvider: () => settings.get_boolean('dock-mode')
+                ? dockPositionChoices.filter(
+                    choice => choice.value !== settings.get_string('panel-position')
+                )
+                : dockPositionChoices,
+            choicesChangedKeys: ['panel-position', 'dock-mode'],
+            setValue: position => {
+                if (position !== settings.get_string('panel-position'))
+                    settings.set_string('dock-position', position);
+            },
+        },
+        connectSettings
+    );
+    const dockMaxLengthRow = addSpinRow(
+        dockModeGroup,
+        settings,
+        {
+            key: 'dock-max-length',
+            title: _('Maximum Dock Length'),
+            subtitle: _('Limit the Dock to this percentage of the monitor length'),
+            lower: 1,
+            upper: 90,
+        },
+        connectSettings
+    );
+    const dockPanelModeSwitch = new Adw.SwitchRow({
+        title: _('Panel mode'),
+        subtitle: _('Extend the Dock fully to the monitor edge'),
+        active: settings.get_boolean('dock-panel-mode'),
+    });
+    dockModeGroup.add(dockPanelModeSwitch);
+    connectSettings(
+        settings,
+        'changed::panel-position',
+        syncDockPositionConflict
+    );
+    connectSettings(
+        settings,
+        'changed::dock-mode',
+        syncDockPositionConflict
+    );
+    connectSettings(
+        settings,
+        'changed::dock-position',
+        syncDockPositionConflict
+    );
 
     const windowsXpThemeSwitch = new Adw.SwitchRow({
         title: _('Windows XP Theme'),
@@ -51,6 +144,10 @@ export function addPanelModeGroup({page, settings, connectSettings}) {
 
     return {
         defaultGnomePanelSwitch,
+        dockModeSwitch,
+        dockPositionRow,
+        dockMaxLengthRow,
+        dockPanelModeSwitch,
         windowsXpThemeSwitch,
         panelButtonPaddingRow,
     };
@@ -61,6 +158,10 @@ export function connectDefaultGnomePanelSync({
     createSettings,
     connectSettings,
     defaultGnomePanelSwitch,
+    dockModeSwitch,
+    dockPositionRow,
+    dockMaxLengthRow,
+    dockPanelModeSwitch,
     appearanceGroup,
     startMenuPage,
     advancedAppBehaviorGroup,
@@ -72,17 +173,20 @@ export function connectDefaultGnomePanelSync({
         const enabled = settings.get_boolean(
             'default-gnome-panel'
         );
+        const dockModeEnabled = settings.get_boolean('dock-mode');
+        const defaultPanelRestrictions = enabled && !dockModeEnabled;
         syncingDefaultGnomePanel = true;
         defaultGnomePanelSwitch.active = enabled;
-        appearanceGroup.sensitive = !enabled;
-        startMenuPage.sensitive = !enabled;
-        advancedAppBehaviorGroup.sensitive = !enabled;
-        advancedStartMenuGroup.sensitive = !enabled;
-        nautilusPlacesSwitch.sensitive = !enabled;
-        appearanceGroup.description = enabled
+        defaultGnomePanelSwitch.sensitive = !dockModeEnabled;
+        appearanceGroup.sensitive = !defaultPanelRestrictions;
+        startMenuPage.sensitive = !defaultPanelRestrictions;
+        advancedAppBehaviorGroup.sensitive = !defaultPanelRestrictions;
+        advancedStartMenuGroup.sensitive = !defaultPanelRestrictions;
+        nautilusPlacesSwitch.sensitive = !defaultPanelRestrictions;
+        appearanceGroup.description = defaultPanelRestrictions
             ? _('Application icons are unavailable in Default GNOME Panel mode.')
             : _('Change the size, spacing, and placement of taskbar icons.');
-        advancedAppBehaviorGroup.description = enabled
+        advancedAppBehaviorGroup.description = defaultPanelRestrictions
             ? _('Application options are unavailable in Default GNOME Panel mode.')
             : _('Choose which applications appear and how they are grouped.');
         syncingDefaultGnomePanel = false;
@@ -114,10 +218,91 @@ export function connectDefaultGnomePanelSync({
             syncDefaultGnomePanel();
         }
     );
+    let syncingDockMode = false;
+    const syncDockMode = () => {
+        syncingDockMode = true;
+        const dockModeEnabled = settings.get_boolean('dock-mode');
+        const dockPanelModeEnabled = settings.get_boolean('dock-panel-mode');
+        dockModeSwitch.active = settings.get_boolean('dock-mode');
+        dockPanelModeSwitch.active = dockPanelModeEnabled;
+        dockPositionRow.sensitive = dockModeEnabled &&
+            !settings.get_boolean('windows-xp-theme-enabled');
+        dockPanelModeSwitch.sensitive = dockModeEnabled &&
+            !settings.get_boolean('windows-xp-theme-enabled');
+        dockMaxLengthRow.sensitive = dockModeEnabled &&
+            !dockPanelModeEnabled &&
+            !settings.get_boolean('windows-xp-theme-enabled');
+        syncingDockMode = false;
+    };
+    const setDockMode = enabled => {
+        const settings = createSettings();
+        settings.delay();
+        if (enabled) {
+            setPanelMode(settings, PANEL_MODE_DEFAULT);
+            if (!settings.get_boolean('dock-mode-initialized')) {
+                settings.set_string('dock-position', 'bottom');
+                settings.set_boolean('windows-start-menu-enabled', false);
+                settings.set_boolean('gnome-start-button-visible', true);
+                settings.set_string('combine-app-buttons-mode', 'always');
+                settings.set_boolean('use-pinned-apps-as-launchers', false);
+                settings.set_boolean('dock-multi-monitor-panels', true);
+                settings.set_boolean('dock-workspace-scroll-enabled', true);
+                settings.set_boolean('dock-mode-initialized', true);
+            }
+            settings.set_boolean('dock-mode', true);
+        } else {
+            settings.set_boolean('dock-mode', false);
+            setPanelMode(settings, PANEL_MODE_TASKBAR);
+        }
+        settings.apply();
+    };
+
+    dockModeSwitch.connect(
+        'notify::active',
+        () => {
+            if (syncingDockMode)
+                return;
+
+            const enabled = dockModeSwitch.active;
+            if (enabled === settings.get_boolean('dock-mode'))
+                return;
+            setDockMode(enabled);
+            syncDefaultGnomePanel();
+            syncDockMode();
+        }
+    );
+    dockPanelModeSwitch.connect(
+        'notify::active',
+        () => {
+            if (syncingDockMode)
+                return;
+
+            settings.set_boolean(
+                'dock-panel-mode',
+                dockPanelModeSwitch.active
+            );
+            syncDockMode();
+        }
+    );
     connectSettings(
         settings,
         'changed::default-gnome-panel',
         syncDefaultGnomePanel
     );
+    connectSettings(settings, 'changed::dock-mode', () => {
+        syncDefaultGnomePanel();
+        syncDockMode();
+    });
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
+        syncDockMode
+    );
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncDockMode
+    );
     syncDefaultGnomePanel();
+    syncDockMode();
 }

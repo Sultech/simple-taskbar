@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-
 import {getPopupBlur} from '../integration/blurMyShellRuntime.js';
+import {panelUsesLightTheme} from '../themeUtils.js';
 import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
@@ -20,9 +19,7 @@ export class ApplicationOverflowThemeController {
     }
 
     sync() {
-        const light = Main.panel.has_style_class_name(
-            'simple-taskbar-theme-light'
-        );
+        const light = panelUsesLightTheme(this._settings);
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );

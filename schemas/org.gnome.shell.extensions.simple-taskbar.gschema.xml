@@ -199,6 +199,91 @@
       <default>false</default>
       <summary>Use a GNOME-style panel without taskbar applications</summary>
     </key>
+    <key name="dock-mode" type="b">
+      <default>false</default>
+      <summary>Enable Dock mode</summary>
+    </key>
+    <key name="dock-item-order" type="as">
+      <default>['start-button', 'applications']</default>
+      <summary>Dock item order</summary>
+    </key>
+    <key name="dock-position" type="s">
+      <choices>
+        <choice value="top"/>
+        <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
+      </choices>
+      <default>'bottom'</default>
+      <summary>Dock screen edge</summary>
+    </key>
+    <key name="dock-mode-initialized" type="b">
+      <default>false</default>
+      <summary>Whether Dock mode defaults have been initialized</summary>
+    </key>
+    <key name="dock-autohide-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the Dock until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="dock-multi-monitor-panels" type="b">
+      <default>false</default>
+      <summary>Show the Dock on every connected monitor</summary>
+    </key>
+    <key name="dock-max-length" type="i">
+      <range min="1" max="90"/>
+      <default>90</default>
+      <summary>Maximum Dock length as a percentage of the monitor</summary>
+    </key>
+    <key name="dock-panel-mode" type="b">
+      <default>false</default>
+      <summary>Extend the Dock to the full monitor edge</summary>
+    </key>
+    <key name="dock-transparency-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Dock transparency</summary>
+    </key>
+    <key name="dock-transparency-level" type="i">
+      <range min="0" max="100"/>
+      <default>20</default>
+      <summary>Dock background transparency percentage</summary>
+    </key>
+    <key name="dock-custom-panel-color-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-color" type="s">
+      <default>'#18181b'</default>
+      <summary>Custom Dock color</summary>
+    </key>
+    <key name="dock-panel-theme-follow-system" type="b">
+      <default>false</default>
+      <summary>Match the Dock to the active GNOME Shell theme</summary>
+    </key>
+    <key name="dock-panel-theme" type="s">
+      <choices>
+        <choice value="light"/>
+        <choice value="dark"/>
+      </choices>
+      <default>'dark'</default>
+      <summary>Dock colour scheme when not following the system</summary>
+    </key>
+    <key name="dock-panel-border-enabled" type="b">
+      <default>false</default>
+      <summary>Show the Dock border in dark mode</summary>
+    </key>
+    <key name="dock-panel-border-light-enabled" type="b">
+      <default>false</default>
+      <summary>Show the Dock border in light mode</summary>
+    </key>
+    <key name="dock-workspace-scroll-enabled" type="b">
+      <default>false</default>
+      <summary>Switch workspaces by scrolling over empty Dock space</summary>
+    </key>
+    <key name="dock-workspace-scroll-delay" type="i">
+      <range min="5" max="250"/>
+      <default>5</default>
+      <summary>Minimum delay between Dock workspace changes in milliseconds</summary>
+    </key>
     <key name="windows-xp-theme-enabled" type="b">
       <default>false</default>
       <summary>Use Windows XP taskbar dimensions</summary>

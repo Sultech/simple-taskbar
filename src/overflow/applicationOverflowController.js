@@ -200,6 +200,13 @@ export class ApplicationOverflowController {
         this._settings.connectObject('changed::transparency-level', () => {
             this._themeController.sync();
         }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::panel-theme-follow-system',
+            () => this._themeController.sync(),
+            'changed::panel-theme',
+            () => this._themeController.sync(),
+            this._signalHolder
+        );
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._sync();
         }, this._signalHolder);

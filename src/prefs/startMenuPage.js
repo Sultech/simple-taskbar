@@ -90,9 +90,8 @@ export function addStartMenuPage({
         Gio.SettingsBindFlags.DEFAULT
     );
     const updateStartPositionRow = () => {
-        const defaultPanel = settings.get_boolean(
-            'default-gnome-panel'
-        );
+        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode');
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -111,6 +110,7 @@ export function addStartMenuPage({
         'changed::default-gnome-panel',
         updateStartPositionRow
     );
+    connectSettings(settings, 'changed::dock-mode', updateStartPositionRow);
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',

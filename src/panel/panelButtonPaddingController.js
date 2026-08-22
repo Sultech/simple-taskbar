@@ -109,8 +109,8 @@ export class PanelButtonPaddingController {
             );
             this._hoverInsetClass = null;
         }
-
         this._restoreAll();
+
         this._panelBoxes = null;
         this._panelActor = null;
         this._settings = null;
@@ -268,6 +268,10 @@ export class PanelButtonPaddingController {
                 panelIsVertical(this._settings)
             );
         }
+    }
+
+    syncPanelHeight() {
+        this._syncHoverInset();
     }
 
     _applyToActor(actor, padding, vertical) {

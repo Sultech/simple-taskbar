@@ -22,6 +22,7 @@ export class TaskbarDragController {
         isPersistentPinned,
         queueRedisplay,
         setSessionOrder,
+        ignoreTaskbarLock = false,
         usePinnedAppLaunchers,
     }) {
         this._settings = settings;
@@ -35,6 +36,7 @@ export class TaskbarDragController {
         this._isPersistentPinned = isPersistentPinned;
         this._queueRedisplay = queueRedisplay;
         this._setSessionOrder = setSessionOrder;
+        this._ignoreTaskbarLock = ignoreTaskbarLock;
         this._usePinnedAppLaunchers = usePinnedAppLaunchers;
         this._showDesktopController = null;
         this._alignmentActor = null;
@@ -332,6 +334,7 @@ export class TaskbarDragController {
         this._listeners.clear();
         this._dragging = false;
         this._draggingItem = null;
+        this._ignoreTaskbarLock = false;
         this._alignmentActor = null;
         this._showDesktopController = null;
         this._usePinnedAppLaunchers = null;
@@ -487,7 +490,8 @@ export class TaskbarDragController {
             source.app &&
             !source.app.is_window_backed() &&
             !this._favorites.isFavorite(source.app.get_id()) &&
-            !this._settings.get_boolean('taskbar-locked') &&
+            (this._ignoreTaskbarLock ||
+                !this._settings.get_boolean('taskbar-locked')) &&
             !this._settings.get_boolean('default-gnome-panel') &&
             !this._settings.get_boolean('hide-pinned-taskbar-apps') &&
             global.settings.is_writable('favorite-apps') &&

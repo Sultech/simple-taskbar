@@ -17,9 +17,11 @@ import {
 } from '../shared/blurMyShellUtils.js';
 import {
     getPanelBlur,
+    hidePanelBlur,
     panelBlurIsActive,
     refreshPanelBlurVisibility,
 } from '../integration/blurMyShellRuntime.js';
+import {extensionStateIsActive} from '../extensionState.js';
 import {
     BLUR_MY_SHELL_ACTIVE_CLASS,
     BLUR_TINTED_CLASS,
@@ -67,8 +69,11 @@ export class PanelThemeController {
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
-                if (extension.uuid === BLUR_MY_SHELL_UUID)
+                if (extension.uuid === BLUR_MY_SHELL_UUID) {
+                    if (extensionStateIsActive(extension))
+                        hidePanelBlur();
                     this.queueBlurMyShellSync();
+                }
             },
             this._signalHolder
         );

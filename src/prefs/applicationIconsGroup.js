@@ -17,6 +17,7 @@ const MAX_ICON_SIZE = 48;
 
 export function addApplicationIconsGroup({
     page,
+    dockPage,
     settings,
     connectSettings,
     panelPositions,
@@ -27,6 +28,21 @@ export function addApplicationIconsGroup({
         description: _('Change the size, spacing, and placement of taskbar icons.'),
     });
     page.add(appearanceGroup);
+    let appearanceGroupOnDockPage = false;
+    const syncAppearanceGroupPage = () => {
+        const dockModeEnabled = settings.get_boolean('dock-mode');
+        if (dockModeEnabled === appearanceGroupOnDockPage)
+            return;
+
+        if (dockModeEnabled) {
+            page.remove(appearanceGroup);
+            dockPage.insert(appearanceGroup, 1);
+        } else {
+            dockPage.remove(appearanceGroup);
+            page.insert(appearanceGroup, 1);
+        }
+        appearanceGroupOnDockPage = dockModeEnabled;
+    };
 
     const iconSizeRow = addSpinRow(
         appearanceGroup,
@@ -117,8 +133,10 @@ export function addApplicationIconsGroup({
         connectSettings
     );
     const syncIndicatorControls = () => {
-        const blocked = settings.get_boolean('windows-xp-theme-enabled') ||
-            settings.get_boolean('default-gnome-panel');
+        const blocked =
+            settings.get_boolean('windows-xp-theme-enabled') ||
+            (settings.get_boolean('default-gnome-panel') &&
+                !settings.get_boolean('dock-mode'));
         const enabled = customIndicatorColorsSwitch.active;
         indicatorStyleRow.sensitive = !blocked;
         customIndicatorColorsSwitch.sensitive = !blocked;
@@ -140,6 +158,7 @@ export function addApplicationIconsGroup({
     for (const key of [
         'windows-xp-theme-enabled',
         'default-gnome-panel',
+        'dock-mode',
     ]) {
         connectSettings(
             settings,
@@ -147,6 +166,8 @@ export function addApplicationIconsGroup({
             syncIndicatorControls
         );
     }
+    connectSettings(settings, 'changed::dock-mode', syncAppearanceGroupPage);
+    syncAppearanceGroupPage();
     syncIndicatorControls();
     const appAlignmentRow = addComboRow(
         appearanceGroup,

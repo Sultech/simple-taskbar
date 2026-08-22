@@ -308,7 +308,10 @@ export function addPanelItemsPage({
                 'clock',
             ].includes(id);
         }
-        if (settings.get_boolean('default-gnome-panel'))
+        if (settings.get_boolean('dock-mode'))
+            return id === 'start-button' || id === 'applications';
+        if (settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode'))
             return id === 'start-button' || id === 'applications';
         return false;
     };
@@ -411,13 +414,15 @@ export function addPanelItemsPage({
     }
 
     const syncPanelPositionSensitivity = () => {
-        const defaultPanel = settings.get_boolean(
-            'default-gnome-panel'
-        );
+        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode');
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const dockMode = settings.get_boolean('dock-mode');
         windowsStartMenuSwitch.sensitive = !windowsXpTheme;
+        panelOrderRows.get('start-button').row.sensitive = !dockMode;
+        panelOrderRows.get('applications').row.sensitive = !dockMode;
         panelOrderRows.get('start-button').positionDropDown.sensitive =
             !defaultPanel && !windowsXpTheme &&
             !followAppAlignmentSwitch.active;
@@ -462,6 +467,14 @@ export function addPanelItemsPage({
     connectSettings(
         settings,
         'changed::default-gnome-panel',
+        () => {
+            syncPanelItemOrder();
+            syncPanelPositionSensitivity();
+        }
+    );
+    connectSettings(
+        settings,
+        'changed::dock-mode',
         () => {
             syncPanelItemOrder();
             syncPanelPositionSensitivity();

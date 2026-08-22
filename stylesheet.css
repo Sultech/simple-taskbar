@@ -25,6 +25,10 @@
     box-shadow: none;
 }
 
+.simple-taskbar-panel.simple-taskbar-dock-floating {
+    border-radius: 12px;
+}
+
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .simple-taskbar-start,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .simple-taskbar-start,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .simple-taskbar-start,

@@ -39,6 +39,10 @@ export function addPanelAppearancePage({
     iconSpacingRow,
     panelButtonPaddingRow,
     defaultGnomePanelSwitch,
+    dockModeSwitch,
+    dockPositionRow,
+    dockMaxLengthRow,
+    dockPanelModeSwitch,
     appAlignmentRow,
     pinnedAppsAsLaunchersSwitch,
     combineAppButtonsRow,
@@ -154,8 +158,19 @@ export function addPanelAppearancePage({
         panelButtonPaddingRow.sensitive = !enabled;
         panelHeightRow.sensitive = !enabled;
         panelPositionRow.sensitive = !enabled;
-        defaultGnomePanelSwitch.sensitive = !enabled;
-        appAlignmentRow.sensitive = !enabled;
+        defaultGnomePanelSwitch.sensitive =
+            !enabled && !settings.get_boolean('dock-mode');
+        dockModeSwitch.sensitive = !enabled;
+        dockPositionRow.sensitive = !enabled &&
+            settings.get_boolean('dock-mode');
+        dockPanelModeSwitch.sensitive = !enabled &&
+            settings.get_boolean('dock-mode');
+        dockMaxLengthRow.sensitive = !enabled &&
+            settings.get_boolean('dock-mode') &&
+            !dockPanelModeSwitch.active;
+        appAlignmentRow.sensitive = !enabled &&
+            (!settings.get_boolean('dock-mode') ||
+                settings.get_boolean('dock-panel-mode'));
         pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
         combineAppButtonsRow.sensitive = true;
         applicationOverflowSwitch.sensitive = !enabled;
@@ -187,6 +202,12 @@ export function addPanelAppearancePage({
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
+        syncWindowsXpTheme
+    );
+    connectSettings(settings, 'changed::dock-mode', syncWindowsXpTheme);
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
         syncWindowsXpTheme
     );
     connectSettings(settings, 'changed::icon-size', syncWindowsXpTheme);

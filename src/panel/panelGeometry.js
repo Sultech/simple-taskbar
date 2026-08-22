@@ -6,17 +6,36 @@ import {
     panelIsVertical,
 } from './panelPosition.js';
 
-export function panelGeometry(settings, monitor, thickness, revealSize = 0) {
+export function panelGeometry(
+    settings,
+    monitor,
+    thickness,
+    revealSize = 0,
+    lengthPercentage = null,
+    lengthOverride = null,
+    edgeGap = 0
+) {
     const vertical = panelIsVertical(settings);
     const minimumEdge = panelIsMinimumEdge(settings);
-    const width = vertical ? thickness : monitor.width;
-    const height = vertical ? monitor.height : thickness;
+    const inset = Math.max(0, Math.floor(edgeGap));
+    const fullLength = vertical ? monitor.height : monitor.width;
+    const length = lengthOverride === null
+        ? lengthPercentage === null
+            ? fullLength
+            : Math.floor(fullLength * lengthPercentage / 100)
+        : Math.min(fullLength, Math.floor(lengthOverride));
+    const width = vertical ? thickness : length;
+    const height = vertical ? length : thickness;
     const x = vertical && !minimumEdge
-        ? monitor.x + monitor.width - thickness
-        : monitor.x;
+        ? monitor.x + monitor.width - thickness - inset
+        : vertical
+            ? monitor.x + inset
+            : monitor.x + Math.floor((monitor.width - length) / 2);
     const y = !vertical && !minimumEdge
-        ? monitor.y + monitor.height - thickness
-        : monitor.y;
+        ? monitor.y + monitor.height - thickness - inset
+        : !vertical
+            ? monitor.y + inset
+            : monitor.y + Math.floor((monitor.height - length) / 2);
     const hiddenOffset = minimumEdge
         ? (vertical ? x : y) - thickness + revealSize
         : (vertical ? x : y) + thickness - revealSize;

@@ -59,6 +59,8 @@ export class TaskbarController {
         onShowDesktopClicked,
         onShowDesktopModeChanged,
         getPreviewController,
+        onRedisplay = () => {},
+        ignoreTaskbarLock = false,
     }) {
         this._settings = settings;
         this._appSystem = appSystem;
@@ -72,7 +74,9 @@ export class TaskbarController {
         this._openNewWindow = openNewWindow;
         this._onShowDesktopClicked = onShowDesktopClicked;
         this._onShowDesktopModeChanged = onShowDesktopModeChanged;
+        this._onRedisplay = onRedisplay;
         this._getPreviews = getPreviewController;
+        this._ignoreTaskbarLock = ignoreTaskbarLock;
         this._alignmentActor = null;
         this._signalHolder = new TransientSignalHolder();
         this._appSignals = new Map();
@@ -137,6 +141,7 @@ export class TaskbarController {
             isPersistentPinned: app => this._isPersistentPinned(app),
             queueRedisplay: () => this._queueRedisplay(),
             setSessionOrder: order => this._entryModel.setSessionOrder(order),
+            ignoreTaskbarLock: this._ignoreTaskbarLock,
             usePinnedAppLaunchers: () => this._usePinnedAppLaunchers(),
         });
         this._showDesktopController = new TaskbarShowDesktopController({
@@ -434,9 +439,11 @@ export class TaskbarController {
                     this._syncIndicatorColor(item);
             }, this._signalHolder);
         }
-        this._settings.connectObject('changed::taskbar-locked', () => {
-            this._syncDragEnabled();
-        }, this._signalHolder);
+        if (!this._ignoreTaskbarLock) {
+            this._settings.connectObject('changed::taskbar-locked', () => {
+                this._syncDragEnabled();
+            }, this._signalHolder);
+        }
         this.actor.connectObject('notify::allocation', () => {
             this.queueIconGeometryUpdate();
         }, this._signalHolder);
@@ -490,6 +497,7 @@ export class TaskbarController {
 
         this._getPreviews = null;
         this._alignmentActor = null;
+        this._ignoreTaskbarLock = false;
         this._settings = null;
         this._appSystem = null;
         this._tracker = null;
@@ -500,6 +508,7 @@ export class TaskbarController {
         this._openNewWindow = null;
         this._onShowDesktopClicked = null;
         this._onShowDesktopModeChanged = null;
+        this._onRedisplay = null;
         this._auxiliaryItems = null;
         this._preserveItemWidths = false;
         this._activeWorkspace = null;
@@ -771,6 +780,7 @@ export class TaskbarController {
         this.syncButtonStates(animateIndicators);
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
+        this._onRedisplay();
     }
 
     _syncApplicationVisibility() {
@@ -1223,7 +1233,8 @@ export class TaskbarController {
     }
 
     _dragIsEnabled(item = null) {
-        if (this._settings.get_boolean('taskbar-locked'))
+        if (!this._ignoreTaskbarLock &&
+            this._settings.get_boolean('taskbar-locked'))
             return false;
 
         if (item && item._taskbarIsShowDesktop)
@@ -1241,7 +1252,9 @@ export class TaskbarController {
 
     _syncDragEnabled(force = false) {
         const configuration = [
-            this._settings.get_boolean('taskbar-locked'),
+            this._ignoreTaskbarLock
+                ? false
+                : this._settings.get_boolean('taskbar-locked'),
             this._combineMode(),
             this._usePinnedAppLaunchers(),
             this._settings.get_boolean('hide-pinned-taskbar-apps'),

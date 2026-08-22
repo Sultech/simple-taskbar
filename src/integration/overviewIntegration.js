@@ -18,10 +18,11 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionWillBeActive} from '../extensionState.js';
+import {panelPosition} from '../panel/panelPosition.js';
 import {
-    panelIsVertical,
-    panelPosition,
-} from '../panel/panelPosition.js';
+    DOCK_EDGE_GAP,
+    ICON_VERTICAL_RESERVE,
+} from '../shared/panelSizing.js';
 
 const OVERVIEW_LABEL_MARGIN = 60;
 const STARTUP_OVERVIEW_DELAY = 600;
@@ -57,6 +58,14 @@ export class OverviewIntegration {
                 this._syncStartupOverview();
                 this._syncDashVisibility();
             },
+            'changed::dock-mode', () => this._syncDashVisibility(),
+            'changed::dock-position', () => {
+                if (this._dashState)
+                    this._syncHiddenDashSize(this._dashState.dash);
+                this.queueRelayout();
+            },
+            'changed::dock-panel-mode', () => this.queueRelayout(),
+            'changed::icon-size', () => this.queueRelayout(),
             'changed::panel-autohide-enabled', () => this.queueRelayout(),
             this._signalHolder
         );
@@ -237,6 +246,7 @@ export class OverviewIntegration {
     _shouldStartInOverview() {
         return Boolean(
             this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('dock-mode') &&
             !this._desktopDockIsEnabled()
         );
     }
@@ -263,13 +273,18 @@ export class OverviewIntegration {
     }
 
     _syncDashVisibility() {
-        if (this._settings.get_boolean('default-gnome-panel')) {
+        if (this._shouldHideDash()) {
+            this._hideDash();
+        } else {
             this._cancelDashVisibilityRepair();
             this._restoreDash();
-        } else {
-            this._hideDash();
         }
         this.queueRelayout();
+    }
+
+    _shouldHideDash() {
+        return !this._settings.get_boolean('default-gnome-panel') ||
+            this._settings.get_boolean('dock-mode');
     }
 
     _watchDashVisibility() {
@@ -283,7 +298,7 @@ export class OverviewIntegration {
 
     _queueDashVisibilityRepair() {
         if (this._dashVisibilityRepairId ||
-            this._settings.get_boolean('default-gnome-panel')) {
+            !this._shouldHideDash()) {
             return;
         }
 
@@ -291,7 +306,7 @@ export class OverviewIntegration {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._dashVisibilityRepairId = 0;
-                if (this._settings.get_boolean('default-gnome-panel'))
+                if (!this._shouldHideDash())
                     return GLib.SOURCE_REMOVE;
 
                 const dash = Main.overview.dash;
@@ -332,13 +347,16 @@ export class OverviewIntegration {
         const scaleFactor = St.ThemeContext.get_for_stage(global.stage)
             .scale_factor;
         const reserve = OVERVIEW_LABEL_MARGIN * scaleFactor;
-        if (panelIsVertical(this._settings)) {
+        const position = this._settings.get_boolean('dock-mode')
+            ? this._settings.get_string('dock-position')
+            : panelPosition(this._settings);
+        if (position === 'left' || position === 'right') {
             dash.set_height(-1);
             dash.set_width(reserve);
         } else {
             dash.set_width(-1);
             dash.set_height(
-                panelPosition(this._settings) === 'bottom' ? reserve : 0
+                position === 'bottom' ? reserve : 0
             );
         }
     }
@@ -369,6 +387,20 @@ export class OverviewIntegration {
                         box.x1 += inset;
                     else
                         box.x2 -= inset;
+                }
+                const dockPosition = integration._settings.get_string(
+                    'dock-position'
+                );
+                const dockInset = integration._dockOverviewInset();
+                if (dockInset > 0) {
+                    if (dockPosition === 'top')
+                        box.y1 += dockInset;
+                    else if (dockPosition === 'bottom')
+                        box.y2 -= dockInset;
+                    else if (dockPosition === 'left')
+                        box.x1 += dockInset;
+                    else
+                        box.x2 -= dockInset;
                 }
                 originalAllocate.call(controls, box);
             }
@@ -401,6 +433,20 @@ export class OverviewIntegration {
 
     _reserveAutoHiddenPanel() {
         return this._settings.get_boolean('panel-autohide-enabled');
+    }
+
+    _dockOverviewInset() {
+        if (!this._settings.get_boolean('dock-mode'))
+            return 0;
+
+        const position = this._settings.get_string('dock-position');
+        if (position !== 'bottom')
+            return 0;
+
+        const panelHeight = this._settings.get_int('icon-size') +
+            ICON_VERTICAL_RESERVE;
+        const panelMode = this._settings.get_boolean('dock-panel-mode');
+        return panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
     }
 
     _beginAppSpread() {

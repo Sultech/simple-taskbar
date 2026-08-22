@@ -127,6 +127,33 @@ export function createPanelOrderRow(settings, {
     };
 }
 
+export function createItemOrderRow({title, subtitle = ''}) {
+    const upButton = new Gtk.Button({
+        icon_name: 'go-up-symbolic',
+        tooltip_text: _('Move Up'),
+        valign: Gtk.Align.CENTER,
+    });
+    const downButton = new Gtk.Button({
+        icon_name: 'go-down-symbolic',
+        tooltip_text: _('Move Down'),
+        valign: Gtk.Align.CENTER,
+    });
+    upButton.add_css_class('flat');
+    downButton.add_css_class('flat');
+    const moveBox = new Gtk.Box({
+        orientation: Gtk.Orientation.HORIZONTAL,
+        spacing: 2,
+        valign: Gtk.Align.CENTER,
+    });
+    moveBox.append(upButton);
+    moveBox.append(downButton);
+
+    const row = new Adw.ActionRow({title, subtitle});
+    row.add_prefix(moveBox);
+
+    return {row, upButton, downButton, group: null};
+}
+
 export function addComboRow(group, settings, {
     key,
     title,
@@ -135,6 +162,7 @@ export function addComboRow(group, settings, {
     initialValue = null,
     choicesProvider = () => choices,
     choicesChangedKey = null,
+    choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
     setValue = value => settings.set_string(key, value),
 }, connectSettings) {
     const createModel = availableChoices => {
@@ -172,8 +200,8 @@ export function addComboRow(group, settings, {
         if (index >= 0 && row.get_selected() !== index)
             row.set_selected(index);
     });
-    if (choicesChangedKey) {
-        connectSettings(settings, `changed::${choicesChangedKey}`, () => {
+    for (const changedKey of choicesChangedKeys) {
+        connectSettings(settings, `changed::${changedKey}`, () => {
             currentChoices = choicesProvider();
             syncingChoices = true;
             row.set_model(createModel(currentChoices));

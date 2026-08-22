@@ -3,7 +3,7 @@
 
 import Clutter from 'gi://Clutter';
 
-const PANEL_ITEM_GAP = 8;
+export const PANEL_ITEM_GAP = 8;
 
 function naturalLength(actor, crossSize, vertical) {
     if (!actor.visible)

@@ -19,6 +19,7 @@ import {
     closePopupMenu,
     openPopupMenu,
 } from '../shared/popupMenuUtils.js';
+import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
@@ -313,9 +314,7 @@ export class WindowPreviewController {
             0.5,
             panelArrowSide(this._settings)
         );
-        const themeClass = Main.panel.has_style_class_name(
-            'simple-taskbar-theme-light'
-        )
+        const themeClass = panelUsesLightTheme(this._settings)
             ? 'simple-taskbar-preview-light'
             : 'simple-taskbar-preview-dark';
         menu.actor.add_style_class_name('simple-taskbar-preview-menu');

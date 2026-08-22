@@ -34,6 +34,7 @@ export class PanelInteractionController {
             Main.panel._centerBox,
             Main.panel._rightBox,
         ],
+        allowTaskbarLock = true,
     }) {
         this._settings = settings;
         this._taskbarController = taskbarController;
@@ -43,6 +44,7 @@ export class PanelInteractionController {
         this._openPreferences = openPreferences;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
+        this._allowTaskbarLock = allowTaskbarLock;
         this._capturedEventId = 0;
         this._workspaceScrollTimeoutId = 0;
         this._contextMenu = null;
@@ -84,6 +86,7 @@ export class PanelInteractionController {
         this._taskbarContainer = null;
         this._panelBoxes = null;
         this._panelActor = null;
+        this._allowTaskbarLock = false;
         this._settings = null;
         this._openPreferences = null;
     }
@@ -96,37 +99,39 @@ export class PanelInteractionController {
         );
         const menuManager = new PopupMenu.PopupMenuManager(this._panelActor);
         menu.addAction(_('Task Manager'), () => this._openTaskManager());
-        menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        const lockItem = menu.addAction(_('Lock the Taskbar'), () => {
-            this._settings.set_boolean(
-                'taskbar-locked',
-                !this._settings.get_boolean('taskbar-locked')
+        if (this._allowTaskbarLock) {
+            menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+            const lockItem = menu.addAction(_('Lock the Taskbar'), () => {
+                this._settings.set_boolean(
+                    'taskbar-locked',
+                    !this._settings.get_boolean('taskbar-locked')
+                );
+            });
+            const ornamentIcon = lockItem._ornamentIcon;
+            ornamentIcon.get_parent().remove_child(ornamentIcon);
+            const rightOrnament = new St.Bin({
+                x_expand: true,
+                x_align: Clutter.ActorAlign.END,
+                y_align: Clutter.ActorAlign.CENTER,
+                child: ornamentIcon,
+            });
+            lockItem.add_child(rightOrnament);
+            const syncLockItem = () => {
+                lockItem.setOrnament(
+                    this._settings.get_boolean('taskbar-locked')
+                        ? PopupMenu.Ornament.CHECK
+                        : PopupMenu.Ornament.NONE
+                );
+                lockItem.remove_style_class_name(
+                    'popup-ornamented-menu-item'
+                );
+            };
+            this._lockChangedId = this._settings.connect(
+                'changed::taskbar-locked',
+                syncLockItem
             );
-        });
-        const ornamentIcon = lockItem._ornamentIcon;
-        ornamentIcon.get_parent().remove_child(ornamentIcon);
-        const rightOrnament = new St.Bin({
-            x_expand: true,
-            x_align: Clutter.ActorAlign.END,
-            y_align: Clutter.ActorAlign.CENTER,
-            child: ornamentIcon,
-        });
-        lockItem.add_child(rightOrnament);
-        const syncLockItem = () => {
-            lockItem.setOrnament(
-                this._settings.get_boolean('taskbar-locked')
-                    ? PopupMenu.Ornament.CHECK
-                    : PopupMenu.Ornament.NONE
-            );
-            // GNOME's ornament class compensates for its normal left-side
-            // location. This menu intentionally keeps the check on the right.
-            lockItem.remove_style_class_name('popup-ornamented-menu-item');
-        };
-        this._lockChangedId = this._settings.connect(
-            'changed::taskbar-locked',
-            syncLockItem
-        );
-        syncLockItem();
+            syncLockItem();
+        }
         menu.addAction(_('Taskbar Settings'), () => this._openPreferences());
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);

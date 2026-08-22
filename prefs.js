@@ -16,10 +16,13 @@ import {
 } from './src/prefs/panelModeGroup.js';
 import {addApplicationIconsGroup} from './src/prefs/applicationIconsGroup.js';
 import {addAppBehaviorGroup} from './src/prefs/appBehaviorGroup.js';
+import {addDockAppearanceGroup} from './src/prefs/dockAppearanceGroup.js';
+import {addDockBehaviorGroup} from './src/prefs/dockBehaviorGroup.js';
 import {addTaskbarBehaviorGroup} from './src/prefs/taskbarBehaviorGroup.js';
 import {createBlurMyShellState} from './src/prefs/blurMyShellState.js';
 import {addPanelAppearancePage} from './src/prefs/panelAppearancePage.js';
 import {addPanelItemsPage} from './src/prefs/panelItemsPage.js';
+import {addDockItemsPage} from './src/prefs/dockItemsPage.js';
 import {addStartMenuPage} from './src/prefs/startMenuPage.js';
 import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
 import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
@@ -48,6 +51,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             icon_name: 'preferences-desktop-appearance-symbolic',
         });
         window.add(page);
+
+        const dockPage = new Adw.PreferencesPage({
+            title: _('Dock'),
+            icon_name: 'go-bottom-symbolic',
+        });
+        window.add(dockPage);
 
         addWindowSwitchingPage(
             window,
@@ -89,15 +98,37 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const panelMode = addPanelModeGroup({
             page,
+            dockPage,
             settings: window._settings,
             connectSettings,
         });
         const defaultGnomePanelSwitch = panelMode.defaultGnomePanelSwitch;
+        const dockModeSwitch = panelMode.dockModeSwitch;
+        const dockPositionRow = panelMode.dockPositionRow;
+        const dockMaxLengthRow = panelMode.dockMaxLengthRow;
+        const dockPanelModeSwitch = panelMode.dockPanelModeSwitch;
         const windowsXpThemeSwitch = panelMode.windowsXpThemeSwitch;
         const panelButtonPaddingRow = panelMode.panelButtonPaddingRow;
 
+        const dockAppearance = addDockAppearanceGroup({
+            page: dockPage,
+            settings: window._settings,
+            connectSettings,
+            blurMyShellPanelBlurEnabled,
+        });
+        blurMyShell.setDockPanelSyncs(
+            dockAppearance.syncTransparency,
+            dockAppearance.syncCustomColor
+        );
+        addDockBehaviorGroup({
+            page: dockPage,
+            settings: window._settings,
+            connectSettings,
+        });
+
         const icons = addApplicationIconsGroup({
             page,
+            dockPage,
             settings: window._settings,
             connectSettings,
             panelPositions,
@@ -128,6 +159,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             createSettings: () => this.getSettings(),
             connectSettings,
             defaultGnomePanelSwitch,
+            dockModeSwitch,
+            dockPositionRow,
+            dockMaxLengthRow,
+            dockPanelModeSwitch,
             appearanceGroup,
             startMenuPage,
             advancedAppBehaviorGroup,
@@ -147,6 +182,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             iconSpacingRow,
             panelButtonPaddingRow,
             defaultGnomePanelSwitch,
+            dockModeSwitch,
+            dockPositionRow,
+            dockMaxLengthRow,
+            dockPanelModeSwitch,
             appAlignmentRow,
             pinnedAppsAsLaunchersSwitch,
             combineAppButtonsRow,
@@ -174,6 +213,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             panelPositions,
             windowsStartMenuSwitch,
             followAppAlignmentSwitch,
+        });
+
+        addDockItemsPage({
+            page: dockPage,
+            settings: window._settings,
+            connectSettings,
         });
 
         addResetGroup(page, window, () => this.getSettings());

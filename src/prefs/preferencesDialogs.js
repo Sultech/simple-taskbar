@@ -194,7 +194,8 @@ function findManagedShortcutConflict(settings, accelerator) {
     }
     const startMenuAvailable =
         settings.get_boolean('windows-start-menu-enabled') &&
-        !settings.get_boolean('default-gnome-panel');
+        (!settings.get_boolean('default-gnome-panel') ||
+            settings.get_boolean('dock-mode'));
     if (startMenuAvailable &&
         (settings.get_boolean('start-menu-super-key') ||
             settings.get_boolean('start-menu-super-tab'))) {

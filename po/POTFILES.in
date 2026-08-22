@@ -6,8 +6,11 @@ prefs.js
 src/prefs/advancedPage.js
 src/prefs/appBehaviorGroup.js
 src/prefs/applicationIconsGroup.js
+src/prefs/dockAppearanceGroup.js
+src/prefs/dockBehaviorGroup.js
 src/prefs/panelAppearancePage.js
 src/prefs/panelItemsPage.js
+src/prefs/dockItemsPage.js
 src/prefs/panelModeGroup.js
 src/prefs/preferencesDialogs.js
 src/prefs/preferencesWidgets.js

@@ -423,6 +423,11 @@ export class StartButtonController {
             this._syncVisibility();
             this._keybindings?.sync();
         }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::dock-mode',
+            () => this._keybindings?.sync(),
+            this._signalHolder
+        );
         this._settings.connectObject('changed::start-menu-super-key', () => {
             this._keybindings?.sync();
         }, this._signalHolder);

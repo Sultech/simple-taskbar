@@ -28,6 +28,8 @@ export class PanelAutoHideController {
         positionActor,
         getMonitor,
         getPanelHeight,
+        getPanelLengthPercentage = () => null,
+        getPanelEdgeGap = () => 0,
         isBlocked,
     }) {
         this._settings = settings;
@@ -35,6 +37,8 @@ export class PanelAutoHideController {
         this._positionActor = positionActor;
         this._getMonitor = getMonitor;
         this._getPanelHeight = getPanelHeight;
+        this._getPanelLengthPercentage = getPanelLengthPercentage;
+        this._getPanelEdgeGap = getPanelEdgeGap;
         this._isBlockedCallback = isBlocked;
         this._signalHolder = new TransientSignalHolder();
         this._hideTimeoutId = 0;
@@ -124,6 +128,8 @@ export class PanelAutoHideController {
         this._positionActor = null;
         this._getMonitor = null;
         this._getPanelHeight = null;
+        this._getPanelLengthPercentage = null;
+        this._getPanelEdgeGap = null;
         this._isBlockedCallback = null;
         this._trackedActorData = null;
     }
@@ -442,7 +448,10 @@ export class PanelAutoHideController {
                 this._settings,
                 monitor,
                 this._getPanelHeight(),
-                REVEAL_EDGE_SIZE
+                REVEAL_EDGE_SIZE,
+                this._getPanelLengthPercentage(),
+                null,
+                this._getPanelEdgeGap()
             );
         }
         const vertical = panelIsVertical(this._settings);
