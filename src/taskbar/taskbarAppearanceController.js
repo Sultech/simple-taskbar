@@ -128,8 +128,8 @@ export class TaskbarAppearanceController {
         ) === 'rounded' ? 4 : 3;
     }
 
-    verticalItemExtent() {
-        return this._getIconSize() + ICON_GLASS_MARGIN * 2 +
+    verticalItemExtent(iconSize = this._getIconSize()) {
+        return iconSize + ICON_GLASS_MARGIN * 2 +
             this.indicatorBarHeight();
     }
 
@@ -292,7 +292,8 @@ export class TaskbarAppearanceController {
         window,
         showLabels = this._showAppLabels(),
         labelWidth = this._getAppLabelWidth(),
-        isCombined = false
+        isCombined = false,
+        iconSize = this._getIconSize()
     ) {
         const hasLabel = (Boolean(window) || isCombined) &&
             !panelIsVertical(this._settings);
@@ -301,7 +302,6 @@ export class TaskbarAppearanceController {
             return WINDOWS_XP_TASKBUTTON_WIDTH;
         }
 
-        const iconSize = this._getIconSize();
         const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
         const iconWidth = Math.max(iconSize, minimumIconWidth) + 8;
         return hasLabel && showLabels
@@ -353,11 +353,18 @@ export class TaskbarAppearanceController {
         window,
         showLabels = this._showAppLabels(),
         labelWidth = this._getAppLabelWidth(),
-        isCombined = false
+        isCombined = false,
+        iconSize = this._getIconSize()
     ) {
         return panelIsVertical(this._settings)
-            ? this.verticalItemExtent()
-            : this.buttonWidth(window, showLabels, labelWidth, isCombined);
+            ? this.verticalItemExtent(iconSize)
+            : this.buttonWidth(
+                window,
+                showLabels,
+                labelWidth,
+                isCombined,
+                iconSize
+            );
     }
 
     itemSlotWidth(
@@ -365,7 +372,8 @@ export class TaskbarAppearanceController {
         isLauncher = false,
         pinnedToRunningGap = false,
         isCombined = false,
-        trailing = false
+        trailing = false,
+        iconSize = this._getIconSize()
     ) {
         const transitionGap = this.transitionGap(pinnedToRunningGap);
         const iconSpacing = this.iconSpacing(isLauncher);
@@ -373,7 +381,8 @@ export class TaskbarAppearanceController {
             window,
             this._showAppLabels(),
             this._getAppLabelWidth(),
-            isCombined
+            isCombined,
+            iconSize
         ) + iconSpacing + transitionGap +
             (trailing && iconSpacing < 0 ? -iconSpacing : 0);
     }

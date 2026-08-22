@@ -71,6 +71,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-autohide-enabled',
     'dock-multi-monitor-panels',
     'dock-max-length',
+    'dock-min-icon-size',
     'dock-transparency-enabled',
     'dock-transparency-level',
     'dock-custom-panel-color-enabled',

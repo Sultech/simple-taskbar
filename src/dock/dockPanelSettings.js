@@ -39,7 +39,16 @@ function remapSettingArguments(args) {
 export class DockPanelSettings {
     constructor(settings) {
         this._settings = settings;
+        this._runtimeIconSize = null;
         this.isDock = true;
+    }
+
+    getConfiguredIconSize() {
+        return this._settings.get_int('icon-size');
+    }
+
+    setRuntimeIconSize(iconSize) {
+        this._runtimeIconSize = iconSize;
     }
 
     get_boolean(key) {
@@ -61,8 +70,11 @@ export class DockPanelSettings {
     }
 
     get_int(...args) {
+        if (args[0] === 'icon-size' && this._runtimeIconSize !== null)
+            return this._runtimeIconSize;
+
         if (args[0] === 'panel-height') {
-            return this._settings.get_int('icon-size') +
+            return this.get_int('icon-size') +
                 ICON_VERTICAL_RESERVE;
         }
 

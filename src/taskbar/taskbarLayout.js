@@ -91,7 +91,8 @@ export function allocateAdaptivePanel(
     centerBox,
     rightBox,
     centerOffset = 0,
-    vertical = false
+    vertical = false,
+    preserveStart = false
 ) {
     allocatePanelBoxes(
         panel,
@@ -108,6 +109,9 @@ export function allocateAdaptivePanel(
         ) => {
             const physicalStart = rtl ? rightNatural : leftNatural;
             const physicalEnd = rtl ? leftNatural : rightNatural;
+            if (preserveStart)
+                return physicalStart + PANEL_ITEM_GAP;
+
             const centered = (length - centerNatural + centerOffset) / 2;
             const minimum = physicalStart + PANEL_ITEM_GAP;
             const maximum = length - physicalEnd - PANEL_ITEM_GAP -

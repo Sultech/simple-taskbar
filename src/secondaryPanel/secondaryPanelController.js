@@ -115,8 +115,11 @@ export class SecondaryPanelController {
         this._dockPanelLength = null;
         this._dockStrutActor = null;
         this._signalHolder = new TransientSignalHolder();
+        this._configuredIconSize = this._dockPanelSizing
+            ? settings.getConfiguredIconSize()
+            : settings.get_int('icon-size');
         this._panelHeight = settings.get_int('panel-height');
-        this._iconSize = settings.get_int('icon-size');
+        this._iconSize = this._configuredIconSize;
 
         this._windowController = new WindowController(tracker, {
             settings,
@@ -406,6 +409,7 @@ export class SecondaryPanelController {
         this._dockPanelSizing = false;
         this._mainPanelPosition = null;
         this._dockPanelLength = null;
+        this._configuredIconSize = 0;
         this._settings = null;
     }
 
@@ -428,6 +432,12 @@ export class SecondaryPanelController {
             );
         }
         this._settings.connectObject('changed::icon-size', () => {
+            if (this._dockPanelSizing) {
+                this._resetDockIconSize();
+                this._position();
+                return;
+            }
+
             this._iconSize = this._settings.get_int('icon-size');
             if (this._panelHeightFromIconSize) {
                 this._panelHeight = this._settings.get_int('panel-height');
@@ -503,6 +513,14 @@ export class SecondaryPanelController {
                 },
                 this._signalHolder
             );
+            this._settings.connectObject(
+                'changed::dock-min-icon-size',
+                () => {
+                    this._resetDockIconSize();
+                    this._position();
+                },
+                this._signalHolder
+            );
         }
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
@@ -510,6 +528,8 @@ export class SecondaryPanelController {
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => {
+                if (this._dockPanelSizing)
+                    this._resetDockIconSize();
                 this._applyLayout();
                 this.syncTheme();
             },
@@ -803,8 +823,15 @@ export class SecondaryPanelController {
             centered: this._appsAreCentered(),
             vertical,
         });
-        if (availableWidth !== undefined)
+        if (availableWidth !== undefined) {
             this._taskbarController.setAvailableWidth(availableWidth);
+            if (this._dockPanelSizing &&
+                !this._settings.get_boolean('windows-xp-theme-enabled') &&
+                this._syncDockIconSize(availableWidth)) {
+                this._position();
+                return;
+            }
+        }
 
         if (!this._dockPanelSizing ||
             this._settings.get_boolean('dock-panel-mode')) {
@@ -822,6 +849,49 @@ export class SecondaryPanelController {
 
         this._dockPanelLength = panelLength;
         this._position();
+    }
+
+    _syncDockIconSize(availableLength) {
+        const maximum = this._configuredIconSize;
+        const minimum = Math.min(
+            this._settings.get_int('dock-min-icon-size'),
+            maximum
+        );
+        const iconSize = this._taskbarController.getIconSizeForLength(
+            availableLength,
+            maximum,
+            minimum
+        );
+        if (iconSize === this._iconSize)
+            return false;
+
+        this._settings.setRuntimeIconSize(iconSize);
+        this._iconSize = iconSize;
+        this._panelHeight = this._settings.get_int('panel-height');
+        this._taskbarController.setIconSize(iconSize);
+        this._taskbarController.setPanelHeight(this._panelHeight);
+        this._startButtonController.applyAppearance(
+            iconSize,
+            this._settings.get_int('start-button-padding')
+        );
+        this._verticalItemsController.sync();
+        this._applicationOverflowController.sync();
+        return true;
+    }
+
+    _resetDockIconSize() {
+        this._configuredIconSize = this._settings.getConfiguredIconSize();
+        this._settings.setRuntimeIconSize(this._configuredIconSize);
+        this._iconSize = this._configuredIconSize;
+        this._panelHeight = this._settings.get_int('panel-height');
+        this._taskbarController.setIconSize(this._iconSize);
+        this._taskbarController.setPanelHeight(this._panelHeight);
+        this._startButtonController.applyAppearance(
+            this._iconSize,
+            this._settings.get_int('start-button-padding')
+        );
+        this._verticalItemsController.sync();
+        this._applicationOverflowController.sync();
     }
 
     _panelLengthPercentage() {

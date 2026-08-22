@@ -66,6 +66,7 @@ export default class SimpleTaskbarExtension extends Extension {
             {
                 onDefaultPanelChanged: () => this._syncTaskbarVisibility(),
                 onIconSizeChanged: iconSize => {
+                    this._maximumIconSize = iconSize;
                     this._iconSize = iconSize;
                     this._startButtonController.applyAppearance(
                         this._iconSize,
@@ -73,15 +74,13 @@ export default class SimpleTaskbarExtension extends Extension {
                     );
                     this._taskbarController.setIconSize(this._iconSize);
                     this._panelController.syncVerticalItems();
+                    this._applicationOverflowController.sync();
                     this._panelController.updateTaskbarWidth();
                 },
                 onIconSpacingChanged: () => this._applyTaskbarAppearance(),
                 onModeChanged: () => {
+                    this._resetTaskbarIconSize();
                     this._applicationOverflowController.clearOverflow();
-                    this._startButtonController.applyAppearance(
-                        this._iconSize,
-                        this._settings.get_int('start-button-padding')
-                    );
                     this._panelController.syncVerticalItems();
                     this._panelController.updateTaskbarWidth();
                 },
@@ -94,7 +93,8 @@ export default class SimpleTaskbarExtension extends Extension {
             }
         );
         this._windowsXpModeController.applyInitialSettings();
-        this._iconSize = this._settings.get_int('icon-size');
+        this._maximumIconSize = this._settings.get_int('icon-size');
+        this._iconSize = this._maximumIconSize;
         this._panelHeight = this._settings.get_int('panel-height');
         if (!this._settings.get_boolean('default-gnome-panel') &&
             !this._settings.get_boolean('windows-xp-theme-enabled') &&
@@ -179,7 +179,9 @@ export default class SimpleTaskbarExtension extends Extension {
             folderMenuButton: this._folderMenuController.actor,
             onAppAlignmentChanged: () => this._applyTaskbarAppearance(),
             onTaskbarAvailableWidthChanged: width =>
-                this._taskbarController.setAvailableWidth(width),
+                this._syncTaskbarIconSize(width),
+            isTaskbarAdaptive: () =>
+                this._iconSize < this._maximumIconSize,
             queueOverviewRelayout: () =>
                 this._overviewIntegration.queueRelayout(),
             isAutoHideBlocked: () => this._panelAutoHideIsBlocked(),
@@ -323,6 +325,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._tracker = null;
         this._appSystem = null;
         this._settings = null;
+        this._maximumIconSize = null;
         this._panelHeight = null;
     }
 
@@ -406,6 +409,19 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelController.syncVerticalItems();
             this._panelController.updateTaskbarWidth();
         }, this);
+        this._settings.connectObject(
+            'changed::dock-min-icon-size',
+            () => {
+                if (this._settings.get_boolean('default-gnome-panel') ||
+                    this._settings.get_boolean('dock-mode') ||
+                    this._settings.get_boolean('windows-xp-theme-enabled')) {
+                    return;
+                }
+                this._resetTaskbarIconSize();
+                this._panelController.updateTaskbarWidth();
+            },
+            this
+        );
         this._settings.connectObject('changed::panel-position', () => {
             synchronizePanelPosition(this._settings);
             hidePanelBlur();
@@ -424,6 +440,49 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController.updateTaskbarWidth();
     }
 
+    _syncTaskbarIconSize(availableLength) {
+        this._taskbarController.setAvailableWidth(availableLength);
+        if (this._settings.get_boolean('default-gnome-panel') ||
+            this._settings.get_boolean('dock-mode') ||
+            this._settings.get_boolean('windows-xp-theme-enabled')) {
+            return false;
+        }
+
+        const maximum = this._maximumIconSize;
+        const minimum = Math.min(
+            this._settings.get_int('dock-min-icon-size'),
+            maximum
+        );
+        const iconSize = this._taskbarController.getIconSizeForLength(
+            availableLength,
+            maximum,
+            minimum
+        );
+        if (iconSize === this._iconSize)
+            return false;
+
+        this._iconSize = iconSize;
+        this._taskbarController.setIconSize(iconSize);
+        this._startButtonController.applyAppearance(
+            iconSize,
+            this._settings.get_int('start-button-padding')
+        );
+        this._panelController.syncVerticalItems();
+        this._applicationOverflowController.sync();
+        return true;
+    }
+
+    _resetTaskbarIconSize() {
+        this._maximumIconSize = this._settings.get_int('icon-size');
+        this._iconSize = this._maximumIconSize;
+        this._taskbarController.setIconSize(this._iconSize);
+        this._startButtonController.applyAppearance(
+            this._iconSize,
+            this._settings.get_int('start-button-padding')
+        );
+        this._applicationOverflowController.sync();
+    }
+
     _syncTaskbarVisibility() {
         const visible = !this._settings.get_boolean('default-gnome-panel');
         this._taskbarBin.visible = visible;
@@ -431,6 +490,10 @@ export default class SimpleTaskbarExtension extends Extension {
             this._windowPreviews.hideTooltip(false);
             this._windowPreviews.hide();
             this._overviewIntegration.cancelAppSpread();
+        }
+        if (visible && !this._settings.get_boolean('dock-mode') &&
+            !this._settings.get_boolean('windows-xp-theme-enabled')) {
+            this._resetTaskbarIconSize();
         }
         this._panelController.applyLayout();
         this._panelController.updateTaskbarWidth();

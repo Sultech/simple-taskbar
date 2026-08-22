@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-22 21:00+0100\n"
+"POT-Creation-Date: 2026-08-23 00:44+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -24,12 +24,12 @@ msgstr ""
 msgid "Show desktop"
 msgstr "Afficher le bureau"
 
-#: src/overflow/applicationOverflowController.js:404
+#: src/overflow/applicationOverflowController.js:408
 msgid "Application overflow"
 msgstr "Débordement des applications"
 
 #: prefs.js:44 src/prefs/panelAppearancePage.js:84
-#: src/prefs/panelModeGroup.js:48
+#: src/prefs/panelModeGroup.js:49
 msgid "Left"
 msgstr "Gauche"
 
@@ -38,7 +38,7 @@ msgid "Center"
 msgstr "Centre"
 
 #: prefs.js:46 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelModeGroup.js:49
+#: src/prefs/panelModeGroup.js:50
 msgid "Right"
 msgstr "Droite"
 
@@ -72,7 +72,7 @@ msgstr ""
 msgid "Application Behavior"
 msgstr "Comportement des applications"
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:190
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:191
 msgid "Choose which applications appear and how they are grouped."
 msgstr ""
 "Choisir quelles applications s’affichent et comment elles sont regroupées."
@@ -217,7 +217,7 @@ msgstr ""
 msgid "Application Icons"
 msgstr "Icônes d’applications"
 
-#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:187
+#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:188
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 "Changer la taille, l’espacement et le placement des icônes de la barre des "
@@ -234,83 +234,92 @@ msgstr ""
 "nécessitent plus d’espace"
 
 #: src/prefs/applicationIconsGroup.js:66
+#, fuzzy
+msgid "Minimum Icon Size"
+msgstr "Taille des icônes"
+
+#: src/prefs/applicationIconsGroup.js:68
+msgid "Smallest application icon size used when space is limited"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:80
 msgid "Icon Spacing"
 msgstr "Espacement des icônes"
 
-#: src/prefs/applicationIconsGroup.js:67
+#: src/prefs/applicationIconsGroup.js:81
 msgid "Space between application buttons"
 msgstr "Espace entre les boutons d’applications"
 
-#: src/prefs/applicationIconsGroup.js:78
+#: src/prefs/applicationIconsGroup.js:92
 msgid "Running Indicator Style"
 msgstr "Style de l’indicateur des applications en cours d’exécution"
 
-#: src/prefs/applicationIconsGroup.js:80
+#: src/prefs/applicationIconsGroup.js:94
 msgid "Choose the shape of indicators beneath running applications"
 msgstr ""
 "Sélectionner la forme des indicateurs sous les applications en cours "
 "d’exécution"
 
-#: src/prefs/applicationIconsGroup.js:83
+#: src/prefs/applicationIconsGroup.js:97
 msgid "Rounded"
 msgstr "Arrondi"
 
-#: src/prefs/applicationIconsGroup.js:84
+#: src/prefs/applicationIconsGroup.js:98
 msgid "Straight"
 msgstr "Droit"
 
-#: src/prefs/applicationIconsGroup.js:90
+#: src/prefs/applicationIconsGroup.js:104
 msgid "Custom Indicator Colors"
 msgstr "Couleurs personnalisées de l’indicateur"
 
-#: src/prefs/applicationIconsGroup.js:91
+#: src/prefs/applicationIconsGroup.js:105
 msgid "Choose colors for running application indicators"
 msgstr ""
 "Sélectionner les couleurs pour les indicateurs des applications en cours "
 "d’exécution"
 
-#: src/prefs/applicationIconsGroup.js:104
+#: src/prefs/applicationIconsGroup.js:118
 msgid "Match Icon Color"
 msgstr "Adapter la couleur à celle de l’icône"
 
-#: src/prefs/applicationIconsGroup.js:106
+#: src/prefs/applicationIconsGroup.js:120
 msgid "Color the focused indicator from the application icon"
 msgstr ""
 "Colorer l’indicateur de la fenêtre sélectionnée avec la couleur de l’icône "
 "de l’application"
 
-#: src/prefs/applicationIconsGroup.js:122
+#: src/prefs/applicationIconsGroup.js:136
 msgid "Focused Indicator Color"
 msgstr "Couleur de l’indicateur de la fenêtre sélectionnée"
 
-#: src/prefs/applicationIconsGroup.js:131
+#: src/prefs/applicationIconsGroup.js:145
 msgid "Unfocused Indicator Color"
 msgstr "Couleur de l’indicateur de la fenêtre non sélectionnée"
 
-#: src/prefs/applicationIconsGroup.js:177
+#: src/prefs/applicationIconsGroup.js:218
 msgid "Icon Alignment"
 msgstr "Alignement des icônes"
 
-#: src/prefs/applicationIconsGroup.js:178
+#: src/prefs/applicationIconsGroup.js:219
 #, fuzzy
 msgid "Choose the application icon alignment"
 msgstr "Suivre l’alignement de l’application"
 
-#: src/prefs/applicationIconsGroup.js:188
+#: src/prefs/applicationIconsGroup.js:229
 msgid "Window Previews"
 msgstr "Aperçus des fenêtres"
 
-#: src/prefs/applicationIconsGroup.js:189
+#: src/prefs/applicationIconsGroup.js:230
 msgid "Show live window previews when hovering application icons"
 msgstr ""
 "Afficher les aperçus en direct des fenêtres lors du survol des icônes "
 "d’application"
 
-#: src/prefs/applicationIconsGroup.js:201
+#: src/prefs/applicationIconsGroup.js:242
 msgid "Spread Multiple Windows"
 msgstr "Disperser les multiples fenêtres"
 
-#: src/prefs/applicationIconsGroup.js:202
+#: src/prefs/applicationIconsGroup.js:243
 msgid ""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
@@ -510,11 +519,11 @@ msgstr "Emplacement du panneau"
 msgid "Place the taskbar at a screen edge"
 msgstr "Placer la barre des tâches en haut ou en bas de l’écran"
 
-#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:46
+#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:47
 msgid "Top"
 msgstr "En haut"
 
-#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:47
+#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:48
 msgid "Bottom"
 msgstr "En bas"
 
@@ -674,7 +683,7 @@ msgid "GNOME workspace overview button"
 msgstr "Bouton de l’aperçu des espaces de travail GNOME"
 
 #: src/prefs/panelItemsPage.js:186 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:649
+#: src/startMenu/startButtonController.js:654
 msgid "Applications"
 msgstr "Applications"
 
@@ -752,67 +761,67 @@ msgstr ""
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "Bouton démarrer style Eleven ou GNOME d’origine"
 
-#: src/prefs/panelModeGroup.js:22 src/prefs/panelModeGroup.js:27
+#: src/prefs/panelModeGroup.js:23 src/prefs/panelModeGroup.js:28
 msgid "General"
 msgstr "Général"
 
-#: src/prefs/panelModeGroup.js:32
+#: src/prefs/panelModeGroup.js:33
 msgid "Default GNOME Panel"
 msgstr "Panneau GNOME par défaut"
 
-#: src/prefs/panelModeGroup.js:33
+#: src/prefs/panelModeGroup.js:34
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Masquer les applications de la barre des tâches et utiliser le dock "
 "d’origine dans l’aperçu"
 
-#: src/prefs/panelModeGroup.js:39
+#: src/prefs/panelModeGroup.js:40
 msgid "Dock mode"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:40
+#: src/prefs/panelModeGroup.js:41
 msgid "Enable Default GNOME Panel mode when switched on"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:70
+#: src/prefs/panelModeGroup.js:71
 #, fuzzy
 msgid "Dock Position"
 msgstr "Emplacement du panneau"
 
-#: src/prefs/panelModeGroup.js:71
+#: src/prefs/panelModeGroup.js:72
 msgid "Place the Dock at a different screen edge from the main panel"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:91
+#: src/prefs/panelModeGroup.js:92
 msgid "Maximum Dock Length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:92
+#: src/prefs/panelModeGroup.js:93
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:99
+#: src/prefs/panelModeGroup.js:100
 #, fuzzy
 msgid "Panel mode"
 msgstr "Mode du panneau"
 
-#: src/prefs/panelModeGroup.js:100
+#: src/prefs/panelModeGroup.js:101
 msgid "Extend the Dock fully to the monitor edge"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:121
+#: src/prefs/panelModeGroup.js:122
 msgid "Windows XP Theme"
 msgstr "Thème Windows XP"
 
-#: src/prefs/panelModeGroup.js:122
+#: src/prefs/panelModeGroup.js:123
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Appliquer un style de barre des tâches inspiré de Windows XP"
 
-#: src/prefs/panelModeGroup.js:134
+#: src/prefs/panelModeGroup.js:135
 msgid "Panel Button Padding"
 msgstr "Remplissage du bouton du panneau"
 
-#: src/prefs/panelModeGroup.js:136
+#: src/prefs/panelModeGroup.js:137
 #, fuzzy
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
@@ -822,13 +831,13 @@ msgstr ""
 "automatique : la valeur de Just Perfection lorsqu’elle est configurée, sinon "
 "3 px"
 
-#: src/prefs/panelModeGroup.js:186
+#: src/prefs/panelModeGroup.js:187
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Les icônes d’applications ne sont pas disponibles dans le mode par défaut du "
 "panneau GNOME."
 
-#: src/prefs/panelModeGroup.js:189
+#: src/prefs/panelModeGroup.js:190
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Les options d’applications sont indisponibles en mode Panneau GNOME par "
@@ -1495,8 +1504,8 @@ msgstr "Désépingler de la barre des tâches"
 msgid "Pin to Taskbar"
 msgstr "Épingler à la barre des tâches"
 
-#: src/taskbar/taskbarAppearanceController.js:396
-#: src/taskbar/taskbarController.js:859 src/taskbar/taskbarController.js:861
+#: src/taskbar/taskbarAppearanceController.js:405
+#: src/taskbar/taskbarController.js:895 src/taskbar/taskbarController.js:897
 msgid "running"
 msgstr "En cours d’exécution"
 
@@ -1504,7 +1513,7 @@ msgstr "En cours d’exécution"
 msgid "Start Menu Settings"
 msgstr "Paramètres du menu démarrer"
 
-#: src/startMenu/startButtonController.js:649
+#: src/startMenu/startButtonController.js:654
 msgid "Start"
 msgstr "Démarrer"
 

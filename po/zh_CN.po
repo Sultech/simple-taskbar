@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-22 21:00+0100\n"
+"POT-Creation-Date: 2026-08-23 00:44+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -22,12 +22,12 @@ msgstr ""
 msgid "Show desktop"
 msgstr "展示桌面"
 
-#: src/overflow/applicationOverflowController.js:404
+#: src/overflow/applicationOverflowController.js:408
 msgid "Application overflow"
 msgstr "应用溢出"
 
 #: prefs.js:44 src/prefs/panelAppearancePage.js:84
-#: src/prefs/panelModeGroup.js:48
+#: src/prefs/panelModeGroup.js:49
 msgid "Left"
 msgstr "左侧"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "居中"
 
 #: prefs.js:46 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelModeGroup.js:49
+#: src/prefs/panelModeGroup.js:50
 msgid "Right"
 msgstr "右侧"
 
@@ -68,7 +68,7 @@ msgstr "使用较少的任务栏和指示器外观选项。"
 msgid "Application Behavior"
 msgstr "应用行为"
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:190
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:191
 msgid "Choose which applications appear and how they are grouped."
 msgstr "选择显示哪些应用以及如何将它们分组。"
 
@@ -196,7 +196,7 @@ msgstr "关闭应用的所有窗口，而不是打开新窗口"
 msgid "Application Icons"
 msgstr "应用程序图标"
 
-#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:187
+#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:188
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "更改任务栏图标的尺寸、间距与位置。"
 
@@ -209,75 +209,84 @@ msgid "The panel grows automatically when larger icons need more room"
 msgstr "当较大图标需要更多空间时，面板会自动增大"
 
 #: src/prefs/applicationIconsGroup.js:66
+#, fuzzy
+msgid "Minimum Icon Size"
+msgstr "图标尺寸"
+
+#: src/prefs/applicationIconsGroup.js:68
+msgid "Smallest application icon size used when space is limited"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:80
 msgid "Icon Spacing"
 msgstr "图标间距"
 
-#: src/prefs/applicationIconsGroup.js:67
+#: src/prefs/applicationIconsGroup.js:81
 msgid "Space between application buttons"
 msgstr "应用程序按钮之间的间距"
 
-#: src/prefs/applicationIconsGroup.js:78
+#: src/prefs/applicationIconsGroup.js:92
 msgid "Running Indicator Style"
 msgstr "运行指示器样式"
 
-#: src/prefs/applicationIconsGroup.js:80
+#: src/prefs/applicationIconsGroup.js:94
 msgid "Choose the shape of indicators beneath running applications"
 msgstr "选择正在运行的应用下方的指示器的式样"
 
-#: src/prefs/applicationIconsGroup.js:83
+#: src/prefs/applicationIconsGroup.js:97
 msgid "Rounded"
 msgstr "圆角"
 
-#: src/prefs/applicationIconsGroup.js:84
+#: src/prefs/applicationIconsGroup.js:98
 msgid "Straight"
 msgstr "平直"
 
-#: src/prefs/applicationIconsGroup.js:90
+#: src/prefs/applicationIconsGroup.js:104
 msgid "Custom Indicator Colors"
 msgstr "自定义指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:91
+#: src/prefs/applicationIconsGroup.js:105
 msgid "Choose colors for running application indicators"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/applicationIconsGroup.js:104
+#: src/prefs/applicationIconsGroup.js:118
 msgid "Match Icon Color"
 msgstr "匹配图标颜色"
 
-#: src/prefs/applicationIconsGroup.js:106
+#: src/prefs/applicationIconsGroup.js:120
 msgid "Color the focused indicator from the application icon"
 msgstr "根据应用图标的颜色显示聚焦指示器"
 
-#: src/prefs/applicationIconsGroup.js:122
+#: src/prefs/applicationIconsGroup.js:136
 msgid "Focused Indicator Color"
 msgstr "聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:131
+#: src/prefs/applicationIconsGroup.js:145
 msgid "Unfocused Indicator Color"
 msgstr "未聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:177
+#: src/prefs/applicationIconsGroup.js:218
 msgid "Icon Alignment"
 msgstr "图标对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:178
+#: src/prefs/applicationIconsGroup.js:219
 #, fuzzy
 msgid "Choose the application icon alignment"
 msgstr "跟随应用对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:188
+#: src/prefs/applicationIconsGroup.js:229
 msgid "Window Previews"
 msgstr "窗口预览"
 
-#: src/prefs/applicationIconsGroup.js:189
+#: src/prefs/applicationIconsGroup.js:230
 msgid "Show live window previews when hovering application icons"
 msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
 
-#: src/prefs/applicationIconsGroup.js:201
+#: src/prefs/applicationIconsGroup.js:242
 msgid "Spread Multiple Windows"
 msgstr "展开多窗口"
 
-#: src/prefs/applicationIconsGroup.js:202
+#: src/prefs/applicationIconsGroup.js:243
 msgid ""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
@@ -459,11 +468,11 @@ msgstr "面板位置"
 msgid "Place the taskbar at a screen edge"
 msgstr "将任务栏放置在屏幕顶部或底部"
 
-#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:46
+#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:47
 msgid "Top"
 msgstr "顶部"
 
-#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:47
+#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:48
 msgid "Bottom"
 msgstr "底部"
 
@@ -612,7 +621,7 @@ msgid "GNOME workspace overview button"
 msgstr "GNOME 工作区概览按钮"
 
 #: src/prefs/panelItemsPage.js:186 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:649
+#: src/startMenu/startButtonController.js:654
 msgid "Applications"
 msgstr "应用程序"
 
@@ -690,65 +699,65 @@ msgstr ""
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "11 风格或原始 GNOME 开始按钮"
 
-#: src/prefs/panelModeGroup.js:22 src/prefs/panelModeGroup.js:27
+#: src/prefs/panelModeGroup.js:23 src/prefs/panelModeGroup.js:28
 msgid "General"
 msgstr "常规"
 
-#: src/prefs/panelModeGroup.js:32
+#: src/prefs/panelModeGroup.js:33
 msgid "Default GNOME Panel"
 msgstr "默认 GNOME 面板"
 
-#: src/prefs/panelModeGroup.js:33
+#: src/prefs/panelModeGroup.js:34
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr "隐藏任务栏应用，并在概览中使用原版的停靠栏"
 
-#: src/prefs/panelModeGroup.js:39
+#: src/prefs/panelModeGroup.js:40
 msgid "Dock mode"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:40
+#: src/prefs/panelModeGroup.js:41
 msgid "Enable Default GNOME Panel mode when switched on"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:70
+#: src/prefs/panelModeGroup.js:71
 #, fuzzy
 msgid "Dock Position"
 msgstr "面板位置"
 
-#: src/prefs/panelModeGroup.js:71
+#: src/prefs/panelModeGroup.js:72
 msgid "Place the Dock at a different screen edge from the main panel"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:91
+#: src/prefs/panelModeGroup.js:92
 msgid "Maximum Dock Length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:92
+#: src/prefs/panelModeGroup.js:93
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:99
+#: src/prefs/panelModeGroup.js:100
 #, fuzzy
 msgid "Panel mode"
 msgstr "面板项目"
 
-#: src/prefs/panelModeGroup.js:100
+#: src/prefs/panelModeGroup.js:101
 msgid "Extend the Dock fully to the monitor edge"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:121
+#: src/prefs/panelModeGroup.js:122
 msgid "Windows XP Theme"
 msgstr "Windows XP 主题"
 
-#: src/prefs/panelModeGroup.js:122
+#: src/prefs/panelModeGroup.js:123
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "使用 Windows XP 风格的任务栏样式"
 
-#: src/prefs/panelModeGroup.js:134
+#: src/prefs/panelModeGroup.js:135
 msgid "Panel Button Padding"
 msgstr "面板按钮内边距"
 
-#: src/prefs/panelModeGroup.js:136
+#: src/prefs/panelModeGroup.js:137
 #, fuzzy
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
@@ -757,11 +766,11 @@ msgstr ""
 "面板按钮周围的水平间距。使用 -1 表示自动：已配置 Just Perfection 时使用其数"
 "值，否则使用 3 像素"
 
-#: src/prefs/panelModeGroup.js:186
+#: src/prefs/panelModeGroup.js:187
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "在默认 GNOME 面板模式下，应用程序图标不可用。"
 
-#: src/prefs/panelModeGroup.js:189
+#: src/prefs/panelModeGroup.js:190
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr "默认 GNOME 面板模式下无法使用应用选项。"
 
@@ -1372,8 +1381,8 @@ msgstr "从任务栏取消固定"
 msgid "Pin to Taskbar"
 msgstr "固定到任务栏"
 
-#: src/taskbar/taskbarAppearanceController.js:396
-#: src/taskbar/taskbarController.js:859 src/taskbar/taskbarController.js:861
+#: src/taskbar/taskbarAppearanceController.js:405
+#: src/taskbar/taskbarController.js:895 src/taskbar/taskbarController.js:897
 msgid "running"
 msgstr "正在运行"
 
@@ -1381,7 +1390,7 @@ msgstr "正在运行"
 msgid "Start Menu Settings"
 msgstr "开始菜单设置"
 
-#: src/startMenu/startButtonController.js:649
+#: src/startMenu/startButtonController.js:654
 msgid "Start"
 msgstr "开始"
 

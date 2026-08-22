@@ -541,6 +541,42 @@ export class TaskbarController {
         this.queueIconGeometryUpdate();
     }
 
+    getIconSize() {
+        return this._iconSize;
+    }
+
+    getLengthForIconSize(iconSize) {
+        const vertical = panelIsVertical(this._settings);
+        return this.getOrderedItems().reduce((length, item) => {
+            if (item._taskbarIsShowDesktop) {
+                return length + (vertical
+                    ? item.get_preferred_height(this._panelHeight)[1]
+                    : item.get_preferred_width(this._panelHeight)[1]);
+            }
+
+            return length + this._appearanceController.itemSlotWidth(
+                item._taskbarWindow,
+                item._taskbarIsLauncher,
+                item._taskbarPinnedToRunningGap,
+                item._taskbarIsCombinedApp,
+                item._taskbarTrailingSpacing,
+                iconSize
+            );
+        }, 0);
+    }
+
+    getIconSizeForLength(availableLength, maximumIconSize, minimumIconSize) {
+        const minimum = Math.min(minimumIconSize, maximumIconSize);
+        for (let iconSize = maximumIconSize;
+            iconSize >= minimum;
+            iconSize--) {
+            if (this.getLengthForIconSize(iconSize) <= availableLength)
+                return iconSize;
+        }
+
+        return minimum;
+    }
+
     setStartMenuOpen(open) {
         if (this._startMenuOpen === open)
             return;

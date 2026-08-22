@@ -41,7 +41,6 @@ export class DockPanelManager {
     }) {
         this._extensionDir = extensionDir;
         this._settings = settings;
-        this._dockSettings = new DockPanelSettings(settings);
         this._appSystem = appSystem;
         this._tracker = tracker;
         this._favorites = favorites;
@@ -115,7 +114,6 @@ export class DockPanelManager {
         this._destroyPanels();
         this._extensionDir = null;
         this._settings = null;
-        this._dockSettings = null;
         this._appSystem = null;
         this._tracker = null;
         this._favorites = null;
@@ -177,7 +175,7 @@ export class DockPanelManager {
         for (const monitor of monitors) {
             const panel = new SecondaryPanelController({
                 extensionDir: this._extensionDir,
-                settings: this._dockSettings,
+                settings: new DockPanelSettings(this._settings),
                 appSystem: this._appSystem,
                 tracker: this._tracker,
                 favorites: this._favorites,

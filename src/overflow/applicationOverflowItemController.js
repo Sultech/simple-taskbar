@@ -54,7 +54,7 @@ export class ApplicationOverflowItemController {
         const window = item._taskbarWindow;
         const icon = app.create_icon_texture(Math.min(
             32,
-            this._settings.get_int('icon-size')
+            this._taskbarController.getIconSize()
         ));
         const label = new St.Label({
             text: window
@@ -238,14 +238,14 @@ export class ApplicationOverflowItemController {
             _taskbarDropAccepted: false,
             _taskbarDropTarget: null,
             getDragActor: () => sourceItem._taskbarApp.create_icon_texture(
-                this._settings.get_int('icon-size')
+                this._taskbarController.getIconSize()
             ),
             getDragActorSource: () => sourceItem._taskbarIcon,
         };
         auxiliaryItem._delegate = dragSource;
         const draggable = DND.makeDraggable(auxiliaryItem, {
             timeoutThreshold: 200,
-            dragActorMaxSize: this._settings.get_int('icon-size'),
+            dragActorMaxSize: this._taskbarController.getIconSize(),
         });
         auxiliaryItem._taskbarDraggable = draggable;
         this._draggables.set(auxiliaryItem, {

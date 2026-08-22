@@ -58,6 +58,20 @@ export function addApplicationIconsGroup({
         },
         connectSettings
     );
+    const dockMinIconSizeRow = addSpinRow(
+        appearanceGroup,
+        settings,
+        {
+            key: 'dock-min-icon-size',
+            title: _('Minimum Icon Size'),
+            subtitle: _(
+                'Smallest application icon size used when space is limited'
+            ),
+            lower: 15,
+            upper: MAX_ICON_SIZE,
+        },
+        connectSettings
+    );
     const iconSpacingRow = addSpinRow(
         appearanceGroup,
         settings,
@@ -167,8 +181,35 @@ export function addApplicationIconsGroup({
         );
     }
     connectSettings(settings, 'changed::dock-mode', syncAppearanceGroupPage);
+    const syncMinimumIconSize = () => {
+        const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
+            (!settings.get_boolean('default-gnome-panel') ||
+                settings.get_boolean('dock-mode'));
+        dockMinIconSizeRow.visible = enabled;
+        dockMinIconSizeRow.sensitive = enabled;
+        if (!enabled)
+            return;
+
+        const maximum = settings.get_int('icon-size');
+        dockMinIconSizeRow.get_adjustment().set_upper(maximum);
+        if (settings.get_int('dock-min-icon-size') > maximum)
+            settings.set_int('dock-min-icon-size', maximum);
+    };
+    for (const key of [
+        'dock-mode',
+        'windows-xp-theme-enabled',
+        'default-gnome-panel',
+        'icon-size',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncMinimumIconSize
+        );
+    }
     syncAppearanceGroupPage();
     syncIndicatorControls();
+    syncMinimumIconSize();
     const appAlignmentRow = addComboRow(
         appearanceGroup,
         settings,

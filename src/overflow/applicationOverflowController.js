@@ -294,6 +294,10 @@ export class ApplicationOverflowController {
         this._clearOverflow();
     }
 
+    sync() {
+        this._queueSync();
+    }
+
     destroy() {
         if (this._syncId) {
             GLib.Source.remove(this._syncId);

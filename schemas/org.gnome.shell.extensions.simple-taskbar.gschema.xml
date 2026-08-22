@@ -234,6 +234,11 @@
       <default>90</default>
       <summary>Maximum Dock length as a percentage of the monitor</summary>
     </key>
+    <key name="dock-min-icon-size" type="i">
+      <range min="15" max="48"/>
+      <default>32</default>
+      <summary>Minimum application icon size when space is limited</summary>
+    </key>
     <key name="dock-panel-mode" type="b">
       <default>false</default>
       <summary>Extend the Dock to the full monitor edge</summary>

@@ -59,6 +59,7 @@ export class PanelController {
         folderMenuButton,
         onAppAlignmentChanged,
         onTaskbarAvailableWidthChanged,
+        isTaskbarAdaptive,
         queueOverviewRelayout,
         isAutoHideBlocked,
     }) {
@@ -72,6 +73,7 @@ export class PanelController {
         this._onAppAlignmentChanged = onAppAlignmentChanged;
         this._onTaskbarAvailableWidthChanged =
             onTaskbarAvailableWidthChanged;
+        this._isTaskbarAdaptive = isTaskbarAdaptive;
         this._queueOverviewRelayout = queueOverviewRelayout;
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signalHolder = new TransientSignalHolder();
@@ -332,8 +334,10 @@ export class PanelController {
             centered: this.appsAreCentered(),
             vertical,
         });
-        if (availableWidth !== undefined)
-            this._onTaskbarAvailableWidthChanged(availableWidth);
+        if (availableWidth !== undefined &&
+            this._onTaskbarAvailableWidthChanged(availableWidth)) {
+            this.updateTaskbarWidth();
+        }
     }
 
     syncVerticalItems() {
@@ -388,6 +392,7 @@ export class PanelController {
         this._folderMenuButton = null;
         this._onAppAlignmentChanged = null;
         this._onTaskbarAvailableWidthChanged = null;
+        this._isTaskbarAdaptive = null;
         this._queueOverviewRelayout = null;
         this._isAutoHideBlocked = null;
         this._settings = null;
@@ -442,6 +447,20 @@ export class PanelController {
                     controller._taskbarBin.get_parent() === this._centerBox
                     ? allocateAdaptivePanel
                     : allocateExpandedSidePanel;
+                if (allocate === allocateAdaptivePanel) {
+                    allocate(
+                        this,
+                        box,
+                        this._leftBox,
+                        this._centerBox,
+                        this._rightBox,
+                        centerOffset,
+                        vertical,
+                        controller._isTaskbarAdaptive()
+                    );
+                    return;
+                }
+
                 allocate(
                     this,
                     box,
