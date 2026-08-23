@@ -258,6 +258,7 @@ export function connectDefaultGnomePanelSync({
                 settings.set_boolean('gnome-start-button-visible', true);
                 settings.set_string('combine-app-buttons-mode', 'always');
                 settings.set_boolean('use-pinned-apps-as-launchers', false);
+                settings.set_boolean('show-pinned-app-separator', true);
                 settings.set_boolean('dock-mode-initialized', true);
             }
             settings.set_boolean('dock-mode', true);
