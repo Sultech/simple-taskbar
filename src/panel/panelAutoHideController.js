@@ -178,7 +178,7 @@ export class PanelAutoHideController {
             this._scheduleHide();
     }
 
-    syncPosition() {
+    syncPosition(animate = false) {
         const monitor = this._getMonitor();
         const actor = this._positionActor;
         if (!monitor)
@@ -188,6 +188,10 @@ export class PanelAutoHideController {
         const offset = this._hidden && this._enabled()
             ? geometry.hiddenOffset
             : geometry.visibleOffset;
+        if (animate) {
+            this._moveTo(offset, true);
+            return;
+        }
         actor.remove_transition('x');
         actor.remove_transition('y');
         if (geometry.vertical)

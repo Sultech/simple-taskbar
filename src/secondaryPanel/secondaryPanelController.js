@@ -119,6 +119,7 @@ export class SecondaryPanelController {
         this._dockStrutActor = null;
         this._activeWorkspace = null;
         this._workspaceWindows = new Set();
+        this._lastPanelEdgeGap = null;
         this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = this._dockPanelSizing
             ? settings.getConfiguredIconSize()
@@ -439,17 +440,17 @@ export class SecondaryPanelController {
                 'active-workspace-changed',
                 () => {
                     this._syncWorkspaceWindows();
-                    this._position();
+                    this._position(true, true);
                 },
                 this._signalHolder
             );
             global.display.connectObject(
                 'notify::focus-window',
-                () => this._position(),
+                () => this._position(true, true),
                 'window-entered-monitor',
-                () => this._position(),
+                () => this._position(true, true),
                 'window-left-monitor',
-                () => this._position(),
+                () => this._position(true, true),
                 this._signalHolder
             );
             this._settings.connectObject(
@@ -735,7 +736,13 @@ export class SecondaryPanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _position(updateTaskbarWidth = true) {
+    _position(updateTaskbarWidth = true, animateEdgeGapRequested = false) {
+        const edgeGap = this._panelEdgeGap();
+        const edgeGapChanged = this._lastPanelEdgeGap !== null &&
+            this._lastPanelEdgeGap !== edgeGap;
+        const animateEdgeGap = animateEdgeGapRequested &&
+            edgeGapChanged &&
+            !this._settings.get_boolean('panel-autohide-enabled');
         const geometry = panelGeometry(
             this._settings,
             this._monitor,
@@ -743,17 +750,18 @@ export class SecondaryPanelController {
             0,
             this._panelLengthPercentage(),
             this._panelLengthOverride(),
-            this._panelEdgeGap()
+            edgeGap
         );
         this._connectToMainPanel(geometry);
         this._panelBox.set_size(geometry.width, geometry.height);
         this.actor.set_size(geometry.width, geometry.height);
-        this._panelBox.set_position(geometry.x, geometry.y);
+        if (!animateEdgeGapRequested || edgeGapChanged && !animateEdgeGap)
+            this._panelBox.set_position(geometry.x, geometry.y);
         if (this._dockStrutActor) {
             const strutGeometry = panelGeometry(
                 this._settings,
                 this._monitor,
-                this._panelHeight + this._panelEdgeGap(),
+                this._panelHeight + edgeGap,
                 0,
                 100
             );
@@ -774,8 +782,13 @@ export class SecondaryPanelController {
             box.orientation = orientation;
         this._syncQuickSettingsIndicators();
         this._verticalItemsController.sync();
-        if (this._autoHideController)
-            this._autoHideController.syncPosition();
+        if (this._autoHideController) {
+            if (animateEdgeGap)
+                this._autoHideController.syncPosition(true);
+            else if (!animateEdgeGapRequested || edgeGapChanged)
+                this._autoHideController.syncPosition();
+        }
+        this._lastPanelEdgeGap = edgeGap;
         if (updateTaskbarWidth)
             this._updateTaskbarWidth();
     }
@@ -1013,12 +1026,12 @@ export class SecondaryPanelController {
             'window-added',
             (_workspace, window) => {
                 this._trackWorkspaceWindow(window);
-                this._position();
+                this._position(true, true);
             },
             'window-removed',
             (_workspace, window) => {
                 this._untrackWorkspaceWindow(window);
-                this._position();
+                this._position(true, true);
             },
             this._signalHolder
         );
@@ -1034,9 +1047,9 @@ export class SecondaryPanelController {
 
         window.connectObject(
             'notify::maximized-horizontally',
-            () => this._position(),
+            () => this._position(true, true),
             'notify::maximized-vertically',
-            () => this._position(),
+            () => this._position(true, true),
             this._signalHolder
         );
     }
