@@ -23,6 +23,7 @@ import {createBlurMyShellState} from './src/prefs/blurMyShellState.js';
 import {addPanelAppearancePage} from './src/prefs/panelAppearancePage.js';
 import {addPanelItemsPage} from './src/prefs/panelItemsPage.js';
 import {addDockItemsPage} from './src/prefs/dockItemsPage.js';
+import {addLocationsGroup} from './src/prefs/locationsGroup.js';
 import {addStartMenuPage} from './src/prefs/startMenuPage.js';
 import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
 import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
@@ -220,6 +221,13 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             panelPositions,
             windowsStartMenuSwitch,
             followAppAlignmentSwitch,
+        });
+
+        addLocationsGroup({
+            page,
+            dockPage,
+            settings: window._settings,
+            connectSettings,
         });
 
         addDockItemsPage({

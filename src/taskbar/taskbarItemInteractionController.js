@@ -5,6 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
+import {TaskbarLocationMenu} from './taskbarLocationMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 
@@ -69,6 +70,10 @@ export class TaskbarItemInteractionController {
         const app = item._taskbarApp;
         previews.hideTooltip();
         previews.hide();
+        if (app._simpleTaskbarLocation) {
+            this._openNewWindow(app);
+            return;
+        }
         if (this._settings.get_boolean('middle-click-close-apps')) {
             app.request_quit();
         } else {
@@ -119,6 +124,15 @@ export class TaskbarItemInteractionController {
         const previews = this._getPreviewController();
         previews.hideTooltip();
         previews.hide();
+        if (item._taskbarApp._simpleTaskbarLocation) {
+            if (button._taskbarMenu)
+                this.destroyButton(button);
+            this._createLocationMenu(button, item._taskbarApp, item);
+            const locationMenu = button._taskbarMenu;
+            syncMenuArrowSide(locationMenu, this._settings);
+            openPopupMenu(locationMenu);
+            return;
+        }
         if (!button._taskbarMenu)
             this._createMenu(button, item._taskbarApp, item);
 
@@ -132,6 +146,8 @@ export class TaskbarItemInteractionController {
             'nautilus-places-enabled'
         );
         for (const item of items) {
+            if (item._taskbarApp && item._taskbarApp._simpleTaskbarLocation)
+                continue;
             item._taskbarButton._taskbarMenu
                 ?.setFileManagerPlacesEnabled(enabled);
         }
@@ -176,6 +192,30 @@ export class TaskbarItemInteractionController {
         const menuManager = new PopupMenu.PopupMenuManager(button);
 
         menu.setApp(app);
+        menu.connect('open-state-changed', (_popup, isOpen) => {
+            if (isOpen) {
+                item.add_style_pseudo_class('hover');
+            } else if (!item.hover &&
+                this._getPreviewController().hoverItem !== item) {
+                item.remove_style_pseudo_class('hover');
+            }
+        });
+        menu.actor.hide();
+        Main.uiGroup.add_child(menu.actor);
+        menuManager.addMenu(menu);
+
+        button._taskbarMenu = menu;
+        button._taskbarMenuManager = menuManager;
+    }
+
+    _createLocationMenu(button, app, item) {
+        const menu = new TaskbarLocationMenu(
+            button,
+            this._settings,
+            app
+        );
+        const menuManager = new PopupMenu.PopupMenuManager(button);
+
         menu.connect('open-state-changed', (_popup, isOpen) => {
             if (isOpen) {
                 item.add_style_pseudo_class('hover');

@@ -225,6 +225,38 @@
       <default>['start-button', 'applications']</default>
       <summary>Dock item order</summary>
     </key>
+    <key name="taskbar-show-locations" type="b">
+      <default>true</default>
+      <summary>Show locations in the taskbar</summary>
+    </key>
+    <key name="taskbar-show-trash" type="b">
+      <default>true</default>
+      <summary>Show Trash in the taskbar</summary>
+    </key>
+    <key name="taskbar-show-mounts" type="b">
+      <default>true</default>
+      <summary>Show drives and volumes in the taskbar</summary>
+    </key>
+    <key name="dock-show-locations" type="b">
+      <default>true</default>
+      <summary>Show locations in the Dock</summary>
+    </key>
+    <key name="dock-show-trash" type="b">
+      <default>true</default>
+      <summary>Show Trash in the Dock</summary>
+    </key>
+    <key name="dock-show-mounts" type="b">
+      <default>true</default>
+      <summary>Show drives and volumes in the Dock</summary>
+    </key>
+    <key name="locations-show-mounted-only" type="b">
+      <default>true</default>
+      <summary>Only show mounted drives and volumes</summary>
+    </key>
+    <key name="locations-show-network" type="b">
+      <default>false</default>
+      <summary>Include network volumes</summary>
+    </key>
     <key name="dock-position" type="s">
       <choices>
         <choice value="top"/>

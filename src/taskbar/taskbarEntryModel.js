@@ -2,11 +2,18 @@
 // Copyright (C) 2026 sultech
 
 export class TaskbarEntryModel {
-    constructor({settings, tracker, favorites, getInterestingWindows}) {
+    constructor({
+        settings,
+        tracker,
+        favorites,
+        getInterestingWindows,
+        getLocationEntries = () => [],
+    }) {
         this._settings = settings;
         this._tracker = tracker;
         this._favorites = favorites;
         this._getInterestingWindows = getInterestingWindows;
+        this._getLocationEntries = getLocationEntries;
         this._sessionOrder = [];
     }
 
@@ -56,7 +63,7 @@ export class TaskbarEntryModel {
             ? this.pinnedApps().length
             : 0;
         if (combineMode === 'always') {
-            return apps.map((app, index) => {
+            const entries = apps.map((app, index) => {
                 const isLauncher = index < launcherCount;
                 return {
                     key: isLauncher
@@ -71,13 +78,15 @@ export class TaskbarEntryModel {
                         this.isPersistentPinned(app),
                 };
             });
+            return [...entries, ...this._getLocationEntries()];
         }
 
-        return this.uncombinedEntries(
+        const entries = this.uncombinedEntries(
             apps,
             launcherCount,
             combineMode === 'when-full' ? combinedAppIds : new Set()
         );
+        return [...entries, ...this._getLocationEntries()];
     }
 
     orderedApps(pinnedOnly, combineMode) {
@@ -198,6 +207,7 @@ export class TaskbarEntryModel {
     destroy() {
         this._sessionOrder = null;
         this._getInterestingWindows = null;
+        this._getLocationEntries = null;
         this._favorites = null;
         this._tracker = null;
         this._settings = null;

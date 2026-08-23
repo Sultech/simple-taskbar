@@ -271,6 +271,13 @@ export class TaskbarAppItemFactory {
         return item;
     }
 
+    sync(item) {
+        const app = item._taskbarApp;
+        item._taskbarIcon.gicon = app.icon;
+        item._taskbarLabel.text = app.get_name();
+        item._taskbarButton.accessible_name = app.get_name();
+    }
+
     destroy() {
         this._syncLauncherIconPosition = null;
         this._syncItemLabel = null;

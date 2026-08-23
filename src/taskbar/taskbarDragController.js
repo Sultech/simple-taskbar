@@ -151,9 +151,10 @@ export class TaskbarDragController {
     }
 
     isPinnedItem(item) {
-        return item._taskbarIsLauncher ||
+        return !item._taskbarApp._simpleTaskbarLocation &&
+            (item._taskbarIsLauncher ||
             (item._taskbarIsPinnedPrimary &&
-                this._isPersistentPinned(item._taskbarApp));
+                this._isPersistentPinned(item._taskbarApp)));
     }
 
     getGroup(item) {
@@ -369,7 +370,8 @@ export class TaskbarDragController {
     }
 
     _isRunningItem(item) {
-        return !item._taskbarIsLauncher &&
+        return !item._taskbarApp._simpleTaskbarLocation &&
+            !item._taskbarIsLauncher &&
             !item._taskbarIsPinnedPrimary;
     }
 

@@ -30,6 +30,7 @@ import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {
     TaskbarShowDesktopController,
 } from './taskbarShowDesktopController.js';
+import {TaskbarLocationsController} from './taskbarLocations.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
@@ -63,6 +64,7 @@ export class TaskbarController {
         getPreviewController,
         onRedisplay = () => {},
         ignoreTaskbarLock = false,
+        locationScope = 'taskbar',
     }) {
         this._settings = settings;
         this._appSystem = appSystem;
@@ -98,6 +100,11 @@ export class TaskbarController {
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = Main.layoutManager._startingUp;
         this._startupSettleId = 0;
+        this._locationController = new TaskbarLocationsController({
+            settings: this._settings,
+            scope: locationScope,
+            onChanged: () => this._queueRedisplay(),
+        });
 
         this.actor = new St.BoxLayout({
             style_class: 'simple-taskbar-apps',
@@ -119,6 +126,7 @@ export class TaskbarController {
             tracker: this._tracker,
             favorites: this._favorites,
             getInterestingWindows: app => this._interestingWindows(app),
+            getLocationEntries: () => this._locationController.getEntries(),
         });
         this._appearanceController = new TaskbarAppearanceController({
             settings: this._settings,
@@ -475,6 +483,8 @@ export class TaskbarController {
         for (const [app, id] of this._appSignals)
             app.disconnect(id);
         this._appSignals.clear();
+        this._locationController.destroy();
+        this._locationController = null;
 
         this._showDesktopController.destroy();
         this._showDesktopController = null;
@@ -784,6 +794,15 @@ export class TaskbarController {
                 index + 1 < entries.length &&
                 !entries[index + 1].isLauncher;
             let item = this._appButtons.get(key);
+            if (item && item._taskbarApp !== app) {
+                this._getPreviews().removeItem(item);
+                this._dragController.releaseDraggable(item);
+                this._untrackApp(item._taskbarApp);
+                this._destroyAppMenu(item._taskbarButton);
+                this._appButtons.delete(key);
+                item.destroy();
+                item = null;
+            }
             if (!item) {
                 item = this._createAppButton(
                     app,
@@ -825,6 +844,8 @@ export class TaskbarController {
                     [this._pinnedSeparator]
                 );
             }
+            if (app._simpleTaskbarLocation)
+                this._appItemFactory.sync(item);
             item._taskbarIsPinnedPrimary = isPinnedPrimary;
 
             if (item._taskbarPinnedToRunningGap !== pinnedToRunningGap) {
@@ -894,13 +915,14 @@ export class TaskbarController {
         const window = item._taskbarWindow;
         const button = item._taskbarButton;
         const isLauncher = item._taskbarIsLauncher;
-        const windowCount = isLauncher
+        const isLocation = app._simpleTaskbarLocation;
+        const windowCount = isLauncher || isLocation
             ? 0
             : this._windowsForItem(item).length;
-        const running = !isLauncher && (window
+        const running = !isLauncher && !isLocation && (window
             ? windowCount > 0
             : app.state === Shell.AppState.RUNNING && windowCount > 0);
-        const hasFocus = !isLauncher && (window
+        const hasFocus = !isLauncher && !isLocation && (window
             ? window === focusedWindow
             : app === focusedApp &&
                 this._interestingWindows(app).includes(focusedWindow));
@@ -1079,8 +1101,11 @@ export class TaskbarController {
         this._getPreviews().hide();
         if (suppressAnimations)
             this._shownInitially = false;
-        for (const item of this.getItems())
+        for (const item of this.getItems()) {
+            if (item._taskbarApp && item._taskbarApp._simpleTaskbarLocation)
+                continue;
             item._taskbarButton._taskbarMenu?.syncWindowScope();
+        }
         this._queueRedisplay();
     }
 
@@ -1375,6 +1400,9 @@ export class TaskbarController {
         if (!item)
             return true;
 
+        if (item._taskbarApp._simpleTaskbarLocation)
+            return false;
+
         if (item._taskbarIsLauncher)
             return true;
 
@@ -1420,7 +1448,10 @@ export class TaskbarController {
         if (this._appSignals.has(app))
             return;
 
-        const id = app.connect('windows-changed', () => {
+        const signal = app._simpleTaskbarLocation
+            ? 'changed'
+            : 'windows-changed';
+        const id = app.connect(signal, () => {
             this._getPreviews().windowsChanged(app);
             if (this._combineMode() === 'always' &&
                 !this._usePinnedAppLaunchers() &&

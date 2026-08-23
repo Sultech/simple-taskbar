@@ -154,6 +154,7 @@ export class SecondaryPanelController {
             onRedisplay: this._dockPanelSizing
                 ? () => this._updateTaskbarWidth()
                 : undefined,
+            locationScope: this._dockPanelSizing ? 'dock' : 'taskbar',
         });
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
