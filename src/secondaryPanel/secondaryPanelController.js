@@ -319,6 +319,7 @@ export class SecondaryPanelController {
             getMonitor: () => this._monitor,
             getPanelHeight: () => this._panelHeight,
             getPanelLengthPercentage: () => this._panelLengthPercentage(),
+            getPanelLengthOverride: () => this._panelLengthOverride(),
             getPanelEdgeGap: () => this._panelEdgeGap(),
             isBlocked: () => this._autoHideIsBlocked(),
         });

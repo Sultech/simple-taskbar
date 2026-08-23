@@ -30,6 +30,7 @@ export class PanelAutoHideController {
         getMonitor,
         getPanelHeight,
         getPanelLengthPercentage = () => null,
+        getPanelLengthOverride = () => null,
         getPanelEdgeGap = () => 0,
         isBlocked,
     }) {
@@ -40,6 +41,7 @@ export class PanelAutoHideController {
         this._getMonitor = getMonitor;
         this._getPanelHeight = getPanelHeight;
         this._getPanelLengthPercentage = getPanelLengthPercentage;
+        this._getPanelLengthOverride = getPanelLengthOverride;
         this._getPanelEdgeGap = getPanelEdgeGap;
         this._isBlockedCallback = isBlocked;
         this._signalHolder = new TransientSignalHolder();
@@ -149,6 +151,7 @@ export class PanelAutoHideController {
         this._getMonitor = null;
         this._getPanelHeight = null;
         this._getPanelLengthPercentage = null;
+        this._getPanelLengthOverride = null;
         this._getPanelEdgeGap = null;
         this._isBlockedCallback = null;
         this._trackedActorData = null;
@@ -490,16 +493,16 @@ export class PanelAutoHideController {
 
         const geometry = this._geometry(monitor);
         if (geometry.vertical) {
-            if (y < this._positionActor.y ||
-                y >= this._positionActor.y + this._positionActor.height) {
+            if (y < geometry.y ||
+                y >= geometry.y + geometry.height) {
                 return false;
             }
             return panelIsMinimumEdge(this._settings)
                 ? x <= monitor.x + REVEAL_EDGE_SIZE
                 : x >= monitor.x + monitor.width - REVEAL_EDGE_SIZE;
         }
-        if (x < this._positionActor.x ||
-            x >= this._positionActor.x + this._positionActor.width) {
+        if (x < geometry.x ||
+            x >= geometry.x + geometry.width) {
             return false;
         }
         return panelIsMinimumEdge(this._settings)
@@ -513,9 +516,9 @@ export class PanelAutoHideController {
                 this._settings,
                 monitor,
                 this._getPanelHeight(),
-                REVEAL_EDGE_SIZE,
+                0,
                 this._getPanelLengthPercentage(),
-                null,
+                this._getPanelLengthOverride(),
                 this._getPanelEdgeGap()
             );
         }

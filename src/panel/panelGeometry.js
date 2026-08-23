@@ -37,8 +37,8 @@ export function panelGeometry(
             ? monitor.y + inset
             : monitor.y + Math.floor((monitor.height - length) / 2);
     const hiddenOffset = minimumEdge
-        ? (vertical ? x : y) - thickness + revealSize
-        : (vertical ? x : y) + thickness - revealSize;
+        ? (vertical ? x : y) - thickness - inset + revealSize
+        : (vertical ? x : y) + thickness + inset - revealSize;
 
     return {
         vertical,
