@@ -387,6 +387,11 @@
       <summary>Use pinned applications as separate launchers</summary>
       <description>Keep pinned applications as launchers and show their running windows separately</description>
     </key>
+    <key name="show-pinned-app-separator" type="b">
+      <default>false</default>
+      <summary>Show a separator between pinned and running applications</summary>
+      <description>Show a line between pinned and running applications</description>
+    </key>
     <key name="combine-app-buttons-mode" type="s">
       <choices>
         <choice value="always"/>

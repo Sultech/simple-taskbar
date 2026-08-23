@@ -46,6 +46,19 @@ export function addAppBehaviorGroup({
         Gio.SettingsBindFlags.DEFAULT
     );
 
+    const pinnedAppSeparatorSwitch = new Adw.SwitchRow({
+        title: _('Show Pinned App Separator'),
+        subtitle: _('Show a line between pinned and running applications'),
+        active: settings.get_boolean('show-pinned-app-separator'),
+    });
+    advancedAppBehaviorGroup.add(pinnedAppSeparatorSwitch);
+    settings.bind(
+        'show-pinned-app-separator',
+        pinnedAppSeparatorSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+
     const combineAppButtonsChoices = [
         {value: 'always', label: _('Always')},
         {value: 'when-full', label: _('Only When Full')},

@@ -262,6 +262,7 @@ Other taskbar options include:
 - Show or hide favourite applications that are not running.
 - Use pinned applications as launchers while showing their running windows in
   separate buttons.
+- Show a separator between pinned and running applications.
 - Show applications from only the current workspace.
 - Show applications only on the monitor where their taskbar is displayed.
 - Lock the taskbar against accidental rearrangement.

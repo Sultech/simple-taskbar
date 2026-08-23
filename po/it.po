@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 01:21+0100\n"
+"POT-Creation-Date: 2026-08-23 01:36+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -122,32 +122,43 @@ msgstr ""
 "quelle in esecuzione"
 
 #: src/prefs/appBehaviorGroup.js:50
+msgid "Show Pinned App Separator"
+msgstr ""
+
+#: src/prefs/appBehaviorGroup.js:51
+#, fuzzy
+msgid "Show a line between pinned and running applications"
+msgstr ""
+"Mostra le anteprime in tempo reale delle finestre quando passi il mouse "
+"sulle icone delle applicazioni"
+
+#: src/prefs/appBehaviorGroup.js:63
 msgid "Always"
 msgstr "Sempre"
 
-#: src/prefs/appBehaviorGroup.js:51 src/prefs/appBehaviorGroup.js:55
+#: src/prefs/appBehaviorGroup.js:64 src/prefs/appBehaviorGroup.js:68
 msgid "Only When Full"
 msgstr "Solo quando piena"
 
-#: src/prefs/appBehaviorGroup.js:52 src/prefs/appBehaviorGroup.js:56
+#: src/prefs/appBehaviorGroup.js:65 src/prefs/appBehaviorGroup.js:69
 msgid "Never"
 msgstr "Mai"
 
-#: src/prefs/appBehaviorGroup.js:63
+#: src/prefs/appBehaviorGroup.js:76
 msgid "Combine Application Buttons"
 msgstr "Combina pulsanti delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:64
+#: src/prefs/appBehaviorGroup.js:77
 msgid "Choose when windows share one taskbar button"
 msgstr ""
 "Scegli quando le finestre condividono un unico pulsante della barra delle "
 "applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:78
+#: src/prefs/appBehaviorGroup.js:91
 msgid "Application Overflow"
 msgstr "Overflow delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:80
+#: src/prefs/appBehaviorGroup.js:93
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -155,58 +166,58 @@ msgstr ""
 "Mostra i pulsanti delle applicazioni che non trovano spazio in un popup di "
 "overflow invece di scorrere la barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:99
+#: src/prefs/appBehaviorGroup.js:112
 msgid "Overflow Style"
 msgstr "Stile dell’overflow"
 
-#: src/prefs/appBehaviorGroup.js:101
+#: src/prefs/appBehaviorGroup.js:114
 msgid "Taskbar Flyout"
 msgstr "Menu a comparsa della barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:102
+#: src/prefs/appBehaviorGroup.js:115
 msgid "Application List"
 msgstr "Elenco delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:114
+#: src/prefs/appBehaviorGroup.js:127
 msgid "Hide App Labels"
 msgstr "Nascondi etichette applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:115
+#: src/prefs/appBehaviorGroup.js:128
 msgid "Show only icons on separate window buttons"
 msgstr "Mostra solo le icone sui pulsanti delle finestre separate"
 
-#: src/prefs/appBehaviorGroup.js:146 src/prefs/windowSwitchingPage.js:52
+#: src/prefs/appBehaviorGroup.js:159 src/prefs/windowSwitchingPage.js:52
 msgid "Isolate Workspaces"
 msgstr "Isola gli spazi di lavoro"
 
-#: src/prefs/appBehaviorGroup.js:147
+#: src/prefs/appBehaviorGroup.js:160
 msgid "Show running applications from the current workspace only"
 msgstr ""
 "Mostra solo le applicazioni in esecuzione dello spazio di lavoro corrente"
 
-#: src/prefs/appBehaviorGroup.js:159 src/prefs/windowSwitchingPage.js:66
+#: src/prefs/appBehaviorGroup.js:172 src/prefs/windowSwitchingPage.js:66
 msgid "Isolate Monitors"
 msgstr "Isola i monitor"
 
-#: src/prefs/appBehaviorGroup.js:160
+#: src/prefs/appBehaviorGroup.js:173
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Mostra le applicazioni in esecuzione solo sulla barra delle applicazioni del "
 "proprio monitor"
 
-#: src/prefs/appBehaviorGroup.js:172
+#: src/prefs/appBehaviorGroup.js:185
 msgid "Nautilus Folder Shortcuts"
 msgstr "Scorciatoie cartelle di Nautilus"
 
-#: src/prefs/appBehaviorGroup.js:173
+#: src/prefs/appBehaviorGroup.js:186
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Mostra le cartelle comuni nel menu File della barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:187
+#: src/prefs/appBehaviorGroup.js:200
 msgid "Middle Click Closes Applications"
 msgstr "Il clic centrale chiude le applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:188
+#: src/prefs/appBehaviorGroup.js:201
 msgid "Close all application windows instead of opening a new window"
 msgstr "Chiude tutte le finestre dell’applicazione invece di aprirne una nuova"
 
@@ -677,7 +688,7 @@ msgid "GNOME workspace overview button"
 msgstr "Pulsante della panoramica degli spazi di lavoro di GNOME"
 
 #: src/prefs/panelItemsPage.js:186 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:650
+#: src/startMenu/startButtonController.js:656
 msgid "Applications"
 msgstr "Applicazioni"
 
@@ -1485,7 +1496,7 @@ msgid "Pin to Taskbar"
 msgstr "Blocca sulla barra delle applicazioni"
 
 #: src/taskbar/taskbarAppearanceController.js:405
-#: src/taskbar/taskbarController.js:895 src/taskbar/taskbarController.js:897
+#: src/taskbar/taskbarController.js:925 src/taskbar/taskbarController.js:927
 msgid "running"
 msgstr "in esecuzione"
 
@@ -1493,7 +1504,13 @@ msgstr "in esecuzione"
 msgid "Start Menu Settings"
 msgstr "Impostazioni del menu Start"
 
-#: src/startMenu/startButtonController.js:650
+#: src/startMenu/startButtonController.js:309
+#: src/panel/panelInteractionController.js:137
+#, fuzzy
+msgid "Dock Settings"
+msgstr "Impostazioni"
+
+#: src/startMenu/startButtonController.js:656
 msgid "Start"
 msgstr "Start"
 
@@ -1542,11 +1559,6 @@ msgstr "Gestore attività"
 #: src/panel/panelInteractionController.js:105
 msgid "Lock the Taskbar"
 msgstr "Blocca la barra delle applicazioni"
-
-#: src/panel/panelInteractionController.js:137
-#, fuzzy
-msgid "Dock Settings"
-msgstr "Impostazioni"
 
 #: src/panel/panelInteractionController.js:137
 msgid "Taskbar Settings"

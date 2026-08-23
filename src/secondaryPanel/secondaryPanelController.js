@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -113,6 +114,8 @@ export class SecondaryPanelController {
         this._dockPanelSizing = dockPanelSizing;
         this._mainPanelPosition = mainPanelPosition;
         this._dockPanelLength = null;
+        this._taskbarWidthUpdateId = 0;
+        this._updatingTaskbarWidth = false;
         this._dockStrutActor = null;
         this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = this._dockPanelSizing
@@ -343,6 +346,10 @@ export class SecondaryPanelController {
     }
 
     destroy() {
+        if (this._taskbarWidthUpdateId)
+            GLib.Source.remove(this._taskbarWidthUpdateId);
+        this._taskbarWidthUpdateId = 0;
+
         this._signalHolder.destroy();
         this._signalHolder = null;
 
@@ -409,6 +416,7 @@ export class SecondaryPanelController {
         this._dockPanelSizing = false;
         this._mainPanelPosition = null;
         this._dockPanelLength = null;
+        this._updatingTaskbarWidth = false;
         this._configuredIconSize = 0;
         this._settings = null;
     }
@@ -691,7 +699,7 @@ export class SecondaryPanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _position() {
+    _position(updateTaskbarWidth = true) {
         const geometry = panelGeometry(
             this._settings,
             this._monitor,
@@ -732,7 +740,8 @@ export class SecondaryPanelController {
         this._verticalItemsController.sync();
         if (this._autoHideController)
             this._autoHideController.syncPosition();
-        this._updateTaskbarWidth();
+        if (updateTaskbarWidth)
+            this._updateTaskbarWidth();
     }
 
     _connectToMainPanel(geometry) {
@@ -804,6 +813,17 @@ export class SecondaryPanelController {
     }
 
     _updateTaskbarWidth() {
+        if (this._updatingTaskbarWidth) {
+            this._queueTaskbarWidthUpdate();
+            return;
+        }
+
+        this._updatingTaskbarWidth = true;
+        this._updateTaskbarWidthInternal();
+        this._updatingTaskbarWidth = false;
+    }
+
+    _updateTaskbarWidthInternal() {
         const vertical = panelIsVertical(this._settings);
         const geometry = panelGeometry(
             this._settings,
@@ -828,7 +848,8 @@ export class SecondaryPanelController {
             if (this._dockPanelSizing &&
                 !this._settings.get_boolean('windows-xp-theme-enabled') &&
                 this._syncDockIconSize(availableWidth)) {
-                this._position();
+                this._position(false);
+                this._queueTaskbarWidthUpdate();
                 return;
             }
         }
@@ -848,7 +869,22 @@ export class SecondaryPanelController {
             return;
 
         this._dockPanelLength = panelLength;
-        this._position();
+        this._position(false);
+        this._queueTaskbarWidthUpdate();
+    }
+
+    _queueTaskbarWidthUpdate() {
+        if (this._taskbarWidthUpdateId)
+            return;
+
+        this._taskbarWidthUpdateId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._taskbarWidthUpdateId = 0;
+                this._updateTaskbarWidth();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     _syncDockIconSize(availableLength) {

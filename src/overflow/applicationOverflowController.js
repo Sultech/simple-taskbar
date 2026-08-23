@@ -467,7 +467,15 @@ export class ApplicationOverflowController {
                 ? item.get_preferred_height(panelHeight)[1]
                 : item.get_preferred_width(panelHeight)[1]
         );
-        const taskbarSize = itemSizes.reduce((sum, size) => sum + size, 0);
+        const separatorTarget = this._taskbarController.getPinnedSeparatorTarget(
+            items
+        );
+        const separatorIndex = separatorTarget
+            ? items.indexOf(separatorTarget)
+            : -1;
+        const separatorSize = this._taskbarController.getPinnedSeparatorLength();
+        const taskbarSize = itemSizes.reduce((sum, size) => sum + size, 0) +
+            (separatorIndex >= 0 ? separatorSize : 0);
         if (taskbarSize <= this._maximumSize) {
             this._showAllItems();
             return;
@@ -485,10 +493,15 @@ export class ApplicationOverflowController {
         let visibleCount = 0;
         let visibleSize = 0;
         for (let index = visibleCount; index < items.length; index++) {
-            if (visibleSize + itemSizes[index] > availableSize)
+            const separatorBefore = index === separatorIndex
+                ? separatorSize
+                : 0;
+            if (visibleSize + separatorBefore + itemSizes[index] >
+                availableSize) {
                 break;
+            }
 
-            visibleSize += itemSizes[index];
+            visibleSize += separatorBefore + itemSizes[index];
             visibleCount++;
         }
 
