@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:36+0100\n"
+"POT-Creation-Date: 2026-08-23 02:40+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -28,7 +28,7 @@ msgstr "Afficher le bureau"
 msgid "Application overflow"
 msgstr "Débordement des applications"
 
-#: prefs.js:44 src/prefs/panelAppearancePage.js:85
+#: prefs.js:44 src/prefs/panelAppearancePage.js:86
 #: src/prefs/panelModeGroup.js:62
 msgid "Left"
 msgstr "Gauche"
@@ -37,7 +37,7 @@ msgstr "Gauche"
 msgid "Center"
 msgstr "Centre"
 
-#: prefs.js:46 src/prefs/panelAppearancePage.js:86
+#: prefs.js:46 src/prefs/panelAppearancePage.js:87
 #: src/prefs/panelModeGroup.js:63
 msgid "Right"
 msgstr "Droite"
@@ -347,7 +347,7 @@ msgstr "Apparence"
 msgid "Configure the Dock independently of the main panel."
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:31 src/prefs/panelAppearancePage.js:269
+#: src/prefs/dockAppearanceGroup.js:31 src/prefs/panelAppearancePage.js:271
 msgid "Follow System Theme"
 msgstr "Suivre le thème du système"
 
@@ -363,17 +363,17 @@ msgstr ""
 msgid "Dock Theme"
 msgstr "Thème de la barre des tâches"
 
-#: src/prefs/dockAppearanceGroup.js:49 src/prefs/panelAppearancePage.js:287
+#: src/prefs/dockAppearanceGroup.js:49 src/prefs/panelAppearancePage.js:289
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 "Sélectionner le schéma de couleurs lorsqu’il n’est pas accordé au système"
 
-#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:289
+#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:291
 #: src/prefs/startMenuPage.js:397
 msgid "Light"
 msgstr "Clair"
 
-#: src/prefs/dockAppearanceGroup.js:52 src/prefs/panelAppearancePage.js:290
+#: src/prefs/dockAppearanceGroup.js:52 src/prefs/panelAppearancePage.js:292
 #: src/prefs/startMenuPage.js:396
 msgid "Dark"
 msgstr "Sombre"
@@ -383,25 +383,25 @@ msgstr "Sombre"
 msgid "Make the Dock background transparent"
 msgstr "Rendre l’arrière-plan de la barre des tâches transparent"
 
-#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:308
+#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:310
 #: src/prefs/startMenuPage.js:422
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "Désactiver le flou du panneau de Blur My Shell pour utiliser cette option"
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:311
+#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:313
 msgid "Enable Transparency"
 msgstr "Activer la transparence"
 
-#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:324
+#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:326
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0% est opaque et 100% est complètement transparent"
 
-#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:331
+#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:333
 msgid "Transparency"
 msgstr "Transparence"
 
-#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:366
+#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:368
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr "Utiliser une couleur choisie au lieu de celle du thème clair ou sombre"
 
@@ -428,15 +428,15 @@ msgstr ""
 msgid "Dock Text Color"
 msgstr "Couleur du texte de la barre des tâches"
 
-#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:402
+#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:404
 msgid "White"
 msgstr "Blanc"
 
-#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:403
+#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:405
 msgid "Black"
 msgstr "Noir"
 
-#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:483
+#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:485
 msgid "Show Border in Dark Mode"
 msgstr "Afficher la bordure en mode sombre"
 
@@ -447,7 +447,7 @@ msgstr ""
 "Afficher une fine bordure le long du bord du panneau faisant face à l’espace "
 "de travail"
 
-#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:496
+#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:498
 msgid "Show Border in Light Mode"
 msgstr "Afficher la bordure en mode clair"
 
@@ -500,79 +500,79 @@ msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 "Délai minimum entre les changements d’espace de travail en millisecondes"
 
-#: src/prefs/panelAppearancePage.js:54
+#: src/prefs/panelAppearancePage.js:55
 msgid "Panel Appearance"
 msgstr "Apparence du panneau"
 
-#: src/prefs/panelAppearancePage.js:55
+#: src/prefs/panelAppearancePage.js:56
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr ""
 "Changer la hauteur de la barre des tâches, le schéma des couleurs et la "
 "transparence."
 
-#: src/prefs/panelAppearancePage.js:64
+#: src/prefs/panelAppearancePage.js:65
 #, fuzzy
 msgid "Panel Thickness"
 msgstr "Éléments du panneau"
 
-#: src/prefs/panelAppearancePage.js:66
+#: src/prefs/panelAppearancePage.js:67
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr ""
 "Les icônes trop grandes sont rétrécies automatiquement lorsque la taille du "
 "panneau est réduite"
 
-#: src/prefs/panelAppearancePage.js:78 src/prefs/preferencesWidgets.js:50
+#: src/prefs/panelAppearancePage.js:79 src/prefs/preferencesWidgets.js:50
 msgid "Panel Position"
 msgstr "Emplacement du panneau"
 
-#: src/prefs/panelAppearancePage.js:80
+#: src/prefs/panelAppearancePage.js:81
 #, fuzzy
 msgid "Place the taskbar at a screen edge"
 msgstr "Placer la barre des tâches en haut ou en bas de l’écran"
 
-#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:60
+#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:60
 msgid "Top"
 msgstr "En haut"
 
-#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:61
+#: src/prefs/panelAppearancePage.js:85 src/prefs/panelModeGroup.js:61
 msgid "Bottom"
 msgstr "En bas"
 
-#: src/prefs/panelAppearancePage.js:270
+#: src/prefs/panelAppearancePage.js:272
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
 "S’accorder au thème actif de GNOME Shell, indépendamment des couleurs des "
 "applications"
 
-#: src/prefs/panelAppearancePage.js:286
+#: src/prefs/panelAppearancePage.js:288
 msgid "Taskbar Theme"
 msgstr "Thème de la barre des tâches"
 
-#: src/prefs/panelAppearancePage.js:305
+#: src/prefs/panelAppearancePage.js:307
 msgid "Make the taskbar background transparent"
 msgstr "Rendre l’arrière-plan de la barre des tâches transparent"
 
-#: src/prefs/panelAppearancePage.js:369
+#: src/prefs/panelAppearancePage.js:371
 msgid "Custom Taskbar Color"
 msgstr "Couleur personnalisée de la barre des tâches"
 
-#: src/prefs/panelAppearancePage.js:387
+#: src/prefs/panelAppearancePage.js:389
 msgid "Taskbar Color"
 msgstr "Couleur de la barre des tâches"
 
-#: src/prefs/panelAppearancePage.js:392
+#: src/prefs/panelAppearancePage.js:394
 msgid ""
 "White text uses the dark panel theme; black text uses the light panel theme"
 msgstr ""
 "Le texte blanc utilise le thème sombre du panneau ; le texte noir utilise le "
 "thème clair du panneau"
 
-#: src/prefs/panelAppearancePage.js:399
+#: src/prefs/panelAppearancePage.js:401
 msgid "Taskbar Text Color"
 msgstr "Couleur du texte de la barre des tâches"
 
-#: src/prefs/panelAppearancePage.js:484 src/prefs/panelAppearancePage.js:497
+#: src/prefs/panelAppearancePage.js:486 src/prefs/panelAppearancePage.js:499
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 "Afficher une fine bordure le long du bord du panneau faisant face à l’espace "

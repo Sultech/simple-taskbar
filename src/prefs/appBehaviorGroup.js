@@ -211,6 +211,7 @@ export function addAppBehaviorGroup({
 
     return {
         pinnedAppsAsLaunchersSwitch,
+        pinnedAppSeparatorSwitch,
         combineAppButtonsRow,
         applicationOverflowSwitch,
         isolateMonitorsSwitch,
