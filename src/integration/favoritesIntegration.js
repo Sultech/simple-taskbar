@@ -24,7 +24,8 @@ export class FavoritesIntegration {
             prototype,
             'addFavoriteAtPos',
             originalMethod => function (appId, position) {
-                if (settings.get_boolean('default-gnome-panel')) {
+                const dockMode = settings.get_boolean('dock-mode');
+                if (settings.get_boolean('default-gnome-panel') && !dockMode) {
                     return originalMethod.call(this, appId, position);
                 }
 
@@ -32,10 +33,15 @@ export class FavoritesIntegration {
                     return;
 
                 const app = Shell.AppSystem.get_default().lookup_app(appId);
-                this._showNotification(
-                    _('%s has been pinned to the taskbar.').format(
+                const message = dockMode
+                    ? _('%s has been pinned to the dock.').format(
                         app.get_name()
-                    ),
+                    )
+                    : _('%s has been pinned to the taskbar.').format(
+                        app.get_name()
+                    );
+                this._showNotification(
+                    message,
                     null,
                     () => this._removeFavorite(appId)
                 );
@@ -46,7 +52,8 @@ export class FavoritesIntegration {
             prototype,
             'removeFavorite',
             originalMethod => function (appId) {
-                if (settings.get_boolean('default-gnome-panel'))
+                const dockMode = settings.get_boolean('dock-mode');
+                if (settings.get_boolean('default-gnome-panel') && !dockMode)
                     return originalMethod.call(this, appId);
 
                 const ids = this._getIds();
@@ -55,10 +62,15 @@ export class FavoritesIntegration {
                 if (!this._removeFavorite(appId))
                     return;
 
-                this._showNotification(
-                    _('%s has been unpinned from the taskbar.').format(
+                const message = dockMode
+                    ? _('%s has been unpinned from the dock.').format(
                         app.get_name()
-                    ),
+                    )
+                    : _('%s has been unpinned from the taskbar.').format(
+                        app.get_name()
+                    );
+                this._showNotification(
+                    message,
                     null,
                     () => this._addFavorite(appId, position)
                 );

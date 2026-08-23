@@ -161,6 +161,7 @@ export class TaskbarItemInteractionController {
     _createMenu(button, app, item) {
         const menu = new TaskbarAppMenu(button, panelArrowSide(this._settings), {
             favoritesSection: true,
+            isDock: this._settings.isDock,
             showSingleWindows: true,
             targetWindow: item._taskbarWindow,
             closeApp: (targetApp, timestamp) =>

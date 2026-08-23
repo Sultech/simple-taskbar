@@ -13,6 +13,7 @@ export class TaskbarAppMenu extends AppMenu {
     constructor(sourceActor, side, params = {}) {
         super(sourceActor, side, params);
 
+        this._isDock = params.isDock;
         this._targetWindow = params.targetWindow ?? null;
         this._closeApp = params.closeApp;
         this._getInterestingWindows = params.getInterestingWindows;
@@ -104,6 +105,7 @@ export class TaskbarAppMenu extends AppMenu {
         }
         this._closeApp = null;
         this._getInterestingWindows = null;
+        this._isDock = false;
         super.destroy();
     }
 
@@ -113,6 +115,13 @@ export class TaskbarAppMenu extends AppMenu {
             return;
 
         const isPinned = this._appFavorites.isFavorite(this._app.get_id());
+        if (this._isDock) {
+            this._toggleFavoriteItem.label.text = isPinned
+                ? _('Unpin from Dock')
+                : _('Pin to Dock');
+            return;
+        }
+
         this._toggleFavoriteItem.label.text = isPinned
             ? _('Unpin from Taskbar')
             : _('Pin to Taskbar');

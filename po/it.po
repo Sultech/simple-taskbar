@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 01:36+0100\n"
+"POT-Creation-Date: 2026-08-23 02:20+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -1326,19 +1326,19 @@ msgstr "Tutte"
 msgid "Other"
 msgstr "Altro"
 
-#: src/startMenu/startMenuAppMenu.js:111 src/startMenu/startMenuAppMenu.js:261
+#: src/startMenu/startMenuAppMenu.js:112 src/startMenu/startMenuAppMenu.js:262
 msgid "Create Desktop Shortcut"
 msgstr "Crea collegamento sul desktop"
 
-#: src/startMenu/startMenuAppMenu.js:197
+#: src/startMenu/startMenuAppMenu.js:198
 msgid "Unpin from Start"
 msgstr "Sblocca da Start"
 
-#: src/startMenu/startMenuAppMenu.js:198
+#: src/startMenu/startMenuAppMenu.js:199
 msgid "Pin to Start"
 msgstr "Blocca su Start"
 
-#: src/startMenu/startMenuAppMenu.js:260
+#: src/startMenu/startMenuAppMenu.js:261
 msgid "Delete Desktop Shortcut"
 msgstr "Elimina collegamento sul desktop"
 
@@ -1475,23 +1475,33 @@ msgstr "Video"
 msgid "Unable to open folder"
 msgstr "Impossibile aprire la cartella"
 
-#: src/taskbar/taskbarAppMenu.js:22
+#: src/taskbar/taskbarAppMenu.js:23
 msgid "Quit"
 msgstr "Esci"
 
-#: src/taskbar/taskbarAppMenu.js:27
+#: src/taskbar/taskbarAppMenu.js:28
 msgid "Close window"
 msgstr "Chiudi finestra"
 
-#: src/taskbar/taskbarAppMenu.js:95
+#: src/taskbar/taskbarAppMenu.js:96
 msgid "Close all windows"
 msgstr "Chiudi tutte le finestre"
 
-#: src/taskbar/taskbarAppMenu.js:117
+#: src/taskbar/taskbarAppMenu.js:120
+#, fuzzy
+msgid "Unpin from Dock"
+msgstr "Sblocca dalla barra delle applicazioni"
+
+#: src/taskbar/taskbarAppMenu.js:121
+#, fuzzy
+msgid "Pin to Dock"
+msgstr "Blocca sulla barra delle applicazioni"
+
+#: src/taskbar/taskbarAppMenu.js:126
 msgid "Unpin from Taskbar"
 msgstr "Sblocca dalla barra delle applicazioni"
 
-#: src/taskbar/taskbarAppMenu.js:118
+#: src/taskbar/taskbarAppMenu.js:127
 msgid "Pin to Taskbar"
 msgstr "Blocca sulla barra delle applicazioni"
 
@@ -1574,12 +1584,22 @@ msgstr "Finestra senza titolo"
 msgid "Close Window"
 msgstr "Chiudi finestra"
 
-#: src/integration/favoritesIntegration.js:36
+#: src/integration/favoritesIntegration.js:37
+#, fuzzy, javascript-format
+msgid "%s has been pinned to the dock."
+msgstr "%s è stata bloccata sulla barra delle applicazioni."
+
+#: src/integration/favoritesIntegration.js:40
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr "%s è stata bloccata sulla barra delle applicazioni."
 
-#: src/integration/favoritesIntegration.js:59
+#: src/integration/favoritesIntegration.js:66
+#, fuzzy, javascript-format
+msgid "%s has been unpinned from the dock."
+msgstr "%s è stata sbloccata dalla barra delle applicazioni."
+
+#: src/integration/favoritesIntegration.js:69
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "%s è stata sbloccata dalla barra delle applicazioni."
