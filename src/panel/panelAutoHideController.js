@@ -5,6 +5,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PointerWatcher from 'resource:///org/gnome/shell/ui/pointerWatcher.js';
 import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
@@ -20,6 +21,7 @@ const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
+const POINTER_WATCH_INTERVAL = 200;
 const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
 export class PanelAutoHideController {
     constructor({
@@ -45,6 +47,7 @@ export class PanelAutoHideController {
         this._getPanelEdgeGap = getPanelEdgeGap;
         this._isBlockedCallback = isBlocked;
         this._signalHolder = new TransientSignalHolder();
+        this._pointerWatch = null;
         this._hideTimeoutId = 0;
         this._fullscreenWatchId = 0;
         this._fullscreenReleasePending = false;
@@ -78,22 +81,11 @@ export class PanelAutoHideController {
         );
         global.stage.connectObject(
             'captured-event', (_stage, event) => {
-                if (!this._enabled() || !this._hidden ||
-                    event.type() !== Clutter.EventType.MOTION) {
+                if (event.type() !== Clutter.EventType.MOTION)
                     return Clutter.EVENT_PROPAGATE;
-                }
 
                 const [x, y] = event.get_coords();
-                if (Main.overview.animationInProgress)
-                    return Clutter.EVENT_PROPAGATE;
-
-                if (!this._pointerIsAtRevealEdge(x, y)) {
-                    this._overviewEdgeRevealBlocked = false;
-                    return Clutter.EVENT_PROPAGATE;
-                }
-
-                if (!this._overviewEdgeRevealBlocked)
-                    this.show();
+                this._handlePointerMotion(x, y);
                 return Clutter.EVENT_PROPAGATE;
             },
             'notify::key-focus', () => {
@@ -129,6 +121,9 @@ export class PanelAutoHideController {
     }
 
     destroy() {
+        if (this._pointerWatch)
+            this._pointerWatch.remove();
+        this._pointerWatch = null;
         this._clearHideTimeout();
         this._stopFullscreenWatch();
         this._signalHolder.destroy();
@@ -219,12 +214,21 @@ export class PanelAutoHideController {
 
     _syncEnabled() {
         if (!this._enabled()) {
+            if (this._pointerWatch)
+                this._pointerWatch.remove();
+            this._pointerWatch = null;
             this.show(false);
             this._restoreStrutTracking();
             this._syncUnredirect();
             return;
         }
 
+        if (!this._pointerWatch) {
+            this._pointerWatch = PointerWatcher.getPointerWatcher().addWatch(
+                POINTER_WATCH_INTERVAL,
+                (x, y) => this._handlePointerMotion(x, y)
+            );
+        }
         this._syncUnredirect();
         this._syncStrutTracking();
         if (this._overviewSuspended) {
@@ -508,6 +512,21 @@ export class PanelAutoHideController {
         return panelIsMinimumEdge(this._settings)
             ? y <= monitor.y + REVEAL_EDGE_SIZE
             : y >= monitor.y + monitor.height - REVEAL_EDGE_SIZE;
+    }
+
+    _handlePointerMotion(x, y) {
+        if (!this._enabled() || !this._hidden ||
+            Main.overview.animationInProgress) {
+            return;
+        }
+
+        if (!this._pointerIsAtRevealEdge(x, y)) {
+            this._overviewEdgeRevealBlocked = false;
+            return;
+        }
+
+        if (!this._overviewEdgeRevealBlocked)
+            this.show();
     }
 
     _geometry(monitor) {
