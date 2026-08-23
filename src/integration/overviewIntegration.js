@@ -372,9 +372,16 @@ export class OverviewIntegration {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
                 const position = panelPosition(integration._settings);
-                if (position === 'bottom')
-                    box.y2 -= integration._panelHeight;
-                else if (integration._reserveAutoHiddenPanel()) {
+                if (position === 'bottom') {
+                    const inset = integration._reserveAutoHiddenPanel()
+                        ? integration._panelHeight * Math.clamp(
+                            controls._stateAdjustment.value,
+                            0,
+                            1
+                        )
+                        : integration._panelHeight;
+                    box.y2 -= inset;
+                } else if (integration._reserveAutoHiddenPanel()) {
                     const progress = Math.clamp(
                         controls._stateAdjustment.value,
                         0,
