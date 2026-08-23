@@ -26,6 +26,7 @@ export class PanelAutoHideController {
         settings,
         panelActor,
         positionActor,
+        strutActor = null,
         getMonitor,
         getPanelHeight,
         getPanelLengthPercentage = () => null,
@@ -35,6 +36,7 @@ export class PanelAutoHideController {
         this._settings = settings;
         this._panelActor = panelActor;
         this._positionActor = positionActor;
+        this._strutActor = strutActor;
         this._getMonitor = getMonitor;
         this._getPanelHeight = getPanelHeight;
         this._getPanelLengthPercentage = getPanelLengthPercentage;
@@ -48,7 +50,9 @@ export class PanelAutoHideController {
         this._hidden = false;
         this._overviewSuspended = false;
         this._trackedActorData = null;
+        this._strutActorData = null;
         this._originalAffectsStruts = false;
+        this._originalStrutAffectsStruts = false;
         this._originalTrackFullscreen = false;
         this._unredirectDisabled = false;
         this._fullscreenVisibilityHeld = false;
@@ -126,12 +130,14 @@ export class PanelAutoHideController {
         this._settings = null;
         this._panelActor = null;
         this._positionActor = null;
+        this._strutActor = null;
         this._getMonitor = null;
         this._getPanelHeight = null;
         this._getPanelLengthPercentage = null;
         this._getPanelEdgeGap = null;
         this._isBlockedCallback = null;
         this._trackedActorData = null;
+        this._strutActorData = null;
     }
 
     setMenuOpen(open) {
@@ -214,35 +220,64 @@ export class PanelAutoHideController {
     }
 
     _captureStrutTracking() {
-        const index = Main.layoutManager._findActor(this._positionActor);
-        this._trackedActorData =
-            Main.layoutManager._trackedActors[index];
+        this._trackedActorData = this._captureActorData(
+            this._positionActor
+        );
         this._originalAffectsStruts =
             this._trackedActorData.affectsStruts;
         this._originalTrackFullscreen =
             this._trackedActorData.trackFullscreen;
+        if (!this._strutActor)
+            return;
+
+        this._strutActorData = this._captureActorData(this._strutActor);
+        this._originalStrutAffectsStruts =
+            this._strutActorData.affectsStruts;
+    }
+
+    _captureActorData(actor) {
+        const index = Main.layoutManager._findActor(actor);
+        return Main.layoutManager._trackedActors[index];
     }
 
     _syncStrutTracking() {
-        if (!this._trackedActorData ||
-            !this._trackedActorData.affectsStruts) {
-            return;
-        }
-
-        this._trackedActorData.affectsStruts = false;
-        Main.layoutManager._queueUpdateRegions();
+        const panelChanged = this._disableStrutTracking(
+            this._trackedActorData
+        );
+        const strutChanged = this._disableStrutTracking(
+            this._strutActorData
+        );
+        if (panelChanged || strutChanged)
+            Main.layoutManager._queueUpdateRegions();
     }
 
     _restoreStrutTracking() {
-        if (!this._trackedActorData ||
-            this._trackedActorData.affectsStruts ===
-                this._originalAffectsStruts) {
-            return;
-        }
+        const panelChanged = this._restoreActorStrutTracking(
+            this._trackedActorData,
+            this._originalAffectsStruts
+        );
+        const strutChanged = this._restoreActorStrutTracking(
+            this._strutActorData,
+            this._originalStrutAffectsStruts
+        );
+        if (panelChanged || strutChanged)
+            Main.layoutManager._queueUpdateRegions();
+    }
 
-        this._trackedActorData.affectsStruts =
-            this._originalAffectsStruts;
-        Main.layoutManager._queueUpdateRegions();
+    _disableStrutTracking(actorData) {
+        if (!actorData || !actorData.affectsStruts)
+            return false;
+
+        actorData.affectsStruts = false;
+        return true;
+    }
+
+    _restoreActorStrutTracking(actorData, originalAffectsStruts) {
+        if (!actorData || actorData.affectsStruts === originalAffectsStruts)
+            return false;
+
+        actorData.affectsStruts = originalAffectsStruts;
+        return true;
     }
 
     _disableUnredirect() {

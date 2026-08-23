@@ -315,6 +315,7 @@ export class SecondaryPanelController {
             settings: this._settings,
             panelActor: this.actor,
             positionActor: this._panelBox,
+            strutActor: this._dockStrutActor,
             getMonitor: () => this._monitor,
             getPanelHeight: () => this._panelHeight,
             getPanelLengthPercentage: () => this._panelLengthPercentage(),
