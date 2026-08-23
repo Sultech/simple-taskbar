@@ -184,8 +184,7 @@ export class PanelAutoHideController {
             return;
 
         const geometry = this._geometry(monitor);
-        const offset = this._hidden && this._enabled() &&
-            !this._overviewSuspended
+        const offset = this._hidden && this._enabled()
             ? geometry.hiddenOffset
             : geometry.visibleOffset;
         actor.remove_transition('x');
