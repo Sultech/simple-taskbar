@@ -321,6 +321,10 @@ export class SecondaryPanelController {
             getPanelLengthPercentage: () => this._panelLengthPercentage(),
             getPanelLengthOverride: () => this._panelLengthOverride(),
             getPanelEdgeGap: () => this._panelEdgeGap(),
+            getLimitRevealToPanel: () =>
+                !this._dockPanelSizing ||
+                (!this._settings.get_boolean('dock-panel-mode') &&
+                    this._settings.get_boolean('edge-reveal-enabled')),
             isBlocked: () => this._autoHideIsBlocked(),
         });
         this._autoHideController.enable();

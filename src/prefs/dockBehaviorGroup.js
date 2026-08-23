@@ -28,6 +28,19 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         Gio.SettingsBindFlags.DEFAULT
     );
 
+    const edgeRevealSwitch = new Adw.SwitchRow({
+        title: _('Limit Reveal to Dock Edge'),
+        subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
+        active: settings.get_boolean('dock-edge-reveal-enabled'),
+    });
+    group.add(edgeRevealSwitch);
+    settings.bind(
+        'dock-edge-reveal-enabled',
+        edgeRevealSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+
     const multiMonitorSwitch = new Adw.SwitchRow({
         title: _('Show Dock on All Monitors'),
         subtitle: _('Show the Dock on every connected monitor'),
@@ -73,8 +86,11 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             workspaceScrollSwitch.active;
     };
     const syncAvailability = () => {
-        group.sensitive = settings.get_boolean('dock-mode') &&
+        const available = settings.get_boolean('dock-mode') &&
             !settings.get_boolean('windows-xp-theme-enabled');
+        group.sensitive = available;
+        edgeRevealSwitch.sensitive = available &&
+            !settings.get_boolean('dock-panel-mode');
         syncWorkspaceScrollControls();
     };
     workspaceScrollSwitch.connect(
@@ -83,6 +99,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     );
     for (const key of [
         'dock-mode',
+        'dock-panel-mode',
         'windows-xp-theme-enabled',
     ]) {
         connectSettings(settings, `changed::${key}`, syncAvailability);

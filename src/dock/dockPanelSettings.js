@@ -13,6 +13,7 @@ const DOCK_SETTING_KEYS = new Map([
     ['panel-border-enabled', 'dock-panel-border-enabled'],
     ['panel-border-light-enabled', 'dock-panel-border-light-enabled'],
     ['panel-autohide-enabled', 'dock-autohide-enabled'],
+    ['edge-reveal-enabled', 'dock-edge-reveal-enabled'],
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],
     ['workspace-scroll-enabled', 'dock-workspace-scroll-enabled'],
     ['workspace-scroll-delay', 'dock-workspace-scroll-delay'],

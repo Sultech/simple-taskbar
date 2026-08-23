@@ -225,6 +225,10 @@
       <default>false</default>
       <summary>Hide the Dock until the pointer reaches its screen edge</summary>
     </key>
+    <key name="dock-edge-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Limit Dock reveal to its floating edge</summary>
+    </key>
     <key name="dock-multi-monitor-panels" type="b">
       <default>true</default>
       <summary>Show the Dock on every connected monitor</summary>

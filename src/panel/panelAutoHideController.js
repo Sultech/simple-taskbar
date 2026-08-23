@@ -34,6 +34,7 @@ export class PanelAutoHideController {
         getPanelLengthPercentage = () => null,
         getPanelLengthOverride = () => null,
         getPanelEdgeGap = () => 0,
+        getLimitRevealToPanel = () => true,
         isBlocked,
     }) {
         this._settings = settings;
@@ -45,6 +46,7 @@ export class PanelAutoHideController {
         this._getPanelLengthPercentage = getPanelLengthPercentage;
         this._getPanelLengthOverride = getPanelLengthOverride;
         this._getPanelEdgeGap = getPanelEdgeGap;
+        this._getLimitRevealToPanel = getLimitRevealToPanel;
         this._isBlockedCallback = isBlocked;
         this._signalHolder = new TransientSignalHolder();
         this._pointerWatch = null;
@@ -148,6 +150,7 @@ export class PanelAutoHideController {
         this._getPanelLengthPercentage = null;
         this._getPanelLengthOverride = null;
         this._getPanelEdgeGap = null;
+        this._getLimitRevealToPanel = null;
         this._isBlockedCallback = null;
         this._trackedActorData = null;
         this._strutActorData = null;
@@ -496,17 +499,18 @@ export class PanelAutoHideController {
             return false;
 
         const geometry = this._geometry(monitor);
+        const limitRevealToPanel = this._getLimitRevealToPanel();
         if (geometry.vertical) {
-            if (y < geometry.y ||
-                y >= geometry.y + geometry.height) {
+            if (limitRevealToPanel && (y < geometry.y ||
+                y >= geometry.y + geometry.height)) {
                 return false;
             }
             return panelIsMinimumEdge(this._settings)
                 ? x <= monitor.x + REVEAL_EDGE_SIZE
                 : x >= monitor.x + monitor.width - REVEAL_EDGE_SIZE;
         }
-        if (x < geometry.x ||
-            x >= geometry.x + geometry.width) {
+        if (limitRevealToPanel && (x < geometry.x ||
+            x >= geometry.x + geometry.width)) {
             return false;
         }
         return panelIsMinimumEdge(this._settings)
