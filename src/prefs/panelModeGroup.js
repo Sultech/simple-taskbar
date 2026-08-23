@@ -13,6 +13,10 @@ import {
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
 import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 
+const DOCK_DEFAULT_ICON_SIZE = 49;
+const DOCK_DEFAULT_ICON_SPACING = 5;
+const DOCK_DEFAULT_START_BUTTON_PADDING = 5;
+
 export function addPanelModeGroup({
     page,
     dockPage,
@@ -240,13 +244,20 @@ export function connectDefaultGnomePanelSync({
         if (enabled) {
             setPanelMode(settings, PANEL_MODE_DEFAULT);
             if (!settings.get_boolean('dock-mode-initialized')) {
+                settings.set_int('icon-size', DOCK_DEFAULT_ICON_SIZE);
+                settings.set_int(
+                    'icon-spacing',
+                    DOCK_DEFAULT_ICON_SPACING
+                );
+                settings.set_int(
+                    'start-button-padding',
+                    DOCK_DEFAULT_START_BUTTON_PADDING
+                );
                 settings.set_string('dock-position', 'bottom');
                 settings.set_boolean('windows-start-menu-enabled', false);
                 settings.set_boolean('gnome-start-button-visible', true);
                 settings.set_string('combine-app-buttons-mode', 'always');
                 settings.set_boolean('use-pinned-apps-as-launchers', false);
-                settings.set_boolean('dock-multi-monitor-panels', true);
-                settings.set_boolean('dock-workspace-scroll-enabled', true);
                 settings.set_boolean('dock-mode-initialized', true);
             }
             settings.set_boolean('dock-mode', true);

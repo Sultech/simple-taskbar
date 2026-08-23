@@ -226,7 +226,7 @@
       <summary>Hide the Dock until the pointer reaches its screen edge</summary>
     </key>
     <key name="dock-multi-monitor-panels" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Show the Dock on every connected monitor</summary>
     </key>
     <key name="dock-max-length" type="i">
@@ -281,7 +281,7 @@
       <summary>Show the Dock border in light mode</summary>
     </key>
     <key name="dock-workspace-scroll-enabled" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Switch workspaces by scrolling over empty Dock space</summary>
     </key>
     <key name="dock-workspace-scroll-delay" type="i">
