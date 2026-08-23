@@ -65,8 +65,13 @@ export class OverviewIntegration {
                 this.queueRelayout();
             },
             'changed::dock-panel-mode', () => this.queueRelayout(),
+            'changed::dock-autohide-enabled', () => this.queueRelayout(),
+            'changed::dock-dodge-windows-enabled', () =>
+                this.queueRelayout(),
             'changed::icon-size', () => this.queueRelayout(),
             'changed::panel-autohide-enabled', () => this.queueRelayout(),
+            'changed::panel-dodge-windows-enabled', () =>
+                this.queueRelayout(),
             this._signalHolder
         );
         Main.overview.connectObject(
@@ -372,8 +377,14 @@ export class OverviewIntegration {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
                 const position = panelPosition(integration._settings);
+                const panelAutohide = integration._settings.get_boolean(
+                    'panel-autohide-enabled'
+                );
+                const panelDodge = integration._settings.get_boolean(
+                    'panel-dodge-windows-enabled'
+                );
                 if (position === 'bottom') {
-                    const inset = integration._reserveAutoHiddenPanel()
+                    const inset = panelAutohide
                         ? integration._panelHeight * Math.clamp(
                             controls._stateAdjustment.value,
                             0,
@@ -381,7 +392,7 @@ export class OverviewIntegration {
                         )
                         : integration._panelHeight;
                     box.y2 -= inset;
-                } else if (integration._reserveAutoHiddenPanel()) {
+                } else if (panelAutohide || panelDodge) {
                     const progress = Math.clamp(
                         controls._stateAdjustment.value,
                         0,
@@ -416,7 +427,13 @@ export class OverviewIntegration {
             SecondaryMonitorDisplay.prototype,
             'vfunc_allocate',
             originalAllocate => function (box) {
-                if (integration._reserveAutoHiddenPanel()) {
+                const panelAutohide = integration._settings.get_boolean(
+                    'panel-autohide-enabled'
+                );
+                const panelDodge = integration._settings.get_boolean(
+                    'panel-dodge-windows-enabled'
+                );
+                if (panelAutohide || panelDodge) {
                     const progress = Math.clamp(
                         this._overviewAdjustment.value,
                         0,
@@ -438,24 +455,23 @@ export class OverviewIntegration {
         );
     }
 
-    _reserveAutoHiddenPanel() {
-        return this._settings.get_boolean('panel-autohide-enabled');
-    }
-
     _dockOverviewInset() {
         if (!this._settings.get_boolean('dock-mode'))
             return 0;
 
-        const position = this._settings.get_string('dock-position');
-        if (position !== 'bottom')
-            return 0;
-
+        const dockAutohide = this._settings.get_boolean(
+            'dock-autohide-enabled'
+        );
+        const dockDodge = this._settings.get_boolean(
+            'dock-dodge-windows-enabled'
+        );
         const panelHeight = this._settings.get_int('icon-size') +
             ICON_VERTICAL_RESERVE;
         const panelMode = this._settings.get_boolean('dock-panel-mode');
         const dockHeight = panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
-        if (!this._settings.get_boolean('dock-autohide-enabled'))
-            return dockHeight;
+        const position = this._settings.get_string('dock-position');
+        if (!dockAutohide && !dockDodge)
+            return position === 'bottom' ? dockHeight : 0;
 
         const progress = Math.clamp(
             Main.overview._overview.controls._stateAdjustment.value,
