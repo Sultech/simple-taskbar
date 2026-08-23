@@ -117,6 +117,8 @@ export class SecondaryPanelController {
         this._taskbarWidthUpdateId = 0;
         this._updatingTaskbarWidth = false;
         this._dockStrutActor = null;
+        this._activeWorkspace = null;
+        this._workspaceWindows = new Set();
         this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = this._dockPanelSizing
             ? settings.getConfiguredIconSize()
@@ -267,12 +269,14 @@ export class SecondaryPanelController {
                 this._settings.get_boolean('dock-panel-mode'),
             trackFullscreen: true,
         });
+        if (this._dockPanelSizing)
+            this._syncWorkspaceWindows();
         if (this._dockPanelSizing &&
             !this._settings.get_boolean('dock-panel-mode')) {
             const strutGeometry = panelGeometry(
                 this._settings,
                 this._monitor,
-                this._panelHeight + DOCK_EDGE_GAP,
+                this._panelHeight + this._panelEdgeGap(),
                 0,
                 100
             );
@@ -358,6 +362,8 @@ export class SecondaryPanelController {
 
         this._signalHolder.destroy();
         this._signalHolder = null;
+        this._workspaceWindows.clear();
+        this._activeWorkspace = null;
 
         this._autoHideController.destroy();
         this._autoHideController = null;
@@ -428,6 +434,30 @@ export class SecondaryPanelController {
     }
 
     _connectSignals() {
+        if (this._dockPanelSizing) {
+            global.workspace_manager.connectObject(
+                'active-workspace-changed',
+                () => {
+                    this._syncWorkspaceWindows();
+                    this._position();
+                },
+                this._signalHolder
+            );
+            global.display.connectObject(
+                'notify::focus-window',
+                () => this._position(),
+                'window-entered-monitor',
+                () => this._position(),
+                'window-left-monitor',
+                () => this._position(),
+                this._signalHolder
+            );
+            this._settings.connectObject(
+                'changed::panel-autohide-enabled',
+                () => this._position(),
+                this._signalHolder
+            );
+        }
         Main.panel.connectObject('notify::style-class', () => {
             this.syncTheme();
         }, this._signalHolder);
@@ -723,7 +753,7 @@ export class SecondaryPanelController {
             const strutGeometry = panelGeometry(
                 this._settings,
                 this._monitor,
-                this._panelHeight + DOCK_EDGE_GAP,
+                this._panelHeight + this._panelEdgeGap(),
                 0,
                 100
             );
@@ -960,7 +990,74 @@ export class SecondaryPanelController {
             return 0;
         }
 
+        if (!this._settings.get_boolean('panel-autohide-enabled') &&
+            this._hasMaximizedWindowOnMonitor()) {
+            return 0;
+        }
+
         return DOCK_EDGE_GAP;
+    }
+
+    _syncWorkspaceWindows() {
+        const workspace = global.workspace_manager.get_active_workspace();
+        if (workspace === this._activeWorkspace)
+            return;
+
+        if (this._activeWorkspace)
+            this._activeWorkspace.disconnectObject(this._signalHolder);
+        for (const window of this._workspaceWindows)
+            window.disconnectObject(this._signalHolder);
+        this._workspaceWindows.clear();
+        this._activeWorkspace = workspace;
+        workspace.connectObject(
+            'window-added',
+            (_workspace, window) => {
+                this._trackWorkspaceWindow(window);
+                this._position();
+            },
+            'window-removed',
+            (_workspace, window) => {
+                this._untrackWorkspaceWindow(window);
+                this._position();
+            },
+            this._signalHolder
+        );
+        for (const window of workspace.list_windows())
+            this._trackWorkspaceWindow(window);
+    }
+
+    _trackWorkspaceWindow(window) {
+        if (this._workspaceWindows.has(window))
+            return;
+
+        this._workspaceWindows.add(window);
+
+        window.connectObject(
+            'notify::maximized-horizontally',
+            () => this._position(),
+            'notify::maximized-vertically',
+            () => this._position(),
+            this._signalHolder
+        );
+    }
+
+    _untrackWorkspaceWindow(window) {
+        if (!this._workspaceWindows.delete(window))
+            return;
+
+        window.disconnectObject(this._signalHolder);
+    }
+
+    _hasMaximizedWindowOnMonitor() {
+        for (const window of this._workspaceWindows) {
+            if (window.get_monitor() === this._monitor.index &&
+                window.maximized_horizontally &&
+                window.maximized_vertically) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     _panelContentLength(vertical) {
