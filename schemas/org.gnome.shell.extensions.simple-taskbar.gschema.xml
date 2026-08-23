@@ -244,7 +244,7 @@
       <summary>Hide the Dock until the pointer reaches its screen edge</summary>
     </key>
     <key name="dock-dodge-windows-enabled" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Hide the Dock when selected windows overlap it</summary>
     </key>
     <key name="dock-dodge-windows-mode" type="s">
@@ -282,6 +282,11 @@
     <key name="dock-panel-mode" type="b">
       <default>false</default>
       <summary>Extend the Dock to the full monitor edge</summary>
+    </key>
+    <key name="dock-corner-radius" type="i">
+      <range min="0" max="64"/>
+      <default>22</default>
+      <summary>Floating Dock corner radius</summary>
     </key>
     <key name="dock-transparency-enabled" type="b">
       <default>true</default>

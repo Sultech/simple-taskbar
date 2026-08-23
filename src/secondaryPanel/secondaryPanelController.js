@@ -61,10 +61,7 @@ import {
 } from './secondaryPanelIndicatorController.js';
 import {StartButtonController} from '../startMenu/startButtonController.js';
 import {TaskbarController} from '../taskbar/taskbarController.js';
-import {
-    DOCK_EDGE_GAP,
-    DOCK_FLOATING_CORNER_RADIUS,
-} from '../shared/panelSizing.js';
+import {DOCK_EDGE_GAP} from '../shared/panelSizing.js';
 import {
     constrainTaskbarSize,
     PANEL_ITEM_GAP,
@@ -557,6 +554,7 @@ export class SecondaryPanelController {
                 'panel-theme',
                 'panel-border-enabled',
                 'panel-border-light-enabled',
+                'dock-corner-radius',
             ]) {
                 this._settings.connectObject(
                     `changed::${key}`,
@@ -1128,6 +1126,12 @@ export class SecondaryPanelController {
     syncTheme() {
         const dockFloating = this._dockPanelSizing &&
             !this._settings.get_boolean('dock-panel-mode');
+        const cornerRadius = dockFloating
+            ? this._settings.get_int('dock-corner-radius')
+            : 0;
+        const cornerRadiusStyle = dockFloating
+            ? `border-radius: ${cornerRadius}px;`
+            : '';
         const vertical = panelIsVertical(this._settings);
         const light = this._dockPanelSizing
             ? panelUsesLightTheme(this._settings)
@@ -1189,16 +1193,17 @@ export class SecondaryPanelController {
         if (this._dockPanelSizing)
             syncPanelBlurCornerRadius(
                 this.actor,
-                dockFloating ? DOCK_FLOATING_CORNER_RADIUS : 0
+                cornerRadius
             );
         if (blurActive) {
-            this.actor.set_style('');
+            this.actor.set_style(cornerRadiusStyle);
             return;
         }
         this.actor.set_style(panelBackgroundStyle(
             this._settings,
             light,
-            borderEnabled
+            borderEnabled,
+            cornerRadiusStyle
         ));
     }
 

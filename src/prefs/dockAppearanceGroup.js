@@ -55,6 +55,21 @@ export function addDockAppearanceGroup({
         connectSettings
     );
 
+    addSpinRow(
+        group,
+        settings,
+        {
+            key: 'dock-corner-radius',
+            title: _('Dock Corner Radius'),
+            subtitle: _(
+                'Applies to the floating Dock without blur and with Dynamic Blur; Static Blur is not supported'
+            ),
+            lower: 0,
+            upper: 64,
+        },
+        connectSettings
+    );
+
     const transparencySwitchSubtitle = _(
         'Make the Dock background transparent'
     );
