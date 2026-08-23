@@ -198,9 +198,10 @@ export class PanelWindowDodgeController {
             return false;
 
         const geometry = this._getGeometry(monitor);
+        const activeWorkspace = global.workspace_manager.get_active_workspace();
         const windows = global.get_window_actors().filter(actor =>
             this._trackedWindowActors.has(actor) &&
-            this._isEligibleWindow(actor)
+            this._isEligibleWindow(actor, activeWorkspace)
         );
         if (windows.length === 0)
             return false;
@@ -240,8 +241,10 @@ export class PanelWindowDodgeController {
         return false;
     }
 
-    _isEligibleWindow(actor) {
+    _isEligibleWindow(actor, activeWorkspace) {
         const window = actor.get_meta_window();
+        if (window.get_workspace() !== activeWorkspace)
+            return false;
         if (window.minimized)
             return false;
         const applicationId = window.get_gtk_application_id();
