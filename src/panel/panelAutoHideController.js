@@ -96,7 +96,7 @@ export class PanelAutoHideController {
         );
         Main.overview.connectObject(
             'showing', () => this._suspendForOverview(),
-            'hiding', () => this._restoreFullscreenVisibility(),
+            'hiding', () => this._hideForOverview(),
             'hidden', () => this._resumeAfterOverview(),
             this._signalHolder
         );
@@ -391,11 +391,7 @@ export class PanelAutoHideController {
                     return GLib.SOURCE_REMOVE;
                 }
 
-                this._hidden = true;
-                this._moveTo(
-                    this._geometry(this._getMonitor()).hiddenOffset,
-                    true
-                );
+                this._hide();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -420,6 +416,12 @@ export class PanelAutoHideController {
         );
     }
 
+    _hideForOverview() {
+        this._restoreFullscreenVisibility();
+        if (this._enabled())
+            this._hide();
+    }
+
     _resumeAfterOverview() {
         if (!this._overviewSuspended)
             return;
@@ -428,10 +430,15 @@ export class PanelAutoHideController {
         if (!this._enabled())
             return;
 
-        if (this._pointerIsInsidePanel())
-            this.show(false);
-        else
-            this._scheduleHide();
+        this._hide(false);
+    }
+
+    _hide(animate = true) {
+        this._hidden = true;
+        this._moveTo(
+            this._geometry(this._getMonitor()).hiddenOffset,
+            animate
+        );
     }
 
     _isBlocked() {
