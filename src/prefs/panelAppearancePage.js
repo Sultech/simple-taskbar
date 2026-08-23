@@ -16,8 +16,8 @@ import {
     WINDOWS_XP_ICON_SPACING,
 } from '../shared/windowsXpTheme.js';
 import {
-    PANEL_MODE_TASKBAR,
     PANEL_MODE_WINDOWS_XP,
+    restorePanelModeAfterWindowsXp,
     setPanelMode,
     setPanelPosition,
 } from '../shared/panelModeProfiles.js';
@@ -35,6 +35,7 @@ export function addPanelAppearancePage({
     advancedAppearanceGroup,
     blurMyShellPanelBlurEnabled,
     windowsXpThemeSwitch,
+    taskbarModeSwitch,
     iconSizeRow,
     iconSpacingRow,
     panelButtonPaddingRow,
@@ -158,6 +159,7 @@ export function addPanelAppearancePage({
         panelButtonPaddingRow.sensitive = !enabled;
         panelHeightRow.sensitive = !enabled;
         panelPositionRow.sensitive = !enabled;
+        taskbarModeSwitch.sensitive = !enabled;
         defaultGnomePanelSwitch.sensitive =
             !enabled && !settings.get_boolean('dock-mode');
         dockModeSwitch.sensitive = !enabled;
@@ -180,10 +182,10 @@ export function addPanelAppearancePage({
     const setWindowsXpTheme = enabled => {
         const settings = createSettings();
         settings.delay();
-        setPanelMode(
-            settings,
-            enabled ? PANEL_MODE_WINDOWS_XP : PANEL_MODE_TASKBAR
-        );
+        if (enabled)
+            setPanelMode(settings, PANEL_MODE_WINDOWS_XP);
+        else
+            restorePanelModeAfterWindowsXp(settings);
         settings.apply();
     };
     windowsXpThemeSwitch.connect('notify::active', () => {

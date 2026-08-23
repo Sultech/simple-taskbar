@@ -28,6 +28,15 @@ export function addPanelModeGroup({
     });
     page.add(panelModeGroup);
 
+    const taskbarModeSwitch = new Adw.SwitchRow({
+        title: _('Taskbar mode'),
+        subtitle: _('Show application buttons in the main panel'),
+        active: !settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode') &&
+            !settings.get_boolean('windows-xp-theme-enabled'),
+    });
+    panelModeGroup.add(taskbarModeSwitch);
+
     const dockModeGroup = new Adw.PreferencesGroup({
         title: _('General'),
     });
@@ -147,6 +156,7 @@ export function addPanelModeGroup({
     );
 
     return {
+        taskbarModeSwitch,
         defaultGnomePanelSwitch,
         dockModeSwitch,
         dockPositionRow,
@@ -161,6 +171,7 @@ export function connectDefaultGnomePanelSync({
     settings,
     createSettings,
     connectSettings,
+    taskbarModeSwitch,
     defaultGnomePanelSwitch,
     dockModeSwitch,
     dockPositionRow,
@@ -172,16 +183,23 @@ export function connectDefaultGnomePanelSync({
     advancedStartMenuGroup,
     nautilusPlacesSwitch,
 }) {
-    let syncingDefaultGnomePanel = false;
+    let syncingPanelModes = false;
     const syncDefaultGnomePanel = () => {
         const enabled = settings.get_boolean(
             'default-gnome-panel'
         );
         const dockModeEnabled = settings.get_boolean('dock-mode');
+        const windowsXpModeEnabled = settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
         const defaultPanelRestrictions = enabled && !dockModeEnabled;
-        syncingDefaultGnomePanel = true;
+        syncingPanelModes = true;
+        taskbarModeSwitch.active = !enabled && !dockModeEnabled &&
+            !windowsXpModeEnabled;
         defaultGnomePanelSwitch.active = enabled;
-        defaultGnomePanelSwitch.sensitive = !dockModeEnabled;
+        taskbarModeSwitch.sensitive = !windowsXpModeEnabled;
+        defaultGnomePanelSwitch.sensitive = !dockModeEnabled &&
+            !windowsXpModeEnabled;
         appearanceGroup.sensitive = !defaultPanelRestrictions;
         startMenuPage.sensitive = !defaultPanelRestrictions;
         advancedAppBehaviorGroup.sensitive = !defaultPanelRestrictions;
@@ -193,7 +211,19 @@ export function connectDefaultGnomePanelSync({
         advancedAppBehaviorGroup.description = defaultPanelRestrictions
             ? _('Application options are unavailable in Default GNOME Panel mode.')
             : _('Choose which applications appear and how they are grouped.');
-        syncingDefaultGnomePanel = false;
+        syncingPanelModes = false;
+    };
+
+    const setTaskbarMode = enabled => {
+        const settings = createSettings();
+        settings.delay();
+        if (enabled) {
+            setPanelMode(settings, PANEL_MODE_TASKBAR);
+            settings.set_boolean('dock-mode', false);
+        } else {
+            setPanelMode(settings, PANEL_MODE_DEFAULT);
+        }
+        settings.apply();
     };
 
     const setDefaultGnomePanel = enabled => {
@@ -209,7 +239,7 @@ export function connectDefaultGnomePanelSync({
     defaultGnomePanelSwitch.connect(
         'notify::active',
         () => {
-            if (syncingDefaultGnomePanel)
+            if (syncingPanelModes)
                 return;
 
             const enabled = defaultGnomePanelSwitch.active;
@@ -220,6 +250,25 @@ export function connectDefaultGnomePanelSync({
             }
             setDefaultGnomePanel(enabled);
             syncDefaultGnomePanel();
+        }
+    );
+    taskbarModeSwitch.connect(
+        'notify::active',
+        () => {
+            if (syncingPanelModes)
+                return;
+
+            const enabled = taskbarModeSwitch.active;
+            const taskbarModeEnabled =
+                !settings.get_boolean('default-gnome-panel') &&
+                !settings.get_boolean('dock-mode') &&
+                !settings.get_boolean('windows-xp-theme-enabled');
+            if (enabled === taskbarModeEnabled)
+                return;
+
+            setTaskbarMode(enabled);
+            syncDefaultGnomePanel();
+            syncDockMode();
         }
     );
     let syncingDockMode = false;
@@ -299,6 +348,11 @@ export function connectDefaultGnomePanelSync({
     connectSettings(
         settings,
         'changed::default-gnome-panel',
+        syncDefaultGnomePanel
+    );
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
         syncDefaultGnomePanel
     );
     connectSettings(settings, 'changed::dock-mode', () => {

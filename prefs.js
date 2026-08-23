@@ -103,6 +103,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             connectSettings,
         });
+        const taskbarModeSwitch = panelMode.taskbarModeSwitch;
         const defaultGnomePanelSwitch = panelMode.defaultGnomePanelSwitch;
         const dockModeSwitch = panelMode.dockModeSwitch;
         const dockPositionRow = panelMode.dockPositionRow;
@@ -159,6 +160,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             createSettings: () => this.getSettings(),
             connectSettings,
+            taskbarModeSwitch,
             defaultGnomePanelSwitch,
             dockModeSwitch,
             dockPositionRow,
@@ -179,6 +181,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             advancedAppearanceGroup,
             blurMyShellPanelBlurEnabled,
             windowsXpThemeSwitch,
+            taskbarModeSwitch,
             iconSizeRow,
             iconSpacingRow,
             panelButtonPaddingRow,

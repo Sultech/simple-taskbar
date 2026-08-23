@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:23+0100\n"
+"POT-Creation-Date: 2026-08-23 02:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,8 +26,8 @@ msgstr ""
 msgid "Application overflow"
 msgstr ""
 
-#: prefs.js:44 src/prefs/panelAppearancePage.js:84
-#: src/prefs/panelModeGroup.js:53
+#: prefs.js:44 src/prefs/panelAppearancePage.js:85
+#: src/prefs/panelModeGroup.js:62
 msgid "Left"
 msgstr ""
 
@@ -35,8 +35,8 @@ msgstr ""
 msgid "Center"
 msgstr ""
 
-#: prefs.js:46 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelModeGroup.js:54
+#: prefs.js:46 src/prefs/panelAppearancePage.js:86
+#: src/prefs/panelModeGroup.js:63
 msgid "Right"
 msgstr ""
 
@@ -68,7 +68,7 @@ msgstr ""
 msgid "Application Behavior"
 msgstr ""
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:195
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:213
 msgid "Choose which applications appear and how they are grouped."
 msgstr ""
 
@@ -204,7 +204,7 @@ msgstr ""
 msgid "Application Icons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:192
+#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:210
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 
@@ -306,7 +306,7 @@ msgstr ""
 msgid "Configure the Dock independently of the main panel."
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:31 src/prefs/panelAppearancePage.js:267
+#: src/prefs/dockAppearanceGroup.js:31 src/prefs/panelAppearancePage.js:269
 msgid "Follow System Theme"
 msgstr ""
 
@@ -318,16 +318,16 @@ msgstr ""
 msgid "Dock Theme"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:49 src/prefs/panelAppearancePage.js:285
+#: src/prefs/dockAppearanceGroup.js:49 src/prefs/panelAppearancePage.js:287
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:287
+#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:289
 #: src/prefs/startMenuPage.js:397
 msgid "Light"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:52 src/prefs/panelAppearancePage.js:288
+#: src/prefs/dockAppearanceGroup.js:52 src/prefs/panelAppearancePage.js:290
 #: src/prefs/startMenuPage.js:396
 msgid "Dark"
 msgstr ""
@@ -336,24 +336,24 @@ msgstr ""
 msgid "Make the Dock background transparent"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:306
+#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:308
 #: src/prefs/startMenuPage.js:422
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:309
+#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:311
 msgid "Enable Transparency"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:322
+#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:324
 msgid "0% is opaque and 100% is fully transparent"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:329
+#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:331
 msgid "Transparency"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:364
+#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:366
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr ""
 
@@ -374,15 +374,15 @@ msgstr ""
 msgid "Dock Text Color"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:400
+#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:402
 msgid "White"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:401
+#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:403
 msgid "Black"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:481
+#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:483
 msgid "Show Border in Dark Mode"
 msgstr ""
 
@@ -390,7 +390,7 @@ msgstr ""
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:494
+#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:496
 msgid "Show Border in Light Mode"
 msgstr ""
 
@@ -434,69 +434,69 @@ msgstr ""
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:53
+#: src/prefs/panelAppearancePage.js:54
 msgid "Panel Appearance"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:54
+#: src/prefs/panelAppearancePage.js:55
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:63
+#: src/prefs/panelAppearancePage.js:64
 msgid "Panel Thickness"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:65
+#: src/prefs/panelAppearancePage.js:66
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:77 src/prefs/preferencesWidgets.js:50
+#: src/prefs/panelAppearancePage.js:78 src/prefs/preferencesWidgets.js:50
 msgid "Panel Position"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:79
+#: src/prefs/panelAppearancePage.js:80
 msgid "Place the taskbar at a screen edge"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:51
+#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:60
 msgid "Top"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:52
+#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:61
 msgid "Bottom"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:268
+#: src/prefs/panelAppearancePage.js:270
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:284
+#: src/prefs/panelAppearancePage.js:286
 msgid "Taskbar Theme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:303
+#: src/prefs/panelAppearancePage.js:305
 msgid "Make the taskbar background transparent"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:367
+#: src/prefs/panelAppearancePage.js:369
 msgid "Custom Taskbar Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:385
+#: src/prefs/panelAppearancePage.js:387
 msgid "Taskbar Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:390
+#: src/prefs/panelAppearancePage.js:392
 msgid ""
 "White text uses the dark panel theme; black text uses the light panel theme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:397
+#: src/prefs/panelAppearancePage.js:399
 msgid "Taskbar Text Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:482 src/prefs/panelAppearancePage.js:495
+#: src/prefs/panelAppearancePage.js:484 src/prefs/panelAppearancePage.js:497
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 
@@ -683,73 +683,81 @@ msgstr ""
 msgid "Eleven-style or original GNOME Start menu"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:27 src/prefs/panelModeGroup.js:32
+#: src/prefs/panelModeGroup.js:27 src/prefs/panelModeGroup.js:41
 msgid "General"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:37
+#: src/prefs/panelModeGroup.js:32
+msgid "Taskbar mode"
+msgstr ""
+
+#: src/prefs/panelModeGroup.js:33
+msgid "Show application buttons in the main panel"
+msgstr ""
+
+#: src/prefs/panelModeGroup.js:46
 msgid "Default GNOME Panel"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:38
+#: src/prefs/panelModeGroup.js:47
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:53
 msgid "Dock mode"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:45
+#: src/prefs/panelModeGroup.js:54
 msgid "Enable Default GNOME Panel mode when switched on"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:75
+#: src/prefs/panelModeGroup.js:84
 msgid "Dock Position"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:76
+#: src/prefs/panelModeGroup.js:85
 msgid "Place the Dock at a different screen edge from the main panel"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:96
+#: src/prefs/panelModeGroup.js:105
 msgid "Maximum Dock Length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:97
+#: src/prefs/panelModeGroup.js:106
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:104
+#: src/prefs/panelModeGroup.js:113
 msgid "Panel mode"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:105
+#: src/prefs/panelModeGroup.js:114
 msgid "Extend the Dock fully to the monitor edge"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:126
+#: src/prefs/panelModeGroup.js:135
 msgid "Windows XP Theme"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:127
+#: src/prefs/panelModeGroup.js:136
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:139
+#: src/prefs/panelModeGroup.js:148
 msgid "Panel Button Padding"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:141
+#: src/prefs/panelModeGroup.js:150
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
 "when it is configured, otherwise 3 px"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:191
+#: src/prefs/panelModeGroup.js:209
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:194
+#: src/prefs/panelModeGroup.js:212
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr ""
 

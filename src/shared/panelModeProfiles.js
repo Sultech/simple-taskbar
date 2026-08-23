@@ -24,6 +24,8 @@ export const PANEL_MODE_TASKBAR = 'taskbar';
 export const PANEL_MODE_DEFAULT = 'default-panel';
 export const PANEL_MODE_WINDOWS_XP = 'windows-xp';
 
+const XP_PREVIOUS_DOCK_MODE = 'dock';
+
 const PANEL_AXIS_HORIZONTAL = 'horizontal';
 const PANEL_AXIS_VERTICAL = 'vertical';
 
@@ -88,6 +90,7 @@ const MODE_SETTING_KEYS = new Set([
     'panel-mode-profiles-initialized',
     'panel-profile-transition',
     'windows-xp-theme-enabled',
+    'windows-xp-previous-mode',
 ]);
 for (const profile of PROFILE_KEYS.values()) {
     MODE_SETTING_KEYS.add(profile.settings);
@@ -115,6 +118,15 @@ function getRequestedPanelMode(settings) {
     if (settings.get_boolean('default-gnome-panel'))
         return PANEL_MODE_DEFAULT;
     return PANEL_MODE_TASKBAR;
+}
+
+function getModeBeforeWindowsXp(settings) {
+    const mode = settings.get_string('active-panel-mode');
+    if (mode === PANEL_MODE_DEFAULT &&
+        settings.get_boolean('dock-mode')) {
+        return XP_PREVIOUS_DOCK_MODE;
+    }
+    return mode;
 }
 
 function savePanelModeSettings(settings, mode) {
@@ -273,6 +285,13 @@ export function setPanelMode(settings, mode) {
 
     const currentMode = settings.get_string('active-panel-mode');
     settings.set_boolean('panel-profile-transition', true);
+    if (mode === PANEL_MODE_WINDOWS_XP &&
+        currentMode !== PANEL_MODE_WINDOWS_XP) {
+        settings.set_string(
+            'windows-xp-previous-mode',
+            getModeBeforeWindowsXp(settings)
+        );
+    }
     if (currentMode !== mode) {
         if (currentMode !== PANEL_MODE_WINDOWS_XP) {
             savePanelAxisSettings(
@@ -292,6 +311,17 @@ export function setPanelMode(settings, mode) {
     }
     settings.set_boolean('panel-profile-transition', false);
     settings.set_boolean('panel-mode-profiles-initialized', true);
+}
+
+export function restorePanelModeAfterWindowsXp(settings) {
+    const previousMode = settings.get_string('windows-xp-previous-mode');
+    if (previousMode === XP_PREVIOUS_DOCK_MODE) {
+        setPanelMode(settings, PANEL_MODE_DEFAULT);
+        settings.set_boolean('dock-mode', true);
+        return;
+    }
+
+    setPanelMode(settings, previousMode);
 }
 
 export function initializePanelModeProfiles(settings) {

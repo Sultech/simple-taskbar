@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:23+0100\n"
+"POT-Creation-Date: 2026-08-23 02:36+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -26,8 +26,8 @@ msgstr "Mostra desktop"
 msgid "Application overflow"
 msgstr "Overflow delle applicazioni"
 
-#: prefs.js:44 src/prefs/panelAppearancePage.js:84
-#: src/prefs/panelModeGroup.js:53
+#: prefs.js:44 src/prefs/panelAppearancePage.js:85
+#: src/prefs/panelModeGroup.js:62
 msgid "Left"
 msgstr "Sinistra"
 
@@ -35,8 +35,8 @@ msgstr "Sinistra"
 msgid "Center"
 msgstr "Centro"
 
-#: prefs.js:46 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelModeGroup.js:54
+#: prefs.js:46 src/prefs/panelAppearancePage.js:86
+#: src/prefs/panelModeGroup.js:63
 msgid "Right"
 msgstr "Destra"
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Application Behavior"
 msgstr "Comportamento delle applicazioni"
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:195
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:213
 msgid "Choose which applications appear and how they are grouped."
 msgstr ""
 "Scegli quali applicazioni vengono visualizzate e come sono raggruppate."
@@ -225,7 +225,7 @@ msgstr "Chiude tutte le finestre dell’applicazione invece di aprirne una nuova
 msgid "Application Icons"
 msgstr "Icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:192
+#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:210
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 "Cambia dimensione, spaziatura e posizione delle icone della barra delle "
@@ -338,7 +338,7 @@ msgstr "Aspetto"
 msgid "Configure the Dock independently of the main panel."
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:31 src/prefs/panelAppearancePage.js:267
+#: src/prefs/dockAppearanceGroup.js:31 src/prefs/panelAppearancePage.js:269
 msgid "Follow System Theme"
 msgstr "Segui il tema di sistema"
 
@@ -354,17 +354,17 @@ msgstr ""
 msgid "Dock Theme"
 msgstr "Tema della barra delle applicazioni"
 
-#: src/prefs/dockAppearanceGroup.js:49 src/prefs/panelAppearancePage.js:285
+#: src/prefs/dockAppearanceGroup.js:49 src/prefs/panelAppearancePage.js:287
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 "Scegli lo schema di colori quando la corrispondenza col sistema è disattivata"
 
-#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:287
+#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:289
 #: src/prefs/startMenuPage.js:397
 msgid "Light"
 msgstr "Chiaro"
 
-#: src/prefs/dockAppearanceGroup.js:52 src/prefs/panelAppearancePage.js:288
+#: src/prefs/dockAppearanceGroup.js:52 src/prefs/panelAppearancePage.js:290
 #: src/prefs/startMenuPage.js:396
 msgid "Dark"
 msgstr "Scuro"
@@ -374,26 +374,26 @@ msgstr "Scuro"
 msgid "Make the Dock background transparent"
 msgstr "Rende trasparente lo sfondo della barra delle applicazioni"
 
-#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:306
+#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:308
 #: src/prefs/startMenuPage.js:422
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "Disabilita la sfocatura del pannello di Blur My Shell per usare questa "
 "opzione"
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:309
+#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:311
 msgid "Enable Transparency"
 msgstr "Abilita trasparenza"
 
-#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:322
+#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:324
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0% è opaco e 100% è completamente trasparente"
 
-#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:329
+#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:331
 msgid "Transparency"
 msgstr "Trasparenza"
 
-#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:364
+#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:366
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr "Usa un colore scelto invece del colore del tema chiaro o scuro"
 
@@ -420,15 +420,15 @@ msgstr ""
 msgid "Dock Text Color"
 msgstr "Colore del testo della barra delle applicazioni"
 
-#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:400
+#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:402
 msgid "White"
 msgstr "Bianco"
 
-#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:401
+#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:403
 msgid "Black"
 msgstr "Nero"
 
-#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:481
+#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:483
 msgid "Show Border in Dark Mode"
 msgstr "Mostra bordo in modalità scura"
 
@@ -439,7 +439,7 @@ msgstr ""
 "Mostra un sottile bordo lungo il bordo del pannello rivolto verso lo spazio "
 "di lavoro"
 
-#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:494
+#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:496
 msgid "Show Border in Light Mode"
 msgstr "Mostra bordo in modalità chiara"
 
@@ -492,79 +492,79 @@ msgstr "Ritardo di scorrimento spazi di lavoro"
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr "Ritardo minimo tra i cambi di spazio di lavoro in millisecondi"
 
-#: src/prefs/panelAppearancePage.js:53
+#: src/prefs/panelAppearancePage.js:54
 msgid "Panel Appearance"
 msgstr "Aspetto del pannello"
 
-#: src/prefs/panelAppearancePage.js:54
+#: src/prefs/panelAppearancePage.js:55
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr ""
 "Cambia l’altezza, lo schema di colori e la trasparenza della barra delle "
 "applicazioni."
 
-#: src/prefs/panelAppearancePage.js:63
+#: src/prefs/panelAppearancePage.js:64
 #, fuzzy
 msgid "Panel Thickness"
 msgstr "Elementi del pannello"
 
-#: src/prefs/panelAppearancePage.js:65
+#: src/prefs/panelAppearancePage.js:66
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr ""
 "Le icone troppo grandi si riducono automaticamente quando il pannello viene "
 "ridotto"
 
-#: src/prefs/panelAppearancePage.js:77 src/prefs/preferencesWidgets.js:50
+#: src/prefs/panelAppearancePage.js:78 src/prefs/preferencesWidgets.js:50
 msgid "Panel Position"
 msgstr "Posizione del pannello"
 
-#: src/prefs/panelAppearancePage.js:79
+#: src/prefs/panelAppearancePage.js:80
 #, fuzzy
 msgid "Place the taskbar at a screen edge"
 msgstr "Posiziona la barra delle applicazioni in alto o in basso sullo schermo"
 
-#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:51
+#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:60
 msgid "Top"
 msgstr "In alto"
 
-#: src/prefs/panelAppearancePage.js:83 src/prefs/panelModeGroup.js:52
+#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:61
 msgid "Bottom"
 msgstr "In basso"
 
-#: src/prefs/panelAppearancePage.js:268
+#: src/prefs/panelAppearancePage.js:270
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
 "Corrisponde al tema attivo di GNOME Shell, indipendentemente dai colori "
 "delle applicazioni"
 
-#: src/prefs/panelAppearancePage.js:284
+#: src/prefs/panelAppearancePage.js:286
 msgid "Taskbar Theme"
 msgstr "Tema della barra delle applicazioni"
 
-#: src/prefs/panelAppearancePage.js:303
+#: src/prefs/panelAppearancePage.js:305
 msgid "Make the taskbar background transparent"
 msgstr "Rende trasparente lo sfondo della barra delle applicazioni"
 
-#: src/prefs/panelAppearancePage.js:367
+#: src/prefs/panelAppearancePage.js:369
 msgid "Custom Taskbar Color"
 msgstr "Colore personalizzato della barra delle applicazioni"
 
-#: src/prefs/panelAppearancePage.js:385
+#: src/prefs/panelAppearancePage.js:387
 msgid "Taskbar Color"
 msgstr "Colore della barra delle applicazioni"
 
-#: src/prefs/panelAppearancePage.js:390
+#: src/prefs/panelAppearancePage.js:392
 msgid ""
 "White text uses the dark panel theme; black text uses the light panel theme"
 msgstr ""
 "Il testo bianco usa il tema scuro del pannello; il testo nero usa il tema "
 "chiaro del pannello"
 
-#: src/prefs/panelAppearancePage.js:397
+#: src/prefs/panelAppearancePage.js:399
 msgid "Taskbar Text Color"
 msgstr "Colore del testo della barra delle applicazioni"
 
-#: src/prefs/panelAppearancePage.js:482 src/prefs/panelAppearancePage.js:495
+#: src/prefs/panelAppearancePage.js:484 src/prefs/panelAppearancePage.js:497
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 "Mostra un sottile bordo lungo il bordo del pannello rivolto verso lo spazio "
@@ -766,67 +766,77 @@ msgstr ""
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "Pulsante Start in stile Eleven o GNOME originale"
 
-#: src/prefs/panelModeGroup.js:27 src/prefs/panelModeGroup.js:32
+#: src/prefs/panelModeGroup.js:27 src/prefs/panelModeGroup.js:41
 msgid "General"
 msgstr "Generale"
 
-#: src/prefs/panelModeGroup.js:37
+#: src/prefs/panelModeGroup.js:32
+#, fuzzy
+msgid "Taskbar mode"
+msgstr "Tema della barra delle applicazioni"
+
+#: src/prefs/panelModeGroup.js:33
+#, fuzzy
+msgid "Show application buttons in the main panel"
+msgstr "Sfoglia le applicazioni per categoria nel menu Start"
+
+#: src/prefs/panelModeGroup.js:46
 msgid "Default GNOME Panel"
 msgstr "Pannello GNOME predefinito"
 
-#: src/prefs/panelModeGroup.js:38
+#: src/prefs/panelModeGroup.js:47
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Nasconde le applicazioni della barra delle applicazioni e usa la Dash "
 "originale nella Panoramica"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:53
 msgid "Dock mode"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:45
+#: src/prefs/panelModeGroup.js:54
 msgid "Enable Default GNOME Panel mode when switched on"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:75
+#: src/prefs/panelModeGroup.js:84
 #, fuzzy
 msgid "Dock Position"
 msgstr "Posizione del pannello"
 
-#: src/prefs/panelModeGroup.js:76
+#: src/prefs/panelModeGroup.js:85
 msgid "Place the Dock at a different screen edge from the main panel"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:96
+#: src/prefs/panelModeGroup.js:105
 msgid "Maximum Dock Length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:97
+#: src/prefs/panelModeGroup.js:106
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:104
+#: src/prefs/panelModeGroup.js:113
 #, fuzzy
 msgid "Panel mode"
 msgstr "Elementi del pannello"
 
-#: src/prefs/panelModeGroup.js:105
+#: src/prefs/panelModeGroup.js:114
 msgid "Extend the Dock fully to the monitor edge"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:126
+#: src/prefs/panelModeGroup.js:135
 msgid "Windows XP Theme"
 msgstr "Tema Windows XP"
 
-#: src/prefs/panelModeGroup.js:127
+#: src/prefs/panelModeGroup.js:136
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Applica uno stile della barra delle applicazioni ispirato a Windows XP"
 
-#: src/prefs/panelModeGroup.js:139
+#: src/prefs/panelModeGroup.js:148
 msgid "Panel Button Padding"
 msgstr "Spaziatura interna dei pulsanti del pannello"
 
-#: src/prefs/panelModeGroup.js:141
+#: src/prefs/panelModeGroup.js:150
 #, fuzzy
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
@@ -836,13 +846,13 @@ msgstr ""
 "l’automatico: il valore di Just Perfection quando è configurato, altrimenti "
 "3 px"
 
-#: src/prefs/panelModeGroup.js:191
+#: src/prefs/panelModeGroup.js:209
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Le icone delle applicazioni non sono disponibili in modalità Pannello GNOME "
 "predefinito."
 
-#: src/prefs/panelModeGroup.js:194
+#: src/prefs/panelModeGroup.js:212
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Le opzioni delle applicazioni non sono disponibili in modalità Pannello "

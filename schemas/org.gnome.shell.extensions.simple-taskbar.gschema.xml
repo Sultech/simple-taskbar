@@ -293,6 +293,15 @@
       <default>false</default>
       <summary>Use Windows XP taskbar dimensions</summary>
     </key>
+    <key name="windows-xp-previous-mode" type="s">
+      <choices>
+        <choice value="taskbar"/>
+        <choice value="default-panel"/>
+        <choice value="dock"/>
+      </choices>
+      <default>'taskbar'</default>
+      <summary>Panel mode to restore after Windows XP mode</summary>
+    </key>
     <key name="taskbar-mode-settings" type="a{sv}">
       <default>{}</default>
       <summary>Settings saved for Taskbar mode</summary>
