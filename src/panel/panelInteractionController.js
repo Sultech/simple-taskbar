@@ -92,6 +92,7 @@ export class PanelInteractionController {
     }
 
     _createContextMenu() {
+        const isDock = this._settings.isDock;
         const menu = new PopupMenu.PopupMenu(
             Main.layoutManager.dummyCursor,
             0.5,
@@ -132,7 +133,17 @@ export class PanelInteractionController {
             );
             syncLockItem();
         }
-        menu.addAction(_('Taskbar Settings'), () => this._openPreferences());
+        menu.addAction(
+            isDock ? _('Dock Settings') : _('Taskbar Settings'),
+            () => {
+                if (isDock)
+                    this._settings.set_string(
+                        'target-prefs-page',
+                        'dock'
+                    );
+                this._openPreferences();
+            }
+        );
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);
         menuManager.addMenu(menu);

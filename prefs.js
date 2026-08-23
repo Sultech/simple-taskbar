@@ -81,6 +81,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const startMenu = addStartMenuPage({
             window,
             page: startMenuPage,
+            dockPage,
             settings: window._settings,
             extensionPath: this.path,
             panelPositions,

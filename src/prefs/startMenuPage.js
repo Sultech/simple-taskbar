@@ -18,6 +18,7 @@ import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 export function addStartMenuPage({
     window,
     page: startMenuPage,
+    dockPage,
     settings,
     connectSettings,
     extensionPath,
@@ -49,6 +50,8 @@ export function addStartMenuPage({
         const target = settings.get_string('target-prefs-page');
         if (target === 'start-menu')
             window.set_visible_page(startMenuPage);
+        else if (target === 'dock')
+            window.set_visible_page(dockPage);
 
         if (target)
             settings.set_string('target-prefs-page', '');
