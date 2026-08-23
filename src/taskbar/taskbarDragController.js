@@ -42,6 +42,7 @@ export class TaskbarDragController {
         this._alignmentActor = null;
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
         this._draggables = new Map();
         this._listeners = new Set();
         this._externalPlaceholder = null;
@@ -85,6 +86,7 @@ export class TaskbarDragController {
     begin(item) {
         this._dragging = true;
         this._draggingItem = item;
+        this._pinnedDropActive = false;
         item.opacity = 96;
         this._hidePreviews();
     }
@@ -93,6 +95,7 @@ export class TaskbarDragController {
         item.opacity = 255;
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
         this._queueRedisplay();
         for (const listener of [...this._listeners])
             listener();
@@ -101,6 +104,7 @@ export class TaskbarDragController {
     cancel() {
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
     }
 
     makeDraggable(item, button, icon, app) {
@@ -195,7 +199,13 @@ export class TaskbarDragController {
         if (!this.isPinnedItem(item) && !this._isRunningItem(item))
             return DND.DragMotionResult.NO_DROP;
 
-        this._reorderGroup(item, position);
+        const pinnedDropActive = this._canDropIntoPinned(
+            source,
+            item,
+            position
+        );
+        this._pinnedDropActive = pinnedDropActive;
+        this._reorderGroup(item, position, pinnedDropActive);
         return DND.DragMotionResult.MOVE_DROP;
     }
 
@@ -228,7 +238,13 @@ export class TaskbarDragController {
             return false;
 
         const appId = item._taskbarApp.get_id();
-        if (this.isPinnedItem(item)) {
+        const pinRunningApp = this._pinnedDropActive &&
+            this._draggingItem === item &&
+            source === item._taskbarButton._delegate;
+        if (pinRunningApp) {
+            const favoriteIndex = this._pinnedInsertionIndex(item);
+            this._favorites.addFavoriteAtPos(appId, favoriteIndex);
+        } else if (this.isPinnedItem(item)) {
             if (global.settings.is_writable('favorite-apps')) {
                 const favoriteIndex = this._pinnedOrder().indexOf(appId);
                 if (favoriteIndex >= 0)
@@ -334,6 +350,7 @@ export class TaskbarDragController {
         this._listeners.clear();
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
         this._ignoreTaskbarLock = false;
         this._alignmentActor = null;
         this._showDesktopController = null;
@@ -382,7 +399,7 @@ export class TaskbarDragController {
         return groups;
     }
 
-    _reorderGroup(item, position) {
+    _reorderGroup(item, position, allowPinnedDrop = false) {
         const groups = this._groups();
         const sourceGroup = groups.find(group =>
             group.items.includes(item)
@@ -396,9 +413,13 @@ export class TaskbarDragController {
                 return false;
 
             const target = group.items[0];
-            return sourceIsPinned
-                ? this.isPinnedItem(target)
-                : this._isRunningItem(target);
+            if (sourceIsPinned || !allowPinnedDrop) {
+                return sourceIsPinned
+                    ? this.isPinnedItem(target)
+                    : this._isRunningItem(target);
+            }
+
+            return this.isPinnedItem(target) || this._isRunningItem(target);
         });
         if (targetGroups.length === 0)
             return false;
@@ -483,6 +504,55 @@ export class TaskbarDragController {
             order.push(appId);
         }
         return order;
+    }
+
+    _canDropIntoPinned(source, item, position) {
+        if (source !== item._taskbarButton._delegate ||
+            !this._isRunningItem(item) ||
+            this.isPinnedItem(item) ||
+            this._isPersistentPinned(item._taskbarApp) ||
+            item._taskbarApp.is_window_backed() ||
+            !global.settings.is_writable('favorite-apps')) {
+            return false;
+        }
+
+        return this._isOverPinnedSection(item, position);
+    }
+
+    _isOverPinnedSection(item, position) {
+        const groups = this._groups();
+        const sourceGroup = groups.find(group =>
+            group.items.includes(item)
+        );
+        const vertical = panelIsVertical(this._settings);
+        for (const group of groups) {
+            const first = group.items[0];
+            const last = group.items.at(-1);
+            const groupStart = vertical ? first.y : first.x;
+            const groupEnd = (vertical ? last.y : last.x) +
+                (vertical ? last.height : last.width);
+            if (position < groupStart || position > groupEnd)
+                continue;
+
+            if (group === sourceGroup)
+                return this._pinnedDropActive;
+
+            return this.isPinnedItem(first);
+        }
+
+        return this._pinnedDropActive;
+    }
+
+    _pinnedInsertionIndex(sourceItem) {
+        let favoriteIndex = 0;
+        for (const group of this._groups()) {
+            if (group.items.includes(sourceItem))
+                return favoriteIndex;
+
+            if (this.isPinnedItem(group.items[0]))
+                favoriteIndex++;
+        }
+        return favoriteIndex;
     }
 
     _canAcceptStartMenuDrop(source) {
