@@ -185,7 +185,7 @@ export function addApplicationIconsGroup({
         const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
             (!settings.get_boolean('default-gnome-panel') ||
                 settings.get_boolean('dock-mode'));
-        dockMinIconSizeRow.visible = enabled;
+        dockMinIconSizeRow.visible = true;
         dockMinIconSizeRow.sensitive = enabled;
         if (!enabled)
             return;
