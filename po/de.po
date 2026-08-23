@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:20+0100\n"
+"POT-Creation-Date: 2026-08-23 02:23+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -1466,21 +1466,21 @@ msgstr "Fenster schließen"
 msgid "Close all windows"
 msgstr "Alle Fenster schließen"
 
-#: src/taskbar/taskbarAppMenu.js:120
+#: src/taskbar/taskbarAppMenu.js:120 src/integration/favoritesIntegration.js:41
 #, fuzzy
 msgid "Unpin from Dock"
 msgstr "Von Taskleiste lösen"
 
-#: src/taskbar/taskbarAppMenu.js:121
+#: src/taskbar/taskbarAppMenu.js:121 src/integration/favoritesIntegration.js:42
 #, fuzzy
 msgid "Pin to Dock"
 msgstr "An Taskleiste anheften"
 
-#: src/taskbar/taskbarAppMenu.js:126
+#: src/taskbar/taskbarAppMenu.js:126 src/integration/favoritesIntegration.js:44
 msgid "Unpin from Taskbar"
 msgstr "Von Taskleiste lösen"
 
-#: src/taskbar/taskbarAppMenu.js:127
+#: src/taskbar/taskbarAppMenu.js:127 src/integration/favoritesIntegration.js:45
 msgid "Pin to Taskbar"
 msgstr "An Taskleiste anheften"
 
@@ -1563,22 +1563,22 @@ msgstr "Unbenanntes Fenster"
 msgid "Close Window"
 msgstr "Fenster schließen"
 
-#: src/integration/favoritesIntegration.js:37
+#: src/integration/favoritesIntegration.js:63
 #, fuzzy, javascript-format
 msgid "%s has been pinned to the dock."
 msgstr "%s wurde an die Taskleiste angeheftet."
 
-#: src/integration/favoritesIntegration.js:40
+#: src/integration/favoritesIntegration.js:66
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr "%s wurde an die Taskleiste angeheftet."
 
-#: src/integration/favoritesIntegration.js:66
+#: src/integration/favoritesIntegration.js:92
 #, fuzzy, javascript-format
 msgid "%s has been unpinned from the dock."
 msgstr "%s wurde von der Taskleiste gelöst."
 
-#: src/integration/favoritesIntegration.js:69
+#: src/integration/favoritesIntegration.js:95
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "%s wurde von der Taskleiste gelöst."

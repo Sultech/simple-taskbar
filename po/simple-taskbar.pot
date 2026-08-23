@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:20+0100\n"
+"POT-Creation-Date: 2026-08-23 02:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1348,19 +1348,19 @@ msgstr ""
 msgid "Close all windows"
 msgstr ""
 
-#: src/taskbar/taskbarAppMenu.js:120
+#: src/taskbar/taskbarAppMenu.js:120 src/integration/favoritesIntegration.js:41
 msgid "Unpin from Dock"
 msgstr ""
 
-#: src/taskbar/taskbarAppMenu.js:121
+#: src/taskbar/taskbarAppMenu.js:121 src/integration/favoritesIntegration.js:42
 msgid "Pin to Dock"
 msgstr ""
 
-#: src/taskbar/taskbarAppMenu.js:126
+#: src/taskbar/taskbarAppMenu.js:126 src/integration/favoritesIntegration.js:44
 msgid "Unpin from Taskbar"
 msgstr ""
 
-#: src/taskbar/taskbarAppMenu.js:127
+#: src/taskbar/taskbarAppMenu.js:127 src/integration/favoritesIntegration.js:45
 msgid "Pin to Taskbar"
 msgstr ""
 
@@ -1442,22 +1442,22 @@ msgstr ""
 msgid "Close Window"
 msgstr ""
 
-#: src/integration/favoritesIntegration.js:37
+#: src/integration/favoritesIntegration.js:63
 #, javascript-format
 msgid "%s has been pinned to the dock."
 msgstr ""
 
-#: src/integration/favoritesIntegration.js:40
+#: src/integration/favoritesIntegration.js:66
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr ""
 
-#: src/integration/favoritesIntegration.js:66
+#: src/integration/favoritesIntegration.js:92
 #, javascript-format
 msgid "%s has been unpinned from the dock."
 msgstr ""
 
-#: src/integration/favoritesIntegration.js:69
+#: src/integration/favoritesIntegration.js:95
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr ""

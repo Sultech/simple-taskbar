@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:20+0100\n"
+"POT-Creation-Date: 2026-08-23 02:23+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -1382,21 +1382,21 @@ msgstr "关闭窗口"
 msgid "Close all windows"
 msgstr "关闭所有窗口"
 
-#: src/taskbar/taskbarAppMenu.js:120
+#: src/taskbar/taskbarAppMenu.js:120 src/integration/favoritesIntegration.js:41
 #, fuzzy
 msgid "Unpin from Dock"
 msgstr "从任务栏取消固定"
 
-#: src/taskbar/taskbarAppMenu.js:121
+#: src/taskbar/taskbarAppMenu.js:121 src/integration/favoritesIntegration.js:42
 #, fuzzy
 msgid "Pin to Dock"
 msgstr "固定到任务栏"
 
-#: src/taskbar/taskbarAppMenu.js:126
+#: src/taskbar/taskbarAppMenu.js:126 src/integration/favoritesIntegration.js:44
 msgid "Unpin from Taskbar"
 msgstr "从任务栏取消固定"
 
-#: src/taskbar/taskbarAppMenu.js:127
+#: src/taskbar/taskbarAppMenu.js:127 src/integration/favoritesIntegration.js:45
 msgid "Pin to Taskbar"
 msgstr "固定到任务栏"
 
@@ -1479,22 +1479,22 @@ msgstr "无标题窗口"
 msgid "Close Window"
 msgstr "关闭窗口"
 
-#: src/integration/favoritesIntegration.js:37
+#: src/integration/favoritesIntegration.js:63
 #, fuzzy, javascript-format
 msgid "%s has been pinned to the dock."
 msgstr "%s 已固定到任务栏。"
 
-#: src/integration/favoritesIntegration.js:40
+#: src/integration/favoritesIntegration.js:66
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr "%s 已固定到任务栏。"
 
-#: src/integration/favoritesIntegration.js:66
+#: src/integration/favoritesIntegration.js:92
 #, fuzzy, javascript-format
 msgid "%s has been unpinned from the dock."
 msgstr "%s 已从任务栏取消固定。"
 
-#: src/integration/favoritesIntegration.js:69
+#: src/integration/favoritesIntegration.js:95
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "%s 已从任务栏取消固定。"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:20+0100\n"
+"POT-Creation-Date: 2026-08-23 02:23+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -1431,21 +1431,21 @@ msgstr "Закрыть окно"
 msgid "Close all windows"
 msgstr "Закрыть все окна"
 
-#: src/taskbar/taskbarAppMenu.js:120
+#: src/taskbar/taskbarAppMenu.js:120 src/integration/favoritesIntegration.js:41
 #, fuzzy
 msgid "Unpin from Dock"
 msgstr "Открепить от панели задач"
 
-#: src/taskbar/taskbarAppMenu.js:121
+#: src/taskbar/taskbarAppMenu.js:121 src/integration/favoritesIntegration.js:42
 #, fuzzy
 msgid "Pin to Dock"
 msgstr "Закрепить на панели задач"
 
-#: src/taskbar/taskbarAppMenu.js:126
+#: src/taskbar/taskbarAppMenu.js:126 src/integration/favoritesIntegration.js:44
 msgid "Unpin from Taskbar"
 msgstr "Открепить от панели задач"
 
-#: src/taskbar/taskbarAppMenu.js:127
+#: src/taskbar/taskbarAppMenu.js:127 src/integration/favoritesIntegration.js:45
 msgid "Pin to Taskbar"
 msgstr "Закрепить на панели задач"
 
@@ -1528,22 +1528,22 @@ msgstr "Безымянное окно"
 msgid "Close Window"
 msgstr "Закрыть окно"
 
-#: src/integration/favoritesIntegration.js:37
+#: src/integration/favoritesIntegration.js:63
 #, fuzzy, javascript-format
 msgid "%s has been pinned to the dock."
 msgstr "%s закреплён на панели задач."
 
-#: src/integration/favoritesIntegration.js:40
+#: src/integration/favoritesIntegration.js:66
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr "%s закреплён на панели задач."
 
-#: src/integration/favoritesIntegration.js:66
+#: src/integration/favoritesIntegration.js:92
 #, fuzzy, javascript-format
 msgid "%s has been unpinned from the dock."
 msgstr "%s откреплён от панели задач."
 
-#: src/integration/favoritesIntegration.js:69
+#: src/integration/favoritesIntegration.js:95
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "%s откреплён от панели задач."

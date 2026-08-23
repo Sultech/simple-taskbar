@@ -4,6 +4,7 @@
 import Shell from 'gi://Shell';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
+import * as ShellAppMenu from 'resource:///org/gnome/shell/ui/appMenu.js';
 import {
     InjectionManager,
     gettext as _,
@@ -19,6 +20,31 @@ export class FavoritesIntegration {
         const favorites = AppFavorites.getAppFavorites();
         const prototype = Object.getPrototypeOf(favorites);
         const settings = this._settings;
+
+        this._injectionManager.overrideMethod(
+            ShellAppMenu.AppMenu.prototype,
+            '_updateFavoriteItem',
+            originalMethod => function () {
+                originalMethod.call(this);
+                const dockMode = settings.get_boolean('dock-mode');
+                if (settings.get_boolean('default-gnome-panel') && !dockMode)
+                    return;
+
+                if (!this._toggleFavoriteItem.visible)
+                    return;
+
+                const isPinned = this._appFavorites.isFavorite(
+                    this._app.get_id()
+                );
+                this._toggleFavoriteItem.label.text = dockMode
+                    ? isPinned
+                        ? _('Unpin from Dock')
+                        : _('Pin to Dock')
+                    : isPinned
+                        ? _('Unpin from Taskbar')
+                        : _('Pin to Taskbar');
+            }
+        );
 
         this._injectionManager.overrideMethod(
             prototype,

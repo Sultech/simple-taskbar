@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:20+0100\n"
+"POT-Creation-Date: 2026-08-23 02:23+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -1443,21 +1443,21 @@ msgstr "Ablak bezárása"
 msgid "Close all windows"
 msgstr "Összes ablak bezárása"
 
-#: src/taskbar/taskbarAppMenu.js:120
+#: src/taskbar/taskbarAppMenu.js:120 src/integration/favoritesIntegration.js:41
 #, fuzzy
 msgid "Unpin from Dock"
 msgstr "Rögzítés törlése a tálcáról"
 
-#: src/taskbar/taskbarAppMenu.js:121
+#: src/taskbar/taskbarAppMenu.js:121 src/integration/favoritesIntegration.js:42
 #, fuzzy
 msgid "Pin to Dock"
 msgstr "Rögzítés a tálcára"
 
-#: src/taskbar/taskbarAppMenu.js:126
+#: src/taskbar/taskbarAppMenu.js:126 src/integration/favoritesIntegration.js:44
 msgid "Unpin from Taskbar"
 msgstr "Rögzítés törlése a tálcáról"
 
-#: src/taskbar/taskbarAppMenu.js:127
+#: src/taskbar/taskbarAppMenu.js:127 src/integration/favoritesIntegration.js:45
 msgid "Pin to Taskbar"
 msgstr "Rögzítés a tálcára"
 
@@ -1540,22 +1540,22 @@ msgstr "Névtelen ablak"
 msgid "Close Window"
 msgstr "Ablak bezárása"
 
-#: src/integration/favoritesIntegration.js:37
+#: src/integration/favoritesIntegration.js:63
 #, fuzzy, javascript-format
 msgid "%s has been pinned to the dock."
 msgstr "A(z) %s rögzítve lett a tálcára."
 
-#: src/integration/favoritesIntegration.js:40
+#: src/integration/favoritesIntegration.js:66
 #, javascript-format
 msgid "%s has been pinned to the taskbar."
 msgstr "A(z) %s rögzítve lett a tálcára."
 
-#: src/integration/favoritesIntegration.js:66
+#: src/integration/favoritesIntegration.js:92
 #, fuzzy, javascript-format
 msgid "%s has been unpinned from the dock."
 msgstr "A(z) %s rögzítése törölve lett a tálcáról."
 
-#: src/integration/favoritesIntegration.js:69
+#: src/integration/favoritesIntegration.js:95
 #, javascript-format
 msgid "%s has been unpinned from the taskbar."
 msgstr "A(z) %s rögzítése törölve lett a tálcáról."
