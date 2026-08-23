@@ -14,6 +14,9 @@ import {
 import {extensionIsActive} from '../extensionState.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
+    PanelWindowDodgeController,
+} from './panelWindowDodgeController.js';
+import {
     ActivitiesDotWidthOverride,
 } from './activitiesDotWidthOverride.js';
 import {PanelActivitiesController} from './panelActivitiesController.js';
@@ -111,6 +114,25 @@ export class PanelController {
             getPanelHeight: () => this._panelHeight,
             isBlocked: () => this._isAutoHideBlocked(),
         });
+        this._windowDodgeController = new PanelWindowDodgeController({
+            settings,
+            getMonitor: () => Main.layoutManager.primaryMonitor,
+            getGeometry: monitor => panelGeometry(
+                this._settings,
+                monitor,
+                this._panelHeight
+            ),
+            onDodgeStateChanged: (enabled, active, pointerReveal) =>
+                this._autoHideController.setDodgeState(
+                    enabled,
+                    active,
+                    pointerReveal
+                ),
+            autohideKey: 'panel-autohide-enabled',
+            dodgeEnabledKey: 'panel-dodge-windows-enabled',
+            dodgeModeKey: 'panel-dodge-windows-mode',
+            dodgePointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
+        });
         this._buttonPaddingController = new PanelButtonPaddingController(
             settings,
             Main.panel,
@@ -165,6 +187,7 @@ export class PanelController {
         this._themeController.connectSignals(() => this.applyLayout());
         this._themeController.queueBlurMyShellSync();
         this._autoHideController.enable();
+        this._windowDodgeController.enable();
     }
 
     setPanelHeight(panelHeight) {
@@ -210,6 +233,8 @@ export class PanelController {
             this._panelHeight
         );
         this._autoHideController.syncPosition();
+        if (this._windowDodgeController)
+            this._windowDodgeController.sync();
         this._queueOverviewRelayout();
         this.updateTaskbarWidth();
     }
@@ -357,6 +382,8 @@ export class PanelController {
         this._signalHolder.destroy();
         this._signalHolder = null;
 
+        this._windowDodgeController.destroy();
+        this._windowDodgeController = null;
         this._autoHideController.destroy();
         this._autoHideController = null;
         this._buttonPaddingController.destroy();

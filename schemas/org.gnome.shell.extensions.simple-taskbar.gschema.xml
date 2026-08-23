@@ -27,6 +27,24 @@
       <default>false</default>
       <summary>Hide the panel until the pointer reaches its screen edge</summary>
     </key>
+    <key name="panel-dodge-windows-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the panel when selected windows overlap it</summary>
+    </key>
+    <key name="panel-dodge-windows-mode" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="maximized-windows"/>
+        <choice value="always-on-top"/>
+      </choices>
+      <default>'focused-application'</default>
+      <summary>Windows that make the panel hide</summary>
+    </key>
+    <key name="panel-dodge-pointer-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Reveal the panel when the pointer reaches its edge while dodging</summary>
+    </key>
     <key name="hot-edge-overview-enabled" type="b">
       <default>true</default>
       <summary>Push against the bottom screen edge to toggle Overview</summary>
@@ -224,6 +242,24 @@
     <key name="dock-autohide-enabled" type="b">
       <default>false</default>
       <summary>Hide the Dock until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="dock-dodge-windows-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the Dock when selected windows overlap it</summary>
+    </key>
+    <key name="dock-dodge-windows-mode" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="maximized-windows"/>
+        <choice value="always-on-top"/>
+      </choices>
+      <default>'focused-application'</default>
+      <summary>Windows that make the Dock hide</summary>
+    </key>
+    <key name="dock-dodge-pointer-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Reveal the Dock when the pointer reaches its edge while dodging</summary>
     </key>
     <key name="dock-edge-reveal-enabled" type="b">
       <default>true</default>

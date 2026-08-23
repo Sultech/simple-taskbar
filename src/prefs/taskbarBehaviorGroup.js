@@ -12,6 +12,7 @@ import {
     addComboRow,
     addSpinRow,
 } from './preferencesWidgets.js';
+import {addWindowDodgeRows} from './windowDodgeGroup.js';
 
 export function addTaskbarBehaviorGroup({
     page,
@@ -36,6 +37,17 @@ export function addTaskbarBehaviorGroup({
         panelAutoHideSwitch,
         'active',
         Gio.SettingsBindFlags.DEFAULT
+    );
+    addWindowDodgeRows(
+        behaviorGroup,
+        settings,
+        {
+            enabledKey: 'panel-dodge-windows-enabled',
+            modeKey: 'panel-dodge-windows-mode',
+            pointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
+            autohideKey: 'panel-autohide-enabled',
+            connectSettings,
+        }
     );
 
     const hotEdgeOverviewSwitch = new Adw.SwitchRow({

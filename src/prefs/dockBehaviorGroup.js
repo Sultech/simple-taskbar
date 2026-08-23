@@ -7,6 +7,7 @@ import Gio from 'gi://Gio';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {addSpinRow} from './preferencesWidgets.js';
+import {addWindowDodgeRows} from './windowDodgeGroup.js';
 
 export function addDockBehaviorGroup({page, settings, connectSettings}) {
     const group = new Adw.PreferencesGroup({
@@ -26,6 +27,17 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         autoHideSwitch,
         'active',
         Gio.SettingsBindFlags.DEFAULT
+    );
+    const dodgeWindows = addWindowDodgeRows(
+        group,
+        settings,
+        {
+            enabledKey: 'dock-dodge-windows-enabled',
+            modeKey: 'dock-dodge-windows-mode',
+            pointerRevealKey: 'dock-dodge-pointer-reveal-enabled',
+            autohideKey: 'dock-autohide-enabled',
+            connectSettings,
+        }
     );
 
     const edgeRevealSwitch = new Adw.SwitchRow({
@@ -91,6 +103,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         group.sensitive = available;
         edgeRevealSwitch.sensitive = available &&
             !settings.get_boolean('dock-panel-mode');
+        dodgeWindows.syncAvailability();
         syncWorkspaceScrollControls();
     };
     workspaceScrollSwitch.connect(

@@ -26,6 +26,9 @@ import {FolderMenuController} from '../folderMenuController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {PanelAutoHideController} from '../panel/panelAutoHideController.js';
 import {
+    PanelWindowDodgeController,
+} from '../panel/panelWindowDodgeController.js';
+import {
     PanelActivitiesController,
 } from '../panel/panelActivitiesController.js';
 import {
@@ -117,6 +120,7 @@ export class SecondaryPanelController {
         this._taskbarWidthUpdateId = 0;
         this._updatingTaskbarWidth = false;
         this._dockStrutActor = null;
+        this._windowDodgeController = null;
         this._activeWorkspace = null;
         this._workspaceWindows = new Set();
         this._lastPanelEdgeGap = null;
@@ -329,10 +333,34 @@ export class SecondaryPanelController {
             getLimitRevealToPanel: () =>
                 !this._dockPanelSizing ||
                 (!this._settings.get_boolean('dock-panel-mode') &&
-                    this._settings.get_boolean('edge-reveal-enabled')),
+                    this._settings.get_boolean('dock-edge-reveal-enabled')),
             isBlocked: () => this._autoHideIsBlocked(),
         });
         this._autoHideController.enable();
+        this._windowDodgeController = new PanelWindowDodgeController({
+            settings: this._settings,
+            getMonitor: () => this._monitor,
+            getGeometry: () => this._panelGeometry(),
+            onDodgeStateChanged: (enabled, active, pointerReveal) =>
+                this._autoHideController.setDodgeState(
+                    enabled,
+                    active,
+                    pointerReveal
+                ),
+            autohideKey: this._dockPanelSizing
+                ? 'dock-autohide-enabled'
+                : 'panel-autohide-enabled',
+            dodgeEnabledKey: this._dockPanelSizing
+                ? 'dock-dodge-windows-enabled'
+                : 'panel-dodge-windows-enabled',
+            dodgeModeKey: this._dockPanelSizing
+                ? 'dock-dodge-windows-mode'
+                : 'panel-dodge-windows-mode',
+            dodgePointerRevealKey: this._dockPanelSizing
+                ? 'dock-dodge-pointer-reveal-enabled'
+                : 'panel-dodge-pointer-reveal-enabled',
+        });
+        this._windowDodgeController.enable();
         this._connectSignals();
     }
 
@@ -366,6 +394,8 @@ export class SecondaryPanelController {
         this._workspaceWindows.clear();
         this._activeWorkspace = null;
 
+        this._windowDodgeController.destroy();
+        this._windowDodgeController = null;
         this._autoHideController.destroy();
         this._autoHideController = null;
         this._interactionController.destroy();
@@ -743,16 +773,7 @@ export class SecondaryPanelController {
         const animateEdgeGap = animateEdgeGapRequested &&
             edgeGapChanged &&
             !this._settings.get_boolean('panel-autohide-enabled');
-        const geometry = panelGeometry(
-            this._settings,
-            this._monitor,
-            this._panelHeight,
-            0,
-            this._panelLengthPercentage(),
-            this._panelLengthOverride(),
-            edgeGap
-        );
-        this._connectToMainPanel(geometry);
+        const geometry = this._panelGeometry();
         this._panelBox.set_size(geometry.width, geometry.height);
         this.actor.set_size(geometry.width, geometry.height);
         if (!animateEdgeGapRequested || edgeGapChanged && !animateEdgeGap)
@@ -789,8 +810,24 @@ export class SecondaryPanelController {
                 this._autoHideController.syncPosition();
         }
         this._lastPanelEdgeGap = edgeGap;
+        if (this._windowDodgeController)
+            this._windowDodgeController.sync();
         if (updateTaskbarWidth)
             this._updateTaskbarWidth();
+    }
+
+    _panelGeometry() {
+        const geometry = panelGeometry(
+            this._settings,
+            this._monitor,
+            this._panelHeight,
+            0,
+            this._panelLengthPercentage(),
+            this._panelLengthOverride(),
+            this._panelEdgeGap()
+        );
+        this._connectToMainPanel(geometry);
+        return geometry;
     }
 
     _connectToMainPanel(geometry) {
