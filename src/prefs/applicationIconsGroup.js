@@ -13,7 +13,7 @@ import {
     addSpinRow,
 } from './preferencesWidgets.js';
 
-const MAX_ICON_SIZE = 48;
+const MAX_ICON_SIZE = 63;
 
 export function addApplicationIconsGroup({
     page,
