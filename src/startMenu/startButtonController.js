@@ -305,6 +305,12 @@ export class StartButtonController {
             this._settings.set_string('target-prefs-page', 'start-menu');
             this._openPreferences();
         });
+        if (this._settings.isDock) {
+            menu.addAction(_('Dock Settings'), () => {
+                this._settings.set_string('target-prefs-page', 'dock');
+                this._openPreferences();
+            });
+        }
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);
         this._menuManager.addMenu(menu);
