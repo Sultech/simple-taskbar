@@ -192,6 +192,8 @@ export class PanelAutoHideController {
 
         this._hidden = false;
         this._moveTo(this._geometry(this._getMonitor()).visibleOffset, animate);
+        if (this._enabled() && !this._pointerIsInsidePanel())
+            this._scheduleHide();
     }
 
     _enabled() {
@@ -470,15 +472,20 @@ export class PanelAutoHideController {
         if (!monitor)
             return false;
 
-        if (panelIsVertical(this._settings)) {
-            if (y < monitor.y || y >= monitor.y + monitor.height)
+        const geometry = this._geometry(monitor);
+        if (geometry.vertical) {
+            if (y < this._positionActor.y ||
+                y >= this._positionActor.y + this._positionActor.height) {
                 return false;
+            }
             return panelIsMinimumEdge(this._settings)
                 ? x <= monitor.x + REVEAL_EDGE_SIZE
                 : x >= monitor.x + monitor.width - REVEAL_EDGE_SIZE;
         }
-        if (x < monitor.x || x >= monitor.x + monitor.width)
+        if (x < this._positionActor.x ||
+            x >= this._positionActor.x + this._positionActor.width) {
             return false;
+        }
         return panelIsMinimumEdge(this._settings)
             ? y <= monitor.y + REVEAL_EDGE_SIZE
             : y >= monitor.y + monitor.height - REVEAL_EDGE_SIZE;
