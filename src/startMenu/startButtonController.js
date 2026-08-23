@@ -315,17 +315,13 @@ export class StartButtonController {
 
         this.actor.connectObject('event', (_actor, event) => {
             if (event.type() !== Clutter.EventType.BUTTON_PRESS ||
-                event.get_button() !== Clutter.BUTTON_SECONDARY ||
-                !this._windowsModeEnabled())
+                event.get_button() !== Clutter.BUTTON_SECONDARY)
                 return Clutter.EVENT_PROPAGATE;
 
             this._openContextMenu();
             return Clutter.EVENT_STOP;
         }, this._signalHolder);
         this.actor.connectObject('popup-menu', () => {
-            if (!this._windowsModeEnabled())
-                return Clutter.EVENT_PROPAGATE;
-
             this._openContextMenu();
             return Clutter.EVENT_STOP;
         }, this._signalHolder);
