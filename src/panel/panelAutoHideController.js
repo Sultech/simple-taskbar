@@ -49,6 +49,7 @@ export class PanelAutoHideController {
         this._pointerButtonPressed = false;
         this._hidden = false;
         this._overviewSuspended = false;
+        this._overviewEdgeRevealBlocked = false;
         this._trackedActorData = null;
         this._strutActorData = null;
         this._originalAffectsStruts = false;
@@ -61,7 +62,10 @@ export class PanelAutoHideController {
     enable() {
         this._panelActor.connectObject(
             'enter-event', () => {
-                this.show();
+                if (!this._overviewEdgeRevealBlocked &&
+                    !Main.overview.animationInProgress) {
+                    this.show();
+                }
                 return Clutter.EVENT_PROPAGATE;
             },
             'leave-event', () => {
@@ -78,7 +82,15 @@ export class PanelAutoHideController {
                 }
 
                 const [x, y] = event.get_coords();
-                if (this._pointerIsAtRevealEdge(x, y))
+                if (Main.overview.animationInProgress)
+                    return Clutter.EVENT_PROPAGATE;
+
+                if (!this._pointerIsAtRevealEdge(x, y)) {
+                    this._overviewEdgeRevealBlocked = false;
+                    return Clutter.EVENT_PROPAGATE;
+                }
+
+                if (!this._overviewEdgeRevealBlocked)
                     this.show();
                 return Clutter.EVENT_PROPAGATE;
             },
@@ -106,6 +118,8 @@ export class PanelAutoHideController {
         );
 
         this._overviewSuspended = Main.overview.visibleTarget;
+        this._overviewEdgeRevealBlocked =
+            Main.overview.animationInProgress;
         this._captureStrutTracking();
         this._syncStrutTracking();
         this.syncPosition();
@@ -121,6 +135,7 @@ export class PanelAutoHideController {
         this._restoreFullscreenVisibilityState();
         this._hidden = false;
         this._overviewSuspended = false;
+        this._overviewEdgeRevealBlocked = false;
         this._positionActor.remove_transition('x');
         this._positionActor.remove_transition('y');
         this.syncPosition();
@@ -407,6 +422,7 @@ export class PanelAutoHideController {
 
     _suspendForOverview() {
         this._overviewSuspended = true;
+        this._overviewEdgeRevealBlocked = true;
         this._clearHideTimeout();
         if (!this._enabled())
             return;
@@ -419,6 +435,7 @@ export class PanelAutoHideController {
     }
 
     _hideForOverview() {
+        this._overviewEdgeRevealBlocked = true;
         this._restoreFullscreenVisibility();
         if (this._enabled())
             this._hide();
