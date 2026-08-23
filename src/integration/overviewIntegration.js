@@ -446,7 +446,16 @@ export class OverviewIntegration {
         const panelHeight = this._settings.get_int('icon-size') +
             ICON_VERTICAL_RESERVE;
         const panelMode = this._settings.get_boolean('dock-panel-mode');
-        return panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
+        const dockHeight = panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
+        if (!this._settings.get_boolean('dock-autohide-enabled'))
+            return dockHeight;
+
+        const progress = Math.clamp(
+            Main.overview._overview.controls._stateAdjustment.value,
+            0,
+            1
+        );
+        return dockHeight * progress;
     }
 
     _beginAppSpread() {
