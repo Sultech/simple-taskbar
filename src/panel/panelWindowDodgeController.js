@@ -284,9 +284,7 @@ export class PanelWindowDodgeController {
             return window.maximized_vertically ||
                 window.maximized_horizontally || window.fullscreen;
 
-        if (focusApp && (!focusWindow || !focusWindow.fullscreen))
-            return false;
-        return true;
+        return false;
     }
 
     _overlaps(rect, geometry) {

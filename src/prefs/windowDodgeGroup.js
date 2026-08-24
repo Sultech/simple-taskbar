@@ -53,10 +53,6 @@ export function addWindowDodgeRows(
                     value: DODGE_WINDOW_MODE.MAXIMIZED_WINDOWS,
                     label: _('Only maximized windows'),
                 },
-                {
-                    value: DODGE_WINDOW_MODE.ALWAYS_ON_TOP,
-                    label: _('Always on top'),
-                },
             ],
         },
         connectSettings

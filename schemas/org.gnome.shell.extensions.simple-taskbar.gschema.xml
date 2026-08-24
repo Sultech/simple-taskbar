@@ -36,7 +36,6 @@
         <choice value="all-windows"/>
         <choice value="focused-application"/>
         <choice value="maximized-windows"/>
-        <choice value="always-on-top"/>
       </choices>
       <default>'focused-application'</default>
       <summary>Windows that make the panel hide</summary>
@@ -284,7 +283,6 @@
         <choice value="all-windows"/>
         <choice value="focused-application"/>
         <choice value="maximized-windows"/>
-        <choice value="always-on-top"/>
       </choices>
       <default>'focused-application'</default>
       <summary>Windows that make the Dock hide</summary>
