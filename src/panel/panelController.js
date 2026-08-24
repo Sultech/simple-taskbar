@@ -233,8 +233,7 @@ export class PanelController {
             this._panelHeight
         );
         this._autoHideController.syncPosition();
-        if (this._windowDodgeController)
-            this._windowDodgeController.sync();
+        this._windowDodgeController.sync();
         this._queueOverviewRelayout();
         this.updateTaskbarWidth();
     }

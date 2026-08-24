@@ -7,7 +7,7 @@ export class TaskbarEntryModel {
         tracker,
         favorites,
         getInterestingWindows,
-        getLocationEntries = () => [],
+        getLocationEntries,
     }) {
         this._settings = settings;
         this._tracker = tracker;
