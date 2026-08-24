@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Adw from 'gi://Adw';
+import Gtk from 'gi://Gtk';
 
 import {
     ExtensionPreferences,
@@ -30,7 +31,10 @@ import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
 
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        window.set_default_size(820, 740);
+        Gtk.IconTheme.get_for_display(window.get_display()).add_search_path(
+            `${this.path}/icons/scalable/actions`
+        );
+        window.set_default_size(600, 740);
         window._settings = this.getSettings();
         const settingsSignalTracker = new SettingsSignalTracker();
         window.connect('close-request', () => settingsSignalTracker.destroy());
@@ -55,7 +59,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const dockPage = new Adw.PreferencesPage({
             title: _('Dock'),
-            icon_name: 'go-bottom-symbolic',
+            icon_name: 'simple-taskbar-dock-symbolic',
         });
         window.add(dockPage);
 
