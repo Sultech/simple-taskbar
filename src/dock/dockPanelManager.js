@@ -183,8 +183,6 @@ export class DockPanelManager {
                 monitor,
                 openPreferences: this._openPreferences,
                 visiblePanelItemIds: DOCK_PANEL_ITEM_IDS,
-                panelHeightFromIconSize: true,
-                dockPanelSizing: true,
                 mainPanelPosition: this._settings.get_string(
                     'panel-position'
                 ),

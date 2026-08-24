@@ -30,7 +30,9 @@ import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {
     TaskbarShowDesktopController,
 } from './taskbarShowDesktopController.js';
-import {TaskbarLocationsController} from './taskbarLocations.js';
+import {
+    TaskbarLocationsController,
+} from './taskbarLocationsController.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;

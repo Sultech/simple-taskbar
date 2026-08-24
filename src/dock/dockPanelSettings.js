@@ -20,6 +20,13 @@ const DOCK_SETTING_KEYS = new Map([
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],
     ['workspace-scroll-enabled', 'dock-workspace-scroll-enabled'],
     ['workspace-scroll-delay', 'dock-workspace-scroll-delay'],
+    ['panel-item-order', 'dock-item-order'],
+    ['panel-dodge-windows-enabled', 'dock-dodge-windows-enabled'],
+    ['panel-dodge-windows-mode', 'dock-dodge-windows-mode'],
+    [
+        'panel-dodge-pointer-reveal-enabled',
+        'dock-dodge-pointer-reveal-enabled',
+    ],
 ]);
 
 function dockSettingKey(key) {
