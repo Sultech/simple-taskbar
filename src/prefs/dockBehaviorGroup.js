@@ -2,11 +2,12 @@
 // Copyright (C) 2026 sultech
 
 import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {addSpinRow} from './preferencesWidgets.js';
+import {
+    addSpinRow,
+    createSwitchRow,
+} from './preferencesWidgets.js';
 import {addWindowDodgeRows} from './windowDodgeGroup.js';
 
 export function addDockBehaviorGroup({page, settings, connectSettings}) {
@@ -16,18 +17,12 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     });
     page.add(group);
 
-    const autoHideSwitch = new Adw.SwitchRow({
+    const autoHideSwitch = createSwitchRow(settings, {
+        key: 'dock-autohide-enabled',
         title: _('Auto-hide Dock'),
         subtitle: _('Reveal the Dock when the pointer reaches its screen edge'),
-        active: settings.get_boolean('dock-autohide-enabled'),
     });
     group.add(autoHideSwitch);
-    settings.bind(
-        'dock-autohide-enabled',
-        autoHideSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const dodgeWindows = addWindowDodgeRows(
         group,
         settings,
@@ -40,44 +35,26 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         }
     );
 
-    const edgeRevealSwitch = new Adw.SwitchRow({
+    const edgeRevealSwitch = createSwitchRow(settings, {
+        key: 'dock-edge-reveal-enabled',
         title: _('Limit Reveal to Dock Edge'),
         subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
-        active: settings.get_boolean('dock-edge-reveal-enabled'),
     });
     group.add(edgeRevealSwitch);
-    settings.bind(
-        'dock-edge-reveal-enabled',
-        edgeRevealSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const multiMonitorSwitch = new Adw.SwitchRow({
+    const multiMonitorSwitch = createSwitchRow(settings, {
+        key: 'dock-multi-monitor-panels',
         title: _('Show Dock on All Monitors'),
         subtitle: _('Show the Dock on every connected monitor'),
-        active: settings.get_boolean('dock-multi-monitor-panels'),
     });
     group.add(multiMonitorSwitch);
-    settings.bind(
-        'dock-multi-monitor-panels',
-        multiMonitorSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const workspaceScrollSwitch = new Adw.SwitchRow({
+    const workspaceScrollSwitch = createSwitchRow(settings, {
+        key: 'dock-workspace-scroll-enabled',
         title: _('Workspace Scroll'),
         subtitle: _('Scroll over empty Dock space to switch workspaces'),
-        active: settings.get_boolean('dock-workspace-scroll-enabled'),
     });
     group.add(workspaceScrollSwitch);
-    settings.bind(
-        'dock-workspace-scroll-enabled',
-        workspaceScrollSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const workspaceScrollDelayRow = addSpinRow(
         group,
