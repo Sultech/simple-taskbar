@@ -64,6 +64,11 @@ export class OverviewIntegration {
                     this._syncHiddenDashSize(this._dashState.dash);
                 this.queueRelayout();
             },
+            'changed::panel-position', () => {
+                if (this._dashState)
+                    this._syncHiddenDashSize(this._dashState.dash);
+                this.queueRelayout();
+            },
             'changed::dock-panel-mode', () => this.queueRelayout(),
             'changed::dock-autohide-enabled', () => this.queueRelayout(),
             'changed::dock-dodge-windows-enabled', () =>
@@ -332,8 +337,10 @@ export class OverviewIntegration {
     }
 
     _hideDash() {
-        if (this._dashState)
+        if (this._dashState) {
+            this._syncHiddenDashSize(this._dashState.dash);
             return;
+        }
 
         const dash = Main.overview.dash;
         if (!dash)
@@ -352,18 +359,20 @@ export class OverviewIntegration {
         const scaleFactor = St.ThemeContext.get_for_stage(global.stage)
             .scale_factor;
         const reserve = OVERVIEW_LABEL_MARGIN * scaleFactor;
-        const position = this._settings.get_boolean('dock-mode')
-            ? this._settings.get_string('dock-position')
-            : panelPosition(this._settings);
-        if (position === 'left' || position === 'right') {
-            dash.set_height(-1);
+        const panelPositionValue = panelPosition(this._settings);
+        const dockMode = this._settings.get_boolean('dock-mode');
+        const dockPosition = this._settings.get_string('dock-position');
+        const vertical = panelPositionValue === 'left' ||
+            panelPositionValue === 'right' ||
+            (dockMode && (dockPosition === 'left' ||
+                dockPosition === 'right'));
+        const bottom = panelPositionValue === 'bottom' ||
+            (dockMode && dockPosition === 'bottom');
+        if (vertical)
             dash.set_width(reserve);
-        } else {
+        else
             dash.set_width(-1);
-            dash.set_height(
-                position === 'bottom' ? reserve : 0
-            );
-        }
+        dash.set_height(bottom ? reserve : vertical ? -1 : 0);
     }
 
     _adaptAllocation() {
