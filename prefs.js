@@ -106,6 +106,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             page,
             dockPage,
             settings: window._settings,
+            createSettings: () => this.getSettings(),
             connectSettings,
         });
         const taskbarModeSwitch = panelMode.taskbarModeSwitch;

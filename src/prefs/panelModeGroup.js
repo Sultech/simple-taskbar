@@ -9,6 +9,7 @@ import {
     PANEL_MODE_DEFAULT,
     PANEL_MODE_TASKBAR,
     setPanelMode,
+    setPanelPosition,
 } from '../shared/panelModeProfiles.js';
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
 import {addComboRow, addSpinRow} from './preferencesWidgets.js';
@@ -21,6 +22,7 @@ export function addPanelModeGroup({
     page,
     dockPage,
     settings,
+    createSettings,
     connectSettings,
 }) {
     const panelModeGroup = new Adw.PreferencesGroup({
@@ -62,7 +64,7 @@ export function addPanelModeGroup({
         {value: 'left', label: _('Left')},
         {value: 'right', label: _('Right')},
     ];
-    const syncDockPositionConflict = () => {
+    const syncPanelPositionConflict = () => {
         if (!settings.get_boolean('dock-mode'))
             return;
 
@@ -75,7 +77,23 @@ export function addPanelModeGroup({
             alternativePanelPosition(panelPosition)
         );
     };
-    syncDockPositionConflict();
+    const syncDockPositionConflict = () => {
+        if (!settings.get_boolean('dock-mode'))
+            return;
+
+        const dockPosition = settings.get_string('dock-position');
+        if (settings.get_string('panel-position') !== dockPosition)
+            return;
+
+        const panelSettings = createSettings();
+        panelSettings.delay();
+        setPanelPosition(
+            panelSettings,
+            alternativePanelPosition(dockPosition)
+        );
+        panelSettings.apply();
+    };
+    syncPanelPositionConflict();
     const dockPositionRow = addComboRow(
         dockModeGroup,
         settings,
@@ -84,16 +102,7 @@ export function addPanelModeGroup({
             title: _('Dock Position'),
             subtitle: _('Place the Dock at a different screen edge from the main panel'),
             choices: dockPositionChoices,
-            choicesProvider: () => settings.get_boolean('dock-mode')
-                ? dockPositionChoices.filter(
-                    choice => choice.value !== settings.get_string('panel-position')
-                )
-                : dockPositionChoices,
-            choicesChangedKeys: ['panel-position', 'dock-mode'],
-            setValue: position => {
-                if (position !== settings.get_string('panel-position'))
-                    settings.set_string('dock-position', position);
-            },
+            setValue: position => settings.set_string('dock-position', position),
         },
         connectSettings
     );
@@ -118,12 +127,12 @@ export function addPanelModeGroup({
     connectSettings(
         settings,
         'changed::panel-position',
-        syncDockPositionConflict
+        syncPanelPositionConflict
     );
     connectSettings(
         settings,
         'changed::dock-mode',
-        syncDockPositionConflict
+        syncPanelPositionConflict
     );
     connectSettings(
         settings,
