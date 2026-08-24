@@ -32,6 +32,8 @@ export class TaskbarLocationsController {
         this._volumeSyncId = 0;
         this._volumeApps = [];
         this._volumeAppSignalIds = [];
+        this._volumeFallbackIds = new WeakMap();
+        this._nextVolumeFallbackId = 0;
         this._trashApp = null;
 
         for (const [signal, callback] of [
@@ -159,9 +161,32 @@ export class TaskbarLocationsController {
         return volume.can_mount() || volume.can_eject();
     }
 
+    _getVolumeIdentifier(volume) {
+        const mount = volume.get_mount();
+        const uuid = (mount ? mount.get_uuid() : null) || volume.get_uuid();
+        if (uuid)
+            return `uuid:${uuid}`;
+
+        const unixDevice = volume.get_identifier('unix-device');
+        if (unixDevice)
+            return `device:${unixDevice}`;
+
+        const location = mount
+            ? mount.get_default_location()
+            : volume.get_activation_root();
+        if (location)
+            return `uri:${location.get_uri()}`;
+
+        let identifier = this._volumeFallbackIds.get(volume);
+        if (!identifier) {
+            identifier = `object:${this._nextVolumeFallbackId++}`;
+            this._volumeFallbackIds.set(volume, identifier);
+        }
+        return identifier;
+    }
+
     _addVolume(volume) {
-        const uuid = volume.get_uuid();
-        const identifier = uuid || volume.get_name();
+        const identifier = this._getVolumeIdentifier(volume);
         const app = new TaskbarLocation({
             id: `location:volume:${identifier}`,
             name: volume.get_name(),
