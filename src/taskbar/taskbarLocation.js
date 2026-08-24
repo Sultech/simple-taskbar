@@ -21,132 +21,29 @@ const LOCATION_ACTIONS = Object.freeze({
     EMPTY_TRASH: 'empty-trash',
 });
 
+Gio._promisify(Gio.File.prototype, 'query_info_async');
+Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
+Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
+Gio._promisify(Gio.FileEnumerator.prototype, 'close_async');
+Gio._promisify(Gio.Volume.prototype, 'mount', 'mount_finish');
+Gio._promisify(
+    Gio.Volume.prototype,
+    'eject_with_operation',
+    'eject_with_operation_finish'
+);
+Gio._promisify(
+    Gio.Mount.prototype,
+    'unmount_with_operation',
+    'unmount_with_operation_finish'
+);
+Gio._promisify(
+    Gio.Mount.prototype,
+    'eject_with_operation',
+    'eject_with_operation_finish'
+);
+
 function isCancelled(error) {
     return error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED);
-}
-
-function mountVolume(volume, operation, cancellable) {
-    return new Promise((resolve, reject) => {
-        volume.mount(
-            Gio.MountMountFlags.NONE,
-            operation.mountOp,
-            cancellable,
-            (_volume, result) => {
-                try {
-                    volume.mount_finish(result);
-                    resolve();
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
-}
-
-function unmountMount(mount, operation, cancellable) {
-    return new Promise((resolve, reject) => {
-        mount.unmount_with_operation(
-            Gio.MountUnmountFlags.FORCE,
-            operation.mountOp,
-            cancellable,
-            (_mount, result) => {
-                try {
-                    mount.unmount_with_operation_finish(result);
-                    resolve();
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
-}
-
-function ejectRemovable(removable, operation, cancellable) {
-    return new Promise((resolve, reject) => {
-        removable.eject_with_operation(
-            Gio.MountUnmountFlags.FORCE,
-            operation.mountOp,
-            cancellable,
-            (_removable, result) => {
-                try {
-                    removable.eject_with_operation_finish(result);
-                    resolve();
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
-}
-
-function queryInfo(file, attributes, cancellable) {
-    return new Promise((resolve, reject) => {
-        file.query_info_async(
-            attributes,
-            Gio.FileQueryInfoFlags.NONE,
-            GLib.PRIORITY_LOW,
-            cancellable,
-            (_file, result) => {
-                try {
-                    resolve(file.query_info_finish(result));
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
-}
-
-function enumerateChildren(file, cancellable) {
-    return new Promise((resolve, reject) => {
-        file.enumerate_children_async(
-            Gio.FILE_ATTRIBUTE_STANDARD_TYPE,
-            Gio.FileQueryInfoFlags.NONE,
-            GLib.PRIORITY_LOW,
-            cancellable,
-            (_file, result) => {
-                try {
-                    resolve(file.enumerate_children_finish(result));
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
-}
-
-function nextFiles(enumerator, cancellable) {
-    return new Promise((resolve, reject) => {
-        enumerator.next_files_async(
-            1,
-            GLib.PRIORITY_LOW,
-            cancellable,
-            (_enumerator, result) => {
-                try {
-                    resolve(enumerator.next_files_finish(result));
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
-}
-
-function closeEnumerator(enumerator, cancellable) {
-    return new Promise((resolve, reject) => {
-        enumerator.close_async(
-            GLib.PRIORITY_LOW,
-            cancellable,
-            (_enumerator, result) => {
-                try {
-                    enumerator.close_finish(result);
-                    resolve();
-                } catch (error) {
-                    reject(error);
-                }
-            }
-        );
-    });
 }
 
 export const TaskbarLocation = GObject.registerClass({
@@ -398,23 +295,23 @@ export const TaskbarLocation = GObject.registerClass({
         try {
             switch (action) {
             case LOCATION_ACTIONS.MOUNT:
-                await mountVolume(
-                    this._volume,
-                    operation,
+                await this._volume.mount(
+                    Gio.MountMountFlags.NONE,
+                    operation.mountOp,
                     cancellable
                 );
                 break;
             case LOCATION_ACTIONS.UNMOUNT:
-                await unmountMount(
-                    this._mount,
-                    operation,
+                await this._mount.unmount_with_operation(
+                    Gio.MountUnmountFlags.FORCE,
+                    operation.mountOp,
                     cancellable
                 );
                 break;
             case LOCATION_ACTIONS.EJECT:
-                await ejectRemovable(
-                    removable,
-                    operation,
+                await removable.eject_with_operation(
+                    Gio.MountUnmountFlags.FORCE,
+                    operation.mountOp,
                     cancellable
                 );
                 break;
@@ -467,9 +364,10 @@ export const TaskbarLocation = GObject.registerClass({
         this._trashQueryCancellable = cancellable;
 
         try {
-            const info = await queryInfo(
-                this._location,
+            const info = await this._location.query_info_async(
                 Gio.FILE_ATTRIBUTE_TRASH_ITEM_COUNT,
+                Gio.FileQueryInfoFlags.NONE,
+                GLib.PRIORITY_LOW,
                 cancellable
             );
             if (this._trashQueryCancellable !== cancellable)
@@ -492,11 +390,17 @@ export const TaskbarLocation = GObject.registerClass({
 
         let enumerator = null;
         try {
-            enumerator = await enumerateChildren(
-                this._location,
+            enumerator = await this._location.enumerate_children_async(
+                Gio.FILE_ATTRIBUTE_STANDARD_TYPE,
+                Gio.FileQueryInfoFlags.NONE,
+                GLib.PRIORITY_LOW,
                 cancellable
             );
-            const children = await nextFiles(enumerator, cancellable);
+            const children = await enumerator.next_files_async(
+                1,
+                GLib.PRIORITY_LOW,
+                cancellable
+            );
             if (this._trashQueryCancellable === cancellable)
                 this._setTrashEmpty(children.length === 0);
         } catch (error) {
@@ -505,7 +409,7 @@ export const TaskbarLocation = GObject.registerClass({
         } finally {
             if (enumerator) {
                 try {
-                    await closeEnumerator(enumerator, null);
+                    await enumerator.close_async(GLib.PRIORITY_LOW, null);
                 } catch (error) {
                     if (!isCancelled(error))
                         logError(error, 'Unable to close Trash enumerator');
