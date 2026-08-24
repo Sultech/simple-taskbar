@@ -86,6 +86,7 @@ export class ApplicationOverflowController {
         this._taskbarController = taskbarController;
         this._previewController = previewController;
         this._viewport = viewport;
+        this._locationActor = taskbarController.getLocationActor();
         this._signalHolder = new TransientSignalHolder();
         this._grab = null;
         this._menu = null;
@@ -112,6 +113,7 @@ export class ApplicationOverflowController {
         });
         this._createButton();
         this.actor.add_child(this._viewport);
+        this.actor.add_child(this._locationActor);
         this.actor.add_child(this._button);
         this.actor.add_child(this._spacer);
     }
@@ -235,7 +237,7 @@ export class ApplicationOverflowController {
             () => this._buttonController.sync(),
             this._signalHolder
         );
-        for (const item of this._taskbarController.getOrderedItems())
+        for (const item of this._taskbarController.getOrderedApplicationItems())
             this._connectTaskbarItem(item);
         this._taskbarController.actor.connectObject('child-added',
             (_actor, item) => {
@@ -246,6 +248,20 @@ export class ApplicationOverflowController {
             this._queueSync();
         }, this._signalHolder);
         this._taskbarController.actor.connectObject(
+            'notify::allocation',
+            () => this._queueSync(),
+            this._signalHolder
+        );
+        for (const item of this._taskbarController.getLocationItems())
+            this._connectTaskbarItem(item);
+        this._locationActor.connectObject(
+            'child-added',
+            (_actor, item) => {
+                this._connectTaskbarItem(item);
+                this._queueSync();
+            },
+            'child-removed',
+            () => this._queueSync(),
             'notify::allocation',
             () => this._queueSync(),
             this._signalHolder
@@ -329,12 +345,14 @@ export class ApplicationOverflowController {
         this._section = null;
 
         this.actor.remove_child(this._viewport);
+        this.actor.remove_child(this._locationActor);
         this.actor.destroy();
         this.actor = null;
         this._button = null;
         this._icon = null;
         this._spacer = null;
         this._viewport = null;
+        this._locationActor = null;
         this._taskbarController = null;
         this._previewController = null;
         this._overflowItems = null;
@@ -461,12 +479,18 @@ export class ApplicationOverflowController {
             : this._viewport.hadjustment;
         adjustment.set_value(0);
         const panelHeight = this._settings.get_int('panel-height');
-        const items = this._taskbarController.getOrderedItems();
+        const items = this._taskbarController.getOrderedApplicationItems();
+        const locationItems = this._taskbarController.getLocationItems();
         const itemSizes = items.map(item =>
             vertical
                 ? item.get_preferred_height(panelHeight)[1]
                 : item.get_preferred_width(panelHeight)[1]
         );
+        const locationSize = locationItems.reduce((size, item) => size + (
+            vertical
+                ? item.get_preferred_height(panelHeight)[1]
+                : item.get_preferred_width(panelHeight)[1]
+        ), 0);
         const separatorTarget = this._taskbarController.getPinnedSeparatorTarget(
             items
         );
@@ -475,8 +499,9 @@ export class ApplicationOverflowController {
             : -1;
         const separatorSize = this._taskbarController.getPinnedSeparatorLength();
         const taskbarSize = itemSizes.reduce((sum, size) => sum + size, 0) +
+            locationSize +
             (separatorIndex >= 0 ? separatorSize : 0);
-        if (taskbarSize <= this._maximumSize) {
+        if (items.length === 0 || taskbarSize <= this._maximumSize) {
             this._showAllItems();
             return;
         }
@@ -488,7 +513,7 @@ export class ApplicationOverflowController {
             : this._button.get_preferred_width(panelHeight)[1];
         const availableSize = Math.max(
             1,
-            this._maximumSize - buttonSize
+            this._maximumSize - buttonSize - locationSize
         );
         let visibleCount = 0;
         let visibleSize = 0;
@@ -529,9 +554,17 @@ export class ApplicationOverflowController {
         this._taskbarController.setPreserveItemWidths(false);
         this._button.hide();
         this._spacer.hide();
+        const vertical = panelIsVertical(this._settings);
+        const panelHeight = this._settings.get_int('panel-height');
+        const locationSize = this._taskbarController.getLocationItems()
+            .reduce((size, item) => size + (
+                vertical
+                    ? item.get_preferred_height(panelHeight)[1]
+                    : item.get_preferred_width(panelHeight)[1]
+            ), 0);
         this._viewport.setMaximumSize(
-            this._maximumSize,
-            panelIsVertical(this._settings)
+            Math.max(1, this._maximumSize - locationSize),
+            vertical
         );
         this._clearOverflow();
     }
@@ -708,6 +741,8 @@ export class ApplicationOverflowController {
             : Clutter.ActorAlign.FILL;
         this._viewport.x_expand = vertical;
         this._viewport.y_expand = !vertical;
+        this._locationActor.x_expand = vertical;
+        this._locationActor.y_expand = !vertical;
         syncPanelMenuPosition(this._menu, this._settings);
         this._queueSync();
     }

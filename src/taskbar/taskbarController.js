@@ -119,6 +119,16 @@ export class TaskbarController {
             visible: !this._settings.get_boolean('default-gnome-panel'),
         });
         this.actor._delegate = this;
+        this._locationActor = new St.BoxLayout({
+            style_class: 'simple-taskbar-locations',
+            orientation: panelIsVertical(this._settings)
+                ? Clutter.Orientation.VERTICAL
+                : Clutter.Orientation.HORIZONTAL,
+            x_align: Clutter.ActorAlign.START,
+            y_align: Clutter.ActorAlign.FILL,
+            y_expand: true,
+            visible: !this._settings.get_boolean('default-gnome-panel'),
+        });
         this._redisplayWorkId = Main.initializeDeferredWork(
             this.actor,
             () => this.redisplay()
@@ -251,10 +261,25 @@ export class TaskbarController {
     }
 
     getOrderedItems() {
+        return [
+            ...this.getOrderedApplicationItems(),
+            ...this._locationActor.get_children(),
+        ];
+    }
+
+    getOrderedApplicationItems() {
         const items = new Set(this._appButtons.values());
         if (this._showDesktopItem)
             items.add(this._showDesktopItem);
         return this.actor.get_children().filter(item => items.has(item));
+    }
+
+    getLocationActor() {
+        return this._locationActor;
+    }
+
+    getLocationItems() {
+        return this._locationActor.get_children();
     }
 
     setPreserveItemWidths(preserve) {
@@ -512,6 +537,8 @@ export class TaskbarController {
         this._appearanceController = null;
         this._entryModel.destroy();
         this._entryModel = null;
+        this._locationActor.destroy();
+        this._locationActor = null;
         this.actor.destroy();
         this.actor = null;
         this._redisplayWorkId = 0;
@@ -648,6 +675,12 @@ export class TaskbarController {
             ? Clutter.ActorAlign.START
             : Clutter.ActorAlign.FILL;
         this.actor.y_expand = !vertical;
+        this._locationActor.orientation = this.actor.orientation;
+        this._locationActor.x_align = this.actor.x_align;
+        this._locationActor.x_expand = this.actor.x_expand;
+        this._locationActor.y_align = this.actor.y_align;
+        this._locationActor.y_expand = this.actor.y_expand;
+        this._locationActor.set_style('spacing: 0;');
         this._syncIndicatorStyle();
         this._syncPinnedSeparatorGeometry();
         for (const item of this._appButtons.values()) {
@@ -657,6 +690,7 @@ export class TaskbarController {
         }
         this._syncTaskbarEdgeSpacing();
         this.actor.queue_relayout();
+        this._locationActor.queue_relayout();
     }
 
     _syncTaskbarEdgeSpacing() {
@@ -676,9 +710,11 @@ export class TaskbarController {
             ? activeChildren[showDesktopIndex - 1]
             : null;
         let trailingItem = null;
-        for (const child of this.actor.get_children()) {
-            if (child !== this._pinnedSeparator && !child.animatingOut)
-                trailingItem = child;
+        if (this._locationActor.get_n_children() === 0) {
+            for (const child of this.actor.get_children()) {
+                if (child !== this._pinnedSeparator && !child.animatingOut)
+                    trailingItem = child;
+            }
         }
 
         for (const item of this._appButtons.values()) {
@@ -755,6 +791,12 @@ export class TaskbarController {
             this._syncDragEnabled();
         }
         const entries = this._orderedEntries(this._startupSettling);
+        const applicationEntries = entries.filter(entry =>
+            !entry.app._simpleTaskbarLocation
+        );
+        const locationEntries = entries.filter(entry =>
+            entry.app._simpleTaskbarLocation
+        );
         const animateIndicators = this._shownInitially &&
             !this._startupSettling && !labelWidthChanged;
         const animateMembershipChanges = animateIndicators &&
@@ -792,9 +834,14 @@ export class TaskbarController {
                 isCombined,
                 isPinnedPrimary,
             } = entries[index];
+            const isLocation = app._simpleTaskbarLocation;
             const pinnedToRunningGap = isLauncher &&
                 index + 1 < entries.length &&
                 !entries[index + 1].isLauncher;
+            const targetActor = isLocation ? this._locationActor : this.actor;
+            const targetIndex = isLocation
+                ? locationEntries.indexOf(entries[index])
+                : applicationEntries.indexOf(entries[index]);
             let item = this._appButtons.get(key);
             if (item && item._taskbarApp !== app) {
                 this._getPreviews().removeItem(item);
@@ -822,11 +869,11 @@ export class TaskbarController {
                     false
                 );
                 placeTaskbarItemAtIndex(
-                    this.actor,
+                    targetActor,
                     item,
-                    index,
-                    this._showDesktopItem,
-                    [this._pinnedSeparator]
+                    targetIndex,
+                    isLocation ? null : this._showDesktopItem,
+                    isLocation ? [] : [this._pinnedSeparator]
                 );
                 animateTaskbarItemIn(
                     item,
@@ -839,11 +886,11 @@ export class TaskbarController {
                 );
             } else {
                 placeTaskbarItemAtIndex(
-                    this.actor,
+                    targetActor,
                     item,
-                    index,
-                    this._showDesktopItem,
-                    [this._pinnedSeparator]
+                    targetIndex,
+                    isLocation ? null : this._showDesktopItem,
+                    isLocation ? [] : [this._pinnedSeparator]
                 );
             }
             if (app._simpleTaskbarLocation)
@@ -874,6 +921,7 @@ export class TaskbarController {
     _syncApplicationVisibility() {
         const visible = !this._settings.get_boolean('default-gnome-panel');
         this.actor.visible = visible;
+        this._locationActor.visible = visible;
         if (!visible) {
             this._getPreviews().hideTooltip(false);
             this._getPreviews().hide();
@@ -1219,10 +1267,10 @@ export class TaskbarController {
         const launcherCount = this._usePinnedAppLaunchers()
             ? pinnedApps.length
             : 0;
-        const entries = this._uncombinedEntries(
-            apps,
-            launcherCount
-        );
+        const entries = [
+            ...this._uncombinedEntries(apps, launcherCount),
+            ...this._locationController.getEntries(),
+        ];
         const showLabels = !this._settings.get_boolean('hide-app-labels');
         if (this._entriesWidth(entries, showLabels) <= this._availableWidth)
             return {combinedAppIds: new Set()};
@@ -1250,11 +1298,14 @@ export class TaskbarController {
         const combinedAppIds = new Set();
         for (const candidate of candidates) {
             combinedAppIds.add(candidate.appId);
-            const groupedEntries = this._uncombinedEntries(
-                apps,
-                launcherCount,
-                combinedAppIds
-            );
+            const groupedEntries = [
+                ...this._uncombinedEntries(
+                    apps,
+                    launcherCount,
+                    combinedAppIds
+                ),
+                ...this._locationController.getEntries(),
+            ];
             if (this._entriesWidth(groupedEntries, showLabels) <=
                 this._availableWidth) {
                 break;

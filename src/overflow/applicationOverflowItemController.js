@@ -99,7 +99,7 @@ export class ApplicationOverflowItemController {
 
     clear() {
         const taskbarItems = new Set(
-            this._taskbarController.getOrderedItems()
+            this._taskbarController.getOrderedApplicationItems()
         );
         for (const {auxiliaryItem, styleItem} of this._records) {
             this._releaseDraggable(auxiliaryItem);
