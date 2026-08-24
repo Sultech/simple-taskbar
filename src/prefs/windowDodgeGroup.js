@@ -83,6 +83,8 @@ export function addWindowDodgeRows(
     const syncAvailability = () => {
         const available = group.sensitive;
         dodgeSwitch.sensitive = available;
+        modeRow.visible = dodgeSwitch.active;
+        pointerRevealSwitch.visible = dodgeSwitch.active;
         modeRow.sensitive = available && dodgeSwitch.active;
         pointerRevealSwitch.sensitive = available && dodgeSwitch.active;
     };
