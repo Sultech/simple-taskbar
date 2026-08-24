@@ -29,9 +29,11 @@ export class TaskbarLocationsController {
         this._monitor = Gio.VolumeMonitor.get();
         this._monitorSignalIds = [];
         this._settingsSignalIds = [];
-        this._volumeSyncId = 0;
+        this._volumeEventId = 0;
         this._volumeApps = [];
-        this._volumeAppSignalIds = [];
+        this._volumeAppsByVolume = new Map();
+        this._volumeAppSignalIds = new Map();
+        this._volumeEvents = [];
         this._volumeFallbackIds = new WeakMap();
         this._nextVolumeFallbackId = 0;
         this._trashApp = null;
@@ -56,7 +58,9 @@ export class TaskbarLocationsController {
             'mount-changed',
         ]) {
             this._monitorSignalIds.push(
-                this._monitor.connect(signal, () => this._queueVolumeSync())
+                this._monitor.connect(signal, (_monitor, object) =>
+                    this._queueVolumeEvent(signal, object)
+                )
             );
         }
         this._sync(false);
@@ -85,10 +89,11 @@ export class TaskbarLocationsController {
     }
 
     destroy() {
-        if (this._volumeSyncId) {
-            GLib.Source.remove(this._volumeSyncId);
-            this._volumeSyncId = 0;
+        if (this._volumeEventId) {
+            GLib.Source.remove(this._volumeEventId);
+            this._volumeEventId = 0;
         }
+        this._volumeEvents = [];
         for (const id of this._settingsSignalIds)
             this._settings.disconnect(id);
         this._settingsSignalIds = [];
@@ -122,17 +127,49 @@ export class TaskbarLocationsController {
             this._onChanged();
     }
 
-    _queueVolumeSync() {
-        if (this._volumeSyncId)
+    _queueVolumeEvent(signal, object) {
+        this._volumeEvents.push([signal, object]);
+        if (this._volumeEventId)
             return;
-        this._volumeSyncId = GLib.idle_add(
+        this._volumeEventId = GLib.idle_add(
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
-                this._volumeSyncId = 0;
-                this._sync();
+                this._volumeEventId = 0;
+                const events = this._volumeEvents;
+                this._volumeEvents = [];
+                this._processVolumeEvents(events);
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    _processVolumeEvents(events) {
+        const enabled = this._settings.get_boolean(this._showLocationsKey) &&
+            this._settings.get_boolean(this._showMountsKey);
+        if (enabled) {
+            const currentVolumes = new Set(this._monitor.get_volumes());
+            for (const [signal, object] of events) {
+                switch (signal) {
+                case 'volume-added':
+                case 'volume-changed':
+                    if (currentVolumes.has(object))
+                        this._syncVolume(object);
+                    break;
+                case 'volume-removed':
+                    this._removeVolume(object);
+                    break;
+                case 'mount-added':
+                case 'mount-removed':
+                case 'mount-changed': {
+                    const volume = object.get_volume();
+                    if (volume && currentVolumes.has(volume))
+                        this._syncVolume(volume);
+                    break;
+                }
+                }
+            }
+        }
+        this._onChanged();
     }
 
     _syncVolumes() {
@@ -161,6 +198,27 @@ export class TaskbarLocationsController {
         return volume.can_mount() || volume.can_eject();
     }
 
+    _syncVolume(volume) {
+        if (this._includeVolume(volume)) {
+            if (!this._volumeAppsByVolume.has(volume))
+                this._addVolume(volume);
+            return;
+        }
+        this._removeVolume(volume);
+    }
+
+    _removeVolume(volume) {
+        const app = this._volumeAppsByVolume.get(volume);
+        if (!app)
+            return;
+
+        this._volumeAppsByVolume.delete(volume);
+        this._volumeApps.splice(this._volumeApps.indexOf(app), 1);
+        app.disconnect(this._volumeAppSignalIds.get(app));
+        this._volumeAppSignalIds.delete(app);
+        app.destroy();
+    }
+
     _getVolumeIdentifier(volume) {
         const mount = volume.get_mount();
         const uuid = (mount ? mount.get_uuid() : null) || volume.get_uuid();
@@ -186,6 +244,9 @@ export class TaskbarLocationsController {
     }
 
     _addVolume(volume) {
+        if (this._volumeAppsByVolume.has(volume))
+            return;
+
         const identifier = this._getVolumeIdentifier(volume);
         const app = new TaskbarLocation({
             id: `location:volume:${identifier}`,
@@ -193,13 +254,11 @@ export class TaskbarLocationsController {
             type: 'volume',
             volume,
         });
-        this._volumeAppSignalIds.push([
-            app,
-            app.connect('mount-changed', () => {
-                if (this._settings.get_boolean(this._showMountedOnlyKey))
-                    this._queueVolumeSync();
-            }),
-        ]);
+        const signalId = app.connect('mount-changed', () =>
+            this._queueVolumeEvent('volume-changed', volume)
+        );
+        this._volumeAppsByVolume.set(volume, app);
+        this._volumeAppSignalIds.set(app, signalId);
         this._volumeApps.push(app);
     }
 
@@ -216,10 +275,11 @@ export class TaskbarLocationsController {
     _destroyVolumeApps() {
         for (const [app, id] of this._volumeAppSignalIds)
             app.disconnect(id);
-        this._volumeAppSignalIds = [];
+        this._volumeAppSignalIds.clear();
         for (const app of this._volumeApps)
             app.destroy();
         this._volumeApps = [];
+        this._volumeAppsByVolume.clear();
     }
 
     _destroyTrashApp() {
