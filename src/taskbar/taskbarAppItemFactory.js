@@ -69,6 +69,7 @@ export class TaskbarAppItemFactory {
         const panelHeight = this._getPanelHeight();
         const item = new TaskbarItemContainer();
         item.setPreserveNaturalWidth(this._getPreserveItemWidths());
+        item.setSnapChildAllocation(true);
         item.add_style_class_name('simple-taskbar-app-item');
         item.reactive = true;
         item.track_hover = true;

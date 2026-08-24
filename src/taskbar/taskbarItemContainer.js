@@ -11,6 +11,7 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
     _init() {
         super._init();
         this._preserveNaturalWidth = false;
+        this._snapChildAllocation = false;
         this._vertical = false;
         this.x_expand = false;
         this.y_expand = false;
@@ -20,6 +21,14 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         if (vertical === this._vertical)
             return;
         this._vertical = vertical;
+        this.queue_relayout();
+    }
+
+    setSnapChildAllocation(snap) {
+        if (snap === this._snapChildAllocation)
+            return;
+
+        this._snapChildAllocation = snap;
         this.queue_relayout();
     }
 
@@ -71,8 +80,14 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
             availableHeight
         );
         const childBox = new Clutter.ActorBox();
-        childBox.x1 = (availableWidth - childWidth) / 2;
-        childBox.y1 = (availableHeight - childHeight) / 2;
+        const childX = (availableWidth - childWidth) / 2;
+        const childY = (availableHeight - childHeight) / 2;
+        childBox.x1 = this._snapChildAllocation
+            ? Math.round(childX)
+            : childX;
+        childBox.y1 = this._snapChildAllocation
+            ? Math.round(childY)
+            : childY;
         childBox.x2 = childBox.x1 + childWidth;
         childBox.y2 = childBox.y1 + childHeight;
         this.child.allocate(childBox);

@@ -7,6 +7,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {IconDominantColorCache} from './iconDominantColor.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
+import {ICON_VERTICAL_RESERVE} from '../shared/panelSizing.js';
 
 const CONTENT_LEADING_SPACE = 7;
 const ICON_GLASS_MARGIN = 3;
@@ -41,6 +42,15 @@ export class TaskbarAppearanceController {
         this._iconColors = new IconDominantColorCache();
     }
 
+    visualPanelHeight() {
+        if (this._settings.isDock &&
+            !this._settings.get_boolean('dock-panel-mode')) {
+            return this._getIconSize() + ICON_VERTICAL_RESERVE;
+        }
+
+        return this._getPanelHeight();
+    }
+
     updateGlassGeometry(item) {
         const glassWidth = this.buttonWidth(
             item._taskbarWindow,
@@ -56,13 +66,14 @@ export class TaskbarAppearanceController {
             item._taskbarTrailingSpacing
         );
         const panelHeight = this._getPanelHeight();
-        const glassHeight = this.glassHeight();
+        const visualPanelHeight = this.visualPanelHeight();
+        const glassHeight = this.glassHeight(visualPanelHeight);
         const vertical = panelIsVertical(this._settings);
-        const slotHeight = vertical ? slotWidth : panelHeight;
-        const itemWidth = vertical ? panelHeight : glassWidth;
+        const slotHeight = vertical ? slotWidth : visualPanelHeight;
+        const itemWidth = vertical ? visualPanelHeight : glassWidth;
         const itemHeight = vertical
             ? this.verticalItemExtent()
-            : panelHeight;
+            : visualPanelHeight;
 
         this.syncLauncherIconPosition(item);
         item.setVertical(vertical);
@@ -70,7 +81,7 @@ export class TaskbarAppearanceController {
             vertical ? 0 : CONTENT_LEADING_SPACE
         );
         item._taskbarButtonContent.set_height(
-            vertical ? -1 : this.buttonContentHeight()
+            vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
         );
         item._taskbarVisual.y_align = vertical
             ? Clutter.ActorAlign.CENTER
@@ -82,7 +93,7 @@ export class TaskbarAppearanceController {
         );
         item._taskbarButton.set_size(itemWidth, itemHeight);
         item._taskbarSlot.set_size(
-            vertical ? panelHeight : slotWidth,
+            vertical ? visualPanelHeight : slotWidth,
             slotHeight
         );
         item._taskbarVisual.set_size(itemWidth, itemHeight);
@@ -133,8 +144,7 @@ export class TaskbarAppearanceController {
             this.indicatorBarHeight();
     }
 
-    glassHeight() {
-        const panelHeight = this._getPanelHeight();
+    glassHeight(panelHeight = this.visualPanelHeight()) {
         if (this._settings.get_boolean('windows-xp-theme-enabled'))
             return panelHeight - 5;
 
@@ -319,10 +329,10 @@ export class TaskbarAppearanceController {
         return this._getAppLabelWidth();
     }
 
-    buttonContentHeight() {
+    buttonContentHeight(panelHeight = this.visualPanelHeight()) {
         return Math.max(
             1,
-            this._getPanelHeight() - APP_CONTENT_VERTICAL_RESERVE
+            panelHeight - APP_CONTENT_VERTICAL_RESERVE
         );
     }
 
