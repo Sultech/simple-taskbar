@@ -99,10 +99,7 @@ export class TaskbarItemInteractionController {
                 return;
             }
             if (previews.currentItem && previews.currentItem !== item) {
-                if (windowCount > 0)
-                    previews.scheduleSwitch(item);
-                else
-                    previews.scheduleClose();
+                previews.scheduleClose();
             } else {
                 previews.schedule(item);
             }
