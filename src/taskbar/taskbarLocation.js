@@ -490,20 +490,27 @@ export const TaskbarLocation = GObject.registerClass({
             }
         }
 
+        let enumerator = null;
         try {
-            const enumerator = await enumerateChildren(
+            enumerator = await enumerateChildren(
                 this._location,
                 cancellable
             );
             const children = await nextFiles(enumerator, cancellable);
-            if (this._trashQueryCancellable !== cancellable)
-                return;
-            this._setTrashEmpty(children.length === 0);
-            await closeEnumerator(enumerator, cancellable);
+            if (this._trashQueryCancellable === cancellable)
+                this._setTrashEmpty(children.length === 0);
         } catch (error) {
             if (!isCancelled(error))
                 logError(error, 'Unable to update Trash');
         } finally {
+            if (enumerator) {
+                try {
+                    await closeEnumerator(enumerator, null);
+                } catch (error) {
+                    if (!isCancelled(error))
+                        logError(error, 'Unable to close Trash enumerator');
+                }
+            }
             this._finishTrashQuery(cancellable);
         }
     }
