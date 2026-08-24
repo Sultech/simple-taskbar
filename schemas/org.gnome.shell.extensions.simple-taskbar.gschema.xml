@@ -226,7 +226,7 @@
       <summary>Dock item order</summary>
     </key>
     <key name="taskbar-show-locations" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show locations in the taskbar</summary>
     </key>
     <key name="taskbar-show-trash" type="b">
@@ -234,7 +234,7 @@
       <summary>Show Trash in the taskbar</summary>
     </key>
     <key name="taskbar-show-mounts" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show drives and volumes in the taskbar</summary>
     </key>
     <key name="dock-show-locations" type="b">
@@ -246,7 +246,7 @@
       <summary>Show Trash in the Dock</summary>
     </key>
     <key name="dock-show-mounts" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show drives and volumes in the Dock</summary>
     </key>
     <key name="locations-show-mounted-only" type="b">

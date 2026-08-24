@@ -121,6 +121,9 @@ export function addLocationsGroup({
         const xpEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        if (xpEnabled && taskbarLocationsRow.active)
+            taskbarLocationsRow.active = false;
+        taskbarLocationsRow.sensitive = !xpEnabled;
         taskbarRow.sensitive = !settings.get_boolean(
             'default-gnome-panel'
         ) && !xpEnabled;
