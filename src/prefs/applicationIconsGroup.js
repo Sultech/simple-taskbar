@@ -140,6 +140,7 @@ function addDockApplicationIconsGroup({
     });
     const syncDockApplicationIcons = () => {
         const dockModeEnabled = settings.get_boolean('dock-mode');
+        appearanceGroup.visible = dockModeEnabled;
         appearanceGroup.sensitive = dockModeEnabled;
         controls.appAlignmentRow.sensitive = dockModeEnabled &&
             settings.get_boolean('dock-panel-mode');
