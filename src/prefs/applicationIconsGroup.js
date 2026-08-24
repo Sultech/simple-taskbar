@@ -132,18 +132,29 @@ function addDockApplicationIconsGroup({
         description: _('Change the size, spacing, and placement of taskbar icons.'),
     });
     page.add(appearanceGroup);
-    addApplicationIconControls({
+    const controls = addApplicationIconControls({
         group: appearanceGroup,
         settings,
         connectSettings,
         panelPositions,
     });
+    const syncDockApplicationIcons = () => {
+        const dockModeEnabled = settings.get_boolean('dock-mode');
+        appearanceGroup.sensitive = dockModeEnabled;
+        controls.appAlignmentRow.sensitive = dockModeEnabled &&
+            settings.get_boolean('dock-panel-mode');
+    };
     connectSettings(
         settings,
         'changed::dock-mode',
-        () => appearanceGroup.sensitive = settings.get_boolean('dock-mode')
+        syncDockApplicationIcons
     );
-    appearanceGroup.sensitive = settings.get_boolean('dock-mode');
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
+        syncDockApplicationIcons
+    );
+    syncDockApplicationIcons();
 }
 
 export function addApplicationIconsGroup({
