@@ -14,7 +14,10 @@ import {
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {axisPanelPositions} from './panelAxis.js';
-import {createPanelOrderRow} from './preferencesWidgets.js';
+import {
+    createPanelOrderRow,
+    createSwitchRow,
+} from './preferencesWidgets.js';
 
 export function addPanelItemsPage({
     window,
@@ -31,72 +34,40 @@ export function addPanelItemsPage({
     });
     page.add(panelGroup);
 
-    const activitiesButtonSwitch = new Adw.SwitchRow({
+    const activitiesButtonSwitch = createSwitchRow(settings, {
+        key: 'activities-button-visible',
         title: _('Show Activities Button'),
         subtitle: _('Display GNOME’s workspace overview button on the taskbar'),
-        active: settings.get_boolean('activities-button-visible'),
     });
     panelGroup.add(activitiesButtonSwitch);
-    settings.bind(
-        'activities-button-visible',
-        activitiesButtonSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const showDesktopSwitch = new Adw.SwitchRow({
+    const showDesktopSwitch = createSwitchRow(settings, {
+        key: 'show-desktop-button-visible',
         title: _('Show Desktop Button'),
         subtitle: _('Display a button that minimizes or restores all windows'),
-        active: settings.get_boolean(
-            'show-desktop-button-visible'
-        ),
     });
     panelGroup.add(showDesktopSwitch);
-    settings.bind(
-        'show-desktop-button-visible',
-        showDesktopSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const volumeMixerSwitch = new Adw.SwitchRow({
+    const volumeMixerSwitch = createSwitchRow(settings, {
+        key: 'volume-mixer-enabled',
         title: _('Application Volume Mixer'),
         subtitle: _('Add per-application volume controls to Quick Settings'),
-        active: settings.get_boolean('volume-mixer-enabled'),
     });
     panelGroup.add(volumeMixerSwitch);
-    settings.bind(
-        'volume-mixer-enabled',
-        volumeMixerSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const trayOverflowSwitch = new Adw.SwitchRow({
+    const trayOverflowSwitch = createSwitchRow(settings, {
+        key: 'tray-overflow-enabled',
         title: _('Collect Tray Icons'),
         subtitle: _('Gather application tray icons behind a panel arrow'),
-        active: settings.get_boolean('tray-overflow-enabled'),
     });
     panelGroup.add(trayOverflowSwitch);
-    settings.bind(
-        'tray-overflow-enabled',
-        trayOverflowSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const folderMenuSwitch = new Adw.SwitchRow({
+    const folderMenuSwitch = createSwitchRow(settings, {
+        key: 'folder-menu-enabled',
         title: _('Show Folder Menu'),
         subtitle: _('Show a selected folder on the taskbar'),
-        active: settings.get_boolean('folder-menu-enabled'),
     });
     panelGroup.add(folderMenuSwitch);
-    settings.bind(
-        'folder-menu-enabled',
-        folderMenuSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const folderMenuRow = new Adw.ActionRow({
         title: _('Folder Menu Location'),

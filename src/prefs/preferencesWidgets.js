@@ -3,9 +3,29 @@
 
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
+import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+
+export function createSwitchRow(settings, {
+    key,
+    title,
+    subtitle = '',
+}) {
+    const row = new Adw.SwitchRow({
+        title,
+        subtitle,
+        active: settings.get_boolean(key),
+    });
+    settings.bind(
+        key,
+        row,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    return row;
+}
 
 export function addSpinRow(group, settings, {
     key,

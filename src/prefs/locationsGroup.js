@@ -2,42 +2,26 @@
 // Copyright (C) 2026 sultech
 
 import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-function createSwitchRow(settings, key, title, subtitle) {
-    const row = new Adw.SwitchRow({
-        title,
-        subtitle,
-        active: settings.get_boolean(key),
-    });
-    settings.bind(
-        key,
-        row,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-    return row;
-}
+import {createSwitchRow} from './preferencesWidgets.js';
 
 function createDriveOptionsRow(settings) {
     const row = new Adw.ExpanderRow({
         title: _('Drive Options'),
         subtitle: _('Choose which connected drives appear'),
     });
-    row.add_row(createSwitchRow(
-        settings,
-        'locations-show-mounted-only',
-        _('Only Show Mounted Drives'),
-        _('Hide drives that are connected but not mounted')
-    ));
-    row.add_row(createSwitchRow(
-        settings,
-        'locations-show-network',
-        _('Include Network Volumes'),
-        _('Include network-mounted locations')
-    ));
+    row.add_row(createSwitchRow(settings, {
+        key: 'locations-show-mounted-only',
+        title: _('Only Show Mounted Drives'),
+        subtitle: _('Hide drives that are connected but not mounted'),
+    }));
+    row.add_row(createSwitchRow(settings, {
+        key: 'locations-show-network',
+        title: _('Include Network Volumes'),
+        subtitle: _('Include network-mounted locations'),
+    }));
     return row;
 }
 
@@ -57,24 +41,21 @@ export function addLocationsGroup({
         title: _('Taskbar'),
         subtitle: _('Locations shown with taskbar applications'),
     });
-    const taskbarLocationsRow = createSwitchRow(
-        settings,
-        'taskbar-show-locations',
-        _('Show Locations'),
-        _('Display selected locations after taskbar applications')
-    );
-    const taskbarTrashRow = createSwitchRow(
-        settings,
-        'taskbar-show-trash',
-        _('Show Trash'),
-        _('Add the Trash to the taskbar')
-    );
-    const taskbarMountsRow = createSwitchRow(
-        settings,
-        'taskbar-show-mounts',
-        _('Show Drives and Volumes'),
-        _('Add mounted or connected drives to the taskbar')
-    );
+    const taskbarLocationsRow = createSwitchRow(settings, {
+        key: 'taskbar-show-locations',
+        title: _('Show Locations'),
+        subtitle: _('Display selected locations after taskbar applications'),
+    });
+    const taskbarTrashRow = createSwitchRow(settings, {
+        key: 'taskbar-show-trash',
+        title: _('Show Trash'),
+        subtitle: _('Add the Trash to the taskbar'),
+    });
+    const taskbarMountsRow = createSwitchRow(settings, {
+        key: 'taskbar-show-mounts',
+        title: _('Show Drives and Volumes'),
+        subtitle: _('Add mounted or connected drives to the taskbar'),
+    });
     taskbarRow.add_row(taskbarLocationsRow);
     taskbarRow.add_row(taskbarTrashRow);
     taskbarRow.add_row(taskbarMountsRow);
@@ -84,24 +65,21 @@ export function addLocationsGroup({
         title: _('Dock'),
         subtitle: _('Locations shown with Dock applications'),
     });
-    const dockLocationsRow = createSwitchRow(
-        settings,
-        'dock-show-locations',
-        _('Show Locations'),
-        _('Display selected locations after Dock applications')
-    );
-    const dockTrashRow = createSwitchRow(
-        settings,
-        'dock-show-trash',
-        _('Show Trash'),
-        _('Add the Trash to the Dock')
-    );
-    const dockMountsRow = createSwitchRow(
-        settings,
-        'dock-show-mounts',
-        _('Show Drives and Volumes'),
-        _('Add mounted or connected drives to the Dock')
-    );
+    const dockLocationsRow = createSwitchRow(settings, {
+        key: 'dock-show-locations',
+        title: _('Show Locations'),
+        subtitle: _('Display selected locations after Dock applications'),
+    });
+    const dockTrashRow = createSwitchRow(settings, {
+        key: 'dock-show-trash',
+        title: _('Show Trash'),
+        subtitle: _('Add the Trash to the Dock'),
+    });
+    const dockMountsRow = createSwitchRow(settings, {
+        key: 'dock-show-mounts',
+        title: _('Show Drives and Volumes'),
+        subtitle: _('Add mounted or connected drives to the Dock'),
+    });
     dockRow.add_row(dockLocationsRow);
     dockRow.add_row(dockTrashRow);
     dockRow.add_row(dockMountsRow);
