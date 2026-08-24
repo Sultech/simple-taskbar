@@ -167,7 +167,7 @@ export class SecondaryPanelDockController {
             return 0;
 
         if (!this._settings.get_boolean('panel-autohide-enabled') &&
-            this._hasMaximizedWindowOnMonitor()) {
+            this._hasFocusedMaximizedWindowOnMonitor()) {
             return 0;
         }
 
@@ -561,6 +561,8 @@ export class SecondaryPanelDockController {
             () => this._onPosition(true, true),
             'notify::maximized-vertically',
             () => this._onPosition(true, true),
+            'notify::minimized',
+            () => this._onPosition(true, true),
             this._signalHolder
         );
     }
@@ -572,9 +574,11 @@ export class SecondaryPanelDockController {
         window.disconnectObject(this._signalHolder);
     }
 
-    _hasMaximizedWindowOnMonitor() {
+    _hasFocusedMaximizedWindowOnMonitor() {
         for (const window of this._workspaceWindows) {
             if (window.get_monitor() === this._monitor.index &&
+                !window.minimized &&
+                window.has_focus() &&
                 window.maximized_horizontally &&
                 window.maximized_vertically) {
                 return true;
