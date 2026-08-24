@@ -56,7 +56,8 @@ export function getPopupBlur() {
 // left freshly blurred panels invisible until Blur My Shell was toggled.
 export function refreshPanelBlurVisibility(panelBlur) {
     for (const actors of panelBlur.actors_list) {
-        if (!panelBlur.queued_updates.has(actors))
+        if (panelBlur.queued_updates &&
+            !panelBlur.queued_updates.has(actors))
             continue;
         if (!actors.widgets.panel.get_stage())
             continue;
