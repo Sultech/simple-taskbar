@@ -28,6 +28,7 @@ import {addLocationsGroup} from './src/prefs/locationsGroup.js';
 import {addStartMenuPage} from './src/prefs/startMenuPage.js';
 import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
 import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
+import {addAboutPage} from './src/prefs/aboutPage.js';
 
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -241,6 +242,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             connectSettings,
         });
 
-        addResetGroup(page, window, () => this.getSettings());
+        const aboutPage = addAboutPage(window, this.path);
+        addResetGroup(aboutPage, window, () => this.getSettings());
     }
 }

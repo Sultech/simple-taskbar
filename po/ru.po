@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 02:40+0100\n"
+"POT-Creation-Date: 2026-08-24 20:25+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -22,35 +22,119 @@ msgstr ""
 msgid "Show desktop"
 msgstr "Показать рабочий стол"
 
-#: src/overflow/applicationOverflowController.js:408
+#: src/overflow/applicationOverflowController.js:426
 msgid "Application overflow"
 msgstr "Переполнение приложений"
 
-#: prefs.js:44 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelModeGroup.js:62
+#: prefs.js:50 src/prefs/panelAppearancePage.js:86
+#: src/prefs/panelModeGroup.js:64
 msgid "Left"
 msgstr "Слева"
 
-#: prefs.js:45
+#: prefs.js:51
 msgid "Center"
 msgstr "По центру"
 
-#: prefs.js:46 src/prefs/panelAppearancePage.js:87
-#: src/prefs/panelModeGroup.js:63
+#: prefs.js:52 src/prefs/panelAppearancePage.js:87
+#: src/prefs/panelModeGroup.js:65
 msgid "Right"
 msgstr "Справа"
 
-#: prefs.js:50
+#: prefs.js:56
 msgid "Taskbar"
 msgstr "Панель задач"
 
-#: prefs.js:56
+#: prefs.js:62
 msgid "Dock"
 msgstr ""
 
-#: prefs.js:68 src/prefs/advancedPage.js:48 src/prefs/dockItemsPage.js:23
+#: prefs.js:74 src/prefs/advancedPage.js:48 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
 msgstr "Меню «Пуск»"
+
+#: src/prefs/aboutPage.js:37
+msgid "About"
+msgstr ""
+
+#: src/prefs/aboutPage.js:66
+#, fuzzy
+msgid "Simple Taskbar"
+msgstr "Панель задач"
+
+#: src/prefs/aboutPage.js:71
+msgid "A configurable taskbar, panel and dock for GNOME Shell"
+msgstr ""
+
+#: src/prefs/aboutPage.js:76
+msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
+msgstr ""
+
+#: src/prefs/aboutPage.js:87
+msgid "Links"
+msgstr ""
+
+#: src/prefs/aboutPage.js:94
+msgid "GitHub Repository"
+msgstr ""
+
+#: src/prefs/aboutPage.js:102
+msgid "Report an Issue"
+msgstr ""
+
+#: src/prefs/aboutPage.js:132
+msgid "Credits"
+msgstr ""
+
+#: src/prefs/aboutPage.js:137
+msgid "Sultech"
+msgstr ""
+
+#: src/prefs/aboutPage.js:138
+msgid "Author"
+msgstr ""
+
+#: src/prefs/aboutPage.js:142
+#, fuzzy
+msgid "Features"
+msgstr "Изображения"
+
+#: src/prefs/aboutPage.js:143
+msgid ""
+"Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
+"Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
+msgstr ""
+
+#: src/prefs/aboutPage.js:147
+msgid "License"
+msgstr ""
+
+#: src/prefs/aboutPage.js:148
+msgid "Simple Taskbar is distributed under GPL-2.0-or-later"
+msgstr ""
+
+#: src/prefs/aboutPage.js:155
+#, fuzzy
+msgid "Support Development"
+msgstr "Разработка"
+
+#: src/prefs/aboutPage.js:156
+msgid ""
+"If Simple Taskbar is useful to you, consider supporting its development."
+msgstr ""
+
+#: src/prefs/aboutPage.js:163
+msgid "Buy Me a Coffee"
+msgstr ""
+
+#: src/prefs/aboutPage.js:185
+#, javascript-format
+msgid "Copy %s address"
+msgstr ""
+
+#: src/prefs/aboutPage.js:192
+#, javascript-format
+msgid "%s address copied"
+msgstr ""
 
 #: src/prefs/advancedPage.js:10
 msgid "Advanced"
@@ -68,11 +152,11 @@ msgstr "Редко используемые параметры внешнего 
 msgid "Application Behavior"
 msgstr "Поведение приложений"
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:213
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:223
 msgid "Choose which applications appear and how they are grouped."
 msgstr "Выберите, какие приложения отображаются и как они группируются."
 
-#: src/prefs/advancedPage.js:32 src/prefs/taskbarBehaviorGroup.js:24
+#: src/prefs/advancedPage.js:32 src/prefs/taskbarBehaviorGroup.js:25
 msgid "Taskbar Behavior"
 msgstr "Поведение панели задач"
 
@@ -209,109 +293,111 @@ msgstr "Средняя кнопка закрывает приложения"
 msgid "Close all application windows instead of opening a new window"
 msgstr "Закрывать все окна приложения вместо открытия нового окна"
 
-#: src/prefs/applicationIconsGroup.js:27
+#: src/prefs/applicationIconsGroup.js:25 src/prefs/applicationIconsGroup.js:156
 msgid "Application Icons"
 msgstr "Значки приложений"
 
-#: src/prefs/applicationIconsGroup.js:28 src/prefs/panelModeGroup.js:210
+#: src/prefs/applicationIconsGroup.js:26 src/prefs/applicationIconsGroup.js:157
+#: src/prefs/panelModeGroup.js:220
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "Измените размер, расстояние и расположение значков панели задач."
 
-#: src/prefs/applicationIconsGroup.js:52
+#: src/prefs/applicationIconsGroup.js:35 src/prefs/applicationIconsGroup.js:172
 msgid "Icon Size"
 msgstr "Размер значков"
 
-#: src/prefs/applicationIconsGroup.js:54
+#: src/prefs/applicationIconsGroup.js:37 src/prefs/applicationIconsGroup.js:174
 msgid "The panel grows automatically when larger icons need more room"
 msgstr ""
 "Панель автоматически расширяется, когда крупные значки требуют больше места"
 
-#: src/prefs/applicationIconsGroup.js:66
+#: src/prefs/applicationIconsGroup.js:49 src/prefs/applicationIconsGroup.js:186
 #, fuzzy
 msgid "Minimum Icon Size"
 msgstr "Размер значков"
 
-#: src/prefs/applicationIconsGroup.js:68
+#: src/prefs/applicationIconsGroup.js:51 src/prefs/applicationIconsGroup.js:188
 msgid "Smallest application icon size used when space is limited"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:80
+#: src/prefs/applicationIconsGroup.js:63 src/prefs/applicationIconsGroup.js:200
 msgid "Icon Spacing"
 msgstr "Расстояние между значками"
 
-#: src/prefs/applicationIconsGroup.js:81
+#: src/prefs/applicationIconsGroup.js:64 src/prefs/applicationIconsGroup.js:201
 msgid "Space between application buttons"
 msgstr "Расстояние между кнопками приложений"
 
-#: src/prefs/applicationIconsGroup.js:92
-msgid "Running Indicator Style"
-msgstr "Стиль индикаторов запущенных приложений"
-
-#: src/prefs/applicationIconsGroup.js:94
-msgid "Choose the shape of indicators beneath running applications"
-msgstr "Выберите форму индикаторов под запущенными приложениями"
-
-#: src/prefs/applicationIconsGroup.js:97
-msgid "Rounded"
-msgstr "Закруглённые"
-
-#: src/prefs/applicationIconsGroup.js:98
-msgid "Straight"
-msgstr "Прямые"
-
-#: src/prefs/applicationIconsGroup.js:104
-msgid "Custom Indicator Colors"
-msgstr "Свои цвета индикаторов"
-
-#: src/prefs/applicationIconsGroup.js:105
-msgid "Choose colors for running application indicators"
-msgstr "Выберите цвета индикаторов запущенных приложений"
-
-#: src/prefs/applicationIconsGroup.js:118
-msgid "Match Icon Color"
-msgstr "Подбирать цвет по значку"
-
-#: src/prefs/applicationIconsGroup.js:120
-msgid "Color the focused indicator from the application icon"
-msgstr "Окрашивать индикатор активного приложения в цвет его значка"
-
-#: src/prefs/applicationIconsGroup.js:136
-msgid "Focused Indicator Color"
-msgstr "Цвет индикатора активного приложения"
-
-#: src/prefs/applicationIconsGroup.js:145
-msgid "Unfocused Indicator Color"
-msgstr "Цвет индикатора неактивного приложения"
-
-#: src/prefs/applicationIconsGroup.js:218
+#: src/prefs/applicationIconsGroup.js:75 src/prefs/applicationIconsGroup.js:336
 msgid "Icon Alignment"
 msgstr "Выравнивание значков"
 
-#: src/prefs/applicationIconsGroup.js:219
+#: src/prefs/applicationIconsGroup.js:76 src/prefs/applicationIconsGroup.js:337
 #, fuzzy
 msgid "Choose the application icon alignment"
 msgstr "Следовать выравниванию приложений"
 
-#: src/prefs/applicationIconsGroup.js:229
+#: src/prefs/applicationIconsGroup.js:86 src/prefs/applicationIconsGroup.js:347
 msgid "Window Previews"
 msgstr "Предпросмотр окон"
 
-#: src/prefs/applicationIconsGroup.js:230
+#: src/prefs/applicationIconsGroup.js:87 src/prefs/applicationIconsGroup.js:348
 msgid "Show live window previews when hovering application icons"
 msgstr ""
 "Показывать интерактивные миниатюры окон при наведении на значки приложений"
 
-#: src/prefs/applicationIconsGroup.js:242
+#: src/prefs/applicationIconsGroup.js:99 src/prefs/applicationIconsGroup.js:360
 msgid "Spread Multiple Windows"
 msgstr "Развернуть несколько окон"
 
-#: src/prefs/applicationIconsGroup.js:243
+#: src/prefs/applicationIconsGroup.js:100
+#: src/prefs/applicationIconsGroup.js:361
 msgid ""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
 msgstr ""
 "Нажмите на приложение с несколькими окнами, чтобы показать только его окна в "
 "обзоре, на всех рабочих столах"
+
+#: src/prefs/applicationIconsGroup.js:212
+msgid "Running Indicator Style"
+msgstr "Стиль индикаторов запущенных приложений"
+
+#: src/prefs/applicationIconsGroup.js:214
+msgid "Choose the shape of indicators beneath running applications"
+msgstr "Выберите форму индикаторов под запущенными приложениями"
+
+#: src/prefs/applicationIconsGroup.js:217
+msgid "Rounded"
+msgstr "Закруглённые"
+
+#: src/prefs/applicationIconsGroup.js:218
+msgid "Straight"
+msgstr "Прямые"
+
+#: src/prefs/applicationIconsGroup.js:224
+msgid "Custom Indicator Colors"
+msgstr "Свои цвета индикаторов"
+
+#: src/prefs/applicationIconsGroup.js:225
+msgid "Choose colors for running application indicators"
+msgstr "Выберите цвета индикаторов запущенных приложений"
+
+#: src/prefs/applicationIconsGroup.js:238
+msgid "Match Icon Color"
+msgstr "Подбирать цвет по значку"
+
+#: src/prefs/applicationIconsGroup.js:240
+msgid "Color the focused indicator from the application icon"
+msgstr "Окрашивать индикатор активного приложения в цвет его значка"
+
+#: src/prefs/applicationIconsGroup.js:256
+msgid "Focused Indicator Color"
+msgstr "Цвет индикатора активного приложения"
+
+#: src/prefs/applicationIconsGroup.js:265
+msgid "Unfocused Indicator Color"
+msgstr "Цвет индикатора неактивного приложения"
 
 #: src/prefs/dockAppearanceGroup.js:22
 #, fuzzy
@@ -350,121 +436,140 @@ msgstr "Светлая"
 msgid "Dark"
 msgstr "Тёмная"
 
-#: src/prefs/dockAppearanceGroup.js:59
+#: src/prefs/dockAppearanceGroup.js:63
+msgid "Dock Corner Radius"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:65
+msgid ""
+"Applies to the floating Dock without blur and with Dynamic Blur; Static Blur "
+"is not supported"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:74
 #, fuzzy
 msgid "Make the Dock background transparent"
 msgstr "Сделать фон панели задач прозрачным"
 
-#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:310
+#: src/prefs/dockAppearanceGroup.js:77 src/prefs/panelAppearancePage.js:310
 #: src/prefs/startMenuPage.js:422
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "Отключите размытие панели в Blur My Shell, чтобы использовать эту настройку"
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:313
+#: src/prefs/dockAppearanceGroup.js:80 src/prefs/panelAppearancePage.js:313
 msgid "Enable Transparency"
 msgstr "Включить прозрачность"
 
-#: src/prefs/dockAppearanceGroup.js:78 src/prefs/panelAppearancePage.js:326
+#: src/prefs/dockAppearanceGroup.js:93 src/prefs/panelAppearancePage.js:326
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0% — непрозрачно, 100% — полностью прозрачно"
 
-#: src/prefs/dockAppearanceGroup.js:85 src/prefs/panelAppearancePage.js:333
+#: src/prefs/dockAppearanceGroup.js:100 src/prefs/panelAppearancePage.js:333
 msgid "Transparency"
 msgstr "Прозрачность"
 
-#: src/prefs/dockAppearanceGroup.js:94 src/prefs/panelAppearancePage.js:368
+#: src/prefs/dockAppearanceGroup.js:109 src/prefs/panelAppearancePage.js:368
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr "Использовать выбранный цвет вместо цвета светлой или тёмной темы"
 
-#: src/prefs/dockAppearanceGroup.js:97
+#: src/prefs/dockAppearanceGroup.js:112
 #, fuzzy
 msgid "Custom Dock Color"
 msgstr "Свой цвет панели задач"
 
-#: src/prefs/dockAppearanceGroup.js:114
+#: src/prefs/dockAppearanceGroup.js:129
 #, fuzzy
 msgid "Dock Color"
 msgstr "Цвет панели задач"
 
-#: src/prefs/dockAppearanceGroup.js:119
+#: src/prefs/dockAppearanceGroup.js:134
 #, fuzzy
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr ""
 "Белый текст использует тёмную тему панели; чёрный текст — светлую тему панели"
 
-#: src/prefs/dockAppearanceGroup.js:126
+#: src/prefs/dockAppearanceGroup.js:141
 #, fuzzy
 msgid "Dock Text Color"
 msgstr "Цвет текста панели задач"
 
-#: src/prefs/dockAppearanceGroup.js:129 src/prefs/panelAppearancePage.js:404
+#: src/prefs/dockAppearanceGroup.js:144 src/prefs/panelAppearancePage.js:404
 msgid "White"
 msgstr "Белый"
 
-#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:405
+#: src/prefs/dockAppearanceGroup.js:145 src/prefs/panelAppearancePage.js:405
 msgid "Black"
 msgstr "Чёрный"
 
-#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:485
+#: src/prefs/dockAppearanceGroup.js:152 src/prefs/panelAppearancePage.js:485
 msgid "Show Border in Dark Mode"
 msgstr "Показывать границу в тёмном режиме"
 
-#: src/prefs/dockAppearanceGroup.js:138 src/prefs/dockAppearanceGroup.js:151
+#: src/prefs/dockAppearanceGroup.js:153 src/prefs/dockAppearanceGroup.js:166
 #, fuzzy
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 "Показывать тонкую границу вдоль края панели, обращённого к рабочей области"
 
-#: src/prefs/dockAppearanceGroup.js:150 src/prefs/panelAppearancePage.js:498
+#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:498
 msgid "Show Border in Light Mode"
 msgstr "Показывать границу в светлом режиме"
 
-#: src/prefs/dockBehaviorGroup.js:13
+#: src/prefs/dockBehaviorGroup.js:14
 #, fuzzy
 msgid "Dock Behavior"
 msgstr "Поведение панели задач"
 
-#: src/prefs/dockBehaviorGroup.js:14
+#: src/prefs/dockBehaviorGroup.js:15
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
-#: src/prefs/dockBehaviorGroup.js:19
+#: src/prefs/dockBehaviorGroup.js:20
 #, fuzzy
 msgid "Auto-hide Dock"
 msgstr "Автоскрытие панели"
 
-#: src/prefs/dockBehaviorGroup.js:20
+#: src/prefs/dockBehaviorGroup.js:21
 #, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
 msgstr "Показывать панель задач, когда указатель достигает края экрана"
 
-#: src/prefs/dockBehaviorGroup.js:32
+#: src/prefs/dockBehaviorGroup.js:44
+msgid "Limit Reveal to Dock Edge"
+msgstr ""
+
+#: src/prefs/dockBehaviorGroup.js:45
+#, fuzzy
+msgid "Only reveal a floating Dock when the pointer reaches its edge"
+msgstr "Показывать панель задач, когда указатель достигает края экрана"
+
+#: src/prefs/dockBehaviorGroup.js:57
 #, fuzzy
 msgid "Show Dock on All Monitors"
 msgstr "Показывать панель задач на всех мониторах"
 
-#: src/prefs/dockBehaviorGroup.js:33
+#: src/prefs/dockBehaviorGroup.js:58
 msgid "Show the Dock on every connected monitor"
 msgstr ""
 
-#: src/prefs/dockBehaviorGroup.js:45 src/prefs/taskbarBehaviorGroup.js:96
+#: src/prefs/dockBehaviorGroup.js:70 src/prefs/taskbarBehaviorGroup.js:108
 msgid "Workspace Scroll"
 msgstr "Прокрутка рабочих столов"
 
-#: src/prefs/dockBehaviorGroup.js:46
+#: src/prefs/dockBehaviorGroup.js:71
 #, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
 msgstr ""
 "Прокручивайте пустое пространство панели задач для переключения рабочих "
 "столов"
 
-#: src/prefs/dockBehaviorGroup.js:62 src/prefs/taskbarBehaviorGroup.js:113
+#: src/prefs/dockBehaviorGroup.js:87 src/prefs/taskbarBehaviorGroup.js:125
 msgid "Workspace Scroll Delay"
 msgstr "Задержка прокрутки рабочих столов"
 
-#: src/prefs/dockBehaviorGroup.js:63 src/prefs/taskbarBehaviorGroup.js:114
+#: src/prefs/dockBehaviorGroup.js:88 src/prefs/taskbarBehaviorGroup.js:126
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 "Минимальная задержка между переключениями рабочих столов в миллисекундах"
@@ -495,11 +600,11 @@ msgstr "Положение панели"
 msgid "Place the taskbar at a screen edge"
 msgstr "Расположить панель задач вверху или внизу экрана"
 
-#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:60
+#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:62
 msgid "Top"
 msgstr "Вверху"
 
-#: src/prefs/panelAppearancePage.js:85 src/prefs/panelModeGroup.js:61
+#: src/prefs/panelAppearancePage.js:85 src/prefs/panelModeGroup.js:63
 msgid "Bottom"
 msgstr "Внизу"
 
@@ -729,76 +834,77 @@ msgstr ""
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "Кнопка «Пуск» в стиле Eleven или оригинальная кнопка GNOME"
 
-#: src/prefs/panelModeGroup.js:27 src/prefs/panelModeGroup.js:41
+#: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:43
 msgid "General"
 msgstr "Общие"
 
-#: src/prefs/panelModeGroup.js:32
+#: src/prefs/panelModeGroup.js:34
 #, fuzzy
 msgid "Taskbar mode"
 msgstr "Тема панели задач"
 
-#: src/prefs/panelModeGroup.js:33
+#: src/prefs/panelModeGroup.js:35
 #, fuzzy
 msgid "Show application buttons in the main panel"
 msgstr "Просматривать приложения по категориям в меню «Пуск»"
 
-#: src/prefs/panelModeGroup.js:46
+#: src/prefs/panelModeGroup.js:48
 msgid "Default GNOME Panel"
 msgstr "Стандартная панель GNOME"
 
-#: src/prefs/panelModeGroup.js:47
+#: src/prefs/panelModeGroup.js:49
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Скрыть приложения панели задач и использовать оригинальный Dash в обзоре"
 
-#: src/prefs/panelModeGroup.js:53
+#: src/prefs/panelModeGroup.js:55
 msgid "Dock mode"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:54
-msgid "Enable Default GNOME Panel mode when switched on"
-msgstr ""
+#: src/prefs/panelModeGroup.js:56
+#, fuzzy
+msgid "Show application buttons in a separate Dock instead of the main panel"
+msgstr "Просматривать приложения по категориям в меню «Пуск»"
 
-#: src/prefs/panelModeGroup.js:84
+#: src/prefs/panelModeGroup.js:102
 #, fuzzy
 msgid "Dock Position"
 msgstr "Положение панели"
 
-#: src/prefs/panelModeGroup.js:85
+#: src/prefs/panelModeGroup.js:103
 msgid "Place the Dock at a different screen edge from the main panel"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:105
+#: src/prefs/panelModeGroup.js:114
 msgid "Maximum Dock Length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:106
+#: src/prefs/panelModeGroup.js:115
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:113
+#: src/prefs/panelModeGroup.js:122
 #, fuzzy
 msgid "Panel mode"
 msgstr "Режим панели"
 
-#: src/prefs/panelModeGroup.js:114
+#: src/prefs/panelModeGroup.js:123
 msgid "Extend the Dock fully to the monitor edge"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:135
+#: src/prefs/panelModeGroup.js:144
 msgid "Windows XP Theme"
 msgstr "Тема Windows XP"
 
-#: src/prefs/panelModeGroup.js:136
+#: src/prefs/panelModeGroup.js:145
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Применить стиль панели задач в духе Windows XP"
 
-#: src/prefs/panelModeGroup.js:148
+#: src/prefs/panelModeGroup.js:157
 msgid "Panel Button Padding"
 msgstr "Отступ кнопок панели"
 
-#: src/prefs/panelModeGroup.js:150
+#: src/prefs/panelModeGroup.js:159
 #, fuzzy
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
@@ -807,11 +913,11 @@ msgstr ""
 "Горизонтальный отступ вокруг кнопок панели. Укажите -1 для автоматического "
 "режима: значение Just Perfection, если оно задано, иначе 3 пикселя"
 
-#: src/prefs/panelModeGroup.js:209
+#: src/prefs/panelModeGroup.js:219
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "Значки приложений недоступны в режиме стандартной панели GNOME."
 
-#: src/prefs/panelModeGroup.js:212
+#: src/prefs/panelModeGroup.js:222
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr "Параметры приложений недоступны в режиме стандартной панели GNOME."
 
@@ -1109,82 +1215,82 @@ msgstr ""
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr "Выберите любое свободное сочетание клавиш; по умолчанию не назначено"
 
-#: src/prefs/taskbarBehaviorGroup.js:29
+#: src/prefs/taskbarBehaviorGroup.js:30
 msgid "Auto-hide Panel"
 msgstr "Автоскрытие панели"
 
-#: src/prefs/taskbarBehaviorGroup.js:30
+#: src/prefs/taskbarBehaviorGroup.js:31
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr "Показывать панель задач, когда указатель достигает края экрана"
 
-#: src/prefs/taskbarBehaviorGroup.js:42
+#: src/prefs/taskbarBehaviorGroup.js:54
 msgid "Bottom Hot Edge"
 msgstr "Активный нижний край"
 
-#: src/prefs/taskbarBehaviorGroup.js:43
+#: src/prefs/taskbarBehaviorGroup.js:55
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Подведите указатель к нижнему краю экрана, чтобы открыть или закрыть обзор"
 
-#: src/prefs/taskbarBehaviorGroup.js:61
+#: src/prefs/taskbarBehaviorGroup.js:73
 msgid "Activation Pressure"
 msgstr "Порог активации"
 
-#: src/prefs/taskbarBehaviorGroup.js:63
+#: src/prefs/taskbarBehaviorGroup.js:75
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr ""
 "Сколько пикселей указатель должен пройти за нижний край экрана, прежде чем "
 "откроется обзор"
 
-#: src/prefs/taskbarBehaviorGroup.js:73
+#: src/prefs/taskbarBehaviorGroup.js:85
 msgid "Hot Edge Animation"
 msgstr "Анимация активного края"
 
-#: src/prefs/taskbarBehaviorGroup.js:74
+#: src/prefs/taskbarBehaviorGroup.js:86
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "Показывать волну при срабатывании нижнего края"
 
-#: src/prefs/taskbarBehaviorGroup.js:97
+#: src/prefs/taskbarBehaviorGroup.js:109
 msgid "Scroll over empty taskbar space to switch workspaces"
 msgstr ""
 "Прокручивайте пустое пространство панели задач для переключения рабочих "
 "столов"
 
-#: src/prefs/taskbarBehaviorGroup.js:127
+#: src/prefs/taskbarBehaviorGroup.js:139
 msgid "Panel Menus Require Click"
 msgstr "Меню панели открываются по щелчку"
 
-#: src/prefs/taskbarBehaviorGroup.js:128
+#: src/prefs/taskbarBehaviorGroup.js:140
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "Переключаться между меню часов, системы и трея только по щелчку"
 
-#: src/prefs/taskbarBehaviorGroup.js:140
+#: src/prefs/taskbarBehaviorGroup.js:152
 msgid "Taskbar-aligned Notification Banners"
 msgstr "Уведомления вдоль панели задач"
 
-#: src/prefs/taskbarBehaviorGroup.js:141
+#: src/prefs/taskbarBehaviorGroup.js:153
 #, fuzzy
 msgid "Follow the taskbar edge and the clock position"
 msgstr "Следовать краю панели задач и горизонтальному положению часов"
 
-#: src/prefs/taskbarBehaviorGroup.js:179
+#: src/prefs/taskbarBehaviorGroup.js:191
 msgid "Automatic Fallback"
 msgstr "Автоматический выбор"
 
-#: src/prefs/taskbarBehaviorGroup.js:187
+#: src/prefs/taskbarBehaviorGroup.js:199
 msgid "Task Manager Application"
 msgstr "Приложение диспетчера задач"
 
-#: src/prefs/taskbarBehaviorGroup.js:188
+#: src/prefs/taskbarBehaviorGroup.js:200
 msgid "Application opened from the taskbar context menu"
 msgstr "Приложение, открываемое из контекстного меню панели задач"
 
-#: src/prefs/taskbarBehaviorGroup.js:204
+#: src/prefs/taskbarBehaviorGroup.js:216
 msgid "Show Taskbar on All Monitors"
 msgstr "Показывать панель задач на всех мониторах"
 
-#: src/prefs/taskbarBehaviorGroup.js:205
+#: src/prefs/taskbarBehaviorGroup.js:217
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 "Показывать «Деятельность», приложения, часы и системное меню на каждом "
@@ -1459,8 +1565,8 @@ msgstr "Открепить от панели задач"
 msgid "Pin to Taskbar"
 msgstr "Закрепить на панели задач"
 
-#: src/taskbar/taskbarAppearanceController.js:405
-#: src/taskbar/taskbarController.js:925 src/taskbar/taskbarController.js:927
+#: src/taskbar/taskbarAppearanceController.js:415
+#: src/taskbar/taskbarController.js:997 src/taskbar/taskbarController.js:999
 msgid "running"
 msgstr "запущено"
 
@@ -1528,13 +1634,13 @@ msgstr "Заблокировать панель задач"
 msgid "Taskbar Settings"
 msgstr "Настройки панели задач"
 
-#: src/taskbar/windowPreviewController.js:767
+#: src/taskbar/windowPreviewController.js:724
 #: src/windowSwitching/gridAltTabPopup.js:221
 #: src/windowSwitching/gridAltTabPopup.js:306
 msgid "Untitled Window"
 msgstr "Безымянное окно"
 
-#: src/taskbar/windowPreviewController.js:815
+#: src/taskbar/windowPreviewController.js:772
 msgid "Close Window"
 msgstr "Закрыть окно"
 

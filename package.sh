@@ -24,6 +24,7 @@ gnome-extensions pack \
     --force \
     --extra-source=COPYING \
     --extra-source=ASSET-CREDITS.md \
+    --extra-source=docs \
     --extra-source=src \
     --extra-source=icons \
     --podir=po \
