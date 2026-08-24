@@ -708,7 +708,7 @@ msgid "Dock mode"
 msgstr ""
 
 #: src/prefs/panelModeGroup.js:54
-msgid "Enable Default GNOME Panel mode when switched on"
+msgid "Show application buttons in a separate Dock instead of the main panel"
 msgstr ""
 
 #: src/prefs/panelModeGroup.js:84

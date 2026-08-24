@@ -51,7 +51,7 @@ export function addPanelModeGroup({
 
     const dockModeSwitch = new Adw.SwitchRow({
         title: _('Dock mode'),
-        subtitle: _('Enable Default GNOME Panel mode when switched on'),
+        subtitle: _('Show application buttons in a separate Dock instead of the main panel'),
         active: settings.get_boolean('dock-mode'),
     });
     dockModeGroup.add(dockModeSwitch);
