@@ -63,7 +63,10 @@ export function refreshPanelBlurVisibility(panelBlur) {
             continue;
         panelBlur.update_size(actors);
     }
-    panelBlur.panel_hide_blur_dynamically?.();
+    if (panelBlur.panel_hide_blur_dynamically)
+        panelBlur.panel_hide_blur_dynamically();
+    else
+        panelBlur.show();
     panelBlur.update_visibility();
 }
 
