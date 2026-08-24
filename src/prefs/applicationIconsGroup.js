@@ -50,7 +50,6 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    dockMinIconSizeRow.visible = true;
     const iconSpacingRow = addSpinRow(
         group,
         settings,

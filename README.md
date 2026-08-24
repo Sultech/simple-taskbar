@@ -1,4 +1,4 @@
-# <img src="docs/images/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
+# <img src="icons/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
 
 <p>
   <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/"><img

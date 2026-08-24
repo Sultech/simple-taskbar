@@ -9,7 +9,9 @@ src/prefs/appBehaviorGroup.js
 src/prefs/applicationIconsGroup.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dockBehaviorGroup.js
+src/prefs/locationsGroup.js
 src/prefs/panelAppearancePage.js
+src/prefs/panelAxis.js
 src/prefs/panelItemsPage.js
 src/prefs/dockItemsPage.js
 src/prefs/panelModeGroup.js
@@ -17,6 +19,7 @@ src/prefs/preferencesDialogs.js
 src/prefs/preferencesWidgets.js
 src/prefs/startMenuPage.js
 src/prefs/taskbarBehaviorGroup.js
+src/prefs/windowDodgeGroup.js
 src/prefs/windowSwitchingPage.js
 src/startMenu/startMenuController.js
 src/startMenu/startMenuAppMenu.js
@@ -26,6 +29,9 @@ src/startMenu/startMenuPowerController.js
 src/folderMenuController.js
 src/integration/fileManagerPlacesSection.js
 src/taskbar/taskbarAppMenu.js
+src/taskbar/taskbarLocation.js
+src/taskbar/taskbarLocationMenu.js
+src/taskbar/taskbarLocationsController.js
 src/taskbar/taskbarAppearanceController.js
 src/startMenu/startButtonController.js
 src/prefs/startIconChooser.js

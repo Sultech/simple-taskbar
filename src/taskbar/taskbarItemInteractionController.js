@@ -189,23 +189,8 @@ export class TaskbarItemInteractionController {
                 'nautilus-places-enabled'
             ),
         });
-        const menuManager = new PopupMenu.PopupMenuManager(button);
-
         menu.setApp(app);
-        menu.connect('open-state-changed', (_popup, isOpen) => {
-            if (isOpen) {
-                item.add_style_pseudo_class('hover');
-            } else if (!item.hover &&
-                this._getPreviewController().hoverItem !== item) {
-                item.remove_style_pseudo_class('hover');
-            }
-        });
-        menu.actor.hide();
-        Main.uiGroup.add_child(menu.actor);
-        menuManager.addMenu(menu);
-
-        button._taskbarMenu = menu;
-        button._taskbarMenuManager = menuManager;
+        this._installMenu(button, menu, item);
     }
 
     _createLocationMenu(button, app, item) {
@@ -214,6 +199,10 @@ export class TaskbarItemInteractionController {
             this._settings,
             app
         );
+        this._installMenu(button, menu, item);
+    }
+
+    _installMenu(button, menu, item) {
         const menuManager = new PopupMenu.PopupMenuManager(button);
 
         menu.connect('open-state-changed', (_popup, isOpen) => {

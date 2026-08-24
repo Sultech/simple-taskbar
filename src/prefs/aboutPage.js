@@ -11,24 +11,22 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 const GITHUB_URL = 'https://github.com/Sultech/simple-taskbar';
 const ISSUES_URL = `${GITHUB_URL}/issues`;
 const COFFEE_URL = 'https://www.buymeacoffee.com/sultech';
+const CRYPTO_ADDRESS_ICON = 'send-to-symbolic';
 const CRYPTO_ADDRESSES = [
     {
         name: 'Solana',
         symbol: 'SOL',
         address: 'BfYcvh1Ja3tUhRMJCuyBNHqdNwNxL7JKFAYLvnhSta2z',
-        icon: 'security-high-symbolic',
     },
     {
         name: 'Ethereum',
         symbol: 'ETH',
         address: '0xaA076D2524e45abd2F2b5Be4f1Bee55b2437b635',
-        icon: 'emblem-shared-symbolic',
     },
     {
         name: 'Bitcoin',
         symbol: 'BTC',
         address: 'bc1qndvpprmgxc5wj3q5yf6vwdhx0whsdapvgasw2t',
-        icon: 'security-medium-symbolic',
     },
 ];
 
@@ -58,7 +56,7 @@ function addHero(page, extensionPath) {
         margin_bottom: 12,
     });
     const logo = Gtk.Image.new_from_file(
-        `${extensionPath}/docs/images/simple-taskbar-logo.png`
+        `${extensionPath}/icons/simple-taskbar-logo.png`
     );
     logo.set_pixel_size(128);
     heroBox.append(logo);
@@ -165,18 +163,18 @@ function addSupport(page, window) {
         'emoji-food-symbolic',
         COFFEE_URL
     );
-    for (const {name, symbol, address, icon} of CRYPTO_ADDRESSES)
-        addCryptoAddress(group, window, name, symbol, address, icon);
+    for (const {name, symbol, address} of CRYPTO_ADDRESSES)
+        addCryptoAddress(group, window, name, symbol, address);
 }
 
-function addCryptoAddress(group, window, name, symbol, address, icon) {
+function addCryptoAddress(group, window, name, symbol, address) {
     const shortAddress = address.length > 24
         ? `${address.slice(0, 12)}…${address.slice(-8)}`
         : address;
     const row = new Adw.ActionRow({
         title: `${name} (${symbol})`,
         subtitle: shortAddress,
-        icon_name: icon,
+        icon_name: CRYPTO_ADDRESS_ICON,
     });
     const copyButton = new Gtk.Button({
         icon_name: 'edit-copy-symbolic',

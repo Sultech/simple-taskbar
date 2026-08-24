@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
-import {addComboRow} from './preferencesWidgets.js';
+import {addComboRow, createSwitchRow} from './preferencesWidgets.js';
 
 export function addWindowDodgeRows(
     group,
@@ -20,18 +17,12 @@ export function addWindowDodgeRows(
         connectSettings,
     }
 ) {
-    const dodgeSwitch = new Adw.SwitchRow({
+    const dodgeSwitch = createSwitchRow(settings, {
+        key: enabledKey,
         title: _('Dodge Windows'),
         subtitle: _('Hide the panel or Dock when a qualifying window overlaps it'),
-        active: settings.get_boolean(enabledKey),
     });
     group.add(dodgeSwitch);
-    settings.bind(
-        enabledKey,
-        dodgeSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const modeRow = addComboRow(
         group,
@@ -58,18 +49,12 @@ export function addWindowDodgeRows(
         connectSettings
     );
 
-    const pointerRevealSwitch = new Adw.SwitchRow({
+    const pointerRevealSwitch = createSwitchRow(settings, {
+        key: pointerRevealKey,
         title: _('Reveal on Pointer'),
         subtitle: _('Reveal the panel or Dock when the pointer reaches its screen edge while dodging a window'),
-        active: settings.get_boolean(pointerRevealKey),
     });
     group.add(pointerRevealSwitch);
-    settings.bind(
-        pointerRevealKey,
-        pointerRevealSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const disableAutoHideWhenDodgeEnabled = () => {
         if (settings.get_boolean(enabledKey) &&

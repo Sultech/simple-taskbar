@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-24 20:25+0100\n"
+"POT-Creation-Date: 2026-08-24 22:52+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -40,11 +40,11 @@ msgstr "居中"
 msgid "Right"
 msgstr "右侧"
 
-#: prefs.js:56
+#: prefs.js:56 src/prefs/locationsGroup.js:41
 msgid "Taskbar"
 msgstr "任务栏"
 
-#: prefs.js:62
+#: prefs.js:62 src/prefs/locationsGroup.js:65
 msgid "Dock"
 msgstr ""
 
@@ -156,7 +156,7 @@ msgstr "应用行为"
 msgid "Choose which applications appear and how they are grouped."
 msgstr "选择显示哪些应用以及如何将它们分组。"
 
-#: src/prefs/advancedPage.js:32 src/prefs/taskbarBehaviorGroup.js:25
+#: src/prefs/advancedPage.js:32 src/prefs/taskbarBehaviorGroup.js:26
 msgid "Taskbar Behavior"
 msgstr "任务栏行为"
 
@@ -176,214 +176,214 @@ msgstr "文件管理器快捷方式和任务栏菜单文件夹。"
 msgid "Less commonly used Start menu options."
 msgstr "使用较少的开始菜单选项。"
 
-#: src/prefs/appBehaviorGroup.js:18
+#: src/prefs/appBehaviorGroup.js:19
 msgid "Hide Pinned Applications"
 msgstr "隐藏已固定的应用"
 
-#: src/prefs/appBehaviorGroup.js:19
+#: src/prefs/appBehaviorGroup.js:20
 msgid "Show pinned taskbar applications only while they are running"
 msgstr "仅展示正在运行的已固定于任务栏的应用"
 
-#: src/prefs/appBehaviorGroup.js:33
+#: src/prefs/appBehaviorGroup.js:26
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "将已固定的应用用作应用程序启动器"
 
-#: src/prefs/appBehaviorGroup.js:35
+#: src/prefs/appBehaviorGroup.js:28
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr "将已固定的应用保留为启动器，并单独展示正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:50
+#: src/prefs/appBehaviorGroup.js:35
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:51
+#: src/prefs/appBehaviorGroup.js:36
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
 
-#: src/prefs/appBehaviorGroup.js:63
+#: src/prefs/appBehaviorGroup.js:41
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/appBehaviorGroup.js:64 src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:42 src/prefs/appBehaviorGroup.js:46
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/appBehaviorGroup.js:65 src/prefs/appBehaviorGroup.js:69
+#: src/prefs/appBehaviorGroup.js:43 src/prefs/appBehaviorGroup.js:47
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/appBehaviorGroup.js:76
+#: src/prefs/appBehaviorGroup.js:54
 msgid "Combine Application Buttons"
 msgstr "合并应用按钮"
 
-#: src/prefs/appBehaviorGroup.js:77
+#: src/prefs/appBehaviorGroup.js:55
 msgid "Choose when windows share one taskbar button"
 msgstr "选择窗口在何时共用一个任务栏按钮"
 
-#: src/prefs/appBehaviorGroup.js:91
+#: src/prefs/appBehaviorGroup.js:70
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/appBehaviorGroup.js:93
+#: src/prefs/appBehaviorGroup.js:72
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/appBehaviorGroup.js:112
+#: src/prefs/appBehaviorGroup.js:82
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/appBehaviorGroup.js:114
+#: src/prefs/appBehaviorGroup.js:84
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/appBehaviorGroup.js:115
+#: src/prefs/appBehaviorGroup.js:85
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/appBehaviorGroup.js:127
+#: src/prefs/appBehaviorGroup.js:98
 msgid "Hide App Labels"
 msgstr "隐藏应用标签"
 
-#: src/prefs/appBehaviorGroup.js:128
+#: src/prefs/appBehaviorGroup.js:99
 msgid "Show only icons on separate window buttons"
 msgstr "在独立的任务栏按钮上仅展示图标"
 
-#: src/prefs/appBehaviorGroup.js:159 src/prefs/windowSwitchingPage.js:52
+#: src/prefs/appBehaviorGroup.js:124 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/appBehaviorGroup.js:160
+#: src/prefs/appBehaviorGroup.js:125
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:172 src/prefs/windowSwitchingPage.js:66
+#: src/prefs/appBehaviorGroup.js:131 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/appBehaviorGroup.js:173
+#: src/prefs/appBehaviorGroup.js:132
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:185
+#: src/prefs/appBehaviorGroup.js:138
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus（文件管理器）文件夹快捷方式"
 
-#: src/prefs/appBehaviorGroup.js:186
+#: src/prefs/appBehaviorGroup.js:139
 msgid "Show common folders in the Files taskbar menu"
 msgstr "在“文件”任务栏菜单中展示常用文件夹"
 
-#: src/prefs/appBehaviorGroup.js:200
+#: src/prefs/appBehaviorGroup.js:145
 msgid "Middle Click Closes Applications"
 msgstr "中键点击以关闭应用"
 
-#: src/prefs/appBehaviorGroup.js:201
+#: src/prefs/appBehaviorGroup.js:146
 msgid "Close all application windows instead of opening a new window"
 msgstr "关闭应用的所有窗口，而不是打开新窗口"
 
-#: src/prefs/applicationIconsGroup.js:25 src/prefs/applicationIconsGroup.js:156
-msgid "Application Icons"
-msgstr "应用程序图标"
-
-#: src/prefs/applicationIconsGroup.js:26 src/prefs/applicationIconsGroup.js:157
-#: src/prefs/panelModeGroup.js:220
-msgid "Change the size, spacing, and placement of taskbar icons."
-msgstr "更改任务栏图标的尺寸、间距与位置。"
-
-#: src/prefs/applicationIconsGroup.js:35 src/prefs/applicationIconsGroup.js:172
+#: src/prefs/applicationIconsGroup.js:30
 msgid "Icon Size"
 msgstr "图标尺寸"
 
-#: src/prefs/applicationIconsGroup.js:37 src/prefs/applicationIconsGroup.js:174
+#: src/prefs/applicationIconsGroup.js:32
 msgid "The panel grows automatically when larger icons need more room"
 msgstr "当较大图标需要更多空间时，面板会自动增大"
 
-#: src/prefs/applicationIconsGroup.js:49 src/prefs/applicationIconsGroup.js:186
+#: src/prefs/applicationIconsGroup.js:44
 #, fuzzy
 msgid "Minimum Icon Size"
 msgstr "图标尺寸"
 
-#: src/prefs/applicationIconsGroup.js:51 src/prefs/applicationIconsGroup.js:188
+#: src/prefs/applicationIconsGroup.js:46
 msgid "Smallest application icon size used when space is limited"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:63 src/prefs/applicationIconsGroup.js:200
+#: src/prefs/applicationIconsGroup.js:58
 msgid "Icon Spacing"
 msgstr "图标间距"
 
-#: src/prefs/applicationIconsGroup.js:64 src/prefs/applicationIconsGroup.js:201
+#: src/prefs/applicationIconsGroup.js:59
 msgid "Space between application buttons"
 msgstr "应用程序按钮之间的间距"
 
-#: src/prefs/applicationIconsGroup.js:75 src/prefs/applicationIconsGroup.js:336
+#: src/prefs/applicationIconsGroup.js:70
 msgid "Icon Alignment"
 msgstr "图标对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:76 src/prefs/applicationIconsGroup.js:337
+#: src/prefs/applicationIconsGroup.js:71
 #, fuzzy
 msgid "Choose the application icon alignment"
 msgstr "跟随应用对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:86 src/prefs/applicationIconsGroup.js:347
+#: src/prefs/applicationIconsGroup.js:81
 msgid "Window Previews"
 msgstr "窗口预览"
 
-#: src/prefs/applicationIconsGroup.js:87 src/prefs/applicationIconsGroup.js:348
+#: src/prefs/applicationIconsGroup.js:82
 msgid "Show live window previews when hovering application icons"
 msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
 
-#: src/prefs/applicationIconsGroup.js:99 src/prefs/applicationIconsGroup.js:360
+#: src/prefs/applicationIconsGroup.js:86
 msgid "Spread Multiple Windows"
 msgstr "展开多窗口"
 
-#: src/prefs/applicationIconsGroup.js:100
-#: src/prefs/applicationIconsGroup.js:361
+#: src/prefs/applicationIconsGroup.js:87
 msgid ""
 "Click an app with multiple windows to show only its windows in Overview, "
 "across all workspaces"
 msgstr "点击具有多个窗口的应用时，仅在概览中跨工作区地展示其窗口"
 
-#: src/prefs/applicationIconsGroup.js:212
+#: src/prefs/applicationIconsGroup.js:131
+#: src/prefs/applicationIconsGroup.js:158
+msgid "Application Icons"
+msgstr "应用程序图标"
+
+#: src/prefs/applicationIconsGroup.js:132
+#: src/prefs/applicationIconsGroup.js:159 src/prefs/panelModeGroup.js:220
+msgid "Change the size, spacing, and placement of taskbar icons."
+msgstr "更改任务栏图标的尺寸、间距与位置。"
+
+#: src/prefs/applicationIconsGroup.js:179
 msgid "Running Indicator Style"
 msgstr "运行指示器样式"
 
-#: src/prefs/applicationIconsGroup.js:214
+#: src/prefs/applicationIconsGroup.js:181
 msgid "Choose the shape of indicators beneath running applications"
 msgstr "选择正在运行的应用下方的指示器的式样"
 
-#: src/prefs/applicationIconsGroup.js:217
+#: src/prefs/applicationIconsGroup.js:184
 msgid "Rounded"
 msgstr "圆角"
 
-#: src/prefs/applicationIconsGroup.js:218
+#: src/prefs/applicationIconsGroup.js:185
 msgid "Straight"
 msgstr "平直"
 
-#: src/prefs/applicationIconsGroup.js:224
+#: src/prefs/applicationIconsGroup.js:191
 msgid "Custom Indicator Colors"
 msgstr "自定义指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:225
+#: src/prefs/applicationIconsGroup.js:192
 msgid "Choose colors for running application indicators"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/applicationIconsGroup.js:238
+#: src/prefs/applicationIconsGroup.js:205
 msgid "Match Icon Color"
 msgstr "匹配图标颜色"
 
-#: src/prefs/applicationIconsGroup.js:240
+#: src/prefs/applicationIconsGroup.js:207
 msgid "Color the focused indicator from the application icon"
 msgstr "根据应用图标的颜色显示聚焦指示器"
 
-#: src/prefs/applicationIconsGroup.js:256
+#: src/prefs/applicationIconsGroup.js:223
 msgid "Focused Indicator Color"
 msgstr "聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:265
+#: src/prefs/applicationIconsGroup.js:232
 msgid "Unfocused Indicator Color"
 msgstr "未聚焦的指示器颜色"
 
@@ -502,59 +502,145 @@ msgstr "在面板朝向工作区的边缘显示细边框"
 msgid "Show Border in Light Mode"
 msgstr "在浅色模式下展示边框"
 
-#: src/prefs/dockBehaviorGroup.js:14
+#: src/prefs/dockBehaviorGroup.js:15
 #, fuzzy
 msgid "Dock Behavior"
 msgstr "任务栏行为"
 
-#: src/prefs/dockBehaviorGroup.js:15
+#: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
-#: src/prefs/dockBehaviorGroup.js:20
+#: src/prefs/dockBehaviorGroup.js:22
 #, fuzzy
 msgid "Auto-hide Dock"
 msgstr "自动隐藏面板"
 
-#: src/prefs/dockBehaviorGroup.js:21
+#: src/prefs/dockBehaviorGroup.js:23
 #, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
 msgstr "当指针到达屏幕边缘时展示任务栏"
 
-#: src/prefs/dockBehaviorGroup.js:44
+#: src/prefs/dockBehaviorGroup.js:40
 msgid "Limit Reveal to Dock Edge"
 msgstr ""
 
-#: src/prefs/dockBehaviorGroup.js:45
+#: src/prefs/dockBehaviorGroup.js:41
 #, fuzzy
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
 msgstr "当指针到达屏幕边缘时展示任务栏"
 
-#: src/prefs/dockBehaviorGroup.js:57
+#: src/prefs/dockBehaviorGroup.js:47
 #, fuzzy
 msgid "Show Dock on All Monitors"
 msgstr "在所有显示器上展示任务栏"
 
-#: src/prefs/dockBehaviorGroup.js:58
+#: src/prefs/dockBehaviorGroup.js:48
 msgid "Show the Dock on every connected monitor"
 msgstr ""
 
-#: src/prefs/dockBehaviorGroup.js:70 src/prefs/taskbarBehaviorGroup.js:108
+#: src/prefs/dockBehaviorGroup.js:54 src/prefs/taskbarBehaviorGroup.js:88
 msgid "Workspace Scroll"
 msgstr "工作区滚动"
 
-#: src/prefs/dockBehaviorGroup.js:71
+#: src/prefs/dockBehaviorGroup.js:55
 #, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
 msgstr "在任务栏空白区域上滚动以切换工作区"
 
-#: src/prefs/dockBehaviorGroup.js:87 src/prefs/taskbarBehaviorGroup.js:125
+#: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
 msgstr "工作区滚动延迟"
 
-#: src/prefs/dockBehaviorGroup.js:88 src/prefs/taskbarBehaviorGroup.js:126
+#: src/prefs/dockBehaviorGroup.js:65 src/prefs/taskbarBehaviorGroup.js:99
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr "在工作区之间切换的最小延迟（毫秒）"
+
+#: src/prefs/locationsGroup.js:12
+#, fuzzy
+msgid "Drive Options"
+msgstr "电源选项"
+
+#: src/prefs/locationsGroup.js:13
+#, fuzzy
+msgid "Choose which connected drives appear"
+msgstr "选择展示哪些可选的面板项目。"
+
+#: src/prefs/locationsGroup.js:17
+msgid "Only Show Mounted Drives"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:18
+msgid "Hide drives that are connected but not mounted"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:22
+msgid "Include Network Volumes"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:23
+msgid "Include network-mounted locations"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:35 src/prefs/locationsGroup.js:87
+#, fuzzy
+msgid "Locations"
+msgstr "应用程序"
+
+#: src/prefs/locationsGroup.js:36
+#, fuzzy
+msgid "Show Trash and connected drives in the taskbar."
+msgstr "在任务栏上展示所选的文件夹"
+
+#: src/prefs/locationsGroup.js:42
+msgid "Locations shown with taskbar applications"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:46 src/prefs/locationsGroup.js:70
+msgid "Show Locations"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:47
+msgid "Display selected locations after taskbar applications"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:51 src/prefs/locationsGroup.js:75
+msgid "Show Trash"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:52
+#, fuzzy
+msgid "Add the Trash to the taskbar"
+msgstr "%s 已固定到任务栏。"
+
+#: src/prefs/locationsGroup.js:56 src/prefs/locationsGroup.js:80
+msgid "Show Drives and Volumes"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:57
+#, fuzzy
+msgid "Add mounted or connected drives to the taskbar"
+msgstr "在任务栏上展示所选的文件夹"
+
+#: src/prefs/locationsGroup.js:66
+msgid "Locations shown with Dock applications"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:71
+msgid "Display selected locations after Dock applications"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:76
+msgid "Add the Trash to the Dock"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:81
+msgid "Add mounted or connected drives to the Dock"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:88
+msgid "Show Trash and connected drives in the Dock."
+msgstr ""
 
 #: src/prefs/panelAppearancePage.js:55
 msgid "Panel Appearance"
@@ -573,7 +659,7 @@ msgstr "面板项目"
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr "当面板缩小时，过大的图标会自动缩小"
 
-#: src/prefs/panelAppearancePage.js:79 src/prefs/preferencesWidgets.js:50
+#: src/prefs/panelAppearancePage.js:79 src/prefs/preferencesWidgets.js:70
 msgid "Panel Position"
 msgstr "面板位置"
 
@@ -582,11 +668,13 @@ msgstr "面板位置"
 msgid "Place the taskbar at a screen edge"
 msgstr "将任务栏放置在屏幕顶部或底部"
 
-#: src/prefs/panelAppearancePage.js:84 src/prefs/panelModeGroup.js:62
+#: src/prefs/panelAppearancePage.js:84 src/prefs/panelAxis.js:13
+#: src/prefs/panelModeGroup.js:62
 msgid "Top"
 msgstr "顶部"
 
-#: src/prefs/panelAppearancePage.js:85 src/prefs/panelModeGroup.js:63
+#: src/prefs/panelAppearancePage.js:85 src/prefs/panelAxis.js:15
+#: src/prefs/panelModeGroup.js:63
 msgid "Bottom"
 msgstr "底部"
 
@@ -624,177 +712,182 @@ msgstr "任务栏文字颜色"
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr "在面板朝向工作区的边缘显示细边框"
 
-#: src/prefs/panelItemsPage.js:29
+#: src/prefs/panelAxis.js:14
+#, fuzzy
+msgid "Middle"
+msgstr "左侧项目"
+
+#: src/prefs/panelItemsPage.js:32
 msgid "Panel Items"
 msgstr "面板项目"
 
-#: src/prefs/panelItemsPage.js:30
+#: src/prefs/panelItemsPage.js:33
 msgid "Choose which optional panel items appear."
 msgstr "选择展示哪些可选的面板项目。"
 
-#: src/prefs/panelItemsPage.js:35
+#: src/prefs/panelItemsPage.js:39
 msgid "Show Activities Button"
 msgstr "展示“活动”按钮"
 
-#: src/prefs/panelItemsPage.js:36
+#: src/prefs/panelItemsPage.js:40
 msgid "Display GNOME’s workspace overview button on the taskbar"
 msgstr "在任务栏上展示 GNOME 的工作区概览按钮"
 
-#: src/prefs/panelItemsPage.js:48 src/prefs/panelItemsPage.js:215
+#: src/prefs/panelItemsPage.js:46 src/prefs/panelItemsPage.js:186
 msgid "Show Desktop Button"
 msgstr "展示“桌面”按钮"
 
-#: src/prefs/panelItemsPage.js:49
+#: src/prefs/panelItemsPage.js:47
 msgid "Display a button that minimizes or restores all windows"
 msgstr "展示一个可最小化或恢复所有窗口的按钮"
 
-#: src/prefs/panelItemsPage.js:63
+#: src/prefs/panelItemsPage.js:53
 msgid "Application Volume Mixer"
 msgstr "应用音量混成器"
 
-#: src/prefs/panelItemsPage.js:64
+#: src/prefs/panelItemsPage.js:54
 msgid "Add per-application volume controls to Quick Settings"
 msgstr "在快速设置中添加一个按应用区分的音量控制器"
 
-#: src/prefs/panelItemsPage.js:76
+#: src/prefs/panelItemsPage.js:60
 msgid "Collect Tray Icons"
 msgstr "收纳托盘图标"
 
-#: src/prefs/panelItemsPage.js:77 src/prefs/panelItemsPage.js:199
+#: src/prefs/panelItemsPage.js:61 src/prefs/panelItemsPage.js:170
 msgid "Gather application tray icons behind a panel arrow"
 msgstr "将应用托盘图标收纳到面板小箭头中"
 
-#: src/prefs/panelItemsPage.js:89
+#: src/prefs/panelItemsPage.js:67
 msgid "Show Folder Menu"
 msgstr "展示文件夹菜单"
 
-#: src/prefs/panelItemsPage.js:90
+#: src/prefs/panelItemsPage.js:68
 msgid "Show a selected folder on the taskbar"
 msgstr "在任务栏上展示所选的文件夹"
 
-#: src/prefs/panelItemsPage.js:102
+#: src/prefs/panelItemsPage.js:73
 msgid "Folder Menu Location"
 msgstr "文件夹菜单位置"
 
-#: src/prefs/panelItemsPage.js:105 src/prefs/startMenuPage.js:146
+#: src/prefs/panelItemsPage.js:76 src/prefs/startMenuPage.js:146
 msgid "Choose…"
 msgstr "选择…"
 
-#: src/prefs/panelItemsPage.js:120
+#: src/prefs/panelItemsPage.js:91
 msgid "No folder selected"
 msgstr "未选择文件夹"
 
-#: src/prefs/panelItemsPage.js:138 src/prefs/panelItemsPage.js:236
+#: src/prefs/panelItemsPage.js:109 src/prefs/panelItemsPage.js:207
 msgid "Left Items"
 msgstr "左侧项目"
 
-#: src/prefs/panelItemsPage.js:140
+#: src/prefs/panelItemsPage.js:111
 msgid "Move items only within their current panel position."
 msgstr "项目只能在当前面板位置内移动。"
 
-#: src/prefs/panelItemsPage.js:144 src/prefs/panelItemsPage.js:236
+#: src/prefs/panelItemsPage.js:115 src/prefs/panelItemsPage.js:207
 msgid "Center Items"
 msgstr "居中项目"
 
-#: src/prefs/panelItemsPage.js:147 src/prefs/panelItemsPage.js:236
+#: src/prefs/panelItemsPage.js:118 src/prefs/panelItemsPage.js:207
 msgid "Right Items"
 msgstr "右侧项目"
 
-#: src/prefs/panelItemsPage.js:155 src/prefs/panelItemsPage.js:239
+#: src/prefs/panelItemsPage.js:126 src/prefs/panelItemsPage.js:210
 msgid "Left Box"
 msgstr "左侧框"
 
-#: src/prefs/panelItemsPage.js:156 src/prefs/panelItemsPage.js:162
-#: src/prefs/panelItemsPage.js:168
+#: src/prefs/panelItemsPage.js:127 src/prefs/panelItemsPage.js:133
+#: src/prefs/panelItemsPage.js:139
 msgid "Other GNOME Shell and extension items"
 msgstr "其他 GNOME Shell 与扩展项目"
 
-#: src/prefs/panelItemsPage.js:161 src/prefs/panelItemsPage.js:239
+#: src/prefs/panelItemsPage.js:132 src/prefs/panelItemsPage.js:210
 msgid "Center Box"
 msgstr "中间框"
 
-#: src/prefs/panelItemsPage.js:167 src/prefs/panelItemsPage.js:239
+#: src/prefs/panelItemsPage.js:138 src/prefs/panelItemsPage.js:210
 msgid "Right Box"
 msgstr "右侧框"
 
-#: src/prefs/panelItemsPage.js:174 src/prefs/startMenuPage.js:32
+#: src/prefs/panelItemsPage.js:145 src/prefs/startMenuPage.js:32
 #: src/prefs/startMenuPage.js:71
 msgid "Start Button"
 msgstr "开始按钮"
 
-#: src/prefs/panelItemsPage.js:175
+#: src/prefs/panelItemsPage.js:146
 msgid "Eleven-style or original GNOME Start button"
 msgstr "11 风格或原始 GNOME 开始按钮"
 
-#: src/prefs/panelItemsPage.js:180
+#: src/prefs/panelItemsPage.js:151
 msgid "Activities"
 msgstr "活动"
 
-#: src/prefs/panelItemsPage.js:181
+#: src/prefs/panelItemsPage.js:152
 msgid "GNOME workspace overview button"
 msgstr "GNOME 工作区概览按钮"
 
-#: src/prefs/panelItemsPage.js:186 src/prefs/dockItemsPage.js:27
+#: src/prefs/panelItemsPage.js:157 src/prefs/dockItemsPage.js:27
 #: src/startMenu/startButtonController.js:656
 msgid "Applications"
 msgstr "应用程序"
 
-#: src/prefs/panelItemsPage.js:187 src/prefs/dockItemsPage.js:28
+#: src/prefs/panelItemsPage.js:158 src/prefs/dockItemsPage.js:28
 msgid "Taskbar application buttons"
 msgstr "任务栏应用按钮"
 
-#: src/prefs/panelItemsPage.js:192
+#: src/prefs/panelItemsPage.js:163
 msgid "Folder Menu"
 msgstr "文件夹菜单"
 
-#: src/prefs/panelItemsPage.js:193
+#: src/prefs/panelItemsPage.js:164
 msgid "Selected folder shortcuts"
 msgstr "所选文件夹快捷方式"
 
-#: src/prefs/panelItemsPage.js:198 src/overflow/trayOverflowController.js:250
+#: src/prefs/panelItemsPage.js:169 src/overflow/trayOverflowController.js:250
 msgid "Tray icons"
 msgstr "托盘图标"
 
-#: src/prefs/panelItemsPage.js:204
+#: src/prefs/panelItemsPage.js:175
 msgid "System Menu"
 msgstr "系统菜单"
 
-#: src/prefs/panelItemsPage.js:205
+#: src/prefs/panelItemsPage.js:176
 msgid "Quick Settings, volume, network, and power"
 msgstr "快速设置、音量、网络与电源"
 
-#: src/prefs/panelItemsPage.js:210
+#: src/prefs/panelItemsPage.js:181
 msgid "Clock"
 msgstr "时钟"
 
-#: src/prefs/panelItemsPage.js:216
+#: src/prefs/panelItemsPage.js:187
 msgid "Minimize or restore all windows"
 msgstr "最小化或恢复所有窗口"
 
-#: src/prefs/panelItemsPage.js:235
+#: src/prefs/panelItemsPage.js:206
 #, fuzzy
 msgid "Top Items"
 msgstr "左侧项目"
 
-#: src/prefs/panelItemsPage.js:235
+#: src/prefs/panelItemsPage.js:206
 #, fuzzy
 msgid "Middle Items"
 msgstr "左侧项目"
 
-#: src/prefs/panelItemsPage.js:235
+#: src/prefs/panelItemsPage.js:206
 #, fuzzy
 msgid "Bottom Items"
 msgstr "底部热区"
 
-#: src/prefs/panelItemsPage.js:238
+#: src/prefs/panelItemsPage.js:209
 msgid "Top Box"
 msgstr ""
 
-#: src/prefs/panelItemsPage.js:238
+#: src/prefs/panelItemsPage.js:209
 msgid "Middle Box"
 msgstr ""
 
-#: src/prefs/panelItemsPage.js:238
+#: src/prefs/panelItemsPage.js:209
 #, fuzzy
 msgid "Bottom Box"
 msgstr "底部"
@@ -955,11 +1048,11 @@ msgstr "该快捷键已被使用。请尝试其他快捷键。"
 msgid "Choose a Folder"
 msgstr "选择一个文件夹"
 
-#: src/prefs/preferencesWidgets.js:96 src/prefs/preferencesWidgets.js:133
+#: src/prefs/preferencesWidgets.js:116 src/prefs/preferencesWidgets.js:153
 msgid "Move Up"
 msgstr "上移"
 
-#: src/prefs/preferencesWidgets.js:101 src/prefs/preferencesWidgets.js:138
+#: src/prefs/preferencesWidgets.js:121 src/prefs/preferencesWidgets.js:158
 msgid "Move Down"
 msgstr "下移"
 
@@ -1177,121 +1270,164 @@ msgstr "要使用自定义快捷键，请关闭 Super+Tab"
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr "选择任意的一个未使用的键盘快捷键，默认不分配任何快捷键"
 
-#: src/prefs/taskbarBehaviorGroup.js:30
+#: src/prefs/taskbarBehaviorGroup.js:32
 msgid "Auto-hide Panel"
 msgstr "自动隐藏面板"
 
-#: src/prefs/taskbarBehaviorGroup.js:31
+#: src/prefs/taskbarBehaviorGroup.js:33
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr "当指针到达屏幕边缘时展示任务栏"
 
-#: src/prefs/taskbarBehaviorGroup.js:54
+#: src/prefs/taskbarBehaviorGroup.js:50
 msgid "Bottom Hot Edge"
 msgstr "底部热区"
 
-#: src/prefs/taskbarBehaviorGroup.js:55
+#: src/prefs/taskbarBehaviorGroup.js:51
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr "将指针抵住屏幕底部边缘以切换概览"
 
-#: src/prefs/taskbarBehaviorGroup.js:73
+#: src/prefs/taskbarBehaviorGroup.js:60
 msgid "Activation Pressure"
 msgstr "激活压力"
 
-#: src/prefs/taskbarBehaviorGroup.js:75
+#: src/prefs/taskbarBehaviorGroup.js:62
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr "指针越过底部边缘所移动的像素数，超过此值后才会激活概览"
 
-#: src/prefs/taskbarBehaviorGroup.js:85
+#: src/prefs/taskbarBehaviorGroup.js:73
 msgid "Hot Edge Animation"
 msgstr "热区动画"
 
-#: src/prefs/taskbarBehaviorGroup.js:86
+#: src/prefs/taskbarBehaviorGroup.js:74
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "底部热区激活时展示波纹动画"
 
-#: src/prefs/taskbarBehaviorGroup.js:109
+#: src/prefs/taskbarBehaviorGroup.js:89
 msgid "Scroll over empty taskbar space to switch workspaces"
 msgstr "在任务栏空白区域上滚动以切换工作区"
 
-#: src/prefs/taskbarBehaviorGroup.js:139
+#: src/prefs/taskbarBehaviorGroup.js:113
 msgid "Panel Menus Require Click"
 msgstr "面板菜单需要点击"
 
-#: src/prefs/taskbarBehaviorGroup.js:140
+#: src/prefs/taskbarBehaviorGroup.js:114
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "仅在点击时切换时钟、系统与托盘菜单"
 
-#: src/prefs/taskbarBehaviorGroup.js:152
+#: src/prefs/taskbarBehaviorGroup.js:120
 msgid "Taskbar-aligned Notification Banners"
 msgstr "与任务栏对齐的通知横幅"
 
-#: src/prefs/taskbarBehaviorGroup.js:153
+#: src/prefs/taskbarBehaviorGroup.js:121
 #, fuzzy
 msgid "Follow the taskbar edge and the clock position"
 msgstr "跟随任务栏的边缘与时钟的水平位置"
 
-#: src/prefs/taskbarBehaviorGroup.js:191
+#: src/prefs/taskbarBehaviorGroup.js:150
 msgid "Automatic Fallback"
 msgstr "自动回退"
 
-#: src/prefs/taskbarBehaviorGroup.js:199
+#: src/prefs/taskbarBehaviorGroup.js:158
 msgid "Task Manager Application"
 msgstr "任务管理器程序"
 
-#: src/prefs/taskbarBehaviorGroup.js:200
+#: src/prefs/taskbarBehaviorGroup.js:159
 msgid "Application opened from the taskbar context menu"
 msgstr "从任务栏右键菜单打开的应用程序"
 
-#: src/prefs/taskbarBehaviorGroup.js:216
+#: src/prefs/taskbarBehaviorGroup.js:176
 msgid "Show Taskbar on All Monitors"
 msgstr "在所有显示器上展示任务栏"
 
-#: src/prefs/taskbarBehaviorGroup.js:217
+#: src/prefs/taskbarBehaviorGroup.js:177
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "在每台显示器上展示活动、应用、时钟与系统菜单"
 
-#: src/prefs/windowSwitchingPage.js:13
+#: src/prefs/windowDodgeGroup.js:22
+#, fuzzy
+msgid "Dodge Windows"
+msgstr "关闭窗口"
+
+#: src/prefs/windowDodgeGroup.js:23
+msgid "Hide the panel or Dock when a qualifying window overlaps it"
+msgstr ""
+
+#: src/prefs/windowDodgeGroup.js:32
+#, fuzzy
+msgid "Dodge Windows Mode"
+msgstr "关闭窗口"
+
+#: src/prefs/windowDodgeGroup.js:33
+msgid "Choose which windows make the panel or Dock hide"
+msgstr ""
+
+#: src/prefs/windowDodgeGroup.js:37
+#, fuzzy
+msgid "All windows"
+msgstr "关闭所有窗口"
+
+#: src/prefs/windowDodgeGroup.js:41
+#, fuzzy
+msgid "Only focused application’s windows"
+msgstr "在已固定的应用下方展示常用的应用"
+
+#: src/prefs/windowDodgeGroup.js:45
+msgid "Only maximized windows"
+msgstr ""
+
+#: src/prefs/windowDodgeGroup.js:54
+msgid "Reveal on Pointer"
+msgstr ""
+
+#: src/prefs/windowDodgeGroup.js:55
+#, fuzzy
+msgid ""
+"Reveal the panel or Dock when the pointer reaches its screen edge while "
+"dodging a window"
+msgstr "当指针到达屏幕边缘时展示任务栏"
+
+#: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"
 msgstr "窗口切换"
 
-#: src/prefs/windowSwitchingPage.js:19
+#: src/prefs/windowSwitchingPage.js:21
 msgid "Grid Alt-Tab"
 msgstr "网格式 Alt-Tab"
 
-#: src/prefs/windowSwitchingPage.js:21
+#: src/prefs/windowSwitchingPage.js:23
 msgid "Switch directly between open windows using live previews."
 msgstr "使用实时预览直接在打开的窗口之间切换。"
 
-#: src/prefs/windowSwitchingPage.js:27
+#: src/prefs/windowSwitchingPage.js:30
 msgid "Enable Grid Alt-Tab"
 msgstr "启用网格式 Alt-Tab（窗口切换器）"
 
-#: src/prefs/windowSwitchingPage.js:29
+#: src/prefs/windowSwitchingPage.js:32
 msgid "Replace GNOME’s application switcher with a responsive window grid"
 msgstr "用响应式窗口网格替换 GNOME 的应用程序切换器"
 
-#: src/prefs/windowSwitchingPage.js:43
+#: src/prefs/windowSwitchingPage.js:39
 msgid "Maximum Card Size"
 msgstr "最大卡片大小"
 
-#: src/prefs/windowSwitchingPage.js:45
+#: src/prefs/windowSwitchingPage.js:41
 msgid "Largest preview height in pixels; widths follow each window’s shape"
 msgstr "最大预览高度（像素），宽度跟随每个窗口的形状"
 
-#: src/prefs/windowSwitchingPage.js:54
+#: src/prefs/windowSwitchingPage.js:51
 msgid "Show windows from the current workspace instead of all workspaces"
 msgstr "仅展示当前工作区的窗口，而非所有工作区"
 
-#: src/prefs/windowSwitchingPage.js:68
+#: src/prefs/windowSwitchingPage.js:59
 msgid "Show only windows from the monitor displaying the switcher"
 msgstr "仅展示切换器所在显示器上的窗口"
 
-#: src/prefs/windowSwitchingPage.js:80
+#: src/prefs/windowSwitchingPage.js:65
 msgid "Show on Primary Monitor"
 msgstr "在主显示器上展示"
 
-#: src/prefs/windowSwitchingPage.js:82
+#: src/prefs/windowSwitchingPage.js:67
 msgid "Always display the switcher on the primary monitor"
 msgstr "始终在主显示器上展示切换器"
 
@@ -1516,6 +1652,39 @@ msgstr "从任务栏取消固定"
 msgid "Pin to Taskbar"
 msgstr "固定到任务栏"
 
+#: src/taskbar/taskbarLocation.js:122
+msgid "Empty Trash"
+msgstr ""
+
+#: src/taskbar/taskbarLocation.js:131
+msgid "Unmount"
+msgstr ""
+
+#: src/taskbar/taskbarLocation.js:133 src/taskbar/taskbarLocation.js:140
+msgid "Eject"
+msgstr ""
+
+#: src/taskbar/taskbarLocation.js:138
+msgid "Mount"
+msgstr ""
+
+#: src/taskbar/taskbarLocation.js:171
+#, fuzzy
+msgid "Unable to open location"
+msgstr "无法打开文件夹"
+
+#: src/taskbar/taskbarLocation.js:325
+msgid "failed"
+msgstr ""
+
+#: src/taskbar/taskbarLocationMenu.js:14
+msgid "Open"
+msgstr ""
+
+#: src/taskbar/taskbarLocationsController.js:270
+msgid "Trash"
+msgstr ""
+
 #: src/taskbar/taskbarAppearanceController.js:415
 #: src/taskbar/taskbarController.js:997 src/taskbar/taskbarController.js:999
 msgid "running"
@@ -1585,13 +1754,13 @@ msgstr "锁定任务栏"
 msgid "Taskbar Settings"
 msgstr "任务栏设置"
 
-#: src/taskbar/windowPreviewController.js:724
+#: src/taskbar/windowPreviewController.js:771
 #: src/windowSwitching/gridAltTabPopup.js:221
 #: src/windowSwitching/gridAltTabPopup.js:306
 msgid "Untitled Window"
 msgstr "无标题窗口"
 
-#: src/taskbar/windowPreviewController.js:772
+#: src/taskbar/windowPreviewController.js:819
 msgid "Close Window"
 msgstr "关闭窗口"
 
