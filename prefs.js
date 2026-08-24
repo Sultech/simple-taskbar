@@ -117,6 +117,19 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const windowsXpThemeSwitch = panelMode.windowsXpThemeSwitch;
         const panelButtonPaddingRow = panelMode.panelButtonPaddingRow;
 
+        const icons = addApplicationIconsGroup({
+            page,
+            dockPage,
+            settings: window._settings,
+            connectSettings,
+            panelPositions,
+            advancedAppearanceGroup,
+        });
+        const appearanceGroup = icons.appearanceGroup;
+        const iconSizeRow = icons.iconSizeRow;
+        const iconSpacingRow = icons.iconSpacingRow;
+        const appAlignmentRow = icons.appAlignmentRow;
+
         const dockAppearance = addDockAppearanceGroup({
             page: dockPage,
             settings: window._settings,
@@ -132,19 +145,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             connectSettings,
         });
-
-        const icons = addApplicationIconsGroup({
-            page,
-            dockPage,
-            settings: window._settings,
-            connectSettings,
-            panelPositions,
-            advancedAppearanceGroup,
-        });
-        const appearanceGroup = icons.appearanceGroup;
-        const iconSizeRow = icons.iconSizeRow;
-        const iconSpacingRow = icons.iconSpacingRow;
-        const appAlignmentRow = icons.appAlignmentRow;
 
         const appBehavior = addAppBehaviorGroup({
             settings: window._settings,

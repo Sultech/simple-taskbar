@@ -200,7 +200,8 @@ export function connectDefaultGnomePanelSync({
         taskbarModeSwitch.sensitive = !windowsXpModeEnabled;
         defaultGnomePanelSwitch.sensitive = !dockModeEnabled &&
             !windowsXpModeEnabled;
-        appearanceGroup.sensitive = !defaultPanelRestrictions;
+        appearanceGroup.sensitive = !dockModeEnabled &&
+            !defaultPanelRestrictions;
         startMenuPage.sensitive = !defaultPanelRestrictions;
         advancedAppBehaviorGroup.sensitive = !defaultPanelRestrictions;
         advancedStartMenuGroup.sensitive = !defaultPanelRestrictions;

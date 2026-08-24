@@ -15,6 +15,135 @@ import {
 
 const MAX_ICON_SIZE = 63;
 
+function addDockApplicationIconsGroup({
+    page,
+    settings,
+    connectSettings,
+    panelPositions,
+}) {
+    const appearanceGroup = new Adw.PreferencesGroup({
+        title: _('Application Icons'),
+        description: _('Change the size, spacing, and placement of taskbar icons.'),
+    });
+    page.add(appearanceGroup);
+
+    addSpinRow(
+        appearanceGroup,
+        settings,
+        {
+            key: 'icon-size',
+            title: _('Icon Size'),
+            subtitle: _(
+                'The panel grows automatically when larger icons need more room'
+            ),
+            lower: 15,
+            upper: MAX_ICON_SIZE,
+        },
+        connectSettings
+    );
+    const dockMinIconSizeRow = addSpinRow(
+        appearanceGroup,
+        settings,
+        {
+            key: 'dock-min-icon-size',
+            title: _('Minimum Icon Size'),
+            subtitle: _(
+                'Smallest application icon size used when space is limited'
+            ),
+            lower: 15,
+            upper: MAX_ICON_SIZE,
+        },
+        connectSettings
+    );
+    addSpinRow(
+        appearanceGroup,
+        settings,
+        {
+            key: 'icon-spacing',
+            title: _('Icon Spacing'),
+            subtitle: _('Space between application buttons'),
+            lower: 0,
+            upper: 16,
+        },
+        connectSettings
+    );
+    addComboRow(
+        appearanceGroup,
+        settings,
+        {
+            key: 'app-alignment',
+            title: _('Icon Alignment'),
+            subtitle: _('Choose the application icon alignment'),
+            choices: panelPositions.slice(0, 2),
+            choicesProvider: () =>
+                axisPanelPositions(settings, panelPositions).slice(0, 2),
+            choicesChangedKey: 'panel-position',
+        },
+        connectSettings
+    );
+
+    const windowPreviewsSwitch = new Adw.SwitchRow({
+        title: _('Window Previews'),
+        subtitle: _('Show live window previews when hovering application icons'),
+        active: settings.get_boolean('window-previews-enabled'),
+    });
+    appearanceGroup.add(windowPreviewsSwitch);
+    settings.bind(
+        'window-previews-enabled',
+        windowPreviewsSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+
+    const multiWindowSpreadSwitch = new Adw.SwitchRow({
+        title: _('Spread Multiple Windows'),
+        subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
+        active: settings.get_boolean(
+            'multi-window-click-spread'
+        ),
+    });
+    appearanceGroup.add(multiWindowSpreadSwitch);
+    settings.bind(
+        'multi-window-click-spread',
+        multiWindowSpreadSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+
+    const syncMinimumIconSize = () => {
+        const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
+            (!settings.get_boolean('default-gnome-panel') ||
+                settings.get_boolean('dock-mode'));
+        dockMinIconSizeRow.sensitive = enabled;
+        if (!enabled)
+            return;
+
+        const maximum = settings.get_int('icon-size');
+        dockMinIconSizeRow.get_adjustment().set_upper(maximum);
+        if (settings.get_int('dock-min-icon-size') > maximum)
+            settings.set_int('dock-min-icon-size', maximum);
+    };
+    for (const key of [
+        'dock-mode',
+        'windows-xp-theme-enabled',
+        'default-gnome-panel',
+        'icon-size',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncMinimumIconSize
+        );
+    }
+    connectSettings(
+        settings,
+        'changed::dock-mode',
+        () => appearanceGroup.sensitive = settings.get_boolean('dock-mode')
+    );
+    appearanceGroup.sensitive = settings.get_boolean('dock-mode');
+    syncMinimumIconSize();
+}
+
 export function addApplicationIconsGroup({
     page,
     dockPage,
@@ -28,21 +157,12 @@ export function addApplicationIconsGroup({
         description: _('Change the size, spacing, and placement of taskbar icons.'),
     });
     page.add(appearanceGroup);
-    let appearanceGroupOnDockPage = false;
-    const syncAppearanceGroupPage = () => {
-        const dockModeEnabled = settings.get_boolean('dock-mode');
-        if (dockModeEnabled === appearanceGroupOnDockPage)
-            return;
-
-        if (dockModeEnabled) {
-            page.remove(appearanceGroup);
-            dockPage.insert(appearanceGroup, 1);
-        } else {
-            dockPage.remove(appearanceGroup);
-            page.insert(appearanceGroup, 1);
-        }
-        appearanceGroupOnDockPage = dockModeEnabled;
-    };
+    addDockApplicationIconsGroup({
+        page: dockPage,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
 
     const iconSizeRow = addSpinRow(
         appearanceGroup,
@@ -180,7 +300,6 @@ export function addApplicationIconsGroup({
             syncIndicatorControls
         );
     }
-    connectSettings(settings, 'changed::dock-mode', syncAppearanceGroupPage);
     const syncMinimumIconSize = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
             (!settings.get_boolean('default-gnome-panel') ||
@@ -207,7 +326,6 @@ export function addApplicationIconsGroup({
             syncMinimumIconSize
         );
     }
-    syncAppearanceGroupPage();
     syncIndicatorControls();
     syncMinimumIconSize();
     const appAlignmentRow = addComboRow(
