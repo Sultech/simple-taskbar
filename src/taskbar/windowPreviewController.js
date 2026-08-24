@@ -49,6 +49,8 @@ export class WindowPreviewController {
         this._previewPendingItem = null;
         this._previewOpenId = 0;
         this._previewCloseId = 0;
+        this._previewSwitchId = 0;
+        this._previewSwitchItem = null;
         this._previewRefreshId = 0;
         this._previewHoverItem = null;
         this._peekedWindow = null;
@@ -133,6 +135,8 @@ export class WindowPreviewController {
     removeItem(item) {
         if (this._previewPendingItem === item)
             this._clearTimeout('_previewOpenId');
+        if (this._previewSwitchItem === item)
+            this._clearSwitch();
         if (this._previewHoverItem === item)
             this._previewHoverItem = null;
         if (this._tooltipItem === item)
@@ -199,6 +203,32 @@ export class WindowPreviewController {
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    scheduleSwitch(item) {
+        this._clearTimeout('_previewOpenId');
+        this._clearTimeout('_previewCloseId');
+        if (!this.previewsEnabled) {
+            this.hide();
+            return;
+        }
+        if (this._overviewIsVisible()) {
+            this.hide();
+            return;
+        }
+        if (this._previewSwitchItem === item)
+            return;
+
+        this._clearSwitch();
+        this._previewSwitchItem = item;
+        this._previewSwitchId = GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
+            this._previewSwitchId = 0;
+            const target = this._previewSwitchItem;
+            this._previewSwitchItem = null;
+            if (target && target.mapped)
+                this.show(target);
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     scheduleTooltip(item) {
@@ -369,6 +399,15 @@ export class WindowPreviewController {
                 this._setHoverItem(hoveredItem);
             else if (!pointerInsidePreview)
                 this._setHoverItem(null);
+
+            if (hoveredItem && hoveredItem !== item &&
+                this._windowsForItem(hoveredItem).length > 0) {
+                this.scheduleSwitch(hoveredItem);
+                return Clutter.EVENT_PROPAGATE;
+            }
+
+            if (this._previewSwitchId)
+                this._clearSwitch();
 
             if (pointerInsidePreview)
                 this._clearTimeout('_previewCloseId');
@@ -550,9 +589,17 @@ export class WindowPreviewController {
     _clearTimeouts() {
         this._clearTimeout('_previewOpenId');
         this._clearTimeout('_previewCloseId');
+        this._clearSwitch();
         if (this._previewRefreshId)
             GLib.Source.remove(this._previewRefreshId);
         this._previewRefreshId = 0;
+    }
+
+    _clearSwitch() {
+        if (this._previewSwitchId)
+            GLib.Source.remove(this._previewSwitchId);
+        this._previewSwitchId = 0;
+        this._previewSwitchItem = null;
     }
 
     _pointerIsOverPreview(item) {
