@@ -8,6 +8,9 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {addProfileTransferGroup} from './profileTransfer.js';
+import {addResetGroup} from './preferencesDialogs.js';
+
 const GITHUB_URL = 'https://github.com/Sultech/simple-taskbar';
 const ISSUES_URL = `${GITHUB_URL}/issues`;
 const COFFEE_URL = 'https://www.buymeacoffee.com/sultech';
@@ -30,7 +33,7 @@ const CRYPTO_ADDRESSES = [
     },
 ];
 
-export function addAboutPage(window, extensionPath) {
+export function addAboutPage(window, extensionPath, settings, createSettings) {
     const page = new Adw.PreferencesPage({
         title: _('About'),
         icon_name: 'help-about-symbolic',
@@ -41,6 +44,8 @@ export function addAboutPage(window, extensionPath) {
     addLinks(page, window);
     addCredits(page);
     addSupport(page, window);
+    addProfileTransferGroup(page, window, settings, createSettings);
+    addResetGroup(page, window, createSettings);
     return page;
 }
 

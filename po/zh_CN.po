@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-24 22:52+0100\n"
+"POT-Creation-Date: 2026-08-25 01:20+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -26,112 +26,112 @@ msgstr "展示桌面"
 msgid "Application overflow"
 msgstr "应用溢出"
 
-#: prefs.js:50 src/prefs/panelAppearancePage.js:86
+#: prefs.js:49 src/prefs/panelAppearancePage.js:86
 #: src/prefs/panelModeGroup.js:64
 msgid "Left"
 msgstr "左侧"
 
-#: prefs.js:51
+#: prefs.js:50
 msgid "Center"
 msgstr "居中"
 
-#: prefs.js:52 src/prefs/panelAppearancePage.js:87
+#: prefs.js:51 src/prefs/panelAppearancePage.js:87
 #: src/prefs/panelModeGroup.js:65
 msgid "Right"
 msgstr "右侧"
 
-#: prefs.js:56 src/prefs/locationsGroup.js:41
+#: prefs.js:55 src/prefs/locationsGroup.js:41
 msgid "Taskbar"
 msgstr "任务栏"
 
-#: prefs.js:62 src/prefs/locationsGroup.js:65
+#: prefs.js:61 src/prefs/locationsGroup.js:65
 msgid "Dock"
 msgstr ""
 
-#: prefs.js:74 src/prefs/advancedPage.js:48 src/prefs/dockItemsPage.js:23
+#: prefs.js:73 src/prefs/advancedPage.js:48 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
 msgstr "开始菜单"
 
-#: src/prefs/aboutPage.js:37
+#: src/prefs/aboutPage.js:38
 msgid "About"
 msgstr ""
 
-#: src/prefs/aboutPage.js:66
+#: src/prefs/aboutPage.js:69
 #, fuzzy
 msgid "Simple Taskbar"
 msgstr "任务栏"
 
-#: src/prefs/aboutPage.js:71
+#: src/prefs/aboutPage.js:74
 msgid "A configurable taskbar, panel and dock for GNOME Shell"
 msgstr ""
 
-#: src/prefs/aboutPage.js:76
+#: src/prefs/aboutPage.js:79
 msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
 msgstr ""
 
-#: src/prefs/aboutPage.js:87
+#: src/prefs/aboutPage.js:90
 msgid "Links"
 msgstr ""
 
-#: src/prefs/aboutPage.js:94
+#: src/prefs/aboutPage.js:97
 msgid "GitHub Repository"
 msgstr ""
 
-#: src/prefs/aboutPage.js:102
+#: src/prefs/aboutPage.js:105
 msgid "Report an Issue"
 msgstr ""
 
-#: src/prefs/aboutPage.js:132
+#: src/prefs/aboutPage.js:135
 msgid "Credits"
 msgstr ""
 
-#: src/prefs/aboutPage.js:137
+#: src/prefs/aboutPage.js:140
 msgid "Sultech"
 msgstr ""
 
-#: src/prefs/aboutPage.js:138
+#: src/prefs/aboutPage.js:141
 msgid "Author"
 msgstr ""
 
-#: src/prefs/aboutPage.js:142
+#: src/prefs/aboutPage.js:145
 #, fuzzy
 msgid "Features"
 msgstr "图片"
 
-#: src/prefs/aboutPage.js:143
+#: src/prefs/aboutPage.js:146
 msgid ""
 "Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
 "Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
 msgstr ""
 
-#: src/prefs/aboutPage.js:147
+#: src/prefs/aboutPage.js:150
 msgid "License"
 msgstr ""
 
-#: src/prefs/aboutPage.js:148
+#: src/prefs/aboutPage.js:151
 msgid "Simple Taskbar is distributed under GPL-2.0-or-later"
 msgstr ""
 
-#: src/prefs/aboutPage.js:155
+#: src/prefs/aboutPage.js:158
 #, fuzzy
 msgid "Support Development"
 msgstr "开发"
 
-#: src/prefs/aboutPage.js:156
+#: src/prefs/aboutPage.js:159
 msgid ""
 "If Simple Taskbar is useful to you, consider supporting its development."
 msgstr ""
 
-#: src/prefs/aboutPage.js:163
+#: src/prefs/aboutPage.js:166
 msgid "Buy Me a Coffee"
 msgstr ""
 
-#: src/prefs/aboutPage.js:185
+#: src/prefs/aboutPage.js:188
 #, javascript-format
 msgid "Copy %s address"
 msgstr ""
 
-#: src/prefs/aboutPage.js:192
+#: src/prefs/aboutPage.js:195
 #, javascript-format
 msgid "%s address copied"
 msgstr ""
@@ -152,7 +152,7 @@ msgstr "使用较少的任务栏和指示器外观选项。"
 msgid "Application Behavior"
 msgstr "应用行为"
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:223
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:224
 msgid "Choose which applications appear and how they are grouped."
 msgstr "选择显示哪些应用以及如何将它们分组。"
 
@@ -338,52 +338,52 @@ msgid ""
 msgstr "点击具有多个窗口的应用时，仅在概览中跨工作区地展示其窗口"
 
 #: src/prefs/applicationIconsGroup.js:131
-#: src/prefs/applicationIconsGroup.js:158
+#: src/prefs/applicationIconsGroup.js:170
 msgid "Application Icons"
 msgstr "应用程序图标"
 
 #: src/prefs/applicationIconsGroup.js:132
-#: src/prefs/applicationIconsGroup.js:159 src/prefs/panelModeGroup.js:220
+#: src/prefs/applicationIconsGroup.js:171 src/prefs/panelModeGroup.js:221
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "更改任务栏图标的尺寸、间距与位置。"
 
-#: src/prefs/applicationIconsGroup.js:179
+#: src/prefs/applicationIconsGroup.js:191
 msgid "Running Indicator Style"
 msgstr "运行指示器样式"
 
-#: src/prefs/applicationIconsGroup.js:181
+#: src/prefs/applicationIconsGroup.js:193
 msgid "Choose the shape of indicators beneath running applications"
 msgstr "选择正在运行的应用下方的指示器的式样"
 
-#: src/prefs/applicationIconsGroup.js:184
+#: src/prefs/applicationIconsGroup.js:196
 msgid "Rounded"
 msgstr "圆角"
 
-#: src/prefs/applicationIconsGroup.js:185
+#: src/prefs/applicationIconsGroup.js:197
 msgid "Straight"
 msgstr "平直"
 
-#: src/prefs/applicationIconsGroup.js:191
+#: src/prefs/applicationIconsGroup.js:203
 msgid "Custom Indicator Colors"
 msgstr "自定义指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:192
+#: src/prefs/applicationIconsGroup.js:204
 msgid "Choose colors for running application indicators"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/applicationIconsGroup.js:205
+#: src/prefs/applicationIconsGroup.js:217
 msgid "Match Icon Color"
 msgstr "匹配图标颜色"
 
-#: src/prefs/applicationIconsGroup.js:207
+#: src/prefs/applicationIconsGroup.js:219
 msgid "Color the focused indicator from the application icon"
 msgstr "根据应用图标的颜色显示聚焦指示器"
 
-#: src/prefs/applicationIconsGroup.js:223
+#: src/prefs/applicationIconsGroup.js:235
 msgid "Focused Indicator Color"
 msgstr "聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:232
+#: src/prefs/applicationIconsGroup.js:244
 msgid "Unfocused Indicator Color"
 msgstr "未聚焦的指示器颜色"
 
@@ -984,11 +984,11 @@ msgstr ""
 "面板按钮周围的水平间距。使用 -1 表示自动：已配置 Just Perfection 时使用其数"
 "值，否则使用 3 像素"
 
-#: src/prefs/panelModeGroup.js:219
+#: src/prefs/panelModeGroup.js:220
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "在默认 GNOME 面板模式下，应用程序图标不可用。"
 
-#: src/prefs/panelModeGroup.js:222
+#: src/prefs/panelModeGroup.js:223
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr "默认 GNOME 面板模式下无法使用应用选项。"
 
@@ -1047,6 +1047,63 @@ msgstr "该快捷键已被使用。请尝试其他快捷键。"
 #: src/prefs/preferencesDialogs.js:163
 msgid "Choose a Folder"
 msgstr "选择一个文件夹"
+
+#: src/prefs/profileTransfer.js:60
+msgid "The selected file is not a valid Simple Taskbar profile."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:72
+msgid "The selected profile is invalid."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:77
+msgid "The selected profile is incompatible with this version."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:118
+msgid "The profile could not be exported."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:134
+msgid "Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:139
+msgid "Export and Import Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:140
+msgid "Save panel settings, Dock settings, and Start Menu pins to a file"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:143
+msgid "Export…"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:147
+msgid "Import…"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:159
+#, javascript-format
+msgid "The profile operation failed: %s"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:167
+msgid "Export Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:184
+msgid "Profile exported."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:195
+msgid "Import Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:212
+msgid "Profile imported."
+msgstr ""
 
 #: src/prefs/preferencesWidgets.js:116 src/prefs/preferencesWidgets.js:153
 msgid "Move Up"

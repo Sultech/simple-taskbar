@@ -16,6 +16,7 @@ src/prefs/panelItemsPage.js
 src/prefs/dockItemsPage.js
 src/prefs/panelModeGroup.js
 src/prefs/preferencesDialogs.js
+src/prefs/profileTransfer.js
 src/prefs/preferencesWidgets.js
 src/prefs/startMenuPage.js
 src/prefs/taskbarBehaviorGroup.js

@@ -9,7 +9,6 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {addResetGroup} from './src/prefs/preferencesDialogs.js';
 import {addAdvancedPage} from './src/prefs/advancedPage.js';
 import {
     addPanelModeGroup,
@@ -242,7 +241,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             connectSettings,
         });
 
-        const aboutPage = addAboutPage(window, this.path);
-        addResetGroup(aboutPage, window, () => this.getSettings());
+        addAboutPage(
+            window,
+            this.path,
+            window._settings,
+            () => this.getSettings()
+        );
     }
 }

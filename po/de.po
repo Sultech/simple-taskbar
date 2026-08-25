@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-24 22:52+0100\n"
+"POT-Creation-Date: 2026-08-25 01:20+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -26,112 +26,112 @@ msgstr "Desktop anzeigen"
 msgid "Application overflow"
 msgstr "Anwendungsüberlauf"
 
-#: prefs.js:50 src/prefs/panelAppearancePage.js:86
+#: prefs.js:49 src/prefs/panelAppearancePage.js:86
 #: src/prefs/panelModeGroup.js:64
 msgid "Left"
 msgstr "Links"
 
-#: prefs.js:51
+#: prefs.js:50
 msgid "Center"
 msgstr "Mitte"
 
-#: prefs.js:52 src/prefs/panelAppearancePage.js:87
+#: prefs.js:51 src/prefs/panelAppearancePage.js:87
 #: src/prefs/panelModeGroup.js:65
 msgid "Right"
 msgstr "Rechts"
 
-#: prefs.js:56 src/prefs/locationsGroup.js:41
+#: prefs.js:55 src/prefs/locationsGroup.js:41
 msgid "Taskbar"
 msgstr "Taskleiste"
 
-#: prefs.js:62 src/prefs/locationsGroup.js:65
+#: prefs.js:61 src/prefs/locationsGroup.js:65
 msgid "Dock"
 msgstr ""
 
-#: prefs.js:74 src/prefs/advancedPage.js:48 src/prefs/dockItemsPage.js:23
+#: prefs.js:73 src/prefs/advancedPage.js:48 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
 msgstr "Startmenü"
 
-#: src/prefs/aboutPage.js:37
+#: src/prefs/aboutPage.js:38
 msgid "About"
 msgstr ""
 
-#: src/prefs/aboutPage.js:66
+#: src/prefs/aboutPage.js:69
 #, fuzzy
 msgid "Simple Taskbar"
 msgstr "Taskleiste"
 
-#: src/prefs/aboutPage.js:71
+#: src/prefs/aboutPage.js:74
 msgid "A configurable taskbar, panel and dock for GNOME Shell"
 msgstr ""
 
-#: src/prefs/aboutPage.js:76
+#: src/prefs/aboutPage.js:79
 msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
 msgstr ""
 
-#: src/prefs/aboutPage.js:87
+#: src/prefs/aboutPage.js:90
 msgid "Links"
 msgstr ""
 
-#: src/prefs/aboutPage.js:94
+#: src/prefs/aboutPage.js:97
 msgid "GitHub Repository"
 msgstr ""
 
-#: src/prefs/aboutPage.js:102
+#: src/prefs/aboutPage.js:105
 msgid "Report an Issue"
 msgstr ""
 
-#: src/prefs/aboutPage.js:132
+#: src/prefs/aboutPage.js:135
 msgid "Credits"
 msgstr ""
 
-#: src/prefs/aboutPage.js:137
+#: src/prefs/aboutPage.js:140
 msgid "Sultech"
 msgstr ""
 
-#: src/prefs/aboutPage.js:138
+#: src/prefs/aboutPage.js:141
 msgid "Author"
 msgstr ""
 
-#: src/prefs/aboutPage.js:142
+#: src/prefs/aboutPage.js:145
 #, fuzzy
 msgid "Features"
 msgstr "Bilder"
 
-#: src/prefs/aboutPage.js:143
+#: src/prefs/aboutPage.js:146
 msgid ""
 "Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
 "Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
 msgstr ""
 
-#: src/prefs/aboutPage.js:147
+#: src/prefs/aboutPage.js:150
 msgid "License"
 msgstr ""
 
-#: src/prefs/aboutPage.js:148
+#: src/prefs/aboutPage.js:151
 msgid "Simple Taskbar is distributed under GPL-2.0-or-later"
 msgstr ""
 
-#: src/prefs/aboutPage.js:155
+#: src/prefs/aboutPage.js:158
 #, fuzzy
 msgid "Support Development"
 msgstr "Entwicklung"
 
-#: src/prefs/aboutPage.js:156
+#: src/prefs/aboutPage.js:159
 msgid ""
 "If Simple Taskbar is useful to you, consider supporting its development."
 msgstr ""
 
-#: src/prefs/aboutPage.js:163
+#: src/prefs/aboutPage.js:166
 msgid "Buy Me a Coffee"
 msgstr ""
 
-#: src/prefs/aboutPage.js:185
+#: src/prefs/aboutPage.js:188
 #, javascript-format
 msgid "Copy %s address"
 msgstr ""
 
-#: src/prefs/aboutPage.js:192
+#: src/prefs/aboutPage.js:195
 #, javascript-format
 msgid "%s address copied"
 msgstr ""
@@ -154,7 +154,7 @@ msgstr ""
 msgid "Application Behavior"
 msgstr "Anwendungsverhalten"
 
-#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:223
+#: src/prefs/advancedPage.js:26 src/prefs/panelModeGroup.js:224
 msgid "Choose which applications appear and how they are grouped."
 msgstr ""
 "Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
@@ -355,52 +355,52 @@ msgstr ""
 "deren Fenster über alle Arbeitsflächen hinweg anzuzeigen"
 
 #: src/prefs/applicationIconsGroup.js:131
-#: src/prefs/applicationIconsGroup.js:158
+#: src/prefs/applicationIconsGroup.js:170
 msgid "Application Icons"
 msgstr "Anwendungssymbole"
 
 #: src/prefs/applicationIconsGroup.js:132
-#: src/prefs/applicationIconsGroup.js:159 src/prefs/panelModeGroup.js:220
+#: src/prefs/applicationIconsGroup.js:171 src/prefs/panelModeGroup.js:221
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "Ändern Sie Größe, Abstand und Platzierung der Taskleistensymbole."
 
-#: src/prefs/applicationIconsGroup.js:179
+#: src/prefs/applicationIconsGroup.js:191
 msgid "Running Indicator Style"
 msgstr "Stil der Ausführungsanzeige"
 
-#: src/prefs/applicationIconsGroup.js:181
+#: src/prefs/applicationIconsGroup.js:193
 msgid "Choose the shape of indicators beneath running applications"
 msgstr "Wählen Sie die Form der Anzeigen unter laufenden Anwendungen"
 
-#: src/prefs/applicationIconsGroup.js:184
+#: src/prefs/applicationIconsGroup.js:196
 msgid "Rounded"
 msgstr "Abgerundet"
 
-#: src/prefs/applicationIconsGroup.js:185
+#: src/prefs/applicationIconsGroup.js:197
 msgid "Straight"
 msgstr "Gerade"
 
-#: src/prefs/applicationIconsGroup.js:191
+#: src/prefs/applicationIconsGroup.js:203
 msgid "Custom Indicator Colors"
 msgstr "Benutzerdefinierte Anzeigefarben"
 
-#: src/prefs/applicationIconsGroup.js:192
+#: src/prefs/applicationIconsGroup.js:204
 msgid "Choose colors for running application indicators"
 msgstr "Wählen Sie Farben für die Anzeigen laufender Anwendungen"
 
-#: src/prefs/applicationIconsGroup.js:205
+#: src/prefs/applicationIconsGroup.js:217
 msgid "Match Icon Color"
 msgstr "Symbolfarbe übernehmen"
 
-#: src/prefs/applicationIconsGroup.js:207
+#: src/prefs/applicationIconsGroup.js:219
 msgid "Color the focused indicator from the application icon"
 msgstr "Die fokussierte Anzeige mit der Farbe des Anwendungssymbols einfärben"
 
-#: src/prefs/applicationIconsGroup.js:223
+#: src/prefs/applicationIconsGroup.js:235
 msgid "Focused Indicator Color"
 msgstr "Farbe der Anzeige für fokussierte Fenster"
 
-#: src/prefs/applicationIconsGroup.js:232
+#: src/prefs/applicationIconsGroup.js:244
 msgid "Unfocused Indicator Color"
 msgstr "Farbe der Anzeige für nicht fokussierte Fenster"
 
@@ -1028,11 +1028,11 @@ msgstr ""
 "Horizontaler Abstand um die Panel-Schaltflächen. Verwenden Sie -1 für "
 "automatisch: der Wert von Just Perfection, wenn konfiguriert, sonst 3 px"
 
-#: src/prefs/panelModeGroup.js:219
+#: src/prefs/panelModeGroup.js:220
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "Anwendungssymbole sind im Standard-GNOME-Panel-Modus nicht verfügbar."
 
-#: src/prefs/panelModeGroup.js:222
+#: src/prefs/panelModeGroup.js:223
 msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr "Anwendungsoptionen sind im Standard-GNOME-Panel-Modus nicht verfügbar."
 
@@ -1098,6 +1098,63 @@ msgstr ""
 #: src/prefs/preferencesDialogs.js:163
 msgid "Choose a Folder"
 msgstr "Ordner auswählen"
+
+#: src/prefs/profileTransfer.js:60
+msgid "The selected file is not a valid Simple Taskbar profile."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:72
+msgid "The selected profile is invalid."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:77
+msgid "The selected profile is incompatible with this version."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:118
+msgid "The profile could not be exported."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:134
+msgid "Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:139
+msgid "Export and Import Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:140
+msgid "Save panel settings, Dock settings, and Start Menu pins to a file"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:143
+msgid "Export…"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:147
+msgid "Import…"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:159
+#, javascript-format
+msgid "The profile operation failed: %s"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:167
+msgid "Export Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:184
+msgid "Profile exported."
+msgstr ""
+
+#: src/prefs/profileTransfer.js:195
+msgid "Import Profiles"
+msgstr ""
+
+#: src/prefs/profileTransfer.js:212
+msgid "Profile imported."
+msgstr ""
 
 #: src/prefs/preferencesWidgets.js:116 src/prefs/preferencesWidgets.js:153
 msgid "Move Up"
