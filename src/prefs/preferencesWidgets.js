@@ -184,6 +184,7 @@ export function addComboRow(group, settings, {
     choicesChangedKey = null,
     choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
     setValue = value => settings.set_string(key, value),
+    addRow = row => group.add(row),
 }, connectSettings) {
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
@@ -233,7 +234,7 @@ export function addComboRow(group, settings, {
             syncingChoices = false;
         });
     }
-    group.add(row);
+    addRow(row);
     return row;
 }
 

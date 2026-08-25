@@ -79,17 +79,21 @@ export function addAppBehaviorGroup({
         connectSettings
     );
 
+    const applicationOverflowRow = new Adw.ExpanderRow({
+        title: _('Application Overflow'),
+        subtitle: _('Choose how overflowing applications are handled'),
+    });
     const applicationOverflowSwitch = createSwitchRow(settings, {
         key: 'application-overflow-enabled',
-        title: _('Application Overflow'),
+        title: _('Enable Application Overflow'),
         subtitle: _(
             'Show application buttons that do not fit in an overflow popup instead of scrolling the taskbar'
         ),
     });
-    advancedAppBehaviorGroup.add(applicationOverflowSwitch);
+    applicationOverflowRow.add_row(applicationOverflowSwitch);
 
     const applicationOverflowStyleRow = addComboRow(
-        advancedAppBehaviorGroup,
+        applicationOverflowRow,
         settings,
         {
             key: 'application-overflow-style',
@@ -98,6 +102,7 @@ export function addAppBehaviorGroup({
                 {value: 'taskbar', label: _('Taskbar Flyout')},
                 {value: 'list', label: _('Application List')},
             ],
+            addRow: row => applicationOverflowRow.add_row(row),
         },
         connectSettings
     );
@@ -106,6 +111,7 @@ export function addAppBehaviorGroup({
     applicationOverflowSwitch.connect('notify::active', widget => {
         applicationOverflowStyleRow.sensitive = widget.active;
     });
+    advancedAppBehaviorGroup.add(applicationOverflowRow);
 
     const hideAppLabelsSwitch = createSwitchRow(settings, {
         key: 'hide-app-labels',

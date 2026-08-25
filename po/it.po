@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:33+0100\n"
+"POT-Creation-Date: 2026-08-25 21:38+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -258,11 +258,21 @@ msgstr ""
 "Scegli quando le finestre condividono un unico pulsante della barra delle "
 "applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:84
+#: src/prefs/appBehaviorGroup.js:83
 msgid "Application Overflow"
 msgstr "Overflow delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:86
+#: src/prefs/appBehaviorGroup.js:84
+#, fuzzy
+msgid "Choose how overflowing applications are handled"
+msgstr "Scegli i colori per gli indicatori delle applicazioni in esecuzione"
+
+#: src/prefs/appBehaviorGroup.js:88
+#, fuzzy
+msgid "Enable Application Overflow"
+msgstr "Overflow delle applicazioni"
+
+#: src/prefs/appBehaviorGroup.js:90
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -270,58 +280,58 @@ msgstr ""
 "Mostra i pulsanti delle applicazioni che non trovano spazio in un popup di "
 "overflow invece di scorrere la barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:96
+#: src/prefs/appBehaviorGroup.js:100
 msgid "Overflow Style"
 msgstr "Stile dell’overflow"
 
-#: src/prefs/appBehaviorGroup.js:98
+#: src/prefs/appBehaviorGroup.js:102
 msgid "Taskbar Flyout"
 msgstr "Menu a comparsa della barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:99
+#: src/prefs/appBehaviorGroup.js:103
 msgid "Application List"
 msgstr "Elenco delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:112
+#: src/prefs/appBehaviorGroup.js:117
 msgid "Hide App Labels"
 msgstr "Nascondi etichette applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:113
+#: src/prefs/appBehaviorGroup.js:118
 msgid "Show only icons on separate window buttons"
 msgstr "Mostra solo le icone sui pulsanti delle finestre separate"
 
-#: src/prefs/appBehaviorGroup.js:138 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:143 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Isola gli spazi di lavoro"
 
-#: src/prefs/appBehaviorGroup.js:139
+#: src/prefs/appBehaviorGroup.js:144
 msgid "Show running applications from the current workspace only"
 msgstr ""
 "Mostra solo le applicazioni in esecuzione dello spazio di lavoro corrente"
 
-#: src/prefs/appBehaviorGroup.js:145 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:150 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Isola i monitor"
 
-#: src/prefs/appBehaviorGroup.js:146
+#: src/prefs/appBehaviorGroup.js:151
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Mostra le applicazioni in esecuzione solo sulla barra delle applicazioni del "
 "proprio monitor"
 
-#: src/prefs/appBehaviorGroup.js:152
+#: src/prefs/appBehaviorGroup.js:157
 msgid "Nautilus Folder Shortcuts"
 msgstr "Scorciatoie cartelle di Nautilus"
 
-#: src/prefs/appBehaviorGroup.js:153
+#: src/prefs/appBehaviorGroup.js:158
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Mostra le cartelle comuni nel menu File della barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:159
+#: src/prefs/appBehaviorGroup.js:164
 msgid "Middle Click Closes Applications"
 msgstr "Il clic centrale chiude le applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:160
+#: src/prefs/appBehaviorGroup.js:165
 msgid "Close all application windows instead of opening a new window"
 msgstr "Chiude tutte le finestre dell’applicazione invece di aprirne una nuova"
 
