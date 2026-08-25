@@ -136,6 +136,158 @@ function addApplicationIconControls({
     };
 }
 
+function addApplicationLayoutControls({
+    group,
+    settings,
+    connectSettings,
+}) {
+    const layoutGroup = new Adw.ExpanderRow({
+        title: _('Application Layout'),
+        subtitle: _(
+            'Choose which applications appear and how their buttons are shown'
+        ),
+    });
+    group.add(layoutGroup);
+
+    const hidePinnedAppsSwitch = createSwitchRow(settings, {
+        key: 'hide-pinned-taskbar-apps',
+        title: _('Hide Pinned Applications'),
+        subtitle: _(
+            'Show pinned taskbar applications only while they are running'
+        ),
+    });
+    layoutGroup.add_row(hidePinnedAppsSwitch);
+
+    const pinnedAppsAsLaunchersSwitch = createSwitchRow(settings, {
+        key: 'use-pinned-apps-as-launchers',
+        title: _('Use Pinned Apps as Application Launchers'),
+        subtitle: _(
+            'Keep pinned applications as launchers and show running applications separately'
+        ),
+    });
+    layoutGroup.add_row(pinnedAppsAsLaunchersSwitch);
+
+    const hideUnpinnedAppsSwitch = createSwitchRow(settings, {
+        key: 'hide-unpinned-taskbar-apps',
+        title: _('Hide Unpinned Applications'),
+        subtitle: _(
+            'Show only pinned applications and their running windows'
+        ),
+    });
+    layoutGroup.add_row(hideUnpinnedAppsSwitch);
+    const syncHideUnpinnedAppsSensitivity = () => {
+        hideUnpinnedAppsSwitch.sensitive =
+            !settings.get_boolean('windows-xp-theme-enabled');
+    };
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncHideUnpinnedAppsSensitivity
+    );
+    syncHideUnpinnedAppsSensitivity();
+
+    const combineAppButtonsChoices = [
+        {value: 'always', label: _('Always')},
+        {value: 'when-full', label: _('Only When Full')},
+        {value: 'never', label: _('Never')},
+    ];
+    const windowsXpCombineAppButtonsChoices = [
+        {value: 'when-full', label: _('Only When Full')},
+        {value: 'never', label: _('Never')},
+    ];
+    const combineAppButtonsRow = addComboRow(
+        layoutGroup,
+        settings,
+        {
+            key: 'combine-app-buttons-mode',
+            title: _('Combine Application Buttons'),
+            subtitle: _('Choose when windows share one taskbar button'),
+            choices: combineAppButtonsChoices,
+            choicesProvider: () =>
+                settings.get_boolean(
+                    'windows-xp-theme-enabled'
+                )
+                    ? windowsXpCombineAppButtonsChoices
+                    : combineAppButtonsChoices,
+            choicesChangedKey: 'windows-xp-theme-enabled',
+            addRow: row => layoutGroup.add_row(row),
+        },
+        connectSettings
+    );
+
+    const hideAppLabelsSwitch = createSwitchRow(settings, {
+        key: 'hide-app-labels',
+        title: _('Hide App Labels'),
+        subtitle: _('Show only icons on separate window buttons'),
+    });
+    layoutGroup.add_row(hideAppLabelsSwitch);
+
+    const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
+        key: 'show-pinned-app-separator',
+        title: _('Show Pinned App Separator'),
+        subtitle: _('Show a line between pinned and running applications'),
+    });
+    layoutGroup.add_row(pinnedAppSeparatorSwitch);
+
+    const locationSeparatorSwitch = createSwitchRow(settings, {
+        key: 'show-location-separator',
+        title: _('Show Location Separator'),
+        subtitle: _('Show a line between applications and locations'),
+    });
+    layoutGroup.add_row(locationSeparatorSwitch);
+
+    const syncSeparatorSensitivity = () => {
+        const enabled = !settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        pinnedAppSeparatorSwitch.sensitive = enabled;
+        locationSeparatorSwitch.sensitive = enabled;
+    };
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncSeparatorSensitivity
+    );
+    syncSeparatorSensitivity();
+
+    const syncLabelSensitivity = () => {
+        hideAppLabelsSwitch.sensitive =
+            !settings.get_boolean(
+                'windows-xp-theme-enabled'
+            ) && !['left', 'right'].includes(settings.get_string(
+                'panel-position'
+            )) && settings.get_string(
+                'combine-app-buttons-mode'
+            ) !== 'always';
+    };
+    combineAppButtonsRow.connect('notify::selected', syncLabelSensitivity);
+    connectSettings(
+        settings,
+        'changed::panel-position',
+        syncLabelSensitivity
+    );
+    syncLabelSensitivity();
+
+    const syncPinnedAppsAsLaunchersSensitivity = () => {
+        pinnedAppsAsLaunchersSwitch.sensitive =
+            !settings.get_boolean('windows-xp-theme-enabled');
+    };
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncPinnedAppsAsLaunchersSensitivity
+    );
+    syncPinnedAppsAsLaunchersSensitivity();
+
+    return {
+        pinnedAppsAsLaunchersSwitch,
+        combineAppButtonsRow,
+        syncLabelSensitivity,
+        pinnedAppSeparatorSwitch,
+        locationSeparatorSwitch,
+    };
+}
+
 function addIndicatorControls({
     group,
     settings,
@@ -268,6 +420,11 @@ function addDockApplicationIconsGroup({
         connectSettings,
         panelPositions,
     });
+    addApplicationLayoutControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+    });
     addIndicatorControls({
         group: appearanceGroup,
         settings,
@@ -319,6 +476,11 @@ export function addApplicationIconsGroup({
         connectSettings,
         panelPositions,
     });
+    const layoutControls = addApplicationLayoutControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+    });
     addIndicatorControls({
         group: appearanceGroup,
         settings,
@@ -330,5 +492,11 @@ export function addApplicationIconsGroup({
         iconSizeRow: controls.iconSizeRow,
         iconSpacingRow: controls.iconSpacingRow,
         appAlignmentRow: controls.appAlignmentRow,
+        pinnedAppsAsLaunchersSwitch:
+            layoutControls.pinnedAppsAsLaunchersSwitch,
+        combineAppButtonsRow: layoutControls.combineAppButtonsRow,
+        syncLabelSensitivity: layoutControls.syncLabelSensitivity,
+        pinnedAppSeparatorSwitch: layoutControls.pinnedAppSeparatorSwitch,
+        locationSeparatorSwitch: layoutControls.locationSeparatorSwitch,
     };
 }

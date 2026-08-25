@@ -129,6 +129,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const iconSizeRow = icons.iconSizeRow;
         const iconSpacingRow = icons.iconSpacingRow;
         const appAlignmentRow = icons.appAlignmentRow;
+        const pinnedAppsAsLaunchersSwitch =
+            icons.pinnedAppsAsLaunchersSwitch;
+        const combineAppButtonsRow = icons.combineAppButtonsRow;
+        const syncLabelSensitivity = icons.syncLabelSensitivity;
 
         const dockAppearance = addDockAppearanceGroup({
             page: dockPage,
@@ -155,15 +159,10 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             advancedAppBehaviorGroup,
             advancedFileManagerGroup,
         });
-        const pinnedAppsAsLaunchersSwitch =
-            appBehavior.pinnedAppsAsLaunchersSwitch;
-        const separatorsRow = appBehavior.separatorsRow;
-        const combineAppButtonsRow = appBehavior.combineAppButtonsRow;
         const applicationOverflowSwitch =
             appBehavior.applicationOverflowSwitch;
         const isolateMonitorsSwitch = appBehavior.isolateMonitorsSwitch;
         const nautilusPlacesSwitch = appBehavior.nautilusPlacesSwitch;
-        const syncLabelSensitivity = appBehavior.syncLabelSensitivity;
 
         connectDefaultGnomePanelSync({
             settings: window._settings,
@@ -200,7 +199,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             dockPanelModeSwitch,
             appAlignmentRow,
             pinnedAppsAsLaunchersSwitch,
-            separatorsRow,
             combineAppButtonsRow,
             applicationOverflowSwitch,
             syncLabelSensitivity,

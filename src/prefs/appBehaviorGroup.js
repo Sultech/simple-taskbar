@@ -16,94 +16,6 @@ export function addAppBehaviorGroup({
     advancedAppBehaviorGroup,
     advancedFileManagerGroup,
 }) {
-    const hidePinnedAppsSwitch = createSwitchRow(settings, {
-        key: 'hide-pinned-taskbar-apps',
-        title: _('Hide Pinned Applications'),
-        subtitle: _('Show pinned taskbar applications only while they are running'),
-    });
-    advancedAppBehaviorGroup.add(hidePinnedAppsSwitch);
-
-    const pinnedAppsAsLaunchersSwitch = createSwitchRow(settings, {
-        key: 'use-pinned-apps-as-launchers',
-        title: _('Use Pinned Apps as Application Launchers'),
-        subtitle: _(
-            'Keep pinned applications as launchers and show running applications separately'
-        ),
-    });
-    advancedAppBehaviorGroup.add(pinnedAppsAsLaunchersSwitch);
-
-    const hideUnpinnedAppsSwitch = createSwitchRow(settings, {
-        key: 'hide-unpinned-taskbar-apps',
-        title: _('Hide Unpinned Applications'),
-        subtitle: _(
-            'Show only pinned applications and their running windows'
-        ),
-    });
-    advancedAppBehaviorGroup.add(hideUnpinnedAppsSwitch);
-    const syncHideUnpinnedAppsSensitivity = () => {
-        hideUnpinnedAppsSwitch.sensitive =
-            !settings.get_boolean('windows-xp-theme-enabled');
-    };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncHideUnpinnedAppsSensitivity
-    );
-    syncHideUnpinnedAppsSensitivity();
-
-    const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
-        key: 'show-pinned-app-separator',
-        title: _('Show Pinned App Separator'),
-        subtitle: _('Show a line between pinned and running applications'),
-    });
-
-    const locationSeparatorSwitch = createSwitchRow(settings, {
-        key: 'show-location-separator',
-        title: _('Show Location Separator'),
-        subtitle: _('Show a line between applications and locations'),
-    });
-    const separatorsRow = new Adw.ExpanderRow({
-        title: _('Separators'),
-        subtitle: _('Choose which separators appear'),
-    });
-    separatorsRow.add_row(pinnedAppSeparatorSwitch);
-    separatorsRow.add_row(locationSeparatorSwitch);
-
-    const combineAppButtonsChoices = [
-        {value: 'always', label: _('Always')},
-        {value: 'when-full', label: _('Only When Full')},
-        {value: 'never', label: _('Never')},
-    ];
-    const windowsXpCombineAppButtonsChoices = [
-        {value: 'when-full', label: _('Only When Full')},
-        {value: 'never', label: _('Never')},
-    ];
-    const combineAppButtonsRow = addComboRow(
-        advancedAppBehaviorGroup,
-        settings,
-        {
-            key: 'combine-app-buttons-mode',
-            title: _('Combine Application Buttons'),
-            subtitle: _('Choose when windows share one taskbar button'),
-            choices: combineAppButtonsChoices,
-            choicesProvider: () =>
-                settings.get_boolean(
-                    'windows-xp-theme-enabled'
-                )
-                    ? windowsXpCombineAppButtonsChoices
-                    : combineAppButtonsChoices,
-            choicesChangedKey: 'windows-xp-theme-enabled',
-        },
-        connectSettings
-    );
-    const hideAppLabelsSwitch = createSwitchRow(settings, {
-        key: 'hide-app-labels',
-        title: _('Hide App Labels'),
-        subtitle: _('Show only icons on separate window buttons'),
-    });
-    advancedAppBehaviorGroup.add(hideAppLabelsSwitch);
-    advancedAppBehaviorGroup.add(separatorsRow);
-
     const applicationOverflowRow = new Adw.ExpanderRow({
         title: _('Application Overflow'),
         subtitle: _('Choose how overflowing applications are handled'),
@@ -138,26 +50,6 @@ export function addAppBehaviorGroup({
     });
     advancedAppBehaviorGroup.add(applicationOverflowRow);
 
-    const syncLabelSensitivity = () => {
-        hideAppLabelsSwitch.sensitive =
-            !settings.get_boolean(
-                'windows-xp-theme-enabled'
-            ) && !['left', 'right'].includes(settings.get_string(
-                'panel-position'
-            )) && settings.get_string(
-                'combine-app-buttons-mode'
-            ) !== 'always';
-    };
-    combineAppButtonsRow.connect('notify::selected', () => {
-        syncLabelSensitivity();
-    });
-    connectSettings(
-        settings,
-        'changed::panel-position',
-        syncLabelSensitivity
-    );
-    syncLabelSensitivity();
-
     const isolateWorkspacesSwitch = createSwitchRow(settings, {
         key: 'isolate-workspaces',
         title: _('Isolate Workspaces'),
@@ -191,12 +83,8 @@ export function addAppBehaviorGroup({
     advancedAppBehaviorGroup.add(middleClickCloseAppsSwitch);
 
     return {
-        pinnedAppsAsLaunchersSwitch,
-        separatorsRow,
-        combineAppButtonsRow,
         applicationOverflowSwitch,
         isolateMonitorsSwitch,
         nautilusPlacesSwitch,
-        syncLabelSensitivity,
     };
 }

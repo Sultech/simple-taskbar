@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 22:39+0100\n"
+"POT-Creation-Date: 2026-08-25 22:50+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -174,115 +174,51 @@ msgid "Less commonly used Start menu options."
 msgstr "Opzioni del menu Start usate meno di frequente."
 
 #: src/prefs/appBehaviorGroup.js:21
-msgid "Hide Pinned Applications"
-msgstr "Nascondi applicazioni bloccate"
-
-#: src/prefs/appBehaviorGroup.js:22
-msgid "Show pinned taskbar applications only while they are running"
-msgstr ""
-"Mostra le applicazioni bloccate nella barra delle applicazioni solo mentre "
-"sono in esecuzione"
-
-#: src/prefs/appBehaviorGroup.js:28
-msgid "Use Pinned Apps as Application Launchers"
-msgstr "Usa le applicazioni bloccate come lanciatori"
-
-#: src/prefs/appBehaviorGroup.js:30
-msgid ""
-"Keep pinned applications as launchers and show running applications "
-"separately"
-msgstr ""
-"Mantieni le applicazioni bloccate come lanciatori e mostra separatamente "
-"quelle in esecuzione"
-
-#: src/prefs/appBehaviorGroup.js:37
-#, fuzzy
-msgid "Hide Unpinned Applications"
-msgstr "Nascondi applicazioni bloccate"
-
-#: src/prefs/appBehaviorGroup.js:39
-#, fuzzy
-msgid "Show only pinned applications and their running windows"
-msgstr ""
-"Mostra le applicazioni bloccate nella barra delle applicazioni solo mentre "
-"sono in esecuzione"
-
-#: src/prefs/appBehaviorGroup.js:56
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:57
+#: src/prefs/appBehaviorGroup.js:22
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr ""
 "Mostra le anteprime in tempo reale delle finestre quando passi il mouse "
 "sulle icone delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:62
+#: src/prefs/appBehaviorGroup.js:27
 msgid "Show Location Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:63
+#: src/prefs/appBehaviorGroup.js:28
 #, fuzzy
 msgid "Show a line between applications and locations"
 msgstr ""
 "Mostra le anteprime in tempo reale delle finestre quando passi il mouse "
 "sulle icone delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:66
+#: src/prefs/appBehaviorGroup.js:31
 msgid "Separators"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:67
+#: src/prefs/appBehaviorGroup.js:32
 #, fuzzy
 msgid "Choose which separators appear"
 msgstr "Scegli quali elementi opzionali del pannello vengono visualizzati."
 
-#: src/prefs/appBehaviorGroup.js:73
-msgid "Always"
-msgstr "Sempre"
-
-#: src/prefs/appBehaviorGroup.js:74 src/prefs/appBehaviorGroup.js:78
-msgid "Only When Full"
-msgstr "Solo quando piena"
-
-#: src/prefs/appBehaviorGroup.js:75 src/prefs/appBehaviorGroup.js:79
-msgid "Never"
-msgstr "Mai"
-
-#: src/prefs/appBehaviorGroup.js:86
-msgid "Combine Application Buttons"
-msgstr "Combina pulsanti delle applicazioni"
-
-#: src/prefs/appBehaviorGroup.js:87
-msgid "Choose when windows share one taskbar button"
-msgstr ""
-"Scegli quando le finestre condividono un unico pulsante della barra delle "
-"applicazioni"
-
-#: src/prefs/appBehaviorGroup.js:101
-msgid "Hide App Labels"
-msgstr "Nascondi etichette applicazioni"
-
-#: src/prefs/appBehaviorGroup.js:102
-msgid "Show only icons on separate window buttons"
-msgstr "Mostra solo le icone sui pulsanti delle finestre separate"
-
-#: src/prefs/appBehaviorGroup.js:108
+#: src/prefs/appBehaviorGroup.js:40
 msgid "Application Overflow"
 msgstr "Overflow delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:109
+#: src/prefs/appBehaviorGroup.js:41
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "Scegli i colori per gli indicatori delle applicazioni in esecuzione"
 
-#: src/prefs/appBehaviorGroup.js:113
+#: src/prefs/appBehaviorGroup.js:45
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "Overflow delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:115
+#: src/prefs/appBehaviorGroup.js:47
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -290,61 +226,61 @@ msgstr ""
 "Mostra i pulsanti delle applicazioni che non trovano spazio in un popup di "
 "overflow invece di scorrere la barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:125
+#: src/prefs/appBehaviorGroup.js:57
 msgid "Overflow Style"
 msgstr "Stile dell’overflow"
 
-#: src/prefs/appBehaviorGroup.js:127
+#: src/prefs/appBehaviorGroup.js:59
 msgid "Taskbar Flyout"
 msgstr "Menu a comparsa della barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:128
+#: src/prefs/appBehaviorGroup.js:60
 msgid "Application List"
 msgstr "Elenco delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:163 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:75 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Isola gli spazi di lavoro"
 
-#: src/prefs/appBehaviorGroup.js:164
+#: src/prefs/appBehaviorGroup.js:76
 msgid "Show running applications from the current workspace only"
 msgstr ""
 "Mostra solo le applicazioni in esecuzione dello spazio di lavoro corrente"
 
-#: src/prefs/appBehaviorGroup.js:168 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:80 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Isola i monitor"
 
-#: src/prefs/appBehaviorGroup.js:169
+#: src/prefs/appBehaviorGroup.js:81
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Mostra le applicazioni in esecuzione solo sulla barra delle applicazioni del "
 "proprio monitor"
 
-#: src/prefs/appBehaviorGroup.js:172
+#: src/prefs/appBehaviorGroup.js:84
 #, fuzzy
 msgid "Application Isolation"
 msgstr "Icone delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:173
+#: src/prefs/appBehaviorGroup.js:85
 #, fuzzy
 msgid "Choose which applications appear on the taskbar"
 msgstr ""
 "Scegli quali applicazioni vengono visualizzate e come sono raggruppate."
 
-#: src/prefs/appBehaviorGroup.js:181
+#: src/prefs/appBehaviorGroup.js:93
 msgid "Nautilus Folder Shortcuts"
 msgstr "Scorciatoie cartelle di Nautilus"
 
-#: src/prefs/appBehaviorGroup.js:182
+#: src/prefs/appBehaviorGroup.js:94
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Mostra le cartelle comuni nel menu File della barra delle applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:188
+#: src/prefs/appBehaviorGroup.js:100
 msgid "Middle Click Closes Applications"
 msgstr "Il clic centrale chiude le applicazioni"
 
-#: src/prefs/appBehaviorGroup.js:189
+#: src/prefs/appBehaviorGroup.js:101
 msgid "Close all application windows instead of opening a new window"
 msgstr "Chiude tutte le finestre dell’applicazione invece di aprirne una nuova"
 
@@ -427,60 +363,137 @@ msgstr ""
 
 #: src/prefs/applicationIconsGroup.js:145
 #, fuzzy
+msgid "Application Layout"
+msgstr "Elenco delle applicazioni"
+
+#: src/prefs/applicationIconsGroup.js:147
+#, fuzzy
+msgid "Choose which applications appear and how their buttons are shown"
+msgstr ""
+"Scegli quali applicazioni vengono visualizzate e come sono raggruppate."
+
+#: src/prefs/applicationIconsGroup.js:154
+msgid "Hide Pinned Applications"
+msgstr "Nascondi applicazioni bloccate"
+
+#: src/prefs/applicationIconsGroup.js:156
+msgid "Show pinned taskbar applications only while they are running"
+msgstr ""
+"Mostra le applicazioni bloccate nella barra delle applicazioni solo mentre "
+"sono in esecuzione"
+
+#: src/prefs/applicationIconsGroup.js:163
+msgid "Use Pinned Apps as Application Launchers"
+msgstr "Usa le applicazioni bloccate come lanciatori"
+
+#: src/prefs/applicationIconsGroup.js:165
+msgid ""
+"Keep pinned applications as launchers and show running applications "
+"separately"
+msgstr ""
+"Mantieni le applicazioni bloccate come lanciatori e mostra separatamente "
+"quelle in esecuzione"
+
+#: src/prefs/applicationIconsGroup.js:172
+#, fuzzy
+msgid "Hide Unpinned Applications"
+msgstr "Nascondi applicazioni bloccate"
+
+#: src/prefs/applicationIconsGroup.js:174
+#, fuzzy
+msgid "Show only pinned applications and their running windows"
+msgstr ""
+"Mostra le applicazioni bloccate nella barra delle applicazioni solo mentre "
+"sono in esecuzione"
+
+#: src/prefs/applicationIconsGroup.js:190
+msgid "Always"
+msgstr "Sempre"
+
+#: src/prefs/applicationIconsGroup.js:191
+#: src/prefs/applicationIconsGroup.js:195
+msgid "Only When Full"
+msgstr "Solo quando piena"
+
+#: src/prefs/applicationIconsGroup.js:192
+#: src/prefs/applicationIconsGroup.js:196
+msgid "Never"
+msgstr "Mai"
+
+#: src/prefs/applicationIconsGroup.js:203
+msgid "Combine Application Buttons"
+msgstr "Combina pulsanti delle applicazioni"
+
+#: src/prefs/applicationIconsGroup.js:204
+msgid "Choose when windows share one taskbar button"
+msgstr ""
+"Scegli quando le finestre condividono un unico pulsante della barra delle "
+"applicazioni"
+
+#: src/prefs/applicationIconsGroup.js:220
+msgid "Hide App Labels"
+msgstr "Nascondi etichette applicazioni"
+
+#: src/prefs/applicationIconsGroup.js:221
+msgid "Show only icons on separate window buttons"
+msgstr "Mostra solo le icone sui pulsanti delle finestre separate"
+
+#: src/prefs/applicationIconsGroup.js:267
+#, fuzzy
 msgid "Running Indicators"
 msgstr "Stile dell’indicatore di esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:146
+#: src/prefs/applicationIconsGroup.js:268
 #, fuzzy
 msgid "Configure indicators beneath running application icons"
 msgstr "Scegli la forma degli indicatori sotto le applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:155
+#: src/prefs/applicationIconsGroup.js:277
 msgid "Running Indicator Style"
 msgstr "Stile dell’indicatore di esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:157
+#: src/prefs/applicationIconsGroup.js:279
 msgid "Choose the shape of indicators beneath running applications"
 msgstr "Scegli la forma degli indicatori sotto le applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:160
+#: src/prefs/applicationIconsGroup.js:282
 msgid "Rounded"
 msgstr "Arrotondato"
 
-#: src/prefs/applicationIconsGroup.js:161
+#: src/prefs/applicationIconsGroup.js:283
 msgid "Straight"
 msgstr "Diritto"
 
-#: src/prefs/applicationIconsGroup.js:168
+#: src/prefs/applicationIconsGroup.js:290
 msgid "Custom Indicator Colors"
 msgstr "Colori personalizzati degli indicatori"
 
-#: src/prefs/applicationIconsGroup.js:169
+#: src/prefs/applicationIconsGroup.js:291
 msgid "Choose colors for running application indicators"
 msgstr "Scegli i colori per gli indicatori delle applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:182
+#: src/prefs/applicationIconsGroup.js:304
 msgid "Match Icon Color"
 msgstr "Abbina il colore dell’icona"
 
-#: src/prefs/applicationIconsGroup.js:184
+#: src/prefs/applicationIconsGroup.js:306
 msgid "Color the focused indicator from the application icon"
 msgstr "Colora l’indicatore attivo con il colore dell’icona dell’applicazione"
 
-#: src/prefs/applicationIconsGroup.js:200
+#: src/prefs/applicationIconsGroup.js:322
 msgid "Focused Indicator Color"
 msgstr "Colore dell’indicatore per la finestra attiva"
 
-#: src/prefs/applicationIconsGroup.js:210
+#: src/prefs/applicationIconsGroup.js:332
 msgid "Unfocused Indicator Color"
 msgstr "Colore dell’indicatore per la finestra non attiva"
 
-#: src/prefs/applicationIconsGroup.js:259
-#: src/prefs/applicationIconsGroup.js:304
+#: src/prefs/applicationIconsGroup.js:381
+#: src/prefs/applicationIconsGroup.js:431
 msgid "Application Icons"
 msgstr "Icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:261
+#: src/prefs/applicationIconsGroup.js:383
 #, fuzzy
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
@@ -488,7 +501,7 @@ msgstr ""
 "Cambia dimensione, spaziatura e posizione delle icone della barra delle "
 "applicazioni."
 
-#: src/prefs/applicationIconsGroup.js:306
+#: src/prefs/applicationIconsGroup.js:433
 #, fuzzy
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
