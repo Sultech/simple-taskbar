@@ -44,7 +44,6 @@ const TASKBAR_CONTENT_CLASS =
 const TASKBAR_SCROLLBAR_CLASS =
     'simple-taskbar-application-overflow-taskbar-scrollbar';
 const POPUP_MARGIN = 32;
-const LOCATION_SEPARATOR_ANIMATION_DURATION = 200;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
@@ -107,7 +106,6 @@ export class ApplicationOverflowController {
             reactive: false,
         });
         this._locationSeparator.add_child(this._locationSeparatorLine);
-        this._locationSeparatorTargetVisible = false;
         this._signalHolder = new TransientSignalHolder();
         this._grab = null;
         this._menu = null;
@@ -607,7 +605,6 @@ export class ApplicationOverflowController {
     _syncLocationSeparator(visible, vertical) {
         const iconSize = this._taskbarController.getIconSize();
         const mainProperty = vertical ? 'height' : 'width';
-        const wasVisible = this._locationSeparator.visible;
         if (vertical) {
             this._locationSeparator.set_width(iconSize);
             this._locationSeparatorLine.set_size(
@@ -622,39 +619,18 @@ export class ApplicationOverflowController {
             );
         }
 
-        if (visible === this._locationSeparatorTargetVisible) {
-            return;
-        }
-
-        this._locationSeparatorTargetVisible = visible;
         this._locationSeparator.remove_all_transitions();
         if (visible) {
             this._locationSeparator.show();
-            if (!wasVisible) {
-                this._locationSeparator[mainProperty] = 0;
-                this._locationSeparator.opacity = 0;
-            }
-            this._locationSeparator.ease({
-                [mainProperty]: TASKBAR_SEPARATOR_EXTENT,
-                opacity: 255,
-                duration: LOCATION_SEPARATOR_ANIMATION_DURATION,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
+            this._locationSeparator[mainProperty] =
+                TASKBAR_SEPARATOR_EXTENT;
+            this._locationSeparator.opacity = 255;
             return;
         }
 
-        this._locationSeparator.ease({
-            [mainProperty]: 0,
-            opacity: 0,
-            duration: LOCATION_SEPARATOR_ANIMATION_DURATION,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => {
-                if (this._locationSeparatorTargetVisible)
-                    return;
-                this._locationSeparator.hide();
-                this._locationSeparator.opacity = 255;
-            },
-        });
+        this._locationSeparator.hide();
+        this._locationSeparator[mainProperty] = 0;
+        this._locationSeparator.opacity = 255;
     }
 
     _onTaskbarDragEnd() {

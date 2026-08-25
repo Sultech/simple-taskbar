@@ -87,6 +87,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-custom-panel-gradient-direction',
     'dock-panel-theme-follow-system',
     'dock-panel-theme',
+    'dock-panel-blur-enabled',
     'dock-panel-border-enabled',
     'dock-panel-border-light-enabled',
     'dock-workspace-scroll-enabled',

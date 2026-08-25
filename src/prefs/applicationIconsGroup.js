@@ -180,6 +180,27 @@ function addApplicationLayoutControls({
         ),
     });
     layoutGroup.add_row(hideUnpinnedAppsSwitch);
+    const syncHiddenApplications = changedKey => {
+        if (!settings.get_boolean(changedKey))
+            return;
+
+        const otherKey = changedKey === 'hide-pinned-taskbar-apps'
+            ? 'hide-unpinned-taskbar-apps'
+            : 'hide-pinned-taskbar-apps';
+        if (settings.get_boolean(otherKey))
+            settings.set_boolean(otherKey, false);
+    };
+    connectSettings(
+        settings,
+        'changed::hide-pinned-taskbar-apps',
+        () => syncHiddenApplications('hide-pinned-taskbar-apps')
+    );
+    connectSettings(
+        settings,
+        'changed::hide-unpinned-taskbar-apps',
+        () => syncHiddenApplications('hide-unpinned-taskbar-apps')
+    );
+    syncHiddenApplications('hide-pinned-taskbar-apps');
     const syncHideUnpinnedAppsSensitivity = () => {
         hideUnpinnedAppsSwitch.sensitive =
             !settings.get_boolean('windows-xp-theme-enabled');

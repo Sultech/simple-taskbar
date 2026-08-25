@@ -97,3 +97,15 @@ export function hidePanelBlurForPanel(panel) {
     if (actors)
         actors.widgets.background.hide();
 }
+
+export function removePanelBlurForPanel(panel) {
+    const panelBlur = getPanelBlur();
+    if (!panelBlur)
+        return;
+
+    const actors = panelBlur.actors_list.find(
+        actors => actors.widgets.panel === panel
+    );
+    if (actors)
+        panelBlur.destroy_blur(actors, false);
+}

@@ -53,6 +53,10 @@ export function addWindowDodgeRows(
                     label: _('Only focused application’s windows'),
                 },
                 {
+                    value: DODGE_WINDOW_MODE.FOCUSED_WINDOW,
+                    label: _('Only focused window'),
+                },
+                {
                     value: DODGE_WINDOW_MODE.MAXIMIZED_WINDOWS,
                     label: _('Only maximized windows'),
                 },

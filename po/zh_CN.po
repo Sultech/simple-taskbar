@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 23:40+0100\n"
+"POT-Creation-Date: 2026-08-26 00:49+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Show desktop"
 msgstr "展示桌面"
 
-#: src/overflow/applicationOverflowController.js:464
+#: src/overflow/applicationOverflowController.js:462
 msgid "Application overflow"
 msgstr "应用溢出"
 
@@ -48,7 +48,7 @@ msgstr "任务栏"
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:71 src/prefs/dockItemsPage.js:23
+#: prefs.js:65 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
 msgstr "开始菜单"
 
@@ -100,7 +100,9 @@ msgstr "功能"
 msgid ""
 "Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
 "Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
-msgstr "可配置的任务栏、默认 GNOME 面板、Dock 和 Windows XP 主题模式 · 实时窗口预览 · 网格 Alt-Tab · 开始菜单 · 多显示器支持"
+msgstr ""
+"可配置的任务栏、默认 GNOME 面板、Dock 和 Windows XP 主题模式 · 实时窗口预览 "
+"· 网格 Alt-Tab · 开始菜单 · 多显示器支持"
 
 #: src/prefs/aboutPage.js:150
 msgid "License"
@@ -241,336 +243,345 @@ msgstr "隐藏未固定的应用"
 msgid "Show only pinned applications and their running windows"
 msgstr "仅显示已固定的应用及其运行中的窗口"
 
-#: src/prefs/applicationIconsGroup.js:195
+#: src/prefs/applicationIconsGroup.js:216
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/applicationIconsGroup.js:196
-#: src/prefs/applicationIconsGroup.js:200
+#: src/prefs/applicationIconsGroup.js:217
+#: src/prefs/applicationIconsGroup.js:221
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/applicationIconsGroup.js:197
-#: src/prefs/applicationIconsGroup.js:201
+#: src/prefs/applicationIconsGroup.js:218
+#: src/prefs/applicationIconsGroup.js:222
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/applicationIconsGroup.js:208
+#: src/prefs/applicationIconsGroup.js:229
 msgid "Combine Application Buttons"
 msgstr "合并应用按钮"
 
-#: src/prefs/applicationIconsGroup.js:209
+#: src/prefs/applicationIconsGroup.js:230
 msgid "Choose when windows share one taskbar button"
 msgstr "选择窗口在何时共用一个任务栏按钮"
 
-#: src/prefs/applicationIconsGroup.js:225
+#: src/prefs/applicationIconsGroup.js:246
 msgid "Hide App Labels"
 msgstr "隐藏应用标签"
 
-#: src/prefs/applicationIconsGroup.js:226
+#: src/prefs/applicationIconsGroup.js:247
 msgid "Show only icons on separate window buttons"
 msgstr "在独立的任务栏按钮上仅展示图标"
 
-#: src/prefs/applicationIconsGroup.js:232
+#: src/prefs/applicationIconsGroup.js:253
 msgid "Show Pinned App Separator"
 msgstr "显示已固定应用分隔线"
 
-#: src/prefs/applicationIconsGroup.js:233
+#: src/prefs/applicationIconsGroup.js:254
 msgid "Show a line between pinned and running applications"
 msgstr "在已固定和正在运行的应用之间显示分隔线"
 
-#: src/prefs/applicationIconsGroup.js:239
+#: src/prefs/applicationIconsGroup.js:260
 msgid "Show Location Separator"
 msgstr "显示位置分隔线"
 
-#: src/prefs/applicationIconsGroup.js:240
+#: src/prefs/applicationIconsGroup.js:261
 msgid "Show a line between applications and locations"
 msgstr "在应用和位置之间显示分隔线"
 
-#: src/prefs/applicationIconsGroup.js:302
+#: src/prefs/applicationIconsGroup.js:323
 msgid "Running Indicators"
 msgstr "运行指示器"
 
-#: src/prefs/applicationIconsGroup.js:303
+#: src/prefs/applicationIconsGroup.js:324
 msgid "Configure indicators beneath running application icons"
 msgstr "配置运行中应用图标下方的指示器"
 
-#: src/prefs/applicationIconsGroup.js:312
+#: src/prefs/applicationIconsGroup.js:333
 msgid "Running Indicator Style"
 msgstr "运行指示器样式"
 
-#: src/prefs/applicationIconsGroup.js:314
+#: src/prefs/applicationIconsGroup.js:335
 msgid "Choose the shape of indicators beneath running applications"
 msgstr "选择正在运行的应用下方的指示器的式样"
 
-#: src/prefs/applicationIconsGroup.js:317
+#: src/prefs/applicationIconsGroup.js:338
 msgid "Rounded"
 msgstr "圆角"
 
-#: src/prefs/applicationIconsGroup.js:318
+#: src/prefs/applicationIconsGroup.js:339
 msgid "Straight"
 msgstr "平直"
 
-#: src/prefs/applicationIconsGroup.js:325
+#: src/prefs/applicationIconsGroup.js:346
 msgid "Custom Indicator Colors"
 msgstr "自定义指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:326
+#: src/prefs/applicationIconsGroup.js:347
 msgid "Choose colors for running application indicators"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/applicationIconsGroup.js:339
+#: src/prefs/applicationIconsGroup.js:360
 msgid "Match Icon Color"
 msgstr "匹配图标颜色"
 
-#: src/prefs/applicationIconsGroup.js:341
+#: src/prefs/applicationIconsGroup.js:362
 msgid "Color the focused indicator from the application icon"
 msgstr "根据应用图标的颜色显示聚焦指示器"
 
-#: src/prefs/applicationIconsGroup.js:357
+#: src/prefs/applicationIconsGroup.js:378
 msgid "Focused Indicator Color"
 msgstr "聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:367
+#: src/prefs/applicationIconsGroup.js:388
 msgid "Unfocused Indicator Color"
 msgstr "未聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:416
+#: src/prefs/applicationIconsGroup.js:437
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/applicationIconsGroup.js:417
+#: src/prefs/applicationIconsGroup.js:438
 msgid "Choose how overflowing applications are handled"
 msgstr "选择如何处理超出空间的应用"
 
-#: src/prefs/applicationIconsGroup.js:423
+#: src/prefs/applicationIconsGroup.js:444
 msgid "Enable Application Overflow"
 msgstr "启用应用溢出"
 
-#: src/prefs/applicationIconsGroup.js:433
+#: src/prefs/applicationIconsGroup.js:454
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/applicationIconsGroup.js:435
+#: src/prefs/applicationIconsGroup.js:456
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/applicationIconsGroup.js:436
+#: src/prefs/applicationIconsGroup.js:457
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/applicationIconsGroup.js:469 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:490 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/applicationIconsGroup.js:470
+#: src/prefs/applicationIconsGroup.js:491
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/applicationIconsGroup.js:474 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:495 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/applicationIconsGroup.js:478
+#: src/prefs/applicationIconsGroup.js:499
 msgid "Application Isolation"
 msgstr "应用隔离"
 
-#: src/prefs/applicationIconsGroup.js:495
-#: src/prefs/applicationIconsGroup.js:561
+#: src/prefs/applicationIconsGroup.js:516
+#: src/prefs/applicationIconsGroup.js:582
 msgid "Application Icons"
 msgstr "应用程序图标"
 
-#: src/prefs/applicationIconsGroup.js:497
+#: src/prefs/applicationIconsGroup.js:518
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr "更改 Dock 图标的大小、间距、位置和运行指示器。"
 
-#: src/prefs/applicationIconsGroup.js:512
+#: src/prefs/applicationIconsGroup.js:533
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the Dock"
 msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动 Dock"
 
-#: src/prefs/applicationIconsGroup.js:518
+#: src/prefs/applicationIconsGroup.js:539
 msgid "Choose which applications appear on the Dock"
 msgstr "选择 Dock 中显示的应用"
 
-#: src/prefs/applicationIconsGroup.js:520
+#: src/prefs/applicationIconsGroup.js:541
 msgid "Show running applications only in the Dock for their monitor"
 msgstr "仅在应用所在的显示器 Dock 中显示正在运行的应用"
 
-#: src/prefs/applicationIconsGroup.js:563
+#: src/prefs/applicationIconsGroup.js:584
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
 msgstr "更改任务栏图标的大小、间距、位置和运行指示器。"
 
-#: src/prefs/applicationIconsGroup.js:584
+#: src/prefs/applicationIconsGroup.js:605
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/applicationIconsGroup.js:590
+#: src/prefs/applicationIconsGroup.js:611
 msgid "Choose which applications appear on the taskbar"
 msgstr "选择任务栏中显示的应用"
 
-#: src/prefs/applicationIconsGroup.js:592
+#: src/prefs/applicationIconsGroup.js:613
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
-#: src/prefs/dockAppearanceGroup.js:25
+#: src/prefs/dockAppearanceGroup.js:26
 msgid "Dock Appearance"
 msgstr "Dock 外观"
 
-#: src/prefs/dockAppearanceGroup.js:26
+#: src/prefs/dockAppearanceGroup.js:27
 msgid "Configure the Dock independently of the main panel."
 msgstr "独立于主面板配置 Dock。"
 
-#: src/prefs/dockAppearanceGroup.js:38 src/prefs/panelAppearancePage.js:259
+#: src/prefs/dockAppearanceGroup.js:39 src/prefs/panelAppearancePage.js:259
 msgid "Theme"
 msgstr "主题"
 
-#: src/prefs/dockAppearanceGroup.js:39
+#: src/prefs/dockAppearanceGroup.js:40
 msgid "Choose the Dock colour scheme"
 msgstr "选择 Dock 配色方案"
 
-#: src/prefs/dockAppearanceGroup.js:44 src/prefs/panelAppearancePage.js:265
+#: src/prefs/dockAppearanceGroup.js:45 src/prefs/panelAppearancePage.js:265
 msgid "Follow System Theme"
 msgstr "跟随系统主题"
 
-#: src/prefs/dockAppearanceGroup.js:45
+#: src/prefs/dockAppearanceGroup.js:46
 msgid "Match the active GNOME Shell theme"
 msgstr "匹配当前 GNOME Shell 主题"
 
-#: src/prefs/dockAppearanceGroup.js:61
+#: src/prefs/dockAppearanceGroup.js:62
 msgid "Dock Theme"
 msgstr "Dock 主题"
 
-#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:283
+#: src/prefs/dockAppearanceGroup.js:63 src/prefs/panelAppearancePage.js:283
 msgid "Choose the colour scheme when system matching is off"
 msgstr "当系统捕获关闭时选择配色方案"
 
-#: src/prefs/dockAppearanceGroup.js:64 src/prefs/panelAppearancePage.js:285
+#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:285
 #: src/prefs/startMenuPage.js:420
 msgid "Light"
 msgstr "浅色"
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:286
+#: src/prefs/dockAppearanceGroup.js:66 src/prefs/panelAppearancePage.js:286
 #: src/prefs/startMenuPage.js:419
 msgid "Dark"
 msgstr "深色"
 
-#: src/prefs/dockAppearanceGroup.js:77
+#: src/prefs/dockAppearanceGroup.js:78
 msgid "Dock Corner Radius"
 msgstr "Dock 圆角半径"
 
-#: src/prefs/dockAppearanceGroup.js:79
+#: src/prefs/dockAppearanceGroup.js:80
 msgid ""
 "Applies to the floating Dock without blur and with Dynamic Blur; Static Blur "
 "is not supported"
 msgstr "适用于无模糊和使用动态模糊的浮动 Dock；不支持静态模糊"
 
-#: src/prefs/dockAppearanceGroup.js:89
+#: src/prefs/dockAppearanceGroup.js:90
 msgid "Make the Dock background transparent"
 msgstr "使 Dock 背景透明"
 
-#: src/prefs/dockAppearanceGroup.js:92 src/prefs/panelAppearancePage.js:305
+#: src/prefs/dockAppearanceGroup.js:93 src/prefs/panelAppearancePage.js:305
 #: src/prefs/startMenuPage.js:446
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的面板模糊"
 
-#: src/prefs/dockAppearanceGroup.js:95 src/prefs/dockAppearanceGroup.js:121
+#: src/prefs/dockAppearanceGroup.js:96 src/prefs/dockAppearanceGroup.js:128
 #: src/prefs/panelAppearancePage.js:308 src/prefs/panelAppearancePage.js:334
 msgid "Transparency"
 msgstr "透明度"
 
-#: src/prefs/dockAppearanceGroup.js:96
+#: src/prefs/dockAppearanceGroup.js:97
 msgid "Control the Dock background transparency"
 msgstr "控制 Dock 背景透明度"
 
-#: src/prefs/dockAppearanceGroup.js:101 src/prefs/panelAppearancePage.js:314
+#: src/prefs/dockAppearanceGroup.js:102 src/prefs/panelAppearancePage.js:314
 msgid "Enable Transparency"
 msgstr "启用透明度"
 
-#: src/prefs/dockAppearanceGroup.js:114 src/prefs/panelAppearancePage.js:327
+#: src/prefs/dockAppearanceGroup.js:115
+msgid "Blur Dock with Blur My Shell"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:116
+#, fuzzy
+msgid "Apply Blur My Shell panel blur to the Dock"
+msgstr "要使用此选项，请禁用 Blur My Shell 的面板模糊"
+
+#: src/prefs/dockAppearanceGroup.js:121 src/prefs/panelAppearancePage.js:327
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0% 为不透明，100% 为完全透明"
 
-#: src/prefs/dockAppearanceGroup.js:131 src/prefs/panelAppearancePage.js:370
+#: src/prefs/dockAppearanceGroup.js:138 src/prefs/panelAppearancePage.js:370
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr "使用选定的颜色，而不是浅色或深色的主题颜色"
 
-#: src/prefs/dockAppearanceGroup.js:134
+#: src/prefs/dockAppearanceGroup.js:141
 msgid "Custom Dock Color"
 msgstr "自定义 Dock 颜色"
 
-#: src/prefs/dockAppearanceGroup.js:151
+#: src/prefs/dockAppearanceGroup.js:158
 msgid "Dock Color"
 msgstr "Dock 颜色"
 
-#: src/prefs/dockAppearanceGroup.js:157
+#: src/prefs/dockAppearanceGroup.js:164
 msgid "Use Dock Gradient"
 msgstr "使用 Dock 渐变"
 
-#: src/prefs/dockAppearanceGroup.js:158
+#: src/prefs/dockAppearanceGroup.js:165
 msgid "Blend the Dock color with a second color"
 msgstr "将 Dock 颜色与第二种颜色混合"
 
-#: src/prefs/dockAppearanceGroup.js:175
+#: src/prefs/dockAppearanceGroup.js:182
 msgid "Dock Gradient Color"
 msgstr "Dock 渐变颜色"
 
-#: src/prefs/dockAppearanceGroup.js:185
+#: src/prefs/dockAppearanceGroup.js:192
 msgid "Dock Gradient Direction"
 msgstr "Dock 渐变方向"
 
-#: src/prefs/dockAppearanceGroup.js:186 src/prefs/panelAppearancePage.js:424
+#: src/prefs/dockAppearanceGroup.js:193 src/prefs/panelAppearancePage.js:424
 msgid "Choose how the gradient flows"
 msgstr "选择渐变方向"
 
-#: src/prefs/dockAppearanceGroup.js:188 src/prefs/panelAppearancePage.js:426
+#: src/prefs/dockAppearanceGroup.js:195 src/prefs/panelAppearancePage.js:426
 msgid "Vertical"
 msgstr "垂直"
 
-#: src/prefs/dockAppearanceGroup.js:189 src/prefs/panelAppearancePage.js:427
+#: src/prefs/dockAppearanceGroup.js:196 src/prefs/panelAppearancePage.js:427
 msgid "Horizontal"
 msgstr "水平"
 
-#: src/prefs/dockAppearanceGroup.js:196
+#: src/prefs/dockAppearanceGroup.js:203
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr "白色文字使用深色 Dock 主题；黑色文字使用浅色 Dock 主题"
 
-#: src/prefs/dockAppearanceGroup.js:203
+#: src/prefs/dockAppearanceGroup.js:210
 msgid "Dock Text Color"
 msgstr "Dock 文本颜色"
 
-#: src/prefs/dockAppearanceGroup.js:206 src/prefs/panelAppearancePage.js:444
+#: src/prefs/dockAppearanceGroup.js:213 src/prefs/panelAppearancePage.js:444
 msgid "White"
 msgstr "白色"
 
-#: src/prefs/dockAppearanceGroup.js:207 src/prefs/panelAppearancePage.js:445
+#: src/prefs/dockAppearanceGroup.js:214 src/prefs/panelAppearancePage.js:445
 msgid "Black"
 msgstr "黑色"
 
-#: src/prefs/dockAppearanceGroup.js:215 src/prefs/panelAppearancePage.js:546
+#: src/prefs/dockAppearanceGroup.js:222 src/prefs/panelAppearancePage.js:546
 msgid "Borders"
 msgstr "边框"
 
-#: src/prefs/dockAppearanceGroup.js:216
+#: src/prefs/dockAppearanceGroup.js:223
 msgid "Choose which borders appear around the Dock"
 msgstr "选择 Dock 周围显示的边框"
 
-#: src/prefs/dockAppearanceGroup.js:221 src/prefs/panelAppearancePage.js:552
+#: src/prefs/dockAppearanceGroup.js:228 src/prefs/panelAppearancePage.js:552
 msgid "Show Border in Dark Mode"
 msgstr "在深色模式下展示边框"
 
-#: src/prefs/dockAppearanceGroup.js:222 src/prefs/dockAppearanceGroup.js:235
+#: src/prefs/dockAppearanceGroup.js:229 src/prefs/dockAppearanceGroup.js:242
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr "在 Dock 朝向工作区的一侧显示细边框"
 
-#: src/prefs/dockAppearanceGroup.js:234 src/prefs/panelAppearancePage.js:565
+#: src/prefs/dockAppearanceGroup.js:241 src/prefs/panelAppearancePage.js:565
 msgid "Show Border in Light Mode"
 msgstr "在浅色模式下展示边框"
 
@@ -905,7 +916,9 @@ msgstr "面板按钮内边距"
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
 "when it is configured, otherwise 3 px"
-msgstr "面板按钮之间的间距。使用 -1 表示自动：如果已配置则使用 Just Perfection 的值，否则为 3 像素"
+msgstr ""
+"面板按钮之间的间距。使用 -1 表示自动：如果已配置则使用 Just Perfection 的值，"
+"否则为 3 像素"
 
 #: src/prefs/panelItemsPage.js:64
 msgid "Panel Item Visibility"
@@ -1662,14 +1675,19 @@ msgid "Only focused application’s windows"
 msgstr "仅当前聚焦应用的窗口"
 
 #: src/prefs/windowDodgeGroup.js:57
+#, fuzzy
+msgid "Only focused window"
+msgstr "关闭窗口"
+
+#: src/prefs/windowDodgeGroup.js:61
 msgid "Only maximized windows"
 msgstr "仅最大化窗口"
 
-#: src/prefs/windowDodgeGroup.js:67
+#: src/prefs/windowDodgeGroup.js:71
 msgid "Reveal on Pointer"
 msgstr "指针触发显示"
 
-#: src/prefs/windowDodgeGroup.js:68
+#: src/prefs/windowDodgeGroup.js:72
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"

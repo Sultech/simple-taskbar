@@ -125,9 +125,11 @@ export class SecondaryPanelController {
                 this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),
             getPreviewController: () => this._windowPreviews,
-            onRedisplay: isDock
-                ? () => this._updateTaskbarWidth()
-                : undefined,
+            onRedisplay: () => {
+                if (isDock)
+                    this._updateTaskbarWidth();
+                this._applicationOverflowController.sync();
+            },
             locationScope: isDock ? 'dock' : 'taskbar',
         });
         this._windowPreviews = new WindowPreviewController(

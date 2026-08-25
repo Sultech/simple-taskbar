@@ -17,6 +17,7 @@ import {
 import {
     getPanelBlur,
     hidePanelBlurForPanel,
+    removePanelBlurForPanel,
     refreshPanelBlurVisibility,
 } from '../integration/blurMyShellRuntime.js';
 import {SecondaryPanelController} from '../secondaryPanel/secondaryPanelController.js';
@@ -60,6 +61,8 @@ export class DockPanelManager {
             'changed::dock-panel-mode', () => this._queueRebuild(),
             'changed::dock-multi-monitor-panels',
             () => this._queueRebuild(),
+            'changed::dock-panel-blur-enabled',
+            () => this._queueBlurMyShellSync(),
             this._signalHolder
         );
         Main.layoutManager.connectObject(
@@ -189,7 +192,8 @@ export class DockPanelManager {
             });
             this._panels.push(panel);
             panel.enable();
-            hidePanelBlurForPanel(panel.actor);
+            if (this._settings.get_boolean('dock-panel-blur-enabled'))
+                hidePanelBlurForPanel(panel.actor);
         }
         this._queueBlurMyShellSync();
     }
@@ -247,8 +251,15 @@ export class DockPanelManager {
         if (!panelBlur)
             return;
 
-        for (const panel of this._panels)
-            panelBlur.maybe_blur_panel(panel.actor);
+        const dockPanelBlurEnabled = this._settings.get_boolean(
+            'dock-panel-blur-enabled'
+        );
+        for (const panel of this._panels) {
+            if (dockPanelBlurEnabled)
+                panelBlur.maybe_blur_panel(panel.actor);
+            else
+                removePanelBlurForPanel(panel.actor);
+        }
 
         if (!Main.overview.visibleTarget)
             refreshPanelBlurVisibility(panelBlur);

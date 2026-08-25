@@ -35,9 +35,10 @@
       <choices>
         <choice value="all-windows"/>
         <choice value="focused-application"/>
+        <choice value="focused-window"/>
         <choice value="maximized-windows"/>
       </choices>
-      <default>'focused-application'</default>
+      <default>'focused-window'</default>
       <summary>Windows that make the panel hide</summary>
     </key>
     <key name="panel-dodge-pointer-reveal-enabled" type="b">
@@ -326,9 +327,10 @@
       <choices>
         <choice value="all-windows"/>
         <choice value="focused-application"/>
+        <choice value="focused-window"/>
         <choice value="maximized-windows"/>
       </choices>
-      <default>'focused-application'</default>
+      <default>'focused-window'</default>
       <summary>Windows that make the Dock hide</summary>
     </key>
     <key name="dock-dodge-pointer-reveal-enabled" type="b">
@@ -365,6 +367,10 @@
     <key name="dock-transparency-enabled" type="b">
       <default>true</default>
       <summary>Enable Dock transparency</summary>
+    </key>
+    <key name="dock-panel-blur-enabled" type="b">
+      <default>true</default>
+      <summary>Apply Blur My Shell panel blur to the Dock</summary>
     </key>
     <key name="dock-transparency-level" type="i">
       <range min="0" max="100"/>

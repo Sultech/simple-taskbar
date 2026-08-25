@@ -133,6 +133,7 @@ export default class SimpleTaskbarExtension extends Extension {
             onShowDesktopModeChanged: () =>
                 this._panelController.applyLayout(),
             getPreviewController: () => this._windowPreviews,
+            onRedisplay: () => this._applicationOverflowController.sync(),
         });
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);
         this._windowPreviews = new WindowPreviewController(

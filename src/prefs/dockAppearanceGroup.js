@@ -10,6 +10,7 @@ import {
     addColorRow,
     addComboRow,
     addSpinRow,
+    createSwitchRow,
 } from './preferencesWidgets.js';
 
 export function addDockAppearanceGroup({
@@ -109,6 +110,12 @@ export function addDockAppearanceGroup({
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
+    const dockPanelBlurSwitch = createSwitchRow(settings, {
+        key: 'dock-panel-blur-enabled',
+        title: _('Blur Dock with Blur My Shell'),
+        subtitle: _('Apply Blur My Shell panel blur to the Dock'),
+    });
+    transparencyExpander.add_row(dockPanelBlurSwitch);
 
     const transparencyRowSubtitle = _(
         '0% is opaque and 100% is fully transparent'
@@ -250,7 +257,8 @@ export function addDockAppearanceGroup({
             !followSystemThemeSwitch.active;
     };
     const syncTransparencyControls = () => {
-        const blocked = blurMyShellPanelBlurEnabled();
+        const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
+            blurMyShellPanelBlurEnabled();
         const available = dockAvailable();
         transparencySwitch.sensitive = available && !blocked;
         transparencySwitch.subtitle = blocked
@@ -263,7 +271,8 @@ export function addDockAppearanceGroup({
             : transparencyRowSubtitle;
     };
     const syncCustomColorControls = () => {
-        const blocked = blurMyShellPanelBlurEnabled();
+        const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
+            blurMyShellPanelBlurEnabled();
         if (blocked &&
             settings.get_boolean('dock-custom-panel-color-enabled')) {
             settings.set_boolean(
@@ -301,7 +310,9 @@ export function addDockAppearanceGroup({
             : customPanelTextColorSubtitle;
     };
     const syncAvailability = () => {
-        group.sensitive = dockAvailable();
+        const available = dockAvailable();
+        group.sensitive = available;
+        dockPanelBlurSwitch.sensitive = available;
         syncThemeControls();
         syncTransparencyControls();
         syncCustomColorControls();
@@ -350,6 +361,14 @@ export function addDockAppearanceGroup({
         settings,
         'changed::dock-transparency-enabled',
         syncTransparencyControls
+    );
+    connectSettings(
+        settings,
+        'changed::dock-panel-blur-enabled',
+        () => {
+            syncTransparencyControls();
+            syncCustomColorControls();
+        }
     );
     syncAvailability();
 

@@ -263,6 +263,9 @@ export class PanelWindowDodgeController {
         if (mode === DODGE_WINDOW_MODE.ALL_WINDOWS)
             return true;
 
+        if (mode === DODGE_WINDOW_MODE.FOCUSED_WINDOW)
+            return window === focusWindow;
+
         if (mode === DODGE_WINDOW_MODE.FOCUSED_APPLICATION) {
             if (!focusApp)
                 return true;
