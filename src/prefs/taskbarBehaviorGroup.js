@@ -32,7 +32,6 @@ export function addTaskbarBehaviorGroup({
         title: _('Auto-hide Panel'),
         subtitle: _('Reveal the taskbar when the pointer reaches its screen edge'),
     });
-    behaviorGroup.add(panelAutoHideSwitch);
     addWindowDodgeRows(
         behaviorGroup,
         settings,
@@ -41,6 +40,11 @@ export function addTaskbarBehaviorGroup({
             modeKey: 'panel-dodge-windows-mode',
             pointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
             autohideKey: 'panel-autohide-enabled',
+            autohideSwitch: panelAutoHideSwitch,
+            visibilitySubtitle: _(
+                'Choose when the taskbar hides and how it is revealed'
+            ),
+            visibilityRows: [],
             connectSettings,
         }
     );

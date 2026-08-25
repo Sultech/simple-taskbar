@@ -22,8 +22,14 @@ function addApplicationIconControls({
     connectSettings,
     panelPositions,
 }) {
+    const iconSizingRow = new Adw.ExpanderRow({
+        title: _('Icon Sizing and Spacing'),
+        subtitle: _('Adjust application icon sizes and the space between them'),
+    });
+    group.add(iconSizingRow);
+
     const iconSizeRow = addSpinRow(
-        group,
+        iconSizingRow,
         settings,
         {
             key: 'icon-size',
@@ -33,11 +39,12 @@ function addApplicationIconControls({
             ),
             lower: 15,
             upper: MAX_ICON_SIZE,
+            addRow: row => iconSizingRow.add_row(row),
         },
         connectSettings
     );
     const dockMinIconSizeRow = addSpinRow(
-        group,
+        iconSizingRow,
         settings,
         {
             key: 'dock-min-icon-size',
@@ -47,11 +54,12 @@ function addApplicationIconControls({
             ),
             lower: 15,
             upper: MAX_ICON_SIZE,
+            addRow: row => iconSizingRow.add_row(row),
         },
         connectSettings
     );
     const iconSpacingRow = addSpinRow(
-        group,
+        iconSizingRow,
         settings,
         {
             key: 'icon-spacing',
@@ -59,6 +67,7 @@ function addApplicationIconControls({
             subtitle: _('Space between application buttons'),
             lower: 0,
             upper: 16,
+            addRow: row => iconSizingRow.add_row(row),
         },
         connectSettings
     );
@@ -76,12 +85,18 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    group.add(createSwitchRow(settings, {
+
+    const windowInteractionRow = new Adw.ExpanderRow({
+        title: _('Window Interaction'),
+        subtitle: _('Configure previews and multi-window actions'),
+    });
+    group.add(windowInteractionRow);
+    windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'window-previews-enabled',
         title: _('Window Previews'),
         subtitle: _('Show live window previews when hovering application icons'),
     }));
-    group.add(createSwitchRow(settings, {
+    windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'multi-window-click-spread',
         title: _('Spread Multiple Windows'),
         subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
@@ -121,70 +136,19 @@ function addApplicationIconControls({
     };
 }
 
-function addDockApplicationIconsGroup({
-    page,
+function addIndicatorControls({
+    group,
     settings,
     connectSettings,
-    panelPositions,
 }) {
-    const appearanceGroup = new Adw.PreferencesGroup({
-        title: _('Application Icons'),
-        description: _('Change the size, spacing, and placement of taskbar icons.'),
+    const indicatorGroup = new Adw.ExpanderRow({
+        title: _('Running Indicators'),
+        subtitle: _('Configure indicators beneath running application icons'),
     });
-    page.add(appearanceGroup);
-    const controls = addApplicationIconControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-        panelPositions,
-    });
-    const syncDockApplicationIcons = () => {
-        const dockModeEnabled = settings.get_boolean('dock-mode');
-        appearanceGroup.visible = dockModeEnabled;
-        appearanceGroup.sensitive = dockModeEnabled;
-        controls.appAlignmentRow.sensitive = dockModeEnabled &&
-            settings.get_boolean('dock-panel-mode');
-    };
-    connectSettings(
-        settings,
-        'changed::dock-mode',
-        syncDockApplicationIcons
-    );
-    connectSettings(
-        settings,
-        'changed::dock-panel-mode',
-        syncDockApplicationIcons
-    );
-    syncDockApplicationIcons();
-}
+    group.add(indicatorGroup);
 
-export function addApplicationIconsGroup({
-    page,
-    dockPage,
-    settings,
-    connectSettings,
-    panelPositions,
-    advancedAppearanceGroup,
-}) {
-    const appearanceGroup = new Adw.PreferencesGroup({
-        title: _('Application Icons'),
-        description: _('Change the size, spacing, and placement of taskbar icons.'),
-    });
-    page.add(appearanceGroup);
-    addDockApplicationIconsGroup({
-        page: dockPage,
-        settings,
-        connectSettings,
-        panelPositions,
-    });
-    const controls = addApplicationIconControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-        panelPositions,
-    });
     const indicatorStyleRow = addComboRow(
-        advancedAppearanceGroup,
+        indicatorGroup,
         settings,
         {
             key: 'running-indicator-style',
@@ -196,6 +160,7 @@ export function addApplicationIconsGroup({
                 {value: 'rounded', label: _('Rounded')},
                 {value: 'straight', label: _('Straight')},
             ],
+            addRow: row => indicatorGroup.add_row(row),
         },
         connectSettings
     );
@@ -206,7 +171,7 @@ export function addApplicationIconsGroup({
             'custom-indicator-colors-enabled'
         ),
     });
-    advancedAppearanceGroup.add(customIndicatorColorsSwitch);
+    indicatorGroup.add_row(customIndicatorColorsSwitch);
     settings.bind(
         'custom-indicator-colors-enabled',
         customIndicatorColorsSwitch,
@@ -220,7 +185,7 @@ export function addApplicationIconsGroup({
         ),
         active: settings.get_boolean('match-icon-color'),
     });
-    advancedAppearanceGroup.add(matchIconColorSwitch);
+    indicatorGroup.add_row(matchIconColorSwitch);
     settings.bind(
         'match-icon-color',
         matchIconColorSwitch,
@@ -228,20 +193,22 @@ export function addApplicationIconsGroup({
         Gio.SettingsBindFlags.DEFAULT
     );
     const focusedIndicatorColorRow = addColorRow(
-        advancedAppearanceGroup,
+        indicatorGroup,
         settings,
         {
             key: 'focused-indicator-color',
             title: _('Focused Indicator Color'),
+            addRow: row => indicatorGroup.add_row(row),
         },
         connectSettings
     );
     const unfocusedIndicatorColorRow = addColorRow(
-        advancedAppearanceGroup,
+        indicatorGroup,
         settings,
         {
             key: 'unfocused-indicator-color',
             title: _('Unfocused Indicator Color'),
+            addRow: row => indicatorGroup.add_row(row),
         },
         connectSettings
     );
@@ -280,6 +247,83 @@ export function addApplicationIconsGroup({
         );
     }
     syncIndicatorControls();
+}
+
+function addDockApplicationIconsGroup({
+    page,
+    settings,
+    connectSettings,
+    panelPositions,
+}) {
+    const appearanceGroup = new Adw.PreferencesGroup({
+        title: _('Application Icons'),
+        description: _(
+            'Change the size, spacing, placement, and running indicators for Dock icons.'
+        ),
+    });
+    page.add(appearanceGroup);
+    const controls = addApplicationIconControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
+    addIndicatorControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+    });
+    const syncDockApplicationIcons = () => {
+        const dockModeEnabled = settings.get_boolean('dock-mode');
+        appearanceGroup.visible = dockModeEnabled;
+        appearanceGroup.sensitive = dockModeEnabled;
+        controls.appAlignmentRow.sensitive = dockModeEnabled &&
+            settings.get_boolean('dock-panel-mode');
+    };
+    connectSettings(
+        settings,
+        'changed::dock-mode',
+        syncDockApplicationIcons
+    );
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
+        syncDockApplicationIcons
+    );
+    syncDockApplicationIcons();
+}
+
+export function addApplicationIconsGroup({
+    page,
+    dockPage,
+    settings,
+    connectSettings,
+    panelPositions,
+}) {
+    const appearanceGroup = new Adw.PreferencesGroup({
+        title: _('Application Icons'),
+        description: _(
+            'Change the size, spacing, placement, and running indicators for taskbar icons.'
+        ),
+    });
+    page.add(appearanceGroup);
+    addDockApplicationIconsGroup({
+        page: dockPage,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
+    const controls = addApplicationIconControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
+    addIndicatorControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+    });
 
     return {
         appearanceGroup,

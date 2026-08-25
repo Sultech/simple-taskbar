@@ -239,7 +239,11 @@ export function addComboRow(group, settings, {
     return row;
 }
 
-export function addColorRow(group, settings, {key, title}, connectSettings) {
+export function addColorRow(group, settings, {
+    key,
+    title,
+    addRow = row => group.add(row),
+}, connectSettings) {
     const dialog = new Gtk.ColorDialog({title});
     const button = new Gtk.ColorDialogButton({
         dialog,
@@ -263,6 +267,6 @@ export function addColorRow(group, settings, {key, title}, connectSettings) {
     });
     connectSettings(settings, `changed::${key}`, syncColor);
     syncColor();
-    group.add(row);
+    addRow(row);
     return row;
 }

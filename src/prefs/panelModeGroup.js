@@ -39,6 +39,12 @@ export function addPanelModeGroup({
     });
     panelModeGroup.add(taskbarModeSwitch);
 
+    const alternativeModesRow = new Adw.ExpanderRow({
+        title: _('Alternative Panel Modes'),
+        subtitle: _('Choose the original GNOME panel or the Windows XP theme'),
+    });
+    panelModeGroup.add(alternativeModesRow);
+
     const dockModeGroup = new Adw.PreferencesGroup({
         title: _('General'),
     });
@@ -49,7 +55,7 @@ export function addPanelModeGroup({
         subtitle: _('Hide taskbar applications and use the original Dash in Overview'),
         active: settings.get_boolean('default-gnome-panel'),
     });
-    panelModeGroup.add(defaultGnomePanelSwitch);
+    alternativeModesRow.add_row(defaultGnomePanelSwitch);
 
     const dockModeSwitch = new Adw.SwitchRow({
         title: _('Dock mode'),
@@ -147,7 +153,7 @@ export function addPanelModeGroup({
             'windows-xp-theme-enabled'
         ),
     });
-    panelModeGroup.add(windowsXpThemeSwitch);
+    alternativeModesRow.add_row(windowsXpThemeSwitch);
 
     const panelButtonPaddingRow = addSpinRow(
         panelModeGroup,
@@ -168,6 +174,7 @@ export function addPanelModeGroup({
         taskbarModeSwitch,
         defaultGnomePanelSwitch,
         dockModeSwitch,
+        dockModeGroup,
         dockPositionRow,
         dockMaxLengthRow,
         dockPanelModeSwitch,

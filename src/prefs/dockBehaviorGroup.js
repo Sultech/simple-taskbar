@@ -22,7 +22,11 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         title: _('Auto-hide Dock'),
         subtitle: _('Reveal the Dock when the pointer reaches its screen edge'),
     });
-    group.add(autoHideSwitch);
+    const edgeRevealSwitch = createSwitchRow(settings, {
+        key: 'dock-edge-reveal-enabled',
+        title: _('Limit Reveal to Dock Edge'),
+        subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
+    });
     const dodgeWindows = addWindowDodgeRows(
         group,
         settings,
@@ -31,16 +35,14 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             modeKey: 'dock-dodge-windows-mode',
             pointerRevealKey: 'dock-dodge-pointer-reveal-enabled',
             autohideKey: 'dock-autohide-enabled',
+            autohideSwitch: autoHideSwitch,
+            visibilitySubtitle: _(
+                'Choose when the Dock hides and how it is revealed'
+            ),
+            visibilityRows: [edgeRevealSwitch],
             connectSettings,
         }
     );
-
-    const edgeRevealSwitch = createSwitchRow(settings, {
-        key: 'dock-edge-reveal-enabled',
-        title: _('Limit Reveal to Dock Edge'),
-        subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
-    });
-    group.add(edgeRevealSwitch);
 
     const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Workspace Scroll'),

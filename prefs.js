@@ -76,7 +76,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         window.add(startMenuPage);
 
         const {
-            advancedAppearanceGroup,
             advancedAppBehaviorGroup,
             advancedBehaviorGroup,
             advancedFileManagerGroup,
@@ -112,6 +111,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const taskbarModeSwitch = panelMode.taskbarModeSwitch;
         const defaultGnomePanelSwitch = panelMode.defaultGnomePanelSwitch;
         const dockModeSwitch = panelMode.dockModeSwitch;
+        const dockModeGroup = panelMode.dockModeGroup;
         const dockPositionRow = panelMode.dockPositionRow;
         const dockMaxLengthRow = panelMode.dockMaxLengthRow;
         const dockPanelModeSwitch = panelMode.dockPanelModeSwitch;
@@ -124,7 +124,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             connectSettings,
             panelPositions,
-            advancedAppearanceGroup,
         });
         const appearanceGroup = icons.appearanceGroup;
         const iconSizeRow = icons.iconSizeRow;
@@ -136,6 +135,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             connectSettings,
             blurMyShellPanelBlurEnabled,
+            dockModeGroup,
+            dockPositionRow,
+            dockMaxLengthRow,
         });
         blurMyShell.setDockPanelSyncs(
             dockAppearance.syncTransparency,
@@ -185,7 +187,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             connectSettings,
             createSettings: () => this.getSettings(),
-            advancedAppearanceGroup,
             blurMyShellPanelBlurEnabled,
             windowsXpThemeSwitch,
             taskbarModeSwitch,

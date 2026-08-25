@@ -17,22 +17,35 @@ export function addDockAppearanceGroup({
     settings,
     connectSettings,
     blurMyShellPanelBlurEnabled,
+    dockModeGroup,
+    dockPositionRow,
+    dockMaxLengthRow,
 }) {
     const group = new Adw.PreferencesGroup({
         title: _('Dock Appearance'),
         description: _('Configure the Dock independently of the main panel.'),
     });
     page.add(group);
+    dockModeGroup.remove(dockMaxLengthRow);
+    dockModeGroup.remove(dockPositionRow);
+    group.add(dockMaxLengthRow);
+    group.add(dockPositionRow);
 
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
         !settings.get_boolean('windows-xp-theme-enabled');
+
+    const themeExpander = new Adw.ExpanderRow({
+        title: _('Theme'),
+        subtitle: _('Choose the Dock colour scheme'),
+    });
+    group.add(themeExpander);
 
     const followSystemThemeSwitch = new Adw.SwitchRow({
         title: _('Follow System Theme'),
         subtitle: _('Match the active GNOME Shell theme'),
         active: settings.get_boolean('dock-panel-theme-follow-system'),
     });
-    group.add(followSystemThemeSwitch);
+    themeExpander.add_row(followSystemThemeSwitch);
     settings.bind(
         'dock-panel-theme-follow-system',
         followSystemThemeSwitch,
@@ -41,7 +54,7 @@ export function addDockAppearanceGroup({
     );
 
     const dockThemeRow = addComboRow(
-        group,
+        themeExpander,
         settings,
         {
             key: 'dock-panel-theme',
@@ -51,12 +64,13 @@ export function addDockAppearanceGroup({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
+            addRow: row => themeExpander.add_row(row),
         },
         connectSettings
     );
 
     addSpinRow(
-        group,
+        themeExpander,
         settings,
         {
             key: 'dock-corner-radius',
@@ -66,6 +80,7 @@ export function addDockAppearanceGroup({
             ),
             lower: 0,
             upper: 64,
+            addRow: row => themeExpander.add_row(row),
         },
         connectSettings
     );
@@ -76,12 +91,18 @@ export function addDockAppearanceGroup({
     const panelBlurTransparencySubtitle = _(
         'Disable Blur My Shell panel blur to use this option'
     );
+    const transparencyExpander = new Adw.ExpanderRow({
+        title: _('Transparency'),
+        subtitle: _('Control the Dock background transparency'),
+    });
+    group.add(transparencyExpander);
+
     const transparencySwitch = new Adw.SwitchRow({
         title: _('Enable Transparency'),
         subtitle: transparencySwitchSubtitle,
         active: settings.get_boolean('dock-transparency-enabled'),
     });
-    group.add(transparencySwitch);
+    transparencyExpander.add_row(transparencySwitch);
     settings.bind(
         'dock-transparency-enabled',
         transparencySwitch,
@@ -93,7 +114,7 @@ export function addDockAppearanceGroup({
         '0% is opaque and 100% is fully transparent'
     );
     const transparencyRow = addSpinRow(
-        group,
+        transparencyExpander,
         settings,
         {
             key: 'dock-transparency-level',
@@ -101,6 +122,7 @@ export function addDockAppearanceGroup({
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
+            addRow: row => transparencyExpander.add_row(row),
         },
         connectSettings
     );
@@ -113,7 +135,7 @@ export function addDockAppearanceGroup({
         subtitle: customPanelColorSubtitle,
         active: settings.get_boolean('dock-custom-panel-color-enabled'),
     });
-    group.add(customPanelColorSwitch);
+    themeExpander.add_row(customPanelColorSwitch);
     settings.bind(
         'dock-custom-panel-color-enabled',
         customPanelColorSwitch,
@@ -122,11 +144,12 @@ export function addDockAppearanceGroup({
     );
 
     const customPanelColorRow = addColorRow(
-        group,
+        themeExpander,
         settings,
         {
             key: 'dock-custom-panel-color',
             title: _('Dock Color'),
+            addRow: row => themeExpander.add_row(row),
         },
         connectSettings
     );
@@ -137,7 +160,7 @@ export function addDockAppearanceGroup({
             'dock-custom-panel-gradient-enabled'
         ),
     });
-    group.add(customPanelGradientSwitch);
+    themeExpander.add_row(customPanelGradientSwitch);
     settings.bind(
         'dock-custom-panel-gradient-enabled',
         customPanelGradientSwitch,
@@ -145,16 +168,17 @@ export function addDockAppearanceGroup({
         Gio.SettingsBindFlags.DEFAULT
     );
     const customPanelGradientColorRow = addColorRow(
-        group,
+        themeExpander,
         settings,
         {
             key: 'dock-custom-panel-gradient-color',
             title: _('Dock Gradient Color'),
+            addRow: row => themeExpander.add_row(row),
         },
         connectSettings
     );
     const customPanelGradientDirectionRow = addComboRow(
-        group,
+        themeExpander,
         settings,
         {
             key: 'dock-custom-panel-gradient-direction',
@@ -164,6 +188,7 @@ export function addDockAppearanceGroup({
                 {value: 'vertical', label: _('Vertical')},
                 {value: 'horizontal', label: _('Horizontal')},
             ],
+            addRow: row => themeExpander.add_row(row),
         },
         connectSettings
     );
@@ -171,7 +196,7 @@ export function addDockAppearanceGroup({
         'White text uses the dark Dock theme; black text uses the light Dock theme'
     );
     const customPanelTextColorRow = addComboRow(
-        group,
+        themeExpander,
         settings,
         {
             key: 'dock-panel-theme',
@@ -181,16 +206,23 @@ export function addDockAppearanceGroup({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
+            addRow: row => themeExpander.add_row(row),
         },
         connectSettings
     );
+
+    const bordersExpander = new Adw.ExpanderRow({
+        title: _('Borders'),
+        subtitle: _('Choose which borders appear around the Dock'),
+    });
+    group.add(bordersExpander);
 
     const darkPanelBorderSwitch = new Adw.SwitchRow({
         title: _('Show Border in Dark Mode'),
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
         active: settings.get_boolean('dock-panel-border-enabled'),
     });
-    group.add(darkPanelBorderSwitch);
+    bordersExpander.add_row(darkPanelBorderSwitch);
     settings.bind(
         'dock-panel-border-enabled',
         darkPanelBorderSwitch,
@@ -203,7 +235,7 @@ export function addDockAppearanceGroup({
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
         active: settings.get_boolean('dock-panel-border-light-enabled'),
     });
-    group.add(lightPanelBorderSwitch);
+    bordersExpander.add_row(lightPanelBorderSwitch);
     settings.bind(
         'dock-panel-border-light-enabled',
         lightPanelBorderSwitch,

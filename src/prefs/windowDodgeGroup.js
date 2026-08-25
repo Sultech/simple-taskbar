@@ -16,15 +16,17 @@ export function addWindowDodgeRows(
         modeKey,
         pointerRevealKey,
         autohideKey,
+        autohideSwitch,
+        visibilitySubtitle,
+        visibilityRows,
         connectSettings,
     }
 ) {
     const dodgeRow = new Adw.ExpanderRow({
-        title: _('Dodge Windows'),
-        subtitle: _(
-            'Hide the panel or Dock when a qualifying window overlaps it'
-        ),
+        title: _('Visibility'),
+        subtitle: visibilitySubtitle,
     });
+    dodgeRow.add_row(autohideSwitch);
     const dodgeSwitch = createSwitchRow(settings, {
         key: enabledKey,
         title: _('Enable Dodge Windows'),
@@ -66,6 +68,8 @@ export function addWindowDodgeRows(
         subtitle: _('Reveal the panel or Dock when the pointer reaches its screen edge while dodging a window'),
     });
     dodgeRow.add_row(pointerRevealSwitch);
+    for (const row of visibilityRows)
+        dodgeRow.add_row(row);
     group.add(dodgeRow);
 
     const disableAutoHideWhenDodgeEnabled = () => {

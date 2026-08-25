@@ -32,7 +32,6 @@ export function addPanelAppearancePage({
     settings,
     connectSettings,
     createSettings,
-    advancedAppearanceGroup,
     blurMyShellPanelBlurEnabled,
     windowsXpThemeSwitch,
     taskbarModeSwitch,
@@ -267,12 +266,18 @@ export function addPanelAppearancePage({
     syncWindowsXpTheme();
     fitPanelToIcons();
 
+    const themeRow = new Adw.ExpanderRow({
+        title: _('Theme'),
+        subtitle: _('Choose the taskbar colour scheme'),
+    });
+    panelAppearanceGroup.add(themeRow);
+
     const followSystemThemeSwitch = new Adw.SwitchRow({
         title: _('Follow System Theme'),
         subtitle: _('Match the active GNOME Shell theme, independently of application colours'),
         active: settings.get_boolean('panel-theme-follow-system'),
     });
-    panelAppearanceGroup.add(followSystemThemeSwitch);
+    themeRow.add_row(followSystemThemeSwitch);
     settings.bind(
         'panel-theme-follow-system',
         followSystemThemeSwitch,
@@ -281,7 +286,7 @@ export function addPanelAppearancePage({
     );
 
     const panelThemeRow = addComboRow(
-        panelAppearanceGroup,
+        themeRow,
         settings,
         {
             key: 'panel-theme',
@@ -291,6 +296,7 @@ export function addPanelAppearancePage({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
+            addRow: row => themeRow.add_row(row),
         },
         connectSettings
     );
@@ -309,12 +315,18 @@ export function addPanelAppearancePage({
     const panelBlurTransparencySubtitle = _(
         'Disable Blur My Shell panel blur to use this option'
     );
+    const transparencyExpander = new Adw.ExpanderRow({
+        title: _('Transparency'),
+        subtitle: _('Control the taskbar background transparency'),
+    });
+    panelAppearanceGroup.add(transparencyExpander);
+
     const transparencySwitch = new Adw.SwitchRow({
         title: _('Enable Transparency'),
         subtitle: transparencySwitchSubtitle,
         active: settings.get_boolean('transparency-enabled'),
     });
-    panelAppearanceGroup.add(transparencySwitch);
+    transparencyExpander.add_row(transparencySwitch);
     settings.bind(
         'transparency-enabled',
         transparencySwitch,
@@ -326,7 +338,7 @@ export function addPanelAppearancePage({
         '0% is opaque and 100% is fully transparent'
     );
     const transparencyRow = addSpinRow(
-        panelAppearanceGroup,
+        transparencyExpander,
         settings,
         {
             key: 'transparency-level',
@@ -334,6 +346,7 @@ export function addPanelAppearancePage({
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
+            addRow: row => transparencyExpander.add_row(row),
         },
         connectSettings
     );
@@ -374,7 +387,7 @@ export function addPanelAppearancePage({
             'custom-panel-color-enabled'
         ),
     });
-    advancedAppearanceGroup.add(customPanelColorSwitch);
+    themeRow.add_row(customPanelColorSwitch);
     settings.bind(
         'custom-panel-color-enabled',
         customPanelColorSwitch,
@@ -382,11 +395,12 @@ export function addPanelAppearancePage({
         Gio.SettingsBindFlags.DEFAULT
     );
     const customPanelColorRow = addColorRow(
-        advancedAppearanceGroup,
+        themeRow,
         settings,
         {
             key: 'custom-panel-color',
             title: _('Taskbar Color'),
+            addRow: row => themeRow.add_row(row),
         },
         connectSettings
     );
@@ -395,7 +409,7 @@ export function addPanelAppearancePage({
         subtitle: _('Blend the taskbar color with a second color'),
         active: settings.get_boolean('custom-panel-gradient-enabled'),
     });
-    advancedAppearanceGroup.add(customPanelGradientSwitch);
+    themeRow.add_row(customPanelGradientSwitch);
     settings.bind(
         'custom-panel-gradient-enabled',
         customPanelGradientSwitch,
@@ -403,16 +417,17 @@ export function addPanelAppearancePage({
         Gio.SettingsBindFlags.DEFAULT
     );
     const customPanelGradientColorRow = addColorRow(
-        advancedAppearanceGroup,
+        themeRow,
         settings,
         {
             key: 'custom-panel-gradient-color',
             title: _('Taskbar Gradient Color'),
+            addRow: row => themeRow.add_row(row),
         },
         connectSettings
     );
     const customPanelGradientDirectionRow = addComboRow(
-        advancedAppearanceGroup,
+        themeRow,
         settings,
         {
             key: 'custom-panel-gradient-direction',
@@ -422,6 +437,7 @@ export function addPanelAppearancePage({
                 {value: 'vertical', label: _('Vertical')},
                 {value: 'horizontal', label: _('Horizontal')},
             ],
+            addRow: row => themeRow.add_row(row),
         },
         connectSettings
     );
@@ -429,7 +445,7 @@ export function addPanelAppearancePage({
         'White text uses the dark panel theme; black text uses the light panel theme'
     );
     const customPanelTextColorRow = addComboRow(
-        advancedAppearanceGroup,
+        themeRow,
         settings,
         {
             key: 'panel-theme',
@@ -439,6 +455,7 @@ export function addPanelAppearancePage({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
+            addRow: row => themeRow.add_row(row),
         },
         connectSettings
     );
@@ -536,12 +553,18 @@ export function addPanelAppearancePage({
     );
     updateCustomPanelColorControls();
 
+    const bordersExpander = new Adw.ExpanderRow({
+        title: _('Borders'),
+        subtitle: _('Choose which borders appear around the taskbar'),
+    });
+    panelAppearanceGroup.add(bordersExpander);
+
     const darkPanelBorderSwitch = new Adw.SwitchRow({
         title: _('Show Border in Dark Mode'),
         subtitle: _('Display a thin border along the panel’s workspace-facing edge'),
         active: settings.get_boolean('panel-border-enabled'),
     });
-    panelAppearanceGroup.add(darkPanelBorderSwitch);
+    bordersExpander.add_row(darkPanelBorderSwitch);
     settings.bind(
         'panel-border-enabled',
         darkPanelBorderSwitch,
@@ -556,7 +579,7 @@ export function addPanelAppearancePage({
             'panel-border-light-enabled'
         ),
     });
-    panelAppearanceGroup.add(lightPanelBorderSwitch);
+    bordersExpander.add_row(lightPanelBorderSwitch);
     settings.bind(
         'panel-border-light-enabled',
         lightPanelBorderSwitch,

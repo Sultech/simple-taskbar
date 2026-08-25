@@ -12,14 +12,6 @@ export function addAdvancedPage(window) {
     });
     window.add(advancedPage);
 
-    const advancedAppearanceGroup = new Adw.PreferencesGroup({
-        title: _('Appearance'),
-        description: _(
-            'Less commonly used taskbar and indicator appearance options.'
-        ),
-    });
-    advancedPage.add(advancedAppearanceGroup);
-
     const advancedAppBehaviorGroup = new Adw.PreferencesGroup({
         title: _('Application Behavior'),
         description: _(
@@ -53,7 +45,6 @@ export function addAdvancedPage(window) {
     advancedPage.add(advancedStartMenuGroup);
 
     return {
-        advancedAppearanceGroup,
         advancedAppBehaviorGroup,
         advancedBehaviorGroup,
         advancedFileManagerGroup,
