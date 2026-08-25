@@ -81,6 +81,8 @@ export class PanelController {
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signalHolder = new TransientSignalHolder();
         this._layoutRepairId = 0;
+        this._taskbarWidthUpdateId = 0;
+        this._updatingTaskbarWidth = false;
         this._applyingLayout = false;
         this._stateController = null;
         this._themeController = null;
@@ -340,6 +342,31 @@ export class PanelController {
     }
 
     updateTaskbarWidth() {
+        if (this._updatingTaskbarWidth) {
+            this._queueTaskbarWidthUpdate();
+            return;
+        }
+
+        this._updatingTaskbarWidth = true;
+        this._updateTaskbarWidthInternal();
+        this._updatingTaskbarWidth = false;
+    }
+
+    _queueTaskbarWidthUpdate() {
+        if (this._taskbarWidthUpdateId)
+            return;
+
+        this._taskbarWidthUpdateId = GLib.idle_add(
+            GLib.PRIORITY_DEFAULT_IDLE,
+            () => {
+                this._taskbarWidthUpdateId = 0;
+                this.updateTaskbarWidth();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _updateTaskbarWidthInternal() {
         const monitor = Main.layoutManager.primaryMonitor;
         const leftBox = Main.panel._leftBox;
         const centerBox = Main.panel._centerBox;
@@ -377,6 +404,10 @@ export class PanelController {
         if (this._layoutRepairId) {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
+        }
+        if (this._taskbarWidthUpdateId) {
+            GLib.Source.remove(this._taskbarWidthUpdateId);
+            this._taskbarWidthUpdateId = 0;
         }
         this._signalHolder.destroy();
         this._signalHolder = null;
