@@ -12,14 +12,6 @@ export function addAdvancedPage(window) {
     });
     window.add(advancedPage);
 
-    const advancedBehaviorGroup = new Adw.PreferencesGroup({
-        title: _('Taskbar Behavior'),
-        description: _(
-            'Less commonly used taskbar interaction options.'
-        ),
-    });
-    advancedPage.add(advancedBehaviorGroup);
-
     const advancedFileManagerGroup = new Adw.PreferencesGroup({
         title: _('File Manager'),
         description: _(
@@ -37,7 +29,6 @@ export function addAdvancedPage(window) {
     advancedPage.add(advancedStartMenuGroup);
 
     return {
-        advancedBehaviorGroup,
         advancedFileManagerGroup,
         advancedStartMenuGroup,
     };

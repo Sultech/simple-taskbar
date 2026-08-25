@@ -76,7 +76,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         window.add(startMenuPage);
 
         const {
-            advancedBehaviorGroup,
             advancedFileManagerGroup,
             advancedStartMenuGroup,
         } = addAdvancedPage(window);
@@ -115,7 +114,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const dockMaxLengthRow = panelMode.dockMaxLengthRow;
         const dockPanelModeSwitch = panelMode.dockPanelModeSwitch;
         const windowsXpThemeSwitch = panelMode.windowsXpThemeSwitch;
-        const panelButtonPaddingRow = panelMode.panelButtonPaddingRow;
 
         const icons = addApplicationIconsGroup({
             page,
@@ -187,7 +185,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             taskbarModeSwitch,
             iconSizeRow,
             iconSpacingRow,
-            panelButtonPaddingRow,
             defaultGnomePanelSwitch,
             dockModeSwitch,
             dockPositionRow,
@@ -207,7 +204,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             page,
             settings: window._settings,
             connectSettings,
-            advancedBehaviorGroup,
             isolateMonitorsSwitch,
         });
 

@@ -15,6 +15,7 @@ import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {
+    addSpinRow,
     createPanelOrderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
@@ -30,55 +31,91 @@ export function addPanelItemsPage({
 }) {
     const panelGroup = new Adw.PreferencesGroup({
         title: _('Panel Items'),
-        description: _('Choose which optional panel items appear.'),
+        description: _('Configure optional panel items and the folder menu.'),
     });
     page.add(panelGroup);
+
+    const panelButtonPaddingRow = addSpinRow(
+        panelGroup,
+        settings,
+        {
+            key: 'panel-button-padding',
+            title: _('Panel Button Padding'),
+            subtitle: _(
+                'Space between panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
+            ),
+            lower: -1,
+            upper: 20,
+        },
+        connectSettings
+    );
+    const syncPanelButtonPaddingSensitivity = () => {
+        panelButtonPaddingRow.sensitive =
+            !settings.get_boolean('windows-xp-theme-enabled');
+    };
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncPanelButtonPaddingSensitivity
+    );
+    syncPanelButtonPaddingSensitivity();
+
+    const panelItemsRow = new Adw.ExpanderRow({
+        title: _('Panel Item Visibility'),
+        subtitle: _('Choose which optional panel items appear.'),
+    });
+    panelGroup.add(panelItemsRow);
 
     const activitiesButtonSwitch = createSwitchRow(settings, {
         key: 'activities-button-visible',
         title: _('Show Activities Button'),
         subtitle: _('Display GNOME’s workspace overview button on the taskbar'),
     });
-    panelGroup.add(activitiesButtonSwitch);
+    panelItemsRow.add_row(activitiesButtonSwitch);
 
     const showDesktopSwitch = createSwitchRow(settings, {
         key: 'show-desktop-button-visible',
         title: _('Show Desktop Button'),
         subtitle: _('Display a button that minimizes or restores all windows'),
     });
-    panelGroup.add(showDesktopSwitch);
+    panelItemsRow.add_row(showDesktopSwitch);
 
     const volumeMixerSwitch = createSwitchRow(settings, {
         key: 'volume-mixer-enabled',
         title: _('Application Volume Mixer'),
         subtitle: _('Add per-application volume controls to Quick Settings'),
     });
-    panelGroup.add(volumeMixerSwitch);
+    panelItemsRow.add_row(volumeMixerSwitch);
 
     const trayOverflowSwitch = createSwitchRow(settings, {
         key: 'tray-overflow-enabled',
         title: _('Collect Tray Icons'),
         subtitle: _('Gather application tray icons behind a panel arrow'),
     });
-    panelGroup.add(trayOverflowSwitch);
+    panelItemsRow.add_row(trayOverflowSwitch);
 
+    const folderMenuGroup = new Adw.ExpanderRow({
+        title: _('Folder Menu'),
+        subtitle: _('Show and configure a selected folder on the taskbar'),
+    });
+    panelGroup.add(folderMenuGroup);
     const folderMenuSwitch = createSwitchRow(settings, {
         key: 'folder-menu-enabled',
         title: _('Show Folder Menu'),
         subtitle: _('Show a selected folder on the taskbar'),
     });
-    panelGroup.add(folderMenuSwitch);
+    folderMenuGroup.add_row(folderMenuSwitch);
 
-    const folderMenuRow = new Adw.ActionRow({
+    const folderMenuLocationRow = new Adw.ActionRow({
         title: _('Folder Menu Location'),
     });
     const chooseFolderButton = new Gtk.Button({
         label: _('Choose…'),
         valign: Gtk.Align.CENTER,
     });
-    folderMenuRow.add_suffix(chooseFolderButton);
-    folderMenuRow.activatable_widget = chooseFolderButton;
-    panelGroup.add(folderMenuRow);
+    folderMenuLocationRow.add_suffix(chooseFolderButton);
+    folderMenuLocationRow.activatable_widget = chooseFolderButton;
+    folderMenuGroup.add_row(folderMenuLocationRow);
 
     const updateFolderMenuRow = () => {
         const location = settings.get_string('folder-menu-uri');
@@ -86,11 +123,11 @@ export function addPanelItemsPage({
             const file = location.includes('://')
                 ? Gio.File.new_for_uri(location)
                 : Gio.File.new_for_path(location);
-            folderMenuRow.subtitle = file.get_parse_name();
+            folderMenuLocationRow.subtitle = file.get_parse_name();
         } else {
-            folderMenuRow.subtitle = _('No folder selected');
+            folderMenuLocationRow.subtitle = _('No folder selected');
         }
-        folderMenuRow.sensitive = folderMenuSwitch.active;
+        folderMenuLocationRow.sensitive = folderMenuSwitch.active;
     };
     chooseFolderButton.connect('clicked', () => {
         selectFolderMenuLocation(window);

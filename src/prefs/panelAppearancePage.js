@@ -37,7 +37,6 @@ export function addPanelAppearancePage({
     taskbarModeSwitch,
     iconSizeRow,
     iconSpacingRow,
-    panelButtonPaddingRow,
     defaultGnomePanelSwitch,
     dockModeSwitch,
     dockPositionRow,
@@ -154,7 +153,6 @@ export function addPanelAppearancePage({
             iconSpacingRow.set_value(iconSpacing);
         iconSizeRow.sensitive = !enabled;
         iconSpacingRow.sensitive = !enabled;
-        panelButtonPaddingRow.sensitive = !enabled;
         panelHeightRow.sensitive = !enabled;
         panelPositionRow.sensitive = !enabled;
         taskbarModeSwitch.sensitive = !enabled;

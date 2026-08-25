@@ -19,7 +19,6 @@ export function addTaskbarBehaviorGroup({
     page,
     settings,
     connectSettings,
-    advancedBehaviorGroup,
     isolateMonitorsSwitch,
 }) {
     const behaviorGroup = new Adw.PreferencesGroup({
@@ -129,19 +128,24 @@ export function addTaskbarBehaviorGroup({
         workspaceScrollDelayRow.sensitive = widget.active;
     });
 
+    const panelNotificationRow = new Adw.ExpanderRow({
+        title: _('Panel and Notification Behavior'),
+        subtitle: _('Configure panel menus and notification banners'),
+    });
     const panelMenuClickOnlySwitch = createSwitchRow(settings, {
         key: 'panel-menu-click-only',
         title: _('Panel Menus Require Click'),
         subtitle: _('Switch between clock, system, and tray menus only when clicked'),
     });
-    advancedBehaviorGroup.add(panelMenuClickOnlySwitch);
+    panelNotificationRow.add_row(panelMenuClickOnlySwitch);
 
     const notificationBannerSwitch = createSwitchRow(settings, {
         key: 'notification-banner-bottom-end',
         title: _('Taskbar-aligned Notification Banners'),
         subtitle: _('Follow the taskbar edge and the clock position'),
     });
-    advancedBehaviorGroup.add(notificationBannerSwitch);
+    panelNotificationRow.add_row(notificationBannerSwitch);
+    behaviorGroup.add(panelNotificationRow);
 
     const allTaskManagerApps = Gio.AppInfo.get_all();
     const taskManagerApps = allTaskManagerApps

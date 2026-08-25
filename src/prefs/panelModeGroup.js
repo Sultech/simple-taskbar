@@ -155,21 +155,6 @@ export function addPanelModeGroup({
     });
     alternativeModesRow.add_row(windowsXpThemeSwitch);
 
-    const panelButtonPaddingRow = addSpinRow(
-        panelModeGroup,
-        settings,
-        {
-            key: 'panel-button-padding',
-            title: _('Panel Button Padding'),
-            subtitle: _(
-                'Space between panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
-            ),
-            lower: -1,
-            upper: 20,
-        },
-        connectSettings
-    );
-
     return {
         taskbarModeSwitch,
         defaultGnomePanelSwitch,
@@ -179,7 +164,6 @@ export function addPanelModeGroup({
         dockMaxLengthRow,
         dockPanelModeSwitch,
         windowsXpThemeSwitch,
-        panelButtonPaddingRow,
     };
 }
 
