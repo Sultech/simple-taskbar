@@ -25,8 +25,7 @@ export class QuickSettingsIndicatorsController {
         this._indicators.set_style(vertical && padding !== null
             ? appendStyle(
                 this._style,
-                `spacing: ${padding * 2}px; ` +
-                    `padding-top: ${padding}px; ` +
+                `padding-top: ${padding}px; ` +
                     `padding-bottom: ${padding}px;`
             )
             : this._style);

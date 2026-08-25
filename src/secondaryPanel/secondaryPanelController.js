@@ -176,7 +176,8 @@ export class SecondaryPanelController {
             : new PanelButtonPaddingController(
                 settings,
                 this.actor,
-                [this._leftBox, this._centerBox, this._rightBox]
+                [this._leftBox, this._centerBox, this._rightBox],
+                () => this._quickSettingsIndicatorsController._indicators
             );
         this._taskbarController.setAlignmentActor(this._centerBox);
         this._interactionController = null;

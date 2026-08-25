@@ -142,7 +142,8 @@ export class PanelController {
                 Main.panel._leftBox,
                 Main.panel._centerBox,
                 Main.panel._rightBox,
-            ]
+            ],
+            () => Main.panel.statusArea.quickSettings._indicators
         );
     }
 

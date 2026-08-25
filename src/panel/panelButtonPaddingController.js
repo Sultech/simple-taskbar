@@ -17,22 +17,29 @@ const AUTOMATIC_FALLBACK_PADDING = 3;
 const STATUS_ICON_CLASS = 'system-status-icon';
 const SHOW_DESKTOP_CLASS = 'simple-taskbar-show-desktop';
 const SELF_SIZED_BUTTON_CLASS = 'simple-taskbar-start';
-const INDICATORS_BOX_CLASS = 'panel-status-indicators-box';
 const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const HOVER_INSET_CLASS_PREFIX =
     'simple-taskbar-panel-button-hover-inset-';
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
     'just-perfection-api-panel-button-padding-size';
+const ICON_HORIZONTAL_PADDING_STYLE =
+    'padding-left: 0; padding-right: 0;';
 const REGULAR_PANEL_HEIGHT = 49;
 const MINIMUM_HOVER_INSET = 3;
 const REGULAR_HOVER_INSET = 6;
 
 export class PanelButtonPaddingController {
-    constructor(settings, panelActor, panelBoxes) {
+    constructor(
+        settings,
+        panelActor,
+        panelBoxes,
+        getQuickSettingsIndicators
+    ) {
         this._settings = settings;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
+        this._getQuickSettingsIndicators = getQuickSettingsIndicators;
         this._signalHolder = new TransientSignalHolder();
         this._styledActors = new Map();
         this._hoverInsetClass = null;
@@ -113,6 +120,7 @@ export class PanelButtonPaddingController {
 
         this._panelBoxes = null;
         this._panelActor = null;
+        this._getQuickSettingsIndicators = null;
         this._settings = null;
     }
 
@@ -168,7 +176,7 @@ export class PanelButtonPaddingController {
                     this._applyToActor(target, padding, vertical);
             } else if (actor.has_style_class_name(STATUS_ICON_CLASS) &&
                 !this._isPaddingTarget(actor, vertical)) {
-                this._clearIconMargin(actor);
+                this._normalizeIconSpacing(actor, vertical);
             }
         }
 
@@ -186,7 +194,7 @@ export class PanelButtonPaddingController {
         if (!child)
             return actor;
 
-        return child.has_style_class_name(INDICATORS_BOX_CLASS)
+        return child === this._getQuickSettingsIndicators()
             ? null
             : child;
     }
@@ -218,31 +226,37 @@ export class PanelButtonPaddingController {
             .join(' ');
     }
 
-    _clearIconMargin(actor) {
+    _normalizeIconSpacing(actor, vertical) {
         const currentStyle = actor.get_style() ?? '';
         const state = this._styledActors.get(actor);
         if (state && currentStyle === state.appliedStyle)
             return;
 
         const stripped = this._styleWithoutMargin(currentStyle);
+        const appliedStyle = vertical
+            ? stripped
+            : appendStyle(stripped, ICON_HORIZONTAL_PADDING_STYLE);
         if (!state) {
             this._styledActors.set(actor, {
                 originalStyle: currentStyle,
-                appliedStyle: stripped,
+                appliedStyle,
                 ...this._trackActor(
                     actor,
-                    () => this._clearIconMargin(actor)
+                    () => this._normalizeIconSpacing(
+                        actor,
+                        panelIsVertical(this._settings)
+                    )
                 ),
             });
         } else {
             state.originalStyle = currentStyle;
-            state.appliedStyle = stripped;
+            state.appliedStyle = appliedStyle;
         }
 
-        if (stripped === currentStyle)
+        if (appliedStyle === currentStyle)
             return;
 
-        actor.set_style(stripped === '' ? null : stripped);
+        actor.set_style(appliedStyle === '' ? null : appliedStyle);
         actor.queue_relayout();
     }
 
