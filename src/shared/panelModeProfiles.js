@@ -277,7 +277,7 @@ function setModeFlags(settings, mode) {
         'windows-xp-theme-enabled',
         mode === PANEL_MODE_WINDOWS_XP
     );
-    if (mode === PANEL_MODE_WINDOWS_XP)
+    if (mode !== PANEL_MODE_DEFAULT)
         settings.set_boolean('dock-mode', false);
 }
 

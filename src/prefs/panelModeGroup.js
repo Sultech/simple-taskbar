@@ -228,12 +228,10 @@ export function connectDefaultGnomePanelSync({
     const setTaskbarMode = enabled => {
         const settings = createSettings();
         settings.delay();
-        if (enabled) {
-            setPanelMode(settings, PANEL_MODE_TASKBAR);
-            settings.set_boolean('dock-mode', false);
-        } else {
-            setPanelMode(settings, PANEL_MODE_DEFAULT);
-        }
+        setPanelMode(
+            settings,
+            enabled ? PANEL_MODE_TASKBAR : PANEL_MODE_DEFAULT
+        );
         settings.apply();
     };
 
