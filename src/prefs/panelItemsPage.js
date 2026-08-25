@@ -286,6 +286,14 @@ export function addPanelItemsPage({
             return id === 'start-button' || id === 'applications';
         return false;
     };
+    const getMovablePositionOrder = positionOrder => {
+        if (!settings.get_boolean('dock-mode') &&
+            !settings.get_boolean('default-gnome-panel')) {
+            return positionOrder;
+        }
+
+        return positionOrder.filter(id => !isPanelItemLocked(id));
+    };
     const syncPanelItemOrder = () => {
         const stored = settings.get_strv('panel-item-order');
         const order = normalizePanelItemOrder(stored);
@@ -317,18 +325,28 @@ export function addPanelItemsPage({
             positionOrders.get(position).push(id);
         }
         for (const positionOrder of positionOrders.values()) {
-            for (const [index, id] of positionOrder.entries()) {
+            const movablePositionOrder =
+                getMovablePositionOrder(positionOrder);
+            for (const [index, id] of movablePositionOrder.entries()) {
                 const controls = panelOrderRows.get(id);
-                const previousId = positionOrder[index - 1];
-                const nextId = positionOrder[index + 1];
+                const previousId = movablePositionOrder[index - 1];
+                const nextId = movablePositionOrder[index + 1];
                 controls.upButton.sensitive =
                     index > 0 &&
                     !isPanelItemLocked(id) &&
                     !isPanelItemLocked(previousId);
                 controls.downButton.sensitive =
-                    index < positionOrder.length - 1 &&
+                    index < movablePositionOrder.length - 1 &&
                     !isPanelItemLocked(id) &&
                     !isPanelItemLocked(nextId);
+            }
+            for (const id of positionOrder) {
+                if (!isPanelItemLocked(id))
+                    continue;
+
+                const controls = panelOrderRows.get(id);
+                controls.upButton.sensitive = false;
+                controls.downButton.sensitive = false;
             }
         }
     };
@@ -340,8 +358,10 @@ export function addPanelItemsPage({
             settings.get_strv('panel-item-order')
         );
         const position = getPanelItemPosition(id);
-        const positionOrder = order.filter(
-            candidate => getPanelItemPosition(candidate) === position
+        const positionOrder = getMovablePositionOrder(
+            order.filter(
+                candidate => getPanelItemPosition(candidate) === position
+            )
         );
         const index = positionOrder.indexOf(id);
         const targetIndex = index + offset;
