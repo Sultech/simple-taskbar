@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -580,7 +581,8 @@ export class SecondaryPanelDockController {
 
     _hasVisibleMaximizedWindowOnMonitor() {
         for (const window of this._workspaceWindows) {
-            if (window.get_monitor() === this._monitor.index &&
+            if (window.get_window_type() !== Meta.WindowType.DESKTOP &&
+                window.get_monitor() === this._monitor.index &&
                 !window.minimized &&
                 window.maximized_horizontally &&
                 window.maximized_vertically) {
