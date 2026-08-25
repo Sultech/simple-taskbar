@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 23:20+0100\n"
+"POT-Creation-Date: 2026-08-25 23:34+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -47,7 +47,7 @@ msgstr "Tálca"
 msgid "Dock"
 msgstr ""
 
-#: prefs.js:73 src/prefs/advancedPage.js:24 src/prefs/dockItemsPage.js:23
+#: prefs.js:73 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
 msgstr "Start menü"
 
@@ -146,10 +146,6 @@ msgstr "Fájlkezelő"
 #: src/prefs/advancedPage.js:18
 msgid "File manager shortcuts and taskbar menu folders."
 msgstr "Fájlkezelő gyorsbillentyűk és tálcamenü mappák."
-
-#: src/prefs/advancedPage.js:26
-msgid "Less commonly used Start menu options."
-msgstr "Kevésbé használt Start menü beállítások."
 
 #: src/prefs/appBehaviorGroup.js:14
 msgid "Nautilus Folder Shortcuts"
@@ -526,12 +522,12 @@ msgid "Choose the colour scheme when system matching is off"
 msgstr "Színskála kiválasztása, ha a rendszerhez igazodás ki van kapcsolva"
 
 #: src/prefs/dockAppearanceGroup.js:64 src/prefs/panelAppearancePage.js:285
-#: src/prefs/startMenuPage.js:397
+#: src/prefs/startMenuPage.js:421
 msgid "Light"
 msgstr "Világos"
 
 #: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:286
-#: src/prefs/startMenuPage.js:396
+#: src/prefs/startMenuPage.js:420
 msgid "Dark"
 msgstr "Sötét"
 
@@ -551,7 +547,7 @@ msgid "Make the Dock background transparent"
 msgstr "Tálca hátterének átlátszóvá tétele"
 
 #: src/prefs/dockAppearanceGroup.js:92 src/prefs/panelAppearancePage.js:305
-#: src/prefs/startMenuPage.js:422
+#: src/prefs/startMenuPage.js:447
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "A Blur My Shell panel elmosásának kikapcsolása a lehetőség használatához"
@@ -1078,7 +1074,7 @@ msgstr "Kiválasztott mappa megjelenítése a tálcán"
 msgid "Folder Menu Location"
 msgstr "Mappamenü helye"
 
-#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:146
+#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:159
 msgid "Choose…"
 msgstr "Kiválasztás…"
 
@@ -1119,8 +1115,8 @@ msgstr "Középső doboz"
 msgid "Right Box"
 msgstr "Jobb doboz"
 
-#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:32
-#: src/prefs/startMenuPage.js:71
+#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:31
+#: src/prefs/startMenuPage.js:76
 msgid "Start Button"
 msgstr "Start gomb"
 
@@ -1290,12 +1286,12 @@ msgstr "Windows XP téma"
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Windows XP által inspirált tálcastílus alkalmazása"
 
-#: src/prefs/panelModeGroup.js:209
+#: src/prefs/panelModeGroup.js:207
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Az alkalmazásikonok nem érhetők el az Alapértelmezett GNOME panel módban."
 
-#: src/prefs/panelModeGroup.js:210
+#: src/prefs/panelModeGroup.js:208
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "A tálcaikonok méretének, térközének és elhelyezkedésének módosítása."
 
@@ -1427,193 +1423,233 @@ msgstr "Mozgatás fel"
 msgid "Move Down"
 msgstr "Mozgatás le"
 
-#: src/prefs/startMenuPage.js:33
-msgid "Configure the Start button position and spacing."
+#: src/prefs/startMenuPage.js:32
+#, fuzzy
+msgid "Configure the Start button position and appearance."
 msgstr "A Start gomb pozíciójának és térközének beállítása."
 
-#: src/prefs/startMenuPage.js:38 src/prefs/startMenuPage.js:199
+#: src/prefs/startMenuPage.js:37 src/prefs/startMenuPage.js:212
 msgid "Eleven-style Start Menu"
 msgstr "Windows 11 stílusú Start menü"
 
-#: src/prefs/startMenuPage.js:39
+#: src/prefs/startMenuPage.js:38
 msgid "Configure the optional Eleven-style application menu."
 msgstr "Az elhagyható Windows 11 stílusú alkalmazásmenü beállítása."
 
-#: src/prefs/startMenuPage.js:44
+#: src/prefs/startMenuPage.js:43
 msgid "Keyboard Shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: src/prefs/startMenuPage.js:45
+#: src/prefs/startMenuPage.js:44
 msgid "Configure Start menu shortcuts."
 msgstr "Start menü gyorsbillentyűk beállítása."
 
-#: src/prefs/startMenuPage.js:72
+#: src/prefs/startMenuPage.js:66
+#, fuzzy
+msgid "Start Button Position"
+msgstr "Start gomb térköze"
+
+#: src/prefs/startMenuPage.js:67
+#, fuzzy
+msgid "Configure the Start button alignment"
+msgstr "Válasszon Start gomb ikont"
+
+#: src/prefs/startMenuPage.js:77
 #, fuzzy
 msgid "Choose the Start button alignment"
 msgstr "Válasszon Start gomb ikont"
 
-#: src/prefs/startMenuPage.js:82
+#: src/prefs/startMenuPage.js:88
 msgid "Follow Application Alignment"
 msgstr "Alkalmazások igazításának követése"
 
-#: src/prefs/startMenuPage.js:83
+#: src/prefs/startMenuPage.js:89
 msgid "Move the Start button with the application buttons"
 msgstr "A Start gomb mozgatása az alkalmazásgombokkal együtt"
 
-#: src/prefs/startMenuPage.js:129
+#: src/prefs/startMenuPage.js:131
+#, fuzzy
+msgid "Start Button Appearance"
+msgstr "Start gomb térköze"
+
+#: src/prefs/startMenuPage.js:132
+msgid "Configure padding, icons, and button visibility"
+msgstr ""
+
+#: src/prefs/startMenuPage.js:141
 msgid "Start Button Padding"
 msgstr "Start gomb térköze"
 
-#: src/prefs/startMenuPage.js:130
+#: src/prefs/startMenuPage.js:142
 msgid "Horizontal space around the Start icon in pixels"
 msgstr "Vízszintes hely a Start ikon körül képpontban"
 
-#: src/prefs/startMenuPage.js:138
+#: src/prefs/startMenuPage.js:151
 msgid "Custom Start Button Icon"
 msgstr "Egyéni Start gomb ikon"
 
-#: src/prefs/startMenuPage.js:142
+#: src/prefs/startMenuPage.js:155
 msgid "Use the built-in icon"
 msgstr "Beépített ikon használata"
 
-#: src/prefs/startMenuPage.js:162
+#: src/prefs/startMenuPage.js:175
 msgid "Using the built-in icon"
 msgstr "Beépített ikon használatban"
 
-#: src/prefs/startMenuPage.js:200
+#: src/prefs/startMenuPage.js:213
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "A GNOME alkalmazásrács lecserélése Windows 11 stílusú menüre"
 
-#: src/prefs/startMenuPage.js:212
+#: src/prefs/startMenuPage.js:225
+#, fuzzy
+msgid "Start Menu Options"
+msgstr "Start menü beállításai"
+
+#: src/prefs/startMenuPage.js:226
+#, fuzzy
+msgid "Configure Start Menu content and behavior"
+msgstr "A tálca magasságának, színskálájának és átlátszóságának módosítása."
+
+#: src/prefs/startMenuPage.js:231
 msgid "Show Profile Picture"
 msgstr "Profilkép megjelenítése"
 
-#: src/prefs/startMenuPage.js:213
+#: src/prefs/startMenuPage.js:232
 msgid "Use your account picture in the Start Menu"
 msgstr "A fiók képének használata a Start menüben"
 
-#: src/prefs/startMenuPage.js:234
+#: src/prefs/startMenuPage.js:253
 msgid "Power Options in Start Menu"
 msgstr "Tápellátási lehetőségek a Start menüben"
 
-#: src/prefs/startMenuPage.js:236
+#: src/prefs/startMenuPage.js:255
 msgid "Show power actions here instead of in Quick Settings"
 msgstr "Kikapcsolási műveletek megjelenítése itt a Gyorsbeállítások helyett"
 
-#: src/prefs/startMenuPage.js:258
+#: src/prefs/startMenuPage.js:277
 msgid "Open All Apps by Default"
 msgstr "Összes alkalmazás megnyitása alapértelmezés szerint"
 
-#: src/prefs/startMenuPage.js:259
+#: src/prefs/startMenuPage.js:278
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr ""
 "Rögzítettek kihagyása és megnyitás közvetlenül az alkalmazásokhoz és "
 "kategóriákhoz"
 
-#: src/prefs/startMenuPage.js:280
+#: src/prefs/startMenuPage.js:299
 msgid "Show Recommended Apps"
 msgstr "Ajánlott alkalmazások megjelenítése"
 
-#: src/prefs/startMenuPage.js:281
+#: src/prefs/startMenuPage.js:300
 msgid "Display frequently used applications below pinned apps"
 msgstr ""
 "Gyakran használt alkalmazások megjelenítése a rögzített alkalmazások alatt"
 
-#: src/prefs/startMenuPage.js:293
+#: src/prefs/startMenuPage.js:312
 msgid "Hide Pinned App Titles"
 msgstr "Rögzített alkalmazások címeinek elrejtése"
 
-#: src/prefs/startMenuPage.js:295
+#: src/prefs/startMenuPage.js:314
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
 "Név elrejtése a rögzített ikonok alatt, megjelenítés buboréksúgóban "
 "föléhúzáskor"
 
-#: src/prefs/startMenuPage.js:329
+#: src/prefs/startMenuPage.js:348
 msgid "Organize All Apps into Categories"
 msgstr "Összes alkalmazás kategóriákba rendezése"
 
-#: src/prefs/startMenuPage.js:330
+#: src/prefs/startMenuPage.js:349
 msgid "Browse applications by category in the Start menu"
 msgstr "Alkalmazások böngészése kategóriák szerint a Start menüben"
 
-#: src/prefs/startMenuPage.js:352
+#: src/prefs/startMenuPage.js:371
 msgid "Show Original GNOME Button"
 msgstr "Eredeti GNOME gomb megjelenítése"
 
-#: src/prefs/startMenuPage.js:353
+#: src/prefs/startMenuPage.js:372
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr ""
 "Az Alkalmazások gomb megjelenítése, ha a Windows 11 stílusú Start menü le "
 "van tiltva"
 
-#: src/prefs/startMenuPage.js:374
+#: src/prefs/startMenuPage.js:393
 msgid "Follow Panel Theme"
 msgstr "Panel téma követése"
 
-#: src/prefs/startMenuPage.js:375
+#: src/prefs/startMenuPage.js:394
 msgid "Use the panel’s effective light or dark appearance"
 msgstr "A panel aktív világos vagy sötét megjelenésének használata"
 
-#: src/prefs/startMenuPage.js:393
+#: src/prefs/startMenuPage.js:400
+#, fuzzy
+msgid "Start Menu Appearance"
+msgstr "Panel megjelenése"
+
+#: src/prefs/startMenuPage.js:401
+#, fuzzy
+msgid "Configure the Start Menu theme and transparency"
+msgstr "A tálca magasságának, színskálájának és átlátszóságának módosítása."
+
+#: src/prefs/startMenuPage.js:417
 msgid "Start Menu Theme"
 msgstr "Start menü témája"
 
-#: src/prefs/startMenuPage.js:394
+#: src/prefs/startMenuPage.js:418
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "Egyéni megjelenés használata vagy a GNOME Shell téma követése"
 
-#: src/prefs/startMenuPage.js:398
+#: src/prefs/startMenuPage.js:422
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: src/prefs/startMenuPage.js:419
+#: src/prefs/startMenuPage.js:444
 msgid "Use the panel’s configured transparency level"
 msgstr "A panel beállított átlátszósági szintjének használata"
 
-#: src/prefs/startMenuPage.js:425
+#: src/prefs/startMenuPage.js:450
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr ""
 "A Blur My Shell felbukkanó elmosásának kikapcsolása a lehetőség használatához"
 
-#: src/prefs/startMenuPage.js:428
+#: src/prefs/startMenuPage.js:453
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr ""
 "A Blur My Shell panel- és felbukkanó-elmosásának kikapcsolása a lehetőség "
 "használatához"
 
-#: src/prefs/startMenuPage.js:431
+#: src/prefs/startMenuPage.js:456
 msgid "Follow Panel Transparency"
 msgstr "Panel átlátszóságának követése"
 
-#: src/prefs/startMenuPage.js:480
+#: src/prefs/startMenuPage.js:505
 msgid "Center Start Menu on Monitor"
 msgstr "Start menü középre igazítása a monitoron"
 
-#: src/prefs/startMenuPage.js:482
+#: src/prefs/startMenuPage.js:507
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 "A menü elhelyezése a tényleges vízszintes középpontban a Start gomb feletti "
 "helyett"
 
-#: src/prefs/startMenuPage.js:523
+#: src/prefs/startMenuPage.js:548
 msgid "Super Opens Start Menu"
 msgstr "Super billentyű megnyitja a Start menüt"
 
-#: src/prefs/startMenuPage.js:524
+#: src/prefs/startMenuPage.js:549
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr ""
 "Super billentyű használata a Start menühöz, és az Áttekintés áthelyezése a "
 "Super+Tab-ra"
 
-#: src/prefs/startMenuPage.js:536
+#: src/prefs/startMenuPage.js:561
 msgid "Super+Tab Opens Start Menu"
 msgstr "Super+Tab megnyitja a Start menüt"
 
-#: src/prefs/startMenuPage.js:538
+#: src/prefs/startMenuPage.js:563
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
@@ -1621,42 +1657,42 @@ msgstr ""
 "A GNOME alkalmazásváltó gyorsbillentyűjének használata a Windows 11 stílusú "
 "Start menühöz, amíg az engedélyezve van"
 
-#: src/prefs/startMenuPage.js:575
+#: src/prefs/startMenuPage.js:600
 msgid "Super+E Opens File Manager"
 msgstr "Super+E megnyitja a Fájlkezelőt"
 
-#: src/prefs/startMenuPage.js:577
+#: src/prefs/startMenuPage.js:602
 msgid "Open your home folder with the system’s default file manager"
 msgstr "A saját mappa megnyitása a rendszer alapértelmezett fájlkezelőjével"
 
-#: src/prefs/startMenuPage.js:592
+#: src/prefs/startMenuPage.js:617
 msgid "Not set"
 msgstr "Nincs beállítva"
 
-#: src/prefs/startMenuPage.js:597
+#: src/prefs/startMenuPage.js:622
 msgid "Set custom shortcut"
 msgstr "Egyéni gyorsbillentyű beállítása"
 
-#: src/prefs/startMenuPage.js:602
+#: src/prefs/startMenuPage.js:627
 msgid "Clear custom shortcut"
 msgstr "Egyéni gyorsbillentyű törlése"
 
-#: src/prefs/startMenuPage.js:606
+#: src/prefs/startMenuPage.js:631
 msgid "Custom Start Menu Shortcut"
 msgstr "Egyéni Start menü gyorsbillentyű"
 
-#: src/prefs/startMenuPage.js:625
+#: src/prefs/startMenuPage.js:650
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 "Kapcsolja ki a Super gyorsbillentyűt egyéni billentyűkombináció használatához"
 
-#: src/prefs/startMenuPage.js:628
+#: src/prefs/startMenuPage.js:653
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 "Kapcsolja ki a Super+Tab gyorsbillentyűt egyéni billentyűkombináció "
 "használatához"
 
-#: src/prefs/startMenuPage.js:631
+#: src/prefs/startMenuPage.js:656
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 "Válasszon egy szabad gyorsbillentyűt; alapértelmezés szerint nincs "
@@ -2205,6 +2241,9 @@ msgstr "Alkalmazás hangereje"
 #: src/integration/volumeMixerController.js:334
 msgid "No applications are playing audio"
 msgstr "Egyetlen alkalmazás sem játszik le hangot"
+
+#~ msgid "Less commonly used Start menu options."
+#~ msgstr "Kevésbé használt Start menü beállítások."
 
 #~ msgid "Less commonly used taskbar interaction options."
 #~ msgstr "Kevésbé használt tálcainterakciós beállítások."

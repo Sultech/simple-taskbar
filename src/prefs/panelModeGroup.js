@@ -179,7 +179,6 @@ export function connectDefaultGnomePanelSync({
     dockPanelModeSwitch,
     appearanceGroup,
     startMenuPage,
-    advancedStartMenuGroup,
     nautilusPlacesSwitch,
 }) {
     let syncingPanelModes = false;
@@ -203,7 +202,6 @@ export function connectDefaultGnomePanelSync({
         appearanceGroup.sensitive = !dockModeEnabled &&
             !defaultPanelRestrictions;
         startMenuPage.sensitive = !defaultPanelRestrictions;
-        advancedStartMenuGroup.sensitive = !defaultPanelRestrictions;
         nautilusPlacesSwitch.sensitive = !defaultPanelRestrictions;
         appearanceGroup.description = defaultPanelRestrictions
             ? _('Application icons are unavailable in Default GNOME Panel mode.')

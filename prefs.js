@@ -77,7 +77,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const {
             advancedFileManagerGroup,
-            advancedStartMenuGroup,
         } = addAdvancedPage(window);
 
         const startMenu = addStartMenuPage({
@@ -87,7 +86,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             extensionPath: this.path,
             panelPositions,
-            advancedStartMenuGroup,
             advancedFileManagerGroup,
             blurMyShellPanelBlurEnabled,
             blurMyShellPopupBlurEnabled,
@@ -171,7 +169,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             dockPanelModeSwitch,
             appearanceGroup,
             startMenuPage,
-            advancedStartMenuGroup,
             nautilusPlacesSwitch,
         });
 

@@ -20,16 +20,7 @@ export function addAdvancedPage(window) {
     });
     advancedPage.add(advancedFileManagerGroup);
 
-    const advancedStartMenuGroup = new Adw.PreferencesGroup({
-        title: _('Start Menu'),
-        description: _(
-            'Less commonly used Start menu options.'
-        ),
-    });
-    advancedPage.add(advancedStartMenuGroup);
-
     return {
         advancedFileManagerGroup,
-        advancedStartMenuGroup,
     };
 }

@@ -23,14 +23,13 @@ export function addStartMenuPage({
     connectSettings,
     extensionPath,
     panelPositions,
-    advancedStartMenuGroup,
     advancedFileManagerGroup,
     blurMyShellPanelBlurEnabled,
     blurMyShellPopupBlurEnabled,
 }) {
     const startButtonGroup = new Adw.PreferencesGroup({
         title: _('Start Button'),
-        description: _('Configure the Start button position and spacing.'),
+        description: _('Configure the Start button position and appearance.'),
     });
     startMenuPage.add(startButtonGroup);
 
@@ -63,8 +62,14 @@ export function addStartMenuPage({
     );
     showRequestedPage();
 
+    const startButtonPositionRow = new Adw.ExpanderRow({
+        title: _('Start Button Position'),
+        subtitle: _('Configure the Start button alignment'),
+    });
+    startButtonGroup.add(startButtonPositionRow);
+
     const startPositionRow = addComboRow(
-        startButtonGroup,
+        startButtonPositionRow,
         settings,
         {
             key: 'start-button-position',
@@ -74,6 +79,7 @@ export function addStartMenuPage({
             choicesProvider: () =>
                 axisPanelPositions(settings, panelPositions).slice(0, 2),
             choicesChangedKey: 'panel-position',
+            addRow: row => startButtonPositionRow.add_row(row),
         },
         connectSettings
     );
@@ -85,7 +91,7 @@ export function addStartMenuPage({
             'start-button-follow-app-alignment'
         ),
     });
-    startButtonGroup.add(followAppAlignmentSwitch);
+    startButtonPositionRow.add_row(followAppAlignmentSwitch);
     settings.bind(
         'start-button-follow-app-alignment',
         followAppAlignmentSwitch,
@@ -121,8 +127,14 @@ export function addStartMenuPage({
     );
     updateStartPositionRow();
 
+    const startButtonAppearanceRow = new Adw.ExpanderRow({
+        title: _('Start Button Appearance'),
+        subtitle: _('Configure padding, icons, and button visibility'),
+    });
+    startButtonGroup.add(startButtonAppearanceRow);
+
     const startButtonPaddingRow = addSpinRow(
-        startButtonGroup,
+        startButtonAppearanceRow,
         settings,
         {
             key: 'start-button-padding',
@@ -130,6 +142,7 @@ export function addStartMenuPage({
             subtitle: _('Horizontal space around the Start icon in pixels'),
             lower: 0,
             upper: 20,
+            addRow: row => startButtonAppearanceRow.add_row(row),
         },
         connectSettings
     );
@@ -149,7 +162,7 @@ export function addStartMenuPage({
     customIconRow.add_suffix(clearCustomIconButton);
     customIconRow.add_suffix(chooseCustomIconButton);
     customIconRow.activatable_widget = chooseCustomIconButton;
-    startButtonGroup.add(customIconRow);
+    startButtonAppearanceRow.add_row(customIconRow);
 
     const updateCustomIconRow = () => {
         const location = settings.get_string(
@@ -207,6 +220,12 @@ export function addStartMenuPage({
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
+
+    const startMenuOptionsRow = new Adw.ExpanderRow({
+        title: _('Start Menu Options'),
+        subtitle: _('Configure Start Menu content and behavior'),
+    });
+    startMenuGroup.add(startMenuOptionsRow);
 
     const profilePictureSwitch = new Adw.SwitchRow({
         title: _('Show Profile Picture'),
@@ -304,11 +323,11 @@ export function addStartMenuPage({
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
-    advancedStartMenuGroup.add(recommendedAppsSwitch);
-    advancedStartMenuGroup.add(powerOptionsSwitch);
-    advancedStartMenuGroup.add(openAllAppsSwitch);
-    advancedStartMenuGroup.add(profilePictureSwitch);
-    advancedStartMenuGroup.add(hidePinnedAppTitlesSwitch);
+    startMenuOptionsRow.add_row(recommendedAppsSwitch);
+    startMenuOptionsRow.add_row(powerOptionsSwitch);
+    startMenuOptionsRow.add_row(openAllAppsSwitch);
+    startMenuOptionsRow.add_row(profilePictureSwitch);
+    startMenuOptionsRow.add_row(hidePinnedAppTitlesSwitch);
     const updateRecommendedAppsSwitch = () => {
         const sensitive = windowsStartMenuSwitch.active &&
             !openAllAppsSwitch.active;
@@ -332,7 +351,7 @@ export function addStartMenuPage({
             'start-menu-app-categories'
         ),
     });
-    startMenuGroup.add(appCategoriesSwitch);
+    startMenuOptionsRow.add_row(appCategoriesSwitch);
     settings.bind(
         'start-menu-app-categories',
         appCategoriesSwitch,
@@ -353,7 +372,7 @@ export function addStartMenuPage({
         subtitle: _('Show the Applications button when the Eleven-style Start Menu is disabled'),
         active: settings.get_boolean('gnome-start-button-visible'),
     });
-    startButtonGroup.add(gnomeStartButtonVisibleSwitch);
+    startButtonAppearanceRow.add_row(gnomeStartButtonVisibleSwitch);
     settings.bind(
         'gnome-start-button-visible',
         gnomeStartButtonVisibleSwitch,
@@ -377,7 +396,12 @@ export function addStartMenuPage({
             'start-menu-follow-panel-theme'
         ),
     });
-    startMenuGroup.add(followPanelThemeSwitch);
+    const startMenuAppearanceRow = new Adw.ExpanderRow({
+        title: _('Start Menu Appearance'),
+        subtitle: _('Configure the Start Menu theme and transparency'),
+    });
+    startMenuGroup.add(startMenuAppearanceRow);
+    startMenuAppearanceRow.add_row(followPanelThemeSwitch);
     settings.bind(
         'start-menu-follow-panel-theme',
         followPanelThemeSwitch,
@@ -386,7 +410,7 @@ export function addStartMenuPage({
     );
 
     const startMenuThemeRow = addComboRow(
-        startMenuGroup,
+        startMenuAppearanceRow,
         settings,
         {
             key: 'start-menu-theme',
@@ -397,6 +421,7 @@ export function addStartMenuPage({
                 {value: 'light', label: _('Light')},
                 {value: 'shell', label: _('GNOME Shell')},
             ],
+            addRow: row => startMenuAppearanceRow.add_row(row),
         },
         connectSettings
     );
@@ -434,7 +459,7 @@ export function addStartMenuPage({
             'start-menu-follow-panel-transparency'
         ),
     });
-    advancedStartMenuGroup.add(followPanelTransparencySwitch);
+    startMenuAppearanceRow.add_row(followPanelTransparencySwitch);
     settings.bind(
         'start-menu-follow-panel-transparency',
         followPanelTransparencySwitch,
