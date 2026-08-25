@@ -46,7 +46,7 @@ export function addPanelAppearancePage({
     dockPanelModeSwitch,
     appAlignmentRow,
     pinnedAppsAsLaunchersSwitch,
-    pinnedAppSeparatorSwitch,
+    separatorsRow,
     combineAppButtonsRow,
     applicationOverflowSwitch,
     syncLabelSensitivity,
@@ -175,7 +175,7 @@ export function addPanelAppearancePage({
             (!settings.get_boolean('dock-mode') ||
                 settings.get_boolean('dock-panel-mode'));
         pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
-        pinnedAppSeparatorSwitch.sensitive = !enabled;
+        separatorsRow.sensitive = !enabled;
         combineAppButtonsRow.sensitive = true;
         applicationOverflowSwitch.sensitive = !enabled;
         syncLabelSensitivity();

@@ -25,6 +25,53 @@ function createDriveOptionsRow(settings) {
     return row;
 }
 
+function createCommonFoldersRow(settings) {
+    const row = new Adw.ExpanderRow({
+        title: _('Common Folders'),
+        subtitle: _('Choose which common folders appear'),
+    });
+    for (const option of [
+        {
+            key: 'locations-show-home',
+            title: _('Home'),
+            subtitle: _('Add the Home folder'),
+        },
+        {
+            key: 'locations-show-desktop',
+            title: _('Desktop'),
+            subtitle: _('Add the Desktop folder'),
+        },
+        {
+            key: 'locations-show-documents',
+            title: _('Documents'),
+            subtitle: _('Add the Documents folder'),
+        },
+        {
+            key: 'locations-show-downloads',
+            title: _('Downloads'),
+            subtitle: _('Add the Downloads folder'),
+        },
+        {
+            key: 'locations-show-music',
+            title: _('Music'),
+            subtitle: _('Add the Music folder'),
+        },
+        {
+            key: 'locations-show-pictures',
+            title: _('Pictures'),
+            subtitle: _('Add the Pictures folder'),
+        },
+        {
+            key: 'locations-show-videos',
+            title: _('Videos'),
+            subtitle: _('Add the Videos folder'),
+        },
+    ]) {
+        row.add_row(createSwitchRow(settings, option));
+    }
+    return row;
+}
+
 export function addLocationsGroup({
     page,
     dockPage,
@@ -33,7 +80,9 @@ export function addLocationsGroup({
 }) {
     const group = new Adw.PreferencesGroup({
         title: _('Locations'),
-        description: _('Show Trash and connected drives in the taskbar.'),
+        description: _(
+            'Show common folders, Trash, and connected drives in the taskbar.'
+        ),
     });
     page.add(group);
 
@@ -91,9 +140,13 @@ export function addLocationsGroup({
     dockGroup.add(dockRow);
 
     const taskbarDriveOptionsRow = createDriveOptionsRow(settings);
+    const taskbarCommonFoldersRow = createCommonFoldersRow(settings);
     const dockDriveOptionsRow = createDriveOptionsRow(settings);
+    const dockCommonFoldersRow = createCommonFoldersRow(settings);
     group.add(taskbarDriveOptionsRow);
+    group.add(taskbarCommonFoldersRow);
     dockGroup.add(dockDriveOptionsRow);
+    dockGroup.add(dockCommonFoldersRow);
 
     const syncAvailability = () => {
         const xpEnabled = settings.get_boolean(
@@ -118,6 +171,8 @@ export function addLocationsGroup({
             (dockEnabled && dockMountsRow.active);
         taskbarDriveOptionsRow.sensitive = driveOptionsEnabled;
         dockDriveOptionsRow.sensitive = driveOptionsEnabled;
+        taskbarCommonFoldersRow.sensitive = taskbarEnabled;
+        dockCommonFoldersRow.sensitive = dockEnabled;
     };
     for (const row of [
         taskbarLocationsRow,

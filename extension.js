@@ -422,6 +422,11 @@ export default class SimpleTaskbarExtension extends Extension {
             },
             this
         );
+        this._settings.connectObject(
+            'changed::show-location-separator',
+            () => this._panelController.updateTaskbarWidth(),
+            this
+        );
         this._settings.connectObject('changed::panel-position', () => {
             synchronizePanelPosition(this._settings);
             hidePanelBlur();

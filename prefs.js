@@ -155,8 +155,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         const pinnedAppsAsLaunchersSwitch =
             appBehavior.pinnedAppsAsLaunchersSwitch;
-        const pinnedAppSeparatorSwitch =
-            appBehavior.pinnedAppSeparatorSwitch;
+        const separatorsRow = appBehavior.separatorsRow;
         const combineAppButtonsRow = appBehavior.combineAppButtonsRow;
         const applicationOverflowSwitch =
             appBehavior.applicationOverflowSwitch;
@@ -200,7 +199,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             dockPanelModeSwitch,
             appAlignmentRow,
             pinnedAppsAsLaunchersSwitch,
-            pinnedAppSeparatorSwitch,
+            separatorsRow,
             combineAppButtonsRow,
             applicationOverflowSwitch,
             syncLabelSensitivity,

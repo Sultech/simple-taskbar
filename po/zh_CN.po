@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 19:55+0100\n"
+"POT-Creation-Date: 2026-08-25 21:33+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Show desktop"
 msgstr "展示桌面"
 
-#: src/overflow/applicationOverflowController.js:426
+#: src/overflow/applicationOverflowController.js:464
 msgid "Application overflow"
 msgstr "应用溢出"
 
@@ -40,11 +40,11 @@ msgstr "居中"
 msgid "Right"
 msgstr "右侧"
 
-#: prefs.js:55 src/prefs/locationsGroup.js:41
+#: prefs.js:55 src/prefs/locationsGroup.js:90
 msgid "Taskbar"
 msgstr "任务栏"
 
-#: prefs.js:61 src/prefs/locationsGroup.js:65
+#: prefs.js:61 src/prefs/locationsGroup.js:114
 msgid "Dock"
 msgstr ""
 
@@ -176,112 +176,130 @@ msgstr "文件管理器快捷方式和任务栏菜单文件夹。"
 msgid "Less commonly used Start menu options."
 msgstr "使用较少的开始菜单选项。"
 
-#: src/prefs/appBehaviorGroup.js:19
+#: src/prefs/appBehaviorGroup.js:21
 msgid "Hide Pinned Applications"
 msgstr "隐藏已固定的应用"
 
-#: src/prefs/appBehaviorGroup.js:20
+#: src/prefs/appBehaviorGroup.js:22
 msgid "Show pinned taskbar applications only while they are running"
 msgstr "仅展示正在运行的已固定于任务栏的应用"
 
-#: src/prefs/appBehaviorGroup.js:26
+#: src/prefs/appBehaviorGroup.js:28
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "将已固定的应用用作应用程序启动器"
 
-#: src/prefs/appBehaviorGroup.js:28
+#: src/prefs/appBehaviorGroup.js:30
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr "将已固定的应用保留为启动器，并单独展示正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:35
+#: src/prefs/appBehaviorGroup.js:37
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:36
+#: src/prefs/appBehaviorGroup.js:38
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
 
-#: src/prefs/appBehaviorGroup.js:41
+#: src/prefs/appBehaviorGroup.js:43
+msgid "Show Location Separator"
+msgstr ""
+
+#: src/prefs/appBehaviorGroup.js:44
+#, fuzzy
+msgid "Show a line between applications and locations"
+msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
+
+#: src/prefs/appBehaviorGroup.js:47
+msgid "Separators"
+msgstr ""
+
+#: src/prefs/appBehaviorGroup.js:48
+#, fuzzy
+msgid "Choose which separators appear"
+msgstr "选择展示哪些可选的面板项目。"
+
+#: src/prefs/appBehaviorGroup.js:55
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/appBehaviorGroup.js:42 src/prefs/appBehaviorGroup.js:46
+#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/appBehaviorGroup.js:43 src/prefs/appBehaviorGroup.js:47
+#: src/prefs/appBehaviorGroup.js:57 src/prefs/appBehaviorGroup.js:61
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/appBehaviorGroup.js:54
+#: src/prefs/appBehaviorGroup.js:68
 msgid "Combine Application Buttons"
 msgstr "合并应用按钮"
 
-#: src/prefs/appBehaviorGroup.js:55
+#: src/prefs/appBehaviorGroup.js:69
 msgid "Choose when windows share one taskbar button"
 msgstr "选择窗口在何时共用一个任务栏按钮"
 
-#: src/prefs/appBehaviorGroup.js:70
+#: src/prefs/appBehaviorGroup.js:84
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/appBehaviorGroup.js:72
+#: src/prefs/appBehaviorGroup.js:86
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/appBehaviorGroup.js:82
+#: src/prefs/appBehaviorGroup.js:96
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/appBehaviorGroup.js:84
+#: src/prefs/appBehaviorGroup.js:98
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/appBehaviorGroup.js:85
+#: src/prefs/appBehaviorGroup.js:99
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/appBehaviorGroup.js:98
+#: src/prefs/appBehaviorGroup.js:112
 msgid "Hide App Labels"
 msgstr "隐藏应用标签"
 
-#: src/prefs/appBehaviorGroup.js:99
+#: src/prefs/appBehaviorGroup.js:113
 msgid "Show only icons on separate window buttons"
 msgstr "在独立的任务栏按钮上仅展示图标"
 
-#: src/prefs/appBehaviorGroup.js:124 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:138 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/appBehaviorGroup.js:125
+#: src/prefs/appBehaviorGroup.js:139
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:131 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:145 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/appBehaviorGroup.js:132
+#: src/prefs/appBehaviorGroup.js:146
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:138
+#: src/prefs/appBehaviorGroup.js:152
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus（文件管理器）文件夹快捷方式"
 
-#: src/prefs/appBehaviorGroup.js:139
+#: src/prefs/appBehaviorGroup.js:153
 msgid "Show common folders in the Files taskbar menu"
 msgstr "在“文件”任务栏菜单中展示常用文件夹"
 
-#: src/prefs/appBehaviorGroup.js:145
+#: src/prefs/appBehaviorGroup.js:159
 msgid "Middle Click Closes Applications"
 msgstr "中键点击以关闭应用"
 
-#: src/prefs/appBehaviorGroup.js:146
+#: src/prefs/appBehaviorGroup.js:160
 msgid "Close all application windows instead of opening a new window"
 msgstr "关闭应用的所有窗口，而不是打开新窗口"
 
@@ -605,63 +623,137 @@ msgstr ""
 msgid "Include network-mounted locations"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:35 src/prefs/locationsGroup.js:87
+#: src/prefs/locationsGroup.js:30
+#, fuzzy
+msgid "Common Folders"
+msgstr "选择一个文件夹"
+
+#: src/prefs/locationsGroup.js:31
+#, fuzzy
+msgid "Choose which common folders appear"
+msgstr "选择展示哪些可选的面板项目。"
+
+#: src/prefs/locationsGroup.js:36
+#: src/integration/fileManagerPlacesSection.js:25
+msgid "Home"
+msgstr "主目录"
+
+#: src/prefs/locationsGroup.js:37
+#, fuzzy
+msgid "Add the Home folder"
+msgstr "无法打开文件夹"
+
+#: src/prefs/locationsGroup.js:41
+#: src/integration/fileManagerPlacesSection.js:30
+msgid "Desktop"
+msgstr "桌面"
+
+#: src/prefs/locationsGroup.js:42
+msgid "Add the Desktop folder"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:46
+#: src/integration/fileManagerPlacesSection.js:35
+msgid "Documents"
+msgstr "文档"
+
+#: src/prefs/locationsGroup.js:47
+msgid "Add the Documents folder"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:51
+#: src/integration/fileManagerPlacesSection.js:40
+msgid "Downloads"
+msgstr "下载"
+
+#: src/prefs/locationsGroup.js:52
+msgid "Add the Downloads folder"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:56
+#: src/integration/fileManagerPlacesSection.js:45
+msgid "Music"
+msgstr "音乐"
+
+#: src/prefs/locationsGroup.js:57
+msgid "Add the Music folder"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:61
+#: src/integration/fileManagerPlacesSection.js:50
+msgid "Pictures"
+msgstr "图片"
+
+#: src/prefs/locationsGroup.js:62
+msgid "Add the Pictures folder"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:66
+#: src/integration/fileManagerPlacesSection.js:55
+msgid "Videos"
+msgstr "视频"
+
+#: src/prefs/locationsGroup.js:67
+msgid "Add the Videos folder"
+msgstr ""
+
+#: src/prefs/locationsGroup.js:82 src/prefs/locationsGroup.js:136
 #, fuzzy
 msgid "Locations"
 msgstr "应用程序"
 
-#: src/prefs/locationsGroup.js:36
+#: src/prefs/locationsGroup.js:84
 #, fuzzy
-msgid "Show Trash and connected drives in the taskbar."
+msgid "Show common folders, Trash, and connected drives in the taskbar."
 msgstr "在任务栏上展示所选的文件夹"
 
-#: src/prefs/locationsGroup.js:42
+#: src/prefs/locationsGroup.js:91
 msgid "Locations shown with taskbar applications"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:46 src/prefs/locationsGroup.js:70
+#: src/prefs/locationsGroup.js:95 src/prefs/locationsGroup.js:119
 msgid "Show Locations"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:47
+#: src/prefs/locationsGroup.js:96
 msgid "Display selected locations after taskbar applications"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:51 src/prefs/locationsGroup.js:75
+#: src/prefs/locationsGroup.js:100 src/prefs/locationsGroup.js:124
 msgid "Show Trash"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:52
+#: src/prefs/locationsGroup.js:101
 #, fuzzy
 msgid "Add the Trash to the taskbar"
 msgstr "%s 已固定到任务栏。"
 
-#: src/prefs/locationsGroup.js:56 src/prefs/locationsGroup.js:80
+#: src/prefs/locationsGroup.js:105 src/prefs/locationsGroup.js:129
 msgid "Show Drives and Volumes"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:57
+#: src/prefs/locationsGroup.js:106
 #, fuzzy
 msgid "Add mounted or connected drives to the taskbar"
 msgstr "在任务栏上展示所选的文件夹"
 
-#: src/prefs/locationsGroup.js:66
+#: src/prefs/locationsGroup.js:115
 msgid "Locations shown with Dock applications"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:71
+#: src/prefs/locationsGroup.js:120
 msgid "Display selected locations after Dock applications"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:76
+#: src/prefs/locationsGroup.js:125
 msgid "Add the Trash to the Dock"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:81
+#: src/prefs/locationsGroup.js:130
 msgid "Add mounted or connected drives to the Dock"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:88
+#: src/prefs/locationsGroup.js:137
 msgid "Show Trash and connected drives in the Dock."
 msgstr ""
 
@@ -1689,34 +1781,6 @@ msgstr "正在加载…"
 msgid "This folder is empty"
 msgstr "此文件夹为空"
 
-#: src/integration/fileManagerPlacesSection.js:25
-msgid "Home"
-msgstr "主目录"
-
-#: src/integration/fileManagerPlacesSection.js:30
-msgid "Desktop"
-msgstr "桌面"
-
-#: src/integration/fileManagerPlacesSection.js:35
-msgid "Documents"
-msgstr "文档"
-
-#: src/integration/fileManagerPlacesSection.js:40
-msgid "Downloads"
-msgstr "下载"
-
-#: src/integration/fileManagerPlacesSection.js:45
-msgid "Music"
-msgstr "音乐"
-
-#: src/integration/fileManagerPlacesSection.js:50
-msgid "Pictures"
-msgstr "图片"
-
-#: src/integration/fileManagerPlacesSection.js:55
-msgid "Videos"
-msgstr "视频"
-
 #: src/integration/fileManagerPlacesSection.js:130
 msgid "Unable to open folder"
 msgstr "无法打开文件夹"
@@ -1751,28 +1815,28 @@ msgstr "从任务栏取消固定"
 msgid "Pin to Taskbar"
 msgstr "固定到任务栏"
 
-#: src/taskbar/taskbarLocation.js:122
+#: src/taskbar/taskbarLocation.js:125
 msgid "Empty Trash"
 msgstr ""
 
-#: src/taskbar/taskbarLocation.js:131
+#: src/taskbar/taskbarLocation.js:137
 msgid "Unmount"
 msgstr ""
 
-#: src/taskbar/taskbarLocation.js:133 src/taskbar/taskbarLocation.js:140
+#: src/taskbar/taskbarLocation.js:139 src/taskbar/taskbarLocation.js:146
 msgid "Eject"
 msgstr ""
 
-#: src/taskbar/taskbarLocation.js:138
+#: src/taskbar/taskbarLocation.js:144
 msgid "Mount"
 msgstr ""
 
-#: src/taskbar/taskbarLocation.js:171
+#: src/taskbar/taskbarLocation.js:180
 #, fuzzy
 msgid "Unable to open location"
 msgstr "无法打开文件夹"
 
-#: src/taskbar/taskbarLocation.js:325
+#: src/taskbar/taskbarLocation.js:334
 msgid "failed"
 msgstr ""
 
@@ -1780,12 +1844,12 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: src/taskbar/taskbarLocationsController.js:270
+#: src/taskbar/taskbarLocationsController.js:351
 msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:415
-#: src/taskbar/taskbarController.js:1005 src/taskbar/taskbarController.js:1007
+#: src/taskbar/taskbarController.js:1029 src/taskbar/taskbarController.js:1031
 msgid "running"
 msgstr "正在运行"
 

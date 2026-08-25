@@ -33,12 +33,14 @@ import {
 import {
     TaskbarLocationsController,
 } from './taskbarLocationsController.js';
+import {
+    TASKBAR_SEPARATOR_EXTENT,
+    TASKBAR_SEPARATOR_LINE_SIZE,
+} from './taskbarSeparator.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
-const PINNED_SEPARATOR_EXTENT = 13;
-const PINNED_SEPARATOR_LINE_SIZE = 1;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -416,6 +418,11 @@ export class TaskbarController {
             this._signalHolder
         );
         this._settings.connectObject(
+            'changed::show-location-separator',
+            () => this._queueRedisplay(),
+            this._signalHolder
+        );
+        this._settings.connectObject(
             'changed::default-gnome-panel',
             () => this._syncApplicationVisibility(),
             this._signalHolder
@@ -613,11 +620,22 @@ export class TaskbarController {
                 iconSize
             );
         }, 0);
-        return length + this.getPinnedSeparatorLength();
+        return length + this.getPinnedSeparatorLength() +
+            this.getLocationSeparatorLength();
     }
 
     getPinnedSeparatorLength() {
-        return this._pinnedSeparator ? PINNED_SEPARATOR_EXTENT : 0;
+        return this._pinnedSeparator ? TASKBAR_SEPARATOR_EXTENT : 0;
+    }
+
+    getLocationSeparatorLength() {
+        if (!this._settings.get_boolean('show-location-separator'))
+            return 0;
+
+        return this.getOrderedApplicationItems().length > 0 &&
+            this.getLocationItems().length > 0
+            ? TASKBAR_SEPARATOR_EXTENT
+            : 0;
     }
 
     getPinnedSeparatorTarget(items) {
@@ -843,9 +861,6 @@ export class TaskbarController {
                 isPinnedPrimary,
             } = entries[index];
             const isLocation = app._simpleTaskbarLocation;
-            const pinnedToRunningGap = isLauncher &&
-                index + 1 < entries.length &&
-                !entries[index + 1].isLauncher;
             const targetActor = isLocation ? this._locationActor : this.actor;
             const targetIndex = isLocation
                 ? locationEntries.indexOf(entries[index])
@@ -905,8 +920,17 @@ export class TaskbarController {
                 this._appItemFactory.sync(item);
             item._taskbarIsPinnedPrimary = isPinnedPrimary;
 
-            if (item._taskbarPinnedToRunningGap !== pinnedToRunningGap) {
-                item._taskbarPinnedToRunningGap = pinnedToRunningGap;
+            const applicationIndex = applicationEntries.indexOf(
+                entries[index]
+            );
+            const nextApplicationEntry = applicationIndex >= 0
+                ? applicationEntries[applicationIndex + 1]
+                : null;
+            const nextIsRunning = Boolean(nextApplicationEntry &&
+                !nextApplicationEntry.isLauncher);
+            const nextPinnedToRunningGap = isLauncher && nextIsRunning;
+            if (item._taskbarPinnedToRunningGap !== nextPinnedToRunningGap) {
+                item._taskbarPinnedToRunningGap = nextPinnedToRunningGap;
                 this._updateGlassGeometry(item);
             }
         }
@@ -917,7 +941,7 @@ export class TaskbarController {
         }
 
         this._showDesktopController.place();
-        this._syncPinnedSeparator(entries);
+        this._syncPinnedSeparator(applicationEntries);
         this._syncTaskbarEdgeSpacing();
         this._shownInitially = true;
         this.syncButtonStates(animateIndicators);
@@ -1324,12 +1348,19 @@ export class TaskbarController {
     }
 
     _entriesWidth(entries, showLabels) {
+        const applicationEntries = entries.filter(entry =>
+            !entry.app._simpleTaskbarLocation
+        );
         const width = entries.reduce((total, entry, index) => {
             const entryShowLabels = showLabels &&
                 (Boolean(entry.window) || entry.isCombined);
-            const pinnedToRunningGap = entry.isLauncher &&
-                index + 1 < entries.length &&
-                !entries[index + 1].isLauncher;
+            const applicationIndex = applicationEntries.indexOf(entry);
+            const nextApplicationEntry = applicationIndex >= 0
+                ? applicationEntries[applicationIndex + 1]
+                : null;
+            const pinnedToRunningGap = !entry.app._simpleTaskbarLocation &&
+                entry.isLauncher && Boolean(nextApplicationEntry) &&
+                !nextApplicationEntry.isLauncher;
             const transitionGap =
                 this._appearanceController.transitionGap(
                     pinnedToRunningGap
@@ -1346,7 +1377,9 @@ export class TaskbarController {
                 entry.isCombined
             ) + iconSpacing + transitionGap + trailingSpacing;
         }, 0);
-        return width + this._pinnedSeparatorLengthForEntries(entries);
+        return width + this._pinnedSeparatorLengthForEntries(
+            applicationEntries
+        ) + this._locationSeparatorLengthForEntries(entries);
     }
 
     _pinnedSeparatorLengthForEntries(entries) {
@@ -1361,9 +1394,24 @@ export class TaskbarController {
                 continue;
             }
             if (hasPinnedEntries)
-                return PINNED_SEPARATOR_EXTENT;
+                return TASKBAR_SEPARATOR_EXTENT;
         }
         return 0;
+    }
+
+    _locationSeparatorLengthForEntries(entries) {
+        if (!this._settings.get_boolean('show-location-separator'))
+            return 0;
+
+        const hasApplications = entries.some(entry =>
+            !entry.app._simpleTaskbarLocation
+        );
+        const hasLocations = entries.some(entry =>
+            entry.app._simpleTaskbarLocation
+        );
+        return hasApplications && hasLocations
+            ? TASKBAR_SEPARATOR_EXTENT
+            : 0;
     }
 
     _syncPinnedSeparator(entries) {
@@ -1401,8 +1449,8 @@ export class TaskbarController {
 
         const vertical = panelIsVertical(this._settings);
         this._pinnedSeparator.set_size(
-            vertical ? this._iconSize : PINNED_SEPARATOR_LINE_SIZE,
-            vertical ? PINNED_SEPARATOR_LINE_SIZE : this._iconSize
+            vertical ? this._iconSize : TASKBAR_SEPARATOR_LINE_SIZE,
+            vertical ? TASKBAR_SEPARATOR_LINE_SIZE : this._iconSize
         );
     }
 

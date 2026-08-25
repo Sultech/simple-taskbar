@@ -23,6 +23,7 @@ const LOCKED_SETTING_KEYS = [
     'start-button-position',
     'use-pinned-apps-as-launchers',
     'show-pinned-app-separator',
+    'show-location-separator',
     'combine-app-buttons-mode',
     'application-overflow-enabled',
     'hide-app-labels',

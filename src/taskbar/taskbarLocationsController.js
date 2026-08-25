@@ -11,6 +11,58 @@ import {
     TRASH_URI,
 } from './taskbarLocation.js';
 
+const COMMON_FOLDER_DEFINITIONS = [
+    {
+        key: 'locations-show-home',
+        name: 'Home',
+        iconName: 'user-home',
+        directory: null,
+        fallback: 'Home',
+    },
+    {
+        key: 'locations-show-desktop',
+        name: 'Desktop',
+        iconName: 'user-desktop',
+        directory: GLib.UserDirectory.DIRECTORY_DESKTOP,
+        fallback: 'Desktop',
+    },
+    {
+        key: 'locations-show-documents',
+        name: 'Documents',
+        iconName: 'folder-documents',
+        directory: GLib.UserDirectory.DIRECTORY_DOCUMENTS,
+        fallback: 'Documents',
+    },
+    {
+        key: 'locations-show-downloads',
+        name: 'Downloads',
+        iconName: 'folder-download',
+        directory: GLib.UserDirectory.DIRECTORY_DOWNLOAD,
+        fallback: 'Downloads',
+    },
+    {
+        key: 'locations-show-music',
+        name: 'Music',
+        iconName: 'folder-music',
+        directory: GLib.UserDirectory.DIRECTORY_MUSIC,
+        fallback: 'Music',
+    },
+    {
+        key: 'locations-show-pictures',
+        name: 'Pictures',
+        iconName: 'folder-pictures',
+        directory: GLib.UserDirectory.DIRECTORY_PICTURES,
+        fallback: 'Pictures',
+    },
+    {
+        key: 'locations-show-videos',
+        name: 'Videos',
+        iconName: 'folder-videos',
+        directory: GLib.UserDirectory.DIRECTORY_VIDEOS,
+        fallback: 'Videos',
+    },
+];
+
 export class TaskbarLocationsController {
     constructor({settings, scope, onChanged}) {
         this._settings = settings;
@@ -26,6 +78,7 @@ export class TaskbarLocationsController {
             : 'taskbar-show-mounts';
         this._showMountedOnlyKey = 'locations-show-mounted-only';
         this._showNetworkKey = 'locations-show-network';
+        this._folderApps = [];
         this._monitor = Gio.VolumeMonitor.get();
         this._monitorSignalIds = [];
         this._settingsSignalIds = [];
@@ -44,6 +97,10 @@ export class TaskbarLocationsController {
             [`changed::${this._showMountsKey}`, () => this._sync()],
             [`changed::${this._showMountedOnlyKey}`, () => this._sync()],
             [`changed::${this._showNetworkKey}`, () => this._sync()],
+            ...COMMON_FOLDER_DEFINITIONS.map(folder => [
+                `changed::${folder.key}`,
+                () => this._sync(),
+            ]),
         ]) {
             this._settingsSignalIds.push(
                 this._settings.connect(signal, callback)
@@ -71,7 +128,8 @@ export class TaskbarLocationsController {
             return [];
         }
 
-        const entries = this._volumeApps.map(app => this._createEntry(app));
+        const entries = this._folderApps.map(app => this._createEntry(app));
+        entries.push(...this._volumeApps.map(app => this._createEntry(app)));
         if (this._trashApp)
             entries.push(this._createEntry(this._trashApp));
         return entries;
@@ -100,6 +158,7 @@ export class TaskbarLocationsController {
         for (const id of this._monitorSignalIds)
             this._monitor.disconnect(id);
         this._monitorSignalIds = [];
+        this._destroyFolderApps();
         this._destroyVolumeApps();
         this._destroyTrashApp();
         this._monitor = null;
@@ -110,9 +169,11 @@ export class TaskbarLocationsController {
     _sync(notify = true) {
         const enabled = this._settings.get_boolean(this._showLocationsKey);
         if (!enabled) {
+            this._destroyFolderApps();
             this._destroyVolumeApps();
             this._destroyTrashApp();
         } else {
+            this._syncFolderApps();
             if (this._settings.get_boolean(this._showMountsKey))
                 this._syncVolumes();
             else
@@ -125,6 +186,26 @@ export class TaskbarLocationsController {
         }
         if (notify)
             this._onChanged();
+    }
+
+    _syncFolderApps() {
+        this._destroyFolderApps();
+        for (const folder of COMMON_FOLDER_DEFINITIONS) {
+            if (!this._settings.get_boolean(folder.key))
+                continue;
+
+            const path = folder.directory === null
+                ? GLib.get_home_dir()
+                : GLib.get_user_special_dir(folder.directory) ||
+                    `${GLib.get_home_dir()}/${folder.fallback}`;
+            this._folderApps.push(new TaskbarLocation({
+                id: `location:folder:${folder.key}`,
+                name: _(folder.name),
+                type: 'folder',
+                location: Gio.File.new_for_path(path),
+                icon: Gio.ThemedIcon.new(folder.iconName),
+            }));
+        }
     }
 
     _queueVolumeEvent(signal, object) {
@@ -280,6 +361,12 @@ export class TaskbarLocationsController {
             app.destroy();
         this._volumeApps = [];
         this._volumeAppsByVolume.clear();
+    }
+
+    _destroyFolderApps() {
+        for (const app of this._folderApps)
+            app.destroy();
+        this._folderApps = [];
     }
 
     _destroyTrashApp() {

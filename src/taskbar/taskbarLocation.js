@@ -13,6 +13,7 @@ export const TRASH_URI = 'trash://';
 const TRASH_UPDATE_DELAY = 1000;
 const FALLBACK_VOLUME_ICON = 'drive-removable-media';
 const FALLBACK_TRASH_ICON = 'user-trash';
+const FALLBACK_FOLDER_ICON = 'folder';
 
 const LOCATION_ACTIONS = Object.freeze({
     MOUNT: 'mount',
@@ -63,7 +64,9 @@ export const TaskbarLocation = GObject.registerClass({
         this._mountSignalIds = [];
         this._fallbackIconName = type === 'trash'
             ? FALLBACK_TRASH_ICON
-            : FALLBACK_VOLUME_ICON;
+            : type === 'folder'
+                ? FALLBACK_FOLDER_ICON
+                : FALLBACK_VOLUME_ICON;
         this.name = name;
         this.icon = icon;
         this.empty = true;
@@ -77,7 +80,7 @@ export const TaskbarLocation = GObject.registerClass({
 
         if (type === 'trash')
             this._initializeTrash();
-        else
+        else if (type === 'volume')
             this._initializeVolume();
     }
 
@@ -122,6 +125,9 @@ export const TaskbarLocation = GObject.registerClass({
                 : [{id: LOCATION_ACTIONS.EMPTY_TRASH, label: _('Empty Trash')}];
         }
 
+        if (this._type !== 'volume')
+            return [];
+
         if (this._currentAction)
             return [];
 
@@ -147,6 +153,9 @@ export const TaskbarLocation = GObject.registerClass({
                 this._emptyTrash();
             return;
         }
+
+        if (this._type !== 'volume')
+            return;
 
         this._runVolumeAction(action);
     }

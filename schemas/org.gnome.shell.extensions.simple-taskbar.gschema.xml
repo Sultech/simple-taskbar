@@ -272,6 +272,34 @@
       <default>false</default>
       <summary>Include network volumes</summary>
     </key>
+    <key name="locations-show-home" type="b">
+      <default>false</default>
+      <summary>Show the Home folder</summary>
+    </key>
+    <key name="locations-show-desktop" type="b">
+      <default>false</default>
+      <summary>Show the Desktop folder</summary>
+    </key>
+    <key name="locations-show-documents" type="b">
+      <default>false</default>
+      <summary>Show the Documents folder</summary>
+    </key>
+    <key name="locations-show-downloads" type="b">
+      <default>true</default>
+      <summary>Show the Downloads folder</summary>
+    </key>
+    <key name="locations-show-music" type="b">
+      <default>false</default>
+      <summary>Show the Music folder</summary>
+    </key>
+    <key name="locations-show-pictures" type="b">
+      <default>false</default>
+      <summary>Show the Pictures folder</summary>
+    </key>
+    <key name="locations-show-videos" type="b">
+      <default>false</default>
+      <summary>Show the Videos folder</summary>
+    </key>
     <key name="dock-position" type="s">
       <choices>
         <choice value="top"/>
@@ -507,6 +535,11 @@
       <default>false</default>
       <summary>Show a separator between pinned and running applications</summary>
       <description>Show a line between pinned and running applications</description>
+    </key>
+    <key name="show-location-separator" type="b">
+      <default>true</default>
+      <summary>Show a separator before locations</summary>
+      <description>Show a line between applications and locations</description>
     </key>
     <key name="combine-app-buttons-mode" type="s">
       <choices>

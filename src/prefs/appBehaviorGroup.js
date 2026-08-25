@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Adw from 'gi://Adw';
+
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
@@ -35,7 +37,19 @@ export function addAppBehaviorGroup({
         title: _('Show Pinned App Separator'),
         subtitle: _('Show a line between pinned and running applications'),
     });
-    advancedAppBehaviorGroup.add(pinnedAppSeparatorSwitch);
+
+    const locationSeparatorSwitch = createSwitchRow(settings, {
+        key: 'show-location-separator',
+        title: _('Show Location Separator'),
+        subtitle: _('Show a line between applications and locations'),
+    });
+    const separatorsRow = new Adw.ExpanderRow({
+        title: _('Separators'),
+        subtitle: _('Choose which separators appear'),
+    });
+    separatorsRow.add_row(pinnedAppSeparatorSwitch);
+    separatorsRow.add_row(locationSeparatorSwitch);
+    advancedAppBehaviorGroup.add(separatorsRow);
 
     const combineAppButtonsChoices = [
         {value: 'always', label: _('Always')},
@@ -149,7 +163,7 @@ export function addAppBehaviorGroup({
 
     return {
         pinnedAppsAsLaunchersSwitch,
-        pinnedAppSeparatorSwitch,
+        separatorsRow,
         combineAppButtonsRow,
         applicationOverflowSwitch,
         isolateMonitorsSwitch,
