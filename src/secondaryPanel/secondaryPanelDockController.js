@@ -174,6 +174,7 @@ export class SecondaryPanelDockController {
             return DOCK_EDGE_GAP;
 
         if (!this._settings.get_boolean('panel-autohide-enabled') &&
+            !this._settings.get_boolean('panel-dodge-windows-enabled') &&
             this._hasVisibleMaximizedWindowOnMonitor()) {
             return 0;
         }
@@ -404,6 +405,8 @@ export class SecondaryPanelDockController {
         );
         this._settings.connectObject(
             'changed::panel-autohide-enabled',
+            () => this._onPosition(),
+            'changed::panel-dodge-windows-enabled',
             () => this._onPosition(),
             'changed::icon-size',
             () => {
