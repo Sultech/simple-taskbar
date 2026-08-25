@@ -540,41 +540,32 @@ msgid "Show Border in Light Mode"
 msgstr "Mostra bordo in modalità chiara"
 
 #: src/prefs/dockBehaviorGroup.js:15
-#, fuzzy
 msgid "Dock Behavior"
-msgstr "Comportamento della barra delle applicazioni"
+msgstr "Comportamento del dock"
 
 #: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:22
-#, fuzzy
 msgid "Auto-hide Dock"
-msgstr "Nascondi automaticamente il pannello"
+msgstr "Nascondi automaticamente il dock"
 
 #: src/prefs/dockBehaviorGroup.js:23
-#, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
-msgstr ""
-"Mostra la barra delle applicazioni quando il puntatore raggiunge il bordo "
-"dello schermo"
+msgstr "Mostra il dock quando il puntatore raggiunge il bordo dello schermo"
 
 #: src/prefs/dockBehaviorGroup.js:40
 msgid "Limit Reveal to Dock Edge"
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:41
-#, fuzzy
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
-msgstr ""
-"Mostra la barra delle applicazioni quando il puntatore raggiunge il bordo "
-"dello schermo"
+msgstr "Mostra un dock fluttuante solo quando il puntatore raggiunge il suo bordo"
 
 #: src/prefs/dockBehaviorGroup.js:47
-#, fuzzy
 msgid "Show Dock on All Monitors"
-msgstr "Mostra la barra delle applicazioni su tutti i monitor"
+msgstr "Mostra il dock su tutti i monitor"
 
 #: src/prefs/dockBehaviorGroup.js:48
 msgid "Show the Dock on every connected monitor"
@@ -585,11 +576,8 @@ msgid "Workspace Scroll"
 msgstr "Scorrimento spazi di lavoro"
 
 #: src/prefs/dockBehaviorGroup.js:55
-#, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
-msgstr ""
-"Scorri sopra lo spazio vuoto della barra delle applicazioni per cambiare "
-"spazio di lavoro"
+msgstr "Scorri sopra lo spazio vuoto del dock per cambiare spazio di lavoro"
 
 #: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
@@ -1503,32 +1491,28 @@ msgstr ""
 "Mostra Attività, applicazioni, orologio e menu di sistema su ogni monitor"
 
 #: src/prefs/windowDodgeGroup.js:22
-#, fuzzy
 msgid "Dodge Windows"
-msgstr "Chiudi finestra"
+msgstr "Evita le finestre"
 
 #: src/prefs/windowDodgeGroup.js:23
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:32
-#, fuzzy
 msgid "Dodge Windows Mode"
-msgstr "Chiudi finestra"
+msgstr "Modalità di evitamento delle finestre"
 
 #: src/prefs/windowDodgeGroup.js:33
 msgid "Choose which windows make the panel or Dock hide"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:37
-#, fuzzy
 msgid "All windows"
-msgstr "Chiudi tutte le finestre"
+msgstr "Tutte le finestre"
 
 #: src/prefs/windowDodgeGroup.js:41
-#, fuzzy
 msgid "Only focused application’s windows"
-msgstr "Mostra le applicazioni usate di frequente sotto le app bloccate"
+msgstr "Solo le finestre dell’applicazione attiva"
 
 #: src/prefs/windowDodgeGroup.js:45
 msgid "Only maximized windows"
@@ -1539,13 +1523,11 @@ msgid "Reveal on Pointer"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:55
-#, fuzzy
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr ""
-"Mostra la barra delle applicazioni quando il puntatore raggiunge il bordo "
-"dello schermo"
+msgstr "Mostra il pannello o il dock quando il puntatore raggiunge il bordo dello "
+"schermo mentre evita una finestra"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"

@@ -518,37 +518,32 @@ msgid "Show Border in Light Mode"
 msgstr "Показывать границу в светлом режиме"
 
 #: src/prefs/dockBehaviorGroup.js:15
-#, fuzzy
 msgid "Dock Behavior"
-msgstr "Поведение панели задач"
+msgstr "Поведение дока"
 
 #: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:22
-#, fuzzy
 msgid "Auto-hide Dock"
-msgstr "Автоскрытие панели"
+msgstr "Автоматически скрывать док"
 
 #: src/prefs/dockBehaviorGroup.js:23
-#, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
-msgstr "Показывать панель задач, когда указатель достигает края экрана"
+msgstr "Показывать док, когда указатель достигает края экрана"
 
 #: src/prefs/dockBehaviorGroup.js:40
 msgid "Limit Reveal to Dock Edge"
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:41
-#, fuzzy
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
-msgstr "Показывать панель задач, когда указатель достигает края экрана"
+msgstr "Показывать плавающий док только при достижении указателем его края"
 
 #: src/prefs/dockBehaviorGroup.js:47
-#, fuzzy
 msgid "Show Dock on All Monitors"
-msgstr "Показывать панель задач на всех мониторах"
+msgstr "Показывать док на всех мониторах"
 
 #: src/prefs/dockBehaviorGroup.js:48
 msgid "Show the Dock on every connected monitor"
@@ -559,11 +554,8 @@ msgid "Workspace Scroll"
 msgstr "Прокрутка рабочих столов"
 
 #: src/prefs/dockBehaviorGroup.js:55
-#, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
-msgstr ""
-"Прокручивайте пустое пространство панели задач для переключения рабочих "
-"столов"
+msgstr "Прокручивайте пустое пространство дока для переключения рабочих столов"
 
 #: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
@@ -1447,32 +1439,28 @@ msgstr ""
 "мониторе"
 
 #: src/prefs/windowDodgeGroup.js:22
-#, fuzzy
 msgid "Dodge Windows"
-msgstr "Закрыть окно"
+msgstr "Избегать окон"
 
 #: src/prefs/windowDodgeGroup.js:23
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:32
-#, fuzzy
 msgid "Dodge Windows Mode"
-msgstr "Закрыть окно"
+msgstr "Режим избегания окон"
 
 #: src/prefs/windowDodgeGroup.js:33
 msgid "Choose which windows make the panel or Dock hide"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:37
-#, fuzzy
 msgid "All windows"
-msgstr "Закрыть все окна"
+msgstr "Все окна"
 
 #: src/prefs/windowDodgeGroup.js:41
-#, fuzzy
 msgid "Only focused application’s windows"
-msgstr "Показывать часто используемые приложения под закреплёнными"
+msgstr "Только окна активного приложения"
 
 #: src/prefs/windowDodgeGroup.js:45
 msgid "Only maximized windows"
@@ -1483,11 +1471,11 @@ msgid "Reveal on Pointer"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:55
-#, fuzzy
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr "Показывать панель задач, когда указатель достигает края экрана"
+msgstr "Показывать панель или док, когда указатель достигает края экрана при "
+"избегании окна"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"

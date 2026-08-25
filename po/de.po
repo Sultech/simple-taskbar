@@ -530,37 +530,32 @@ msgid "Show Border in Light Mode"
 msgstr "Rahmen im hellen Modus anzeigen"
 
 #: src/prefs/dockBehaviorGroup.js:15
-#, fuzzy
 msgid "Dock Behavior"
-msgstr "Taskleistenverhalten"
+msgstr "Dock-Verhalten"
 
 #: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:22
-#, fuzzy
 msgid "Auto-hide Dock"
-msgstr "Panel automatisch ausblenden"
+msgstr "Dock automatisch ausblenden"
 
 #: src/prefs/dockBehaviorGroup.js:23
-#, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
-msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
+msgstr "Dock anzeigen, wenn der Zeiger den Bildschirmrand erreicht"
 
 #: src/prefs/dockBehaviorGroup.js:40
 msgid "Limit Reveal to Dock Edge"
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:41
-#, fuzzy
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
-msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
+msgstr "Ein schwebendes Dock nur anzeigen, wenn der Zeiger den Rand des Docks erreicht"
 
 #: src/prefs/dockBehaviorGroup.js:47
-#, fuzzy
 msgid "Show Dock on All Monitors"
-msgstr "Taskleiste auf allen Monitoren anzeigen"
+msgstr "Dock auf allen Monitoren anzeigen"
 
 #: src/prefs/dockBehaviorGroup.js:48
 msgid "Show the Dock on every connected monitor"
@@ -571,10 +566,8 @@ msgid "Workspace Scroll"
 msgstr "Arbeitsflächen-Scrollen"
 
 #: src/prefs/dockBehaviorGroup.js:55
-#, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
-msgstr ""
-"Scrollen Sie über leeren Taskleistenbereich, um die Arbeitsfläche zu wechseln"
+msgstr "Über leeren Dock-Bereich scrollen, um die Arbeitsflächen zu wechseln"
 
 #: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
@@ -1480,32 +1473,28 @@ msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "Zeigt Aktivitäten, Anwendungen, Uhr und Systemmenü auf jedem Monitor"
 
 #: src/prefs/windowDodgeGroup.js:22
-#, fuzzy
 msgid "Dodge Windows"
-msgstr "Fenster schließen"
+msgstr "Fenstern ausweichen"
 
 #: src/prefs/windowDodgeGroup.js:23
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:32
-#, fuzzy
 msgid "Dodge Windows Mode"
-msgstr "Fenster schließen"
+msgstr "Fenster-Ausweichmodus"
 
 #: src/prefs/windowDodgeGroup.js:33
 msgid "Choose which windows make the panel or Dock hide"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:37
-#, fuzzy
 msgid "All windows"
-msgstr "Alle Fenster schließen"
+msgstr "Alle Fenster"
 
 #: src/prefs/windowDodgeGroup.js:41
-#, fuzzy
 msgid "Only focused application’s windows"
-msgstr "Zeigt häufig verwendete Anwendungen unterhalb der angehefteten Apps"
+msgstr "Nur Fenster der fokussierten Anwendung"
 
 #: src/prefs/windowDodgeGroup.js:45
 msgid "Only maximized windows"
@@ -1516,11 +1505,11 @@ msgid "Reveal on Pointer"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:55
-#, fuzzy
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
+msgstr "Panel oder Dock anzeigen, wenn der Zeiger beim Ausweichen vor einem Fenster "
+"den Bildschirmrand erreicht"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"

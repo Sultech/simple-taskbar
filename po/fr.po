@@ -548,39 +548,32 @@ msgid "Show Border in Light Mode"
 msgstr "Afficher la bordure en mode clair"
 
 #: src/prefs/dockBehaviorGroup.js:15
-#, fuzzy
 msgid "Dock Behavior"
-msgstr "Comportement de la barre des tâches"
+msgstr "Comportement du dock"
 
 #: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:22
-#, fuzzy
 msgid "Auto-hide Dock"
-msgstr "Masquer automatiquement le panneau"
+msgstr "Masquer automatiquement le dock"
 
 #: src/prefs/dockBehaviorGroup.js:23
-#, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
-msgstr ""
-"Afficher la barre des tâches lorsque le curseur atteint le bord de l’écran"
+msgstr "Afficher le dock lorsque le curseur atteint le bord de l’écran"
 
 #: src/prefs/dockBehaviorGroup.js:40
 msgid "Limit Reveal to Dock Edge"
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:41
-#, fuzzy
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
-msgstr ""
-"Afficher la barre des tâches lorsque le curseur atteint le bord de l’écran"
+msgstr "N’afficher un dock flottant que lorsque le curseur atteint son bord"
 
 #: src/prefs/dockBehaviorGroup.js:47
-#, fuzzy
 msgid "Show Dock on All Monitors"
-msgstr "Afficher la barre de tâches sur tous les moniteurs"
+msgstr "Afficher le dock sur tous les moniteurs"
 
 #: src/prefs/dockBehaviorGroup.js:48
 msgid "Show the Dock on every connected monitor"
@@ -591,11 +584,8 @@ msgid "Workspace Scroll"
 msgstr "Défilement des espaces de travail"
 
 #: src/prefs/dockBehaviorGroup.js:55
-#, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
-msgstr ""
-"Défiler sur un espace vide de la barre des tâches afin de basculer entre les "
-"espaces de travail"
+msgstr "Faire défiler l’espace vide du dock pour changer d’espace de travail"
 
 #: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
@@ -1518,34 +1508,28 @@ msgstr ""
 "chaque moniteur"
 
 #: src/prefs/windowDodgeGroup.js:22
-#, fuzzy
 msgid "Dodge Windows"
-msgstr "Fermer la fenêtre"
+msgstr "Éviter les fenêtres"
 
 #: src/prefs/windowDodgeGroup.js:23
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:32
-#, fuzzy
 msgid "Dodge Windows Mode"
-msgstr "Fermer la fenêtre"
+msgstr "Mode d’évitement des fenêtres"
 
 #: src/prefs/windowDodgeGroup.js:33
 msgid "Choose which windows make the panel or Dock hide"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:37
-#, fuzzy
 msgid "All windows"
-msgstr "Fermer toutes les fenêtres"
+msgstr "Toutes les fenêtres"
 
 #: src/prefs/windowDodgeGroup.js:41
-#, fuzzy
 msgid "Only focused application’s windows"
-msgstr ""
-"Afficher les applications fréquemment utilisées sous les applications "
-"épinglées"
+msgstr "Fenêtres de l’application active uniquement"
 
 #: src/prefs/windowDodgeGroup.js:45
 msgid "Only maximized windows"
@@ -1556,12 +1540,11 @@ msgid "Reveal on Pointer"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:55
-#, fuzzy
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr ""
-"Afficher la barre des tâches lorsque le curseur atteint le bord de l’écran"
+msgstr "Afficher le panneau ou le dock lorsque le curseur atteint le bord de l’écran "
+"pendant l’évitement d’une fenêtre"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"

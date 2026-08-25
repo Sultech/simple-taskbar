@@ -519,37 +519,32 @@ msgid "Show Border in Light Mode"
 msgstr "Keret megjelenítése világos módban"
 
 #: src/prefs/dockBehaviorGroup.js:15
-#, fuzzy
 msgid "Dock Behavior"
-msgstr "Tálca viselkedése"
+msgstr "Dock viselkedése"
 
 #: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:22
-#, fuzzy
 msgid "Auto-hide Dock"
-msgstr "Panel automatikus elrejtése"
+msgstr "Dock automatikus elrejtése"
 
 #: src/prefs/dockBehaviorGroup.js:23
-#, fuzzy
 msgid "Reveal the Dock when the pointer reaches its screen edge"
-msgstr "Tálca megjelenítése, ha az egérmutató eléri a képernyő szélét"
+msgstr "A Dock megjelenítése, amikor a mutató eléri a képernyő szélét"
 
 #: src/prefs/dockBehaviorGroup.js:40
 msgid "Limit Reveal to Dock Edge"
 msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:41
-#, fuzzy
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
-msgstr "Tálca megjelenítése, ha az egérmutató eléri a képernyő szélét"
+msgstr "Lebegő Dock megjelenítése csak akkor, amikor a mutató eléri a szélét"
 
 #: src/prefs/dockBehaviorGroup.js:47
-#, fuzzy
 msgid "Show Dock on All Monitors"
-msgstr "Tálca megjelenítése az összes monitoron"
+msgstr "Dock megjelenítése minden monitoron"
 
 #: src/prefs/dockBehaviorGroup.js:48
 msgid "Show the Dock on every connected monitor"
@@ -560,9 +555,8 @@ msgid "Workspace Scroll"
 msgstr "Görgetés munkaterületek között"
 
 #: src/prefs/dockBehaviorGroup.js:55
-#, fuzzy
 msgid "Scroll over empty Dock space to switch workspaces"
-msgstr "Görgetés a tálca üres részén a munkaterületek közötti váltáshoz"
+msgstr "Görgetés a Dock üres területén a munkaterületek közötti váltáshoz"
 
 #: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
@@ -1458,33 +1452,28 @@ msgstr ""
 "monitoron"
 
 #: src/prefs/windowDodgeGroup.js:22
-#, fuzzy
 msgid "Dodge Windows"
-msgstr "Ablak bezárása"
+msgstr "Ablakok elkerülése"
 
 #: src/prefs/windowDodgeGroup.js:23
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:32
-#, fuzzy
 msgid "Dodge Windows Mode"
-msgstr "Ablak bezárása"
+msgstr "Ablakkerülési mód"
 
 #: src/prefs/windowDodgeGroup.js:33
 msgid "Choose which windows make the panel or Dock hide"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:37
-#, fuzzy
 msgid "All windows"
-msgstr "Összes ablak bezárása"
+msgstr "Minden ablak"
 
 #: src/prefs/windowDodgeGroup.js:41
-#, fuzzy
 msgid "Only focused application’s windows"
-msgstr ""
-"Gyakran használt alkalmazások megjelenítése a rögzített alkalmazások alatt"
+msgstr "Csak a fókuszban lévő alkalmazás ablakai"
 
 #: src/prefs/windowDodgeGroup.js:45
 msgid "Only maximized windows"
@@ -1495,11 +1484,11 @@ msgid "Reveal on Pointer"
 msgstr ""
 
 #: src/prefs/windowDodgeGroup.js:55
-#, fuzzy
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr "Tálca megjelenítése, ha az egérmutató eléri a képernyő szélét"
+msgstr "A panel vagy a Dock megjelenítése, amikor a mutató eléri a képernyő szélét "
+"egy ablak elkerülése közben"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"
