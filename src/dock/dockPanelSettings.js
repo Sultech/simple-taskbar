@@ -24,6 +24,18 @@ const DOCK_SETTING_KEYS = new Map([
     ['panel-dodge-windows-enabled', 'dock-dodge-windows-enabled'],
     ['panel-dodge-windows-mode', 'dock-dodge-windows-mode'],
     [
+        'custom-panel-gradient-enabled',
+        'dock-custom-panel-gradient-enabled',
+    ],
+    [
+        'custom-panel-gradient-color',
+        'dock-custom-panel-gradient-color',
+    ],
+    [
+        'custom-panel-gradient-direction',
+        'dock-custom-panel-gradient-direction',
+    ],
+    [
         'panel-dodge-pointer-reveal-enabled',
         'dock-dodge-pointer-reveal-enabled',
     ],

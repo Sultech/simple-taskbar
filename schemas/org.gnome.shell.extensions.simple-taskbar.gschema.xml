@@ -117,6 +117,22 @@
       <default>'#18181b'</default>
       <summary>Custom taskbar color</summary>
     </key>
+    <key name="custom-panel-gradient-enabled" type="b">
+      <default>false</default>
+      <summary>Use a gradient for the custom taskbar color</summary>
+    </key>
+    <key name="custom-panel-gradient-color" type="s">
+      <default>'#333333'</default>
+      <summary>Secondary custom taskbar color</summary>
+    </key>
+    <key name="custom-panel-gradient-direction" type="s">
+      <choices>
+        <choice value="vertical"/>
+        <choice value="horizontal"/>
+      </choices>
+      <default>'vertical'</default>
+      <summary>Custom taskbar gradient direction</summary>
+    </key>
     <key name="panel-theme-follow-system" type="b">
       <default>true</default>
       <summary>Follow the active GNOME Shell theme</summary>
@@ -334,6 +350,22 @@
     <key name="dock-custom-panel-color" type="s">
       <default>'#18181b'</default>
       <summary>Custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-gradient-enabled" type="b">
+      <default>false</default>
+      <summary>Use a gradient for the custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-gradient-color" type="s">
+      <default>'#333333'</default>
+      <summary>Secondary custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-gradient-direction" type="s">
+      <choices>
+        <choice value="vertical"/>
+        <choice value="horizontal"/>
+      </choices>
+      <default>'vertical'</default>
+      <summary>Custom Dock gradient direction</summary>
     </key>
     <key name="dock-panel-theme-follow-system" type="b">
       <default>false</default>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 01:20+0100\n"
+"POT-Creation-Date: 2026-08-25 19:55+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -512,6 +512,35 @@ msgid "Dock Color"
 msgstr "Couleur de la barre des tâches"
 
 #: src/prefs/dockAppearanceGroup.js:134
+msgid "Use Dock Gradient"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:135
+msgid "Blend the Dock color with a second color"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:152
+#, fuzzy
+msgid "Dock Gradient Color"
+msgstr "Couleur du texte de la barre des tâches"
+
+#: src/prefs/dockAppearanceGroup.js:161
+msgid "Dock Gradient Direction"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:162 src/prefs/panelAppearancePage.js:420
+msgid "Choose how the gradient flows"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:164 src/prefs/panelAppearancePage.js:422
+msgid "Vertical"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:423
+msgid "Horizontal"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:171
 #, fuzzy
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
@@ -519,31 +548,31 @@ msgstr ""
 "Le texte blanc utilise le thème sombre du panneau ; le texte noir utilise le "
 "thème clair du panneau"
 
-#: src/prefs/dockAppearanceGroup.js:141
+#: src/prefs/dockAppearanceGroup.js:178
 #, fuzzy
 msgid "Dock Text Color"
 msgstr "Couleur du texte de la barre des tâches"
 
-#: src/prefs/dockAppearanceGroup.js:144 src/prefs/panelAppearancePage.js:404
+#: src/prefs/dockAppearanceGroup.js:181 src/prefs/panelAppearancePage.js:439
 msgid "White"
 msgstr "Blanc"
 
-#: src/prefs/dockAppearanceGroup.js:145 src/prefs/panelAppearancePage.js:405
+#: src/prefs/dockAppearanceGroup.js:182 src/prefs/panelAppearancePage.js:440
 msgid "Black"
 msgstr "Noir"
 
-#: src/prefs/dockAppearanceGroup.js:152 src/prefs/panelAppearancePage.js:485
+#: src/prefs/dockAppearanceGroup.js:189 src/prefs/panelAppearancePage.js:540
 msgid "Show Border in Dark Mode"
 msgstr "Afficher la bordure en mode sombre"
 
-#: src/prefs/dockAppearanceGroup.js:153 src/prefs/dockAppearanceGroup.js:166
+#: src/prefs/dockAppearanceGroup.js:190 src/prefs/dockAppearanceGroup.js:203
 #, fuzzy
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 "Afficher une fine bordure le long du bord du panneau faisant face à l’espace "
 "de travail"
 
-#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:498
+#: src/prefs/dockAppearanceGroup.js:202 src/prefs/panelAppearancePage.js:553
 msgid "Show Border in Light Mode"
 msgstr "Afficher la bordure en mode clair"
 
@@ -571,30 +600,30 @@ msgstr ""
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
 msgstr "N’afficher un dock flottant que lorsque le curseur atteint son bord"
 
-#: src/prefs/dockBehaviorGroup.js:47
-msgid "Show Dock on All Monitors"
-msgstr "Afficher le dock sur tous les moniteurs"
-
-#: src/prefs/dockBehaviorGroup.js:48
-msgid "Show the Dock on every connected monitor"
-msgstr ""
-
-#: src/prefs/dockBehaviorGroup.js:54 src/prefs/taskbarBehaviorGroup.js:88
+#: src/prefs/dockBehaviorGroup.js:47 src/prefs/taskbarBehaviorGroup.js:88
 msgid "Workspace Scroll"
 msgstr "Défilement des espaces de travail"
 
-#: src/prefs/dockBehaviorGroup.js:55
+#: src/prefs/dockBehaviorGroup.js:48
 msgid "Scroll over empty Dock space to switch workspaces"
 msgstr "Faire défiler l’espace vide du dock pour changer d’espace de travail"
 
-#: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
+#: src/prefs/dockBehaviorGroup.js:57 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
 msgstr "Délai du défilement des espaces de travail"
 
-#: src/prefs/dockBehaviorGroup.js:65 src/prefs/taskbarBehaviorGroup.js:99
+#: src/prefs/dockBehaviorGroup.js:58 src/prefs/taskbarBehaviorGroup.js:99
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 "Délai minimum entre les changements d’espace de travail en millisecondes"
+
+#: src/prefs/dockBehaviorGroup.js:68
+msgid "Show Dock on All Monitors"
+msgstr "Afficher le dock sur tous les moniteurs"
+
+#: src/prefs/dockBehaviorGroup.js:69
+msgid "Show the Dock on every connected monitor"
+msgstr ""
 
 #: src/prefs/locationsGroup.js:12
 #, fuzzy
@@ -746,17 +775,36 @@ msgid "Taskbar Color"
 msgstr "Couleur de la barre des tâches"
 
 #: src/prefs/panelAppearancePage.js:394
+#, fuzzy
+msgid "Use Taskbar Gradient"
+msgstr "Thème de la barre des tâches"
+
+#: src/prefs/panelAppearancePage.js:395
+msgid "Blend the taskbar color with a second color"
+msgstr ""
+
+#: src/prefs/panelAppearancePage.js:410
+#, fuzzy
+msgid "Taskbar Gradient Color"
+msgstr "Couleur du texte de la barre des tâches"
+
+#: src/prefs/panelAppearancePage.js:419
+#, fuzzy
+msgid "Taskbar Gradient Direction"
+msgstr "Paramètres de la barre des tâches"
+
+#: src/prefs/panelAppearancePage.js:429
 msgid ""
 "White text uses the dark panel theme; black text uses the light panel theme"
 msgstr ""
 "Le texte blanc utilise le thème sombre du panneau ; le texte noir utilise le "
 "thème clair du panneau"
 
-#: src/prefs/panelAppearancePage.js:401
+#: src/prefs/panelAppearancePage.js:436
 msgid "Taskbar Text Color"
 msgstr "Couleur du texte de la barre des tâches"
 
-#: src/prefs/panelAppearancePage.js:486 src/prefs/panelAppearancePage.js:499
+#: src/prefs/panelAppearancePage.js:541 src/prefs/panelAppearancePage.js:554
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 "Afficher une fine bordure le long du bord du panneau faisant face à l’espace "
@@ -887,7 +935,7 @@ msgstr "Bouton de l’aperçu des espaces de travail GNOME"
 msgid "Applications"
 msgstr "Applications"
 
-#: src/prefs/panelItemsPage.js:158 src/prefs/dockItemsPage.js:28
+#: src/prefs/panelItemsPage.js:158
 msgid "Taskbar application buttons"
 msgstr "Boutons d’applications de la barre des tâches"
 
@@ -960,6 +1008,11 @@ msgstr ""
 #, fuzzy
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "Bouton démarrer style Eleven ou GNOME d’origine"
+
+#: src/prefs/dockItemsPage.js:28
+#, fuzzy
+msgid "Dock application buttons"
+msgstr "Boutons d’applications de la barre des tâches"
 
 #: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:43
 msgid "General"
@@ -1543,7 +1596,8 @@ msgstr ""
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr "Afficher le panneau ou le dock lorsque le curseur atteint le bord de l’écran "
+msgstr ""
+"Afficher le panneau ou le dock lorsque le curseur atteint le bord de l’écran "
 "pendant l’évitement d’une fenêtre"
 
 #: src/prefs/windowSwitchingPage.js:15
@@ -1855,7 +1909,7 @@ msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:415
-#: src/taskbar/taskbarController.js:997 src/taskbar/taskbarController.js:999
+#: src/taskbar/taskbarController.js:1005 src/taskbar/taskbarController.js:1007
 msgid "running"
 msgstr "En cours d’exécution"
 

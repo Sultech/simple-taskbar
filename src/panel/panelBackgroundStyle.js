@@ -10,14 +10,16 @@ const DARK_BORDER_COLOR = '255, 255, 255';
 const LIGHT_BORDER_COLOR = '0, 0, 0';
 const BORDER_OPACITY = 0.20;
 
+function colorComponents(value) {
+    const [, color] = Cogl.Color.from_string(value);
+    return `${color.red}, ${color.green}, ${color.blue}`;
+}
+
 function panelBackgroundColor(settings, light) {
     if (!settings.get_boolean('custom-panel-color-enabled'))
         return light ? '224, 229, 238' : '24, 24, 27';
 
-    const [, color] = Cogl.Color.from_string(
-        settings.get_string('custom-panel-color')
-    );
-    return `${color.red}, ${color.green}, ${color.blue}`;
+    return colorComponents(settings.get_string('custom-panel-color'));
 }
 
 export function panelBorderStyle(settings, light, borderEnabled,
@@ -60,9 +62,22 @@ export function panelBackgroundStyle(settings, light, borderEnabled,
         borderEnabled,
         fullBorder
     );
-    const transparencyStyle =
-        `background-color: rgba(${background}, ` +
-        `${opacity.toFixed(2)}) !important; ` +
+    const gradientEnabled =
+        settings.get_boolean('custom-panel-color-enabled') &&
+        settings.get_boolean('custom-panel-gradient-enabled');
+    const backgroundStyle = gradientEnabled
+        ? 'background-color: transparent !important; ' +
+            `background-gradient-direction: ${settings.get_string(
+                'custom-panel-gradient-direction'
+            )} !important; ` +
+            `background-gradient-start: rgba(${background}, ` +
+            `${opacity.toFixed(2)}) !important; ` +
+            `background-gradient-end: rgba(${colorComponents(
+                settings.get_string('custom-panel-gradient-color')
+            )}, ${opacity.toFixed(2)}) !important; `
+        : `background-color: rgba(${background}, ` +
+            `${opacity.toFixed(2)}) !important; `;
+    const transparencyStyle = backgroundStyle +
         borderStyle +
         'box-shadow: none;';
     const separator = originalStyle.endsWith(';') ? ' ' : '; ';

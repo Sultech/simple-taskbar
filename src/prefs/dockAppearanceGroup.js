@@ -130,6 +130,43 @@ export function addDockAppearanceGroup({
         },
         connectSettings
     );
+    const customPanelGradientSwitch = new Adw.SwitchRow({
+        title: _('Use Dock Gradient'),
+        subtitle: _('Blend the Dock color with a second color'),
+        active: settings.get_boolean(
+            'dock-custom-panel-gradient-enabled'
+        ),
+    });
+    group.add(customPanelGradientSwitch);
+    settings.bind(
+        'dock-custom-panel-gradient-enabled',
+        customPanelGradientSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    const customPanelGradientColorRow = addColorRow(
+        group,
+        settings,
+        {
+            key: 'dock-custom-panel-gradient-color',
+            title: _('Dock Gradient Color'),
+        },
+        connectSettings
+    );
+    const customPanelGradientDirectionRow = addComboRow(
+        group,
+        settings,
+        {
+            key: 'dock-custom-panel-gradient-direction',
+            title: _('Dock Gradient Direction'),
+            subtitle: _('Choose how the gradient flows'),
+            choices: [
+                {value: 'vertical', label: _('Vertical')},
+                {value: 'horizontal', label: _('Horizontal')},
+            ],
+        },
+        connectSettings
+    );
     const customPanelTextColorSubtitle = _(
         'White text uses the dark Dock theme; black text uses the light Dock theme'
     );
@@ -204,10 +241,23 @@ export function addDockAppearanceGroup({
         }
         const available = dockAvailable();
         const enabled = customPanelColorSwitch.active;
+        const gradientEnabled = settings.get_boolean(
+            'dock-custom-panel-gradient-enabled'
+        );
         customPanelColorSwitch.sensitive = available && !blocked;
         customPanelColorSwitch.subtitle = blocked
             ? panelBlurTransparencySubtitle
             : customPanelColorSubtitle;
+        customPanelGradientSwitch.visible = enabled;
+        customPanelGradientSwitch.sensitive = available &&
+            !blocked && enabled;
+        customPanelGradientColorRow.visible = enabled && gradientEnabled;
+        customPanelGradientColorRow.sensitive = available &&
+            !blocked && enabled && gradientEnabled;
+        customPanelGradientDirectionRow.visible = enabled &&
+            gradientEnabled;
+        customPanelGradientDirectionRow.sensitive = available &&
+            !blocked && enabled && gradientEnabled;
         customPanelColorRow.visible = enabled;
         customPanelColorRow.sensitive = available &&
             !blocked && enabled;
@@ -243,6 +293,10 @@ export function addDockAppearanceGroup({
         syncThemeControls();
         syncCustomColorControls();
     });
+    customPanelGradientSwitch.connect(
+        'notify::active',
+        syncCustomColorControls
+    );
 
     for (const key of [
         'dock-mode',

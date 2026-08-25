@@ -390,6 +390,41 @@ export function addPanelAppearancePage({
         },
         connectSettings
     );
+    const customPanelGradientSwitch = new Adw.SwitchRow({
+        title: _('Use Taskbar Gradient'),
+        subtitle: _('Blend the taskbar color with a second color'),
+        active: settings.get_boolean('custom-panel-gradient-enabled'),
+    });
+    advancedAppearanceGroup.add(customPanelGradientSwitch);
+    settings.bind(
+        'custom-panel-gradient-enabled',
+        customPanelGradientSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    const customPanelGradientColorRow = addColorRow(
+        advancedAppearanceGroup,
+        settings,
+        {
+            key: 'custom-panel-gradient-color',
+            title: _('Taskbar Gradient Color'),
+        },
+        connectSettings
+    );
+    const customPanelGradientDirectionRow = addComboRow(
+        advancedAppearanceGroup,
+        settings,
+        {
+            key: 'custom-panel-gradient-direction',
+            title: _('Taskbar Gradient Direction'),
+            subtitle: _('Choose how the gradient flows'),
+            choices: [
+                {value: 'vertical', label: _('Vertical')},
+                {value: 'horizontal', label: _('Horizontal')},
+            ],
+        },
+        connectSettings
+    );
     const customPanelTextColorSubtitle = _(
         'White text uses the dark panel theme; black text uses the light panel theme'
     );
@@ -422,6 +457,9 @@ export function addPanelAppearancePage({
         const customPanelColorEnabled = settings.get_boolean(
             'custom-panel-color-enabled'
         );
+        const customPanelGradientEnabled = settings.get_boolean(
+            'custom-panel-gradient-enabled'
+        );
         const windowsXpThemeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -430,6 +468,19 @@ export function addPanelAppearancePage({
         customPanelColorSwitch.subtitle = blocked
             ? panelBlurTransparencySubtitle
             : customPanelColorSubtitle;
+        customPanelGradientSwitch.visible = customPanelColorEnabled;
+        customPanelGradientSwitch.sensitive = !blocked &&
+            !windowsXpThemeEnabled && customPanelColorEnabled;
+        customPanelGradientColorRow.visible = customPanelColorEnabled &&
+            customPanelGradientEnabled;
+        customPanelGradientColorRow.sensitive = !blocked &&
+            !windowsXpThemeEnabled && customPanelColorEnabled &&
+            customPanelGradientEnabled;
+        customPanelGradientDirectionRow.visible = customPanelColorEnabled &&
+            customPanelGradientEnabled;
+        customPanelGradientDirectionRow.sensitive = !blocked &&
+            !windowsXpThemeEnabled && customPanelColorEnabled &&
+            customPanelGradientEnabled;
         customPanelColorRow.visible = customPanelColorEnabled;
         customPanelColorRow.sensitive = !blocked &&
             !windowsXpThemeEnabled &&
@@ -478,6 +529,10 @@ export function addPanelAppearancePage({
             }
             updateCustomPanelColorControls();
         }
+    );
+    customPanelGradientSwitch.connect(
+        'notify::active',
+        updateCustomPanelColorControls
     );
     updateCustomPanelColorControls();
 

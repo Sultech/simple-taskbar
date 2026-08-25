@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 01:20+0100\n"
+"POT-Creation-Date: 2026-08-25 19:55+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -484,36 +484,65 @@ msgid "Dock Color"
 msgstr "Цвет панели задач"
 
 #: src/prefs/dockAppearanceGroup.js:134
+msgid "Use Dock Gradient"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:135
+msgid "Blend the Dock color with a second color"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:152
+#, fuzzy
+msgid "Dock Gradient Color"
+msgstr "Цвет текста панели задач"
+
+#: src/prefs/dockAppearanceGroup.js:161
+msgid "Dock Gradient Direction"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:162 src/prefs/panelAppearancePage.js:420
+msgid "Choose how the gradient flows"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:164 src/prefs/panelAppearancePage.js:422
+msgid "Vertical"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:423
+msgid "Horizontal"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js:171
 #, fuzzy
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr ""
 "Белый текст использует тёмную тему панели; чёрный текст — светлую тему панели"
 
-#: src/prefs/dockAppearanceGroup.js:141
+#: src/prefs/dockAppearanceGroup.js:178
 #, fuzzy
 msgid "Dock Text Color"
 msgstr "Цвет текста панели задач"
 
-#: src/prefs/dockAppearanceGroup.js:144 src/prefs/panelAppearancePage.js:404
+#: src/prefs/dockAppearanceGroup.js:181 src/prefs/panelAppearancePage.js:439
 msgid "White"
 msgstr "Белый"
 
-#: src/prefs/dockAppearanceGroup.js:145 src/prefs/panelAppearancePage.js:405
+#: src/prefs/dockAppearanceGroup.js:182 src/prefs/panelAppearancePage.js:440
 msgid "Black"
 msgstr "Чёрный"
 
-#: src/prefs/dockAppearanceGroup.js:152 src/prefs/panelAppearancePage.js:485
+#: src/prefs/dockAppearanceGroup.js:189 src/prefs/panelAppearancePage.js:540
 msgid "Show Border in Dark Mode"
 msgstr "Показывать границу в тёмном режиме"
 
-#: src/prefs/dockAppearanceGroup.js:153 src/prefs/dockAppearanceGroup.js:166
+#: src/prefs/dockAppearanceGroup.js:190 src/prefs/dockAppearanceGroup.js:203
 #, fuzzy
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 "Показывать тонкую границу вдоль края панели, обращённого к рабочей области"
 
-#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:498
+#: src/prefs/dockAppearanceGroup.js:202 src/prefs/panelAppearancePage.js:553
 msgid "Show Border in Light Mode"
 msgstr "Показывать границу в светлом режиме"
 
@@ -541,30 +570,30 @@ msgstr ""
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
 msgstr "Показывать плавающий док только при достижении указателем его края"
 
-#: src/prefs/dockBehaviorGroup.js:47
-msgid "Show Dock on All Monitors"
-msgstr "Показывать док на всех мониторах"
-
-#: src/prefs/dockBehaviorGroup.js:48
-msgid "Show the Dock on every connected monitor"
-msgstr ""
-
-#: src/prefs/dockBehaviorGroup.js:54 src/prefs/taskbarBehaviorGroup.js:88
+#: src/prefs/dockBehaviorGroup.js:47 src/prefs/taskbarBehaviorGroup.js:88
 msgid "Workspace Scroll"
 msgstr "Прокрутка рабочих столов"
 
-#: src/prefs/dockBehaviorGroup.js:55
+#: src/prefs/dockBehaviorGroup.js:48
 msgid "Scroll over empty Dock space to switch workspaces"
 msgstr "Прокручивайте пустое пространство дока для переключения рабочих столов"
 
-#: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:98
+#: src/prefs/dockBehaviorGroup.js:57 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll Delay"
 msgstr "Задержка прокрутки рабочих столов"
 
-#: src/prefs/dockBehaviorGroup.js:65 src/prefs/taskbarBehaviorGroup.js:99
+#: src/prefs/dockBehaviorGroup.js:58 src/prefs/taskbarBehaviorGroup.js:99
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr ""
 "Минимальная задержка между переключениями рабочих столов в миллисекундах"
+
+#: src/prefs/dockBehaviorGroup.js:68
+msgid "Show Dock on All Monitors"
+msgstr "Показывать док на всех мониторах"
+
+#: src/prefs/dockBehaviorGroup.js:69
+msgid "Show the Dock on every connected monitor"
+msgstr ""
 
 #: src/prefs/locationsGroup.js:12
 #, fuzzy
@@ -710,16 +739,35 @@ msgid "Taskbar Color"
 msgstr "Цвет панели задач"
 
 #: src/prefs/panelAppearancePage.js:394
+#, fuzzy
+msgid "Use Taskbar Gradient"
+msgstr "Тема панели задач"
+
+#: src/prefs/panelAppearancePage.js:395
+msgid "Blend the taskbar color with a second color"
+msgstr ""
+
+#: src/prefs/panelAppearancePage.js:410
+#, fuzzy
+msgid "Taskbar Gradient Color"
+msgstr "Цвет текста панели задач"
+
+#: src/prefs/panelAppearancePage.js:419
+#, fuzzy
+msgid "Taskbar Gradient Direction"
+msgstr "Настройки панели задач"
+
+#: src/prefs/panelAppearancePage.js:429
 msgid ""
 "White text uses the dark panel theme; black text uses the light panel theme"
 msgstr ""
 "Белый текст использует тёмную тему панели; чёрный текст — светлую тему панели"
 
-#: src/prefs/panelAppearancePage.js:401
+#: src/prefs/panelAppearancePage.js:436
 msgid "Taskbar Text Color"
 msgstr "Цвет текста панели задач"
 
-#: src/prefs/panelAppearancePage.js:486 src/prefs/panelAppearancePage.js:499
+#: src/prefs/panelAppearancePage.js:541 src/prefs/panelAppearancePage.js:554
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 "Показывать тонкую границу вдоль края панели, обращённого к рабочей области"
@@ -845,7 +893,7 @@ msgstr "Кнопка обзора рабочих столов GNOME"
 msgid "Applications"
 msgstr "Приложения"
 
-#: src/prefs/panelItemsPage.js:158 src/prefs/dockItemsPage.js:28
+#: src/prefs/panelItemsPage.js:158
 msgid "Taskbar application buttons"
 msgstr "Кнопки приложений на панели задач"
 
@@ -918,6 +966,11 @@ msgstr ""
 #, fuzzy
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "Кнопка «Пуск» в стиле Eleven или оригинальная кнопка GNOME"
+
+#: src/prefs/dockItemsPage.js:28
+#, fuzzy
+msgid "Dock application buttons"
+msgstr "Кнопки приложений на панели задач"
 
 #: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:43
 msgid "General"
@@ -1474,7 +1527,8 @@ msgstr ""
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"
-msgstr "Показывать панель или док, когда указатель достигает края экрана при "
+msgstr ""
+"Показывать панель или док, когда указатель достигает края экрана при "
 "избегании окна"
 
 #: src/prefs/windowSwitchingPage.js:15
@@ -1780,7 +1834,7 @@ msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:415
-#: src/taskbar/taskbarController.js:997 src/taskbar/taskbarController.js:999
+#: src/taskbar/taskbarController.js:1005 src/taskbar/taskbarController.js:1007
 msgid "running"
 msgstr "запущено"
 

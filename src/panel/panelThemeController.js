@@ -96,6 +96,12 @@ export class PanelThemeController {
             'changed::custom-panel-color-enabled',
             () => this.applyTransparency(),
             'changed::custom-panel-color', () => this.applyTransparency(),
+            'changed::custom-panel-gradient-enabled',
+            () => this.applyTransparency(),
+            'changed::custom-panel-gradient-color',
+            () => this.applyTransparency(),
+            'changed::custom-panel-gradient-direction',
+            () => this.applyTransparency(),
             'changed::panel-border-enabled', () => {
                 this.syncBorder();
                 this.applyTransparency();
