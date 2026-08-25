@@ -41,7 +41,6 @@ export class SecondaryPanelManager {
     enable() {
         this._settings.connectObject(
             'changed::multi-monitor-panels', () => this._queueRebuild(),
-            'changed::panel-position', () => this._queueRebuild(),
             this._signalHolder
         );
         Main.layoutManager.connectObject(

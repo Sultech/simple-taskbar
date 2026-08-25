@@ -6,6 +6,7 @@ import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {axisPanelPositions} from './panelAxis.js';
 import {
     addColorRow,
     addComboRow,
@@ -153,10 +154,11 @@ export function addApplicationIconsGroup({
         {
             key: 'app-alignment',
             title: _('Icon Alignment'),
-            subtitle: _(
-                'Place application icons at the left or center'
-            ),
+            subtitle: _('Choose the application icon alignment'),
             choices: panelPositions.slice(0, 2),
+            choicesProvider: () =>
+                axisPanelPositions(settings, panelPositions).slice(0, 2),
+            choicesChangedKey: 'panel-position',
         },
         connectSettings
     );

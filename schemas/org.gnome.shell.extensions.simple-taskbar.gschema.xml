@@ -11,6 +11,8 @@
       <choices>
         <choice value="top"/>
         <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
       </choices>
       <default>'bottom'</default>
       <summary>Taskbar screen edge</summary>
@@ -237,6 +239,54 @@
     <key name="panel-mode-profiles-initialized" type="b">
       <default>false</default>
       <summary>Whether panel mode profiles have been initialized</summary>
+    </key>
+    <key name="taskbar-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Taskbar panel</summary>
+    </key>
+    <key name="taskbar-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Taskbar settings are saved</summary>
+    </key>
+    <key name="taskbar-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Taskbar panel</summary>
+    </key>
+    <key name="taskbar-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Taskbar settings are saved</summary>
+    </key>
+    <key name="default-panel-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Default GNOME Panel</summary>
+    </key>
+    <key name="default-panel-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Default GNOME Panel settings are saved</summary>
+    </key>
+    <key name="default-panel-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Default GNOME Panel</summary>
+    </key>
+    <key name="default-panel-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Default GNOME Panel settings are saved</summary>
+    </key>
+    <key name="active-panel-axis" type="s">
+      <choices>
+        <choice value="horizontal"/>
+        <choice value="vertical"/>
+      </choices>
+      <default>'horizontal'</default>
+      <summary>Panel axis whose settings are currently active</summary>
+    </key>
+    <key name="panel-axis-profiles-initialized" type="b">
+      <default>false</default>
+      <summary>Whether panel axis profiles have been initialized</summary>
+    </key>
+    <key name="panel-profile-transition" type="b">
+      <default>false</default>
+      <summary>Whether a panel profile transition is in progress</summary>
     </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>

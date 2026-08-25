@@ -11,8 +11,16 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
     _init() {
         super._init();
         this._preserveNaturalWidth = false;
+        this._vertical = false;
         this.x_expand = false;
         this.y_expand = false;
+    }
+
+    setVertical(vertical) {
+        if (vertical === this._vertical)
+            return;
+        this._vertical = vertical;
+        this.queue_relayout();
     }
 
     setPreserveNaturalWidth(preserve) {
@@ -29,6 +37,17 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         return [
             this._preserveNaturalWidth ? naturalWidth : minimumWidth,
             naturalWidth,
+        ];
+    }
+
+    vfunc_get_preferred_height(forWidth) {
+        const [minimumHeight, naturalHeight] =
+            super.vfunc_get_preferred_height(forWidth);
+        return [
+            this._vertical && this._preserveNaturalWidth
+                ? naturalHeight
+                : minimumHeight,
+            naturalHeight,
         ];
     }
 

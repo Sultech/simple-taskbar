@@ -18,7 +18,10 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionWillBeActive} from '../extensionState.js';
-import {panelIsTop} from '../panel/panelPosition.js';
+import {
+    panelIsVertical,
+    panelPosition,
+} from '../panel/panelPosition.js';
 
 const OVERVIEW_LABEL_MARGIN = 60;
 const STARTUP_OVERVIEW_DELAY = 600;
@@ -101,13 +104,7 @@ export class OverviewIntegration {
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         if (this._dashState)
-            this._dashState.dash.set_height(this._getDashHeight());
-        this.queueRelayout();
-    }
-
-    syncPanelPosition() {
-        if (this._dashState)
-            this._dashState.dash.set_height(this._getDashHeight());
+            this._syncHiddenDashSize(this._dashState.dash);
         this.queueRelayout();
     }
 
@@ -299,7 +296,7 @@ export class OverviewIntegration {
 
                 const dash = Main.overview.dash;
                 dash.hide();
-                dash.set_height(this._getDashHeight());
+                this._syncHiddenDashSize(dash);
                 this.queueRelayout();
                 return GLib.SOURCE_REMOVE;
             }
@@ -328,17 +325,22 @@ export class OverviewIntegration {
         };
         dash.hide();
 
-        // Keep space for overview window labels above the bottom taskbar.
-        dash.set_height(this._getDashHeight());
+        this._syncHiddenDashSize(dash);
     }
 
-    _getDashHeight() {
-        if (panelIsTop(this._settings))
-            return 0;
-
+    _syncHiddenDashSize(dash) {
         const scaleFactor = St.ThemeContext.get_for_stage(global.stage)
             .scale_factor;
-        return OVERVIEW_LABEL_MARGIN * scaleFactor;
+        const reserve = OVERVIEW_LABEL_MARGIN * scaleFactor;
+        if (panelIsVertical(this._settings)) {
+            dash.set_height(-1);
+            dash.set_width(reserve);
+        } else {
+            dash.set_width(-1);
+            dash.set_height(
+                panelPosition(this._settings) === 'bottom' ? reserve : 0
+            );
+        }
     }
 
     _adaptAllocation() {
@@ -351,7 +353,8 @@ export class OverviewIntegration {
             originalAllocate => box => {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
-                if (!panelIsTop(integration._settings))
+                const position = panelPosition(integration._settings);
+                if (position === 'bottom')
                     box.y2 -= integration._panelHeight;
                 else if (integration._reserveAutoHiddenPanel()) {
                     const progress = Math.clamp(
@@ -359,7 +362,13 @@ export class OverviewIntegration {
                         0,
                         1
                     );
-                    box.y1 += integration._panelHeight * progress;
+                    const inset = integration._panelHeight * progress;
+                    if (position === 'top')
+                        box.y1 += inset;
+                    else if (position === 'left')
+                        box.x1 += inset;
+                    else
+                        box.x2 -= inset;
                 }
                 originalAllocate.call(controls, box);
             }
@@ -375,10 +384,15 @@ export class OverviewIntegration {
                         1
                     );
                     const inset = integration._panelHeight * progress;
-                    if (panelIsTop(integration._settings))
+                    const position = panelPosition(integration._settings);
+                    if (position === 'top')
                         box.y1 += inset;
-                    else
+                    else if (position === 'bottom')
                         box.y2 -= inset;
+                    else if (position === 'left')
+                        box.x1 += inset;
+                    else
+                        box.x2 -= inset;
                 }
                 originalAllocate.call(this, box);
             }
@@ -521,7 +535,9 @@ export class OverviewIntegration {
         // leave it partly outside the overview. GNOME's stock dash uses its
         // natural height, represented by -1.
         hiddenDash.set_height(-1);
+        hiddenDash.set_width(-1);
         dash.set_height(-1);
+        dash.set_width(-1);
         if (visible) {
             this._resetDashItems(dash);
             dash.show();

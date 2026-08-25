@@ -9,7 +9,11 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelIsTop} from './panelPosition.js';
+import {panelGeometry} from './panelGeometry.js';
+import {
+    panelIsMinimumEdge,
+    panelIsVertical,
+} from './panelPosition.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 
 const HIDE_DELAY = 450;
@@ -109,6 +113,7 @@ export class PanelAutoHideController {
         this._restoreFullscreenVisibilityState();
         this._hidden = false;
         this._overviewSuspended = false;
+        this._positionActor.remove_transition('x');
         this._positionActor.remove_transition('y');
         this.syncPosition();
         this._restoreStrutTracking();
@@ -151,11 +156,17 @@ export class PanelAutoHideController {
         if (!monitor)
             return;
 
-        actor.remove_transition('y');
-        actor.y = this._hidden && this._enabled() &&
+        const geometry = this._geometry(monitor);
+        const offset = this._hidden && this._enabled() &&
             !this._overviewSuspended
-            ? this._hiddenY(monitor)
-            : this._visibleY(monitor);
+            ? geometry.hiddenOffset
+            : geometry.visibleOffset;
+        actor.remove_transition('x');
+        actor.remove_transition('y');
+        if (geometry.vertical)
+            actor.x = offset;
+        else
+            actor.y = offset;
         Main.layoutManager._queueUpdateRegions();
     }
 
@@ -168,7 +179,7 @@ export class PanelAutoHideController {
         }
 
         this._hidden = false;
-        this._moveTo(this._visibleY(this._getMonitor()), animate);
+        this._moveTo(this._geometry(this._getMonitor()).visibleOffset, animate);
     }
 
     _enabled() {
@@ -340,7 +351,10 @@ export class PanelAutoHideController {
                 }
 
                 this._hidden = true;
-                this._moveTo(this._hiddenY(this._getMonitor()), true);
+                this._moveTo(
+                    this._geometry(this._getMonitor()).hiddenOffset,
+                    true
+                );
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -359,7 +373,10 @@ export class PanelAutoHideController {
             return;
 
         this._hidden = false;
-        this._moveTo(this._visibleY(this._getMonitor()), false);
+        this._moveTo(
+            this._geometry(this._getMonitor()).visibleOffset,
+            false
+        );
     }
 
     _resumeAfterOverview() {
@@ -395,57 +412,71 @@ export class PanelAutoHideController {
             return false;
 
         const [x, y] = global.get_pointer();
-        const panelHeight = this._getPanelHeight();
-        const visibleY = this._visibleY(monitor);
-        return x >= monitor.x && x < monitor.x + monitor.width &&
-            y >= visibleY && y < visibleY + panelHeight;
+        const geometry = this._geometry(monitor);
+        return x >= geometry.x && x < geometry.x + geometry.width &&
+            y >= geometry.y && y < geometry.y + geometry.height;
     }
 
     _pointerIsAtRevealEdge(x, y) {
         const monitor = this._getMonitor();
-        if (!monitor || x < monitor.x || x >= monitor.x + monitor.width)
+        if (!monitor)
             return false;
 
-        return panelIsTop(this._settings)
+        if (panelIsVertical(this._settings)) {
+            if (y < monitor.y || y >= monitor.y + monitor.height)
+                return false;
+            return panelIsMinimumEdge(this._settings)
+                ? x <= monitor.x + REVEAL_EDGE_SIZE
+                : x >= monitor.x + monitor.width - REVEAL_EDGE_SIZE;
+        }
+        if (x < monitor.x || x >= monitor.x + monitor.width)
+            return false;
+        return panelIsMinimumEdge(this._settings)
             ? y <= monitor.y + REVEAL_EDGE_SIZE
             : y >= monitor.y + monitor.height - REVEAL_EDGE_SIZE;
     }
 
-    _visibleY(monitor) {
-        if (!monitor)
-            return this._positionActor.y;
-        const panelHeight = this._getPanelHeight();
-        return panelIsTop(this._settings)
-            ? monitor.y
-            : monitor.y + monitor.height - panelHeight;
+    _geometry(monitor) {
+        if (monitor) {
+            return panelGeometry(
+                this._settings,
+                monitor,
+                this._getPanelHeight(),
+                REVEAL_EDGE_SIZE
+            );
+        }
+        const vertical = panelIsVertical(this._settings);
+        const offset = vertical
+            ? this._positionActor.x
+            : this._positionActor.y;
+        return {
+            vertical,
+            visibleOffset: offset,
+            hiddenOffset: offset,
+        };
     }
 
-    _hiddenY(monitor) {
-        if (!monitor)
-            return this._positionActor.y;
-        const panelHeight = this._getPanelHeight();
-        return panelIsTop(this._settings)
-            ? monitor.y - panelHeight + REVEAL_EDGE_SIZE
-            : monitor.y + monitor.height - REVEAL_EDGE_SIZE;
-    }
-
-    _moveTo(y, animate) {
+    _moveTo(offset, animate) {
         const actor = this._positionActor;
-        if (!actor || y === undefined)
+        if (!actor || offset === undefined)
             return;
 
+        const vertical = panelIsVertical(this._settings);
+        const property = vertical ? 'x' : 'y';
+        actor.remove_transition('x');
         actor.remove_transition('y');
         if (!animate) {
-            actor.y = y;
+            actor[property] = offset;
             Main.layoutManager._queueUpdateRegions();
             return;
         }
 
-        actor.ease({
-            y,
+        const params = {
             duration: ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             onComplete: () => Main.layoutManager._queueUpdateRegions(),
-        });
+        };
+        params[property] = offset;
+        actor.ease(params);
     }
 }

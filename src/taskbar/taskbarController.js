@@ -30,6 +30,7 @@ import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {
     TaskbarShowDesktopController,
 } from './taskbarShowDesktopController.js';
+import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
@@ -93,6 +94,9 @@ export class TaskbarController {
 
         this.actor = new St.BoxLayout({
             style_class: 'simple-taskbar-apps',
+            orientation: panelIsVertical(this._settings)
+                ? Clutter.Orientation.VERTICAL
+                : Clutter.Orientation.HORIZONTAL,
             x_align: Clutter.ActorAlign.START,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
@@ -192,9 +196,9 @@ export class TaskbarController {
             handleHover: (item, hovering) =>
                 this.handleItemHover(item, hovering),
             handleMiddleClick: item => this.handleItemMiddleClick(item),
-            initializeAppearance: (item, glassWidth) => {
+            initializeAppearance: item => {
                 this._syncIndicatorVisibility(item);
-                this._updateIndicatorGeometry(item, false, glassWidth);
+                this._updateGlassGeometry(item);
             },
             makeDraggable: (item, button, icon, app) =>
                 this._dragController.makeDraggable(item, button, icon, app),
@@ -539,7 +543,6 @@ export class TaskbarController {
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         for (const item of this._appButtons.values()) {
-            item.set_height(panelHeight);
             item._taskbarButtonContent.set_height(
                 this._buttonContentHeight()
             );
@@ -550,11 +553,23 @@ export class TaskbarController {
     }
 
     applyAppearance() {
+        const vertical = panelIsVertical(this._settings);
+        this.actor.orientation = vertical
+            ? Clutter.Orientation.VERTICAL
+            : Clutter.Orientation.HORIZONTAL;
         this.actor.set_style('spacing: 0;');
-        this.actor.x_align = Clutter.ActorAlign.START;
+        this.actor.x_align = vertical
+            ? Clutter.ActorAlign.FILL
+            : Clutter.ActorAlign.START;
+        this.actor.x_expand = vertical;
+        this.actor.y_align = vertical
+            ? Clutter.ActorAlign.START
+            : Clutter.ActorAlign.FILL;
+        this.actor.y_expand = !vertical;
         this._syncIndicatorStyle();
         for (const item of this._appButtons.values()) {
             this._syncIndicatorVisibility(item);
+            this._syncItemLabel(item);
             this._updateGlassGeometry(item);
         }
         this._syncTaskbarEdgeSpacing();
@@ -908,7 +923,10 @@ export class TaskbarController {
     }
 
     handleDragOver(source, _actor, x, _y, _time) {
-        return this._dragController.handleDragOver(source, x);
+        return this._dragController.handleDragOver(
+            source,
+            panelIsVertical(this._settings) ? _y : x
+        );
     }
 
     acceptDrop(source, _actor, _x, _y, _time) {
@@ -1159,7 +1177,7 @@ export class TaskbarController {
                 iconSpacing < 0
                 ? -iconSpacing
                 : 0;
-            return width + this._buttonWidth(
+            return width + this._appearanceController.itemMainExtent(
                 entry.window,
                 entryShowLabels,
                 APP_LABEL_WIDTH,
@@ -1176,7 +1194,8 @@ export class TaskbarController {
     }
 
     _showAppLabels() {
-        return this._combineMode() !== 'always' &&
+        return !panelIsVertical(this._settings) &&
+            this._combineMode() !== 'always' &&
             !this._settings.get_boolean('hide-app-labels');
     }
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import GLib from 'gi://GLib';
 import Shell from 'gi://Shell';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
@@ -38,10 +39,13 @@ import {WindowController} from './src/taskbar/windowController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
 import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
+import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
+import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
+        this._rebuildId = 0;
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
@@ -67,6 +71,7 @@ export default class SimpleTaskbarExtension extends Extension {
                         this._settings.get_int('start-button-padding')
                     );
                     this._taskbarController.setIconSize(this._iconSize);
+                    this._panelController.syncVerticalItems();
                     this._panelController.updateTaskbarWidth();
                 },
                 onIconSpacingChanged: () => this._applyTaskbarAppearance(),
@@ -76,6 +81,7 @@ export default class SimpleTaskbarExtension extends Extension {
                         this._iconSize,
                         this._settings.get_int('start-button-padding')
                     );
+                    this._panelController.syncVerticalItems();
                     this._panelController.updateTaskbarWidth();
                 },
                 onPanelHeightChanged: panelHeight => {
@@ -244,6 +250,10 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     disable() {
+        if (this._rebuildId) {
+            GLib.Source.remove(this._rebuildId);
+            this._rebuildId = 0;
+        }
         this._settings.disconnectObject(this);
         this._windowsXpModeController.destroy();
         this._windowsXpModeController = null;
@@ -300,6 +310,19 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appSystem = null;
         this._settings = null;
         this._panelHeight = null;
+    }
+
+    _queueRebuild() {
+        if (this._rebuildId)
+            return;
+
+        this._rebuildId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this._rebuildId = 0;
+            this.disable();
+            this.enable();
+            resetPanelBlur();
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     openPreferences() {
@@ -366,10 +389,14 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
+            this._panelController.syncVerticalItems();
             this._panelController.updateTaskbarWidth();
         }, this);
         this._settings.connectObject('changed::panel-position', () => {
-            this._overviewIntegration.syncPanelPosition();
+            synchronizePanelPosition(this._settings);
+            hidePanelBlur();
+            this._panelController.position();
+            this._queueRebuild();
         }, this);
     }
 
@@ -379,6 +406,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings.get_int('start-button-padding')
         );
         this._taskbarController.applyAppearance();
+        this._panelController.syncVerticalItems();
         this._panelController.updateTaskbarWidth();
     }
 
