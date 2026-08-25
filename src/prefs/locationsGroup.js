@@ -80,9 +80,7 @@ export function addLocationsGroup({
 }) {
     const group = new Adw.PreferencesGroup({
         title: _('Locations'),
-        description: _(
-            'Show common folders, Trash, and connected drives in the taskbar.'
-        ),
+        description: _('Configure taskbar locations and Files menu shortcuts.'),
     });
     page.add(group);
 
@@ -145,6 +143,14 @@ export function addLocationsGroup({
     const dockCommonFoldersRow = createCommonFoldersRow(settings);
     group.add(taskbarDriveOptionsRow);
     group.add(taskbarCommonFoldersRow);
+
+    const nautilusPlacesSwitch = createSwitchRow(settings, {
+        key: 'nautilus-places-enabled',
+        title: _('Nautilus Folder Shortcuts'),
+        subtitle: _('Show common folders in the Files taskbar menu'),
+    });
+    group.add(nautilusPlacesSwitch);
+
     dockGroup.add(dockDriveOptionsRow);
     dockGroup.add(dockCommonFoldersRow);
 
@@ -152,6 +158,10 @@ export function addLocationsGroup({
         const xpEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const defaultPanel = settings.get_boolean(
+            'default-gnome-panel'
+        ) && !settings.get_boolean('dock-mode');
+        nautilusPlacesSwitch.sensitive = !defaultPanel;
         if (xpEnabled && taskbarLocationsRow.active)
             taskbarLocationsRow.active = false;
         taskbarLocationsRow.sensitive = !xpEnabled;

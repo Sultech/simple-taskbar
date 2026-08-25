@@ -9,13 +9,11 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {addAdvancedPage} from './src/prefs/advancedPage.js';
 import {
     addPanelModeGroup,
     connectDefaultGnomePanelSync,
 } from './src/prefs/panelModeGroup.js';
 import {addApplicationIconsGroup} from './src/prefs/applicationIconsGroup.js';
-import {addAppBehaviorGroup} from './src/prefs/appBehaviorGroup.js';
 import {addDockAppearanceGroup} from './src/prefs/dockAppearanceGroup.js';
 import {addDockBehaviorGroup} from './src/prefs/dockBehaviorGroup.js';
 import {addTaskbarBehaviorGroup} from './src/prefs/taskbarBehaviorGroup.js';
@@ -75,10 +73,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         window.add(startMenuPage);
 
-        const {
-            advancedFileManagerGroup,
-        } = addAdvancedPage(window);
-
         const startMenu = addStartMenuPage({
             window,
             page: startMenuPage,
@@ -86,7 +80,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             extensionPath: this.path,
             panelPositions,
-            advancedFileManagerGroup,
             blurMyShellPanelBlurEnabled,
             blurMyShellPopupBlurEnabled,
             connectSettings,
@@ -151,12 +144,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             connectSettings,
         });
 
-        const appBehavior = addAppBehaviorGroup({
-            settings: window._settings,
-            advancedFileManagerGroup,
-        });
-        const nautilusPlacesSwitch = appBehavior.nautilusPlacesSwitch;
-
         connectDefaultGnomePanelSync({
             settings: window._settings,
             createSettings: () => this.getSettings(),
@@ -169,7 +156,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             dockPanelModeSwitch,
             appearanceGroup,
             startMenuPage,
-            nautilusPlacesSwitch,
         });
 
         const panelAppearance = addPanelAppearancePage({

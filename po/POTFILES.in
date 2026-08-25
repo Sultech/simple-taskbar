@@ -4,8 +4,6 @@ src/overflow/applicationOverflowController.js
 src/overflow/applicationOverflowItemController.js
 prefs.js
 src/prefs/aboutPage.js
-src/prefs/advancedPage.js
-src/prefs/appBehaviorGroup.js
 src/prefs/applicationIconsGroup.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dockBehaviorGroup.js

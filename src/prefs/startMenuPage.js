@@ -23,7 +23,6 @@ export function addStartMenuPage({
     connectSettings,
     extensionPath,
     panelPositions,
-    advancedFileManagerGroup,
     blurMyShellPanelBlurEnabled,
     blurMyShellPopupBlurEnabled,
 }) {
@@ -605,7 +604,7 @@ export function addStartMenuPage({
             'super-e-file-manager-enabled'
         ),
     });
-    advancedFileManagerGroup.add(superEFileManagerRow);
+    startMenuKeybindingsGroup.add(superEFileManagerRow);
     settings.bind(
         'super-e-file-manager-enabled',
         superEFileManagerRow,
