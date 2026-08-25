@@ -6,7 +6,8 @@ import Cogl from 'gi://Cogl';
 import {panelPosition} from './panelPosition.js';
 import {panelTransparencyOpacity} from '../transparencyUtils.js';
 
-const BORDER_COLOR = '255, 255, 255';
+const DARK_BORDER_COLOR = '255, 255, 255';
+const LIGHT_BORDER_COLOR = '0, 0, 0';
 const BORDER_OPACITY = 0.20;
 
 function panelBackgroundColor(settings, light) {
@@ -19,16 +20,22 @@ function panelBackgroundColor(settings, light) {
     return `${color.red}, ${color.green}, ${color.blue}`;
 }
 
-export function panelBackgroundStyle(settings, light, borderEnabled,
-    originalStyle = '', fullBorder = false) {
-    const opacity = panelTransparencyOpacity(settings);
-    const background = panelBackgroundColor(settings, light);
+export function panelBorderStyle(settings, light, borderEnabled,
+    fullBorder = false, important = false) {
     const position = panelPosition(settings);
+    const borderColor = light
+        ? LIGHT_BORDER_COLOR
+        : DARK_BORDER_COLOR;
+    const priority = important ? ' !important' : '';
     let borderStyle =
-        'border-top: 0; border-bottom: 0; border-left: 0; border-right: 0; ';
+        `border-top: 0${priority}; ` +
+        `border-bottom: 0${priority}; ` +
+        `border-left: 0${priority}; ` +
+        `border-right: 0${priority}; `;
     if (borderEnabled && fullBorder) {
         borderStyle += 'border: 1px solid ' +
-            `rgba(${BORDER_COLOR}, ${BORDER_OPACITY.toFixed(3)}); `;
+            `rgba(${borderColor}, ${BORDER_OPACITY.toFixed(3)})` +
+            `${priority}; `;
     } else if (borderEnabled) {
         const borderEdge = {
             top: 'bottom',
@@ -37,8 +44,22 @@ export function panelBackgroundStyle(settings, light, borderEnabled,
             right: 'left',
         }[position];
         borderStyle += `border-${borderEdge}: 1px solid ` +
-            `rgba(${BORDER_COLOR}, ${BORDER_OPACITY.toFixed(3)}); `;
+            `rgba(${borderColor}, ${BORDER_OPACITY.toFixed(3)})` +
+            `${priority}; `;
     }
+    return borderStyle;
+}
+
+export function panelBackgroundStyle(settings, light, borderEnabled,
+    originalStyle = '', fullBorder = false) {
+    const opacity = panelTransparencyOpacity(settings);
+    const background = panelBackgroundColor(settings, light);
+    const borderStyle = panelBorderStyle(
+        settings,
+        light,
+        borderEnabled,
+        fullBorder
+    );
     const transparencyStyle =
         `background-color: rgba(${background}, ` +
         `${opacity.toFixed(2)}) !important; ` +

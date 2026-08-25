@@ -16,7 +16,10 @@ import {
     panelBlurIsActive,
     syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
-import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
+import {
+    panelBackgroundStyle,
+    panelBorderStyle,
+} from '../panel/panelBackgroundStyle.js';
 import {
     PANEL_BLUR_CLASSES,
     syncPanelBlurClasses,
@@ -323,7 +326,18 @@ export class SecondaryPanelDockController {
         syncPanelBlurClasses(this._actor, blurActive, light);
         syncPanelBlurCornerRadius(this._actor, cornerRadius);
         if (blurActive) {
-            this._actor.set_style(cornerRadiusStyle);
+            const borderStyle = panelBorderStyle(
+                this._settings,
+                light,
+                borderEnabled,
+                dockFloating,
+                true
+            );
+            this._actor.set_style(
+                cornerRadiusStyle
+                    ? `${cornerRadiusStyle} ${borderStyle}`
+                    : borderStyle
+            );
             return;
         }
         this._actor.set_style(panelBackgroundStyle(
