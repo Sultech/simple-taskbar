@@ -61,17 +61,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
         window.add(dockPage);
 
-        addWindowSwitchingPage(
-            window,
-            window._settings,
-            connectSettings
-        );
-
         const startMenuPage = new Adw.PreferencesPage({
             title: _('Start Menu'),
             icon_name: 'view-app-grid-symbolic',
         });
         window.add(startMenuPage);
+
+        addWindowSwitchingPage(
+            window,
+            window._settings,
+            connectSettings
+        );
 
         const startMenu = addStartMenuPage({
             window,
