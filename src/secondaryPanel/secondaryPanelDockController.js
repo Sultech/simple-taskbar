@@ -505,7 +505,10 @@ export class SecondaryPanelDockController {
         const iconSize = this._taskbarController.getIconSizeForLength(
             availableLength,
             maximum,
-            minimum
+            minimum,
+            this._startButtonController.actor.visible
+                ? this._getIconSize()
+                : null
         );
         if (iconSize === this._getIconSize())
             return false;

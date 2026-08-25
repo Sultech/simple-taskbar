@@ -456,7 +456,8 @@ export default class SimpleTaskbarExtension extends Extension {
         const iconSize = this._taskbarController.getIconSizeForLength(
             availableLength,
             maximum,
-            minimum
+            minimum,
+            this._startButtonController.actor.visible ? this._iconSize : null
         );
         if (iconSize === this._iconSize)
             return false;

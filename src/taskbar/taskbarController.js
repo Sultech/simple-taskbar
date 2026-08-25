@@ -629,12 +629,20 @@ export class TaskbarController {
             !item._taskbarIsPinnedPrimary) ?? null;
     }
 
-    getIconSizeForLength(availableLength, maximumIconSize, minimumIconSize) {
+    getIconSizeForLength(
+        availableLength,
+        maximumIconSize,
+        minimumIconSize,
+        scalingIconSize = null
+    ) {
         const minimum = Math.min(minimumIconSize, maximumIconSize);
         for (let iconSize = maximumIconSize;
             iconSize >= minimum;
             iconSize--) {
-            if (this.getLengthForIconSize(iconSize) <= availableLength)
+            const available = scalingIconSize === null
+                ? availableLength
+                : availableLength + scalingIconSize - iconSize;
+            if (this.getLengthForIconSize(iconSize) <= available)
                 return iconSize;
         }
 
