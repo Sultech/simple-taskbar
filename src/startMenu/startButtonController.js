@@ -24,7 +24,11 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
-import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
+import {
+    panelArrowSide,
+    panelIsVertical,
+    syncMenuArrowSide,
+} from '../panel/panelPosition.js';
 
 export class StartButtonController {
     constructor({
@@ -174,6 +178,19 @@ export class StartButtonController {
         ) && startButtonPosition === 'left'
             ? padding
             : 0;
+        if (panelIsVertical(this._settings)) {
+            this._content.set_width(-1);
+            this._content.set_height(width);
+            this.actor.set_width(-1);
+            this.actor.set_height(width);
+            this.actor.set_style(
+                `min-width: 0; padding: 0; margin-top: ${leftMargin}px;`
+            );
+            return;
+        }
+
+        this._content.set_height(-1);
+        this.actor.set_height(-1);
         this._content.set_width(width);
         this.actor.set_width(width);
         this.actor.set_style(
@@ -288,6 +305,12 @@ export class StartButtonController {
             this._settings.set_string('target-prefs-page', 'start-menu');
             this._openPreferences();
         });
+        if (this._settings.isDock) {
+            menu.addAction(_('Dock Settings'), () => {
+                this._settings.set_string('target-prefs-page', 'dock');
+                this._openPreferences();
+            });
+        }
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);
         this._menuManager.addMenu(menu);
@@ -298,17 +321,13 @@ export class StartButtonController {
 
         this.actor.connectObject('event', (_actor, event) => {
             if (event.type() !== Clutter.EventType.BUTTON_PRESS ||
-                event.get_button() !== Clutter.BUTTON_SECONDARY ||
-                !this._windowsModeEnabled())
+                event.get_button() !== Clutter.BUTTON_SECONDARY)
                 return Clutter.EVENT_PROPAGATE;
 
             this._openContextMenu();
             return Clutter.EVENT_STOP;
         }, this._signalHolder);
         this.actor.connectObject('popup-menu', () => {
-            if (!this._windowsModeEnabled())
-                return Clutter.EVENT_PROPAGATE;
-
             this._openContextMenu();
             return Clutter.EVENT_STOP;
         }, this._signalHolder);
@@ -406,6 +425,11 @@ export class StartButtonController {
             this._syncVisibility();
             this._keybindings?.sync();
         }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::dock-mode',
+            () => this._keybindings?.sync(),
+            this._signalHolder
+        );
         this._settings.connectObject('changed::start-menu-super-key', () => {
             this._keybindings?.sync();
         }, this._signalHolder);

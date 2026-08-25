@@ -16,9 +16,15 @@ import {
 
 import {
     panelArrowSide,
+    panelIsVertical,
     syncPanelMenuPosition,
 } from '../panel/panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
+import {MaximumSizeClamp} from '../taskbar/maximumSizeClamp.js';
+import {
+    TASKBAR_SEPARATOR_EXTENT,
+    TASKBAR_SEPARATOR_LINE_SIZE,
+} from '../taskbar/taskbarSeparator.js';
 import {
     ApplicationOverflowButtonController,
 } from './applicationOverflowButtonController.js';
@@ -38,38 +44,43 @@ const TASKBAR_CONTENT_CLASS =
 const TASKBAR_SCROLLBAR_CLASS =
     'simple-taskbar-application-overflow-taskbar-scrollbar';
 const POPUP_MARGIN = 32;
+const LOCATION_SEPARATOR_ANIMATION_DURATION = 200;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
-    _init(onMaximumWidthChanged) {
+    _init(onMaximumSizeChanged) {
         super._init({
             style_class: 'simple-taskbar-application-overflow-container',
             x_align: Clutter.ActorAlign.START,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
         });
-        this._maximumWidth = Number.MAX_SAFE_INTEGER;
-        this._onMaximumWidthChanged = onMaximumWidthChanged;
+        this._clamp = new MaximumSizeClamp();
+        this._onMaximumSizeChanged = onMaximumSizeChanged;
     }
 
-    setMaximumWidth(width) {
-        const maximumWidth = Math.max(1, Math.floor(width));
-        if (maximumWidth === this._maximumWidth)
+    setMaximumSize(size, vertical) {
+        if (!this._clamp.set(size, vertical))
             return;
 
-        this._maximumWidth = maximumWidth;
-        this._onMaximumWidthChanged(maximumWidth);
+        this._onMaximumSizeChanged(this._clamp.size);
         this.queue_relayout();
     }
 
     vfunc_get_preferred_width(forHeight) {
         const [, naturalWidth] =
             super.vfunc_get_preferred_width(forHeight);
-        return [0, Math.min(naturalWidth, this._maximumWidth)];
+        return [0, this._clamp.width(naturalWidth)];
+    }
+
+    vfunc_get_preferred_height(forWidth) {
+        const [, naturalHeight] =
+            super.vfunc_get_preferred_height(forWidth);
+        return [0, this._clamp.height(naturalHeight)];
     }
 
     destroy() {
-        this._onMaximumWidthChanged = null;
+        this._onMaximumSizeChanged = null;
         super.destroy();
     }
 });
@@ -80,6 +91,23 @@ export class ApplicationOverflowController {
         this._taskbarController = taskbarController;
         this._previewController = previewController;
         this._viewport = viewport;
+        this._locationActor = taskbarController.getLocationActor();
+        this._locationSeparator = new St.Widget({
+            layout_manager: new Clutter.BinLayout(),
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+            reactive: false,
+            visible: false,
+            clip_to_allocation: true,
+        });
+        this._locationSeparatorLine = new St.Widget({
+            style_class: 'simple-taskbar-pinned-app-separator',
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+            reactive: false,
+        });
+        this._locationSeparator.add_child(this._locationSeparatorLine);
+        this._locationSeparatorTargetVisible = false;
         this._signalHolder = new TransientSignalHolder();
         this._grab = null;
         this._menu = null;
@@ -87,7 +115,7 @@ export class ApplicationOverflowController {
         this._button = null;
         this._icon = null;
         this._spacer = new St.Widget({visible: false});
-        this._maximumWidth = Number.MAX_SAFE_INTEGER;
+        this._maximumSize = Number.MAX_SAFE_INTEGER;
         this._syncId = 0;
         this._dragEndListener = () => this._onTaskbarDragEnd();
         this._dragEndListenerRegistered = false;
@@ -100,12 +128,14 @@ export class ApplicationOverflowController {
         this._buttonController = null;
         this._themeController = null;
 
-        this.actor = new ApplicationOverflowContainer(width => {
-            this._maximumWidth = width;
+        this.actor = new ApplicationOverflowContainer(size => {
+            this._maximumSize = size;
             this._queueSync();
         });
         this._createButton();
         this.actor.add_child(this._viewport);
+        this.actor.add_child(this._locationSeparator);
+        this.actor.add_child(this._locationActor);
         this.actor.add_child(this._button);
         this.actor.add_child(this._spacer);
     }
@@ -135,7 +165,8 @@ export class ApplicationOverflowController {
         this._dragController = new ApplicationOverflowDragController(
             this._taskbarController,
             () => this._itemController.records,
-            () => this._style
+            () => this._style,
+            () => panelIsVertical(this._settings)
         );
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
@@ -184,19 +215,30 @@ export class ApplicationOverflowController {
         this._settings.connectObject('changed::icon-spacing', () => {
             this._queueSync();
         }, this._signalHolder);
+        this._settings.connectObject('changed::panel-button-padding', () => {
+            this._queueSync();
+        }, this._signalHolder);
         this._settings.connectObject('changed::transparency-enabled', () => {
             this._themeController.sync();
         }, this._signalHolder);
         this._settings.connectObject('changed::transparency-level', () => {
             this._themeController.sync();
         }, this._signalHolder);
-        this._settings.connectObject('changed::panel-position', () => {
-            this.close();
-            this._syncPanelPosition();
-        }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::panel-theme-follow-system',
+            () => this._themeController.sync(),
+            'changed::panel-theme',
+            () => this._themeController.sync(),
+            this._signalHolder
+        );
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._sync();
         }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::show-location-separator',
+            () => this._queueSync(),
+            this._signalHolder
+        );
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => this._sync(),
@@ -222,7 +264,7 @@ export class ApplicationOverflowController {
             () => this._buttonController.sync(),
             this._signalHolder
         );
-        for (const item of this._taskbarController.getOrderedItems())
+        for (const item of this._taskbarController.getOrderedApplicationItems())
             this._connectTaskbarItem(item);
         this._taskbarController.actor.connectObject('child-added',
             (_actor, item) => {
@@ -237,6 +279,27 @@ export class ApplicationOverflowController {
             () => this._queueSync(),
             this._signalHolder
         );
+        for (const item of this._taskbarController.getLocationItems())
+            this._connectTaskbarItem(item);
+        this._locationActor.connectObject(
+            'child-added',
+            (_actor, item) => {
+                this._connectTaskbarItem(item);
+                this._queueSync();
+            },
+            'child-removed',
+            () => this._queueSync(),
+            'notify::allocation',
+            () => this._queueSync(),
+            this._signalHolder
+        );
+        this._locationSeparator.connectObject(
+            'notify::width',
+            () => this._queueSync(),
+            'notify::height',
+            () => this._queueSync(),
+            this._signalHolder
+        );
         this._viewport.connectObject('notify::allocation', () => {
             this._queueSync();
         }, this._signalHolder);
@@ -244,6 +307,12 @@ export class ApplicationOverflowController {
             if (this._settings.get_boolean('application-overflow-enabled') &&
                 this._viewport.hadjustment.get_value() !== 0) {
                 this._viewport.hadjustment.set_value(0);
+            }
+        }, this._signalHolder);
+        this._viewport.vadjustment.connectObject('notify::value', () => {
+            if (this._settings.get_boolean('application-overflow-enabled') &&
+                this._viewport.vadjustment.get_value() !== 0) {
+                this._viewport.vadjustment.set_value(0);
             }
         }, this._signalHolder);
         Main.panel.connectObject('notify::style-class', () => {
@@ -273,6 +342,10 @@ export class ApplicationOverflowController {
 
     clearOverflow() {
         this._clearOverflow();
+    }
+
+    sync() {
+        this._queueSync();
     }
 
     destroy() {
@@ -306,12 +379,18 @@ export class ApplicationOverflowController {
         this._section = null;
 
         this.actor.remove_child(this._viewport);
+        this.actor.remove_child(this._locationSeparator);
+        this.actor.remove_child(this._locationActor);
+        this._locationSeparator.destroy();
         this.actor.destroy();
         this.actor = null;
         this._button = null;
         this._icon = null;
         this._spacer = null;
         this._viewport = null;
+        this._locationSeparator = null;
+        this._locationSeparatorLine = null;
+        this._locationActor = null;
         this._taskbarController = null;
         this._previewController = null;
         this._overflowItems = null;
@@ -432,41 +511,150 @@ export class ApplicationOverflowController {
             return;
         }
 
-        this._viewport.hadjustment.set_value(0);
+        const vertical = panelIsVertical(this._settings);
         const panelHeight = this._settings.get_int('panel-height');
-        const items = this._taskbarController.getOrderedItems();
-        const itemWidths = items.map(item =>
-            item.get_preferred_width(panelHeight)[1]
+        const items = this._taskbarController.getOrderedApplicationItems();
+        const locationItems = this._taskbarController.getLocationItems();
+        this._syncLocationSeparator(
+            this._shouldShowLocationSeparator(items, locationItems),
+            vertical
         );
-        const taskbarWidth = itemWidths.reduce((sum, width) => sum + width, 0);
-        if (taskbarWidth <= this._maximumWidth) {
+        const locationSeparatorSize = this._locationSeparatorSize(vertical);
+        const adjustment = vertical
+            ? this._viewport.vadjustment
+            : this._viewport.hadjustment;
+        adjustment.set_value(0);
+        const itemSizes = items.map(item =>
+            vertical
+                ? item.get_preferred_height(panelHeight)[1]
+                : item.get_preferred_width(panelHeight)[1]
+        );
+        const locationSize = locationItems.reduce((size, item) => size + (
+            vertical
+                ? item.get_preferred_height(panelHeight)[1]
+                : item.get_preferred_width(panelHeight)[1]
+        ), 0);
+        const separatorTarget = this._taskbarController.getPinnedSeparatorTarget(
+            items
+        );
+        const separatorIndex = separatorTarget
+            ? items.indexOf(separatorTarget)
+            : -1;
+        const separatorSize = this._taskbarController.getPinnedSeparatorLength();
+        const taskbarSize = itemSizes.reduce((sum, size) => sum + size, 0) +
+            locationSize +
+            locationSeparatorSize +
+            (separatorIndex >= 0 ? separatorSize : 0);
+        if (items.length === 0 || taskbarSize <= this._maximumSize) {
             this._showAllItems();
             return;
         }
 
         this._button.show();
         this._button.ensure_style();
-        const [, buttonWidth] = this._button.get_preferred_width(panelHeight);
-        const availableWidth = Math.max(
+        const buttonSize = vertical
+            ? this._button.get_preferred_height(panelHeight)[1]
+            : this._button.get_preferred_width(panelHeight)[1];
+        const availableSize = Math.max(
             1,
-            this._maximumWidth - buttonWidth
+            this._maximumSize - buttonSize - locationSize -
+                locationSeparatorSize
         );
         let visibleCount = 0;
-        let visibleWidth = 0;
+        let visibleSize = 0;
         for (let index = visibleCount; index < items.length; index++) {
-            if (visibleWidth + itemWidths[index] > availableWidth)
+            const separatorBefore = index === separatorIndex
+                ? separatorSize
+                : 0;
+            if (visibleSize + separatorBefore + itemSizes[index] >
+                availableSize) {
                 break;
+            }
 
-            visibleWidth += itemWidths[index];
+            visibleSize += separatorBefore + itemSizes[index];
             visibleCount++;
         }
 
         this._taskbarController.setPreserveItemWidths(true);
-        this._viewport.setMaximumWidth(Math.max(1, visibleWidth));
-        this._spacer.set_width(Math.max(0, availableWidth - visibleWidth));
+        this._viewport.setMaximumSize(Math.max(1, visibleSize), vertical);
+        if (vertical) {
+            this._spacer.set_width(-1);
+            this._spacer.set_height(Math.max(0, availableSize - visibleSize));
+        } else {
+            this._spacer.set_height(-1);
+            this._spacer.set_width(Math.max(0, availableSize - visibleSize));
+        }
         this._spacer.show();
         this._setOverflowItems(items.slice(visibleCount));
         this._themeController.sync();
+    }
+
+    _shouldShowLocationSeparator(items, locationItems) {
+        return this._settings.get_boolean('show-location-separator') &&
+            items.length > 0 &&
+            locationItems.some(item => !item.animatingOut);
+    }
+
+    _locationSeparatorSize(vertical) {
+        if (!this._locationSeparator.visible)
+            return 0;
+
+        return vertical
+            ? this._locationSeparator.height
+            : this._locationSeparator.width;
+    }
+
+    _syncLocationSeparator(visible, vertical) {
+        const iconSize = this._taskbarController.getIconSize();
+        const mainProperty = vertical ? 'height' : 'width';
+        const wasVisible = this._locationSeparator.visible;
+        if (vertical) {
+            this._locationSeparator.set_width(iconSize);
+            this._locationSeparatorLine.set_size(
+                iconSize,
+                TASKBAR_SEPARATOR_LINE_SIZE
+            );
+        } else {
+            this._locationSeparator.set_height(iconSize);
+            this._locationSeparatorLine.set_size(
+                TASKBAR_SEPARATOR_LINE_SIZE,
+                iconSize
+            );
+        }
+
+        if (visible === this._locationSeparatorTargetVisible) {
+            return;
+        }
+
+        this._locationSeparatorTargetVisible = visible;
+        this._locationSeparator.remove_all_transitions();
+        if (visible) {
+            this._locationSeparator.show();
+            if (!wasVisible) {
+                this._locationSeparator[mainProperty] = 0;
+                this._locationSeparator.opacity = 0;
+            }
+            this._locationSeparator.ease({
+                [mainProperty]: TASKBAR_SEPARATOR_EXTENT,
+                opacity: 255,
+                duration: LOCATION_SEPARATOR_ANIMATION_DURATION,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+            return;
+        }
+
+        this._locationSeparator.ease({
+            [mainProperty]: 0,
+            opacity: 0,
+            duration: LOCATION_SEPARATOR_ANIMATION_DURATION,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onComplete: () => {
+                if (this._locationSeparatorTargetVisible)
+                    return;
+                this._locationSeparator.hide();
+                this._locationSeparator.opacity = 255;
+            },
+        });
     }
 
     _onTaskbarDragEnd() {
@@ -479,7 +667,28 @@ export class ApplicationOverflowController {
         this._taskbarController.setPreserveItemWidths(false);
         this._button.hide();
         this._spacer.hide();
-        this._viewport.setMaximumWidth(this._maximumWidth);
+        const vertical = panelIsVertical(this._settings);
+        const panelHeight = this._settings.get_int('panel-height');
+        const items = this._taskbarController.getOrderedApplicationItems();
+        const locationItems = this._taskbarController.getLocationItems();
+        this._syncLocationSeparator(
+            this._shouldShowLocationSeparator(items, locationItems),
+            vertical
+        );
+        const locationSize = locationItems
+            .reduce((size, item) => size + (
+                vertical
+                    ? item.get_preferred_height(panelHeight)[1]
+                : item.get_preferred_width(panelHeight)[1]
+            ), 0);
+        const locationSeparatorSize = this._locationSeparatorSize(vertical);
+        this._viewport.setMaximumSize(
+            Math.max(
+                1,
+                this._maximumSize - locationSize - locationSeparatorSize
+            ),
+            vertical
+        );
         this._clearOverflow();
     }
 
@@ -494,8 +703,11 @@ export class ApplicationOverflowController {
             'application-overflow-style'
         );
         const panelHeight = this._settings.get_int('panel-height');
+        const vertical = panelIsVertical(this._settings);
         const layoutSignature = items.map(item =>
-            item.get_preferred_width(panelHeight)[1]
+            vertical
+                ? item.get_preferred_height(panelHeight)[1]
+                : item.get_preferred_width(panelHeight)[1]
         ).join(':') + `:${panelHeight}`;
         if (style === this._style &&
             layoutSignature === this._layoutSignature &&
@@ -524,6 +736,9 @@ export class ApplicationOverflowController {
         this._menu.box.add_style_class_name(TASKBAR_CONTENT_CLASS);
         const box = new St.BoxLayout({
             style_class: 'simple-taskbar-application-overflow-taskbar',
+            orientation: panelIsVertical(this._settings)
+                ? Clutter.Orientation.VERTICAL
+                : Clutter.Orientation.HORIZONTAL,
         });
         for (const item of items)
             box.add_child(this._itemController.createTaskbarItem(item));
@@ -538,7 +753,9 @@ export class ApplicationOverflowController {
             child: box,
         });
         scrollView.connect('scroll-event', (_actor, event) => {
-            const adjustment = scrollView.hadjustment;
+            const adjustment = panelIsVertical(this._settings)
+                ? scrollView.vadjustment
+                : scrollView.hadjustment;
             const increment = Math.max(
                 adjustment.step_increment,
                 this._settings.get_int('panel-height')
@@ -589,18 +806,20 @@ export class ApplicationOverflowController {
         );
         const scrollView = this._section.actor.get_child_at_index(0);
         if (this._style === 'taskbar') {
-            const maximumWidth = Math.max(
+            const vertical = panelIsVertical(this._settings);
+            const maximumSize = Math.max(
                 1,
-                workArea.width - POPUP_MARGIN
+                (vertical ? workArea.height : workArea.width) - POPUP_MARGIN
             );
             const panelHeight = this._settings.get_int('panel-height');
-            const contentWidth = this._overflowItems.reduce(
-                (width, item) => width +
-                    item.get_preferred_width(panelHeight)[1],
+            const contentSize = this._overflowItems.reduce(
+                (size, item) => size + (vertical
+                    ? item.get_preferred_height(panelHeight)[1]
+                    : item.get_preferred_width(panelHeight)[1]),
                 0
             );
-            const hasHorizontalScrollbar = contentWidth > maximumWidth;
-            if (hasHorizontalScrollbar) {
+            const hasScrollbar = contentSize > maximumSize;
+            if (hasScrollbar) {
                 this._menu.box.add_style_class_name(
                     TASKBAR_SCROLLBAR_CLASS
                 );
@@ -610,14 +829,16 @@ export class ApplicationOverflowController {
                 );
             }
             scrollView.set_policy(
-                hasHorizontalScrollbar
+                !vertical && hasScrollbar
                     ? St.PolicyType.ALWAYS
                     : St.PolicyType.NEVER,
-                St.PolicyType.NEVER
+                vertical && hasScrollbar
+                    ? St.PolicyType.ALWAYS
+                    : St.PolicyType.NEVER
             );
-            scrollView.set_style(
-                `max-width: ${maximumWidth}px;`
-            );
+            scrollView.set_style(vertical
+                ? `max-height: ${maximumSize}px;`
+                : `max-width: ${maximumSize}px;`);
         } else {
             this._menu.box.remove_style_class_name(
                 TASKBAR_SCROLLBAR_CLASS
@@ -631,6 +852,21 @@ export class ApplicationOverflowController {
 
 
     _syncPanelPosition() {
+        const vertical = panelIsVertical(this._settings);
+        this.actor.orientation = vertical
+            ? Clutter.Orientation.VERTICAL
+            : Clutter.Orientation.HORIZONTAL;
+        this.actor.x_align = vertical
+            ? Clutter.ActorAlign.FILL
+            : Clutter.ActorAlign.START;
+        this.actor.y_align = vertical
+            ? Clutter.ActorAlign.START
+            : Clutter.ActorAlign.FILL;
+        this._viewport.x_expand = vertical;
+        this._viewport.y_expand = !vertical;
+        this._locationActor.x_expand = vertical;
+        this._locationActor.y_expand = !vertical;
         syncPanelMenuPosition(this._menu, this._settings);
+        this._queueSync();
     }
 }

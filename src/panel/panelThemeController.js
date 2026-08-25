@@ -17,9 +17,11 @@ import {
 } from '../shared/blurMyShellUtils.js';
 import {
     getPanelBlur,
+    hidePanelBlur,
     panelBlurIsActive,
     refreshPanelBlurVisibility,
 } from '../integration/blurMyShellRuntime.js';
+import {extensionStateIsActive} from '../extensionState.js';
 import {
     BLUR_MY_SHELL_ACTIVE_CLASS,
     BLUR_TINTED_CLASS,
@@ -27,7 +29,7 @@ import {
     LIGHT_BLUR_OVERLAY_CLASS,
     syncPanelBlurClasses,
 } from './panelBlurClasses.js';
-import {panelIsTop} from './panelPosition.js';
+import {panelPosition} from './panelPosition.js';
 import {panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
@@ -55,7 +57,7 @@ export class PanelThemeController {
         this._stSettings = St.Settings.get();
     }
 
-    connectSignals(onWindowsXpThemeChanged, onPanelPositionChanged) {
+    connectSignals(onWindowsXpThemeChanged) {
         Main.panel.connectObject(
             'notify::style-class', () => this.applyTransparency(),
             'notify::style', () => {
@@ -67,8 +69,11 @@ export class PanelThemeController {
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
-                if (extension.uuid === BLUR_MY_SHELL_UUID)
+                if (extension.uuid === BLUR_MY_SHELL_UUID) {
+                    if (extensionStateIsActive(extension))
+                        hidePanelBlur();
                     this.queueBlurMyShellSync();
+                }
             },
             this._signalHolder
         );
@@ -91,6 +96,12 @@ export class PanelThemeController {
             'changed::custom-panel-color-enabled',
             () => this.applyTransparency(),
             'changed::custom-panel-color', () => this.applyTransparency(),
+            'changed::custom-panel-gradient-enabled',
+            () => this.applyTransparency(),
+            'changed::custom-panel-gradient-color',
+            () => this.applyTransparency(),
+            'changed::custom-panel-gradient-direction',
+            () => this.applyTransparency(),
             'changed::panel-border-enabled', () => {
                 this.syncBorder();
                 this.applyTransparency();
@@ -106,11 +117,6 @@ export class PanelThemeController {
                 onWindowsXpThemeChanged();
                 this.queueBlurMyShellSync();
             },
-            'changed::panel-position', () => {
-                this.syncEdgeClass();
-                onPanelPositionChanged();
-                this.applyTransparency();
-            },
             this._signalHolder
         );
         this._themeContext.connectObject(
@@ -125,12 +131,14 @@ export class PanelThemeController {
     }
 
     syncEdgeClass() {
-        const top = panelIsTop(this._settings);
-        Main.panel.remove_style_class_name(
-            top ? 'simple-taskbar-panel-bottom' : 'simple-taskbar-panel-top'
-        );
+        const position = panelPosition(this._settings);
+        for (const edge of ['top', 'bottom', 'left', 'right']) {
+            Main.panel.remove_style_class_name(
+                `simple-taskbar-panel-${edge}`
+            );
+        }
         Main.panel.add_style_class_name(
-            top ? 'simple-taskbar-panel-top' : 'simple-taskbar-panel-bottom'
+            `simple-taskbar-panel-${position}`
         );
     }
 
@@ -202,6 +210,8 @@ export class PanelThemeController {
         Main.panel.remove_style_class_name('simple-taskbar-theme-dark');
         Main.panel.remove_style_class_name('simple-taskbar-panel-top');
         Main.panel.remove_style_class_name('simple-taskbar-panel-bottom');
+        Main.panel.remove_style_class_name('simple-taskbar-panel-left');
+        Main.panel.remove_style_class_name('simple-taskbar-panel-right');
         Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
         Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
         Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);

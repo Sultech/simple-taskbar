@@ -37,3 +37,15 @@ function _probeShellMenusUseLightTheme() {
 export function shellMenusUseLightTheme() {
     return _probeShellMenusUseLightTheme();
 }
+
+export function panelUsesLightTheme(settings) {
+    if (!settings.isDock)
+        return Main.panel.has_style_class_name(
+            'simple-taskbar-theme-light'
+        );
+
+    if (!settings.get_boolean('panel-theme-follow-system'))
+        return settings.get_string('panel-theme') === 'light';
+
+    return shellMenusUseLightTheme();
+}

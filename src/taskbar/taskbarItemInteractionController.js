@@ -5,6 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
+import {TaskbarLocationMenu} from './taskbarLocationMenu.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 
@@ -69,6 +70,10 @@ export class TaskbarItemInteractionController {
         const app = item._taskbarApp;
         previews.hideTooltip();
         previews.hide();
+        if (app._simpleTaskbarLocation) {
+            this._openNewWindow(app);
+            return;
+        }
         if (this._settings.get_boolean('middle-click-close-apps')) {
             app.request_quit();
         } else {
@@ -119,6 +124,15 @@ export class TaskbarItemInteractionController {
         const previews = this._getPreviewController();
         previews.hideTooltip();
         previews.hide();
+        if (item._taskbarApp._simpleTaskbarLocation) {
+            if (button._taskbarMenu)
+                this.destroyButton(button);
+            this._createLocationMenu(button, item._taskbarApp, item);
+            const locationMenu = button._taskbarMenu;
+            syncMenuArrowSide(locationMenu, this._settings);
+            openPopupMenu(locationMenu);
+            return;
+        }
         if (!button._taskbarMenu)
             this._createMenu(button, item._taskbarApp, item);
 
@@ -132,6 +146,8 @@ export class TaskbarItemInteractionController {
             'nautilus-places-enabled'
         );
         for (const item of items) {
+            if (item._taskbarApp && item._taskbarApp._simpleTaskbarLocation)
+                continue;
             item._taskbarButton._taskbarMenu
                 ?.setFileManagerPlacesEnabled(enabled);
         }
@@ -161,6 +177,7 @@ export class TaskbarItemInteractionController {
     _createMenu(button, app, item) {
         const menu = new TaskbarAppMenu(button, panelArrowSide(this._settings), {
             favoritesSection: true,
+            isDock: this._settings.isDock,
             showSingleWindows: true,
             targetWindow: item._taskbarWindow,
             closeApp: (targetApp, timestamp) =>
@@ -172,9 +189,22 @@ export class TaskbarItemInteractionController {
                 'nautilus-places-enabled'
             ),
         });
+        menu.setApp(app);
+        this._installMenu(button, menu, item);
+    }
+
+    _createLocationMenu(button, app, item) {
+        const menu = new TaskbarLocationMenu(
+            button,
+            this._settings,
+            app
+        );
+        this._installMenu(button, menu, item);
+    }
+
+    _installMenu(button, menu, item) {
         const menuManager = new PopupMenu.PopupMenuManager(button);
 
-        menu.setApp(app);
         menu.connect('open-state-changed', (_popup, isOpen) => {
             if (isOpen) {
                 item.add_style_pseudo_class('hover');

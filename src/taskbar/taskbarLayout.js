@@ -3,22 +3,23 @@
 
 import Clutter from 'gi://Clutter';
 
-const PANEL_ITEM_GAP = 8;
+export const PANEL_ITEM_GAP = 8;
 
-function naturalWidth(actor, height) {
+function naturalLength(actor, crossSize, vertical) {
     if (!actor.visible)
         return 0;
 
-    const [, width] = actor.get_preferred_width(height);
-    return width;
+    return vertical
+        ? actor.get_preferred_height(crossSize)[1]
+        : actor.get_preferred_width(crossSize)[1];
 }
 
-function childrenNaturalWidth(box, excludedActor, height) {
-    return box.get_children().reduce((width, actor) => {
+function childrenNaturalLength(box, excludedActor, crossSize, vertical) {
+    return box.get_children().reduce((length, actor) => {
         if (actor === excludedActor)
-            return width;
+            return length;
 
-        return width + naturalWidth(actor, height);
+        return length + naturalLength(actor, crossSize, vertical);
     }, 0);
 }
 
@@ -28,46 +29,57 @@ function allocatePanelBoxes(
     leftBox,
     centerBox,
     rightBox,
-    resolveCenterX
+    resolveCenter,
+    vertical
 ) {
     panel.set_allocation(box);
 
     const width = box.x2 - box.x1;
     const height = box.y2 - box.y1;
-    const [, leftNaturalWidth] = leftBox.get_preferred_width(height);
-    const [, centerNaturalWidth] = centerBox.get_preferred_width(height);
-    const [, rightNaturalWidth] = rightBox.get_preferred_width(height);
-    const rtl =
+    const crossSize = vertical ? width : height;
+    const length = vertical ? height : width;
+    const leftNatural = naturalLength(leftBox, crossSize, vertical);
+    const centerNatural = naturalLength(centerBox, crossSize, vertical);
+    const rightNatural = naturalLength(rightBox, crossSize, vertical);
+    const rtl = !vertical &&
         panel.get_text_direction() === Clutter.TextDirection.RTL;
     const childBox = new Clutter.ActorBox();
-    childBox.y1 = 0;
-    childBox.y2 = height;
 
-    if (rtl) {
-        childBox.x1 = Math.max(width - leftNaturalWidth, 0);
-        childBox.x2 = width;
-    } else {
+    if (vertical) {
         childBox.x1 = 0;
-        childBox.x2 = Math.min(leftNaturalWidth, width);
+        childBox.x2 = width;
+        childBox.y1 = 0;
+        childBox.y2 = Math.min(leftNatural, height);
+    } else {
+        childBox.y1 = 0;
+        childBox.y2 = height;
+        childBox.x1 = rtl ? Math.max(width - leftNatural, 0) : 0;
+        childBox.x2 = rtl ? width : Math.min(leftNatural, width);
     }
     leftBox.allocate(childBox);
 
-    childBox.x1 = resolveCenterX(
-        width,
-        centerNaturalWidth,
-        leftNaturalWidth,
-        rightNaturalWidth,
+    const centerStart = resolveCenter(
+        length,
+        centerNatural,
+        leftNatural,
+        rightNatural,
         rtl
     );
-    childBox.x2 = childBox.x1 + centerNaturalWidth;
+    if (vertical) {
+        childBox.y1 = centerStart;
+        childBox.y2 = centerStart + centerNatural;
+    } else {
+        childBox.x1 = centerStart;
+        childBox.x2 = centerStart + centerNatural;
+    }
     centerBox.allocate(childBox);
 
-    if (rtl) {
-        childBox.x1 = 0;
-        childBox.x2 = Math.min(rightNaturalWidth, width);
+    if (vertical) {
+        childBox.y1 = Math.max(height - rightNatural, 0);
+        childBox.y2 = height;
     } else {
-        childBox.x1 = Math.max(width - rightNaturalWidth, 0);
-        childBox.x2 = width;
+        childBox.x1 = rtl ? 0 : Math.max(width - rightNatural, 0);
+        childBox.x2 = rtl ? Math.min(rightNatural, width) : width;
     }
     rightBox.allocate(childBox);
 }
@@ -78,7 +90,9 @@ export function allocateAdaptivePanel(
     leftBox,
     centerBox,
     rightBox,
-    centerOffset = 0
+    centerOffset = 0,
+    vertical = false,
+    preserveStart = false
 ) {
     allocatePanelBoxes(
         panel,
@@ -87,30 +101,28 @@ export function allocateAdaptivePanel(
         centerBox,
         rightBox,
         (
-            width,
-            centerNaturalWidth,
-            leftNaturalWidth,
-            rightNaturalWidth,
+            length,
+            centerNatural,
+            leftNatural,
+            rightNatural,
             rtl
         ) => {
-            const physicalLeftWidth = rtl
-                ? rightNaturalWidth
-                : leftNaturalWidth;
-            const physicalRightWidth = rtl
-                ? leftNaturalWidth
-                : rightNaturalWidth;
-            const centeredX =
-                (width - centerNaturalWidth + centerOffset) / 2;
-            const minimumCenterX = physicalLeftWidth + PANEL_ITEM_GAP;
-            const maximumCenterX = width - physicalRightWidth -
-                PANEL_ITEM_GAP - centerNaturalWidth;
-            const centerX = Math.clamp(
-                centeredX,
-                minimumCenterX,
-                Math.max(minimumCenterX, maximumCenterX)
-            );
-            return Math.round(centerX);
-        }
+            const physicalStart = rtl ? rightNatural : leftNatural;
+            const physicalEnd = rtl ? leftNatural : rightNatural;
+            if (preserveStart)
+                return physicalStart + PANEL_ITEM_GAP;
+
+            const centered = (length - centerNatural + centerOffset) / 2;
+            const minimum = physicalStart + PANEL_ITEM_GAP;
+            const maximum = length - physicalEnd - PANEL_ITEM_GAP -
+                centerNatural;
+            return Math.round(Math.clamp(
+                centered,
+                minimum,
+                Math.max(minimum, maximum)
+            ));
+        },
+        vertical
     );
 }
 
@@ -120,7 +132,8 @@ export function allocateExpandedSidePanel(
     leftBox,
     centerBox,
     rightBox,
-    centerOffset = 0
+    centerOffset = 0,
+    vertical = false
 ) {
     allocatePanelBoxes(
         panel,
@@ -128,76 +141,85 @@ export function allocateExpandedSidePanel(
         leftBox,
         centerBox,
         rightBox,
-        (width, centerNaturalWidth) => Math.ceil(
-            (width - centerNaturalWidth + centerOffset) / 2
-        )
+        (length, centerNatural) => Math.ceil(
+            (length - centerNatural + centerOffset) / 2
+        ),
+        vertical
     );
 }
 
-export function constrainTaskbarWidth({
+export function constrainTaskbarSize({
     taskbarBin,
     leftBox,
     centerBox,
     rightBox,
-    panelWidth,
-    panelHeight,
+    panelLength,
+    panelThickness,
     centered,
+    vertical,
 }) {
     if (!taskbarBin.visible || !leftBox || !centerBox ||
-        !rightBox || panelWidth <= 0)
+        !rightBox || panelLength <= 0) {
         return;
-
-    let availableWidth;
-    if (centered) {
-        const leftWidth = childrenNaturalWidth(
-            leftBox,
-            taskbarBin,
-            panelHeight
-        );
-        const rightWidth = childrenNaturalWidth(
-            rightBox,
-            taskbarBin,
-            panelHeight
-        );
-        const rtl =
-            leftBox.get_text_direction() === Clutter.TextDirection.RTL;
-        const physicalLeftWidth = rtl ? rightWidth : leftWidth;
-        const physicalRightWidth = rtl ? leftWidth : rightWidth;
-        const centerOtherWidth = childrenNaturalWidth(
-            centerBox,
-            taskbarBin,
-            panelHeight
-        );
-        availableWidth = panelWidth - centerOtherWidth -
-            physicalLeftWidth - physicalRightWidth - 2 * PANEL_ITEM_GAP;
-    } else {
-        const leftOtherWidth = childrenNaturalWidth(
-            leftBox,
-            taskbarBin,
-            panelHeight
-        );
-        const centerWidth = childrenNaturalWidth(
-            centerBox,
-            taskbarBin,
-            panelHeight
-        );
-        const rightWidth = childrenNaturalWidth(
-            rightBox,
-            taskbarBin,
-            panelHeight
-        );
-        let protectedStart = panelWidth - rightWidth - PANEL_ITEM_GAP;
-
-        if (centerWidth > 0) {
-            protectedStart = Math.min(
-                protectedStart,
-                (panelWidth - centerWidth) / 2 - PANEL_ITEM_GAP
-            );
-        }
-        availableWidth = protectedStart - leftOtherWidth;
     }
 
-    const viewportWidth = Math.max(1, Math.floor(availableWidth));
-    taskbarBin.setMaximumWidth(viewportWidth);
-    return viewportWidth;
+    let availableLength;
+    if (centered) {
+        const leftLength = childrenNaturalLength(
+            leftBox,
+            taskbarBin,
+            panelThickness,
+            vertical
+        );
+        const rightLength = childrenNaturalLength(
+            rightBox,
+            taskbarBin,
+            panelThickness,
+            vertical
+        );
+        const rtl = !vertical &&
+            leftBox.get_text_direction() === Clutter.TextDirection.RTL;
+        const physicalStart = rtl ? rightLength : leftLength;
+        const physicalEnd = rtl ? leftLength : rightLength;
+        const centerOtherLength = childrenNaturalLength(
+            centerBox,
+            taskbarBin,
+            panelThickness,
+            vertical
+        );
+        availableLength = panelLength - centerOtherLength -
+            physicalStart - physicalEnd - 2 * PANEL_ITEM_GAP;
+    } else {
+        const leftOtherLength = childrenNaturalLength(
+            leftBox,
+            taskbarBin,
+            panelThickness,
+            vertical
+        );
+        const centerLength = childrenNaturalLength(
+            centerBox,
+            taskbarBin,
+            panelThickness,
+            vertical
+        );
+        const rightLength = childrenNaturalLength(
+            rightBox,
+            taskbarBin,
+            panelThickness,
+            vertical
+        );
+        let protectedStart = panelLength - rightLength - PANEL_ITEM_GAP;
+
+        if (centerLength > 0) {
+            protectedStart = Math.min(
+                protectedStart,
+                (panelLength - centerLength) / 2 - PANEL_ITEM_GAP
+            );
+        }
+        availableLength = protectedStart - leftOtherLength;
+    }
+
+    const viewportLength = Math.max(1, Math.floor(availableLength));
+    taskbarBin.setMaximumSize(viewportLength, vertical);
+    return viewportLength;
 }

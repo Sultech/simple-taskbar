@@ -6,7 +6,11 @@ import Clutter from 'gi://Clutter';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {IconDominantColorCache} from './iconDominantColor.js';
+import {panelIsVertical} from '../panel/panelPosition.js';
+import {ICON_VERTICAL_RESERVE} from '../shared/panelSizing.js';
 
+const CONTENT_LEADING_SPACE = 7;
+const ICON_GLASS_MARGIN = 3;
 const INDICATOR_ANIMATION_DURATION = 150;
 const INDICATOR_SEGMENT_GAP = 2;
 const APP_LABEL_SPACING = 8;
@@ -38,6 +42,15 @@ export class TaskbarAppearanceController {
         this._iconColors = new IconDominantColorCache();
     }
 
+    visualPanelHeight() {
+        if (this._settings.isDock &&
+            !this._settings.get_boolean('dock-panel-mode')) {
+            return this._getIconSize() + ICON_VERTICAL_RESERVE;
+        }
+
+        return this._getPanelHeight();
+    }
+
     updateGlassGeometry(item) {
         const glassWidth = this.buttonWidth(
             item._taskbarWindow,
@@ -53,21 +66,53 @@ export class TaskbarAppearanceController {
             item._taskbarTrailingSpacing
         );
         const panelHeight = this._getPanelHeight();
-        const glassHeight = this.glassHeight();
+        const visualPanelHeight = this.visualPanelHeight();
+        const glassHeight = this.glassHeight(visualPanelHeight);
+        const vertical = panelIsVertical(this._settings);
+        const slotHeight = vertical ? slotWidth : visualPanelHeight;
+        const itemWidth = vertical ? visualPanelHeight : glassWidth;
+        const itemHeight = vertical
+            ? this.verticalItemExtent()
+            : visualPanelHeight;
 
         this.syncLauncherIconPosition(item);
-        item._taskbarButton.set_width(glassWidth);
-        item._taskbarSlot.set_size(slotWidth, panelHeight);
-        item._taskbarVisual.set_size(glassWidth, panelHeight);
-        item._taskbarGlassHost.set_size(glassWidth, panelHeight);
+        item.setVertical(vertical);
+        item._taskbarTopSpacer.set_height(
+            vertical ? 0 : CONTENT_LEADING_SPACE
+        );
+        item._taskbarButtonContent.set_height(
+            vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
+        );
+        item._taskbarVisual.y_align = vertical
+            ? Clutter.ActorAlign.CENTER
+            : Clutter.ActorAlign.FILL;
+        item._taskbarVisual.y_expand = !vertical;
+        item.set_size(
+            vertical ? panelHeight : -1,
+            vertical ? -1 : slotHeight
+        );
+        item._taskbarButton.set_size(itemWidth, itemHeight);
+        item._taskbarSlot.set_size(
+            vertical ? visualPanelHeight : slotWidth,
+            slotHeight
+        );
+        item._taskbarVisual.set_size(itemWidth, itemHeight);
+        item._taskbarGlassHost.set_size(itemWidth, itemHeight);
         const glassInset = this.glassInset();
-        const glassY = this.glassY();
+        const glassOuterHeight = vertical ? itemHeight : glassHeight;
+        const glassX = vertical
+            ? Math.floor((itemWidth - glassWidth) / 2)
+            : 0;
+        const glassY = vertical ? 0 : this.glassY();
         const glassContentWidth = glassWidth - glassInset * 2;
-        const glassContentHeight = glassHeight - glassInset * 2;
-        item._taskbarGlass.set_position(glassInset, glassY + glassInset);
+        const glassContentHeight = glassOuterHeight - glassInset * 2;
+        item._taskbarGlass.set_position(
+            glassX + glassInset,
+            glassY + glassInset
+        );
         item._taskbarGlass.set_size(glassContentWidth, glassContentHeight);
         item._taskbarGlassTexture.set_position(
-            glassInset,
+            glassX + glassInset,
             glassY + glassInset
         );
         item._taskbarGlassTexture.set_size(
@@ -77,8 +122,8 @@ export class TaskbarAppearanceController {
         item._taskbarGlassTexture.set_style(
             `background-size: ${glassContentWidth}px ${glassContentHeight}px;`
         );
-        item._taskbarGlassBorder.set_position(0, glassY);
-        item._taskbarGlassBorder.set_size(glassWidth, glassHeight);
+        item._taskbarGlassBorder.set_position(glassX, glassY);
+        item._taskbarGlassBorder.set_size(glassWidth, glassOuterHeight);
         item._taskbarLabel.set_width(
             this.labelWidthForButton(
                 item._taskbarWindow,
@@ -88,8 +133,18 @@ export class TaskbarAppearanceController {
         this.updateIndicatorGeometry(item, false, glassWidth);
     }
 
-    glassHeight() {
-        const panelHeight = this._getPanelHeight();
+    indicatorBarHeight() {
+        return this._settings.get_string(
+            'running-indicator-style'
+        ) === 'rounded' ? 4 : 3;
+    }
+
+    verticalItemExtent(iconSize = this._getIconSize()) {
+        return iconSize + ICON_GLASS_MARGIN * 2 +
+            this.indicatorBarHeight();
+    }
+
+    glassHeight(panelHeight = this.visualPanelHeight()) {
         if (this._settings.get_boolean('windows-xp-theme-enabled'))
             return panelHeight - 5;
 
@@ -247,15 +302,16 @@ export class TaskbarAppearanceController {
         window,
         showLabels = this._showAppLabels(),
         labelWidth = this._getAppLabelWidth(),
-        isCombined = false
+        isCombined = false,
+        iconSize = this._getIconSize()
     ) {
-        const hasLabel = Boolean(window) || isCombined;
+        const hasLabel = (Boolean(window) || isCombined) &&
+            !panelIsVertical(this._settings);
         if (this._settings.get_boolean('windows-xp-theme-enabled') &&
             hasLabel && showLabels) {
             return WINDOWS_XP_TASKBUTTON_WIDTH;
         }
 
-        const iconSize = this._getIconSize();
         const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
         const iconWidth = Math.max(iconSize, minimumIconWidth) + 8;
         return hasLabel && showLabels
@@ -273,10 +329,10 @@ export class TaskbarAppearanceController {
         return this._getAppLabelWidth();
     }
 
-    buttonContentHeight() {
+    buttonContentHeight(panelHeight = this.visualPanelHeight()) {
         return Math.max(
             1,
-            this._getPanelHeight() - APP_CONTENT_VERTICAL_RESERVE
+            panelHeight - APP_CONTENT_VERTICAL_RESERVE
         );
     }
 
@@ -303,20 +359,40 @@ export class TaskbarAppearanceController {
             : 0;
     }
 
+    itemMainExtent(
+        window,
+        showLabels = this._showAppLabels(),
+        labelWidth = this._getAppLabelWidth(),
+        isCombined = false,
+        iconSize = this._getIconSize()
+    ) {
+        return panelIsVertical(this._settings)
+            ? this.verticalItemExtent(iconSize)
+            : this.buttonWidth(
+                window,
+                showLabels,
+                labelWidth,
+                isCombined,
+                iconSize
+            );
+    }
+
     itemSlotWidth(
         window,
         isLauncher = false,
         pinnedToRunningGap = false,
         isCombined = false,
-        trailing = false
+        trailing = false,
+        iconSize = this._getIconSize()
     ) {
         const transitionGap = this.transitionGap(pinnedToRunningGap);
         const iconSpacing = this.iconSpacing(isLauncher);
-        return this.buttonWidth(
+        return this.itemMainExtent(
             window,
             this._showAppLabels(),
             this._getAppLabelWidth(),
-            isCombined
+            isCombined,
+            iconSize
         ) + iconSpacing + transitionGap +
             (trailing && iconSpacing < 0 ? -iconSpacing : 0);
     }
@@ -334,7 +410,7 @@ export class TaskbarAppearanceController {
         item._taskbarLabel.text = text;
         item._taskbarLabel.visible =
             (Boolean(window) || item._taskbarIsCombinedApp) &&
-            this._showAppLabels();
+            this._showAppLabels() && !panelIsVertical(this._settings);
         if (window)
             item._taskbarButton.accessible_name = `${text}, ${_('running')}`;
     }

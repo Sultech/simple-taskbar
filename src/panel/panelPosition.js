@@ -3,26 +3,44 @@
 
 import St from 'gi://St';
 
+import {
+    panelIsTop,
+    panelIsVertical,
+    panelPosition,
+} from '../shared/panelPositionUtils.js';
+
+export {
+    panelIsMinimumEdge,
+    panelIsTop,
+    panelIsVertical,
+    panelPosition,
+} from '../shared/panelPositionUtils.js';
+
 const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
 const BOTTOM_PANEL_MENU_CLASS = 'simple-taskbar-bottom-panel-menu';
 
-export function panelIsTop(settings) {
-    return settings.get_string('panel-position') === 'top';
-}
-
 export function panelArrowSide(settings) {
-    return panelIsTop(settings) ? St.Side.TOP : St.Side.BOTTOM;
+    switch (panelPosition(settings)) {
+    case 'top':
+        return St.Side.TOP;
+    case 'left':
+        return St.Side.LEFT;
+    case 'right':
+        return St.Side.RIGHT;
+    default:
+        return St.Side.BOTTOM;
+    }
 }
 
 export function syncMenuArrowSide(menu, settings) {
     const side = panelArrowSide(settings);
-    menu._boxPointer._userArrowSide = side;
+    menu._boxPointer.updateArrowSide(side);
     menu._arrowSide = side;
 }
 
 export function syncPanelMenuPosition(menu, settings) {
     syncMenuArrowSide(menu, settings);
-    if (panelIsTop(settings))
+    if (panelIsTop(settings) || panelIsVertical(settings))
         menu.actor.remove_style_class_name(BOTTOM_PANEL_MENU_CLASS);
     else
         menu.actor.add_style_class_name(BOTTOM_PANEL_MENU_CLASS);
@@ -31,7 +49,7 @@ export function syncPanelMenuPosition(menu, settings) {
 export function syncXpPopupOffset(menu, settings) {
     const enabled = settings.get_boolean(
         'windows-xp-theme-enabled'
-    ) && !panelIsTop(settings);
+    ) && panelPosition(settings) === 'bottom';
     if (enabled) {
         menu.actor.add_style_class_name(XP_POPUP_OFFSET_CLASS);
         menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);

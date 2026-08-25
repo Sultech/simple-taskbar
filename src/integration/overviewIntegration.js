@@ -18,7 +18,11 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionWillBeActive} from '../extensionState.js';
-import {panelIsTop} from '../panel/panelPosition.js';
+import {panelPosition} from '../panel/panelPosition.js';
+import {
+    DOCK_EDGE_GAP,
+    ICON_VERTICAL_RESERVE,
+} from '../shared/panelSizing.js';
 
 const OVERVIEW_LABEL_MARGIN = 60;
 const STARTUP_OVERVIEW_DELAY = 600;
@@ -54,7 +58,25 @@ export class OverviewIntegration {
                 this._syncStartupOverview();
                 this._syncDashVisibility();
             },
+            'changed::dock-mode', () => this._syncDashVisibility(),
+            'changed::dock-position', () => {
+                if (this._dashState)
+                    this._syncHiddenDashSize(this._dashState.dash);
+                this.queueRelayout();
+            },
+            'changed::panel-position', () => {
+                if (this._dashState)
+                    this._syncHiddenDashSize(this._dashState.dash);
+                this.queueRelayout();
+            },
+            'changed::dock-panel-mode', () => this.queueRelayout(),
+            'changed::dock-autohide-enabled', () => this.queueRelayout(),
+            'changed::dock-dodge-windows-enabled', () =>
+                this.queueRelayout(),
+            'changed::icon-size', () => this.queueRelayout(),
             'changed::panel-autohide-enabled', () => this.queueRelayout(),
+            'changed::panel-dodge-windows-enabled', () =>
+                this.queueRelayout(),
             this._signalHolder
         );
         Main.overview.connectObject(
@@ -101,13 +123,7 @@ export class OverviewIntegration {
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         if (this._dashState)
-            this._dashState.dash.set_height(this._getDashHeight());
-        this.queueRelayout();
-    }
-
-    syncPanelPosition() {
-        if (this._dashState)
-            this._dashState.dash.set_height(this._getDashHeight());
+            this._syncHiddenDashSize(this._dashState.dash);
         this.queueRelayout();
     }
 
@@ -240,6 +256,7 @@ export class OverviewIntegration {
     _shouldStartInOverview() {
         return Boolean(
             this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('dock-mode') &&
             !this._desktopDockIsEnabled()
         );
     }
@@ -266,13 +283,18 @@ export class OverviewIntegration {
     }
 
     _syncDashVisibility() {
-        if (this._settings.get_boolean('default-gnome-panel')) {
+        if (this._shouldHideDash()) {
+            this._hideDash();
+        } else {
             this._cancelDashVisibilityRepair();
             this._restoreDash();
-        } else {
-            this._hideDash();
         }
         this.queueRelayout();
+    }
+
+    _shouldHideDash() {
+        return !this._settings.get_boolean('default-gnome-panel') ||
+            this._settings.get_boolean('dock-mode');
     }
 
     _watchDashVisibility() {
@@ -286,7 +308,7 @@ export class OverviewIntegration {
 
     _queueDashVisibilityRepair() {
         if (this._dashVisibilityRepairId ||
-            this._settings.get_boolean('default-gnome-panel')) {
+            !this._shouldHideDash()) {
             return;
         }
 
@@ -294,12 +316,12 @@ export class OverviewIntegration {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._dashVisibilityRepairId = 0;
-                if (this._settings.get_boolean('default-gnome-panel'))
+                if (!this._shouldHideDash())
                     return GLib.SOURCE_REMOVE;
 
                 const dash = Main.overview.dash;
                 dash.hide();
-                dash.set_height(this._getDashHeight());
+                this._syncHiddenDashSize(dash);
                 this.queueRelayout();
                 return GLib.SOURCE_REMOVE;
             }
@@ -315,8 +337,10 @@ export class OverviewIntegration {
     }
 
     _hideDash() {
-        if (this._dashState)
+        if (this._dashState) {
+            this._syncHiddenDashSize(this._dashState.dash);
             return;
+        }
 
         const dash = Main.overview.dash;
         if (!dash)
@@ -328,17 +352,27 @@ export class OverviewIntegration {
         };
         dash.hide();
 
-        // Keep space for overview window labels above the bottom taskbar.
-        dash.set_height(this._getDashHeight());
+        this._syncHiddenDashSize(dash);
     }
 
-    _getDashHeight() {
-        if (panelIsTop(this._settings))
-            return 0;
-
+    _syncHiddenDashSize(dash) {
         const scaleFactor = St.ThemeContext.get_for_stage(global.stage)
             .scale_factor;
-        return OVERVIEW_LABEL_MARGIN * scaleFactor;
+        const reserve = OVERVIEW_LABEL_MARGIN * scaleFactor;
+        const panelPositionValue = panelPosition(this._settings);
+        const dockMode = this._settings.get_boolean('dock-mode');
+        const dockPosition = this._settings.get_string('dock-position');
+        const vertical = panelPositionValue === 'left' ||
+            panelPositionValue === 'right' ||
+            (dockMode && (dockPosition === 'left' ||
+                dockPosition === 'right'));
+        const bottom = panelPositionValue === 'bottom' ||
+            (dockMode && dockPosition === 'bottom');
+        if (vertical)
+            dash.set_width(reserve);
+        else
+            dash.set_width(-1);
+        dash.set_height(bottom ? reserve : vertical ? -1 : 0);
     }
 
     _adaptAllocation() {
@@ -351,15 +385,49 @@ export class OverviewIntegration {
             originalAllocate => box => {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
-                if (!panelIsTop(integration._settings))
-                    box.y2 -= integration._panelHeight;
-                else if (integration._reserveAutoHiddenPanel()) {
+                const position = panelPosition(integration._settings);
+                const panelAutohide = integration._settings.get_boolean(
+                    'panel-autohide-enabled'
+                );
+                const panelDodge = integration._settings.get_boolean(
+                    'panel-dodge-windows-enabled'
+                );
+                if (position === 'bottom') {
+                    const inset = panelAutohide
+                        ? integration._panelHeight * Math.clamp(
+                            controls._stateAdjustment.value,
+                            0,
+                            1
+                        )
+                        : integration._panelHeight;
+                    box.y2 -= inset;
+                } else if (panelAutohide || panelDodge) {
                     const progress = Math.clamp(
                         controls._stateAdjustment.value,
                         0,
                         1
                     );
-                    box.y1 += integration._panelHeight * progress;
+                    const inset = integration._panelHeight * progress;
+                    if (position === 'top')
+                        box.y1 += inset;
+                    else if (position === 'left')
+                        box.x1 += inset;
+                    else
+                        box.x2 -= inset;
+                }
+                const dockPosition = integration._settings.get_string(
+                    'dock-position'
+                );
+                const dockInset = integration._dockOverviewInset();
+                if (dockInset > 0) {
+                    if (dockPosition === 'top')
+                        box.y1 += dockInset;
+                    else if (dockPosition === 'bottom')
+                        box.y2 -= dockInset;
+                    else if (dockPosition === 'left')
+                        box.x1 += dockInset;
+                    else
+                        box.x2 -= dockInset;
                 }
                 originalAllocate.call(controls, box);
             }
@@ -368,25 +436,58 @@ export class OverviewIntegration {
             SecondaryMonitorDisplay.prototype,
             'vfunc_allocate',
             originalAllocate => function (box) {
-                if (integration._reserveAutoHiddenPanel()) {
+                const panelAutohide = integration._settings.get_boolean(
+                    'panel-autohide-enabled'
+                );
+                const panelDodge = integration._settings.get_boolean(
+                    'panel-dodge-windows-enabled'
+                );
+                if (panelAutohide || panelDodge) {
                     const progress = Math.clamp(
                         this._overviewAdjustment.value,
                         0,
                         1
                     );
                     const inset = integration._panelHeight * progress;
-                    if (panelIsTop(integration._settings))
+                    const position = panelPosition(integration._settings);
+                    if (position === 'top')
                         box.y1 += inset;
-                    else
+                    else if (position === 'bottom')
                         box.y2 -= inset;
+                    else if (position === 'left')
+                        box.x1 += inset;
+                    else
+                        box.x2 -= inset;
                 }
                 originalAllocate.call(this, box);
             }
         );
     }
 
-    _reserveAutoHiddenPanel() {
-        return this._settings.get_boolean('panel-autohide-enabled');
+    _dockOverviewInset() {
+        if (!this._settings.get_boolean('dock-mode'))
+            return 0;
+
+        const dockAutohide = this._settings.get_boolean(
+            'dock-autohide-enabled'
+        );
+        const dockDodge = this._settings.get_boolean(
+            'dock-dodge-windows-enabled'
+        );
+        const panelHeight = this._settings.get_int('icon-size') +
+            ICON_VERTICAL_RESERVE;
+        const panelMode = this._settings.get_boolean('dock-panel-mode');
+        const dockHeight = panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
+        const position = this._settings.get_string('dock-position');
+        if (!dockAutohide && !dockDodge)
+            return position === 'bottom' ? dockHeight : 0;
+
+        const progress = Math.clamp(
+            Main.overview._overview.controls._stateAdjustment.value,
+            0,
+            1
+        );
+        return dockHeight * progress;
     }
 
     _beginAppSpread() {
@@ -521,7 +622,9 @@ export class OverviewIntegration {
         // leave it partly outside the overview. GNOME's stock dash uses its
         // natural height, represented by -1.
         hiddenDash.set_height(-1);
+        hiddenDash.set_width(-1);
         dash.set_height(-1);
+        dash.set_width(-1);
         if (visible) {
             this._resetDashItems(dash);
             dash.show();

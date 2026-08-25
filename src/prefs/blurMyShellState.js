@@ -52,10 +52,14 @@ export function createBlurMyShellState(connectSettings) {
         blurMyShellBlurEnabled(blurMyShellPopupSettings);
     let syncPanelTransparencyControls = () => {};
     let syncCustomPanelColorControls = () => {};
+    let syncDockTransparencyControls = () => {};
+    let syncDockCustomPanelColorControls = () => {};
     let syncStartMenuTransparencyControl = () => {};
     const syncBlurMyShellTransparencyState = () => {
         syncPanelTransparencyControls();
         syncCustomPanelColorControls();
+        syncDockTransparencyControls();
+        syncDockCustomPanelColorControls();
         syncStartMenuTransparencyControl();
     };
     if (blurMyShellPanelSettings &&
@@ -94,6 +98,10 @@ export function createBlurMyShellState(connectSettings) {
         setPanelSyncs(syncTransparency, syncCustomColor) {
             syncPanelTransparencyControls = syncTransparency;
             syncCustomPanelColorControls = syncCustomColor;
+        },
+        setDockPanelSyncs(syncTransparency, syncCustomColor) {
+            syncDockTransparencyControls = syncTransparency;
+            syncDockCustomPanelColorControls = syncCustomColor;
         },
     };
 }

@@ -1,4 +1,4 @@
-# <img src="docs/images/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
+# <img src="icons/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
 
 <p>
   <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/"><img
@@ -84,7 +84,7 @@ Overview, including windows on other workspaces.
 ### Panel Appearance
 
 - Standard panel height: 32–80px.
-- Application icons: 15–48px.
+- Application icons: 15–63px.
 - Application spacing: 0–16px.
 - Panel button padding: automatic or an explicit 0–20px value. Automatic uses
   Just Perfection's padding when available, otherwise 3px. An explicit value
@@ -262,6 +262,7 @@ Other taskbar options include:
 - Show or hide favourite applications that are not running.
 - Use pinned applications as launchers while showing their running windows in
   separate buttons.
+- Show a separator between pinned and running applications.
 - Show applications from only the current workspace.
 - Show applications only on the monitor where their taskbar is displayed.
 - Lock the taskbar against accidental rearrangement.

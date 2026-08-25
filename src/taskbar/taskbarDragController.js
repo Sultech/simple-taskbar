@@ -7,6 +7,8 @@ import St from 'gi://St';
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {panelIsVertical} from '../panel/panelPosition.js';
+
 export class TaskbarDragController {
     constructor({
         settings,
@@ -20,6 +22,7 @@ export class TaskbarDragController {
         isPersistentPinned,
         queueRedisplay,
         setSessionOrder,
+        ignoreTaskbarLock = false,
         usePinnedAppLaunchers,
     }) {
         this._settings = settings;
@@ -33,11 +36,13 @@ export class TaskbarDragController {
         this._isPersistentPinned = isPersistentPinned;
         this._queueRedisplay = queueRedisplay;
         this._setSessionOrder = setSessionOrder;
+        this._ignoreTaskbarLock = ignoreTaskbarLock;
         this._usePinnedAppLaunchers = usePinnedAppLaunchers;
         this._showDesktopController = null;
         this._alignmentActor = null;
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
         this._draggables = new Map();
         this._listeners = new Set();
         this._externalPlaceholder = null;
@@ -81,6 +86,7 @@ export class TaskbarDragController {
     begin(item) {
         this._dragging = true;
         this._draggingItem = item;
+        this._pinnedDropActive = false;
         item.opacity = 96;
         this._hidePreviews();
     }
@@ -89,6 +95,7 @@ export class TaskbarDragController {
         item.opacity = 255;
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
         this._queueRedisplay();
         for (const listener of [...this._listeners])
             listener();
@@ -97,6 +104,7 @@ export class TaskbarDragController {
     cancel() {
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
     }
 
     makeDraggable(item, button, icon, app) {
@@ -143,9 +151,10 @@ export class TaskbarDragController {
     }
 
     isPinnedItem(item) {
-        return item._taskbarIsLauncher ||
+        return !item._taskbarApp._simpleTaskbarLocation &&
+            (item._taskbarIsLauncher ||
             (item._taskbarIsPinnedPrimary &&
-                this._isPersistentPinned(item._taskbarApp));
+                this._isPersistentPinned(item._taskbarApp)));
     }
 
     getGroup(item) {
@@ -174,9 +183,9 @@ export class TaskbarDragController {
         return this._reorderGroups(sourceGroup, targetGroup, insertBefore);
     }
 
-    handleDragOver(source, x) {
+    handleDragOver(source, position) {
         if (source && source._startMenuTaskbarApp)
-            return this.handleStartMenuDragOver(source, x);
+            return this.handleStartMenuDragOver(source, position);
 
         if (!this._dragIsEnabled(source?._taskbarItem))
             return DND.DragMotionResult.NO_DROP;
@@ -186,12 +195,18 @@ export class TaskbarDragController {
             return DND.DragMotionResult.CONTINUE;
 
         if (item._taskbarIsShowDesktop)
-            return this._showDesktopController.handleDragOver(item, x);
+            return this._showDesktopController.handleDragOver(item, position);
 
         if (!this.isPinnedItem(item) && !this._isRunningItem(item))
             return DND.DragMotionResult.NO_DROP;
 
-        this._reorderGroup(item, x);
+        const pinnedDropActive = this._canDropIntoPinned(
+            source,
+            item,
+            position
+        );
+        this._pinnedDropActive = pinnedDropActive;
+        this._reorderGroup(item, position, pinnedDropActive);
         return DND.DragMotionResult.MOVE_DROP;
     }
 
@@ -224,7 +239,13 @@ export class TaskbarDragController {
             return false;
 
         const appId = item._taskbarApp.get_id();
-        if (this.isPinnedItem(item)) {
+        const pinRunningApp = this._pinnedDropActive &&
+            this._draggingItem === item &&
+            source === item._taskbarButton._delegate;
+        if (pinRunningApp) {
+            const favoriteIndex = this._pinnedInsertionIndex(item);
+            this._favorites.addFavoriteAtPos(appId, favoriteIndex);
+        } else if (this.isPinnedItem(item)) {
             if (global.settings.is_writable('favorite-apps')) {
                 const favoriteIndex = this._pinnedOrder().indexOf(appId);
                 if (favoriteIndex >= 0)
@@ -240,7 +261,7 @@ export class TaskbarDragController {
         return true;
     }
 
-    handleStartMenuDragOver(source, x) {
+    handleStartMenuDragOver(source, position) {
         if (!this._canAcceptStartMenuDrop(source)) {
             if (source._taskbarDropTarget === this._dropTarget)
                 source._clearTaskbarDropTarget();
@@ -278,16 +299,22 @@ export class TaskbarDragController {
         }
 
         if (!this._externalFavoriteCenters) {
+            const vertical = panelIsVertical(this._settings);
             this._externalFavoriteCenters = favoriteItems.map(item => {
-                const [itemX] = item.get_transformed_position();
-                const [itemWidth] = item.get_transformed_size();
-                return itemX + itemWidth / 2;
+                const [itemX, itemY] = item.get_transformed_position();
+                const [itemWidth, itemHeight] = item.get_transformed_size();
+                return vertical
+                    ? itemY + itemHeight / 2
+                    : itemX + itemWidth / 2;
             });
         }
-        const [actorX] = this._taskbarActor.get_transformed_position();
-        const stageX = actorX + x;
+        const [actorX, actorY] =
+            this._taskbarActor.get_transformed_position();
+        const stagePosition = panelIsVertical(this._settings)
+            ? actorY + position
+            : actorX + position;
         let favoriteIndex = this._externalFavoriteCenters.findIndex(
-            center => stageX < center
+            center => stagePosition < center
         );
         if (favoriteIndex < 0)
             favoriteIndex = favoriteItems.length;
@@ -324,6 +351,8 @@ export class TaskbarDragController {
         this._listeners.clear();
         this._dragging = false;
         this._draggingItem = null;
+        this._pinnedDropActive = false;
+        this._ignoreTaskbarLock = false;
         this._alignmentActor = null;
         this._showDesktopController = null;
         this._usePinnedAppLaunchers = null;
@@ -341,7 +370,8 @@ export class TaskbarDragController {
     }
 
     _isRunningItem(item) {
-        return !item._taskbarIsLauncher &&
+        return !item._taskbarApp._simpleTaskbarLocation &&
+            !item._taskbarIsLauncher &&
             !item._taskbarIsPinnedPrimary;
     }
 
@@ -371,7 +401,7 @@ export class TaskbarDragController {
         return groups;
     }
 
-    _reorderGroup(item, x) {
+    _reorderGroup(item, position, allowPinnedDrop = false) {
         const groups = this._groups();
         const sourceGroup = groups.find(group =>
             group.items.includes(item)
@@ -385,9 +415,13 @@ export class TaskbarDragController {
                 return false;
 
             const target = group.items[0];
-            return sourceIsPinned
-                ? this.isPinnedItem(target)
-                : this._isRunningItem(target);
+            if (sourceIsPinned || !allowPinnedDrop) {
+                return sourceIsPinned
+                    ? this.isPinnedItem(target)
+                    : this._isRunningItem(target);
+            }
+
+            return this.isPinnedItem(target) || this._isRunningItem(target);
         });
         if (targetGroups.length === 0)
             return false;
@@ -395,9 +429,11 @@ export class TaskbarDragController {
         let targetGroup = targetGroups.find(group => {
             const first = group.items[0];
             const last = group.items.at(-1);
-            const groupStart = first.x;
-            const groupEnd = last.x + last.width;
-            return x < groupStart + (groupEnd - groupStart) / 2;
+            const vertical = panelIsVertical(this._settings);
+            const groupStart = vertical ? first.y : first.x;
+            const groupEnd = (vertical ? last.y : last.x) +
+                (vertical ? last.height : last.width);
+            return position < groupStart + (groupEnd - groupStart) / 2;
         });
         const insertBefore = targetGroup !== undefined;
         if (!targetGroup)
@@ -472,12 +508,62 @@ export class TaskbarDragController {
         return order;
     }
 
+    _canDropIntoPinned(source, item, position) {
+        if (source !== item._taskbarButton._delegate ||
+            !this._isRunningItem(item) ||
+            this.isPinnedItem(item) ||
+            this._isPersistentPinned(item._taskbarApp) ||
+            item._taskbarApp.is_window_backed() ||
+            !global.settings.is_writable('favorite-apps')) {
+            return false;
+        }
+
+        return this._isOverPinnedSection(item, position);
+    }
+
+    _isOverPinnedSection(item, position) {
+        const groups = this._groups();
+        const sourceGroup = groups.find(group =>
+            group.items.includes(item)
+        );
+        const vertical = panelIsVertical(this._settings);
+        for (const group of groups) {
+            const first = group.items[0];
+            const last = group.items.at(-1);
+            const groupStart = vertical ? first.y : first.x;
+            const groupEnd = (vertical ? last.y : last.x) +
+                (vertical ? last.height : last.width);
+            if (position < groupStart || position > groupEnd)
+                continue;
+
+            if (group === sourceGroup)
+                return this._pinnedDropActive;
+
+            return this.isPinnedItem(first);
+        }
+
+        return this._pinnedDropActive;
+    }
+
+    _pinnedInsertionIndex(sourceItem) {
+        let favoriteIndex = 0;
+        for (const group of this._groups()) {
+            if (group.items.includes(sourceItem))
+                return favoriteIndex;
+
+            if (this.isPinnedItem(group.items[0]))
+                favoriteIndex++;
+        }
+        return favoriteIndex;
+    }
+
     _canAcceptStartMenuDrop(source) {
         return Boolean(
             source.app &&
             !source.app.is_window_backed() &&
             !this._favorites.isFavorite(source.app.get_id()) &&
-            !this._settings.get_boolean('taskbar-locked') &&
+            (this._ignoreTaskbarLock ||
+                !this._settings.get_boolean('taskbar-locked')) &&
             !this._settings.get_boolean('default-gnome-panel') &&
             !this._settings.get_boolean('hide-pinned-taskbar-apps') &&
             global.settings.is_writable('favorite-apps') &&
@@ -488,13 +574,22 @@ export class TaskbarDragController {
     _showExternalPlaceholder(favoriteItems, favoriteIndex) {
         if (!this._externalPlaceholder) {
             const reference = favoriteItems[0];
+            const vertical = panelIsVertical(this._settings);
+            const size = Math.max(
+                reference
+                    ? vertical ? reference.height : reference.width
+                    : 0,
+                this._getIconSize() + 8
+            );
             this._externalPlaceholder = new St.Widget({
                 style_class: 'simple-taskbar-drag-placeholder',
-                width: Math.max(
-                    reference ? reference.width : 0,
-                    this._getIconSize() + 8
-                ),
-                height: Math.max(1, this._getPanelHeight() - 10),
+                width: vertical
+                    ? Math.max(1, this._getPanelHeight() - 10)
+                    : size,
+                height: vertical
+                    ? size
+                    : Math.max(1, this._getPanelHeight() - 10),
+                x_align: Clutter.ActorAlign.CENTER,
                 y_align: Clutter.ActorAlign.CENTER,
             });
             this._taskbarActor.add_child(this._externalPlaceholder);
@@ -541,11 +636,14 @@ export class TaskbarDragController {
             return DND.DragMotionResult.CONTINUE;
         }
 
-        const [, x] = this._taskbarActor.transform_stage_point(
+        const [, x, y] = this._taskbarActor.transform_stage_point(
             event.x,
             event.y
         );
-        return this.handleStartMenuDragOver(source, x);
+        return this.handleStartMenuDragOver(
+            source,
+            panelIsVertical(this._settings) ? y : x
+        );
     }
 
     _activatePanelDropTarget() {
@@ -577,13 +675,18 @@ export class TaskbarDragController {
         if (!monitor)
             return false;
 
-        const [, actorY] = this._taskbarActor.get_transformed_position();
-        const [, actorHeight] = this._taskbarActor.get_transformed_size();
-        const panelHeight = Math.max(
-            actorHeight,
-            this._getPanelHeight()
-        );
+        const [actorX, actorY] =
+            this._taskbarActor.get_transformed_position();
+        const [actorWidth, actorHeight] =
+            this._taskbarActor.get_transformed_size();
+        const panelThickness = this._getPanelHeight();
+        if (panelIsVertical(this._settings)) {
+            const width = Math.max(actorWidth, panelThickness);
+            return x >= actorX && x < actorX + width &&
+                y >= monitor.y && y < monitor.y + monitor.height;
+        }
+        const height = Math.max(actorHeight, panelThickness);
         return x >= monitor.x && x < monitor.x + monitor.width &&
-            y >= actorY && y < actorY + panelHeight;
+            y >= actorY && y < actorY + height;
     }
 }
