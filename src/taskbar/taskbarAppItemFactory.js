@@ -69,11 +69,11 @@ export class TaskbarAppItemFactory {
         const panelHeight = this._getPanelHeight();
         const item = new TaskbarItemContainer();
         item.setPreserveNaturalWidth(this._getPreserveItemWidths());
+        item.setSnapChildAllocation(true);
         item.add_style_class_name('simple-taskbar-app-item');
         item.reactive = true;
         item.track_hover = true;
         item.y_align = Clutter.ActorAlign.FILL;
-        item.set_height(panelHeight);
         item.connect('notify::allocation', () => {
             this._queueIconGeometryUpdate();
         });
@@ -142,7 +142,7 @@ export class TaskbarAppItemFactory {
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
         });
-        const topSpacer = new St.Widget({height: 7});
+        const topSpacer = new St.Widget();
         const content = new St.Widget({
             style_class: 'simple-taskbar-app-content',
             layout_manager: new Clutter.BinLayout(),
@@ -220,6 +220,7 @@ export class TaskbarAppItemFactory {
             _taskbarIcon: icon,
             _taskbarLabel: label,
             _taskbarSlot: slot,
+            _taskbarTopSpacer: topSpacer,
             _taskbarVisual: visual,
             _taskbarGlassHost: glassHost,
             _taskbarGlass: glass,
@@ -234,7 +235,7 @@ export class TaskbarAppItemFactory {
             _taskbarShowSecondary: false,
         });
         this._syncLauncherIconPosition(item);
-        this._initializeAppearance(item, glassWidth);
+        this._initializeAppearance(item);
         if (window) {
             window.connectObject(
                 'notify::title',
@@ -269,6 +270,13 @@ export class TaskbarAppItemFactory {
         });
 
         return item;
+    }
+
+    sync(item) {
+        const app = item._taskbarApp;
+        item._taskbarIcon.gicon = app.icon;
+        item._taskbarLabel.text = app.get_name();
+        item._taskbarButton.accessible_name = app.get_name();
     }
 
     destroy() {

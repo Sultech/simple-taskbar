@@ -12,7 +12,12 @@ import {
     normalizePanelItemOrder,
 } from '../shared/panelItemOrder.js';
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
-import {createPanelOrderRow} from './preferencesWidgets.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {axisPanelPositions} from './panelAxis.js';
+import {
+    createPanelOrderRow,
+    createSwitchRow,
+} from './preferencesWidgets.js';
 
 export function addPanelItemsPage({
     window,
@@ -29,72 +34,40 @@ export function addPanelItemsPage({
     });
     page.add(panelGroup);
 
-    const activitiesButtonSwitch = new Adw.SwitchRow({
+    const activitiesButtonSwitch = createSwitchRow(settings, {
+        key: 'activities-button-visible',
         title: _('Show Activities Button'),
         subtitle: _('Display GNOME’s workspace overview button on the taskbar'),
-        active: settings.get_boolean('activities-button-visible'),
     });
     panelGroup.add(activitiesButtonSwitch);
-    settings.bind(
-        'activities-button-visible',
-        activitiesButtonSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const showDesktopSwitch = new Adw.SwitchRow({
+    const showDesktopSwitch = createSwitchRow(settings, {
+        key: 'show-desktop-button-visible',
         title: _('Show Desktop Button'),
         subtitle: _('Display a button that minimizes or restores all windows'),
-        active: settings.get_boolean(
-            'show-desktop-button-visible'
-        ),
     });
     panelGroup.add(showDesktopSwitch);
-    settings.bind(
-        'show-desktop-button-visible',
-        showDesktopSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const volumeMixerSwitch = new Adw.SwitchRow({
+    const volumeMixerSwitch = createSwitchRow(settings, {
+        key: 'volume-mixer-enabled',
         title: _('Application Volume Mixer'),
         subtitle: _('Add per-application volume controls to Quick Settings'),
-        active: settings.get_boolean('volume-mixer-enabled'),
     });
     panelGroup.add(volumeMixerSwitch);
-    settings.bind(
-        'volume-mixer-enabled',
-        volumeMixerSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const trayOverflowSwitch = new Adw.SwitchRow({
+    const trayOverflowSwitch = createSwitchRow(settings, {
+        key: 'tray-overflow-enabled',
         title: _('Collect Tray Icons'),
         subtitle: _('Gather application tray icons behind a panel arrow'),
-        active: settings.get_boolean('tray-overflow-enabled'),
     });
     panelGroup.add(trayOverflowSwitch);
-    settings.bind(
-        'tray-overflow-enabled',
-        trayOverflowSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const folderMenuSwitch = new Adw.SwitchRow({
+    const folderMenuSwitch = createSwitchRow(settings, {
+        key: 'folder-menu-enabled',
         title: _('Show Folder Menu'),
         subtitle: _('Show a selected folder on the taskbar'),
-        active: settings.get_boolean('folder-menu-enabled'),
     });
     panelGroup.add(folderMenuSwitch);
-    settings.bind(
-        'folder-menu-enabled',
-        folderMenuSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const folderMenuRow = new Adw.ActionRow({
         title: _('Folder Menu Location'),
@@ -130,6 +103,7 @@ export function addPanelItemsPage({
     folderMenuSwitch.connect('notify::active', updateFolderMenuRow);
     updateFolderMenuRow();
 
+    const initialPositions = axisPanelPositions(settings, panelPositions);
     const panelOrderGroups = new Map([
         ['left', new Adw.PreferencesGroup({
             title: _('Left Items'),
@@ -151,67 +125,67 @@ export function addPanelItemsPage({
         ['left-box', {
             title: _('Left Box'),
             subtitle: _('Other GNOME Shell and extension items'),
-            choices: [panelPositions[0]],
+            choices: [initialPositions[0]],
             fixedPosition: 'left',
         }],
         ['center-box', {
             title: _('Center Box'),
             subtitle: _('Other GNOME Shell and extension items'),
-            choices: [panelPositions[1]],
+            choices: [initialPositions[1]],
             fixedPosition: 'center',
         }],
         ['right-box', {
             title: _('Right Box'),
             subtitle: _('Other GNOME Shell and extension items'),
-            choices: [panelPositions[2]],
+            choices: [initialPositions[2]],
             fixedPosition: 'right',
         }],
         ['start-button', {
             key: 'start-button-position',
             title: _('Start Button'),
             subtitle: _('Eleven-style or original GNOME Start button'),
-            choices: panelPositions.slice(0, 2),
+            choices: initialPositions.slice(0, 2),
         }],
         ['activities', {
             key: 'activities-button-position',
             title: _('Activities'),
             subtitle: _('GNOME workspace overview button'),
-            choices: panelPositions,
+            choices: initialPositions,
         }],
         ['applications', {
             key: 'app-alignment',
             title: _('Applications'),
             subtitle: _('Taskbar application buttons'),
-            choices: panelPositions.slice(0, 2),
+            choices: initialPositions.slice(0, 2),
         }],
         ['folder-menu', {
             key: 'folder-menu-position',
             title: _('Folder Menu'),
             subtitle: _('Selected folder shortcuts'),
-            choices: panelPositions,
+            choices: initialPositions,
         }],
         ['tray-overflow', {
             key: 'tray-overflow-position',
             title: _('Tray icons'),
             subtitle: _('Gather application tray icons behind a panel arrow'),
-            choices: panelPositions,
+            choices: initialPositions,
         }],
         ['system-menu', {
             key: 'system-menu-position',
             title: _('System Menu'),
             subtitle: _('Quick Settings, volume, network, and power'),
-            choices: panelPositions,
+            choices: initialPositions,
         }],
         ['clock', {
             key: 'clock-position',
             title: _('Clock'),
-            choices: panelPositions,
+            choices: initialPositions,
         }],
         ['show-desktop', {
             key: 'show-desktop-button-position',
             title: _('Show Desktop Button'),
             subtitle: _('Minimize or restore all windows'),
-            choices: panelPositions.filter(
+            choices: initialPositions.filter(
                 position => position.value !== 'center'
             ),
         }],
@@ -225,21 +199,60 @@ export function addPanelItemsPage({
         );
         panelOrderRows.set(id, controls);
     }
-    const activitiesPanelPositions = panelPositions.filter(
-        position => position.value !== 'center'
-    );
-    const syncActivitiesPositionChoices = () => {
-        const choices = settings.get_boolean(
+    const syncPanelAxis = () => {
+        const positions = axisPanelPositions(settings, panelPositions);
+        const vertical = panelIsVertical(settings);
+        const groupTitles = vertical
+            ? [_('Top Items'), _('Middle Items'), _('Bottom Items')]
+            : [_('Left Items'), _('Center Items'), _('Right Items')];
+        const boxTitles = vertical
+            ? [_('Top Box'), _('Middle Box'), _('Bottom Box')]
+            : [_('Left Box'), _('Center Box'), _('Right Box')];
+        for (const [index, position] of [
+            'left',
+            'center',
+            'right',
+        ].entries()) {
+            panelOrderGroups.get(position).title = groupTitles[index];
+            panelOrderRows.get(`${position}-box`).row.title = boxTitles[index];
+            panelOrderRows.get(`${position}-box`).setChoices([
+                positions[index],
+            ]);
+        }
+        panelOrderRows.get('start-button').setChoices(
+            positions.slice(0, 2)
+        );
+        panelOrderRows.get('applications').setChoices(
+            positions.slice(0, 2)
+        );
+        panelOrderRows.get('show-desktop').setChoices(
+            positions.filter(position => position.value !== 'center')
+        );
+        const activitiesPositions = settings.get_boolean(
             'windows-xp-theme-enabled'
-        ) ? activitiesPanelPositions : panelPositions;
-        panelOrderRows.get('activities').setChoices(choices);
+        )
+            ? positions.filter(position => position.value !== 'center')
+            : positions;
+        panelOrderRows.get('activities').setChoices(activitiesPositions);
+        for (const id of [
+            'folder-menu',
+            'tray-overflow',
+            'system-menu',
+            'clock',
+        ])
+            panelOrderRows.get(id).setChoices(positions);
     };
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
-        syncActivitiesPositionChoices
+        syncPanelAxis
     );
-    syncActivitiesPositionChoices();
+    connectSettings(
+        settings,
+        'changed::panel-position',
+        syncPanelAxis
+    );
+    syncPanelAxis();
 
     const getPanelItemPosition = id => {
         const definition = panelOrderDefinitions.get(id);
@@ -266,9 +279,20 @@ export function addPanelItemsPage({
                 'clock',
             ].includes(id);
         }
-        if (settings.get_boolean('default-gnome-panel'))
+        if (settings.get_boolean('dock-mode'))
+            return id === 'start-button' || id === 'applications';
+        if (settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode'))
             return id === 'start-button' || id === 'applications';
         return false;
+    };
+    const getMovablePositionOrder = positionOrder => {
+        if (!settings.get_boolean('dock-mode') &&
+            !settings.get_boolean('default-gnome-panel')) {
+            return positionOrder;
+        }
+
+        return positionOrder.filter(id => !isPanelItemLocked(id));
     };
     const syncPanelItemOrder = () => {
         const stored = settings.get_strv('panel-item-order');
@@ -301,18 +325,28 @@ export function addPanelItemsPage({
             positionOrders.get(position).push(id);
         }
         for (const positionOrder of positionOrders.values()) {
-            for (const [index, id] of positionOrder.entries()) {
+            const movablePositionOrder =
+                getMovablePositionOrder(positionOrder);
+            for (const [index, id] of movablePositionOrder.entries()) {
                 const controls = panelOrderRows.get(id);
-                const previousId = positionOrder[index - 1];
-                const nextId = positionOrder[index + 1];
+                const previousId = movablePositionOrder[index - 1];
+                const nextId = movablePositionOrder[index + 1];
                 controls.upButton.sensitive =
                     index > 0 &&
                     !isPanelItemLocked(id) &&
                     !isPanelItemLocked(previousId);
                 controls.downButton.sensitive =
-                    index < positionOrder.length - 1 &&
+                    index < movablePositionOrder.length - 1 &&
                     !isPanelItemLocked(id) &&
                     !isPanelItemLocked(nextId);
+            }
+            for (const id of positionOrder) {
+                if (!isPanelItemLocked(id))
+                    continue;
+
+                const controls = panelOrderRows.get(id);
+                controls.upButton.sensitive = false;
+                controls.downButton.sensitive = false;
             }
         }
     };
@@ -324,8 +358,10 @@ export function addPanelItemsPage({
             settings.get_strv('panel-item-order')
         );
         const position = getPanelItemPosition(id);
-        const positionOrder = order.filter(
-            candidate => getPanelItemPosition(candidate) === position
+        const positionOrder = getMovablePositionOrder(
+            order.filter(
+                candidate => getPanelItemPosition(candidate) === position
+            )
         );
         const index = positionOrder.indexOf(id);
         const targetIndex = index + offset;
@@ -369,13 +405,15 @@ export function addPanelItemsPage({
     }
 
     const syncPanelPositionSensitivity = () => {
-        const defaultPanel = settings.get_boolean(
-            'default-gnome-panel'
-        );
+        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode');
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const dockMode = settings.get_boolean('dock-mode');
         windowsStartMenuSwitch.sensitive = !windowsXpTheme;
+        panelOrderRows.get('start-button').row.sensitive = !dockMode;
+        panelOrderRows.get('applications').row.sensitive = !dockMode;
         panelOrderRows.get('start-button').positionDropDown.sensitive =
             !defaultPanel && !windowsXpTheme &&
             !followAppAlignmentSwitch.active;
@@ -420,6 +458,14 @@ export function addPanelItemsPage({
     connectSettings(
         settings,
         'changed::default-gnome-panel',
+        () => {
+            syncPanelItemOrder();
+            syncPanelPositionSensitivity();
+        }
+    );
+    connectSettings(
+        settings,
+        'changed::dock-mode',
         () => {
             syncPanelItemOrder();
             syncPanelPositionSensitivity();

@@ -5,51 +5,77 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PointerWatcher from 'resource:///org/gnome/shell/ui/pointerWatcher.js';
 import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelIsTop} from './panelPosition.js';
+import {panelGeometry} from './panelGeometry.js';
+import {
+    panelIsMinimumEdge,
+    panelIsVertical,
+} from './panelPosition.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 
 const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
+const POINTER_WATCH_INTERVAL = 200;
 const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
 export class PanelAutoHideController {
     constructor({
         settings,
         panelActor,
         positionActor,
+        strutActor = null,
         getMonitor,
         getPanelHeight,
+        getPanelLengthPercentage = () => null,
+        getPanelLengthOverride = () => null,
+        getPanelEdgeGap = () => 0,
+        getLimitRevealToPanel = () => true,
         isBlocked,
     }) {
         this._settings = settings;
         this._panelActor = panelActor;
         this._positionActor = positionActor;
+        this._strutActor = strutActor;
         this._getMonitor = getMonitor;
         this._getPanelHeight = getPanelHeight;
+        this._getPanelLengthPercentage = getPanelLengthPercentage;
+        this._getPanelLengthOverride = getPanelLengthOverride;
+        this._getPanelEdgeGap = getPanelEdgeGap;
+        this._getLimitRevealToPanel = getLimitRevealToPanel;
         this._isBlockedCallback = isBlocked;
         this._signalHolder = new TransientSignalHolder();
+        this._pointerWatch = null;
         this._hideTimeoutId = 0;
         this._fullscreenWatchId = 0;
         this._fullscreenReleasePending = false;
         this._pointerButtonPressed = false;
         this._hidden = false;
         this._overviewSuspended = false;
+        this._overviewEdgeRevealBlocked = false;
         this._trackedActorData = null;
+        this._strutActorData = null;
         this._originalAffectsStruts = false;
+        this._originalStrutAffectsStruts = false;
         this._originalTrackFullscreen = false;
         this._unredirectDisabled = false;
         this._fullscreenVisibilityHeld = false;
+        this._dodgeEnabled = false;
+        this._dodgeActive = false;
+        this._dodgePointerReveal = false;
     }
 
     enable() {
         this._panelActor.connectObject(
             'enter-event', () => {
-                this.show();
+                if (!this._overviewEdgeRevealBlocked &&
+                    !Main.overview.animationInProgress) {
+                    this.show();
+                }
                 return Clutter.EVENT_PROPAGATE;
             },
             'leave-event', () => {
@@ -60,14 +86,11 @@ export class PanelAutoHideController {
         );
         global.stage.connectObject(
             'captured-event', (_stage, event) => {
-                if (!this._enabled() || !this._hidden ||
-                    event.type() !== Clutter.EventType.MOTION) {
+                if (event.type() !== Clutter.EventType.MOTION)
                     return Clutter.EVENT_PROPAGATE;
-                }
 
                 const [x, y] = event.get_coords();
-                if (this._pointerIsAtRevealEdge(x, y))
-                    this.show();
+                this._handlePointerMotion(x, y);
                 return Clutter.EVENT_PROPAGATE;
             },
             'notify::key-focus', () => {
@@ -84,7 +107,7 @@ export class PanelAutoHideController {
         );
         Main.overview.connectObject(
             'showing', () => this._suspendForOverview(),
-            'hiding', () => this._restoreFullscreenVisibility(),
+            'hiding', () => this._hideForOverview(),
             'hidden', () => this._resumeAfterOverview(),
             this._signalHolder
         );
@@ -94,6 +117,8 @@ export class PanelAutoHideController {
         );
 
         this._overviewSuspended = Main.overview.visibleTarget;
+        this._overviewEdgeRevealBlocked =
+            Main.overview.animationInProgress;
         this._captureStrutTracking();
         this._syncStrutTracking();
         this.syncPosition();
@@ -101,6 +126,9 @@ export class PanelAutoHideController {
     }
 
     destroy() {
+        if (this._pointerWatch)
+            this._pointerWatch.remove();
+        this._pointerWatch = null;
         this._clearHideTimeout();
         this._stopFullscreenWatch();
         this._signalHolder.destroy();
@@ -109,6 +137,11 @@ export class PanelAutoHideController {
         this._restoreFullscreenVisibilityState();
         this._hidden = false;
         this._overviewSuspended = false;
+        this._overviewEdgeRevealBlocked = false;
+        this._dodgeEnabled = false;
+        this._dodgeActive = false;
+        this._dodgePointerReveal = false;
+        this._positionActor.remove_transition('x');
         this._positionActor.remove_transition('y');
         this.syncPosition();
         this._restoreStrutTracking();
@@ -117,10 +150,16 @@ export class PanelAutoHideController {
         this._settings = null;
         this._panelActor = null;
         this._positionActor = null;
+        this._strutActor = null;
         this._getMonitor = null;
         this._getPanelHeight = null;
+        this._getPanelLengthPercentage = null;
+        this._getPanelLengthOverride = null;
+        this._getPanelEdgeGap = null;
+        this._getLimitRevealToPanel = null;
         this._isBlockedCallback = null;
         this._trackedActorData = null;
+        this._strutActorData = null;
     }
 
     setMenuOpen(open) {
@@ -141,34 +180,97 @@ export class PanelAutoHideController {
 
         if (this._fullscreenVisibilityHeld)
             return;
+        if (this._dodgeEnabled && this._dodgeActive) {
+            if (!this._dodgePointerReveal ||
+                !this._pointerIsInsidePanel()) {
+                if (!this._hidden)
+                    this._hide();
+            }
+            return;
+        }
         if (this._enabled() && !this._pointerIsInsidePanel())
             this._scheduleHide();
     }
 
-    syncPosition() {
+    setDodgeState(enabled, active, pointerReveal) {
+        this._dodgeEnabled = enabled;
+        this._dodgeActive = active;
+        this._dodgePointerReveal = pointerReveal;
+        this._syncPointerWatch();
+        if (this._enabled() || enabled)
+            this._syncStrutTracking();
+        else
+            this._restoreStrutTracking();
+        this._syncUnredirect();
+        if (this._overviewSuspended ||
+            this._fullscreenVisibilityHeld) {
+            return;
+        }
+
+        if (!active) {
+            if (!this._enabled())
+                this.show();
+            else if (this._pointerIsInsidePanel())
+                this.show();
+            else
+                this._scheduleHide();
+            return;
+        }
+
+        if (pointerReveal && this._pointerIsInsidePanel()) {
+            this.show();
+            return;
+        }
+
+        if (this._isBlocked()) {
+            this._scheduleHide(0);
+            return;
+        }
+
+        if (!this._hidden)
+            this._hide();
+        if (pointerReveal) {
+            const [x, y] = global.get_pointer();
+            this._handlePointerMotion(x, y);
+        }
+    }
+
+    syncPosition(animate = false) {
         const monitor = this._getMonitor();
         const actor = this._positionActor;
         if (!monitor)
             return;
 
+        const geometry = this._geometry(monitor);
+        const offset = this._hidden && (this._enabled() ||
+            this._dodgeActive)
+            ? geometry.hiddenOffset
+            : geometry.visibleOffset;
+        if (animate) {
+            this._moveTo(offset, true);
+            return;
+        }
+        actor.remove_transition('x');
         actor.remove_transition('y');
-        actor.y = this._hidden && this._enabled() &&
-            !this._overviewSuspended
-            ? this._hiddenY(monitor)
-            : this._visibleY(monitor);
+        if (geometry.vertical)
+            actor.x = offset;
+        else
+            actor.y = offset;
         Main.layoutManager._queueUpdateRegions();
     }
 
     show(animate = true) {
         this._clearHideTimeout();
         if (!this._hidden) {
-            if (this._enabled() && !this._pointerIsInsidePanel())
+            if (this._shouldScheduleHide())
                 this._scheduleHide();
             return;
         }
 
         this._hidden = false;
-        this._moveTo(this._visibleY(this._getMonitor()), animate);
+        this._moveTo(this._geometry(this._getMonitor()).visibleOffset, animate);
+        if (this._shouldScheduleHide())
+            this._scheduleHide();
     }
 
     _enabled() {
@@ -176,16 +278,26 @@ export class PanelAutoHideController {
     }
 
     _syncEnabled() {
-        if (!this._enabled()) {
-            this.show(false);
+        this._syncPointerWatch();
+        this._syncUnredirect();
+        if (this._enabled() || this._dodgeEnabled)
+            this._syncStrutTracking();
+        else
             this._restoreStrutTracking();
-            this._syncUnredirect();
+        if (this._overviewSuspended) {
+            this.show(false);
             return;
         }
 
-        this._syncUnredirect();
-        this._syncStrutTracking();
-        if (this._overviewSuspended) {
+        if (this._dodgeActive) {
+            if (this._dodgePointerReveal && this._pointerIsInsidePanel())
+                this.show(false);
+            else if (!this._hidden)
+                this._hide(false);
+            return;
+        }
+
+        if (!this._enabled()) {
             this.show(false);
             return;
         }
@@ -196,36 +308,80 @@ export class PanelAutoHideController {
             this._scheduleHide();
     }
 
+    _syncPointerWatch() {
+        const shouldWatch = this._enabled() ||
+            this._dodgeEnabled && this._dodgeActive &&
+            this._dodgePointerReveal;
+        if (shouldWatch && !this._pointerWatch) {
+            this._pointerWatch = PointerWatcher.getPointerWatcher().addWatch(
+                POINTER_WATCH_INTERVAL,
+                (x, y) => this._handlePointerMotion(x, y)
+            );
+        } else if (!shouldWatch && this._pointerWatch) {
+            this._pointerWatch.remove();
+            this._pointerWatch = null;
+        }
+    }
+
     _captureStrutTracking() {
-        const index = Main.layoutManager._findActor(this._positionActor);
-        this._trackedActorData =
-            Main.layoutManager._trackedActors[index];
+        this._trackedActorData = this._captureActorData(
+            this._positionActor
+        );
         this._originalAffectsStruts =
             this._trackedActorData.affectsStruts;
         this._originalTrackFullscreen =
             this._trackedActorData.trackFullscreen;
+        if (!this._strutActor)
+            return;
+
+        this._strutActorData = this._captureActorData(this._strutActor);
+        this._originalStrutAffectsStruts =
+            this._strutActorData.affectsStruts;
+    }
+
+    _captureActorData(actor) {
+        const index = Main.layoutManager._findActor(actor);
+        return Main.layoutManager._trackedActors[index];
     }
 
     _syncStrutTracking() {
-        if (!this._trackedActorData ||
-            !this._trackedActorData.affectsStruts) {
-            return;
-        }
-
-        this._trackedActorData.affectsStruts = false;
-        Main.layoutManager._queueUpdateRegions();
+        const panelChanged = this._disableStrutTracking(
+            this._trackedActorData
+        );
+        const strutChanged = this._disableStrutTracking(
+            this._strutActorData
+        );
+        if (panelChanged || strutChanged)
+            Main.layoutManager._queueUpdateRegions();
     }
 
     _restoreStrutTracking() {
-        if (!this._trackedActorData ||
-            this._trackedActorData.affectsStruts ===
-                this._originalAffectsStruts) {
-            return;
-        }
+        const panelChanged = this._restoreActorStrutTracking(
+            this._trackedActorData,
+            this._originalAffectsStruts
+        );
+        const strutChanged = this._restoreActorStrutTracking(
+            this._strutActorData,
+            this._originalStrutAffectsStruts
+        );
+        if (panelChanged || strutChanged)
+            Main.layoutManager._queueUpdateRegions();
+    }
 
-        this._trackedActorData.affectsStruts =
-            this._originalAffectsStruts;
-        Main.layoutManager._queueUpdateRegions();
+    _disableStrutTracking(actorData) {
+        if (!actorData || !actorData.affectsStruts)
+            return false;
+
+        actorData.affectsStruts = false;
+        return true;
+    }
+
+    _restoreActorStrutTracking(actorData, originalAffectsStruts) {
+        if (!actorData || actorData.affectsStruts === originalAffectsStruts)
+            return false;
+
+        actorData.affectsStruts = originalAffectsStruts;
+        return true;
     }
 
     _disableUnredirect() {
@@ -245,7 +401,8 @@ export class PanelAutoHideController {
     }
 
     _syncUnredirect() {
-        if (this._enabled() || this._fullscreenVisibilityHeld)
+        if (this._enabled() || this._dodgeEnabled ||
+            this._fullscreenVisibilityHeld)
             this._disableUnredirect();
         else
             this._restoreUnredirect();
@@ -277,7 +434,8 @@ export class PanelAutoHideController {
         }
 
         this._restoreFullscreenVisibility();
-        if (this._enabled() && !this._pointerIsInsidePanel())
+        if ((this._enabled() || this._dodgeActive) &&
+            !this._pointerIsInsidePanel())
             this._scheduleHide();
     }
 
@@ -318,8 +476,13 @@ export class PanelAutoHideController {
         this._pointerButtonPressed = false;
     }
 
-    _scheduleHide(delay = HIDE_DELAY) {
-        if (!this._enabled() || this._overviewSuspended ||
+    _scheduleHide(delay = this._dodgeActive &&
+        this._dodgePointerReveal ? 0 : HIDE_DELAY) {
+        const canHide = this._enabled() ||
+            this._dodgeEnabled && this._dodgeActive &&
+            this._dodgePointerReveal;
+        if (!canHide ||
+            this._overviewSuspended ||
             this._fullscreenVisibilityHeld || this._hidden ||
             this._hideTimeoutId) {
             return;
@@ -330,8 +493,14 @@ export class PanelAutoHideController {
             delay,
             () => {
                 this._hideTimeoutId = 0;
-                if (!this._enabled() || this._overviewSuspended ||
-                    this._pointerIsInsidePanel()) {
+                const [x, y] = global.get_pointer();
+                const canStillHide = this._enabled() ||
+                    this._dodgeEnabled && this._dodgeActive &&
+                    this._dodgePointerReveal;
+                if (!canStillHide ||
+                    this._overviewSuspended ||
+                    this._pointerIsInsidePanel() ||
+                    this._pointerIsAtRevealEdge(x, y)) {
                     return GLib.SOURCE_REMOVE;
                 }
                 if (this._isBlocked()) {
@@ -339,8 +508,7 @@ export class PanelAutoHideController {
                     return GLib.SOURCE_REMOVE;
                 }
 
-                this._hidden = true;
-                this._moveTo(this._hiddenY(this._getMonitor()), true);
+                this._hide();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -354,12 +522,23 @@ export class PanelAutoHideController {
 
     _suspendForOverview() {
         this._overviewSuspended = true;
+        this._overviewEdgeRevealBlocked = true;
         this._clearHideTimeout();
-        if (!this._enabled())
+        if (!this._enabled() && !this._dodgeActive)
             return;
 
         this._hidden = false;
-        this._moveTo(this._visibleY(this._getMonitor()), false);
+        this._moveTo(
+            this._geometry(this._getMonitor()).visibleOffset,
+            false
+        );
+    }
+
+    _hideForOverview() {
+        this._overviewEdgeRevealBlocked = true;
+        this._restoreFullscreenVisibility();
+        if (this._enabled() || this._dodgeActive)
+            this._hide();
     }
 
     _resumeAfterOverview() {
@@ -367,18 +546,33 @@ export class PanelAutoHideController {
             return;
 
         this._overviewSuspended = false;
-        if (!this._enabled())
+        if (!this._enabled() && !this._dodgeActive)
             return;
 
-        if (this._pointerIsInsidePanel())
-            this.show(false);
-        else
-            this._scheduleHide();
+        this._hide(false);
+    }
+
+    _hide(animate = true) {
+        this._hidden = true;
+        this._moveTo(
+            this._geometry(this._getMonitor()).hiddenOffset,
+            animate
+        );
     }
 
     _isBlocked() {
         return this._focusIsInsidePanel() ||
             this._isBlockedCallback();
+    }
+
+    _shouldScheduleHide() {
+        const canHide = this._enabled() ||
+            this._dodgeEnabled && this._dodgeActive &&
+            this._dodgePointerReveal;
+        const [x, y] = global.get_pointer();
+        return canHide &&
+            !this._pointerIsInsidePanel() &&
+            !this._pointerIsAtRevealEdge(x, y);
     }
 
     _focusIsInsidePanel() {
@@ -395,57 +589,106 @@ export class PanelAutoHideController {
             return false;
 
         const [x, y] = global.get_pointer();
-        const panelHeight = this._getPanelHeight();
-        const visibleY = this._visibleY(monitor);
-        return x >= monitor.x && x < monitor.x + monitor.width &&
-            y >= visibleY && y < visibleY + panelHeight;
+        const geometry = this._geometry(monitor);
+        return x >= geometry.x && x < geometry.x + geometry.width &&
+            y >= geometry.y && y < geometry.y + geometry.height;
     }
 
     _pointerIsAtRevealEdge(x, y) {
         const monitor = this._getMonitor();
-        if (!monitor || x < monitor.x || x >= monitor.x + monitor.width)
+        if (!monitor)
             return false;
 
-        return panelIsTop(this._settings)
-            ? y <= monitor.y + REVEAL_EDGE_SIZE
-            : y >= monitor.y + monitor.height - REVEAL_EDGE_SIZE;
+        const geometry = this._geometry(monitor);
+        const limitRevealToPanel = this._getLimitRevealToPanel();
+        const minimumEdge = panelIsMinimumEdge(this._settings);
+        if (geometry.vertical) {
+            if (limitRevealToPanel && (y < geometry.y ||
+                y >= geometry.y + geometry.height)) {
+                return false;
+            }
+            const edge = minimumEdge
+                ? geometry.x
+                : geometry.x + geometry.width;
+            return minimumEdge
+                ? x <= edge + REVEAL_EDGE_SIZE
+                : x >= edge - REVEAL_EDGE_SIZE;
+        }
+        if (limitRevealToPanel && (x < geometry.x ||
+            x >= geometry.x + geometry.width)) {
+            return false;
+        }
+        const edge = minimumEdge
+            ? geometry.y
+            : geometry.y + geometry.height;
+        return minimumEdge
+            ? y <= edge + REVEAL_EDGE_SIZE
+            : y >= edge - REVEAL_EDGE_SIZE;
     }
 
-    _visibleY(monitor) {
-        if (!monitor)
-            return this._positionActor.y;
-        const panelHeight = this._getPanelHeight();
-        return panelIsTop(this._settings)
-            ? monitor.y
-            : monitor.y + monitor.height - panelHeight;
+    _handlePointerMotion(x, y) {
+        const dodgeActive = this._dodgeEnabled && this._dodgeActive;
+        const pointerReveal = dodgeActive
+            ? this._dodgePointerReveal
+            : this._enabled();
+        if (!pointerReveal || !this._hidden ||
+            Main.overview.animationInProgress) {
+            return;
+        }
+
+        if (!this._pointerIsAtRevealEdge(x, y)) {
+            this._overviewEdgeRevealBlocked = false;
+            return;
+        }
+
+        if (!this._overviewEdgeRevealBlocked)
+            this.show();
     }
 
-    _hiddenY(monitor) {
-        if (!monitor)
-            return this._positionActor.y;
-        const panelHeight = this._getPanelHeight();
-        return panelIsTop(this._settings)
-            ? monitor.y - panelHeight + REVEAL_EDGE_SIZE
-            : monitor.y + monitor.height - REVEAL_EDGE_SIZE;
+    _geometry(monitor) {
+        if (monitor) {
+            return panelGeometry(
+                this._settings,
+                monitor,
+                this._getPanelHeight(),
+                0,
+                this._getPanelLengthPercentage(),
+                this._getPanelLengthOverride(),
+                this._getPanelEdgeGap()
+            );
+        }
+        const vertical = panelIsVertical(this._settings);
+        const offset = vertical
+            ? this._positionActor.x
+            : this._positionActor.y;
+        return {
+            vertical,
+            visibleOffset: offset,
+            hiddenOffset: offset,
+        };
     }
 
-    _moveTo(y, animate) {
+    _moveTo(offset, animate) {
         const actor = this._positionActor;
-        if (!actor || y === undefined)
+        if (!actor || offset === undefined)
             return;
 
+        const vertical = panelIsVertical(this._settings);
+        const property = vertical ? 'x' : 'y';
+        actor.remove_transition('x');
         actor.remove_transition('y');
         if (!animate) {
-            actor.y = y;
+            actor[property] = offset;
             Main.layoutManager._queueUpdateRegions();
             return;
         }
 
-        actor.ease({
-            y,
+        const params = {
             duration: ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             onComplete: () => Main.layoutManager._queueUpdateRegions(),
-        });
+        };
+        params[property] = offset;
+        actor.ease(params);
     }
 }

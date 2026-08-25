@@ -110,7 +110,8 @@ export class StartMenuKeybindings {
 
     _startMenuAvailable() {
         return this._settings.get_boolean('windows-start-menu-enabled') &&
-            !this._settings.get_boolean('default-gnome-panel');
+            (!this._settings.get_boolean('default-gnome-panel') ||
+                this._settings.get_boolean('dock-mode'));
     }
 
     _syncFileManager() {

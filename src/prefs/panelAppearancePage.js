@@ -16,9 +16,10 @@ import {
     WINDOWS_XP_ICON_SPACING,
 } from '../shared/windowsXpTheme.js';
 import {
-    PANEL_MODE_TASKBAR,
     PANEL_MODE_WINDOWS_XP,
+    restorePanelModeAfterWindowsXp,
     setPanelMode,
+    setPanelPosition,
 } from '../shared/panelModeProfiles.js';
 import {
     addColorRow,
@@ -34,12 +35,18 @@ export function addPanelAppearancePage({
     advancedAppearanceGroup,
     blurMyShellPanelBlurEnabled,
     windowsXpThemeSwitch,
+    taskbarModeSwitch,
     iconSizeRow,
     iconSpacingRow,
     panelButtonPaddingRow,
     defaultGnomePanelSwitch,
+    dockModeSwitch,
+    dockPositionRow,
+    dockMaxLengthRow,
+    dockPanelModeSwitch,
     appAlignmentRow,
     pinnedAppsAsLaunchersSwitch,
+    pinnedAppSeparatorSwitch,
     combineAppButtonsRow,
     applicationOverflowSwitch,
     syncLabelSensitivity,
@@ -55,7 +62,7 @@ export function addPanelAppearancePage({
         settings,
         {
             key: 'panel-height',
-            title: _('Panel Height'),
+            title: _('Panel Thickness'),
             subtitle: _(
                 'Oversized icons shrink automatically when the panel is reduced'
             ),
@@ -71,12 +78,20 @@ export function addPanelAppearancePage({
             key: 'panel-position',
             title: _('Panel Position'),
             subtitle: _(
-                'Place the taskbar at the top or bottom of the screen'
+                'Place the taskbar at a screen edge'
             ),
             choices: [
                 {value: 'top', label: _('Top')},
                 {value: 'bottom', label: _('Bottom')},
+                {value: 'left', label: _('Left')},
+                {value: 'right', label: _('Right')},
             ],
+            setValue: position => {
+                const settings = createSettings();
+                settings.delay();
+                setPanelPosition(settings, position);
+                settings.apply();
+            },
         },
         connectSettings
     );
@@ -145,9 +160,22 @@ export function addPanelAppearancePage({
         panelButtonPaddingRow.sensitive = !enabled;
         panelHeightRow.sensitive = !enabled;
         panelPositionRow.sensitive = !enabled;
-        defaultGnomePanelSwitch.sensitive = !enabled;
-        appAlignmentRow.sensitive = !enabled;
+        taskbarModeSwitch.sensitive = !enabled;
+        defaultGnomePanelSwitch.sensitive =
+            !enabled && !settings.get_boolean('dock-mode');
+        dockModeSwitch.sensitive = !enabled;
+        dockPositionRow.sensitive = !enabled &&
+            settings.get_boolean('dock-mode');
+        dockPanelModeSwitch.sensitive = !enabled &&
+            settings.get_boolean('dock-mode');
+        dockMaxLengthRow.sensitive = !enabled &&
+            settings.get_boolean('dock-mode') &&
+            !dockPanelModeSwitch.active;
+        appAlignmentRow.sensitive = !enabled &&
+            (!settings.get_boolean('dock-mode') ||
+                settings.get_boolean('dock-panel-mode'));
         pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
+        pinnedAppSeparatorSwitch.sensitive = !enabled;
         combineAppButtonsRow.sensitive = true;
         applicationOverflowSwitch.sensitive = !enabled;
         syncLabelSensitivity();
@@ -156,10 +184,10 @@ export function addPanelAppearancePage({
     const setWindowsXpTheme = enabled => {
         const settings = createSettings();
         settings.delay();
-        setPanelMode(
-            settings,
-            enabled ? PANEL_MODE_WINDOWS_XP : PANEL_MODE_TASKBAR
-        );
+        if (enabled)
+            setPanelMode(settings, PANEL_MODE_WINDOWS_XP);
+        else
+            restorePanelModeAfterWindowsXp(settings);
         settings.apply();
     };
     windowsXpThemeSwitch.connect('notify::active', () => {
@@ -178,6 +206,12 @@ export function addPanelAppearancePage({
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
+        syncWindowsXpTheme
+    );
+    connectSettings(settings, 'changed::dock-mode', syncWindowsXpTheme);
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
         syncWindowsXpTheme
     );
     connectSettings(settings, 'changed::icon-size', syncWindowsXpTheme);

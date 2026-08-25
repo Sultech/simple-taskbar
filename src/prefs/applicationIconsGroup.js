@@ -6,29 +6,24 @@ import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {axisPanelPositions} from './panelAxis.js';
 import {
     addColorRow,
     addComboRow,
     addSpinRow,
+    createSwitchRow,
 } from './preferencesWidgets.js';
 
-const MAX_ICON_SIZE = 48;
+const MAX_ICON_SIZE = 63;
 
-export function addApplicationIconsGroup({
-    page,
+function addApplicationIconControls({
+    group,
     settings,
     connectSettings,
     panelPositions,
-    advancedAppearanceGroup,
 }) {
-    const appearanceGroup = new Adw.PreferencesGroup({
-        title: _('Application Icons'),
-        description: _('Change the size, spacing, and placement of taskbar icons.'),
-    });
-    page.add(appearanceGroup);
-
     const iconSizeRow = addSpinRow(
-        appearanceGroup,
+        group,
         settings,
         {
             key: 'icon-size',
@@ -41,8 +36,22 @@ export function addApplicationIconsGroup({
         },
         connectSettings
     );
+    const dockMinIconSizeRow = addSpinRow(
+        group,
+        settings,
+        {
+            key: 'dock-min-icon-size',
+            title: _('Minimum Icon Size'),
+            subtitle: _(
+                'Smallest application icon size used when space is limited'
+            ),
+            lower: 15,
+            upper: MAX_ICON_SIZE,
+        },
+        connectSettings
+    );
     const iconSpacingRow = addSpinRow(
-        appearanceGroup,
+        group,
         settings,
         {
             key: 'icon-spacing',
@@ -53,6 +62,127 @@ export function addApplicationIconsGroup({
         },
         connectSettings
     );
+    const appAlignmentRow = addComboRow(
+        group,
+        settings,
+        {
+            key: 'app-alignment',
+            title: _('Icon Alignment'),
+            subtitle: _('Choose the application icon alignment'),
+            choices: panelPositions.slice(0, 2),
+            choicesProvider: () =>
+                axisPanelPositions(settings, panelPositions).slice(0, 2),
+            choicesChangedKey: 'panel-position',
+        },
+        connectSettings
+    );
+    group.add(createSwitchRow(settings, {
+        key: 'window-previews-enabled',
+        title: _('Window Previews'),
+        subtitle: _('Show live window previews when hovering application icons'),
+    }));
+    group.add(createSwitchRow(settings, {
+        key: 'multi-window-click-spread',
+        title: _('Spread Multiple Windows'),
+        subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
+    }));
+
+    const syncMinimumIconSize = () => {
+        const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
+            (!settings.get_boolean('default-gnome-panel') ||
+                settings.get_boolean('dock-mode'));
+        dockMinIconSizeRow.sensitive = enabled;
+        if (!enabled)
+            return;
+
+        const maximum = settings.get_int('icon-size');
+        dockMinIconSizeRow.get_adjustment().set_upper(maximum);
+        if (settings.get_int('dock-min-icon-size') > maximum)
+            settings.set_int('dock-min-icon-size', maximum);
+    };
+    for (const key of [
+        'dock-mode',
+        'windows-xp-theme-enabled',
+        'default-gnome-panel',
+        'icon-size',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncMinimumIconSize
+        );
+    }
+    syncMinimumIconSize();
+
+    return {
+        iconSizeRow,
+        iconSpacingRow,
+        appAlignmentRow,
+    };
+}
+
+function addDockApplicationIconsGroup({
+    page,
+    settings,
+    connectSettings,
+    panelPositions,
+}) {
+    const appearanceGroup = new Adw.PreferencesGroup({
+        title: _('Application Icons'),
+        description: _('Change the size, spacing, and placement of taskbar icons.'),
+    });
+    page.add(appearanceGroup);
+    const controls = addApplicationIconControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
+    const syncDockApplicationIcons = () => {
+        const dockModeEnabled = settings.get_boolean('dock-mode');
+        appearanceGroup.visible = dockModeEnabled;
+        appearanceGroup.sensitive = dockModeEnabled;
+        controls.appAlignmentRow.sensitive = dockModeEnabled &&
+            settings.get_boolean('dock-panel-mode');
+    };
+    connectSettings(
+        settings,
+        'changed::dock-mode',
+        syncDockApplicationIcons
+    );
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
+        syncDockApplicationIcons
+    );
+    syncDockApplicationIcons();
+}
+
+export function addApplicationIconsGroup({
+    page,
+    dockPage,
+    settings,
+    connectSettings,
+    panelPositions,
+    advancedAppearanceGroup,
+}) {
+    const appearanceGroup = new Adw.PreferencesGroup({
+        title: _('Application Icons'),
+        description: _('Change the size, spacing, and placement of taskbar icons.'),
+    });
+    page.add(appearanceGroup);
+    addDockApplicationIconsGroup({
+        page: dockPage,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
+    const controls = addApplicationIconControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+        panelPositions,
+    });
     const indicatorStyleRow = addComboRow(
         advancedAppearanceGroup,
         settings,
@@ -116,8 +246,10 @@ export function addApplicationIconsGroup({
         connectSettings
     );
     const syncIndicatorControls = () => {
-        const blocked = settings.get_boolean('windows-xp-theme-enabled') ||
-            settings.get_boolean('default-gnome-panel');
+        const blocked =
+            settings.get_boolean('windows-xp-theme-enabled') ||
+            (settings.get_boolean('default-gnome-panel') &&
+                !settings.get_boolean('dock-mode'));
         const enabled = customIndicatorColorsSwitch.active;
         indicatorStyleRow.sensitive = !blocked;
         customIndicatorColorsSwitch.sensitive = !blocked;
@@ -139,6 +271,7 @@ export function addApplicationIconsGroup({
     for (const key of [
         'windows-xp-theme-enabled',
         'default-gnome-panel',
+        'dock-mode',
     ]) {
         connectSettings(
             settings,
@@ -147,52 +280,11 @@ export function addApplicationIconsGroup({
         );
     }
     syncIndicatorControls();
-    const appAlignmentRow = addComboRow(
-        appearanceGroup,
-        settings,
-        {
-            key: 'app-alignment',
-            title: _('Icon Alignment'),
-            subtitle: _(
-                'Place application icons at the left or center'
-            ),
-            choices: panelPositions.slice(0, 2),
-        },
-        connectSettings
-    );
-
-    const windowPreviewsSwitch = new Adw.SwitchRow({
-        title: _('Window Previews'),
-        subtitle: _('Show live window previews when hovering application icons'),
-        active: settings.get_boolean('window-previews-enabled'),
-    });
-    appearanceGroup.add(windowPreviewsSwitch);
-    settings.bind(
-        'window-previews-enabled',
-        windowPreviewsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-
-    const multiWindowSpreadSwitch = new Adw.SwitchRow({
-        title: _('Spread Multiple Windows'),
-        subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
-        active: settings.get_boolean(
-            'multi-window-click-spread'
-        ),
-    });
-    appearanceGroup.add(multiWindowSpreadSwitch);
-    settings.bind(
-        'multi-window-click-spread',
-        multiWindowSpreadSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     return {
         appearanceGroup,
-        iconSizeRow,
-        iconSpacingRow,
-        appAlignmentRow,
+        iconSizeRow: controls.iconSizeRow,
+        iconSpacingRow: controls.iconSpacingRow,
+        appAlignmentRow: controls.appAlignmentRow,
     };
 }

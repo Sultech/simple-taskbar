@@ -4,25 +4,29 @@
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
+import {MaximumSizeClamp} from './maximumSizeClamp.js';
+
 export const TaskbarViewport = GObject.registerClass(
 class TaskbarViewport extends St.ScrollView {
     _init(params = {}) {
         super._init(params);
-        this._maximumWidth = Number.MAX_SAFE_INTEGER;
+        this._clamp = new MaximumSizeClamp();
     }
 
-    setMaximumWidth(width) {
-        const maximumWidth = Math.max(1, Math.floor(width));
-        if (maximumWidth === this._maximumWidth)
-            return;
-
-        this._maximumWidth = maximumWidth;
-        this.queue_relayout();
+    setMaximumSize(size, vertical) {
+        if (this._clamp.set(size, vertical))
+            this.queue_relayout();
     }
 
     vfunc_get_preferred_width(forHeight) {
         const [, naturalWidth] =
             super.vfunc_get_preferred_width(forHeight);
-        return [0, Math.min(naturalWidth, this._maximumWidth)];
+        return [0, this._clamp.width(naturalWidth)];
+    }
+
+    vfunc_get_preferred_height(forWidth) {
+        const [, naturalHeight] =
+            super.vfunc_get_preferred_height(forWidth);
+        return [0, this._clamp.height(naturalHeight)];
     }
 });

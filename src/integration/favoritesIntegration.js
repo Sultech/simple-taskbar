@@ -4,6 +4,7 @@
 import Shell from 'gi://Shell';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
+import * as ShellAppMenu from 'resource:///org/gnome/shell/ui/appMenu.js';
 import {
     InjectionManager,
     gettext as _,
@@ -21,10 +22,36 @@ export class FavoritesIntegration {
         const settings = this._settings;
 
         this._injectionManager.overrideMethod(
+            ShellAppMenu.AppMenu.prototype,
+            '_updateFavoriteItem',
+            originalMethod => function () {
+                originalMethod.call(this);
+                const dockMode = settings.get_boolean('dock-mode');
+                if (settings.get_boolean('default-gnome-panel') && !dockMode)
+                    return;
+
+                if (!this._toggleFavoriteItem.visible)
+                    return;
+
+                const isPinned = this._appFavorites.isFavorite(
+                    this._app.get_id()
+                );
+                this._toggleFavoriteItem.label.text = dockMode
+                    ? isPinned
+                        ? _('Unpin from Dock')
+                        : _('Pin to Dock')
+                    : isPinned
+                        ? _('Unpin from Taskbar')
+                        : _('Pin to Taskbar');
+            }
+        );
+
+        this._injectionManager.overrideMethod(
             prototype,
             'addFavoriteAtPos',
             originalMethod => function (appId, position) {
-                if (settings.get_boolean('default-gnome-panel')) {
+                const dockMode = settings.get_boolean('dock-mode');
+                if (settings.get_boolean('default-gnome-panel') && !dockMode) {
                     return originalMethod.call(this, appId, position);
                 }
 
@@ -32,10 +59,15 @@ export class FavoritesIntegration {
                     return;
 
                 const app = Shell.AppSystem.get_default().lookup_app(appId);
-                this._showNotification(
-                    _('%s has been pinned to the taskbar.').format(
+                const message = dockMode
+                    ? _('%s has been pinned to the dock.').format(
                         app.get_name()
-                    ),
+                    )
+                    : _('%s has been pinned to the taskbar.').format(
+                        app.get_name()
+                    );
+                this._showNotification(
+                    message,
                     null,
                     () => this._removeFavorite(appId)
                 );
@@ -46,7 +78,8 @@ export class FavoritesIntegration {
             prototype,
             'removeFavorite',
             originalMethod => function (appId) {
-                if (settings.get_boolean('default-gnome-panel'))
+                const dockMode = settings.get_boolean('dock-mode');
+                if (settings.get_boolean('default-gnome-panel') && !dockMode)
                     return originalMethod.call(this, appId);
 
                 const ids = this._getIds();
@@ -55,10 +88,15 @@ export class FavoritesIntegration {
                 if (!this._removeFavorite(appId))
                     return;
 
-                this._showNotification(
-                    _('%s has been unpinned from the taskbar.').format(
+                const message = dockMode
+                    ? _('%s has been unpinned from the dock.').format(
                         app.get_name()
-                    ),
+                    )
+                    : _('%s has been unpinned from the taskbar.').format(
+                        app.get_name()
+                    );
+                this._showNotification(
+                    message,
                     null,
                     () => this._addFavorite(appId, position)
                 );

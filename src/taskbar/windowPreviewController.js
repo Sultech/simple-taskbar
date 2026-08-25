@@ -10,11 +10,16 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide, panelIsTop} from '../panel/panelPosition.js';
+import {
+    panelArrowSide,
+    panelIsTop,
+    panelPosition,
+} from '../panel/panelPosition.js';
 import {
     closePopupMenu,
     openPopupMenu,
 } from '../shared/popupMenuUtils.js';
+import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
@@ -185,8 +190,7 @@ export class WindowPreviewController {
 
     scheduleClose() {
         this._clearTimeout('_previewOpenId');
-        this._clearTimeout('_previewCloseId');
-        if (!this._previewItem)
+        if (!this._previewItem || this._previewCloseId)
             return;
         this._previewCloseId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
@@ -199,6 +203,32 @@ export class WindowPreviewController {
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    scheduleSwitch(item) {
+        this._clearTimeout('_previewOpenId');
+        this._clearTimeout('_previewCloseId');
+        if (!this.previewsEnabled) {
+            this.hide();
+            return;
+        }
+        if (this._overviewIsVisible()) {
+            this.hide();
+            return;
+        }
+        if (this._previewSwitchItem === item)
+            return;
+
+        this._clearSwitch();
+        this._previewSwitchItem = item;
+        this._previewSwitchId = GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
+            this._previewSwitchId = 0;
+            const target = this._previewSwitchItem;
+            this._previewSwitchItem = null;
+            if (target && target.mapped)
+                this.show(target);
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     scheduleTooltip(item) {
@@ -253,32 +283,6 @@ export class WindowPreviewController {
         });
     }
 
-    scheduleSwitch(item) {
-        this._clearTimeout('_previewOpenId');
-        this._clearTimeout('_previewCloseId');
-        if (!this.previewsEnabled) {
-            this.hide();
-            return;
-        }
-        if (this._overviewIsVisible()) {
-            this.hide();
-            return;
-        }
-        if (this._previewSwitchItem === item)
-            return;
-
-        this._clearSwitch();
-        this._previewSwitchItem = item;
-        this._previewSwitchId = GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
-            this._previewSwitchId = 0;
-            const target = this._previewSwitchItem;
-            this._previewSwitchItem = null;
-            if (target?.mapped)
-                this.show(target);
-            return GLib.SOURCE_REMOVE;
-        });
-    }
-
     show(item) {
         if (!this.previewsEnabled) {
             this.hide();
@@ -309,9 +313,7 @@ export class WindowPreviewController {
             0.5,
             panelArrowSide(this._settings)
         );
-        const themeClass = Main.panel.has_style_class_name(
-            'simple-taskbar-theme-light'
-        )
+        const themeClass = panelUsesLightTheme(this._settings)
             ? 'simple-taskbar-preview-light'
             : 'simple-taskbar-preview-dark';
         menu.actor.add_style_class_name('simple-taskbar-preview-menu');
@@ -407,6 +409,11 @@ export class WindowPreviewController {
             if (this._previewSwitchId)
                 this._clearSwitch();
 
+            if (pointerInsidePreview)
+                this._clearTimeout('_previewCloseId');
+            else
+                this.scheduleClose();
+
             return Clutter.EVENT_PROPAGATE;
         });
         menu.connect('open-state-changed', (_popup, isOpen) => {
@@ -472,13 +479,6 @@ export class WindowPreviewController {
         this[name] = 0;
         if (name === '_previewOpenId')
             this._previewPendingItem = null;
-    }
-
-    _clearSwitch() {
-        if (this._previewSwitchId)
-            GLib.Source.remove(this._previewSwitchId);
-        this._previewSwitchId = 0;
-        this._previewSwitchItem = null;
     }
 
     _peekWindow(window) {
@@ -595,6 +595,13 @@ export class WindowPreviewController {
         this._previewRefreshId = 0;
     }
 
+    _clearSwitch() {
+        if (this._previewSwitchId)
+            GLib.Source.remove(this._previewSwitchId);
+        this._previewSwitchId = 0;
+        this._previewSwitchItem = null;
+    }
+
     _pointerIsOverPreview(item) {
         if (!item.mapped)
             return false;
@@ -657,18 +664,35 @@ export class WindowPreviewController {
         const monitor = Main.layoutManager.findMonitorForActor(item) ??
             Main.layoutManager.primaryMonitor;
         const itemWidth = item.allocation.get_width();
-        const x = Math.clamp(
-            stageX + Math.floor((itemWidth - labelWidth) / 2),
-            monitor.x,
-            monitor.x + monitor.width - labelWidth
-        );
         const itemHeight = item.allocation.get_height();
-        const y = panelIsTop(this._settings)
-            ? Math.min(
-                monitor.y + monitor.height - labelHeight,
-                stageY + itemHeight + 8
-            )
-            : Math.max(monitor.y, stageY - labelHeight - 8);
+        const position = panelPosition(this._settings);
+        let x;
+        let y;
+        if (position === 'left' || position === 'right') {
+            x = position === 'left'
+                ? Math.min(
+                    monitor.x + monitor.width - labelWidth,
+                    stageX + itemWidth + 8
+                )
+                : Math.max(monitor.x, stageX - labelWidth - 8);
+            y = Math.clamp(
+                stageY + Math.floor((itemHeight - labelHeight) / 2),
+                monitor.y,
+                monitor.y + monitor.height - labelHeight
+            );
+        } else {
+            x = Math.clamp(
+                stageX + Math.floor((itemWidth - labelWidth) / 2),
+                monitor.x,
+                monitor.x + monitor.width - labelWidth
+            );
+            y = panelIsTop(this._settings)
+                ? Math.min(
+                    monitor.y + monitor.height - labelHeight,
+                    stageY + itemHeight + 8
+                )
+                : Math.max(monitor.y, stageY - labelHeight - 8);
+        }
         label.set_position(x, y);
         label.ease({
             opacity: 255,

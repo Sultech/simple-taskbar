@@ -91,6 +91,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
     constructor(sourceActor, side, settings, params) {
         super(sourceActor, side, {
             favoritesSection: true,
+            isDock: settings.isDock,
             showSingleWindows: true,
             closeApp: params.closeApp,
             getInterestingWindows: params.getInterestingWindows,

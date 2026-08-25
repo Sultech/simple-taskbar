@@ -3,9 +3,29 @@
 
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
+import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+
+export function createSwitchRow(settings, {
+    key,
+    title,
+    subtitle = '',
+}) {
+    const row = new Adw.SwitchRow({
+        title,
+        subtitle,
+        active: settings.get_boolean(key),
+    });
+    settings.bind(
+        key,
+        row,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    return row;
+}
 
 export function addSpinRow(group, settings, {
     key,
@@ -66,8 +86,9 @@ export function createPanelOrderRow(settings, {
         currentChoices = availableChoices;
         syncingPosition = true;
         positionDropDown.set_model(createModel(currentChoices));
+        const value = fixedPosition ?? settings.get_string(key);
         const index = currentChoices.findIndex(
-            choice => choice.value === settings.get_string(key)
+            choice => choice.value === value
         );
         positionDropDown.selected = index < 0 ? 0 : index;
         syncingPosition = false;
@@ -126,6 +147,33 @@ export function createPanelOrderRow(settings, {
     };
 }
 
+export function createItemOrderRow({title, subtitle = ''}) {
+    const upButton = new Gtk.Button({
+        icon_name: 'go-up-symbolic',
+        tooltip_text: _('Move Up'),
+        valign: Gtk.Align.CENTER,
+    });
+    const downButton = new Gtk.Button({
+        icon_name: 'go-down-symbolic',
+        tooltip_text: _('Move Down'),
+        valign: Gtk.Align.CENTER,
+    });
+    upButton.add_css_class('flat');
+    downButton.add_css_class('flat');
+    const moveBox = new Gtk.Box({
+        orientation: Gtk.Orientation.HORIZONTAL,
+        spacing: 2,
+        valign: Gtk.Align.CENTER,
+    });
+    moveBox.append(upButton);
+    moveBox.append(downButton);
+
+    const row = new Adw.ActionRow({title, subtitle});
+    row.add_prefix(moveBox);
+
+    return {row, upButton, downButton, group: null};
+}
+
 export function addComboRow(group, settings, {
     key,
     title,
@@ -134,6 +182,8 @@ export function addComboRow(group, settings, {
     initialValue = null,
     choicesProvider = () => choices,
     choicesChangedKey = null,
+    choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
+    setValue = value => settings.set_string(key, value),
 }, connectSettings) {
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
@@ -160,7 +210,7 @@ export function addComboRow(group, settings, {
 
         const choice = currentChoices[widget.get_selected()];
         if (choice)
-            settings.set_string(key, choice.value);
+            setValue(choice.value);
     });
     connectSettings(settings, `changed::${key}`, () => {
         const value = settings.get_string(key);
@@ -170,8 +220,8 @@ export function addComboRow(group, settings, {
         if (index >= 0 && row.get_selected() !== index)
             row.set_selected(index);
     });
-    if (choicesChangedKey) {
-        connectSettings(settings, `changed::${choicesChangedKey}`, () => {
+    for (const changedKey of choicesChangedKeys) {
+        connectSettings(settings, `changed::${changedKey}`, () => {
             currentChoices = choicesProvider();
             syncingChoices = true;
             row.set_model(createModel(currentChoices));

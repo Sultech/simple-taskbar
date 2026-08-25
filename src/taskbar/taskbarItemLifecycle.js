@@ -27,16 +27,20 @@ export function placeTaskbarItemAtIndex(
     actor,
     item,
     index,
-    excludedItem
+    excludedItem,
+    excludedItems = []
 ) {
     const children = actor.get_children();
     const activeChildren = children.filter(child =>
         child !== item &&
         child !== excludedItem &&
+        !excludedItems.includes(child) &&
         !child.animatingOut
     );
     const currentActiveChildren = children.filter(child =>
-        child !== excludedItem && !child.animatingOut
+        child !== excludedItem &&
+        !excludedItems.includes(child) &&
+        !child.animatingOut
     );
     if (currentActiveChildren.indexOf(item) === index)
         return;

@@ -11,12 +11,14 @@ import {
     getStartIconDisplayName,
     StartIconChooserDialog,
 } from './startIconChooser.js';
+import {axisPanelPositions} from './panelAxis.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
 import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 
 export function addStartMenuPage({
     window,
     page: startMenuPage,
+    dockPage,
     settings,
     connectSettings,
     extensionPath,
@@ -48,6 +50,8 @@ export function addStartMenuPage({
         const target = settings.get_string('target-prefs-page');
         if (target === 'start-menu')
             window.set_visible_page(startMenuPage);
+        else if (target === 'dock')
+            window.set_visible_page(dockPage);
 
         if (target)
             settings.set_string('target-prefs-page', '');
@@ -65,10 +69,11 @@ export function addStartMenuPage({
         {
             key: 'start-button-position',
             title: _('Start Button'),
-            subtitle: _(
-                'Place the Start button at the left edge or in the center'
-            ),
+            subtitle: _('Choose the Start button alignment'),
             choices: panelPositions.slice(0, 2),
+            choicesProvider: () =>
+                axisPanelPositions(settings, panelPositions).slice(0, 2),
+            choicesChangedKey: 'panel-position',
         },
         connectSettings
     );
@@ -88,9 +93,8 @@ export function addStartMenuPage({
         Gio.SettingsBindFlags.DEFAULT
     );
     const updateStartPositionRow = () => {
-        const defaultPanel = settings.get_boolean(
-            'default-gnome-panel'
-        );
+        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode');
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -109,6 +113,7 @@ export function addStartMenuPage({
         'changed::default-gnome-panel',
         updateStartPositionRow
     );
+    connectSettings(settings, 'changed::dock-mode', updateStartPositionRow);
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',

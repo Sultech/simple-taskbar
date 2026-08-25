@@ -11,6 +11,8 @@
       <choices>
         <choice value="top"/>
         <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
       </choices>
       <default>'bottom'</default>
       <summary>Taskbar screen edge</summary>
@@ -24,6 +26,23 @@
     <key name="panel-autohide-enabled" type="b">
       <default>false</default>
       <summary>Hide the panel until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="panel-dodge-windows-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the panel when selected windows overlap it</summary>
+    </key>
+    <key name="panel-dodge-windows-mode" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="maximized-windows"/>
+      </choices>
+      <default>'focused-application'</default>
+      <summary>Windows that make the panel hide</summary>
+    </key>
+    <key name="panel-dodge-pointer-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Reveal the panel when the pointer reaches its edge while dodging</summary>
     </key>
     <key name="hot-edge-overview-enabled" type="b">
       <default>true</default>
@@ -40,7 +59,7 @@
       <summary>Show a ripple when the bottom hot edge activates</summary>
     </key>
     <key name="icon-size" type="i">
-      <range min="15" max="48"/>
+      <range min="15" max="63"/>
       <default>32</default>
       <summary>Application icon size</summary>
     </key>
@@ -197,9 +216,166 @@
       <default>false</default>
       <summary>Use a GNOME-style panel without taskbar applications</summary>
     </key>
+    <key name="dock-mode" type="b">
+      <default>false</default>
+      <summary>Enable Dock mode</summary>
+    </key>
+    <key name="dock-item-order" type="as">
+      <default>['start-button', 'applications']</default>
+      <summary>Dock item order</summary>
+    </key>
+    <key name="taskbar-show-locations" type="b">
+      <default>false</default>
+      <summary>Show locations in the taskbar</summary>
+    </key>
+    <key name="taskbar-show-trash" type="b">
+      <default>true</default>
+      <summary>Show Trash in the taskbar</summary>
+    </key>
+    <key name="taskbar-show-mounts" type="b">
+      <default>false</default>
+      <summary>Show drives and volumes in the taskbar</summary>
+    </key>
+    <key name="dock-show-locations" type="b">
+      <default>true</default>
+      <summary>Show locations in the Dock</summary>
+    </key>
+    <key name="dock-show-trash" type="b">
+      <default>true</default>
+      <summary>Show Trash in the Dock</summary>
+    </key>
+    <key name="dock-show-mounts" type="b">
+      <default>false</default>
+      <summary>Show drives and volumes in the Dock</summary>
+    </key>
+    <key name="locations-show-mounted-only" type="b">
+      <default>true</default>
+      <summary>Only show mounted drives and volumes</summary>
+    </key>
+    <key name="locations-show-network" type="b">
+      <default>false</default>
+      <summary>Include network volumes</summary>
+    </key>
+    <key name="dock-position" type="s">
+      <choices>
+        <choice value="top"/>
+        <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
+      </choices>
+      <default>'bottom'</default>
+      <summary>Dock screen edge</summary>
+    </key>
+    <key name="dock-mode-initialized" type="b">
+      <default>false</default>
+      <summary>Whether Dock mode defaults have been initialized</summary>
+    </key>
+    <key name="dock-autohide-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the Dock until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="dock-dodge-windows-enabled" type="b">
+      <default>true</default>
+      <summary>Hide the Dock when selected windows overlap it</summary>
+    </key>
+    <key name="dock-dodge-windows-mode" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="maximized-windows"/>
+      </choices>
+      <default>'focused-application'</default>
+      <summary>Windows that make the Dock hide</summary>
+    </key>
+    <key name="dock-dodge-pointer-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Reveal the Dock when the pointer reaches its edge while dodging</summary>
+    </key>
+    <key name="dock-edge-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Limit Dock reveal to its floating edge</summary>
+    </key>
+    <key name="dock-multi-monitor-panels" type="b">
+      <default>true</default>
+      <summary>Show the Dock on every connected monitor</summary>
+    </key>
+    <key name="dock-max-length" type="i">
+      <range min="1" max="90"/>
+      <default>90</default>
+      <summary>Maximum Dock length as a percentage of the monitor</summary>
+    </key>
+    <key name="dock-min-icon-size" type="i">
+      <range min="15" max="63"/>
+      <default>32</default>
+      <summary>Minimum application icon size when space is limited</summary>
+    </key>
+    <key name="dock-panel-mode" type="b">
+      <default>false</default>
+      <summary>Extend the Dock to the full monitor edge</summary>
+    </key>
+    <key name="dock-corner-radius" type="i">
+      <range min="0" max="64"/>
+      <default>22</default>
+      <summary>Floating Dock corner radius</summary>
+    </key>
+    <key name="dock-transparency-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Dock transparency</summary>
+    </key>
+    <key name="dock-transparency-level" type="i">
+      <range min="0" max="100"/>
+      <default>20</default>
+      <summary>Dock background transparency percentage</summary>
+    </key>
+    <key name="dock-custom-panel-color-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-color" type="s">
+      <default>'#18181b'</default>
+      <summary>Custom Dock color</summary>
+    </key>
+    <key name="dock-panel-theme-follow-system" type="b">
+      <default>false</default>
+      <summary>Match the Dock to the active GNOME Shell theme</summary>
+    </key>
+    <key name="dock-panel-theme" type="s">
+      <choices>
+        <choice value="light"/>
+        <choice value="dark"/>
+      </choices>
+      <default>'dark'</default>
+      <summary>Dock colour scheme when not following the system</summary>
+    </key>
+    <key name="dock-panel-border-enabled" type="b">
+      <default>false</default>
+      <summary>Show the Dock border in dark mode</summary>
+    </key>
+    <key name="dock-panel-border-light-enabled" type="b">
+      <default>false</default>
+      <summary>Show the Dock border in light mode</summary>
+    </key>
+    <key name="dock-workspace-scroll-enabled" type="b">
+      <default>true</default>
+      <summary>Switch workspaces by scrolling over empty Dock space</summary>
+    </key>
+    <key name="dock-workspace-scroll-delay" type="i">
+      <range min="5" max="250"/>
+      <default>5</default>
+      <summary>Minimum delay between Dock workspace changes in milliseconds</summary>
+    </key>
     <key name="windows-xp-theme-enabled" type="b">
       <default>false</default>
       <summary>Use Windows XP taskbar dimensions</summary>
+    </key>
+    <key name="windows-xp-previous-mode" type="s">
+      <choices>
+        <choice value="taskbar"/>
+        <choice value="default-panel"/>
+        <choice value="dock"/>
+      </choices>
+      <default>'taskbar'</default>
+      <summary>Panel mode to restore after Windows XP mode</summary>
     </key>
     <key name="taskbar-mode-settings" type="a{sv}">
       <default>{}</default>
@@ -238,6 +414,54 @@
       <default>false</default>
       <summary>Whether panel mode profiles have been initialized</summary>
     </key>
+    <key name="taskbar-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Taskbar panel</summary>
+    </key>
+    <key name="taskbar-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Taskbar settings are saved</summary>
+    </key>
+    <key name="taskbar-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Taskbar panel</summary>
+    </key>
+    <key name="taskbar-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Taskbar settings are saved</summary>
+    </key>
+    <key name="default-panel-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Default GNOME Panel</summary>
+    </key>
+    <key name="default-panel-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Default GNOME Panel settings are saved</summary>
+    </key>
+    <key name="default-panel-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Default GNOME Panel</summary>
+    </key>
+    <key name="default-panel-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Default GNOME Panel settings are saved</summary>
+    </key>
+    <key name="active-panel-axis" type="s">
+      <choices>
+        <choice value="horizontal"/>
+        <choice value="vertical"/>
+      </choices>
+      <default>'horizontal'</default>
+      <summary>Panel axis whose settings are currently active</summary>
+    </key>
+    <key name="panel-axis-profiles-initialized" type="b">
+      <default>false</default>
+      <summary>Whether panel axis profiles have been initialized</summary>
+    </key>
+    <key name="panel-profile-transition" type="b">
+      <default>false</default>
+      <summary>Whether a panel profile transition is in progress</summary>
+    </key>
     <key name="hide-pinned-taskbar-apps" type="b">
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>
@@ -246,6 +470,11 @@
       <default>false</default>
       <summary>Use pinned applications as separate launchers</summary>
       <description>Keep pinned applications as launchers and show their running windows separately</description>
+    </key>
+    <key name="show-pinned-app-separator" type="b">
+      <default>false</default>
+      <summary>Show a separator between pinned and running applications</summary>
+      <description>Show a line between pinned and running applications</description>
     </key>
     <key name="combine-app-buttons-mode" type="s">
       <choices>

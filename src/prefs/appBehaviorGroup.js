@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {addComboRow} from './preferencesWidgets.js';
+import {
+    addComboRow,
+    createSwitchRow,
+} from './preferencesWidgets.js';
 
 export function addAppBehaviorGroup({
     settings,
@@ -14,37 +14,28 @@ export function addAppBehaviorGroup({
     advancedAppBehaviorGroup,
     advancedFileManagerGroup,
 }) {
-    const hidePinnedAppsSwitch = new Adw.SwitchRow({
+    const hidePinnedAppsSwitch = createSwitchRow(settings, {
+        key: 'hide-pinned-taskbar-apps',
         title: _('Hide Pinned Applications'),
         subtitle: _('Show pinned taskbar applications only while they are running'),
-        active: settings.get_boolean(
-            'hide-pinned-taskbar-apps'
-        ),
     });
     advancedAppBehaviorGroup.add(hidePinnedAppsSwitch);
-    settings.bind(
-        'hide-pinned-taskbar-apps',
-        hidePinnedAppsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const pinnedAppsAsLaunchersSwitch = new Adw.SwitchRow({
+    const pinnedAppsAsLaunchersSwitch = createSwitchRow(settings, {
+        key: 'use-pinned-apps-as-launchers',
         title: _('Use Pinned Apps as Application Launchers'),
         subtitle: _(
             'Keep pinned applications as launchers and show running applications separately'
         ),
-        active: settings.get_boolean(
-            'use-pinned-apps-as-launchers'
-        ),
     });
     advancedAppBehaviorGroup.add(pinnedAppsAsLaunchersSwitch);
-    settings.bind(
-        'use-pinned-apps-as-launchers',
-        pinnedAppsAsLaunchersSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
+
+    const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
+        key: 'show-pinned-app-separator',
+        title: _('Show Pinned App Separator'),
+        subtitle: _('Show a line between pinned and running applications'),
+    });
+    advancedAppBehaviorGroup.add(pinnedAppSeparatorSwitch);
 
     const combineAppButtonsChoices = [
         {value: 'always', label: _('Always')},
@@ -74,22 +65,14 @@ export function addAppBehaviorGroup({
         connectSettings
     );
 
-    const applicationOverflowSwitch = new Adw.SwitchRow({
+    const applicationOverflowSwitch = createSwitchRow(settings, {
+        key: 'application-overflow-enabled',
         title: _('Application Overflow'),
         subtitle: _(
             'Show application buttons that do not fit in an overflow popup instead of scrolling the taskbar'
         ),
-        active: settings.get_boolean(
-            'application-overflow-enabled'
-        ),
     });
     advancedAppBehaviorGroup.add(applicationOverflowSwitch);
-    settings.bind(
-        'application-overflow-enabled',
-        applicationOverflowSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const applicationOverflowStyleRow = addComboRow(
         advancedAppBehaviorGroup,
@@ -110,87 +93,63 @@ export function addAppBehaviorGroup({
         applicationOverflowStyleRow.sensitive = widget.active;
     });
 
-    const hideAppLabelsSwitch = new Adw.SwitchRow({
+    const hideAppLabelsSwitch = createSwitchRow(settings, {
+        key: 'hide-app-labels',
         title: _('Hide App Labels'),
         subtitle: _('Show only icons on separate window buttons'),
-        active: settings.get_boolean('hide-app-labels'),
     });
     advancedAppBehaviorGroup.add(hideAppLabelsSwitch);
-    settings.bind(
-        'hide-app-labels',
-        hideAppLabelsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const syncLabelSensitivity = () => {
         hideAppLabelsSwitch.sensitive =
             !settings.get_boolean(
                 'windows-xp-theme-enabled'
-            ) && settings.get_string(
+            ) && !['left', 'right'].includes(settings.get_string(
+                'panel-position'
+            )) && settings.get_string(
                 'combine-app-buttons-mode'
             ) !== 'always';
     };
     combineAppButtonsRow.connect('notify::selected', () => {
         syncLabelSensitivity();
     });
+    connectSettings(
+        settings,
+        'changed::panel-position',
+        syncLabelSensitivity
+    );
     syncLabelSensitivity();
 
-    const isolateWorkspacesSwitch = new Adw.SwitchRow({
+    const isolateWorkspacesSwitch = createSwitchRow(settings, {
+        key: 'isolate-workspaces',
         title: _('Isolate Workspaces'),
         subtitle: _('Show running applications from the current workspace only'),
-        active: settings.get_boolean('isolate-workspaces'),
     });
     advancedAppBehaviorGroup.add(isolateWorkspacesSwitch);
-    settings.bind(
-        'isolate-workspaces',
-        isolateWorkspacesSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const isolateMonitorsSwitch = new Adw.SwitchRow({
+    const isolateMonitorsSwitch = createSwitchRow(settings, {
+        key: 'isolate-monitors',
         title: _('Isolate Monitors'),
         subtitle: _('Show running applications only on the taskbar for their monitor'),
-        active: settings.get_boolean('isolate-monitors'),
     });
     advancedAppBehaviorGroup.add(isolateMonitorsSwitch);
-    settings.bind(
-        'isolate-monitors',
-        isolateMonitorsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const nautilusPlacesSwitch = new Adw.SwitchRow({
+    const nautilusPlacesSwitch = createSwitchRow(settings, {
+        key: 'nautilus-places-enabled',
         title: _('Nautilus Folder Shortcuts'),
         subtitle: _('Show common folders in the Files taskbar menu'),
-        active: settings.get_boolean(
-            'nautilus-places-enabled'
-        ),
     });
     advancedFileManagerGroup.add(nautilusPlacesSwitch);
-    settings.bind(
-        'nautilus-places-enabled',
-        nautilusPlacesSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const middleClickCloseAppsSwitch = new Adw.SwitchRow({
+    const middleClickCloseAppsSwitch = createSwitchRow(settings, {
+        key: 'middle-click-close-apps',
         title: _('Middle Click Closes Applications'),
         subtitle: _('Close all application windows instead of opening a new window'),
-        active: settings.get_boolean('middle-click-close-apps'),
     });
     advancedAppBehaviorGroup.add(middleClickCloseAppsSwitch);
-    settings.bind(
-        'middle-click-close-apps',
-        middleClickCloseAppsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     return {
         pinnedAppsAsLaunchersSwitch,
+        pinnedAppSeparatorSwitch,
         combineAppButtonsRow,
         applicationOverflowSwitch,
         isolateMonitorsSwitch,

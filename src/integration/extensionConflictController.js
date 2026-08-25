@@ -31,6 +31,8 @@ export class ExtensionConflictController {
         this._settings.connectObject(
             'changed::default-gnome-panel',
             () => this._sync(),
+            'changed::dock-mode',
+            () => this._sync(),
             this._signalHolder
         );
         Main.extensionManager.connectObject(
@@ -66,7 +68,7 @@ export class ExtensionConflictController {
     _sync() {
         this._cancelPendingDisable();
         const conflictingUuids = [...ALWAYS_CONFLICTING_UUIDS];
-        if (this._taskbarModeActive())
+        if (this._dockExtensionConflictActive())
             conflictingUuids.push(...TASKBAR_DOCK_UUIDS);
 
         for (const uuid of conflictingUuids) {
@@ -76,14 +78,16 @@ export class ExtensionConflictController {
         }
     }
 
-    _taskbarModeActive() {
-        return !this._settings.get_boolean('default-gnome-panel');
+    _dockExtensionConflictActive() {
+        return !this._settings.get_boolean('default-gnome-panel') ||
+            this._settings.get_boolean('dock-mode');
     }
 
     _shouldDisable(uuid) {
         return Boolean(
             ALWAYS_CONFLICTING_UUIDS.includes(uuid) ||
-            this._taskbarModeActive() && TASKBAR_DOCK_UUIDS.includes(uuid)
+            this._dockExtensionConflictActive() &&
+                TASKBAR_DOCK_UUIDS.includes(uuid)
         );
     }
 

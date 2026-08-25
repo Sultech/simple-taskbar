@@ -9,6 +9,7 @@ import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {closePopupMenu} from '../shared/popupMenuUtils.js';
+import {panelIsVertical} from '../panel/panelPosition.js';
 
 export class ApplicationOverflowItemController {
     constructor(settings, taskbarController, menu, section) {
@@ -26,15 +27,18 @@ export class ApplicationOverflowItemController {
 
     createTaskbarItem(item) {
         const panelHeight = this._settings.get_int('panel-height');
-        const [, width] = item.get_preferred_width(panelHeight);
+        const vertical = panelIsVertical(this._settings);
+        const size = vertical
+            ? item.get_preferred_height(panelHeight)[1]
+            : item.get_preferred_width(panelHeight)[1];
         const clone = new Clutter.Clone({source: item});
         const button = new St.Button({
             style_class: 'simple-taskbar-app-item simple-taskbar-application-overflow-taskbar-item',
             reactive: true,
             can_focus: true,
             track_hover: true,
-            width,
-            height: panelHeight,
+            width: vertical ? panelHeight : size,
+            height: vertical ? size : panelHeight,
             accessible_name: item._taskbarButton.accessible_name,
             child: clone,
         });
@@ -50,7 +54,7 @@ export class ApplicationOverflowItemController {
         const window = item._taskbarWindow;
         const icon = app.create_icon_texture(Math.min(
             32,
-            this._settings.get_int('icon-size')
+            this._taskbarController.getIconSize()
         ));
         const label = new St.Label({
             text: window
@@ -95,7 +99,7 @@ export class ApplicationOverflowItemController {
 
     clear() {
         const taskbarItems = new Set(
-            this._taskbarController.getOrderedItems()
+            this._taskbarController.getOrderedApplicationItems()
         );
         for (const {auxiliaryItem, styleItem} of this._records) {
             this._releaseDraggable(auxiliaryItem);
@@ -234,14 +238,14 @@ export class ApplicationOverflowItemController {
             _taskbarDropAccepted: false,
             _taskbarDropTarget: null,
             getDragActor: () => sourceItem._taskbarApp.create_icon_texture(
-                this._settings.get_int('icon-size')
+                this._taskbarController.getIconSize()
             ),
             getDragActorSource: () => sourceItem._taskbarIcon,
         };
         auxiliaryItem._delegate = dragSource;
         const draggable = DND.makeDraggable(auxiliaryItem, {
             timeoutThreshold: 200,
-            dragActorMaxSize: this._settings.get_int('icon-size'),
+            dragActorMaxSize: this._taskbarController.getIconSize(),
         });
         auxiliaryItem._taskbarDraggable = draggable;
         this._draggables.set(auxiliaryItem, {

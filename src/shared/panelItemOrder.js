@@ -19,6 +19,27 @@ export const DEFAULT_PANEL_ITEM_ORDER = Object.freeze([
     'show-desktop',
 ]);
 
+export const DEFAULT_DOCK_ITEM_ORDER = Object.freeze([
+    'start-button',
+    'applications',
+]);
+
+export function normalizeDockItemOrder(order) {
+    const validItems = new Set(DEFAULT_DOCK_ITEM_ORDER);
+    const normalized = [];
+
+    for (const item of order) {
+        if (validItems.delete(item))
+            normalized.push(item);
+    }
+    for (const item of DEFAULT_DOCK_ITEM_ORDER) {
+        if (validItems.has(item))
+            normalized.push(item);
+    }
+
+    return normalized;
+}
+
 export function normalizePanelItemOrder(order) {
     const validItems = new Set(DEFAULT_PANEL_ITEM_ORDER);
     const normalized = [];

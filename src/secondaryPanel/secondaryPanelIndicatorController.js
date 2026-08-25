@@ -5,7 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
     panelArrowSide,
-    panelIsTop,
+    panelPosition,
     removeXpPopupOffset,
     syncXpPopupOffset,
 } from '../panel/panelPosition.js';
@@ -46,7 +46,8 @@ export class SecondaryPanelIndicatorController {
                 boxPointer._userArrowSide = side;
             if ('_arrowSide' in menu)
                 menu._arrowSide = side;
-            if (role !== 'quickSettings' && !panelIsTop(this._settings)) {
+            if (role !== 'quickSettings' &&
+                panelPosition(this._settings) !== 'top') {
                 menu.actor.add_style_class_name(
                     'simple-taskbar-bottom-panel-menu'
                 );

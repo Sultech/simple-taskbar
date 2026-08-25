@@ -11,7 +11,9 @@ import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
 import {
     addComboRow,
     addSpinRow,
+    createSwitchRow,
 } from './preferencesWidgets.js';
+import {addWindowDodgeRows} from './windowDodgeGroup.js';
 
 export function addTaskbarBehaviorGroup({
     page,
@@ -25,33 +27,30 @@ export function addTaskbarBehaviorGroup({
     });
     page.add(behaviorGroup);
 
-    const panelAutoHideSwitch = new Adw.SwitchRow({
+    const panelAutoHideSwitch = createSwitchRow(settings, {
+        key: 'panel-autohide-enabled',
         title: _('Auto-hide Panel'),
         subtitle: _('Reveal the taskbar when the pointer reaches its screen edge'),
-        active: settings.get_boolean('panel-autohide-enabled'),
     });
     behaviorGroup.add(panelAutoHideSwitch);
-    settings.bind(
-        'panel-autohide-enabled',
-        panelAutoHideSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
+    addWindowDodgeRows(
+        behaviorGroup,
+        settings,
+        {
+            enabledKey: 'panel-dodge-windows-enabled',
+            modeKey: 'panel-dodge-windows-mode',
+            pointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
+            autohideKey: 'panel-autohide-enabled',
+            connectSettings,
+        }
     );
 
-    const hotEdgeOverviewSwitch = new Adw.SwitchRow({
+    const hotEdgeOverviewSwitch = createSwitchRow(settings, {
+        key: 'hot-edge-overview-enabled',
         title: _('Bottom Hot Edge'),
         subtitle: _('Push the pointer against the bottom screen edge to toggle Overview'),
-        active: settings.get_boolean(
-            'hot-edge-overview-enabled'
-        ),
     });
     behaviorGroup.add(hotEdgeOverviewSwitch);
-    settings.bind(
-        'hot-edge-overview-enabled',
-        hotEdgeOverviewSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const hotEdgePressureRow = addSpinRow(
         behaviorGroup,
@@ -69,19 +68,11 @@ export function addTaskbarBehaviorGroup({
         connectSettings
     );
 
-    const hotEdgeAnimationSwitch = new Adw.SwitchRow({
+    const hotEdgeAnimationSwitch = createSwitchRow(settings, {
+        key: 'hot-edge-animation-enabled',
         title: _('Hot Edge Animation'),
         subtitle: _('Show a ripple when the bottom hot edge activates'),
-        active: settings.get_boolean(
-            'hot-edge-animation-enabled'
-        ),
     });
-    settings.bind(
-        'hot-edge-animation-enabled',
-        hotEdgeAnimationSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateHotEdgeAnimationSwitch = () => {
         hotEdgeAnimationSwitch.sensitive = hotEdgeOverviewSwitch.active;
         hotEdgePressureRow.visible = hotEdgeOverviewSwitch.active;
@@ -92,18 +83,12 @@ export function addTaskbarBehaviorGroup({
     );
     updateHotEdgeAnimationSwitch();
 
-    const workspaceScrollSwitch = new Adw.SwitchRow({
+    const workspaceScrollSwitch = createSwitchRow(settings, {
+        key: 'workspace-scroll-enabled',
         title: _('Workspace Scroll'),
         subtitle: _('Scroll over empty taskbar space to switch workspaces'),
-        active: settings.get_boolean('workspace-scroll-enabled'),
     });
     behaviorGroup.add(workspaceScrollSwitch);
-    settings.bind(
-        'workspace-scroll-enabled',
-        workspaceScrollSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const workspaceScrollDelayRow = addSpinRow(
         behaviorGroup,
@@ -123,34 +108,20 @@ export function addTaskbarBehaviorGroup({
         workspaceScrollDelayRow.sensitive = widget.active;
     });
 
-    const panelMenuClickOnlySwitch = new Adw.SwitchRow({
+    const panelMenuClickOnlySwitch = createSwitchRow(settings, {
+        key: 'panel-menu-click-only',
         title: _('Panel Menus Require Click'),
         subtitle: _('Switch between clock, system, and tray menus only when clicked'),
-        active: settings.get_boolean('panel-menu-click-only'),
     });
     advancedBehaviorGroup.add(panelMenuClickOnlySwitch);
-    settings.bind(
-        'panel-menu-click-only',
-        panelMenuClickOnlySwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const notificationBannerSwitch = new Adw.SwitchRow({
+    const notificationBannerSwitch = createSwitchRow(settings, {
+        key: 'notification-banner-bottom-end',
         title: _('Taskbar-aligned Notification Banners'),
-        subtitle: _('Follow the taskbar edge and the clock’s horizontal position'),
-        active: settings.get_boolean(
-            'notification-banner-bottom-end'
-        ),
+        subtitle: _('Follow the taskbar edge and the clock position'),
     });
     advancedBehaviorGroup.add(notificationBannerSwitch);
     advancedBehaviorGroup.add(hotEdgeAnimationSwitch);
-    settings.bind(
-        'notification-banner-bottom-end',
-        notificationBannerSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const allTaskManagerApps = Gio.AppInfo.get_all();
     const taskManagerApps = allTaskManagerApps
@@ -200,18 +171,12 @@ export function addTaskbarBehaviorGroup({
         Gtk.StringFilterMatchMode.SUBSTRING;
     taskManagerAppRow.enable_search = true;
 
-    const multiMonitorPanelsSwitch = new Adw.SwitchRow({
+    const multiMonitorPanelsSwitch = createSwitchRow(settings, {
+        key: 'multi-monitor-panels',
         title: _('Show Taskbar on All Monitors'),
         subtitle: _('Show Activities, applications, clock, and system menu on every monitor'),
-        active: settings.get_boolean('multi-monitor-panels'),
     });
     behaviorGroup.add(multiMonitorPanelsSwitch);
-    settings.bind(
-        'multi-monitor-panels',
-        multiMonitorPanelsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const syncMonitorIsolationSensitivity = () => {
         isolateMonitorsSwitch.sensitive =
             settings.get_boolean('multi-monitor-panels');
