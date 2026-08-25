@@ -42,13 +42,6 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     });
     group.add(edgeRevealSwitch);
 
-    const multiMonitorSwitch = createSwitchRow(settings, {
-        key: 'dock-multi-monitor-panels',
-        title: _('Show Dock on All Monitors'),
-        subtitle: _('Show the Dock on every connected monitor'),
-    });
-    group.add(multiMonitorSwitch);
-
     const workspaceScrollSwitch = createSwitchRow(settings, {
         key: 'dock-workspace-scroll-enabled',
         title: _('Workspace Scroll'),
@@ -69,6 +62,13 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         },
         connectSettings
     );
+
+    const multiMonitorSwitch = createSwitchRow(settings, {
+        key: 'dock-multi-monitor-panels',
+        title: _('Show Dock on All Monitors'),
+        subtitle: _('Show the Dock on every connected monitor'),
+    });
+    group.add(multiMonitorSwitch);
 
     const syncWorkspaceScrollControls = () => {
         workspaceScrollDelayRow.sensitive = group.sensitive &&
