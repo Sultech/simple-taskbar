@@ -46,7 +46,7 @@ msgstr "Taskleiste"
 
 #: prefs.js:59 src/prefs/locationsGroup.js:112
 msgid "Dock"
-msgstr ""
+msgstr "Dock"
 
 #: prefs.js:71 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
@@ -54,97 +54,92 @@ msgstr "Startmenü"
 
 #: src/prefs/aboutPage.js:38
 msgid "About"
-msgstr ""
+msgstr "Über"
 
 #: src/prefs/aboutPage.js:69
-#, fuzzy
 msgid "Simple Taskbar"
-msgstr "Taskleiste"
+msgstr "Simple Taskbar"
 
 #: src/prefs/aboutPage.js:74
 msgid "A configurable taskbar, panel and dock for GNOME Shell"
-msgstr ""
+msgstr "Eine konfigurierbare Taskleiste, ein Panel und ein Dock für GNOME Shell"
 
 #: src/prefs/aboutPage.js:79
 msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
-msgstr ""
+msgstr "GNOME Shell 48–51 • GPL-2.0-or-later"
 
 #: src/prefs/aboutPage.js:90
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: src/prefs/aboutPage.js:97
 msgid "GitHub Repository"
-msgstr ""
+msgstr "GitHub-Repository"
 
 #: src/prefs/aboutPage.js:105
 msgid "Report an Issue"
-msgstr ""
+msgstr "Problem melden"
 
 #: src/prefs/aboutPage.js:135
 msgid "Credits"
-msgstr ""
+msgstr "Mitwirkende"
 
 #: src/prefs/aboutPage.js:140
 msgid "Sultech"
-msgstr ""
+msgstr "Sultech"
 
 #: src/prefs/aboutPage.js:141
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: src/prefs/aboutPage.js:145
-#, fuzzy
 msgid "Features"
-msgstr "Bilder"
+msgstr "Funktionen"
 
 #: src/prefs/aboutPage.js:146
 msgid ""
 "Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
 "Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
-msgstr ""
+msgstr "Konfigurierbare Taskleiste, Standard-GNOME-Panel, Dock- und Windows-XP-Theme-Modi · Live-Fenstervorschauen · Raster-Alt-Tab · Startmenü · Unterstützung mehrerer Monitore"
 
 #: src/prefs/aboutPage.js:150
 msgid "License"
-msgstr ""
+msgstr "Lizenz"
 
 #: src/prefs/aboutPage.js:151
 msgid "Simple Taskbar is distributed under GPL-2.0-or-later"
-msgstr ""
+msgstr "Simple Taskbar wird unter der GPL-2.0-or-later-Lizenz vertrieben"
 
 #: src/prefs/aboutPage.js:158
-#, fuzzy
 msgid "Support Development"
-msgstr "Entwicklung"
+msgstr "Entwicklung unterstützen"
 
 #: src/prefs/aboutPage.js:159
 msgid ""
 "If Simple Taskbar is useful to you, consider supporting its development."
-msgstr ""
+msgstr "Wenn Simple Taskbar nützlich ist, unterstützen Sie bitte seine Entwicklung."
 
 #: src/prefs/aboutPage.js:166
 msgid "Buy Me a Coffee"
-msgstr ""
+msgstr "Buy Me a Coffee"
 
 #: src/prefs/aboutPage.js:188
 #, javascript-format
 msgid "Copy %s address"
-msgstr ""
+msgstr "Adresse von %s kopieren"
 
 #: src/prefs/aboutPage.js:195
 #, javascript-format
 msgid "%s address copied"
-msgstr ""
+msgstr "Adresse von %s kopiert"
 
 #: src/prefs/applicationIconsGroup.js:26
-#, fuzzy
 msgid "Icon Sizing and Spacing"
-msgstr "Symbolabstand"
+msgstr "Symbolgröße und -abstände"
 
 #: src/prefs/applicationIconsGroup.js:27
-#, fuzzy
 msgid "Adjust application icon sizes and the space between them"
-msgstr "Platzieren Sie Anwendungssymbole links oder mittig"
+msgstr "Größe der Anwendungssymbole und den Abstand zwischen ihnen anpassen"
 
 #: src/prefs/applicationIconsGroup.js:36
 msgid "Icon Size"
@@ -157,13 +152,12 @@ msgstr ""
 "benötigen"
 
 #: src/prefs/applicationIconsGroup.js:51
-#, fuzzy
 msgid "Minimum Icon Size"
-msgstr "Symbolgröße"
+msgstr "Minimale Symbolgröße"
 
 #: src/prefs/applicationIconsGroup.js:53
 msgid "Smallest application icon size used when space is limited"
-msgstr ""
+msgstr "Kleinste Anwendungssymbolgröße bei begrenztem Platz"
 
 #: src/prefs/applicationIconsGroup.js:66
 msgid "Icon Spacing"
@@ -178,18 +172,16 @@ msgid "Icon Alignment"
 msgstr "Symbolausrichtung"
 
 #: src/prefs/applicationIconsGroup.js:80
-#, fuzzy
 msgid "Choose the application icon alignment"
-msgstr "Anwendungsausrichtung folgen"
+msgstr "Ausrichtung der Anwendungssymbole wählen"
 
 #: src/prefs/applicationIconsGroup.js:90
-#, fuzzy
 msgid "Application Interaction"
-msgstr "Anwendungssymbole"
+msgstr "Anwendungsinteraktion"
 
 #: src/prefs/applicationIconsGroup.js:91
 msgid "Configure previews, multi-window actions, and clicks"
-msgstr ""
+msgstr "Vorschauen, Aktionen für mehrere Fenster und Klicks konfigurieren"
 
 #: src/prefs/applicationIconsGroup.js:96
 msgid "Window Previews"
@@ -222,15 +214,12 @@ msgid "Close all application windows instead of opening a new window"
 msgstr "Schließt alle Anwendungsfenster, anstatt ein neues Fenster zu öffnen"
 
 #: src/prefs/applicationIconsGroup.js:150
-#, fuzzy
 msgid "Application Layout"
-msgstr "Anwendungsliste"
+msgstr "Anordnung der Anwendungen"
 
 #: src/prefs/applicationIconsGroup.js:152
-#, fuzzy
 msgid "Choose which applications appear and how their buttons are shown"
-msgstr ""
-"Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
+msgstr "Wählen Sie, welche Anwendungen angezeigt werden und wie ihre Schaltflächen dargestellt werden"
 
 #: src/prefs/applicationIconsGroup.js:159
 msgid "Hide Pinned Applications"
@@ -255,16 +244,12 @@ msgstr ""
 "separat anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:177
-#, fuzzy
 msgid "Hide Unpinned Applications"
-msgstr "Angeheftete Anwendungen ausblenden"
+msgstr "Nicht angeheftete Anwendungen ausblenden"
 
 #: src/prefs/applicationIconsGroup.js:179
-#, fuzzy
 msgid "Show only pinned applications and their running windows"
-msgstr ""
-"Zeigt angeheftete Taskleisten-Anwendungen nur an, während sie ausgeführt "
-"werden"
+msgstr "Nur angeheftete Anwendungen und deren laufende Fenster anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:195
 msgid "Always"
@@ -298,35 +283,27 @@ msgstr "Zeigt nur Symbole auf separaten Fensterschaltflächen"
 
 #: src/prefs/applicationIconsGroup.js:232
 msgid "Show Pinned App Separator"
-msgstr ""
+msgstr "Trennlinie zwischen angehefteten und laufenden Apps anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:233
-#, fuzzy
 msgid "Show a line between pinned and running applications"
-msgstr ""
-"Live-Fenstervorschauen anzeigen, wenn der Mauszeiger über Anwendungssymbole "
-"bewegt wird"
+msgstr "Eine Linie zwischen angehefteten und laufenden Anwendungen anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:239
 msgid "Show Location Separator"
-msgstr ""
+msgstr "Trennlinie für Orte anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:240
-#, fuzzy
 msgid "Show a line between applications and locations"
-msgstr ""
-"Live-Fenstervorschauen anzeigen, wenn der Mauszeiger über Anwendungssymbole "
-"bewegt wird"
+msgstr "Eine Linie zwischen Anwendungen und Orten anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:302
-#, fuzzy
 msgid "Running Indicators"
-msgstr "Stil der Ausführungsanzeige"
+msgstr "Anzeigen laufender Anwendungen"
 
 #: src/prefs/applicationIconsGroup.js:303
-#, fuzzy
 msgid "Configure indicators beneath running application icons"
-msgstr "Wählen Sie die Form der Anzeigen unter laufenden Anwendungen"
+msgstr "Anzeigen unter laufenden Anwendungssymbolen konfigurieren"
 
 #: src/prefs/applicationIconsGroup.js:312
 msgid "Running Indicator Style"
@@ -373,14 +350,12 @@ msgid "Application Overflow"
 msgstr "Anwendungsüberlauf"
 
 #: src/prefs/applicationIconsGroup.js:417
-#, fuzzy
 msgid "Choose how overflowing applications are handled"
-msgstr "Wählen Sie Farben für die Anzeigen laufender Anwendungen"
+msgstr "Festlegen, wie überlaufende Anwendungen behandelt werden"
 
 #: src/prefs/applicationIconsGroup.js:423
-#, fuzzy
 msgid "Enable Application Overflow"
-msgstr "Anwendungsüberlauf"
+msgstr "Anwendungsüberlauf aktivieren"
 
 #: src/prefs/applicationIconsGroup.js:433
 msgid "Overflow Style"
@@ -407,9 +382,8 @@ msgid "Isolate Monitors"
 msgstr "Monitore isolieren"
 
 #: src/prefs/applicationIconsGroup.js:478
-#, fuzzy
 msgid "Application Isolation"
-msgstr "Anwendungssymbole"
+msgstr "Anwendungsisolierung"
 
 #: src/prefs/applicationIconsGroup.js:495
 #: src/prefs/applicationIconsGroup.js:561
@@ -417,37 +391,29 @@ msgid "Application Icons"
 msgstr "Anwendungssymbole"
 
 #: src/prefs/applicationIconsGroup.js:497
-#, fuzzy
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
-msgstr "Ändern Sie Größe, Abstand und Platzierung der Taskleistensymbole."
+msgstr "Größe, Abstand, Platzierung und Laufanzeigen der Dock-Symbole ändern."
 
 #: src/prefs/applicationIconsGroup.js:512
-#, fuzzy
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the Dock"
-msgstr ""
-"Anwendungsschaltflächen, die nicht in das Überlaufmenü passen, anzeigen, "
-"anstatt die Taskleiste zu scrollen"
+msgstr "Anwendungsschaltflächen, die nicht passen, in einem Überlauf-Popup anzeigen, statt durch das Dock zu scrollen"
 
 #: src/prefs/applicationIconsGroup.js:518
-#, fuzzy
 msgid "Choose which applications appear on the Dock"
-msgstr ""
-"Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
+msgstr "Wählen Sie, welche Anwendungen im Dock angezeigt werden"
 
 #: src/prefs/applicationIconsGroup.js:520
-#, fuzzy
 msgid "Show running applications only in the Dock for their monitor"
-msgstr "Zeigt laufende Anwendungen nur auf der Taskleiste ihres Monitors"
+msgstr "Laufende Anwendungen im Dock nur auf dem jeweiligen Monitor anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:563
-#, fuzzy
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
-msgstr "Ändern Sie Größe, Abstand und Platzierung der Taskleistensymbole."
+msgstr "Größe, Abstand, Platzierung und Laufanzeigen der Taskleisten-Symbole ändern."
 
 #: src/prefs/applicationIconsGroup.js:584
 msgid ""
@@ -458,48 +424,40 @@ msgstr ""
 "anstatt die Taskleiste zu scrollen"
 
 #: src/prefs/applicationIconsGroup.js:590
-#, fuzzy
 msgid "Choose which applications appear on the taskbar"
-msgstr ""
-"Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
+msgstr "Wählen Sie, welche Anwendungen in der Taskleiste angezeigt werden"
 
 #: src/prefs/applicationIconsGroup.js:592
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Zeigt laufende Anwendungen nur auf der Taskleiste ihres Monitors"
 
 #: src/prefs/dockAppearanceGroup.js:25
-#, fuzzy
 msgid "Dock Appearance"
-msgstr "Erscheinungsbild"
+msgstr "Dock-Erscheinungsbild"
 
 #: src/prefs/dockAppearanceGroup.js:26
 msgid "Configure the Dock independently of the main panel."
-msgstr ""
+msgstr "Dock unabhängig vom Hauptpanel konfigurieren."
 
 #: src/prefs/dockAppearanceGroup.js:38 src/prefs/panelAppearancePage.js:259
-#, fuzzy
 msgid "Theme"
-msgstr "Taskleisten-Thema"
+msgstr "Thema"
 
 #: src/prefs/dockAppearanceGroup.js:39
 msgid "Choose the Dock colour scheme"
-msgstr ""
+msgstr "Farbschema des Docks wählen"
 
 #: src/prefs/dockAppearanceGroup.js:44 src/prefs/panelAppearancePage.js:265
 msgid "Follow System Theme"
 msgstr "Systemthema folgen"
 
 #: src/prefs/dockAppearanceGroup.js:45
-#, fuzzy
 msgid "Match the active GNOME Shell theme"
-msgstr ""
-"Passt sich dem aktiven GNOME-Shell-Thema an, unabhängig von den "
-"Anwendungsfarben"
+msgstr "An das aktive GNOME-Shell-Thema anpassen"
 
 #: src/prefs/dockAppearanceGroup.js:61
-#, fuzzy
 msgid "Dock Theme"
-msgstr "Taskleisten-Thema"
+msgstr "Dock-Thema"
 
 #: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:283
 msgid "Choose the colour scheme when system matching is off"
@@ -517,18 +475,17 @@ msgstr "Dunkel"
 
 #: src/prefs/dockAppearanceGroup.js:77
 msgid "Dock Corner Radius"
-msgstr ""
+msgstr "Dock-Eckenradius"
 
 #: src/prefs/dockAppearanceGroup.js:79
 msgid ""
 "Applies to the floating Dock without blur and with Dynamic Blur; Static Blur "
 "is not supported"
-msgstr ""
+msgstr "Gilt für das schwebende Dock ohne Unschärfe und mit dynamischer Unschärfe; statische Unschärfe wird nicht unterstützt"
 
 #: src/prefs/dockAppearanceGroup.js:89
-#, fuzzy
 msgid "Make the Dock background transparent"
-msgstr "Macht den Hintergrund der Taskleiste transparent"
+msgstr "Den Dock-Hintergrund transparent machen"
 
 #: src/prefs/dockAppearanceGroup.js:92 src/prefs/panelAppearancePage.js:305
 #: src/prefs/startMenuPage.js:446
@@ -543,9 +500,8 @@ msgid "Transparency"
 msgstr "Transparenz"
 
 #: src/prefs/dockAppearanceGroup.js:96
-#, fuzzy
 msgid "Control the Dock background transparency"
-msgstr "Macht den Hintergrund der Taskleiste transparent"
+msgstr "Transparenz des Dock-Hintergrunds steuern"
 
 #: src/prefs/dockAppearanceGroup.js:101 src/prefs/panelAppearancePage.js:314
 msgid "Enable Transparency"
@@ -562,56 +518,49 @@ msgstr ""
 "Themas"
 
 #: src/prefs/dockAppearanceGroup.js:134
-#, fuzzy
 msgid "Custom Dock Color"
-msgstr "Benutzerdefinierte Taskleistenfarbe"
+msgstr "Benutzerdefinierte Dock-Farbe"
 
 #: src/prefs/dockAppearanceGroup.js:151
-#, fuzzy
 msgid "Dock Color"
-msgstr "Taskleistenfarbe"
+msgstr "Dock-Farbe"
 
 #: src/prefs/dockAppearanceGroup.js:157
 msgid "Use Dock Gradient"
-msgstr ""
+msgstr "Dock-Verlauf verwenden"
 
 #: src/prefs/dockAppearanceGroup.js:158
 msgid "Blend the Dock color with a second color"
-msgstr ""
+msgstr "Dock-Farbe mit einer zweiten Farbe verblenden"
 
 #: src/prefs/dockAppearanceGroup.js:175
-#, fuzzy
 msgid "Dock Gradient Color"
-msgstr "Textfarbe der Taskleiste"
+msgstr "Dock-Verlaufsfarbe"
 
 #: src/prefs/dockAppearanceGroup.js:185
 msgid "Dock Gradient Direction"
-msgstr ""
+msgstr "Richtung des Dock-Verlaufs"
 
 #: src/prefs/dockAppearanceGroup.js:186 src/prefs/panelAppearancePage.js:424
 msgid "Choose how the gradient flows"
-msgstr ""
+msgstr "Wählen Sie den Verlauf des Farbverlaufs"
 
 #: src/prefs/dockAppearanceGroup.js:188 src/prefs/panelAppearancePage.js:426
 msgid "Vertical"
-msgstr ""
+msgstr "Vertikal"
 
 #: src/prefs/dockAppearanceGroup.js:189 src/prefs/panelAppearancePage.js:427
 msgid "Horizontal"
-msgstr ""
+msgstr "Horizontal"
 
 #: src/prefs/dockAppearanceGroup.js:196
-#, fuzzy
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
-msgstr ""
-"Weißer Text verwendet das dunkle Panel-Thema; schwarzer Text verwendet das "
-"helle Panel-Thema"
+msgstr "Weißer Text verwendet das dunkle Dock-Thema; schwarzer Text verwendet das helle Dock-Thema"
 
 #: src/prefs/dockAppearanceGroup.js:203
-#, fuzzy
 msgid "Dock Text Color"
-msgstr "Textfarbe der Taskleiste"
+msgstr "Dock-Textfarbe"
 
 #: src/prefs/dockAppearanceGroup.js:206 src/prefs/panelAppearancePage.js:444
 msgid "White"
@@ -623,24 +572,19 @@ msgstr "Schwarz"
 
 #: src/prefs/dockAppearanceGroup.js:215 src/prefs/panelAppearancePage.js:546
 msgid "Borders"
-msgstr ""
+msgstr "Rahmen"
 
 #: src/prefs/dockAppearanceGroup.js:216
-#, fuzzy
 msgid "Choose which borders appear around the Dock"
-msgstr ""
-"Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
+msgstr "Wählen Sie, welche Rahmen um das Dock angezeigt werden"
 
 #: src/prefs/dockAppearanceGroup.js:221 src/prefs/panelAppearancePage.js:552
 msgid "Show Border in Dark Mode"
 msgstr "Rahmen im dunklen Modus anzeigen"
 
 #: src/prefs/dockAppearanceGroup.js:222 src/prefs/dockAppearanceGroup.js:235
-#, fuzzy
 msgid "Display a thin border along the Dock’s workspace-facing edge"
-msgstr ""
-"Zeigt einen dünnen Rahmen entlang der der Arbeitsfläche zugewandten Panel-"
-"Kante"
+msgstr "Einen dünnen Rahmen an der zur Arbeitsfläche gerichteten Dock-Kante anzeigen"
 
 #: src/prefs/dockAppearanceGroup.js:234 src/prefs/panelAppearancePage.js:565
 msgid "Show Border in Light Mode"
@@ -652,7 +596,7 @@ msgstr "Dock-Verhalten"
 
 #: src/prefs/dockBehaviorGroup.js:16
 msgid "Configure Dock interaction independently of the main panel."
-msgstr ""
+msgstr "Dock-Interaktion unabhängig vom Hauptpanel konfigurieren."
 
 #: src/prefs/dockBehaviorGroup.js:22
 msgid "Auto-hide Dock"
@@ -664,7 +608,7 @@ msgstr "Dock anzeigen, wenn der Zeiger den Bildschirmrand erreicht"
 
 #: src/prefs/dockBehaviorGroup.js:27
 msgid "Limit Reveal to Dock Edge"
-msgstr ""
+msgstr "Einblenden auf die Dock-Kante beschränken"
 
 #: src/prefs/dockBehaviorGroup.js:28
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
@@ -674,7 +618,7 @@ msgstr ""
 
 #: src/prefs/dockBehaviorGroup.js:40
 msgid "Choose when the Dock hides and how it is revealed"
-msgstr ""
+msgstr "Festlegen, wann das Dock ausgeblendet wird und wie es angezeigt wird"
 
 #: src/prefs/dockBehaviorGroup.js:48 src/prefs/taskbarBehaviorGroup.js:101
 msgid "Workspace Scroll"
@@ -685,9 +629,8 @@ msgid "Scroll over empty Dock space to switch workspaces"
 msgstr "Über leeren Dock-Bereich scrollen, um die Arbeitsflächen zu wechseln"
 
 #: src/prefs/dockBehaviorGroup.js:53 src/prefs/taskbarBehaviorGroup.js:106
-#, fuzzy
 msgid "Enable Workspace Scroll"
-msgstr "Arbeitsflächen-Scrollen"
+msgstr "Arbeitsflächen-Scrollen aktivieren"
 
 #: src/prefs/dockBehaviorGroup.js:63 src/prefs/taskbarBehaviorGroup.js:116
 msgid "Workspace Scroll Delay"
@@ -703,43 +646,39 @@ msgstr "Dock auf allen Monitoren anzeigen"
 
 #: src/prefs/dockBehaviorGroup.js:77
 msgid "Show the Dock on every connected monitor"
-msgstr ""
+msgstr "Das Dock auf jedem verbundenen Monitor anzeigen"
 
 #: src/prefs/locationsGroup.js:12
-#, fuzzy
 msgid "Drive Options"
-msgstr "Energieoptionen"
+msgstr "Laufwerksoptionen"
 
 #: src/prefs/locationsGroup.js:13
-#, fuzzy
 msgid "Choose which connected drives appear"
-msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
+msgstr "Wählen Sie, welche verbundenen Laufwerke angezeigt werden"
 
 #: src/prefs/locationsGroup.js:17
 msgid "Only Show Mounted Drives"
-msgstr ""
+msgstr "Nur eingehängte Laufwerke anzeigen"
 
 #: src/prefs/locationsGroup.js:18
 msgid "Hide drives that are connected but not mounted"
-msgstr ""
+msgstr "Nicht eingehängte verbundene Laufwerke ausblenden"
 
 #: src/prefs/locationsGroup.js:22
 msgid "Include Network Volumes"
-msgstr ""
+msgstr "Netzwerkvolumes einbeziehen"
 
 #: src/prefs/locationsGroup.js:23
 msgid "Include network-mounted locations"
-msgstr ""
+msgstr "Netzwerk-eingehängte Orte einbeziehen"
 
 #: src/prefs/locationsGroup.js:30
-#, fuzzy
 msgid "Common Folders"
-msgstr "Ordner auswählen"
+msgstr "Häufig verwendete Ordner"
 
 #: src/prefs/locationsGroup.js:31
-#, fuzzy
 msgid "Choose which common folders appear"
-msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
+msgstr "Wählen Sie, welche häufig verwendeten Ordner angezeigt werden"
 
 #: src/prefs/locationsGroup.js:36
 #: src/integration/fileManagerPlacesSection.js:25
@@ -747,9 +686,8 @@ msgid "Home"
 msgstr "Persönlicher Ordner"
 
 #: src/prefs/locationsGroup.js:37
-#, fuzzy
 msgid "Add the Home folder"
-msgstr "Ordner kann nicht geöffnet werden"
+msgstr "Den Persönlichen Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:41
 #: src/integration/fileManagerPlacesSection.js:30
@@ -758,7 +696,7 @@ msgstr "Schreibtisch"
 
 #: src/prefs/locationsGroup.js:42
 msgid "Add the Desktop folder"
-msgstr ""
+msgstr "Den Schreibtisch-Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:46
 #: src/integration/fileManagerPlacesSection.js:35
@@ -767,7 +705,7 @@ msgstr "Dokumente"
 
 #: src/prefs/locationsGroup.js:47
 msgid "Add the Documents folder"
-msgstr ""
+msgstr "Den Dokumente-Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:51
 #: src/integration/fileManagerPlacesSection.js:40
@@ -776,7 +714,7 @@ msgstr "Downloads"
 
 #: src/prefs/locationsGroup.js:52
 msgid "Add the Downloads folder"
-msgstr ""
+msgstr "Den Downloads-Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:56
 #: src/integration/fileManagerPlacesSection.js:45
@@ -785,7 +723,7 @@ msgstr "Musik"
 
 #: src/prefs/locationsGroup.js:57
 msgid "Add the Music folder"
-msgstr ""
+msgstr "Den Musik-Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:61
 #: src/integration/fileManagerPlacesSection.js:50
@@ -794,7 +732,7 @@ msgstr "Bilder"
 
 #: src/prefs/locationsGroup.js:62
 msgid "Add the Pictures folder"
-msgstr ""
+msgstr "Den Bilder-Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:66
 #: src/integration/fileManagerPlacesSection.js:55
@@ -803,67 +741,63 @@ msgstr "Videos"
 
 #: src/prefs/locationsGroup.js:67
 msgid "Add the Videos folder"
-msgstr ""
+msgstr "Den Videos-Ordner hinzufügen"
 
 #: src/prefs/locationsGroup.js:82 src/prefs/locationsGroup.js:134
-#, fuzzy
 msgid "Locations"
-msgstr "Anwendungen"
+msgstr "Orte"
 
 #: src/prefs/locationsGroup.js:83
-#, fuzzy
 msgid "Configure taskbar locations and Files menu shortcuts."
-msgstr "Konfigurieren Sie Tastenkombinationen für das Startmenü."
+msgstr "Taskleisten-Orte und Verknüpfungen im Dateien-Menü konfigurieren."
 
 #: src/prefs/locationsGroup.js:89
 msgid "Locations shown with taskbar applications"
-msgstr ""
+msgstr "Orte, die mit Taskleisten-Anwendungen angezeigt werden"
 
 #: src/prefs/locationsGroup.js:93 src/prefs/locationsGroup.js:117
 msgid "Show Locations"
-msgstr ""
+msgstr "Orte anzeigen"
 
 #: src/prefs/locationsGroup.js:94
 msgid "Display selected locations after taskbar applications"
-msgstr ""
+msgstr "Ausgewählte Orte nach den Taskleisten-Anwendungen anzeigen"
 
 #: src/prefs/locationsGroup.js:98 src/prefs/locationsGroup.js:122
 msgid "Show Trash"
-msgstr ""
+msgstr "Papierkorb anzeigen"
 
 #: src/prefs/locationsGroup.js:99
-#, fuzzy
 msgid "Add the Trash to the taskbar"
-msgstr "%s wurde an die Taskleiste angeheftet."
+msgstr "Den Papierkorb zur Taskleiste hinzufügen"
 
 #: src/prefs/locationsGroup.js:103 src/prefs/locationsGroup.js:127
 msgid "Show Drives and Volumes"
-msgstr ""
+msgstr "Laufwerke und Volumes anzeigen"
 
 #: src/prefs/locationsGroup.js:104
-#, fuzzy
 msgid "Add mounted or connected drives to the taskbar"
-msgstr "Zeigt einen ausgewählten Ordner auf der Taskleiste"
+msgstr "Eingehängte oder verbundene Laufwerke zur Taskleiste hinzufügen"
 
 #: src/prefs/locationsGroup.js:113
 msgid "Locations shown with Dock applications"
-msgstr ""
+msgstr "Orte, die mit Dock-Anwendungen angezeigt werden"
 
 #: src/prefs/locationsGroup.js:118
 msgid "Display selected locations after Dock applications"
-msgstr ""
+msgstr "Ausgewählte Orte nach den Dock-Anwendungen anzeigen"
 
 #: src/prefs/locationsGroup.js:123
 msgid "Add the Trash to the Dock"
-msgstr ""
+msgstr "Den Papierkorb zum Dock hinzufügen"
 
 #: src/prefs/locationsGroup.js:128
 msgid "Add mounted or connected drives to the Dock"
-msgstr ""
+msgstr "Eingehängte oder verbundene Laufwerke zum Dock hinzufügen"
 
 #: src/prefs/locationsGroup.js:135
 msgid "Show Trash and connected drives in the Dock."
-msgstr ""
+msgstr "Papierkorb und verbundene Laufwerke im Dock anzeigen."
 
 #: src/prefs/locationsGroup.js:149
 msgid "Nautilus Folder Shortcuts"
@@ -882,9 +816,8 @@ msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr "Ändern Sie Höhe, Farbschema und Transparenz der Taskleiste."
 
 #: src/prefs/panelAppearancePage.js:61
-#, fuzzy
 msgid "Panel Thickness"
-msgstr "Panel-Elemente"
+msgstr "Panelstärke"
 
 #: src/prefs/panelAppearancePage.js:63
 msgid "Oversized icons shrink automatically when the panel is reduced"
@@ -897,9 +830,8 @@ msgid "Panel Position"
 msgstr "Panel-Position"
 
 #: src/prefs/panelAppearancePage.js:77
-#, fuzzy
 msgid "Place the taskbar at a screen edge"
-msgstr "Platziert die Taskleiste oben oder unten am Bildschirm"
+msgstr "Taskleiste an einer Bildschirmkante platzieren"
 
 #: src/prefs/panelAppearancePage.js:80 src/prefs/panelAxis.js:13
 #: src/prefs/panelModeGroup.js:68
@@ -912,9 +844,8 @@ msgid "Bottom"
 msgstr "Unten"
 
 #: src/prefs/panelAppearancePage.js:260
-#, fuzzy
 msgid "Choose the taskbar colour scheme"
-msgstr "Ändern Sie Höhe, Farbschema und Transparenz der Taskleiste."
+msgstr "Farbschema der Taskleiste wählen"
 
 #: src/prefs/panelAppearancePage.js:266
 msgid ""
@@ -932,9 +863,8 @@ msgid "Make the taskbar background transparent"
 msgstr "Macht den Hintergrund der Taskleiste transparent"
 
 #: src/prefs/panelAppearancePage.js:309
-#, fuzzy
 msgid "Control the taskbar background transparency"
-msgstr "Macht den Hintergrund der Taskleiste transparent"
+msgstr "Transparenz des Taskleisten-Hintergrunds steuern"
 
 #: src/prefs/panelAppearancePage.js:373
 msgid "Custom Taskbar Color"
@@ -945,23 +875,20 @@ msgid "Taskbar Color"
 msgstr "Taskleistenfarbe"
 
 #: src/prefs/panelAppearancePage.js:397
-#, fuzzy
 msgid "Use Taskbar Gradient"
-msgstr "Taskleisten-Thema"
+msgstr "Taskleistenverlauf verwenden"
 
 #: src/prefs/panelAppearancePage.js:398
 msgid "Blend the taskbar color with a second color"
-msgstr ""
+msgstr "Taskleistenfarbe mit einer zweiten Farbe verblenden"
 
 #: src/prefs/panelAppearancePage.js:413
-#, fuzzy
 msgid "Taskbar Gradient Color"
-msgstr "Textfarbe der Taskleiste"
+msgstr "Farbe des Taskleistenverlaufs"
 
 #: src/prefs/panelAppearancePage.js:423
-#, fuzzy
 msgid "Taskbar Gradient Direction"
-msgstr "Taskleisten-Einstellungen"
+msgstr "Richtung des Taskleistenverlaufs"
 
 #: src/prefs/panelAppearancePage.js:434
 msgid ""
@@ -975,10 +902,8 @@ msgid "Taskbar Text Color"
 msgstr "Textfarbe der Taskleiste"
 
 #: src/prefs/panelAppearancePage.js:547
-#, fuzzy
 msgid "Choose which borders appear around the taskbar"
-msgstr ""
-"Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
+msgstr "Wählen Sie, welche Rahmen um die Taskleiste angezeigt werden"
 
 #: src/prefs/panelAppearancePage.js:553 src/prefs/panelAppearancePage.js:566
 msgid "Display a thin border along the panel’s workspace-facing edge"
@@ -987,36 +912,30 @@ msgstr ""
 "Kante"
 
 #: src/prefs/panelAxis.js:14
-#, fuzzy
 msgid "Middle"
-msgstr "Linke Elemente"
+msgstr "Mitte"
 
 #: src/prefs/panelItemsPage.js:33
 msgid "Panel Items"
 msgstr "Panel-Elemente"
 
 #: src/prefs/panelItemsPage.js:34
-#, fuzzy
 msgid "Configure optional panel items and the folder menu."
-msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
+msgstr "Optionale Panel-Elemente und das Ordnermenü konfigurieren."
 
 #: src/prefs/panelItemsPage.js:43
 msgid "Panel Button Padding"
 msgstr "Innenabstand der Panel-Schaltflächen"
 
 #: src/prefs/panelItemsPage.js:45
-#, fuzzy
 msgid ""
 "Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
 "when it is configured, otherwise 3 px"
-msgstr ""
-"Horizontaler Abstand um die Panel-Schaltflächen. Verwenden Sie -1 für "
-"automatisch: der Wert von Just Perfection, wenn konfiguriert, sonst 3 px"
+msgstr "Abstand zwischen Panel-Schaltflächen. Für automatisch -1 verwenden: der Wert von Just Perfection, wenn konfiguriert, sonst 3 px"
 
 #: src/prefs/panelItemsPage.js:64
-#, fuzzy
 msgid "Panel Item Visibility"
-msgstr "Panel-Elemente"
+msgstr "Sichtbarkeit der Panel-Elemente"
 
 #: src/prefs/panelItemsPage.js:65
 msgid "Choose which optional panel items appear."
@@ -1063,9 +982,8 @@ msgid "Folder Menu"
 msgstr "Ordnermenü"
 
 #: src/prefs/panelItemsPage.js:99
-#, fuzzy
 msgid "Show and configure a selected folder on the taskbar"
-msgstr "Zeigt einen ausgewählten Ordner auf der Taskleiste"
+msgstr "Einen ausgewählten Ordner in der Taskleiste anzeigen und konfigurieren"
 
 #: src/prefs/panelItemsPage.js:104
 msgid "Show Folder Menu"
@@ -1172,74 +1090,64 @@ msgid "Minimize or restore all windows"
 msgstr "Minimiert oder stellt alle Fenster wieder her"
 
 #: src/prefs/panelItemsPage.js:243
-#, fuzzy
 msgid "Top Items"
-msgstr "Linke Elemente"
+msgstr "Obere Elemente"
 
 #: src/prefs/panelItemsPage.js:243
-#, fuzzy
 msgid "Middle Items"
-msgstr "Linke Elemente"
+msgstr "Mittlere Elemente"
 
 #: src/prefs/panelItemsPage.js:243
-#, fuzzy
 msgid "Bottom Items"
-msgstr "Unterer Aktivbereich"
+msgstr "Untere Elemente"
 
 #: src/prefs/panelItemsPage.js:246
 msgid "Top Box"
-msgstr ""
+msgstr "Oberer Bereich"
 
 #: src/prefs/panelItemsPage.js:246
 msgid "Middle Box"
-msgstr ""
+msgstr "Mittlerer Bereich"
 
 #: src/prefs/panelItemsPage.js:246
-#, fuzzy
 msgid "Bottom Box"
-msgstr "Unten"
+msgstr "Unterer Bereich"
 
 #: src/prefs/dockItemsPage.js:16
-#, fuzzy
 msgid "Dock Items"
-msgstr "Linke Elemente"
+msgstr "Dock-Elemente"
 
 #: src/prefs/dockItemsPage.js:17
 msgid "Choose the order of items in the Dock."
-msgstr ""
+msgstr "Reihenfolge der Elemente im Dock wählen."
 
 #: src/prefs/dockItemsPage.js:24
-#, fuzzy
 msgid "Eleven-style or original GNOME Start menu"
-msgstr ""
-"Start-Schaltfläche im Eleven-Stil oder ursprüngliche GNOME-Schaltfläche"
+msgstr "Startmenü im Eleven-Stil oder originales GNOME-Startmenü"
 
 #: src/prefs/dockItemsPage.js:28
-#, fuzzy
 msgid "Dock application buttons"
-msgstr "Anwendungsschaltflächen der Taskleiste"
+msgstr "Anwendungsschaltflächen des Docks"
 
 #: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:49
 msgid "General"
 msgstr "Allgemein"
 
 #: src/prefs/panelModeGroup.js:34
-#, fuzzy
 msgid "Taskbar mode"
-msgstr "Taskleisten-Thema"
+msgstr "Taskleistenmodus"
 
 #: src/prefs/panelModeGroup.js:35
-#, fuzzy
 msgid "Show application buttons in the main panel"
-msgstr "Durchsuchen Sie Anwendungen nach Kategorie im Startmenü"
+msgstr "Anwendungsschaltflächen im Hauptpanel anzeigen"
 
 #: src/prefs/panelModeGroup.js:43
 msgid "Alternative Panel Modes"
-msgstr ""
+msgstr "Alternative Panelmodi"
 
 #: src/prefs/panelModeGroup.js:44
 msgid "Choose the original GNOME panel or the Windows XP theme"
-msgstr ""
+msgstr "Wählen Sie das ursprüngliche GNOME-Panel oder das Windows-XP-Theme"
 
 #: src/prefs/panelModeGroup.js:54
 msgid "Default GNOME Panel"
@@ -1253,38 +1161,35 @@ msgstr ""
 
 #: src/prefs/panelModeGroup.js:61
 msgid "Dock mode"
-msgstr ""
+msgstr "Dock-Modus"
 
 #: src/prefs/panelModeGroup.js:62
-#, fuzzy
 msgid "Show application buttons in a separate Dock instead of the main panel"
-msgstr "Durchsuchen Sie Anwendungen nach Kategorie im Startmenü"
+msgstr "Anwendungsschaltflächen in einem separaten Dock statt im Hauptpanel anzeigen"
 
 #: src/prefs/panelModeGroup.js:108
-#, fuzzy
 msgid "Dock Position"
-msgstr "Panel-Position"
+msgstr "Dock-Position"
 
 #: src/prefs/panelModeGroup.js:109
 msgid "Place the Dock at a different screen edge from the main panel"
-msgstr ""
+msgstr "Dock an einer anderen Bildschirmkante als das Hauptpanel platzieren"
 
 #: src/prefs/panelModeGroup.js:120
 msgid "Maximum Dock Length"
-msgstr ""
+msgstr "Maximale Dock-Länge"
 
 #: src/prefs/panelModeGroup.js:121
 msgid "Limit the Dock to this percentage of the monitor length"
-msgstr ""
+msgstr "Dock auf diesen Prozentsatz der Monitorlänge begrenzen"
 
 #: src/prefs/panelModeGroup.js:128
-#, fuzzy
 msgid "Panel mode"
-msgstr "Panel-Elemente"
+msgstr "Panelmodus"
 
 #: src/prefs/panelModeGroup.js:129
 msgid "Extend the Dock fully to the monitor edge"
-msgstr ""
+msgstr "Dock vollständig bis zur Bildschirmkante erweitern"
 
 #: src/prefs/panelModeGroup.js:150
 msgid "Windows XP Theme"
@@ -1367,60 +1272,60 @@ msgstr "Ordner auswählen"
 
 #: src/prefs/profileTransfer.js:60
 msgid "The selected file is not a valid Simple Taskbar profile."
-msgstr ""
+msgstr "Die ausgewählte Datei ist kein gültiges Simple-Taskbar-Profil."
 
 #: src/prefs/profileTransfer.js:72
 msgid "The selected profile is invalid."
-msgstr ""
+msgstr "Das ausgewählte Profil ist ungültig."
 
 #: src/prefs/profileTransfer.js:77
 msgid "The selected profile is incompatible with this version."
-msgstr ""
+msgstr "Das ausgewählte Profil ist mit dieser Version nicht kompatibel."
 
 #: src/prefs/profileTransfer.js:118
 msgid "The profile could not be exported."
-msgstr ""
+msgstr "Das Profil konnte nicht exportiert werden."
 
 #: src/prefs/profileTransfer.js:134
 msgid "Profiles"
-msgstr ""
+msgstr "Profile"
 
 #: src/prefs/profileTransfer.js:139
 msgid "Export and Import Profiles"
-msgstr ""
+msgstr "Profile exportieren und importieren"
 
 #: src/prefs/profileTransfer.js:140
 msgid "Save panel settings, Dock settings, and Start Menu pins to a file"
-msgstr ""
+msgstr "Panel-Einstellungen, Dock-Einstellungen und Startmenü-Pins in einer Datei speichern"
 
 #: src/prefs/profileTransfer.js:143
 msgid "Export…"
-msgstr ""
+msgstr "Exportieren…"
 
 #: src/prefs/profileTransfer.js:147
 msgid "Import…"
-msgstr ""
+msgstr "Importieren…"
 
 #: src/prefs/profileTransfer.js:159
 #, javascript-format
 msgid "The profile operation failed: %s"
-msgstr ""
+msgstr "Der Profilvorgang ist fehlgeschlagen: %s"
 
 #: src/prefs/profileTransfer.js:167
 msgid "Export Profiles"
-msgstr ""
+msgstr "Profile exportieren"
 
 #: src/prefs/profileTransfer.js:184
 msgid "Profile exported."
-msgstr ""
+msgstr "Profil exportiert."
 
 #: src/prefs/profileTransfer.js:195
 msgid "Import Profiles"
-msgstr ""
+msgstr "Profile importieren"
 
 #: src/prefs/profileTransfer.js:212
 msgid "Profile imported."
-msgstr ""
+msgstr "Profil importiert."
 
 #: src/prefs/preferencesWidgets.js:117 src/prefs/preferencesWidgets.js:154
 msgid "Move Up"
@@ -1431,9 +1336,8 @@ msgid "Move Down"
 msgstr "Nach unten verschieben"
 
 #: src/prefs/startMenuPage.js:31
-#, fuzzy
 msgid "Configure the Start button position and appearance."
-msgstr "Konfigurieren Sie Position und Abstand der Start-Schaltfläche."
+msgstr "Position und Erscheinungsbild der Start-Schaltfläche konfigurieren."
 
 #: src/prefs/startMenuPage.js:36 src/prefs/startMenuPage.js:211
 msgid "Eleven-style Start Menu"
@@ -1452,19 +1356,16 @@ msgid "Configure Start menu shortcuts."
 msgstr "Konfigurieren Sie Tastenkombinationen für das Startmenü."
 
 #: src/prefs/startMenuPage.js:65
-#, fuzzy
 msgid "Start Button Position"
-msgstr "Innenabstand der Start-Schaltfläche"
+msgstr "Position der Start-Schaltfläche"
 
 #: src/prefs/startMenuPage.js:66
-#, fuzzy
 msgid "Configure the Start button alignment"
-msgstr "Wählen Sie ein Symbol für die Start-Schaltfläche"
+msgstr "Ausrichtung der Start-Schaltfläche konfigurieren"
 
 #: src/prefs/startMenuPage.js:76
-#, fuzzy
 msgid "Choose the Start button alignment"
-msgstr "Wählen Sie ein Symbol für die Start-Schaltfläche"
+msgstr "Ausrichtung der Start-Schaltfläche wählen"
 
 #: src/prefs/startMenuPage.js:87
 msgid "Follow Application Alignment"
@@ -1475,13 +1376,12 @@ msgid "Move the Start button with the application buttons"
 msgstr "Bewegt die Start-Schaltfläche zusammen mit den Anwendungsschaltflächen"
 
 #: src/prefs/startMenuPage.js:130
-#, fuzzy
 msgid "Start Button Appearance"
-msgstr "Innenabstand der Start-Schaltfläche"
+msgstr "Erscheinungsbild der Start-Schaltfläche"
 
 #: src/prefs/startMenuPage.js:131
 msgid "Configure padding, icons, and button visibility"
-msgstr ""
+msgstr "Abstände, Symbole und Schaltflächensichtbarkeit konfigurieren"
 
 #: src/prefs/startMenuPage.js:140
 msgid "Start Button Padding"
@@ -1508,14 +1408,12 @@ msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "Ersetzt das GNOME-App-Raster durch ein Menü im Eleven-Stil"
 
 #: src/prefs/startMenuPage.js:224
-#, fuzzy
 msgid "Start Menu Options"
-msgstr "Startmenü-Einstellungen"
+msgstr "Startmenü-Optionen"
 
 #: src/prefs/startMenuPage.js:225
-#, fuzzy
 msgid "Configure Start Menu content and behavior"
-msgstr "Ändern Sie Höhe, Farbschema und Transparenz der Taskleiste."
+msgstr "Inhalt und Verhalten des Startmenüs konfigurieren"
 
 #: src/prefs/startMenuPage.js:230
 msgid "Show Profile Picture"
@@ -1589,14 +1487,12 @@ msgstr ""
 "Verwendet das tatsächliche helle oder dunkle Erscheinungsbild des Panels"
 
 #: src/prefs/startMenuPage.js:399
-#, fuzzy
 msgid "Start Menu Appearance"
-msgstr "Panel-Erscheinungsbild"
+msgstr "Erscheinungsbild des Startmenüs"
 
 #: src/prefs/startMenuPage.js:400
-#, fuzzy
 msgid "Configure the Start Menu theme and transparency"
-msgstr "Ändern Sie Höhe, Farbschema und Transparenz der Taskleiste."
+msgstr "Thema und Transparenz des Startmenüs konfigurieren"
 
 #: src/prefs/startMenuPage.js:416
 msgid "Start Menu Theme"
@@ -1720,7 +1616,7 @@ msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
 
 #: src/prefs/taskbarBehaviorGroup.js:44
 msgid "Choose when the taskbar hides and how it is revealed"
-msgstr ""
+msgstr "Festlegen, wann die Taskleiste ausgeblendet wird und wie sie angezeigt wird"
 
 #: src/prefs/taskbarBehaviorGroup.js:52
 msgid "Bottom Hot Edge"
@@ -1733,9 +1629,8 @@ msgstr ""
 "umzuschalten"
 
 #: src/prefs/taskbarBehaviorGroup.js:59
-#, fuzzy
 msgid "Enable Bottom Hot Edge"
-msgstr "Unterer Aktivbereich"
+msgstr "Unteren Aktivrand aktivieren"
 
 #: src/prefs/taskbarBehaviorGroup.js:71
 msgid "Activation Pressure"
@@ -1762,13 +1657,12 @@ msgstr ""
 "Scrollen Sie über leeren Taskleistenbereich, um die Arbeitsfläche zu wechseln"
 
 #: src/prefs/taskbarBehaviorGroup.js:132
-#, fuzzy
 msgid "Panel and Notification Behavior"
-msgstr "Anwendungsverhalten"
+msgstr "Panel- und Benachrichtigungsverhalten"
 
 #: src/prefs/taskbarBehaviorGroup.js:133
 msgid "Configure panel menus and notification banners"
-msgstr ""
+msgstr "Panelmenüs und Benachrichtigungsbanner konfigurieren"
 
 #: src/prefs/taskbarBehaviorGroup.js:137
 msgid "Panel Menus Require Click"
@@ -1783,9 +1677,8 @@ msgid "Taskbar-aligned Notification Banners"
 msgstr "An der Taskleiste ausgerichtete Benachrichtigungsbanner"
 
 #: src/prefs/taskbarBehaviorGroup.js:145
-#, fuzzy
 msgid "Follow the taskbar edge and the clock position"
-msgstr "Folgt der Taskleistenkante und der horizontalen Position der Uhr"
+msgstr "Der Taskleistenkante und der Uhrposition folgen"
 
 #: src/prefs/taskbarBehaviorGroup.js:174
 msgid "Automatic Fallback"
@@ -1809,16 +1702,15 @@ msgstr "Zeigt Aktivitäten, Anwendungen, Uhr und Systemmenü auf jedem Monitor"
 
 #: src/prefs/windowDodgeGroup.js:26
 msgid "Visibility"
-msgstr ""
+msgstr "Sichtbarkeit"
 
 #: src/prefs/windowDodgeGroup.js:32
-#, fuzzy
 msgid "Enable Dodge Windows"
-msgstr "Fenstern ausweichen"
+msgstr "Fenstern ausweichen aktivieren"
 
 #: src/prefs/windowDodgeGroup.js:34
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
-msgstr ""
+msgstr "Panel oder Dock ausblenden, wenn ein entsprechendes Fenster sie überlappt"
 
 #: src/prefs/windowDodgeGroup.js:44
 msgid "Dodge Windows Mode"
@@ -1826,7 +1718,7 @@ msgstr "Fenster-Ausweichmodus"
 
 #: src/prefs/windowDodgeGroup.js:45
 msgid "Choose which windows make the panel or Dock hide"
-msgstr ""
+msgstr "Festlegen, welche Fenster das Panel oder Dock ausblenden lassen"
 
 #: src/prefs/windowDodgeGroup.js:49
 msgid "All windows"
@@ -1838,11 +1730,11 @@ msgstr "Nur Fenster der fokussierten Anwendung"
 
 #: src/prefs/windowDodgeGroup.js:57
 msgid "Only maximized windows"
-msgstr ""
+msgstr "Nur maximierte Fenster"
 
 #: src/prefs/windowDodgeGroup.js:67
 msgid "Reveal on Pointer"
-msgstr ""
+msgstr "Bei Zeiger anzeigen"
 
 #: src/prefs/windowDodgeGroup.js:68
 msgid ""
@@ -2078,14 +1970,12 @@ msgid "Close all windows"
 msgstr "Alle Fenster schließen"
 
 #: src/taskbar/taskbarAppMenu.js:120 src/integration/favoritesIntegration.js:41
-#, fuzzy
 msgid "Unpin from Dock"
-msgstr "Von Taskleiste lösen"
+msgstr "Vom Dock lösen"
 
 #: src/taskbar/taskbarAppMenu.js:121 src/integration/favoritesIntegration.js:42
-#, fuzzy
 msgid "Pin to Dock"
-msgstr "An Taskleiste anheften"
+msgstr "An Dock anheften"
 
 #: src/taskbar/taskbarAppMenu.js:126 src/integration/favoritesIntegration.js:44
 msgid "Unpin from Taskbar"
@@ -2097,36 +1987,35 @@ msgstr "An Taskleiste anheften"
 
 #: src/taskbar/taskbarLocation.js:125
 msgid "Empty Trash"
-msgstr ""
+msgstr "Papierkorb leeren"
 
 #: src/taskbar/taskbarLocation.js:137
 msgid "Unmount"
-msgstr ""
+msgstr "Aushängen"
 
 #: src/taskbar/taskbarLocation.js:139 src/taskbar/taskbarLocation.js:146
 msgid "Eject"
-msgstr ""
+msgstr "Auswerfen"
 
 #: src/taskbar/taskbarLocation.js:144
 msgid "Mount"
-msgstr ""
+msgstr "Einhängen"
 
 #: src/taskbar/taskbarLocation.js:180
-#, fuzzy
 msgid "Unable to open location"
-msgstr "Ordner kann nicht geöffnet werden"
+msgstr "Ort konnte nicht geöffnet werden"
 
 #: src/taskbar/taskbarLocation.js:334
 msgid "failed"
-msgstr ""
+msgstr "fehlgeschlagen"
 
 #: src/taskbar/taskbarLocationMenu.js:14
 msgid "Open"
-msgstr ""
+msgstr "Öffnen"
 
 #: src/taskbar/taskbarLocationsController.js:351
 msgid "Trash"
-msgstr ""
+msgstr "Papierkorb"
 
 #: src/taskbar/taskbarAppearanceController.js:415
 #: src/taskbar/taskbarController.js:1038 src/taskbar/taskbarController.js:1040
@@ -2139,9 +2028,8 @@ msgstr "Startmenü-Einstellungen"
 
 #: src/startMenu/startButtonController.js:309
 #: src/panel/panelInteractionController.js:137
-#, fuzzy
 msgid "Dock Settings"
-msgstr "Einstellungen"
+msgstr "Dock-Einstellungen"
 
 #: src/startMenu/startButtonController.js:656
 msgid "Start"
@@ -2208,9 +2096,9 @@ msgid "Close Window"
 msgstr "Fenster schließen"
 
 #: src/integration/favoritesIntegration.js:63
-#, fuzzy, javascript-format
+#, javascript-format
 msgid "%s has been pinned to the dock."
-msgstr "%s wurde an die Taskleiste angeheftet."
+msgstr "%s wurde am Dock angeheftet."
 
 #: src/integration/favoritesIntegration.js:66
 #, javascript-format
@@ -2218,9 +2106,9 @@ msgid "%s has been pinned to the taskbar."
 msgstr "%s wurde an die Taskleiste angeheftet."
 
 #: src/integration/favoritesIntegration.js:92
-#, fuzzy, javascript-format
+#, javascript-format
 msgid "%s has been unpinned from the dock."
-msgstr "%s wurde von der Taskleiste gelöst."
+msgstr "%s wurde vom Dock gelöst."
 
 #: src/integration/favoritesIntegration.js:95
 #, javascript-format
@@ -2251,64 +2139,3 @@ msgstr "Anwendungslautstärke"
 #: src/integration/volumeMixerController.js:334
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
-
-#~ msgid "Advanced"
-#~ msgstr "Erweitert"
-
-#~ msgid "File Manager"
-#~ msgstr "Dateimanager"
-
-#~ msgid "File manager shortcuts and taskbar menu folders."
-#~ msgstr "Verknüpfungen des Dateimanagers und Ordner im Taskleistenmenü."
-
-#, fuzzy
-#~ msgid "Show common folders, Trash, and connected drives in the taskbar."
-#~ msgstr "Zeigt einen ausgewählten Ordner auf der Taskleiste"
-
-#~ msgid "Less commonly used Start menu options."
-#~ msgstr "Weniger häufig verwendete Optionen des Startmenüs."
-
-#~ msgid "Less commonly used taskbar interaction options."
-#~ msgstr "Weniger häufig verwendete Interaktionsoptionen der Taskleiste."
-
-#~ msgid "Choose which applications appear and how they are grouped."
-#~ msgstr ""
-#~ "Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert "
-#~ "sind."
-
-#~ msgid "Application options are unavailable in Default GNOME Panel mode."
-#~ msgstr ""
-#~ "Anwendungsoptionen sind im Standard-GNOME-Panel-Modus nicht verfügbar."
-
-#, fuzzy
-#~ msgid "Choose which separators appear"
-#~ msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
-
-#, fuzzy
-#~ msgid "Window Interaction"
-#~ msgstr "Fensterwechsel"
-
-#~ msgid "Appearance"
-#~ msgstr "Erscheinungsbild"
-
-#~ msgid "Less commonly used taskbar and indicator appearance options."
-#~ msgstr ""
-#~ "Weniger häufig verwendete Optionen für das Erscheinungsbild von "
-#~ "Taskleiste und Indikatoren."
-
-#~ msgid "Dodge Windows"
-#~ msgstr "Fenstern ausweichen"
-
-#, fuzzy
-#~ msgid "Dock Menus Require Click"
-#~ msgstr "Panel-Menüs erfordern Klick"
-
-#, fuzzy
-#~ msgid "Switch between Dock menus only when clicked"
-#~ msgstr "Wechselt nur bei Klick zwischen Uhr-, System- und Tray-Menüs"
-
-#~ msgid "Panel Height"
-#~ msgstr "Panel-Höhe"
-
-#~ msgid "Place the Start button at the left edge or in the center"
-#~ msgstr "Platziert die Start-Schaltfläche am linken Rand oder in der Mitte"
