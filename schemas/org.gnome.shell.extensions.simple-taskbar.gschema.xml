@@ -348,11 +348,11 @@
       <summary>Dock colour scheme when not following the system</summary>
     </key>
     <key name="dock-panel-border-enabled" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show the Dock border in dark mode</summary>
     </key>
     <key name="dock-panel-border-light-enabled" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show the Dock border in light mode</summary>
     </key>
     <key name="dock-workspace-scroll-enabled" type="b">
