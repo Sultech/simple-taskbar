@@ -330,7 +330,8 @@ export class SecondaryPanelDockController {
             this._settings,
             light,
             borderEnabled,
-            cornerRadiusStyle
+            cornerRadiusStyle,
+            dockFloating
         ));
     }
 

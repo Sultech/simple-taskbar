@@ -20,13 +20,16 @@ function panelBackgroundColor(settings, light) {
 }
 
 export function panelBackgroundStyle(settings, light, borderEnabled,
-    originalStyle = '') {
+    originalStyle = '', fullBorder = false) {
     const opacity = panelTransparencyOpacity(settings);
     const background = panelBackgroundColor(settings, light);
     const position = panelPosition(settings);
     let borderStyle =
         'border-top: 0; border-bottom: 0; border-left: 0; border-right: 0; ';
-    if (borderEnabled) {
+    if (borderEnabled && fullBorder) {
+        borderStyle += 'border: 1px solid ' +
+            `rgba(${BORDER_COLOR}, ${BORDER_OPACITY.toFixed(3)}); `;
+    } else if (borderEnabled) {
         const borderEdge = {
             top: 'bottom',
             bottom: 'top',
