@@ -170,6 +170,9 @@ export class SecondaryPanelDockController {
         if (this._settings.get_boolean('dock-panel-mode'))
             return 0;
 
+        if (Main.overview.visibleTarget)
+            return DOCK_EDGE_GAP;
+
         if (!this._settings.get_boolean('panel-autohide-enabled') &&
             this._hasVisibleMaximizedWindowOnMonitor()) {
             return 0;
@@ -392,6 +395,11 @@ export class SecondaryPanelDockController {
             () => this._onPosition(true, true),
             'window-left-monitor',
             () => this._onPosition(true, true),
+            this._signalHolder
+        );
+        Main.overview.connectObject(
+            'showing', () => this._onPosition(true, true),
+            'hiding', () => this._onPosition(true, true),
             this._signalHolder
         );
         this._settings.connectObject(
