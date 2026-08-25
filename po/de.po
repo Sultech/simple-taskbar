@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:55+0100\n"
+"POT-Creation-Date: 2026-08-25 22:10+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -213,80 +213,80 @@ msgstr ""
 "Zeigt angeheftete Taskleisten-Anwendungen nur an, während sie ausgeführt "
 "werden"
 
-#: src/prefs/appBehaviorGroup.js:61
+#: src/prefs/appBehaviorGroup.js:56
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:62
+#: src/prefs/appBehaviorGroup.js:57
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr ""
 "Live-Fenstervorschauen anzeigen, wenn der Mauszeiger über Anwendungssymbole "
 "bewegt wird"
 
-#: src/prefs/appBehaviorGroup.js:67
+#: src/prefs/appBehaviorGroup.js:62
 msgid "Show Location Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:63
 #, fuzzy
 msgid "Show a line between applications and locations"
 msgstr ""
 "Live-Fenstervorschauen anzeigen, wenn der Mauszeiger über Anwendungssymbole "
 "bewegt wird"
 
-#: src/prefs/appBehaviorGroup.js:71
+#: src/prefs/appBehaviorGroup.js:66
 msgid "Separators"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:72
+#: src/prefs/appBehaviorGroup.js:67
 #, fuzzy
 msgid "Choose which separators appear"
 msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
 
-#: src/prefs/appBehaviorGroup.js:78
+#: src/prefs/appBehaviorGroup.js:73
 msgid "Always"
 msgstr "Immer"
 
-#: src/prefs/appBehaviorGroup.js:79 src/prefs/appBehaviorGroup.js:83
+#: src/prefs/appBehaviorGroup.js:74 src/prefs/appBehaviorGroup.js:78
 msgid "Only When Full"
 msgstr "Nur wenn voll"
 
-#: src/prefs/appBehaviorGroup.js:80 src/prefs/appBehaviorGroup.js:84
+#: src/prefs/appBehaviorGroup.js:75 src/prefs/appBehaviorGroup.js:79
 msgid "Never"
 msgstr "Nie"
 
-#: src/prefs/appBehaviorGroup.js:91
+#: src/prefs/appBehaviorGroup.js:86
 msgid "Combine Application Buttons"
 msgstr "Anwendungsschaltflächen zusammenfassen"
 
-#: src/prefs/appBehaviorGroup.js:92
+#: src/prefs/appBehaviorGroup.js:87
 msgid "Choose when windows share one taskbar button"
 msgstr "Wählen Sie, wann sich Fenster eine Taskleisten-Schaltfläche teilen"
 
-#: src/prefs/appBehaviorGroup.js:106
+#: src/prefs/appBehaviorGroup.js:101
 msgid "Hide App Labels"
 msgstr "App-Beschriftungen ausblenden"
 
-#: src/prefs/appBehaviorGroup.js:107
+#: src/prefs/appBehaviorGroup.js:102
 msgid "Show only icons on separate window buttons"
 msgstr "Zeigt nur Symbole auf separaten Fensterschaltflächen"
 
-#: src/prefs/appBehaviorGroup.js:113
+#: src/prefs/appBehaviorGroup.js:108
 msgid "Application Overflow"
 msgstr "Anwendungsüberlauf"
 
-#: src/prefs/appBehaviorGroup.js:114
+#: src/prefs/appBehaviorGroup.js:109
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "Wählen Sie Farben für die Anzeigen laufender Anwendungen"
 
-#: src/prefs/appBehaviorGroup.js:118
+#: src/prefs/appBehaviorGroup.js:113
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "Anwendungsüberlauf"
 
-#: src/prefs/appBehaviorGroup.js:120
+#: src/prefs/appBehaviorGroup.js:115
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -294,58 +294,58 @@ msgstr ""
 "Anwendungsschaltflächen, die nicht in das Überlaufmenü passen, anzeigen, "
 "anstatt die Taskleiste zu scrollen"
 
-#: src/prefs/appBehaviorGroup.js:130
+#: src/prefs/appBehaviorGroup.js:125
 msgid "Overflow Style"
 msgstr "Überlaufstil"
 
-#: src/prefs/appBehaviorGroup.js:132
+#: src/prefs/appBehaviorGroup.js:127
 msgid "Taskbar Flyout"
 msgstr "Taskleisten-Flyout"
 
-#: src/prefs/appBehaviorGroup.js:133
+#: src/prefs/appBehaviorGroup.js:128
 msgid "Application List"
 msgstr "Anwendungsliste"
 
-#: src/prefs/appBehaviorGroup.js:168 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:163 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Arbeitsflächen isolieren"
 
-#: src/prefs/appBehaviorGroup.js:169
+#: src/prefs/appBehaviorGroup.js:164
 msgid "Show running applications from the current workspace only"
 msgstr "Zeigt nur laufende Anwendungen der aktuellen Arbeitsfläche"
 
-#: src/prefs/appBehaviorGroup.js:173 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:168 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Monitore isolieren"
 
-#: src/prefs/appBehaviorGroup.js:174
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Zeigt laufende Anwendungen nur auf der Taskleiste ihres Monitors"
 
-#: src/prefs/appBehaviorGroup.js:177
+#: src/prefs/appBehaviorGroup.js:172
 #, fuzzy
 msgid "Application Isolation"
 msgstr "Anwendungssymbole"
 
-#: src/prefs/appBehaviorGroup.js:178
+#: src/prefs/appBehaviorGroup.js:173
 #, fuzzy
 msgid "Choose which applications appear on the taskbar"
 msgstr ""
 "Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
 
-#: src/prefs/appBehaviorGroup.js:186
+#: src/prefs/appBehaviorGroup.js:181
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus-Ordnerverknüpfungen"
 
-#: src/prefs/appBehaviorGroup.js:187
+#: src/prefs/appBehaviorGroup.js:182
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Zeigt häufig verwendete Ordner im Dateien-Menü der Taskleiste"
 
-#: src/prefs/appBehaviorGroup.js:193
+#: src/prefs/appBehaviorGroup.js:188
 msgid "Middle Click Closes Applications"
 msgstr "Mittelklick schließt Anwendungen"
 
-#: src/prefs/appBehaviorGroup.js:194
+#: src/prefs/appBehaviorGroup.js:189
 msgid "Close all application windows instead of opening a new window"
 msgstr "Schließt alle Anwendungsfenster, anstatt ein neues Fenster zu öffnen"
 
@@ -637,27 +637,32 @@ msgstr ""
 "Ein schwebendes Dock nur anzeigen, wenn der Zeiger den Rand des Docks "
 "erreicht"
 
-#: src/prefs/dockBehaviorGroup.js:47 src/prefs/taskbarBehaviorGroup.js:88
+#: src/prefs/dockBehaviorGroup.js:46 src/prefs/taskbarBehaviorGroup.js:98
 msgid "Workspace Scroll"
 msgstr "Arbeitsflächen-Scrollen"
 
-#: src/prefs/dockBehaviorGroup.js:48
+#: src/prefs/dockBehaviorGroup.js:47 src/prefs/dockBehaviorGroup.js:52
 msgid "Scroll over empty Dock space to switch workspaces"
 msgstr "Über leeren Dock-Bereich scrollen, um die Arbeitsflächen zu wechseln"
 
-#: src/prefs/dockBehaviorGroup.js:57 src/prefs/taskbarBehaviorGroup.js:98
+#: src/prefs/dockBehaviorGroup.js:51 src/prefs/taskbarBehaviorGroup.js:103
+#, fuzzy
+msgid "Enable Workspace Scroll"
+msgstr "Arbeitsflächen-Scrollen"
+
+#: src/prefs/dockBehaviorGroup.js:61 src/prefs/taskbarBehaviorGroup.js:113
 msgid "Workspace Scroll Delay"
 msgstr "Verzögerung beim Arbeitsflächen-Scrollen"
 
-#: src/prefs/dockBehaviorGroup.js:58 src/prefs/taskbarBehaviorGroup.js:99
+#: src/prefs/dockBehaviorGroup.js:62 src/prefs/taskbarBehaviorGroup.js:114
 msgid "Minimum delay between workspace changes in milliseconds"
 msgstr "Mindestverzögerung zwischen Arbeitsflächenwechseln in Millisekunden"
 
-#: src/prefs/dockBehaviorGroup.js:68
+#: src/prefs/dockBehaviorGroup.js:74
 msgid "Show Dock on All Monitors"
 msgstr "Dock auf allen Monitoren anzeigen"
 
-#: src/prefs/dockBehaviorGroup.js:69
+#: src/prefs/dockBehaviorGroup.js:75
 msgid "Show the Dock on every connected monitor"
 msgstr ""
 
@@ -840,7 +845,7 @@ msgstr ""
 "Übergroße Symbole verkleinern sich automatisch, wenn das Panel verkleinert "
 "wird"
 
-#: src/prefs/panelAppearancePage.js:79 src/prefs/preferencesWidgets.js:70
+#: src/prefs/panelAppearancePage.js:79 src/prefs/preferencesWidgets.js:71
 msgid "Panel Position"
 msgstr "Panel-Position"
 
@@ -1331,11 +1336,11 @@ msgstr ""
 msgid "Profile imported."
 msgstr ""
 
-#: src/prefs/preferencesWidgets.js:116 src/prefs/preferencesWidgets.js:153
+#: src/prefs/preferencesWidgets.js:117 src/prefs/preferencesWidgets.js:154
 msgid "Move Up"
 msgstr "Nach oben verschieben"
 
-#: src/prefs/preferencesWidgets.js:121 src/prefs/preferencesWidgets.js:158
+#: src/prefs/preferencesWidgets.js:122 src/prefs/preferencesWidgets.js:159
 msgid "Move Down"
 msgstr "Nach unten verschieben"
 
@@ -1583,110 +1588,120 @@ msgstr "Panel automatisch ausblenden"
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr "Zeigt die Taskleiste, wenn der Zeiger den Bildschirmrand erreicht"
 
-#: src/prefs/taskbarBehaviorGroup.js:50
+#: src/prefs/taskbarBehaviorGroup.js:49
 msgid "Bottom Hot Edge"
 msgstr "Unterer Aktivbereich"
 
-#: src/prefs/taskbarBehaviorGroup.js:51
+#: src/prefs/taskbarBehaviorGroup.js:51 src/prefs/taskbarBehaviorGroup.js:58
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Drücken Sie den Zeiger gegen den unteren Bildschirmrand, um die Übersicht "
 "umzuschalten"
 
-#: src/prefs/taskbarBehaviorGroup.js:60
+#: src/prefs/taskbarBehaviorGroup.js:56
+#, fuzzy
+msgid "Enable Bottom Hot Edge"
+msgstr "Unterer Aktivbereich"
+
+#: src/prefs/taskbarBehaviorGroup.js:68
 msgid "Activation Pressure"
 msgstr "Aktivierungsdruck"
 
-#: src/prefs/taskbarBehaviorGroup.js:62
+#: src/prefs/taskbarBehaviorGroup.js:70
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr ""
 "Pixel, die der Zeiger über den unteren Rand hinaus zurücklegen muss, bevor "
 "die Übersicht aktiviert wird"
 
-#: src/prefs/taskbarBehaviorGroup.js:73
+#: src/prefs/taskbarBehaviorGroup.js:82
 msgid "Hot Edge Animation"
 msgstr "Aktivbereich-Animation"
 
-#: src/prefs/taskbarBehaviorGroup.js:74
+#: src/prefs/taskbarBehaviorGroup.js:83
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "Zeigt einen Welleneffekt, wenn der untere Aktivbereich aktiviert wird"
 
-#: src/prefs/taskbarBehaviorGroup.js:89
+#: src/prefs/taskbarBehaviorGroup.js:99 src/prefs/taskbarBehaviorGroup.js:104
 msgid "Scroll over empty taskbar space to switch workspaces"
 msgstr ""
 "Scrollen Sie über leeren Taskleistenbereich, um die Arbeitsfläche zu wechseln"
 
-#: src/prefs/taskbarBehaviorGroup.js:113
+#: src/prefs/taskbarBehaviorGroup.js:130
 msgid "Panel Menus Require Click"
 msgstr "Panel-Menüs erfordern Klick"
 
-#: src/prefs/taskbarBehaviorGroup.js:114
+#: src/prefs/taskbarBehaviorGroup.js:131
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "Wechselt nur bei Klick zwischen Uhr-, System- und Tray-Menüs"
 
-#: src/prefs/taskbarBehaviorGroup.js:120
+#: src/prefs/taskbarBehaviorGroup.js:137
 msgid "Taskbar-aligned Notification Banners"
 msgstr "An der Taskleiste ausgerichtete Benachrichtigungsbanner"
 
-#: src/prefs/taskbarBehaviorGroup.js:121
+#: src/prefs/taskbarBehaviorGroup.js:138
 #, fuzzy
 msgid "Follow the taskbar edge and the clock position"
 msgstr "Folgt der Taskleistenkante und der horizontalen Position der Uhr"
 
-#: src/prefs/taskbarBehaviorGroup.js:150
+#: src/prefs/taskbarBehaviorGroup.js:166
 msgid "Automatic Fallback"
 msgstr "Automatischer Rückgriff"
 
-#: src/prefs/taskbarBehaviorGroup.js:158
+#: src/prefs/taskbarBehaviorGroup.js:174
 msgid "Task Manager Application"
 msgstr "Task-Manager-Anwendung"
 
-#: src/prefs/taskbarBehaviorGroup.js:159
+#: src/prefs/taskbarBehaviorGroup.js:175
 msgid "Application opened from the taskbar context menu"
 msgstr "Anwendung, die über das Kontextmenü der Taskleiste geöffnet wird"
 
-#: src/prefs/taskbarBehaviorGroup.js:176
+#: src/prefs/taskbarBehaviorGroup.js:192
 msgid "Show Taskbar on All Monitors"
 msgstr "Taskleiste auf allen Monitoren anzeigen"
 
-#: src/prefs/taskbarBehaviorGroup.js:177
+#: src/prefs/taskbarBehaviorGroup.js:193
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "Zeigt Aktivitäten, Anwendungen, Uhr und Systemmenü auf jedem Monitor"
 
-#: src/prefs/windowDodgeGroup.js:22
+#: src/prefs/windowDodgeGroup.js:23
 msgid "Dodge Windows"
 msgstr "Fenstern ausweichen"
 
-#: src/prefs/windowDodgeGroup.js:23
+#: src/prefs/windowDodgeGroup.js:25 src/prefs/windowDodgeGroup.js:32
 msgid "Hide the panel or Dock when a qualifying window overlaps it"
 msgstr ""
 
-#: src/prefs/windowDodgeGroup.js:32
+#: src/prefs/windowDodgeGroup.js:30
+#, fuzzy
+msgid "Enable Dodge Windows"
+msgstr "Fenstern ausweichen"
+
+#: src/prefs/windowDodgeGroup.js:42
 msgid "Dodge Windows Mode"
 msgstr "Fenster-Ausweichmodus"
 
-#: src/prefs/windowDodgeGroup.js:33
+#: src/prefs/windowDodgeGroup.js:43
 msgid "Choose which windows make the panel or Dock hide"
 msgstr ""
 
-#: src/prefs/windowDodgeGroup.js:37
+#: src/prefs/windowDodgeGroup.js:47
 msgid "All windows"
 msgstr "Alle Fenster"
 
-#: src/prefs/windowDodgeGroup.js:41
+#: src/prefs/windowDodgeGroup.js:51
 msgid "Only focused application’s windows"
 msgstr "Nur Fenster der fokussierten Anwendung"
 
-#: src/prefs/windowDodgeGroup.js:45
+#: src/prefs/windowDodgeGroup.js:55
 msgid "Only maximized windows"
 msgstr ""
 
-#: src/prefs/windowDodgeGroup.js:54
+#: src/prefs/windowDodgeGroup.js:65
 msgid "Reveal on Pointer"
 msgstr ""
 
-#: src/prefs/windowDodgeGroup.js:55
+#: src/prefs/windowDodgeGroup.js:66
 msgid ""
 "Reveal the panel or Dock when the pointer reaches its screen edge while "
 "dodging a window"

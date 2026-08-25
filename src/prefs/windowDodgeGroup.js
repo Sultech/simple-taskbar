@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Adw from 'gi://Adw';
+
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
@@ -17,15 +19,23 @@ export function addWindowDodgeRows(
         connectSettings,
     }
 ) {
+    const dodgeRow = new Adw.ExpanderRow({
+        title: _('Dodge Windows'),
+        subtitle: _(
+            'Hide the panel or Dock when a qualifying window overlaps it'
+        ),
+    });
     const dodgeSwitch = createSwitchRow(settings, {
         key: enabledKey,
-        title: _('Dodge Windows'),
-        subtitle: _('Hide the panel or Dock when a qualifying window overlaps it'),
+        title: _('Enable Dodge Windows'),
+        subtitle: _(
+            'Hide the panel or Dock when a qualifying window overlaps it'
+        ),
     });
-    group.add(dodgeSwitch);
+    dodgeRow.add_row(dodgeSwitch);
 
     const modeRow = addComboRow(
-        group,
+        dodgeRow,
         settings,
         {
             key: modeKey,
@@ -45,6 +55,7 @@ export function addWindowDodgeRows(
                     label: _('Only maximized windows'),
                 },
             ],
+            addRow: row => dodgeRow.add_row(row),
         },
         connectSettings
     );
@@ -54,7 +65,8 @@ export function addWindowDodgeRows(
         title: _('Reveal on Pointer'),
         subtitle: _('Reveal the panel or Dock when the pointer reaches its screen edge while dodging a window'),
     });
-    group.add(pointerRevealSwitch);
+    dodgeRow.add_row(pointerRevealSwitch);
+    group.add(dodgeRow);
 
     const disableAutoHideWhenDodgeEnabled = () => {
         if (settings.get_boolean(enabledKey) &&
@@ -82,9 +94,8 @@ export function addWindowDodgeRows(
 
     const syncAvailability = () => {
         const available = group.sensitive;
+        dodgeRow.sensitive = available;
         dodgeSwitch.sensitive = available;
-        modeRow.visible = dodgeSwitch.active;
-        pointerRevealSwitch.visible = dodgeSwitch.active;
         modeRow.sensitive = available && dodgeSwitch.active;
         pointerRevealSwitch.sensitive = available && dodgeSwitch.active;
     };

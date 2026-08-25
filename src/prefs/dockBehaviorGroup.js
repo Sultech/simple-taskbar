@@ -42,15 +42,19 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     });
     group.add(edgeRevealSwitch);
 
-    const workspaceScrollSwitch = createSwitchRow(settings, {
-        key: 'dock-workspace-scroll-enabled',
+    const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Workspace Scroll'),
         subtitle: _('Scroll over empty Dock space to switch workspaces'),
     });
-    group.add(workspaceScrollSwitch);
+    const workspaceScrollSwitch = createSwitchRow(settings, {
+        key: 'dock-workspace-scroll-enabled',
+        title: _('Enable Workspace Scroll'),
+        subtitle: _('Scroll over empty Dock space to switch workspaces'),
+    });
+    workspaceScrollRow.add_row(workspaceScrollSwitch);
 
     const workspaceScrollDelayRow = addSpinRow(
-        group,
+        workspaceScrollRow,
         settings,
         {
             key: 'dock-workspace-scroll-delay',
@@ -59,9 +63,11 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             lower: 5,
             upper: 250,
             step: 5,
+            addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
     );
+    group.add(workspaceScrollRow);
 
     const multiMonitorSwitch = createSwitchRow(settings, {
         key: 'dock-multi-monitor-panels',

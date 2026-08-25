@@ -45,15 +45,23 @@ export function addTaskbarBehaviorGroup({
         }
     );
 
+    const hotEdgeRow = new Adw.ExpanderRow({
+        title: _('Bottom Hot Edge'),
+        subtitle: _(
+            'Push the pointer against the bottom screen edge to toggle Overview'
+        ),
+    });
     const hotEdgeOverviewSwitch = createSwitchRow(settings, {
         key: 'hot-edge-overview-enabled',
-        title: _('Bottom Hot Edge'),
-        subtitle: _('Push the pointer against the bottom screen edge to toggle Overview'),
+        title: _('Enable Bottom Hot Edge'),
+        subtitle: _(
+            'Push the pointer against the bottom screen edge to toggle Overview'
+        ),
     });
-    behaviorGroup.add(hotEdgeOverviewSwitch);
+    hotEdgeRow.add_row(hotEdgeOverviewSwitch);
 
     const hotEdgePressureRow = addSpinRow(
-        behaviorGroup,
+        hotEdgeRow,
         settings,
         {
             key: 'hot-edge-pressure-threshold',
@@ -64,6 +72,7 @@ export function addTaskbarBehaviorGroup({
             lower: 0,
             upper: 500,
             step: 25,
+            addRow: row => hotEdgeRow.add_row(row),
         },
         connectSettings
     );
@@ -73,25 +82,31 @@ export function addTaskbarBehaviorGroup({
         title: _('Hot Edge Animation'),
         subtitle: _('Show a ripple when the bottom hot edge activates'),
     });
-    const updateHotEdgeAnimationSwitch = () => {
+    hotEdgeRow.add_row(hotEdgeAnimationSwitch);
+    const syncHotEdgeControls = () => {
         hotEdgeAnimationSwitch.sensitive = hotEdgeOverviewSwitch.active;
-        hotEdgePressureRow.visible = hotEdgeOverviewSwitch.active;
+        hotEdgePressureRow.sensitive = hotEdgeOverviewSwitch.active;
     };
     hotEdgeOverviewSwitch.connect(
         'notify::active',
-        updateHotEdgeAnimationSwitch
+        syncHotEdgeControls
     );
-    updateHotEdgeAnimationSwitch();
+    syncHotEdgeControls();
+    behaviorGroup.add(hotEdgeRow);
 
-    const workspaceScrollSwitch = createSwitchRow(settings, {
-        key: 'workspace-scroll-enabled',
+    const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Workspace Scroll'),
         subtitle: _('Scroll over empty taskbar space to switch workspaces'),
     });
-    behaviorGroup.add(workspaceScrollSwitch);
+    const workspaceScrollSwitch = createSwitchRow(settings, {
+        key: 'workspace-scroll-enabled',
+        title: _('Enable Workspace Scroll'),
+        subtitle: _('Scroll over empty taskbar space to switch workspaces'),
+    });
+    workspaceScrollRow.add_row(workspaceScrollSwitch);
 
     const workspaceScrollDelayRow = addSpinRow(
-        behaviorGroup,
+        workspaceScrollRow,
         settings,
         {
             key: 'workspace-scroll-delay',
@@ -100,9 +115,11 @@ export function addTaskbarBehaviorGroup({
             lower: 5,
             upper: 250,
             step: 5,
+            addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
     );
+    behaviorGroup.add(workspaceScrollRow);
     workspaceScrollDelayRow.sensitive = workspaceScrollSwitch.active;
     workspaceScrollSwitch.connect('notify::active', widget => {
         workspaceScrollDelayRow.sensitive = widget.active;
@@ -121,7 +138,6 @@ export function addTaskbarBehaviorGroup({
         subtitle: _('Follow the taskbar edge and the clock position'),
     });
     advancedBehaviorGroup.add(notificationBannerSwitch);
-    advancedBehaviorGroup.add(hotEdgeAnimationSwitch);
 
     const allTaskManagerApps = Gio.AppInfo.get_all();
     const taskManagerApps = allTaskManagerApps

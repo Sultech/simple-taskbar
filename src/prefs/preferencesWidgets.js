@@ -34,6 +34,7 @@ export function addSpinRow(group, settings, {
     lower,
     upper,
     step = 1,
+    addRow = row => group.add(row),
 }, connectSettings) {
     const row = Adw.SpinRow.new_with_range(lower, upper, step);
     row.title = title;
@@ -47,7 +48,7 @@ export function addSpinRow(group, settings, {
         if (row.get_value() !== value)
             row.set_value(value);
     });
-    group.add(row);
+    addRow(row);
     return row;
 }
 
