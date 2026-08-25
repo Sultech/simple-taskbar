@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 22:50+0100\n"
+"POT-Creation-Date: 2026-08-25 23:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Application overflow"
 msgstr ""
 
-#: prefs.js:49 src/prefs/panelAppearancePage.js:85
+#: prefs.js:49 src/prefs/panelAppearancePage.js:83
 #: src/prefs/panelModeGroup.js:70
 msgid "Left"
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 msgid "Center"
 msgstr ""
 
-#: prefs.js:51 src/prefs/panelAppearancePage.js:86
+#: prefs.js:51 src/prefs/panelAppearancePage.js:84
 #: src/prefs/panelModeGroup.js:71
 msgid "Right"
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Dock"
 msgstr ""
 
-#: prefs.js:73 src/prefs/advancedPage.js:40 src/prefs/dockItemsPage.js:23
+#: prefs.js:73 src/prefs/advancedPage.js:32 src/prefs/dockItemsPage.js:23
 msgid "Start Menu"
 msgstr ""
 
@@ -137,126 +137,32 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: src/prefs/advancedPage.js:16
-msgid "Application Behavior"
-msgstr ""
-
-#: src/prefs/advancedPage.js:18 src/prefs/panelModeGroup.js:231
-msgid "Choose which applications appear and how they are grouped."
-msgstr ""
-
-#: src/prefs/advancedPage.js:24 src/prefs/taskbarBehaviorGroup.js:26
+#: src/prefs/advancedPage.js:16 src/prefs/taskbarBehaviorGroup.js:26
 msgid "Taskbar Behavior"
 msgstr ""
 
-#: src/prefs/advancedPage.js:26
+#: src/prefs/advancedPage.js:18
 msgid "Less commonly used taskbar interaction options."
 msgstr ""
 
-#: src/prefs/advancedPage.js:32
+#: src/prefs/advancedPage.js:24
 msgid "File Manager"
 msgstr ""
 
-#: src/prefs/advancedPage.js:34
+#: src/prefs/advancedPage.js:26
 msgid "File manager shortcuts and taskbar menu folders."
 msgstr ""
 
-#: src/prefs/advancedPage.js:42
+#: src/prefs/advancedPage.js:34
 msgid "Less commonly used Start menu options."
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:21
-msgid "Show Pinned App Separator"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:22
-msgid "Show a line between pinned and running applications"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:27
-msgid "Show Location Separator"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:28
-msgid "Show a line between applications and locations"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:31
-msgid "Separators"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:32
-msgid "Choose which separators appear"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:40
-msgid "Application Overflow"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:41
-msgid "Choose how overflowing applications are handled"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:45
-msgid "Enable Application Overflow"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:47
-msgid ""
-"Show application buttons that do not fit in an overflow popup instead of "
-"scrolling the taskbar"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:57
-msgid "Overflow Style"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:59
-msgid "Taskbar Flyout"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:60
-msgid "Application List"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:75 src/prefs/windowSwitchingPage.js:49
-msgid "Isolate Workspaces"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:76
-msgid "Show running applications from the current workspace only"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:80 src/prefs/windowSwitchingPage.js:57
-msgid "Isolate Monitors"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:81
-msgid "Show running applications only on the taskbar for their monitor"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:84
-msgid "Application Isolation"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:85
-msgid "Choose which applications appear on the taskbar"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:93
+#: src/prefs/appBehaviorGroup.js:14
 msgid "Nautilus Folder Shortcuts"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:94
+#: src/prefs/appBehaviorGroup.js:15
 msgid "Show common folders in the Files taskbar menu"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:100
-msgid "Middle Click Closes Applications"
-msgstr ""
-
-#: src/prefs/appBehaviorGroup.js:101
-msgid "Close all application windows instead of opening a new window"
 msgstr ""
 
 #: src/prefs/applicationIconsGroup.js:26
@@ -300,11 +206,11 @@ msgid "Choose the application icon alignment"
 msgstr ""
 
 #: src/prefs/applicationIconsGroup.js:90
-msgid "Window Interaction"
+msgid "Application Interaction"
 msgstr ""
 
 #: src/prefs/applicationIconsGroup.js:91
-msgid "Configure previews and multi-window actions"
+msgid "Configure previews, multi-window actions, and clicks"
 msgstr ""
 
 #: src/prefs/applicationIconsGroup.js:96
@@ -325,132 +231,224 @@ msgid ""
 "across all workspaces"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:145
+#: src/prefs/applicationIconsGroup.js:106
+msgid "Middle Click Closes Applications"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:107
+msgid "Close all application windows instead of opening a new window"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:150
 msgid "Application Layout"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:147
+#: src/prefs/applicationIconsGroup.js:152
 msgid "Choose which applications appear and how their buttons are shown"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:154
+#: src/prefs/applicationIconsGroup.js:159
 msgid "Hide Pinned Applications"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:156
+#: src/prefs/applicationIconsGroup.js:161
 msgid "Show pinned taskbar applications only while they are running"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:163
+#: src/prefs/applicationIconsGroup.js:168
 msgid "Use Pinned Apps as Application Launchers"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:165
+#: src/prefs/applicationIconsGroup.js:170
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:172
+#: src/prefs/applicationIconsGroup.js:177
 msgid "Hide Unpinned Applications"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:174
+#: src/prefs/applicationIconsGroup.js:179
 msgid "Show only pinned applications and their running windows"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:190
+#: src/prefs/applicationIconsGroup.js:195
 msgid "Always"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:191
-#: src/prefs/applicationIconsGroup.js:195
+#: src/prefs/applicationIconsGroup.js:196
+#: src/prefs/applicationIconsGroup.js:200
 msgid "Only When Full"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:192
-#: src/prefs/applicationIconsGroup.js:196
+#: src/prefs/applicationIconsGroup.js:197
+#: src/prefs/applicationIconsGroup.js:201
 msgid "Never"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:203
+#: src/prefs/applicationIconsGroup.js:208
 msgid "Combine Application Buttons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:204
+#: src/prefs/applicationIconsGroup.js:209
 msgid "Choose when windows share one taskbar button"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:220
+#: src/prefs/applicationIconsGroup.js:225
 msgid "Hide App Labels"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:221
+#: src/prefs/applicationIconsGroup.js:226
 msgid "Show only icons on separate window buttons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:267
+#: src/prefs/applicationIconsGroup.js:232
+msgid "Show Pinned App Separator"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:233
+msgid "Show a line between pinned and running applications"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:239
+msgid "Show Location Separator"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:240
+msgid "Show a line between applications and locations"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:302
 msgid "Running Indicators"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:268
+#: src/prefs/applicationIconsGroup.js:303
 msgid "Configure indicators beneath running application icons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:277
+#: src/prefs/applicationIconsGroup.js:312
 msgid "Running Indicator Style"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:279
+#: src/prefs/applicationIconsGroup.js:314
 msgid "Choose the shape of indicators beneath running applications"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:282
+#: src/prefs/applicationIconsGroup.js:317
 msgid "Rounded"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:283
+#: src/prefs/applicationIconsGroup.js:318
 msgid "Straight"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:290
+#: src/prefs/applicationIconsGroup.js:325
 msgid "Custom Indicator Colors"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:291
+#: src/prefs/applicationIconsGroup.js:326
 msgid "Choose colors for running application indicators"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:304
+#: src/prefs/applicationIconsGroup.js:339
 msgid "Match Icon Color"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:306
+#: src/prefs/applicationIconsGroup.js:341
 msgid "Color the focused indicator from the application icon"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:322
+#: src/prefs/applicationIconsGroup.js:357
 msgid "Focused Indicator Color"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:332
+#: src/prefs/applicationIconsGroup.js:367
 msgid "Unfocused Indicator Color"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:381
-#: src/prefs/applicationIconsGroup.js:431
+#: src/prefs/applicationIconsGroup.js:416
+msgid "Application Overflow"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:417
+msgid "Choose how overflowing applications are handled"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:423
+msgid "Enable Application Overflow"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:433
+msgid "Overflow Style"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:435
+msgid "Taskbar Flyout"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:436
+msgid "Application List"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:469 src/prefs/windowSwitchingPage.js:49
+msgid "Isolate Workspaces"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:470
+msgid "Show running applications from the current workspace only"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:474 src/prefs/windowSwitchingPage.js:57
+msgid "Isolate Monitors"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:478
+msgid "Application Isolation"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:495
+#: src/prefs/applicationIconsGroup.js:561
 msgid "Application Icons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:383
+#: src/prefs/applicationIconsGroup.js:497
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:433
+#: src/prefs/applicationIconsGroup.js:512
+msgid ""
+"Show application buttons that do not fit in an overflow popup instead of "
+"scrolling the Dock"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:518
+msgid "Choose which applications appear on the Dock"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:520
+msgid "Show running applications only in the Dock for their monitor"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:563
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:584
+msgid ""
+"Show application buttons that do not fit in an overflow popup instead of "
+"scrolling the taskbar"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:590
+msgid "Choose which applications appear on the taskbar"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:592
+msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 
 #: src/prefs/dockAppearanceGroup.js:25
@@ -461,7 +459,7 @@ msgstr ""
 msgid "Configure the Dock independently of the main panel."
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:38 src/prefs/panelAppearancePage.js:270
+#: src/prefs/dockAppearanceGroup.js:38 src/prefs/panelAppearancePage.js:261
 msgid "Theme"
 msgstr ""
 
@@ -469,7 +467,7 @@ msgstr ""
 msgid "Choose the Dock colour scheme"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:44 src/prefs/panelAppearancePage.js:276
+#: src/prefs/dockAppearanceGroup.js:44 src/prefs/panelAppearancePage.js:267
 msgid "Follow System Theme"
 msgstr ""
 
@@ -481,16 +479,16 @@ msgstr ""
 msgid "Dock Theme"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:294
+#: src/prefs/dockAppearanceGroup.js:62 src/prefs/panelAppearancePage.js:285
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:64 src/prefs/panelAppearancePage.js:296
+#: src/prefs/dockAppearanceGroup.js:64 src/prefs/panelAppearancePage.js:287
 #: src/prefs/startMenuPage.js:397
 msgid "Light"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:297
+#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:288
 #: src/prefs/startMenuPage.js:396
 msgid "Dark"
 msgstr ""
@@ -509,13 +507,13 @@ msgstr ""
 msgid "Make the Dock background transparent"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:92 src/prefs/panelAppearancePage.js:316
+#: src/prefs/dockAppearanceGroup.js:92 src/prefs/panelAppearancePage.js:307
 #: src/prefs/startMenuPage.js:422
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 
 #: src/prefs/dockAppearanceGroup.js:95 src/prefs/dockAppearanceGroup.js:121
-#: src/prefs/panelAppearancePage.js:319 src/prefs/panelAppearancePage.js:345
+#: src/prefs/panelAppearancePage.js:310 src/prefs/panelAppearancePage.js:336
 msgid "Transparency"
 msgstr ""
 
@@ -523,15 +521,15 @@ msgstr ""
 msgid "Control the Dock background transparency"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:101 src/prefs/panelAppearancePage.js:325
+#: src/prefs/dockAppearanceGroup.js:101 src/prefs/panelAppearancePage.js:316
 msgid "Enable Transparency"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:114 src/prefs/panelAppearancePage.js:338
+#: src/prefs/dockAppearanceGroup.js:114 src/prefs/panelAppearancePage.js:329
 msgid "0% is opaque and 100% is fully transparent"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:131 src/prefs/panelAppearancePage.js:381
+#: src/prefs/dockAppearanceGroup.js:131 src/prefs/panelAppearancePage.js:372
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr ""
 
@@ -559,15 +557,15 @@ msgstr ""
 msgid "Dock Gradient Direction"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:186 src/prefs/panelAppearancePage.js:435
+#: src/prefs/dockAppearanceGroup.js:186 src/prefs/panelAppearancePage.js:426
 msgid "Choose how the gradient flows"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:188 src/prefs/panelAppearancePage.js:437
+#: src/prefs/dockAppearanceGroup.js:188 src/prefs/panelAppearancePage.js:428
 msgid "Vertical"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:189 src/prefs/panelAppearancePage.js:438
+#: src/prefs/dockAppearanceGroup.js:189 src/prefs/panelAppearancePage.js:429
 msgid "Horizontal"
 msgstr ""
 
@@ -580,15 +578,15 @@ msgstr ""
 msgid "Dock Text Color"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:206 src/prefs/panelAppearancePage.js:455
+#: src/prefs/dockAppearanceGroup.js:206 src/prefs/panelAppearancePage.js:446
 msgid "White"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:207 src/prefs/panelAppearancePage.js:456
+#: src/prefs/dockAppearanceGroup.js:207 src/prefs/panelAppearancePage.js:447
 msgid "Black"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:215 src/prefs/panelAppearancePage.js:557
+#: src/prefs/dockAppearanceGroup.js:215 src/prefs/panelAppearancePage.js:548
 msgid "Borders"
 msgstr ""
 
@@ -596,7 +594,7 @@ msgstr ""
 msgid "Choose which borders appear around the Dock"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:221 src/prefs/panelAppearancePage.js:563
+#: src/prefs/dockAppearanceGroup.js:221 src/prefs/panelAppearancePage.js:554
 msgid "Show Border in Dark Mode"
 msgstr ""
 
@@ -604,7 +602,7 @@ msgstr ""
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:234 src/prefs/panelAppearancePage.js:576
+#: src/prefs/dockAppearanceGroup.js:234 src/prefs/panelAppearancePage.js:567
 msgid "Show Border in Light Mode"
 msgstr ""
 
@@ -815,99 +813,99 @@ msgstr ""
 msgid "Show Trash and connected drives in the Dock."
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:54
+#: src/prefs/panelAppearancePage.js:52
 msgid "Panel Appearance"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:55
+#: src/prefs/panelAppearancePage.js:53
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:64
+#: src/prefs/panelAppearancePage.js:62
 msgid "Panel Thickness"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:66
+#: src/prefs/panelAppearancePage.js:64
 msgid "Oversized icons shrink automatically when the panel is reduced"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:78 src/prefs/preferencesWidgets.js:71
+#: src/prefs/panelAppearancePage.js:76 src/prefs/preferencesWidgets.js:71
 msgid "Panel Position"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:80
+#: src/prefs/panelAppearancePage.js:78
 msgid "Place the taskbar at a screen edge"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:83 src/prefs/panelAxis.js:13
+#: src/prefs/panelAppearancePage.js:81 src/prefs/panelAxis.js:13
 #: src/prefs/panelModeGroup.js:68
 msgid "Top"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:84 src/prefs/panelAxis.js:15
+#: src/prefs/panelAppearancePage.js:82 src/prefs/panelAxis.js:15
 #: src/prefs/panelModeGroup.js:69
 msgid "Bottom"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:271
+#: src/prefs/panelAppearancePage.js:262
 msgid "Choose the taskbar colour scheme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:277
+#: src/prefs/panelAppearancePage.js:268
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:293
+#: src/prefs/panelAppearancePage.js:284
 msgid "Taskbar Theme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:313
+#: src/prefs/panelAppearancePage.js:304
 msgid "Make the taskbar background transparent"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:320
+#: src/prefs/panelAppearancePage.js:311
 msgid "Control the taskbar background transparency"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:384
+#: src/prefs/panelAppearancePage.js:375
 msgid "Custom Taskbar Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:402
+#: src/prefs/panelAppearancePage.js:393
 msgid "Taskbar Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:408
+#: src/prefs/panelAppearancePage.js:399
 msgid "Use Taskbar Gradient"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:409
+#: src/prefs/panelAppearancePage.js:400
 msgid "Blend the taskbar color with a second color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:424
+#: src/prefs/panelAppearancePage.js:415
 msgid "Taskbar Gradient Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:434
+#: src/prefs/panelAppearancePage.js:425
 msgid "Taskbar Gradient Direction"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:445
+#: src/prefs/panelAppearancePage.js:436
 msgid ""
 "White text uses the dark panel theme; black text uses the light panel theme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:452
+#: src/prefs/panelAppearancePage.js:443
 msgid "Taskbar Text Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:558
+#: src/prefs/panelAppearancePage.js:549
 msgid "Choose which borders appear around the taskbar"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:564 src/prefs/panelAppearancePage.js:577
+#: src/prefs/panelAppearancePage.js:555 src/prefs/panelAppearancePage.js:568
 msgid "Display a thin border along the panel’s workspace-facing edge"
 msgstr ""
 
@@ -1180,16 +1178,12 @@ msgid ""
 "when it is configured, otherwise 3 px"
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:227
+#: src/prefs/panelModeGroup.js:225
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 
-#: src/prefs/panelModeGroup.js:228
+#: src/prefs/panelModeGroup.js:226
 msgid "Change the size, spacing, and placement of taskbar icons."
-msgstr ""
-
-#: src/prefs/panelModeGroup.js:230
-msgid "Application options are unavailable in Default GNOME Panel mode."
 msgstr ""
 
 #: src/prefs/preferencesDialogs.js:15

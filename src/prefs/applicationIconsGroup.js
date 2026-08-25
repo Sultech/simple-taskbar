@@ -87,8 +87,8 @@ function addApplicationIconControls({
     );
 
     const windowInteractionRow = new Adw.ExpanderRow({
-        title: _('Window Interaction'),
-        subtitle: _('Configure previews and multi-window actions'),
+        title: _('Application Interaction'),
+        subtitle: _('Configure previews, multi-window actions, and clicks'),
     });
     group.add(windowInteractionRow);
     windowInteractionRow.add_row(createSwitchRow(settings, {
@@ -100,6 +100,11 @@ function addApplicationIconControls({
         key: 'multi-window-click-spread',
         title: _('Spread Multiple Windows'),
         subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
+    }));
+    windowInteractionRow.add_row(createSwitchRow(settings, {
+        key: 'middle-click-close-apps',
+        title: _('Middle Click Closes Applications'),
+        subtitle: _('Close all application windows instead of opening a new window'),
     }));
 
     const syncMinimumIconSize = () => {
@@ -401,6 +406,85 @@ function addIndicatorControls({
     syncIndicatorControls();
 }
 
+function addApplicationOverflowControls({
+    group,
+    settings,
+    connectSettings,
+    switchSubtitle,
+}) {
+    const applicationOverflowRow = new Adw.ExpanderRow({
+        title: _('Application Overflow'),
+        subtitle: _('Choose how overflowing applications are handled'),
+    });
+    group.add(applicationOverflowRow);
+
+    const applicationOverflowSwitch = createSwitchRow(settings, {
+        key: 'application-overflow-enabled',
+        title: _('Enable Application Overflow'),
+        subtitle: switchSubtitle,
+    });
+    applicationOverflowRow.add_row(applicationOverflowSwitch);
+
+    const applicationOverflowStyleRow = addComboRow(
+        applicationOverflowRow,
+        settings,
+        {
+            key: 'application-overflow-style',
+            title: _('Overflow Style'),
+            choices: [
+                {value: 'taskbar', label: _('Taskbar Flyout')},
+                {value: 'list', label: _('Application List')},
+            ],
+            addRow: row => applicationOverflowRow.add_row(row),
+        },
+        connectSettings
+    );
+    applicationOverflowStyleRow.sensitive =
+        applicationOverflowSwitch.active;
+    applicationOverflowSwitch.connect('notify::active', widget => {
+        applicationOverflowStyleRow.sensitive = widget.active;
+    });
+    const syncApplicationOverflowSensitivity = () => {
+        applicationOverflowSwitch.sensitive =
+            !settings.get_boolean('windows-xp-theme-enabled');
+    };
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncApplicationOverflowSensitivity
+    );
+    syncApplicationOverflowSensitivity();
+
+    return {applicationOverflowSwitch};
+}
+
+function addApplicationIsolationControls({
+    group,
+    settings,
+    groupSubtitle,
+    monitorSubtitle,
+}) {
+    const isolateWorkspacesSwitch = createSwitchRow(settings, {
+        key: 'isolate-workspaces',
+        title: _('Isolate Workspaces'),
+        subtitle: _('Show running applications from the current workspace only'),
+    });
+    const isolateMonitorsSwitch = createSwitchRow(settings, {
+        key: 'isolate-monitors',
+        title: _('Isolate Monitors'),
+        subtitle: monitorSubtitle,
+    });
+    const applicationIsolationRow = new Adw.ExpanderRow({
+        title: _('Application Isolation'),
+        subtitle: groupSubtitle,
+    });
+    applicationIsolationRow.add_row(isolateWorkspacesSwitch);
+    applicationIsolationRow.add_row(isolateMonitorsSwitch);
+    group.add(applicationIsolationRow);
+
+    return {isolateMonitorsSwitch};
+}
+
 function addDockApplicationIconsGroup({
     page,
     settings,
@@ -420,12 +504,28 @@ function addDockApplicationIconsGroup({
         connectSettings,
         panelPositions,
     });
-    addApplicationLayoutControls({
+    addApplicationOverflowControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+        switchSubtitle: _(
+            'Show application buttons that do not fit in an overflow popup instead of scrolling the Dock'
+        ),
+    });
+    addApplicationIsolationControls({
+        group: appearanceGroup,
+        settings,
+        groupSubtitle: _('Choose which applications appear on the Dock'),
+        monitorSubtitle: _(
+            'Show running applications only in the Dock for their monitor'
+        ),
+    });
+    addIndicatorControls({
         group: appearanceGroup,
         settings,
         connectSettings,
     });
-    addIndicatorControls({
+    addApplicationLayoutControls({
         group: appearanceGroup,
         settings,
         connectSettings,
@@ -476,12 +576,28 @@ export function addApplicationIconsGroup({
         connectSettings,
         panelPositions,
     });
-    const layoutControls = addApplicationLayoutControls({
+    const overflowControls = addApplicationOverflowControls({
+        group: appearanceGroup,
+        settings,
+        connectSettings,
+        switchSubtitle: _(
+            'Show application buttons that do not fit in an overflow popup instead of scrolling the taskbar'
+        ),
+    });
+    const isolationControls = addApplicationIsolationControls({
+        group: appearanceGroup,
+        settings,
+        groupSubtitle: _('Choose which applications appear on the taskbar'),
+        monitorSubtitle: _(
+            'Show running applications only on the taskbar for their monitor'
+        ),
+    });
+    addIndicatorControls({
         group: appearanceGroup,
         settings,
         connectSettings,
     });
-    addIndicatorControls({
+    const layoutControls = addApplicationLayoutControls({
         group: appearanceGroup,
         settings,
         connectSettings,
@@ -498,5 +614,8 @@ export function addApplicationIconsGroup({
         syncLabelSensitivity: layoutControls.syncLabelSensitivity,
         pinnedAppSeparatorSwitch: layoutControls.pinnedAppSeparatorSwitch,
         locationSeparatorSwitch: layoutControls.locationSeparatorSwitch,
+        applicationOverflowSwitch:
+            overflowControls.applicationOverflowSwitch,
+        isolateMonitorsSwitch: isolationControls.isolateMonitorsSwitch,
     };
 }

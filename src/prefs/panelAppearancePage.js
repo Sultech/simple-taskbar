@@ -46,7 +46,6 @@ export function addPanelAppearancePage({
     appAlignmentRow,
     pinnedAppsAsLaunchersSwitch,
     combineAppButtonsRow,
-    applicationOverflowSwitch,
     syncLabelSensitivity,
 }) {
     const panelAppearanceGroup = new Adw.PreferencesGroup({
@@ -174,7 +173,6 @@ export function addPanelAppearancePage({
                 settings.get_boolean('dock-panel-mode'));
         pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
         combineAppButtonsRow.sensitive = true;
-        applicationOverflowSwitch.sensitive = !enabled;
         syncLabelSensitivity();
         syncingWindowsXpTheme = false;
     };
@@ -249,11 +247,6 @@ export function addPanelAppearancePage({
     connectSettings(
         settings,
         'changed::combine-app-buttons-mode',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::application-overflow-enabled',
         syncWindowsXpTheme
     );
     connectSettings(

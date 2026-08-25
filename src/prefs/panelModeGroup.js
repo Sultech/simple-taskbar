@@ -195,7 +195,6 @@ export function connectDefaultGnomePanelSync({
     dockPanelModeSwitch,
     appearanceGroup,
     startMenuPage,
-    advancedAppBehaviorGroup,
     advancedStartMenuGroup,
     nautilusPlacesSwitch,
 }) {
@@ -220,15 +219,11 @@ export function connectDefaultGnomePanelSync({
         appearanceGroup.sensitive = !dockModeEnabled &&
             !defaultPanelRestrictions;
         startMenuPage.sensitive = !defaultPanelRestrictions;
-        advancedAppBehaviorGroup.sensitive = !defaultPanelRestrictions;
         advancedStartMenuGroup.sensitive = !defaultPanelRestrictions;
         nautilusPlacesSwitch.sensitive = !defaultPanelRestrictions;
         appearanceGroup.description = defaultPanelRestrictions
             ? _('Application icons are unavailable in Default GNOME Panel mode.')
             : _('Change the size, spacing, and placement of taskbar icons.');
-        advancedAppBehaviorGroup.description = defaultPanelRestrictions
-            ? _('Application options are unavailable in Default GNOME Panel mode.')
-            : _('Choose which applications appear and how they are grouped.');
         syncingPanelModes = false;
     };
 

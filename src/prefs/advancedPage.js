@@ -12,14 +12,6 @@ export function addAdvancedPage(window) {
     });
     window.add(advancedPage);
 
-    const advancedAppBehaviorGroup = new Adw.PreferencesGroup({
-        title: _('Application Behavior'),
-        description: _(
-            'Choose which applications appear and how they are grouped.'
-        ),
-    });
-    advancedPage.add(advancedAppBehaviorGroup);
-
     const advancedBehaviorGroup = new Adw.PreferencesGroup({
         title: _('Taskbar Behavior'),
         description: _(
@@ -45,7 +37,6 @@ export function addAdvancedPage(window) {
     advancedPage.add(advancedStartMenuGroup);
 
     return {
-        advancedAppBehaviorGroup,
         advancedBehaviorGroup,
         advancedFileManagerGroup,
         advancedStartMenuGroup,

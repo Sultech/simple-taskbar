@@ -76,7 +76,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         window.add(startMenuPage);
 
         const {
-            advancedAppBehaviorGroup,
             advancedBehaviorGroup,
             advancedFileManagerGroup,
             advancedStartMenuGroup,
@@ -133,6 +132,9 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             icons.pinnedAppsAsLaunchersSwitch;
         const combineAppButtonsRow = icons.combineAppButtonsRow;
         const syncLabelSensitivity = icons.syncLabelSensitivity;
+        const applicationOverflowSwitch =
+            icons.applicationOverflowSwitch;
+        const isolateMonitorsSwitch = icons.isolateMonitorsSwitch;
 
         const dockAppearance = addDockAppearanceGroup({
             page: dockPage,
@@ -155,13 +157,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
 
         const appBehavior = addAppBehaviorGroup({
             settings: window._settings,
-            connectSettings,
-            advancedAppBehaviorGroup,
             advancedFileManagerGroup,
         });
-        const applicationOverflowSwitch =
-            appBehavior.applicationOverflowSwitch;
-        const isolateMonitorsSwitch = appBehavior.isolateMonitorsSwitch;
         const nautilusPlacesSwitch = appBehavior.nautilusPlacesSwitch;
 
         connectDefaultGnomePanelSync({
@@ -176,7 +173,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             dockPanelModeSwitch,
             appearanceGroup,
             startMenuPage,
-            advancedAppBehaviorGroup,
             advancedStartMenuGroup,
             nautilusPlacesSwitch,
         });
@@ -200,7 +196,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             appAlignmentRow,
             pinnedAppsAsLaunchersSwitch,
             combineAppButtonsRow,
-            applicationOverflowSwitch,
             syncLabelSensitivity,
         });
         blurMyShell.setPanelSyncs(
