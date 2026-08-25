@@ -32,6 +32,25 @@ export function addAppBehaviorGroup({
     });
     advancedAppBehaviorGroup.add(pinnedAppsAsLaunchersSwitch);
 
+    const hideUnpinnedAppsSwitch = createSwitchRow(settings, {
+        key: 'hide-unpinned-taskbar-apps',
+        title: _('Hide Unpinned Applications'),
+        subtitle: _(
+            'Show only pinned applications and their running windows'
+        ),
+    });
+    advancedAppBehaviorGroup.add(hideUnpinnedAppsSwitch);
+    const syncHideUnpinnedAppsSensitivity = () => {
+        hideUnpinnedAppsSwitch.sensitive =
+            !settings.get_boolean('windows-xp-theme-enabled');
+    };
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncHideUnpinnedAppsSensitivity
+    );
+    syncHideUnpinnedAppsSensitivity();
+
     const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
         key: 'show-pinned-app-separator',
         title: _('Show Pinned App Separator'),

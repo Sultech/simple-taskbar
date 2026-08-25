@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:47+0100\n"
+"POT-Creation-Date: 2026-08-25 21:55+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -198,79 +198,89 @@ msgstr ""
 "megjelenítése"
 
 #: src/prefs/appBehaviorGroup.js:37
+#, fuzzy
+msgid "Hide Unpinned Applications"
+msgstr "Rögzített alkalmazások elrejtése"
+
+#: src/prefs/appBehaviorGroup.js:39
+#, fuzzy
+msgid "Show only pinned applications and their running windows"
+msgstr "A rögzített tálcaalkalmazások megjelenítése csak futás közben"
+
+#: src/prefs/appBehaviorGroup.js:61
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:38
+#: src/prefs/appBehaviorGroup.js:62
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr ""
 "Élő ablak-előnézetek megjelenítése, amikor az egérmutatót az "
 "alkalmazásikonok fölé viszi"
 
-#: src/prefs/appBehaviorGroup.js:43
+#: src/prefs/appBehaviorGroup.js:67
 msgid "Show Location Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:44
+#: src/prefs/appBehaviorGroup.js:68
 #, fuzzy
 msgid "Show a line between applications and locations"
 msgstr ""
 "Élő ablak-előnézetek megjelenítése, amikor az egérmutatót az "
 "alkalmazásikonok fölé viszi"
 
-#: src/prefs/appBehaviorGroup.js:47
+#: src/prefs/appBehaviorGroup.js:71
 msgid "Separators"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:48
+#: src/prefs/appBehaviorGroup.js:72
 #, fuzzy
 msgid "Choose which separators appear"
 msgstr "Válassza ki, mely opcionális panelelemek jelenjenek meg."
 
-#: src/prefs/appBehaviorGroup.js:54
+#: src/prefs/appBehaviorGroup.js:78
 msgid "Always"
 msgstr "Mindig"
 
-#: src/prefs/appBehaviorGroup.js:55 src/prefs/appBehaviorGroup.js:59
+#: src/prefs/appBehaviorGroup.js:79 src/prefs/appBehaviorGroup.js:83
 msgid "Only When Full"
 msgstr "Csak ha megtelt"
 
-#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
+#: src/prefs/appBehaviorGroup.js:80 src/prefs/appBehaviorGroup.js:84
 msgid "Never"
 msgstr "Soha"
 
-#: src/prefs/appBehaviorGroup.js:67
+#: src/prefs/appBehaviorGroup.js:91
 msgid "Combine Application Buttons"
 msgstr "Alkalmazásgombok összevonása"
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:92
 msgid "Choose when windows share one taskbar button"
 msgstr "Válassza ki, mikor osztozzanak az ablakok egyetlen tálcagombon"
 
-#: src/prefs/appBehaviorGroup.js:82
+#: src/prefs/appBehaviorGroup.js:106
 msgid "Hide App Labels"
 msgstr "Alkalmazáscímkék elrejtése"
 
-#: src/prefs/appBehaviorGroup.js:83
+#: src/prefs/appBehaviorGroup.js:107
 msgid "Show only icons on separate window buttons"
 msgstr "Csak ikonok megjelenítése a különálló ablakgombokon"
 
-#: src/prefs/appBehaviorGroup.js:89
+#: src/prefs/appBehaviorGroup.js:113
 msgid "Application Overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: src/prefs/appBehaviorGroup.js:90
+#: src/prefs/appBehaviorGroup.js:114
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "Színek kiválasztása a futó alkalmazások jelzőihez"
 
-#: src/prefs/appBehaviorGroup.js:94
+#: src/prefs/appBehaviorGroup.js:118
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: src/prefs/appBehaviorGroup.js:96
+#: src/prefs/appBehaviorGroup.js:120
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -278,59 +288,59 @@ msgstr ""
 "A nem illeszkedő alkalmazásgombok megjelenítése túlfolyó ablakban a tálca "
 "görgetése helyett"
 
-#: src/prefs/appBehaviorGroup.js:106
+#: src/prefs/appBehaviorGroup.js:130
 msgid "Overflow Style"
 msgstr "Túlfolyás stílusa"
 
-#: src/prefs/appBehaviorGroup.js:108
+#: src/prefs/appBehaviorGroup.js:132
 msgid "Taskbar Flyout"
 msgstr "Tálca felbukkanó menü"
 
-#: src/prefs/appBehaviorGroup.js:109
+#: src/prefs/appBehaviorGroup.js:133
 msgid "Application List"
 msgstr "Alkalmazáslista"
 
-#: src/prefs/appBehaviorGroup.js:144 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:168 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Munkaterületek elkülönítése"
 
-#: src/prefs/appBehaviorGroup.js:145
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Show running applications from the current workspace only"
 msgstr "Futó alkalmazások megjelenítése csak az aktuális munkaterületről"
 
-#: src/prefs/appBehaviorGroup.js:149 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:173 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Monitorok elkülönítése"
 
-#: src/prefs/appBehaviorGroup.js:150
+#: src/prefs/appBehaviorGroup.js:174
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Futó alkalmazások megjelenítése csak a saját monitoruk tálcáján"
 
-#: src/prefs/appBehaviorGroup.js:153
+#: src/prefs/appBehaviorGroup.js:177
 #, fuzzy
 msgid "Application Isolation"
 msgstr "Alkalmazásikonok"
 
-#: src/prefs/appBehaviorGroup.js:154
+#: src/prefs/appBehaviorGroup.js:178
 #, fuzzy
 msgid "Choose which applications appear on the taskbar"
 msgstr ""
 "Válassza ki, mely alkalmazások jelenjenek meg, és hogyan legyenek "
 "csoportosítva."
 
-#: src/prefs/appBehaviorGroup.js:162
+#: src/prefs/appBehaviorGroup.js:186
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus mappa gyorslinkek"
 
-#: src/prefs/appBehaviorGroup.js:163
+#: src/prefs/appBehaviorGroup.js:187
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Gyakori mappák megjelenítése a Fájlok tálcamenüben"
 
-#: src/prefs/appBehaviorGroup.js:169
+#: src/prefs/appBehaviorGroup.js:193
 msgid "Middle Click Closes Applications"
 msgstr "Középső kattintás bezárja az alkalmazásokat"
 
-#: src/prefs/appBehaviorGroup.js:170
+#: src/prefs/appBehaviorGroup.js:194
 msgid "Close all application windows instead of opening a new window"
 msgstr "Az összes alkalmazásablak bezárása új ablak nyitása helyett"
 
@@ -1936,7 +1946,7 @@ msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:415
-#: src/taskbar/taskbarController.js:1029 src/taskbar/taskbarController.js:1031
+#: src/taskbar/taskbarController.js:1038 src/taskbar/taskbarController.js:1040
 msgid "running"
 msgstr "fut"
 

@@ -22,6 +22,7 @@ const LOCKED_SETTING_KEYS = [
     'app-alignment',
     'start-button-position',
     'use-pinned-apps-as-launchers',
+    'hide-unpinned-taskbar-apps',
     'show-pinned-app-separator',
     'show-location-separator',
     'combine-app-buttons-mode',

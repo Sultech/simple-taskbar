@@ -93,12 +93,14 @@ export class TaskbarEntryModel {
         const seen = new Set();
         const runningApps = pinnedOnly ? [] : this._getRunningApps();
         const pinnedApps = this.pinnedApps();
+        const pinnedAppIds = new Set();
 
         for (const app of pinnedApps) {
             const id = app.get_id();
             if (!id || seen.has(id))
                 continue;
             seen.add(id);
+            pinnedAppIds.add(id);
         }
 
         const unpinnedApps = runningApps.filter(app => {
@@ -109,10 +111,20 @@ export class TaskbarEntryModel {
             return true;
         });
         const usePinnedAppLaunchers = this.usePinnedAppLaunchers();
+        const hideUnpinnedApps = this._settings.get_boolean(
+            'hide-unpinned-taskbar-apps'
+        );
         const orderPinnedRunningApps = usePinnedAppLaunchers ||
             combineMode !== 'always';
-        const appsToOrder = orderPinnedRunningApps
-            ? runningApps
+        const appsToOrder = hideUnpinnedApps
+            ? runningApps.filter(app =>
+                pinnedAppIds.has(app.get_id())
+            )
+            : orderPinnedRunningApps
+                ? runningApps
+                : unpinnedApps;
+        const visibleUnpinnedApps = hideUnpinnedApps
+            ? []
             : unpinnedApps;
         const visibleRunningIds = new Set(
             appsToOrder.map(app => app.get_id())
@@ -139,7 +151,7 @@ export class TaskbarEntryModel {
         if (!usePinnedAppLaunchers) {
             return [
                 ...pinnedApps,
-                ...unpinnedApps.sort((a, b) =>
+                ...visibleUnpinnedApps.sort((a, b) =>
                     positions.get(a.get_id()) - positions.get(b.get_id())
                 ),
             ];

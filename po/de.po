@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:47+0100\n"
+"POT-Creation-Date: 2026-08-25 21:55+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -202,79 +202,91 @@ msgstr ""
 "separat anzeigen"
 
 #: src/prefs/appBehaviorGroup.js:37
+#, fuzzy
+msgid "Hide Unpinned Applications"
+msgstr "Angeheftete Anwendungen ausblenden"
+
+#: src/prefs/appBehaviorGroup.js:39
+#, fuzzy
+msgid "Show only pinned applications and their running windows"
+msgstr ""
+"Zeigt angeheftete Taskleisten-Anwendungen nur an, während sie ausgeführt "
+"werden"
+
+#: src/prefs/appBehaviorGroup.js:61
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:38
+#: src/prefs/appBehaviorGroup.js:62
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr ""
 "Live-Fenstervorschauen anzeigen, wenn der Mauszeiger über Anwendungssymbole "
 "bewegt wird"
 
-#: src/prefs/appBehaviorGroup.js:43
+#: src/prefs/appBehaviorGroup.js:67
 msgid "Show Location Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:44
+#: src/prefs/appBehaviorGroup.js:68
 #, fuzzy
 msgid "Show a line between applications and locations"
 msgstr ""
 "Live-Fenstervorschauen anzeigen, wenn der Mauszeiger über Anwendungssymbole "
 "bewegt wird"
 
-#: src/prefs/appBehaviorGroup.js:47
+#: src/prefs/appBehaviorGroup.js:71
 msgid "Separators"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:48
+#: src/prefs/appBehaviorGroup.js:72
 #, fuzzy
 msgid "Choose which separators appear"
 msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
 
-#: src/prefs/appBehaviorGroup.js:54
+#: src/prefs/appBehaviorGroup.js:78
 msgid "Always"
 msgstr "Immer"
 
-#: src/prefs/appBehaviorGroup.js:55 src/prefs/appBehaviorGroup.js:59
+#: src/prefs/appBehaviorGroup.js:79 src/prefs/appBehaviorGroup.js:83
 msgid "Only When Full"
 msgstr "Nur wenn voll"
 
-#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
+#: src/prefs/appBehaviorGroup.js:80 src/prefs/appBehaviorGroup.js:84
 msgid "Never"
 msgstr "Nie"
 
-#: src/prefs/appBehaviorGroup.js:67
+#: src/prefs/appBehaviorGroup.js:91
 msgid "Combine Application Buttons"
 msgstr "Anwendungsschaltflächen zusammenfassen"
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:92
 msgid "Choose when windows share one taskbar button"
 msgstr "Wählen Sie, wann sich Fenster eine Taskleisten-Schaltfläche teilen"
 
-#: src/prefs/appBehaviorGroup.js:82
+#: src/prefs/appBehaviorGroup.js:106
 msgid "Hide App Labels"
 msgstr "App-Beschriftungen ausblenden"
 
-#: src/prefs/appBehaviorGroup.js:83
+#: src/prefs/appBehaviorGroup.js:107
 msgid "Show only icons on separate window buttons"
 msgstr "Zeigt nur Symbole auf separaten Fensterschaltflächen"
 
-#: src/prefs/appBehaviorGroup.js:89
+#: src/prefs/appBehaviorGroup.js:113
 msgid "Application Overflow"
 msgstr "Anwendungsüberlauf"
 
-#: src/prefs/appBehaviorGroup.js:90
+#: src/prefs/appBehaviorGroup.js:114
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "Wählen Sie Farben für die Anzeigen laufender Anwendungen"
 
-#: src/prefs/appBehaviorGroup.js:94
+#: src/prefs/appBehaviorGroup.js:118
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "Anwendungsüberlauf"
 
-#: src/prefs/appBehaviorGroup.js:96
+#: src/prefs/appBehaviorGroup.js:120
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -282,58 +294,58 @@ msgstr ""
 "Anwendungsschaltflächen, die nicht in das Überlaufmenü passen, anzeigen, "
 "anstatt die Taskleiste zu scrollen"
 
-#: src/prefs/appBehaviorGroup.js:106
+#: src/prefs/appBehaviorGroup.js:130
 msgid "Overflow Style"
 msgstr "Überlaufstil"
 
-#: src/prefs/appBehaviorGroup.js:108
+#: src/prefs/appBehaviorGroup.js:132
 msgid "Taskbar Flyout"
 msgstr "Taskleisten-Flyout"
 
-#: src/prefs/appBehaviorGroup.js:109
+#: src/prefs/appBehaviorGroup.js:133
 msgid "Application List"
 msgstr "Anwendungsliste"
 
-#: src/prefs/appBehaviorGroup.js:144 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:168 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Arbeitsflächen isolieren"
 
-#: src/prefs/appBehaviorGroup.js:145
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Show running applications from the current workspace only"
 msgstr "Zeigt nur laufende Anwendungen der aktuellen Arbeitsfläche"
 
-#: src/prefs/appBehaviorGroup.js:149 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:173 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Monitore isolieren"
 
-#: src/prefs/appBehaviorGroup.js:150
+#: src/prefs/appBehaviorGroup.js:174
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Zeigt laufende Anwendungen nur auf der Taskleiste ihres Monitors"
 
-#: src/prefs/appBehaviorGroup.js:153
+#: src/prefs/appBehaviorGroup.js:177
 #, fuzzy
 msgid "Application Isolation"
 msgstr "Anwendungssymbole"
 
-#: src/prefs/appBehaviorGroup.js:154
+#: src/prefs/appBehaviorGroup.js:178
 #, fuzzy
 msgid "Choose which applications appear on the taskbar"
 msgstr ""
 "Wählen Sie, welche Anwendungen angezeigt werden und wie sie gruppiert sind."
 
-#: src/prefs/appBehaviorGroup.js:162
+#: src/prefs/appBehaviorGroup.js:186
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus-Ordnerverknüpfungen"
 
-#: src/prefs/appBehaviorGroup.js:163
+#: src/prefs/appBehaviorGroup.js:187
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Zeigt häufig verwendete Ordner im Dateien-Menü der Taskleiste"
 
-#: src/prefs/appBehaviorGroup.js:169
+#: src/prefs/appBehaviorGroup.js:193
 msgid "Middle Click Closes Applications"
 msgstr "Mittelklick schließt Anwendungen"
 
-#: src/prefs/appBehaviorGroup.js:170
+#: src/prefs/appBehaviorGroup.js:194
 msgid "Close all application windows instead of opening a new window"
 msgstr "Schließt alle Anwendungsfenster, anstatt ein neues Fenster zu öffnen"
 
@@ -1959,7 +1971,7 @@ msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:415
-#: src/taskbar/taskbarController.js:1029 src/taskbar/taskbarController.js:1031
+#: src/taskbar/taskbarController.js:1038 src/taskbar/taskbarController.js:1040
 msgid "running"
 msgstr "läuft"
 

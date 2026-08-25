@@ -402,6 +402,15 @@ export class TaskbarController {
             this._signalHolder
         );
         this._settings.connectObject(
+            'changed::hide-unpinned-taskbar-apps',
+            () => {
+                this._entryModel.resetSessionOrder();
+                this._queueRedisplay();
+                this._syncDragEnabled(true);
+            },
+            this._signalHolder
+        );
+        this._settings.connectObject(
             'changed::use-pinned-apps-as-launchers',
             () => {
                 this._getPreviews().hideTooltip(false);

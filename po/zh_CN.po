@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:47+0100\n"
+"POT-Creation-Date: 2026-08-25 21:55+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -195,131 +195,141 @@ msgid ""
 msgstr "将已固定的应用保留为启动器，并单独展示正在运行的应用"
 
 #: src/prefs/appBehaviorGroup.js:37
+#, fuzzy
+msgid "Hide Unpinned Applications"
+msgstr "隐藏已固定的应用"
+
+#: src/prefs/appBehaviorGroup.js:39
+#, fuzzy
+msgid "Show only pinned applications and their running windows"
+msgstr "仅展示正在运行的已固定于任务栏的应用"
+
+#: src/prefs/appBehaviorGroup.js:61
 msgid "Show Pinned App Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:38
+#: src/prefs/appBehaviorGroup.js:62
 #, fuzzy
 msgid "Show a line between pinned and running applications"
 msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
 
-#: src/prefs/appBehaviorGroup.js:43
+#: src/prefs/appBehaviorGroup.js:67
 msgid "Show Location Separator"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:44
+#: src/prefs/appBehaviorGroup.js:68
 #, fuzzy
 msgid "Show a line between applications and locations"
 msgstr "将鼠标悬停在应用图标上时显示实时窗口预览"
 
-#: src/prefs/appBehaviorGroup.js:47
+#: src/prefs/appBehaviorGroup.js:71
 msgid "Separators"
 msgstr ""
 
-#: src/prefs/appBehaviorGroup.js:48
+#: src/prefs/appBehaviorGroup.js:72
 #, fuzzy
 msgid "Choose which separators appear"
 msgstr "选择展示哪些可选的面板项目。"
 
-#: src/prefs/appBehaviorGroup.js:54
+#: src/prefs/appBehaviorGroup.js:78
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/appBehaviorGroup.js:55 src/prefs/appBehaviorGroup.js:59
+#: src/prefs/appBehaviorGroup.js:79 src/prefs/appBehaviorGroup.js:83
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
+#: src/prefs/appBehaviorGroup.js:80 src/prefs/appBehaviorGroup.js:84
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/appBehaviorGroup.js:67
+#: src/prefs/appBehaviorGroup.js:91
 msgid "Combine Application Buttons"
 msgstr "合并应用按钮"
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:92
 msgid "Choose when windows share one taskbar button"
 msgstr "选择窗口在何时共用一个任务栏按钮"
 
-#: src/prefs/appBehaviorGroup.js:82
+#: src/prefs/appBehaviorGroup.js:106
 msgid "Hide App Labels"
 msgstr "隐藏应用标签"
 
-#: src/prefs/appBehaviorGroup.js:83
+#: src/prefs/appBehaviorGroup.js:107
 msgid "Show only icons on separate window buttons"
 msgstr "在独立的任务栏按钮上仅展示图标"
 
-#: src/prefs/appBehaviorGroup.js:89
+#: src/prefs/appBehaviorGroup.js:113
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/appBehaviorGroup.js:90
+#: src/prefs/appBehaviorGroup.js:114
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/appBehaviorGroup.js:94
+#: src/prefs/appBehaviorGroup.js:118
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/appBehaviorGroup.js:96
+#: src/prefs/appBehaviorGroup.js:120
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/appBehaviorGroup.js:106
+#: src/prefs/appBehaviorGroup.js:130
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/appBehaviorGroup.js:108
+#: src/prefs/appBehaviorGroup.js:132
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/appBehaviorGroup.js:109
+#: src/prefs/appBehaviorGroup.js:133
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/appBehaviorGroup.js:144 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:168 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/appBehaviorGroup.js:145
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:149 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:173 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/appBehaviorGroup.js:150
+#: src/prefs/appBehaviorGroup.js:174
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:153
+#: src/prefs/appBehaviorGroup.js:177
 #, fuzzy
 msgid "Application Isolation"
 msgstr "应用程序图标"
 
-#: src/prefs/appBehaviorGroup.js:154
+#: src/prefs/appBehaviorGroup.js:178
 #, fuzzy
 msgid "Choose which applications appear on the taskbar"
 msgstr "选择显示哪些应用以及如何将它们分组。"
 
-#: src/prefs/appBehaviorGroup.js:162
+#: src/prefs/appBehaviorGroup.js:186
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus（文件管理器）文件夹快捷方式"
 
-#: src/prefs/appBehaviorGroup.js:163
+#: src/prefs/appBehaviorGroup.js:187
 msgid "Show common folders in the Files taskbar menu"
 msgstr "在“文件”任务栏菜单中展示常用文件夹"
 
-#: src/prefs/appBehaviorGroup.js:169
+#: src/prefs/appBehaviorGroup.js:193
 msgid "Middle Click Closes Applications"
 msgstr "中键点击以关闭应用"
 
-#: src/prefs/appBehaviorGroup.js:170
+#: src/prefs/appBehaviorGroup.js:194
 msgid "Close all application windows instead of opening a new window"
 msgstr "关闭应用的所有窗口，而不是打开新窗口"
 
@@ -1869,7 +1879,7 @@ msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:415
-#: src/taskbar/taskbarController.js:1029 src/taskbar/taskbarController.js:1031
+#: src/taskbar/taskbarController.js:1038 src/taskbar/taskbarController.js:1040
 msgid "running"
 msgstr "正在运行"
 
