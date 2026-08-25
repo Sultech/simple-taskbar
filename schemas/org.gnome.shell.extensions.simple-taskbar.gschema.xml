@@ -408,7 +408,7 @@
       <summary>Dock colour scheme when not following the system</summary>
     </key>
     <key name="dock-panel-border-enabled" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Show the Dock border in dark mode</summary>
     </key>
     <key name="dock-panel-border-light-enabled" type="b">
