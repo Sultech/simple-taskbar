@@ -25,7 +25,7 @@ export function addDockItemsPage({page, settings, connectSettings}) {
         }],
         ['applications', {
             title: _('Applications'),
-            subtitle: _('Taskbar application buttons'),
+            subtitle: _('Dock application buttons'),
         }],
     ]);
     const rows = new Map();

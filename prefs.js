@@ -228,15 +228,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             followAppAlignmentSwitch,
         });
 
-        addLocationsGroup({
-            page,
-            dockPage,
+        addDockItemsPage({
+            page: dockPage,
             settings: window._settings,
             connectSettings,
         });
 
-        addDockItemsPage({
-            page: dockPage,
+        addLocationsGroup({
+            page,
+            dockPage,
             settings: window._settings,
             connectSettings,
         });
