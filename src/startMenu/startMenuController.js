@@ -18,10 +18,9 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {
     panelArrowSide,
-    panelIsVertical,
+    panelIsTop,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
-import {panelGeometry} from '../panel/panelGeometry.js';
 import {
     closePopupMenu,
     openPopupMenu,
@@ -503,35 +502,24 @@ export class StartMenuController {
 
         if (useDummySource) {
             const panelHeight = this._settings.get_int('panel-height');
-            const vertical = panelIsVertical(this._settings);
-            const geometry = panelGeometry(
-                this._settings,
-                monitor,
-                panelHeight
-            );
             let sourceX = monitor.x + monitor.width / 2;
-            let sourceY = monitor.y + monitor.height / 2;
             let sourceWidth = 1;
-            let sourceHeight = 1;
             if (!centerOnMonitor) {
-                const [actorX, actorY] =
+                const [actorX] =
                     this._sourceActor.get_transformed_position();
-                const [actorWidth, actorHeight] =
+                const [actorWidth] =
                     this._sourceActor.get_transformed_size();
                 sourceX = actorX;
-                sourceY = actorY;
                 sourceWidth = Math.max(1, Math.round(actorWidth));
-                sourceHeight = Math.max(1, Math.round(actorHeight));
             }
-            if (vertical)
-                sourceX = geometry.x;
-            else
-                sourceY = geometry.y;
+            const sourceY = panelIsTop(this._settings)
+                ? monitor.y
+                : monitor.y + monitor.height - panelHeight;
             Main.layoutManager.setDummyCursorGeometry(
                 Math.round(sourceX),
                 Math.round(sourceY),
-                vertical ? panelHeight : sourceWidth,
-                vertical ? sourceHeight : panelHeight
+                sourceWidth,
+                panelHeight
             );
         }
 

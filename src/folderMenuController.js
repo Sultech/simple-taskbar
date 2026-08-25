@@ -75,6 +75,10 @@ export class FolderMenuController {
                 if (this._menu.isOpen)
                     this._reloadMenu();
             },
+            'changed::panel-position', () => {
+                closePopupMenu(this._menu, false);
+                this._syncPanelPosition();
+            },
             this._signalHolder
         );
         this._themeContext.connectObject(

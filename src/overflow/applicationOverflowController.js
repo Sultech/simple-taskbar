@@ -16,11 +16,9 @@ import {
 
 import {
     panelArrowSide,
-    panelIsVertical,
     syncPanelMenuPosition,
 } from '../panel/panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
-import {MaximumSizeClamp} from '../taskbar/maximumSizeClamp.js';
 import {
     ApplicationOverflowButtonController,
 } from './applicationOverflowButtonController.js';
@@ -43,39 +41,35 @@ const POPUP_MARGIN = 32;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
-    _init(onMaximumSizeChanged) {
+    _init(onMaximumWidthChanged) {
         super._init({
             style_class: 'simple-taskbar-application-overflow-container',
             x_align: Clutter.ActorAlign.START,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
         });
-        this._clamp = new MaximumSizeClamp();
-        this._onMaximumSizeChanged = onMaximumSizeChanged;
+        this._maximumWidth = Number.MAX_SAFE_INTEGER;
+        this._onMaximumWidthChanged = onMaximumWidthChanged;
     }
 
-    setMaximumSize(size, vertical) {
-        if (!this._clamp.set(size, vertical))
+    setMaximumWidth(width) {
+        const maximumWidth = Math.max(1, Math.floor(width));
+        if (maximumWidth === this._maximumWidth)
             return;
 
-        this._onMaximumSizeChanged(this._clamp.size);
+        this._maximumWidth = maximumWidth;
+        this._onMaximumWidthChanged(maximumWidth);
         this.queue_relayout();
     }
 
     vfunc_get_preferred_width(forHeight) {
         const [, naturalWidth] =
             super.vfunc_get_preferred_width(forHeight);
-        return [0, this._clamp.width(naturalWidth)];
-    }
-
-    vfunc_get_preferred_height(forWidth) {
-        const [, naturalHeight] =
-            super.vfunc_get_preferred_height(forWidth);
-        return [0, this._clamp.height(naturalHeight)];
+        return [0, Math.min(naturalWidth, this._maximumWidth)];
     }
 
     destroy() {
-        this._onMaximumSizeChanged = null;
+        this._onMaximumWidthChanged = null;
         super.destroy();
     }
 });
@@ -93,7 +87,7 @@ export class ApplicationOverflowController {
         this._button = null;
         this._icon = null;
         this._spacer = new St.Widget({visible: false});
-        this._maximumSize = Number.MAX_SAFE_INTEGER;
+        this._maximumWidth = Number.MAX_SAFE_INTEGER;
         this._syncId = 0;
         this._dragEndListener = () => this._onTaskbarDragEnd();
         this._dragEndListenerRegistered = false;
@@ -106,8 +100,8 @@ export class ApplicationOverflowController {
         this._buttonController = null;
         this._themeController = null;
 
-        this.actor = new ApplicationOverflowContainer(size => {
-            this._maximumSize = size;
+        this.actor = new ApplicationOverflowContainer(width => {
+            this._maximumWidth = width;
             this._queueSync();
         });
         this._createButton();
@@ -141,8 +135,7 @@ export class ApplicationOverflowController {
         this._dragController = new ApplicationOverflowDragController(
             this._taskbarController,
             () => this._itemController.records,
-            () => this._style,
-            () => panelIsVertical(this._settings)
+            () => this._style
         );
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
@@ -191,14 +184,15 @@ export class ApplicationOverflowController {
         this._settings.connectObject('changed::icon-spacing', () => {
             this._queueSync();
         }, this._signalHolder);
-        this._settings.connectObject('changed::panel-button-padding', () => {
-            this._queueSync();
-        }, this._signalHolder);
         this._settings.connectObject('changed::transparency-enabled', () => {
             this._themeController.sync();
         }, this._signalHolder);
         this._settings.connectObject('changed::transparency-level', () => {
             this._themeController.sync();
+        }, this._signalHolder);
+        this._settings.connectObject('changed::panel-position', () => {
+            this.close();
+            this._syncPanelPosition();
         }, this._signalHolder);
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._sync();
@@ -250,12 +244,6 @@ export class ApplicationOverflowController {
             if (this._settings.get_boolean('application-overflow-enabled') &&
                 this._viewport.hadjustment.get_value() !== 0) {
                 this._viewport.hadjustment.set_value(0);
-            }
-        }, this._signalHolder);
-        this._viewport.vadjustment.connectObject('notify::value', () => {
-            if (this._settings.get_boolean('application-overflow-enabled') &&
-                this._viewport.vadjustment.get_value() !== 0) {
-                this._viewport.vadjustment.set_value(0);
             }
         }, this._signalHolder);
         Main.panel.connectObject('notify::style-class', () => {
@@ -444,52 +432,38 @@ export class ApplicationOverflowController {
             return;
         }
 
-        const vertical = panelIsVertical(this._settings);
-        const adjustment = vertical
-            ? this._viewport.vadjustment
-            : this._viewport.hadjustment;
-        adjustment.set_value(0);
+        this._viewport.hadjustment.set_value(0);
         const panelHeight = this._settings.get_int('panel-height');
         const items = this._taskbarController.getOrderedItems();
-        const itemSizes = items.map(item =>
-            vertical
-                ? item.get_preferred_height(panelHeight)[1]
-                : item.get_preferred_width(panelHeight)[1]
+        const itemWidths = items.map(item =>
+            item.get_preferred_width(panelHeight)[1]
         );
-        const taskbarSize = itemSizes.reduce((sum, size) => sum + size, 0);
-        if (taskbarSize <= this._maximumSize) {
+        const taskbarWidth = itemWidths.reduce((sum, width) => sum + width, 0);
+        if (taskbarWidth <= this._maximumWidth) {
             this._showAllItems();
             return;
         }
 
         this._button.show();
         this._button.ensure_style();
-        const buttonSize = vertical
-            ? this._button.get_preferred_height(panelHeight)[1]
-            : this._button.get_preferred_width(panelHeight)[1];
-        const availableSize = Math.max(
+        const [, buttonWidth] = this._button.get_preferred_width(panelHeight);
+        const availableWidth = Math.max(
             1,
-            this._maximumSize - buttonSize
+            this._maximumWidth - buttonWidth
         );
         let visibleCount = 0;
-        let visibleSize = 0;
+        let visibleWidth = 0;
         for (let index = visibleCount; index < items.length; index++) {
-            if (visibleSize + itemSizes[index] > availableSize)
+            if (visibleWidth + itemWidths[index] > availableWidth)
                 break;
 
-            visibleSize += itemSizes[index];
+            visibleWidth += itemWidths[index];
             visibleCount++;
         }
 
         this._taskbarController.setPreserveItemWidths(true);
-        this._viewport.setMaximumSize(Math.max(1, visibleSize), vertical);
-        if (vertical) {
-            this._spacer.set_width(-1);
-            this._spacer.set_height(Math.max(0, availableSize - visibleSize));
-        } else {
-            this._spacer.set_height(-1);
-            this._spacer.set_width(Math.max(0, availableSize - visibleSize));
-        }
+        this._viewport.setMaximumWidth(Math.max(1, visibleWidth));
+        this._spacer.set_width(Math.max(0, availableWidth - visibleWidth));
         this._spacer.show();
         this._setOverflowItems(items.slice(visibleCount));
         this._themeController.sync();
@@ -505,10 +479,7 @@ export class ApplicationOverflowController {
         this._taskbarController.setPreserveItemWidths(false);
         this._button.hide();
         this._spacer.hide();
-        this._viewport.setMaximumSize(
-            this._maximumSize,
-            panelIsVertical(this._settings)
-        );
+        this._viewport.setMaximumWidth(this._maximumWidth);
         this._clearOverflow();
     }
 
@@ -523,11 +494,8 @@ export class ApplicationOverflowController {
             'application-overflow-style'
         );
         const panelHeight = this._settings.get_int('panel-height');
-        const vertical = panelIsVertical(this._settings);
         const layoutSignature = items.map(item =>
-            vertical
-                ? item.get_preferred_height(panelHeight)[1]
-                : item.get_preferred_width(panelHeight)[1]
+            item.get_preferred_width(panelHeight)[1]
         ).join(':') + `:${panelHeight}`;
         if (style === this._style &&
             layoutSignature === this._layoutSignature &&
@@ -556,9 +524,6 @@ export class ApplicationOverflowController {
         this._menu.box.add_style_class_name(TASKBAR_CONTENT_CLASS);
         const box = new St.BoxLayout({
             style_class: 'simple-taskbar-application-overflow-taskbar',
-            orientation: panelIsVertical(this._settings)
-                ? Clutter.Orientation.VERTICAL
-                : Clutter.Orientation.HORIZONTAL,
         });
         for (const item of items)
             box.add_child(this._itemController.createTaskbarItem(item));
@@ -573,9 +538,7 @@ export class ApplicationOverflowController {
             child: box,
         });
         scrollView.connect('scroll-event', (_actor, event) => {
-            const adjustment = panelIsVertical(this._settings)
-                ? scrollView.vadjustment
-                : scrollView.hadjustment;
+            const adjustment = scrollView.hadjustment;
             const increment = Math.max(
                 adjustment.step_increment,
                 this._settings.get_int('panel-height')
@@ -626,20 +589,18 @@ export class ApplicationOverflowController {
         );
         const scrollView = this._section.actor.get_child_at_index(0);
         if (this._style === 'taskbar') {
-            const vertical = panelIsVertical(this._settings);
-            const maximumSize = Math.max(
+            const maximumWidth = Math.max(
                 1,
-                (vertical ? workArea.height : workArea.width) - POPUP_MARGIN
+                workArea.width - POPUP_MARGIN
             );
             const panelHeight = this._settings.get_int('panel-height');
-            const contentSize = this._overflowItems.reduce(
-                (size, item) => size + (vertical
-                    ? item.get_preferred_height(panelHeight)[1]
-                    : item.get_preferred_width(panelHeight)[1]),
+            const contentWidth = this._overflowItems.reduce(
+                (width, item) => width +
+                    item.get_preferred_width(panelHeight)[1],
                 0
             );
-            const hasScrollbar = contentSize > maximumSize;
-            if (hasScrollbar) {
+            const hasHorizontalScrollbar = contentWidth > maximumWidth;
+            if (hasHorizontalScrollbar) {
                 this._menu.box.add_style_class_name(
                     TASKBAR_SCROLLBAR_CLASS
                 );
@@ -649,16 +610,14 @@ export class ApplicationOverflowController {
                 );
             }
             scrollView.set_policy(
-                !vertical && hasScrollbar
+                hasHorizontalScrollbar
                     ? St.PolicyType.ALWAYS
                     : St.PolicyType.NEVER,
-                vertical && hasScrollbar
-                    ? St.PolicyType.ALWAYS
-                    : St.PolicyType.NEVER
+                St.PolicyType.NEVER
             );
-            scrollView.set_style(vertical
-                ? `max-height: ${maximumSize}px;`
-                : `max-width: ${maximumSize}px;`);
+            scrollView.set_style(
+                `max-width: ${maximumWidth}px;`
+            );
         } else {
             this._menu.box.remove_style_class_name(
                 TASKBAR_SCROLLBAR_CLASS
@@ -672,19 +631,6 @@ export class ApplicationOverflowController {
 
 
     _syncPanelPosition() {
-        const vertical = panelIsVertical(this._settings);
-        this.actor.orientation = vertical
-            ? Clutter.Orientation.VERTICAL
-            : Clutter.Orientation.HORIZONTAL;
-        this.actor.x_align = vertical
-            ? Clutter.ActorAlign.FILL
-            : Clutter.ActorAlign.START;
-        this.actor.y_align = vertical
-            ? Clutter.ActorAlign.START
-            : Clutter.ActorAlign.FILL;
-        this._viewport.x_expand = vertical;
-        this._viewport.y_expand = !vertical;
         syncPanelMenuPosition(this._menu, this._settings);
-        this._queueSync();
     }
 }

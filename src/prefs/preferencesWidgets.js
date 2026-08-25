@@ -66,9 +66,8 @@ export function createPanelOrderRow(settings, {
         currentChoices = availableChoices;
         syncingPosition = true;
         positionDropDown.set_model(createModel(currentChoices));
-        const value = fixedPosition ?? settings.get_string(key);
         const index = currentChoices.findIndex(
-            choice => choice.value === value
+            choice => choice.value === settings.get_string(key)
         );
         positionDropDown.selected = index < 0 ? 0 : index;
         syncingPosition = false;
@@ -135,7 +134,6 @@ export function addComboRow(group, settings, {
     initialValue = null,
     choicesProvider = () => choices,
     choicesChangedKey = null,
-    setValue = value => settings.set_string(key, value),
 }, connectSettings) {
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
@@ -162,7 +160,7 @@ export function addComboRow(group, settings, {
 
         const choice = currentChoices[widget.get_selected()];
         if (choice)
-            setValue(choice.value);
+            settings.set_string(key, choice.value);
     });
     connectSettings(settings, `changed::${key}`, () => {
         const value = settings.get_string(key);

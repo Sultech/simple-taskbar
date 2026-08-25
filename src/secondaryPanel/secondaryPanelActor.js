@@ -38,7 +38,6 @@ class SecondaryPanelActor extends St.Widget {
         this.add_child(this.rightBox);
         this.adaptiveCenter = false;
         this.expandedSide = false;
-        this.vertical = false;
     }
 
     vfunc_allocate(box) {
@@ -48,9 +47,7 @@ class SecondaryPanelActor extends St.Widget {
                 box,
                 this.leftBox,
                 this.centerBox,
-                this.rightBox,
-                0,
-                this.vertical
+                this.rightBox
             );
             return;
         }
@@ -60,9 +57,7 @@ class SecondaryPanelActor extends St.Widget {
                 box,
                 this.leftBox,
                 this.centerBox,
-                this.rightBox,
-                0,
-                this.vertical
+                this.rightBox
             );
             return;
         }
@@ -71,28 +66,6 @@ class SecondaryPanelActor extends St.Widget {
 
         const width = box.x2 - box.x1;
         const height = box.y2 - box.y1;
-        if (this.vertical) {
-            const [, leftHeight] = this.leftBox.get_preferred_height(width);
-            const [, centerHeight] = this.centerBox.get_preferred_height(width);
-            const [, rightHeight] = this.rightBox.get_preferred_height(width);
-            const sideHeight = Math.max(0, (height - centerHeight) / 2);
-            const childBox = new Clutter.ActorBox();
-            childBox.x1 = 0;
-            childBox.x2 = width;
-            childBox.y1 = 0;
-            childBox.y2 = Math.min(Math.floor(sideHeight), leftHeight);
-            this.leftBox.allocate(childBox);
-            childBox.y1 = Math.ceil(sideHeight);
-            childBox.y2 = childBox.y1 + centerHeight;
-            this.centerBox.allocate(childBox);
-            childBox.y1 = Math.max(
-                height - Math.min(Math.floor(sideHeight), rightHeight),
-                0
-            );
-            childBox.y2 = height;
-            this.rightBox.allocate(childBox);
-            return;
-        }
         const [, leftNaturalWidth] =
             this.leftBox.get_preferred_width(-1);
         const [, centerNaturalWidth] =

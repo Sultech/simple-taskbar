@@ -24,11 +24,7 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
-import {
-    panelArrowSide,
-    panelIsVertical,
-    syncMenuArrowSide,
-} from '../panel/panelPosition.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 
 export class StartButtonController {
     constructor({
@@ -178,19 +174,6 @@ export class StartButtonController {
         ) && startButtonPosition === 'left'
             ? padding
             : 0;
-        if (panelIsVertical(this._settings)) {
-            this._content.set_width(-1);
-            this._content.set_height(width);
-            this.actor.set_width(-1);
-            this.actor.set_height(width);
-            this.actor.set_style(
-                `min-width: 0; padding: 0; margin-top: ${leftMargin}px;`
-            );
-            return;
-        }
-
-        this._content.set_height(-1);
-        this.actor.set_height(-1);
         this._content.set_width(width);
         this.actor.set_width(width);
         this.actor.set_style(

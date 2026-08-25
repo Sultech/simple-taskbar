@@ -19,7 +19,6 @@ import {
     PANEL_MODE_TASKBAR,
     PANEL_MODE_WINDOWS_XP,
     setPanelMode,
-    setPanelPosition,
 } from '../shared/panelModeProfiles.js';
 import {
     addColorRow,
@@ -56,7 +55,7 @@ export function addPanelAppearancePage({
         settings,
         {
             key: 'panel-height',
-            title: _('Panel Thickness'),
+            title: _('Panel Height'),
             subtitle: _(
                 'Oversized icons shrink automatically when the panel is reduced'
             ),
@@ -72,20 +71,12 @@ export function addPanelAppearancePage({
             key: 'panel-position',
             title: _('Panel Position'),
             subtitle: _(
-                'Place the taskbar at a screen edge'
+                'Place the taskbar at the top or bottom of the screen'
             ),
             choices: [
                 {value: 'top', label: _('Top')},
                 {value: 'bottom', label: _('Bottom')},
-                {value: 'left', label: _('Left')},
-                {value: 'right', label: _('Right')},
             ],
-            setValue: position => {
-                const settings = createSettings();
-                settings.delay();
-                setPanelPosition(settings, position);
-                settings.apply();
-            },
         },
         connectSettings
     );

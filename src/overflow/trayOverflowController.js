@@ -15,8 +15,7 @@ import {
 
 import {
     panelArrowSide,
-    panelIsVertical,
-    panelPosition,
+    panelIsTop,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
 import {closePopupMenu} from '../shared/popupMenuUtils.js';
@@ -45,7 +44,6 @@ export class TrayOverflowController {
         this._relayoutId = 0;
         this._menuRaiseId = 0;
         this._activationCloseId = 0;
-        this._alignBeforeUpdateId = 0;
         this._menuRaiseIndicator = null;
         this._stashed = new Map();
     }
@@ -79,7 +77,6 @@ export class TrayOverflowController {
             if (open) {
                 this._button.add_style_pseudo_class('active');
                 this._syncTheme();
-                this._queueMenuArrowAlignment();
             } else {
                 this._button.remove_style_pseudo_class('active');
                 this._closeStashedMenus();
@@ -87,6 +84,10 @@ export class TrayOverflowController {
         }, this._signalHolder);
         this._settings.connectObject(
             'changed::tray-overflow-enabled', () => this._sync(),
+            'changed::panel-position', () => {
+                closePopupMenu(this._menu, false);
+                this._syncPanelPosition();
+            },
             'changed::windows-xp-theme-enabled',
             () => this._syncPanelPosition(),
             this._signalHolder
@@ -133,70 +134,23 @@ export class TrayOverflowController {
             this._menu.actor.add_style_class_name(LIGHT_MENU_CLASS);
     }
 
-    _queueMenuArrowAlignment() {
-        if (this._alignBeforeUpdateId)
-            return;
-
-        this._alignBeforeUpdateId = global.stage.connect('before-update', () => {
-            global.stage.disconnect(this._alignBeforeUpdateId);
-            this._alignBeforeUpdateId = 0;
-            this._alignMenuArrow();
-        });
-    }
-
-    _alignMenuArrow() {
-        const boxPointer = this._menu._boxPointer;
-        if (boxPointer._arrowSide !== St.Side.LEFT &&
-            boxPointer._arrowSide !== St.Side.RIGHT)
-            return;
-
-        const allocation = boxPointer.get_allocation_box();
-        const height = allocation.y2 - allocation.y1;
-        const [, , , naturalHeight] = boxPointer.get_preferred_size();
-        if (height === naturalHeight)
-            return;
-
-        const themeNode = boxPointer.get_theme_node();
-        const margin = 4 * themeNode.get_length('-arrow-border-radius') +
-            themeNode.get_length('-arrow-border-width') +
-            themeNode.get_length('-arrow-base');
-        const span = naturalHeight - margin;
-        if (span <= 0)
-            return;
-
-        const alignment = Math.clamp((height - margin) / (2 * span), 0, 1);
-        if (alignment === boxPointer._arrowAlignment)
-            return;
-
-        boxPointer.setPosition(this._button, alignment);
-    }
-
     _syncPanelPosition() {
         syncMenuArrowSide(this._menu, this._settings);
-        this._menu._boxPointer.setPosition(this._button, 0.5);
         const xpPopupOffset = this._settings.get_boolean(
             'windows-xp-theme-enabled'
-        ) && panelPosition(this._settings) === 'bottom';
+        ) && !panelIsTop(this._settings);
         if (xpPopupOffset)
             this._menu._boxPointer.add_style_class_name(XP_POPUP_OFFSET_CLASS);
         else
             this._menu._boxPointer.remove_style_class_name(XP_POPUP_OFFSET_CLASS);
-        const position = panelPosition(this._settings);
-        if (position === 'top') {
+        if (panelIsTop(this._settings)) {
             this._icon.icon_name = 'pan-down-symbolic';
             this._menu.actor.remove_style_class_name(
                 'simple-taskbar-bottom-panel-menu'
             );
-        } else if (position === 'bottom') {
+        } else {
             this._icon.icon_name = 'pan-up-symbolic';
             this._menu.actor.add_style_class_name(
-                'simple-taskbar-bottom-panel-menu'
-            );
-        } else {
-            this._icon.icon_name = position === 'left'
-                ? 'pan-end-symbolic'
-                : 'pan-start-symbolic';
-            this._menu.actor.remove_style_class_name(
                 'simple-taskbar-bottom-panel-menu'
             );
         }
@@ -218,10 +172,6 @@ export class TrayOverflowController {
         if (this._activationCloseId) {
             GLib.Source.remove(this._activationCloseId);
             this._activationCloseId = 0;
-        }
-        if (this._alignBeforeUpdateId) {
-            global.stage.disconnect(this._alignBeforeUpdateId);
-            this._alignBeforeUpdateId = 0;
         }
         this._menuRaiseIndicator = null;
         this._signalHolder.destroy();
@@ -407,15 +357,12 @@ export class TrayOverflowController {
         if (!open || indicator.menu.actor.get_parent() !== Main.uiGroup)
             return;
 
-        const [overflowX, overflowY] =
-            this._menu.actor.get_transformed_position();
-        const [overflowWidth, overflowHeight] =
-            this._menu.actor.get_transformed_size();
-        const [indicatorX, indicatorY] = indicator.get_transformed_position();
-        const [indicatorWidth, indicatorHeight] = indicator.get_transformed_size();
-        const sourceAlignment = panelIsVertical(this._settings)
-            ? (indicatorY + indicatorHeight / 2 - overflowY) / overflowHeight
-            : (indicatorX + indicatorWidth / 2 - overflowX) / overflowWidth;
+        const [overflowX] = this._menu.actor.get_transformed_position();
+        const [overflowWidth] = this._menu.actor.get_transformed_size();
+        const [indicatorX] = indicator.get_transformed_position();
+        const [indicatorWidth] = indicator.get_transformed_size();
+        const sourceAlignment =
+            (indicatorX + indicatorWidth / 2 - overflowX) / overflowWidth;
         indicator.menu._boxPointer.setPosition(this._menu.actor, 0.5);
         indicator.menu.setSourceAlignment(sourceAlignment);
 
@@ -671,8 +618,6 @@ export class TrayOverflowController {
                 row.add_child(cell);
             this._grid.add_child(row);
         }
-        this._menu.actor.set_width(-1);
-        this._menu.actor.set_height(-1);
         this._syncButtonVisibility(cells.length > 0);
     }
 

@@ -115,9 +115,8 @@ export class PanelMenuPositioner {
         const side = panelArrowSide(this._settings);
         boxPointer._userArrowSide = side;
         menu._arrowSide = side;
-        if (removeTopPanelGap && !panelIsTop(this._settings)) {
+        if (removeTopPanelGap && !panelIsTop(this._settings))
             menu.actor.add_style_class_name('simple-taskbar-bottom-panel-menu');
-        }
         syncXpPopupOffset(menu, this._settings);
     }
 }

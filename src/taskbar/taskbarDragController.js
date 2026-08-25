@@ -7,8 +7,6 @@ import St from 'gi://St';
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {panelIsVertical} from '../panel/panelPosition.js';
-
 export class TaskbarDragController {
     constructor({
         settings,
@@ -176,9 +174,9 @@ export class TaskbarDragController {
         return this._reorderGroups(sourceGroup, targetGroup, insertBefore);
     }
 
-    handleDragOver(source, position) {
+    handleDragOver(source, x) {
         if (source && source._startMenuTaskbarApp)
-            return this.handleStartMenuDragOver(source, position);
+            return this.handleStartMenuDragOver(source, x);
 
         if (!this._dragIsEnabled(source?._taskbarItem))
             return DND.DragMotionResult.NO_DROP;
@@ -188,12 +186,12 @@ export class TaskbarDragController {
             return DND.DragMotionResult.CONTINUE;
 
         if (item._taskbarIsShowDesktop)
-            return this._showDesktopController.handleDragOver(item, position);
+            return this._showDesktopController.handleDragOver(item, x);
 
         if (!this.isPinnedItem(item) && !this._isRunningItem(item))
             return DND.DragMotionResult.NO_DROP;
 
-        this._reorderGroup(item, position);
+        this._reorderGroup(item, x);
         return DND.DragMotionResult.MOVE_DROP;
     }
 
@@ -242,7 +240,7 @@ export class TaskbarDragController {
         return true;
     }
 
-    handleStartMenuDragOver(source, position) {
+    handleStartMenuDragOver(source, x) {
         if (!this._canAcceptStartMenuDrop(source)) {
             if (source._taskbarDropTarget === this._dropTarget)
                 source._clearTaskbarDropTarget();
@@ -280,22 +278,16 @@ export class TaskbarDragController {
         }
 
         if (!this._externalFavoriteCenters) {
-            const vertical = panelIsVertical(this._settings);
             this._externalFavoriteCenters = favoriteItems.map(item => {
-                const [itemX, itemY] = item.get_transformed_position();
-                const [itemWidth, itemHeight] = item.get_transformed_size();
-                return vertical
-                    ? itemY + itemHeight / 2
-                    : itemX + itemWidth / 2;
+                const [itemX] = item.get_transformed_position();
+                const [itemWidth] = item.get_transformed_size();
+                return itemX + itemWidth / 2;
             });
         }
-        const [actorX, actorY] =
-            this._taskbarActor.get_transformed_position();
-        const stagePosition = panelIsVertical(this._settings)
-            ? actorY + position
-            : actorX + position;
+        const [actorX] = this._taskbarActor.get_transformed_position();
+        const stageX = actorX + x;
         let favoriteIndex = this._externalFavoriteCenters.findIndex(
-            center => stagePosition < center
+            center => stageX < center
         );
         if (favoriteIndex < 0)
             favoriteIndex = favoriteItems.length;
@@ -379,7 +371,7 @@ export class TaskbarDragController {
         return groups;
     }
 
-    _reorderGroup(item, position) {
+    _reorderGroup(item, x) {
         const groups = this._groups();
         const sourceGroup = groups.find(group =>
             group.items.includes(item)
@@ -403,11 +395,9 @@ export class TaskbarDragController {
         let targetGroup = targetGroups.find(group => {
             const first = group.items[0];
             const last = group.items.at(-1);
-            const vertical = panelIsVertical(this._settings);
-            const groupStart = vertical ? first.y : first.x;
-            const groupEnd = (vertical ? last.y : last.x) +
-                (vertical ? last.height : last.width);
-            return position < groupStart + (groupEnd - groupStart) / 2;
+            const groupStart = first.x;
+            const groupEnd = last.x + last.width;
+            return x < groupStart + (groupEnd - groupStart) / 2;
         });
         const insertBefore = targetGroup !== undefined;
         if (!targetGroup)
@@ -498,22 +488,13 @@ export class TaskbarDragController {
     _showExternalPlaceholder(favoriteItems, favoriteIndex) {
         if (!this._externalPlaceholder) {
             const reference = favoriteItems[0];
-            const vertical = panelIsVertical(this._settings);
-            const size = Math.max(
-                reference
-                    ? vertical ? reference.height : reference.width
-                    : 0,
-                this._getIconSize() + 8
-            );
             this._externalPlaceholder = new St.Widget({
                 style_class: 'simple-taskbar-drag-placeholder',
-                width: vertical
-                    ? Math.max(1, this._getPanelHeight() - 10)
-                    : size,
-                height: vertical
-                    ? size
-                    : Math.max(1, this._getPanelHeight() - 10),
-                x_align: Clutter.ActorAlign.CENTER,
+                width: Math.max(
+                    reference ? reference.width : 0,
+                    this._getIconSize() + 8
+                ),
+                height: Math.max(1, this._getPanelHeight() - 10),
                 y_align: Clutter.ActorAlign.CENTER,
             });
             this._taskbarActor.add_child(this._externalPlaceholder);
@@ -560,14 +541,11 @@ export class TaskbarDragController {
             return DND.DragMotionResult.CONTINUE;
         }
 
-        const [, x, y] = this._taskbarActor.transform_stage_point(
+        const [, x] = this._taskbarActor.transform_stage_point(
             event.x,
             event.y
         );
-        return this.handleStartMenuDragOver(
-            source,
-            panelIsVertical(this._settings) ? y : x
-        );
+        return this.handleStartMenuDragOver(source, x);
     }
 
     _activatePanelDropTarget() {
@@ -599,18 +577,13 @@ export class TaskbarDragController {
         if (!monitor)
             return false;
 
-        const [actorX, actorY] =
-            this._taskbarActor.get_transformed_position();
-        const [actorWidth, actorHeight] =
-            this._taskbarActor.get_transformed_size();
-        const panelThickness = this._getPanelHeight();
-        if (panelIsVertical(this._settings)) {
-            const width = Math.max(actorWidth, panelThickness);
-            return x >= actorX && x < actorX + width &&
-                y >= monitor.y && y < monitor.y + monitor.height;
-        }
-        const height = Math.max(actorHeight, panelThickness);
+        const [, actorY] = this._taskbarActor.get_transformed_position();
+        const [, actorHeight] = this._taskbarActor.get_transformed_size();
+        const panelHeight = Math.max(
+            actorHeight,
+            this._getPanelHeight()
+        );
         return x >= monitor.x && x < monitor.x + monitor.width &&
-            y >= actorY && y < actorY + height;
+            y >= actorY && y < actorY + panelHeight;
     }
 }

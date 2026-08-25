@@ -126,20 +126,13 @@ export function addAppBehaviorGroup({
         hideAppLabelsSwitch.sensitive =
             !settings.get_boolean(
                 'windows-xp-theme-enabled'
-            ) && !['left', 'right'].includes(settings.get_string(
-                'panel-position'
-            )) && settings.get_string(
+            ) && settings.get_string(
                 'combine-app-buttons-mode'
             ) !== 'always';
     };
     combineAppButtonsRow.connect('notify::selected', () => {
         syncLabelSensitivity();
     });
-    connectSettings(
-        settings,
-        'changed::panel-position',
-        syncLabelSensitivity
-    );
     syncLabelSensitivity();
 
     const isolateWorkspacesSwitch = new Adw.SwitchRow({

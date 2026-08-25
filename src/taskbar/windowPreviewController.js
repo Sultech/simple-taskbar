@@ -10,11 +10,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {
-    panelArrowSide,
-    panelIsTop,
-    panelPosition,
-} from '../panel/panelPosition.js';
+import {panelArrowSide, panelIsTop} from '../panel/panelPosition.js';
 import {
     closePopupMenu,
     openPopupMenu,
@@ -661,35 +657,18 @@ export class WindowPreviewController {
         const monitor = Main.layoutManager.findMonitorForActor(item) ??
             Main.layoutManager.primaryMonitor;
         const itemWidth = item.allocation.get_width();
+        const x = Math.clamp(
+            stageX + Math.floor((itemWidth - labelWidth) / 2),
+            monitor.x,
+            monitor.x + monitor.width - labelWidth
+        );
         const itemHeight = item.allocation.get_height();
-        const position = panelPosition(this._settings);
-        let x;
-        let y;
-        if (position === 'left' || position === 'right') {
-            x = position === 'left'
-                ? Math.min(
-                    monitor.x + monitor.width - labelWidth,
-                    stageX + itemWidth + 8
-                )
-                : Math.max(monitor.x, stageX - labelWidth - 8);
-            y = Math.clamp(
-                stageY + Math.floor((itemHeight - labelHeight) / 2),
-                monitor.y,
-                monitor.y + monitor.height - labelHeight
-            );
-        } else {
-            x = Math.clamp(
-                stageX + Math.floor((itemWidth - labelWidth) / 2),
-                monitor.x,
-                monitor.x + monitor.width - labelWidth
-            );
-            y = panelIsTop(this._settings)
-                ? Math.min(
-                    monitor.y + monitor.height - labelHeight,
-                    stageY + itemHeight + 8
-                )
-                : Math.max(monitor.y, stageY - labelHeight - 8);
-        }
+        const y = panelIsTop(this._settings)
+            ? Math.min(
+                monitor.y + monitor.height - labelHeight,
+                stageY + itemHeight + 8
+            )
+            : Math.max(monitor.y, stageY - labelHeight - 8);
         label.set_position(x, y);
         label.ease({
             opacity: 255,

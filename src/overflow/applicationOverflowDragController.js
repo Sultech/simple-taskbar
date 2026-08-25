@@ -4,11 +4,10 @@
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 
 export class ApplicationOverflowDragController {
-    constructor(taskbarController, getRecords, getStyle, getVertical) {
+    constructor(taskbarController, getRecords, getStyle) {
         this._taskbarController = taskbarController;
         this._getRecords = getRecords;
         this._getStyle = getStyle;
-        this._getVertical = getVertical;
         this._contentBox = null;
     }
 
@@ -29,7 +28,6 @@ export class ApplicationOverflowDragController {
     destroy() {
         this._contentBox = null;
         this._getStyle = null;
-        this._getVertical = null;
         this._getRecords = null;
         this._taskbarController = null;
     }
@@ -41,8 +39,7 @@ export class ApplicationOverflowDragController {
             return DND.DragMotionResult.NO_DROP;
         }
 
-        const coordinate = this._getStyle() === 'taskbar' &&
-            !this._getVertical() ? x : y;
+        const coordinate = this._getStyle() === 'taskbar' ? x : y;
         const target = this._getTarget(item, coordinate);
         if (!target)
             return DND.DragMotionResult.NO_DROP;
@@ -71,8 +68,7 @@ export class ApplicationOverflowDragController {
             return false;
         }
 
-        const coordinate = this._getStyle() === 'taskbar' &&
-            !this._getVertical() ? x : y;
+        const coordinate = this._getStyle() === 'taskbar' ? x : y;
         const target = this._getTarget(item, coordinate);
         if (!target)
             return false;
@@ -128,12 +124,10 @@ export class ApplicationOverflowDragController {
             }
 
             visualGroup.records.push(record);
-            const horizontalTaskbar = this._getStyle() === 'taskbar' &&
-                !this._getVertical();
-            const start = horizontalTaskbar
+            const start = this._getStyle() === 'taskbar'
                 ? auxiliaryItem.x
                 : auxiliaryItem.y;
-            const size = horizontalTaskbar
+            const size = this._getStyle() === 'taskbar'
                 ? auxiliaryItem.width
                 : auxiliaryItem.height;
             visualGroup.start = Math.min(visualGroup.start, start);

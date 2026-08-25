@@ -5,11 +5,7 @@ import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {panelIsVertical} from './panelPosition.js';
-
 const CLOCK_SHOW_DATE_SETTING = 'clock-show-date';
-const CLOCK_SHOW_SECONDS_SETTING = 'clock-show-seconds';
-const CLOCK_SHOW_WEEKDAY_SETTING = 'clock-show-weekday';
 
 export class PanelStateController {
     constructor({
@@ -33,7 +29,6 @@ export class PanelStateController {
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
         this._dateMenuDisplayBox = null;
-        this._dateMenuDisplayBoxTranslationX = null;
         this._dateMenuDisplayBoxTranslationY = null;
         this._desktopSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.interface',
@@ -69,7 +64,6 @@ export class PanelStateController {
             this._panelBoxState.push({
                 box,
                 children: box.get_children(),
-                orientation: box.orientation,
             });
         }
 
@@ -99,7 +93,6 @@ export class PanelStateController {
             return;
 
         this._dateMenuDisplayBox = displayBox;
-        this._dateMenuDisplayBoxTranslationX = displayBox.translation_x;
         this._dateMenuDisplayBoxTranslationY = displayBox.translation_y;
         this._dateMenuIndicatorPad = indicatorPad;
         this._dateMenuIndicatorPadConstraints =
@@ -119,21 +112,6 @@ export class PanelStateController {
             return;
 
         this._panelHeight = panelHeight;
-        if (panelIsVertical(this._settings)) {
-            const clockHasAdditionalText =
-                this._desktopSettings.get_boolean(CLOCK_SHOW_DATE_SETTING) ||
-                this._desktopSettings.get_boolean(CLOCK_SHOW_SECONDS_SETTING) ||
-                this._desktopSettings.get_boolean(CLOCK_SHOW_WEEKDAY_SETTING);
-            const parityOffset = clockHasAdditionalText &&
-                panelHeight % 2 === 0 ? 1 : 0;
-            this._dateMenuDisplayBox.translation_x =
-                this._dateMenuDisplayBoxTranslationX + parityOffset;
-            this._dateMenuDisplayBox.translation_y =
-                this._dateMenuDisplayBoxTranslationY;
-            return;
-        }
-        this._dateMenuDisplayBox.translation_x =
-            this._dateMenuDisplayBoxTranslationX;
         const dateShown = this._desktopSettings.get_boolean(
             CLOCK_SHOW_DATE_SETTING
         );
@@ -171,7 +149,7 @@ export class PanelStateController {
 
         const panelBox = Main.layoutManager.panelBox;
         const primaryMonitor = Main.layoutManager.primaryMonitor;
-        Main.panel.set_size(-1, -1);
+        Main.panel.set_height(-1);
         panelBox.set_size(
             primaryMonitor?.width ?? this._oldPanelGeometry.width,
             -1
@@ -192,7 +170,6 @@ export class PanelStateController {
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = null;
         this._dateMenuDisplayBox = null;
-        this._dateMenuDisplayBoxTranslationX = null;
         this._dateMenuDisplayBoxTranslationY = null;
         this._clockShowDateChangedId = 0;
         this._desktopSettings = null;
@@ -218,8 +195,6 @@ export class PanelStateController {
         if (!this._dateMenuDisplayBox)
             return;
 
-        this._dateMenuDisplayBox.translation_x =
-            this._dateMenuDisplayBoxTranslationX;
         this._dateMenuDisplayBox.translation_y =
             this._dateMenuDisplayBoxTranslationY;
     }
@@ -295,8 +270,5 @@ export class PanelStateController {
                     box.insert_child_at_index(actor, index);
             }
         }
-
-        for (const {box, orientation} of this._panelBoxState)
-            box.orientation = orientation;
     }
 }

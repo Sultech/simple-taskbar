@@ -14,39 +14,23 @@ import {
 import {extensionIsActive} from '../extensionState.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
-    ActivitiesDotWidthOverride,
-} from './activitiesDotWidthOverride.js';
-import {PanelActivitiesController} from './panelActivitiesController.js';
-import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
-import {PanelClockController} from './panelClockController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
-import {panelGeometry} from './panelGeometry.js';
-import {panelIsVertical} from './panelPosition.js';
-import {
-    QuickSettingsIndicatorsController,
-} from './quickSettingsIndicatorsController.js';
+import {panelIsTop} from './panelPosition.js';
 import {PanelStateController} from './panelStateController.js';
 import {PanelThemeController} from './panelThemeController.js';
-import {
-    PanelVerticalItemsController,
-} from './panelVerticalItemsController.js';
-import {
-    VerticalPanelCompatibilityController,
-} from './verticalPanelCompatibilityController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {TRAY_OVERFLOW_ROLE} from '../overflow/trayOverflowController.js';
 import {
     allocateAdaptivePanel,
     allocateExpandedSidePanel,
-    constrainTaskbarSize,
+    constrainTaskbarWidth,
 } from '../taskbar/taskbarLayout.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
-const GNOME_PANEL_SIZE = 32;
 
 export class PanelController {
     constructor({
@@ -85,22 +69,6 @@ export class PanelController {
             settings
         );
         this._notificationAreaController = new NotificationAreaController();
-        this._quickSettingsIndicatorsController = null;
-        this._activitiesDotWidthOverride = null;
-        this._activitiesController = null;
-        this._clockController = null;
-        this._verticalPanelCompatibilityController =
-            new VerticalPanelCompatibilityController(settings);
-        this._verticalItemsController = new PanelVerticalItemsController(
-            settings,
-            [
-                Main.panel._leftBox,
-                Main.panel._centerBox,
-                Main.panel._rightBox,
-            ],
-            () => this._panelHeight,
-            () => this._buttonPaddingController.effectivePadding()
-        );
         this._autoHideController = new PanelAutoHideController({
             settings,
             panelActor: Main.panel,
@@ -121,7 +89,6 @@ export class PanelController {
     }
 
     enable() {
-        this._verticalPanelCompatibilityController.enable();
         this._stateController = new PanelStateController({
             settings: this._settings,
             panelHeight: this._panelHeight,
@@ -131,26 +98,11 @@ export class PanelController {
             showDesktopButton: this._showDesktopButton,
         });
         this._stateController.enable();
-        this._activitiesDotWidthOverride = new ActivitiesDotWidthOverride(
-            Main.panel.statusArea.activities
-        );
-        this._activitiesController = new PanelActivitiesController(
-            this._settings,
-            Main.panel.statusArea.activities
-        );
-        this._activitiesController.enable();
-        this._clockController = new PanelClockController(
-            this._settings,
-            Main.panel.statusArea.dateMenu,
-            () => this._panelHeight
-        );
-        this._clockController.enable();
         this._themeController = new PanelThemeController(
             this._settings,
             this._stateController.oldPanelStyle
         );
         this._configureAdaptivePanelAllocation();
-        this._configureHotCornerSizing();
         this._themeController.syncEdgeClass();
         this._themeController.syncBorder();
         this._buttonPaddingController.enable();
@@ -160,7 +112,13 @@ export class PanelController {
         this._menuPositioner.enable();
         this._configurePanelMenuSwitching();
         this._connectSignals();
-        this._themeController.connectSignals(() => this.applyLayout());
+        this._themeController.connectSignals(
+            () => this.applyLayout(),
+            () => {
+                this.position();
+                this._menuPositioner.refresh();
+            }
+        );
         this._themeController.queueBlurMyShellSync();
         this._autoHideController.enable();
     }
@@ -168,7 +126,6 @@ export class PanelController {
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         this.position();
-        this._clockController.sync();
     }
 
     setStartMenuOpen(open) {
@@ -185,28 +142,13 @@ export class PanelController {
         if (!monitor)
             return;
 
-        const geometry = panelGeometry(
-            this._settings,
-            monitor,
-            this._panelHeight
-        );
-        if (geometry.vertical)
-            Main.panel.set_size(geometry.width, geometry.height);
-        else {
-            Main.panel.set_width(-1);
-            Main.panel.set_height(geometry.height);
-        }
-        Main.layoutManager.panelBox.set_size(
-            geometry.width,
-            geometry.height
-        );
-        Main.layoutManager.panelBox.set_position(geometry.x, geometry.y);
-        Main.layoutManager._updateHotCorners();
-        this._syncPanelOrientation();
-        this._verticalItemsController.sync();
+        Main.panel.set_height(this._panelHeight);
+        Main.layoutManager.panelBox.set_size(monitor.width, this._panelHeight);
         this._stateController.syncDateMenuVerticalAlignment(
             this._panelHeight
         );
+        const panelBox = Main.layoutManager.panelBox;
+        panelBox.x = monitor.x;
         this._autoHideController.syncPosition();
         this._queueOverviewRelayout();
         this.updateTaskbarWidth();
@@ -309,7 +251,6 @@ export class PanelController {
             windowsXpThemeEnabled
         );
         this._stateController.syncActivitiesVisibility();
-        this._verticalItemsController.sync();
         this.updateTaskbarWidth();
     }
 
@@ -321,23 +262,17 @@ export class PanelController {
         if (!monitor)
             return;
 
-        const vertical = panelIsVertical(this._settings);
-        const availableWidth = constrainTaskbarSize({
+        const availableWidth = constrainTaskbarWidth({
             taskbarBin: this._taskbarBin,
             leftBox,
             centerBox,
             rightBox,
-            panelLength: vertical ? monitor.height : monitor.width,
-            panelThickness: this._panelHeight,
+            panelWidth: monitor.width,
+            panelHeight: this._panelHeight,
             centered: this.appsAreCentered(),
-            vertical,
         });
         if (availableWidth !== undefined)
             this._onTaskbarAvailableWidthChanged(availableWidth);
-    }
-
-    syncVerticalItems() {
-        this._verticalItemsController.sync();
     }
 
     appsAreCentered() {
@@ -357,16 +292,7 @@ export class PanelController {
         this._autoHideController = null;
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
-        this._verticalItemsController.destroy();
-        this._verticalItemsController = null;
-        this._activitiesController.destroy();
-        this._activitiesController = null;
-        this._activitiesDotWidthOverride.destroy();
-        this._activitiesDotWidthOverride = null;
-        this._clockController.destroy();
-        this._clockController = null;
         this._notificationAreaController.destroy();
-        this._restoreNativeLayouts();
 
         this._menuPositioner.destroy();
         this._menuPositioner = null;
@@ -377,9 +303,6 @@ export class PanelController {
         this._themeController = null;
         this._stateController.destroy(restoringUnlockPanel);
         this._stateController = null;
-        this._verticalPanelCompatibilityController.destroy();
-        this._verticalPanelCompatibilityController = null;
-        this._restoreHotCornerSizing();
 
         this._startButton = null;
         this._taskbarBin = null;
@@ -414,12 +337,8 @@ export class PanelController {
             Object.getPrototypeOf(Main.panel),
             'vfunc_allocate',
             originalAllocate => function (box) {
-                const vertical = panelIsVertical(controller._settings);
-                const visible = controller._taskbarBin.visible;
-                const skip = visible
-                    ? !controller._taskbarBin.get_parent()
-                    : !vertical;
-                if (skip) {
+                if (!controller._taskbarBin.visible ||
+                    !controller._taskbarBin.get_parent()) {
                     originalAllocate.call(this, box);
                     return;
                 }
@@ -432,14 +351,11 @@ export class PanelController {
                         Main.layoutManager.getWorkAreaForMonitor(
                             monitor.index
                         );
-                    centerOffset = vertical
-                        ? 2 * (workArea.y - monitor.y) +
-                            workArea.height - monitor.height
-                        : 2 * (workArea.x - monitor.x) +
-                            workArea.width - monitor.width;
+                    centerOffset = 2 * (workArea.x - monitor.x) +
+                        workArea.width - monitor.width;
                 }
-                const allocate = !controller._taskbarBin.visible ||
-                    controller._taskbarBin.get_parent() === this._centerBox
+                const allocate = controller._taskbarBin.get_parent() ===
+                    this._centerBox
                     ? allocateAdaptivePanel
                     : allocateExpandedSidePanel;
                 allocate(
@@ -448,74 +364,10 @@ export class PanelController {
                     this._leftBox,
                     this._centerBox,
                     this._rightBox,
-                    centerOffset,
-                    vertical
+                    centerOffset
                 );
             }
         );
-    }
-
-    _configureHotCornerSizing() {
-        const controller = this;
-        this._injectionManager.overrideMethod(
-            Main.layoutManager,
-            '_updateHotCorners',
-            originalMethod => function () {
-                originalMethod.call(this);
-                if (!panelIsVertical(controller._settings))
-                    return;
-                for (const corner of this.hotCorners) {
-                    if (!corner)
-                        continue;
-                    const setBarrierSize =
-                        Object.getPrototypeOf(corner).setBarrierSize;
-                    corner.setBarrierSize = size => setBarrierSize.call(
-                        corner,
-                        Math.min(size, GNOME_PANEL_SIZE)
-                    );
-                    corner.setBarrierSize(controller._panelHeight);
-                }
-            }
-        );
-    }
-
-    _restoreHotCornerSizing() {
-        Main.layoutManager._updateHotCorners();
-    }
-
-    _syncPanelOrientation() {
-        const vertical = panelIsVertical(this._settings);
-        const orientation = vertical
-            ? Clutter.Orientation.VERTICAL
-            : Clutter.Orientation.HORIZONTAL;
-        for (const box of [
-            Main.panel._leftBox,
-            Main.panel._centerBox,
-            Main.panel._rightBox,
-        ])
-            box.orientation = orientation;
-
-        this._quickSettingsIndicatorsController ??=
-            new QuickSettingsIndicatorsController(
-                Main.panel.statusArea.quickSettings._indicators
-            );
-        this._quickSettingsIndicatorsController.sync(
-            vertical,
-            this._buttonPaddingController.effectivePadding()
-        );
-        if (vertical)
-            Main.panel.add_style_class_name('simple-taskbar-panel-vertical');
-        else
-            Main.panel.remove_style_class_name('simple-taskbar-panel-vertical');
-    }
-
-    _restoreNativeLayouts() {
-        Main.panel.remove_style_class_name('simple-taskbar-panel-vertical');
-        if (!this._quickSettingsIndicatorsController)
-            return;
-
-        this._quickSettingsIndicatorsController.destroy();
-        this._quickSettingsIndicatorsController = null;
     }
 
     _connectSignals() {
@@ -545,11 +397,9 @@ export class PanelController {
             Main.panel._centerBox,
             Main.panel._rightBox,
         ]) {
-            box.connectObject(
-                'notify::width', () => this.updateTaskbarWidth(),
-                'notify::height', () => this.updateTaskbarWidth(),
-                this._signalHolder
-            );
+            box.connectObject('notify::width', () => {
+                this.updateTaskbarWidth();
+            }, this._signalHolder);
         }
         for (const signal of ['child-added', 'child-removed']) {
             this._taskbarActor.connectObject(signal, () => {
@@ -557,11 +407,6 @@ export class PanelController {
             }, this._signalHolder);
         }
         this._settings.connectObject('changed::hide-app-labels', () => {
-            this.updateTaskbarWidth();
-        }, this._signalHolder);
-        this._settings.connectObject('changed::panel-button-padding', () => {
-            this._syncPanelOrientation();
-            this._verticalItemsController.sync();
             this.updateTaskbarWidth();
         }, this._signalHolder);
         this._startButton.connectObject('notify::visible', () => {

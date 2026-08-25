@@ -27,7 +27,7 @@ import {
     LIGHT_BLUR_OVERLAY_CLASS,
     syncPanelBlurClasses,
 } from './panelBlurClasses.js';
-import {panelPosition} from './panelPosition.js';
+import {panelIsTop} from './panelPosition.js';
 import {panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
@@ -55,7 +55,7 @@ export class PanelThemeController {
         this._stSettings = St.Settings.get();
     }
 
-    connectSignals(onWindowsXpThemeChanged) {
+    connectSignals(onWindowsXpThemeChanged, onPanelPositionChanged) {
         Main.panel.connectObject(
             'notify::style-class', () => this.applyTransparency(),
             'notify::style', () => {
@@ -106,6 +106,11 @@ export class PanelThemeController {
                 onWindowsXpThemeChanged();
                 this.queueBlurMyShellSync();
             },
+            'changed::panel-position', () => {
+                this.syncEdgeClass();
+                onPanelPositionChanged();
+                this.applyTransparency();
+            },
             this._signalHolder
         );
         this._themeContext.connectObject(
@@ -120,14 +125,12 @@ export class PanelThemeController {
     }
 
     syncEdgeClass() {
-        const position = panelPosition(this._settings);
-        for (const edge of ['top', 'bottom', 'left', 'right']) {
-            Main.panel.remove_style_class_name(
-                `simple-taskbar-panel-${edge}`
-            );
-        }
+        const top = panelIsTop(this._settings);
+        Main.panel.remove_style_class_name(
+            top ? 'simple-taskbar-panel-bottom' : 'simple-taskbar-panel-top'
+        );
         Main.panel.add_style_class_name(
-            `simple-taskbar-panel-${position}`
+            top ? 'simple-taskbar-panel-top' : 'simple-taskbar-panel-bottom'
         );
     }
 
@@ -199,8 +202,6 @@ export class PanelThemeController {
         Main.panel.remove_style_class_name('simple-taskbar-theme-dark');
         Main.panel.remove_style_class_name('simple-taskbar-panel-top');
         Main.panel.remove_style_class_name('simple-taskbar-panel-bottom');
-        Main.panel.remove_style_class_name('simple-taskbar-panel-left');
-        Main.panel.remove_style_class_name('simple-taskbar-panel-right');
         Main.panel.remove_style_class_name(LIGHT_BLUR_OVERLAY_CLASS);
         Main.panel.remove_style_class_name(BORDER_DISABLED_CLASS);
         Main.panel.remove_style_class_name(BLUR_MY_SHELL_ACTIVE_CLASS);

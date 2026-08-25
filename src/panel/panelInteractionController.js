@@ -11,11 +11,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {
-    panelArrowSide,
-    panelIsVertical,
-    syncMenuArrowSide,
-} from './panelPosition.js';
+import {panelArrowSide, syncMenuArrowSide} from './panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
@@ -227,9 +223,7 @@ export class PanelInteractionController {
         if (this._settings.get_boolean('application-overflow-enabled'))
             return false;
 
-        const adjustment = panelIsVertical(this._settings)
-            ? this._taskbarBin.vadjustment
-            : this._taskbarBin.hadjustment;
+        const adjustment = this._taskbarBin.hadjustment;
         const [value, , upper, stepIncrement, , pageSize] =
             adjustment.get_values();
         if (upper <= pageSize + 1)

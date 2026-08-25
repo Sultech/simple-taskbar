@@ -10,7 +10,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelPosition} from '../panel/panelPosition.js';
+import {panelIsTop} from '../panel/panelPosition.js';
 
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 
@@ -25,6 +25,7 @@ export class NotificationBannerController {
         this._originalAlignmentX = null;
         this._originalAlignmentY = null;
         this._originalHideNotification = null;
+        this._bottomHideNotification = null;
     }
 
     enable() {
@@ -35,10 +36,12 @@ export class NotificationBannerController {
         this._originalAlignmentY = this._bannerBin.get_y_align();
         this._originalHideNotification =
             this._messageTray._hideNotification;
+        this._bottomHideNotification = this._createBottomHideNotification();
 
         this._settings.connectObject(
             'changed::notification-banner-bottom-end', () => this._sync(),
             'changed::clock-position', () => this._sync(),
+            'changed::panel-position', () => this._sync(),
             this._signalHolder
         );
         this._bannerBin.connectObject(
@@ -66,6 +69,7 @@ export class NotificationBannerController {
         this._signalHolder = null;
         this._restore();
 
+        this._bottomHideNotification = null;
         this._originalHideNotification = null;
         this._originalAlignmentY = null;
         this._originalAlignmentX = null;
@@ -82,29 +86,14 @@ export class NotificationBannerController {
             return;
         }
 
-        const position = panelPosition(this._settings);
-        const clockAlignment = this._getClockAlignment();
-        if (position === 'left' || position === 'right') {
-            this._messageTray.bannerAlignment = position === 'left'
-                ? Clutter.ActorAlign.START
-                : Clutter.ActorAlign.END;
-            this._bannerBin.set_y_align(clockAlignment);
-            this._messageTray._hideNotification =
-                this._createEdgeHideNotification(
-                    'x',
-                    position === 'left' ? -1 : 1
-                );
-        } else {
-            this._messageTray.bannerAlignment = clockAlignment;
-            this._bannerBin.set_y_align(
-                position === 'top'
-                    ? Clutter.ActorAlign.START
-                    : Clutter.ActorAlign.END
-            );
-            this._messageTray._hideNotification = position === 'top'
-                ? this._originalHideNotification
-                : this._createEdgeHideNotification('y', 1);
-        }
+        const top = panelIsTop(this._settings);
+        this._messageTray.bannerAlignment = this._getClockAlignment();
+        this._bannerBin.set_y_align(
+            top ? Clutter.ActorAlign.START : Clutter.ActorAlign.END
+        );
+        this._messageTray._hideNotification = top
+            ? this._originalHideNotification
+            : this._bottomHideNotification;
         this._applied = true;
     }
 
@@ -146,7 +135,7 @@ export class NotificationBannerController {
         );
     }
 
-    _createEdgeHideNotification(property, direction) {
+    _createBottomHideNotification() {
         return function (animate) {
             this._notificationFocusGrabber.ungrabFocus();
             this._banner.disconnectObject(this);
@@ -160,22 +149,16 @@ export class NotificationBannerController {
                 duration,
                 mode: Clutter.AnimationMode.EASE,
             });
-            const offset = direction * (property === 'x'
-                ? this._bannerBin.width
-                : this._bannerBin.height);
-            const params = {
+            this._bannerBin.ease({
+                y: this._bannerBin.height,
                 duration,
                 mode: Clutter.AnimationMode.EASE,
                 onStopped: () => {
-                    if (property === 'x')
-                        this._bannerBin.x = 0;
                     this._notificationState = MessageTray.State.HIDDEN;
                     this._hideNotificationCompleted();
                     this._updateState();
                 },
-            };
-            params[property] = offset;
-            this._bannerBin.ease(params);
+            });
         };
     }
 }

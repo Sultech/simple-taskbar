@@ -13,70 +13,6 @@
     box-shadow: none;
 }
 
-.simple-taskbar-panel.simple-taskbar-panel-left {
-    border: 0;
-    border-right: 1px solid rgba(255, 255, 255, 0.20);
-    box-shadow: none;
-}
-
-.simple-taskbar-panel.simple-taskbar-panel-right {
-    border: 0;
-    border-left: 1px solid rgba(255, 255, 255, 0.20);
-    box-shadow: none;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .simple-taskbar-start {
-    border-left-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-width: 0;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical .panel-button {
-    min-width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    -natural-hpadding: 0;
-    -minimum-hpadding: 0;
-    text-align: center;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .panel-button .system-status-icon,
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .panel-button.clock-display .clock,
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    #panelActivities StBoxLayout {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .panel-button .system-status-icon {
-    margin-top: 4px;
-    margin-bottom: 4px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    #panelActivities StBoxLayout {
-    margin-top: 8px;
-    margin-bottom: 8px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical .panel-status-indicators-box {
-    spacing: 2px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical #panelActivities {
-    -natural-hpadding: 12px;
-    -minimum-hpadding: 6px;
-}
-
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-transparent {
     background-color: transparent;
     border-top-color: transparent;
@@ -87,28 +23,12 @@
     border-bottom-color: transparent;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-transparent {
-    border-right-color: transparent;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-transparent {
-    border-left-color: transparent;
-}
-
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-tinted {
     border-top-color: transparent;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-tinted {
     border-bottom-color: transparent;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-tinted {
-    border-right-color: transparent;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-blur-my-shell-active.simple-taskbar-blur-tinted {
-    border-left-color: transparent;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-dark {
@@ -135,40 +55,19 @@
     box-shadow: none !important;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-dark,
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-light {
-    border: 0 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.20) !important;
-    box-shadow: none !important;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-dark,
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-blur-my-shell-active.simple-taskbar-theme-light {
-    border: 0 !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.20) !important;
-    box-shadow: none !important;
-}
-
 #panel.simple-taskbar-panel.simple-taskbar-border-disabled,
 #panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-border-disabled,
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-border-disabled,
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-border-disabled,
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled,
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled,
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled,
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled {
-    border: 0 !important;
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active.simple-taskbar-border-disabled {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
     box-shadow: none !important;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-blur-my-shell-active:overview,
-#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active:overview,
-#panel.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-blur-my-shell-active:overview,
-#panel.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-blur-my-shell-active:overview {
+#panel.simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-blur-my-shell-active:overview {
     border-top-color: transparent !important;
     border-bottom-color: transparent !important;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
     box-shadow: none !important;
     transition-duration: 0ms !important;
 }
@@ -191,14 +90,6 @@
 .simple-taskbar-panel.simple-taskbar-panel-top.simple-taskbar-theme-light {
     border-bottom-color: rgba(255, 255, 255, 0.20);
     box-shadow: none;
-}
-
-.simple-taskbar-panel.simple-taskbar-panel-left.simple-taskbar-theme-light {
-    border-right-color: rgba(255, 255, 255, 0.20);
-}
-
-.simple-taskbar-panel.simple-taskbar-panel-right.simple-taskbar-theme-light {
-    border-left-color: rgba(255, 255, 255, 0.20);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button,
@@ -380,38 +271,6 @@
     border-bottom-width: 6px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 3px;
-    border-right-width: 3px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 4px;
-    border-right-width: 4px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 5px;
-    border-right-width: 5px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 6px;
-    border-right-width: 6px;
-}
-
 #panel.simple-taskbar-panel .simple-taskbar-show-desktop {
     border-top-width: 0;
     border-bottom-width: 0;
@@ -486,13 +345,6 @@
     border-color: rgba(255, 255, 255, 0.22);
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-app-item:hover .simple-taskbar-app-glass,
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
-    background-gradient-direction: horizontal;
-}
-
 .simple-taskbar-app-button {
     min-width: 0;
     padding: 0;
@@ -531,11 +383,6 @@
     .simple-taskbar-running-indicator-segment {
     height: 4px;
     border-radius: 999px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-running-indicator {
-    margin-bottom: 0;
 }
 
 .simple-taskbar-app-item.running .simple-taskbar-running-indicator-segment {
@@ -805,23 +652,6 @@
     margin-right: 5px;
     border-left-width: 0;
     border-right-width: 1px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-show-desktop {
-    min-width: 0;
-    min-height: 12px;
-    margin: 5px 1px 0;
-    border-left-width: 0;
-    border-top-width: 1px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-show-desktop.simple-taskbar-show-desktop-left {
-    margin: 0 1px 5px;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-width: 1px;
 }
 
 .simple-taskbar-show-desktop:hover {

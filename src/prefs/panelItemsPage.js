@@ -12,8 +12,6 @@ import {
     normalizePanelItemOrder,
 } from '../shared/panelItemOrder.js';
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
-import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {axisPanelPositions} from './panelAxis.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
 
 export function addPanelItemsPage({
@@ -132,7 +130,6 @@ export function addPanelItemsPage({
     folderMenuSwitch.connect('notify::active', updateFolderMenuRow);
     updateFolderMenuRow();
 
-    const initialPositions = axisPanelPositions(settings, panelPositions);
     const panelOrderGroups = new Map([
         ['left', new Adw.PreferencesGroup({
             title: _('Left Items'),
@@ -154,67 +151,67 @@ export function addPanelItemsPage({
         ['left-box', {
             title: _('Left Box'),
             subtitle: _('Other GNOME Shell and extension items'),
-            choices: [initialPositions[0]],
+            choices: [panelPositions[0]],
             fixedPosition: 'left',
         }],
         ['center-box', {
             title: _('Center Box'),
             subtitle: _('Other GNOME Shell and extension items'),
-            choices: [initialPositions[1]],
+            choices: [panelPositions[1]],
             fixedPosition: 'center',
         }],
         ['right-box', {
             title: _('Right Box'),
             subtitle: _('Other GNOME Shell and extension items'),
-            choices: [initialPositions[2]],
+            choices: [panelPositions[2]],
             fixedPosition: 'right',
         }],
         ['start-button', {
             key: 'start-button-position',
             title: _('Start Button'),
             subtitle: _('Eleven-style or original GNOME Start button'),
-            choices: initialPositions.slice(0, 2),
+            choices: panelPositions.slice(0, 2),
         }],
         ['activities', {
             key: 'activities-button-position',
             title: _('Activities'),
             subtitle: _('GNOME workspace overview button'),
-            choices: initialPositions,
+            choices: panelPositions,
         }],
         ['applications', {
             key: 'app-alignment',
             title: _('Applications'),
             subtitle: _('Taskbar application buttons'),
-            choices: initialPositions.slice(0, 2),
+            choices: panelPositions.slice(0, 2),
         }],
         ['folder-menu', {
             key: 'folder-menu-position',
             title: _('Folder Menu'),
             subtitle: _('Selected folder shortcuts'),
-            choices: initialPositions,
+            choices: panelPositions,
         }],
         ['tray-overflow', {
             key: 'tray-overflow-position',
             title: _('Tray icons'),
             subtitle: _('Gather application tray icons behind a panel arrow'),
-            choices: initialPositions,
+            choices: panelPositions,
         }],
         ['system-menu', {
             key: 'system-menu-position',
             title: _('System Menu'),
             subtitle: _('Quick Settings, volume, network, and power'),
-            choices: initialPositions,
+            choices: panelPositions,
         }],
         ['clock', {
             key: 'clock-position',
             title: _('Clock'),
-            choices: initialPositions,
+            choices: panelPositions,
         }],
         ['show-desktop', {
             key: 'show-desktop-button-position',
             title: _('Show Desktop Button'),
             subtitle: _('Minimize or restore all windows'),
-            choices: initialPositions.filter(
+            choices: panelPositions.filter(
                 position => position.value !== 'center'
             ),
         }],
@@ -228,60 +225,21 @@ export function addPanelItemsPage({
         );
         panelOrderRows.set(id, controls);
     }
-    const syncPanelAxis = () => {
-        const positions = axisPanelPositions(settings, panelPositions);
-        const vertical = panelIsVertical(settings);
-        const groupTitles = vertical
-            ? [_('Top Items'), _('Middle Items'), _('Bottom Items')]
-            : [_('Left Items'), _('Center Items'), _('Right Items')];
-        const boxTitles = vertical
-            ? [_('Top Box'), _('Middle Box'), _('Bottom Box')]
-            : [_('Left Box'), _('Center Box'), _('Right Box')];
-        for (const [index, position] of [
-            'left',
-            'center',
-            'right',
-        ].entries()) {
-            panelOrderGroups.get(position).title = groupTitles[index];
-            panelOrderRows.get(`${position}-box`).row.title = boxTitles[index];
-            panelOrderRows.get(`${position}-box`).setChoices([
-                positions[index],
-            ]);
-        }
-        panelOrderRows.get('start-button').setChoices(
-            positions.slice(0, 2)
-        );
-        panelOrderRows.get('applications').setChoices(
-            positions.slice(0, 2)
-        );
-        panelOrderRows.get('show-desktop').setChoices(
-            positions.filter(position => position.value !== 'center')
-        );
-        const activitiesPositions = settings.get_boolean(
+    const activitiesPanelPositions = panelPositions.filter(
+        position => position.value !== 'center'
+    );
+    const syncActivitiesPositionChoices = () => {
+        const choices = settings.get_boolean(
             'windows-xp-theme-enabled'
-        )
-            ? positions.filter(position => position.value !== 'center')
-            : positions;
-        panelOrderRows.get('activities').setChoices(activitiesPositions);
-        for (const id of [
-            'folder-menu',
-            'tray-overflow',
-            'system-menu',
-            'clock',
-        ])
-            panelOrderRows.get(id).setChoices(positions);
+        ) ? activitiesPanelPositions : panelPositions;
+        panelOrderRows.get('activities').setChoices(choices);
     };
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
-        syncPanelAxis
+        syncActivitiesPositionChoices
     );
-    connectSettings(
-        settings,
-        'changed::panel-position',
-        syncPanelAxis
-    );
-    syncPanelAxis();
+    syncActivitiesPositionChoices();
 
     const getPanelItemPosition = id => {
         const definition = panelOrderDefinitions.get(id);

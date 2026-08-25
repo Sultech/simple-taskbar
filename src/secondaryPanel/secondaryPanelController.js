@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -21,23 +20,12 @@ import {FolderMenuController} from '../folderMenuController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {PanelAutoHideController} from '../panel/panelAutoHideController.js';
 import {
-    PanelActivitiesController,
-} from '../panel/panelActivitiesController.js';
-import {
     PanelButtonPaddingController,
 } from '../panel/panelButtonPaddingController.js';
-import {PanelClockController} from '../panel/panelClockController.js';
 import {PanelInteractionController} from '../panel/panelInteractionController.js';
-import {
-    PanelVerticalItemsController,
-} from '../panel/panelVerticalItemsController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from '../panel/panelItems.js';
-import {panelGeometry} from '../panel/panelGeometry.js';
-import {panelIsVertical} from '../panel/panelPosition.js';
-import {
-    QuickSettingsIndicatorsController,
-} from '../panel/quickSettingsIndicatorsController.js';
+import {panelIsTop} from '../panel/panelPosition.js';
 import {
     QuickSettingsPowerController,
 } from '../integration/quickSettingsPowerController.js';
@@ -50,7 +38,7 @@ import {
 } from './secondaryPanelIndicatorController.js';
 import {StartButtonController} from '../startMenu/startButtonController.js';
 import {TaskbarController} from '../taskbar/taskbarController.js';
-import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
+import {constrainTaskbarWidth} from '../taskbar/taskbarLayout.js';
 import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
 import {WindowController} from '../taskbar/windowController.js';
@@ -156,15 +144,6 @@ export class SecondaryPanelController {
         this._quickSettingsPowerController = null;
         this._quickSettingsXpIconController = null;
         this._notificationAreaController = new NotificationAreaController();
-        this._quickSettingsIndicatorsController = null;
-        this._activitiesController = null;
-        this._clockController = null;
-        this._verticalItemsController = new PanelVerticalItemsController(
-            settings,
-            [this._leftBox, this._centerBox, this._rightBox],
-            () => this._panelHeight,
-            () => this._buttonPaddingController.effectivePadding()
-        );
     }
 
     enable() {
@@ -177,22 +156,6 @@ export class SecondaryPanelController {
             );
         this._indicatorController.acquire();
         const quickSettings = this._indicatorController.get('quickSettings');
-        const activities = this._indicatorController.get('activities');
-        const dateMenu = this._indicatorController.get('dateMenu');
-        this._quickSettingsIndicatorsController =
-            new QuickSettingsIndicatorsController(quickSettings._indicators);
-        this._syncQuickSettingsIndicators();
-        this._activitiesController = new PanelActivitiesController(
-            this._settings,
-            activities
-        );
-        this._activitiesController.enable();
-        this._clockController = new PanelClockController(
-            this._settings,
-            dateMenu,
-            () => this._panelHeight
-        );
-        this._clockController.enable();
         this._volumeMixerController = new VolumeMixerController(
             this._settings,
             quickSettings
@@ -274,12 +237,6 @@ export class SecondaryPanelController {
         this._interactionController = null;
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
-        this._verticalItemsController.destroy();
-        this._verticalItemsController = null;
-        this._activitiesController.destroy();
-        this._activitiesController = null;
-        this._clockController.destroy();
-        this._clockController = null;
         this._startButtonController.destroy();
         this._startButtonController = null;
         this._windowController.destroy();
@@ -299,8 +256,6 @@ export class SecondaryPanelController {
         this._quickSettingsPowerController.destroy();
         this._quickSettingsPowerController = null;
         this._notificationAreaController.destroy();
-        this._quickSettingsIndicatorsController.destroy();
-        this._quickSettingsIndicatorsController = null;
         this._indicatorController.destroy();
         this._indicatorController = null;
         this._folderMenuController.destroy();
@@ -334,11 +289,9 @@ export class SecondaryPanelController {
             this._centerBox,
             this._rightBox,
         ]) {
-            box.connectObject(
-                'notify::width', () => this._updateTaskbarWidth(),
-                'notify::height', () => this._updateTaskbarWidth(),
-                this._signalHolder
-            );
+            box.connectObject('notify::width', () => {
+                this._updateTaskbarWidth();
+            }, this._signalHolder);
         }
         this._settings.connectObject('changed::icon-size', () => {
             this._iconSize = this._settings.get_int('icon-size');
@@ -347,7 +300,6 @@ export class SecondaryPanelController {
                 this._settings.get_int('start-button-padding')
             );
             this._taskbarController.setIconSize(this._iconSize);
-            this._verticalItemsController.sync();
             this._updateTaskbarWidth();
         }, this._signalHolder);
         this._settings.connectObject('changed::panel-height', () => {
@@ -417,7 +369,6 @@ export class SecondaryPanelController {
                 this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
-            this._verticalItemsController.sync();
             this._updateTaskbarWidth();
         }, this._signalHolder);
         for (const signal of ['child-added', 'child-removed']) {
@@ -428,10 +379,6 @@ export class SecondaryPanelController {
         this._settings.connectObject('changed::hide-app-labels', () => {
             this._updateTaskbarWidth();
         }, this._signalHolder);
-        this._settings.connectObject('changed::panel-button-padding', () => {
-            this._syncQuickSettingsIndicators();
-            this._updateTaskbarWidth();
-        }, this._signalHolder);
     }
 
     _applyAppearance() {
@@ -440,7 +387,6 @@ export class SecondaryPanelController {
             this._settings.get_int('start-button-padding')
         );
         this._taskbarController.applyAppearance();
-        this._verticalItemsController.sync();
     }
 
     _syncTaskbarVisibility() {
@@ -515,32 +461,16 @@ export class SecondaryPanelController {
     }
 
     _position() {
-        const geometry = panelGeometry(
-            this._settings,
-            this._monitor,
-            this._panelHeight
-        );
-        this._panelBox.set_size(geometry.width, geometry.height);
-        this.actor.set_size(geometry.width, geometry.height);
-        this._panelBox.set_position(geometry.x, geometry.y);
-        this.actor.vertical = geometry.vertical;
-        const orientation = geometry.vertical
-            ? Clutter.Orientation.VERTICAL
-            : Clutter.Orientation.HORIZONTAL;
-        for (const box of [this._leftBox, this._centerBox, this._rightBox])
-            box.orientation = orientation;
-        this._syncQuickSettingsIndicators();
-        this._verticalItemsController.sync();
+        this._panelBox.set_size(this._monitor.width, this._panelHeight);
+        this.actor.set_size(this._monitor.width, this._panelHeight);
+        this._panelBox.x = this._monitor.x;
         if (this._autoHideController)
             this._autoHideController.syncPosition();
+        else
+            this._panelBox.y = panelIsTop(this._settings)
+                ? this._monitor.y
+                : this._monitor.y + this._monitor.height - this._panelHeight;
         this._updateTaskbarWidth();
-    }
-
-    _syncQuickSettingsIndicators() {
-        this._quickSettingsIndicatorsController.sync(
-            panelIsVertical(this._settings),
-            this._buttonPaddingController.effectivePadding()
-        );
     }
 
     _autoHideIsBlocked() {
@@ -557,18 +487,14 @@ export class SecondaryPanelController {
     }
 
     _updateTaskbarWidth() {
-        const vertical = panelIsVertical(this._settings);
-        const availableWidth = constrainTaskbarSize({
+        const availableWidth = constrainTaskbarWidth({
             taskbarBin: this._taskbarBin,
             leftBox: this._leftBox,
             centerBox: this._centerBox,
             rightBox: this._rightBox,
-            panelLength: vertical
-                ? this._monitor.height
-                : this._monitor.width,
-            panelThickness: this._panelHeight,
+            panelWidth: this._monitor.width,
+            panelHeight: this._panelHeight,
             centered: this._appsAreCentered(),
-            vertical,
         });
         if (availableWidth !== undefined)
             this._taskbarController.setAvailableWidth(availableWidth);
