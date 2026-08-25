@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:38+0100\n"
+"POT-Creation-Date: 2026-08-25 21:47+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -226,41 +226,49 @@ msgstr ""
 msgid "Choose which separators appear"
 msgstr "Выберите, какие необязательные элементы отображать на панели."
 
-#: src/prefs/appBehaviorGroup.js:55
+#: src/prefs/appBehaviorGroup.js:54
 msgid "Always"
 msgstr "Всегда"
 
-#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
+#: src/prefs/appBehaviorGroup.js:55 src/prefs/appBehaviorGroup.js:59
 msgid "Only When Full"
 msgstr "Только при заполнении"
 
-#: src/prefs/appBehaviorGroup.js:57 src/prefs/appBehaviorGroup.js:61
+#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
 msgid "Never"
 msgstr "Никогда"
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:67
 msgid "Combine Application Buttons"
 msgstr "Объединить кнопки приложений"
 
-#: src/prefs/appBehaviorGroup.js:69
+#: src/prefs/appBehaviorGroup.js:68
 msgid "Choose when windows share one taskbar button"
 msgstr "Выберите, когда окна объединяются в одну кнопку на панели задач"
 
+#: src/prefs/appBehaviorGroup.js:82
+msgid "Hide App Labels"
+msgstr "Скрыть подписи приложений"
+
 #: src/prefs/appBehaviorGroup.js:83
+msgid "Show only icons on separate window buttons"
+msgstr "Показывать только значки на раздельных кнопках окон"
+
+#: src/prefs/appBehaviorGroup.js:89
 msgid "Application Overflow"
 msgstr "Переполнение приложений"
 
-#: src/prefs/appBehaviorGroup.js:84
+#: src/prefs/appBehaviorGroup.js:90
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "Выберите цвета индикаторов запущенных приложений"
 
-#: src/prefs/appBehaviorGroup.js:88
+#: src/prefs/appBehaviorGroup.js:94
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "Переполнение приложений"
 
-#: src/prefs/appBehaviorGroup.js:90
+#: src/prefs/appBehaviorGroup.js:96
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -268,57 +276,59 @@ msgstr ""
 "Показывать кнопки приложений, для которых не хватает места, во всплывающем "
 "окне переполнения вместо прокрутки панели задач"
 
-#: src/prefs/appBehaviorGroup.js:100
+#: src/prefs/appBehaviorGroup.js:106
 msgid "Overflow Style"
 msgstr "Стиль переполнения"
 
-#: src/prefs/appBehaviorGroup.js:102
+#: src/prefs/appBehaviorGroup.js:108
 msgid "Taskbar Flyout"
 msgstr "Всплывающее меню панели задач"
 
-#: src/prefs/appBehaviorGroup.js:103
+#: src/prefs/appBehaviorGroup.js:109
 msgid "Application List"
 msgstr "Список приложений"
 
-#: src/prefs/appBehaviorGroup.js:117
-msgid "Hide App Labels"
-msgstr "Скрыть подписи приложений"
-
-#: src/prefs/appBehaviorGroup.js:118
-msgid "Show only icons on separate window buttons"
-msgstr "Показывать только значки на раздельных кнопках окон"
-
-#: src/prefs/appBehaviorGroup.js:143 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:144 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Изолировать рабочие столы"
 
-#: src/prefs/appBehaviorGroup.js:144
+#: src/prefs/appBehaviorGroup.js:145
 msgid "Show running applications from the current workspace only"
 msgstr "Показывать запущенные приложения только с текущего рабочего стола"
 
-#: src/prefs/appBehaviorGroup.js:150 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:149 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Изолировать мониторы"
 
-#: src/prefs/appBehaviorGroup.js:151
+#: src/prefs/appBehaviorGroup.js:150
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Показывать запущенные приложения только на панели задач соответствующего "
 "монитора"
 
-#: src/prefs/appBehaviorGroup.js:157
+#: src/prefs/appBehaviorGroup.js:153
+#, fuzzy
+msgid "Application Isolation"
+msgstr "Значки приложений"
+
+#: src/prefs/appBehaviorGroup.js:154
+#, fuzzy
+msgid "Choose which applications appear on the taskbar"
+msgstr "Выберите, какие приложения отображаются и как они группируются."
+
+#: src/prefs/appBehaviorGroup.js:162
 msgid "Nautilus Folder Shortcuts"
 msgstr "Ярлыки папок Nautilus"
 
-#: src/prefs/appBehaviorGroup.js:158
+#: src/prefs/appBehaviorGroup.js:163
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Показывать основные папки в меню «Файлы» на панели задач"
 
-#: src/prefs/appBehaviorGroup.js:164
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Middle Click Closes Applications"
 msgstr "Средняя кнопка закрывает приложения"
 
-#: src/prefs/appBehaviorGroup.js:165
+#: src/prefs/appBehaviorGroup.js:170
 msgid "Close all application windows instead of opening a new window"
 msgstr "Закрывать все окна приложения вместо открытия нового окна"
 

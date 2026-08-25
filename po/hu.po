@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:38+0100\n"
+"POT-Creation-Date: 2026-08-25 21:47+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -228,41 +228,49 @@ msgstr ""
 msgid "Choose which separators appear"
 msgstr "Válassza ki, mely opcionális panelelemek jelenjenek meg."
 
-#: src/prefs/appBehaviorGroup.js:55
+#: src/prefs/appBehaviorGroup.js:54
 msgid "Always"
 msgstr "Mindig"
 
-#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
+#: src/prefs/appBehaviorGroup.js:55 src/prefs/appBehaviorGroup.js:59
 msgid "Only When Full"
 msgstr "Csak ha megtelt"
 
-#: src/prefs/appBehaviorGroup.js:57 src/prefs/appBehaviorGroup.js:61
+#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
 msgid "Never"
 msgstr "Soha"
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:67
 msgid "Combine Application Buttons"
 msgstr "Alkalmazásgombok összevonása"
 
-#: src/prefs/appBehaviorGroup.js:69
+#: src/prefs/appBehaviorGroup.js:68
 msgid "Choose when windows share one taskbar button"
 msgstr "Válassza ki, mikor osztozzanak az ablakok egyetlen tálcagombon"
 
+#: src/prefs/appBehaviorGroup.js:82
+msgid "Hide App Labels"
+msgstr "Alkalmazáscímkék elrejtése"
+
 #: src/prefs/appBehaviorGroup.js:83
+msgid "Show only icons on separate window buttons"
+msgstr "Csak ikonok megjelenítése a különálló ablakgombokon"
+
+#: src/prefs/appBehaviorGroup.js:89
 msgid "Application Overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: src/prefs/appBehaviorGroup.js:84
+#: src/prefs/appBehaviorGroup.js:90
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "Színek kiválasztása a futó alkalmazások jelzőihez"
 
-#: src/prefs/appBehaviorGroup.js:88
+#: src/prefs/appBehaviorGroup.js:94
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: src/prefs/appBehaviorGroup.js:90
+#: src/prefs/appBehaviorGroup.js:96
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -270,55 +278,59 @@ msgstr ""
 "A nem illeszkedő alkalmazásgombok megjelenítése túlfolyó ablakban a tálca "
 "görgetése helyett"
 
-#: src/prefs/appBehaviorGroup.js:100
+#: src/prefs/appBehaviorGroup.js:106
 msgid "Overflow Style"
 msgstr "Túlfolyás stílusa"
 
-#: src/prefs/appBehaviorGroup.js:102
+#: src/prefs/appBehaviorGroup.js:108
 msgid "Taskbar Flyout"
 msgstr "Tálca felbukkanó menü"
 
-#: src/prefs/appBehaviorGroup.js:103
+#: src/prefs/appBehaviorGroup.js:109
 msgid "Application List"
 msgstr "Alkalmazáslista"
 
-#: src/prefs/appBehaviorGroup.js:117
-msgid "Hide App Labels"
-msgstr "Alkalmazáscímkék elrejtése"
-
-#: src/prefs/appBehaviorGroup.js:118
-msgid "Show only icons on separate window buttons"
-msgstr "Csak ikonok megjelenítése a különálló ablakgombokon"
-
-#: src/prefs/appBehaviorGroup.js:143 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:144 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Munkaterületek elkülönítése"
 
-#: src/prefs/appBehaviorGroup.js:144
+#: src/prefs/appBehaviorGroup.js:145
 msgid "Show running applications from the current workspace only"
 msgstr "Futó alkalmazások megjelenítése csak az aktuális munkaterületről"
 
-#: src/prefs/appBehaviorGroup.js:150 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:149 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Monitorok elkülönítése"
 
-#: src/prefs/appBehaviorGroup.js:151
+#: src/prefs/appBehaviorGroup.js:150
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Futó alkalmazások megjelenítése csak a saját monitoruk tálcáján"
 
-#: src/prefs/appBehaviorGroup.js:157
+#: src/prefs/appBehaviorGroup.js:153
+#, fuzzy
+msgid "Application Isolation"
+msgstr "Alkalmazásikonok"
+
+#: src/prefs/appBehaviorGroup.js:154
+#, fuzzy
+msgid "Choose which applications appear on the taskbar"
+msgstr ""
+"Válassza ki, mely alkalmazások jelenjenek meg, és hogyan legyenek "
+"csoportosítva."
+
+#: src/prefs/appBehaviorGroup.js:162
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus mappa gyorslinkek"
 
-#: src/prefs/appBehaviorGroup.js:158
+#: src/prefs/appBehaviorGroup.js:163
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Gyakori mappák megjelenítése a Fájlok tálcamenüben"
 
-#: src/prefs/appBehaviorGroup.js:164
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Middle Click Closes Applications"
 msgstr "Középső kattintás bezárja az alkalmazásokat"
 
-#: src/prefs/appBehaviorGroup.js:165
+#: src/prefs/appBehaviorGroup.js:170
 msgid "Close all application windows instead of opening a new window"
 msgstr "Az összes alkalmazásablak bezárása új ablak nyitása helyett"
 

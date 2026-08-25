@@ -49,7 +49,6 @@ export function addAppBehaviorGroup({
     });
     separatorsRow.add_row(pinnedAppSeparatorSwitch);
     separatorsRow.add_row(locationSeparatorSwitch);
-    advancedAppBehaviorGroup.add(separatorsRow);
 
     const combineAppButtonsChoices = [
         {value: 'always', label: _('Always')},
@@ -78,6 +77,13 @@ export function addAppBehaviorGroup({
         },
         connectSettings
     );
+    const hideAppLabelsSwitch = createSwitchRow(settings, {
+        key: 'hide-app-labels',
+        title: _('Hide App Labels'),
+        subtitle: _('Show only icons on separate window buttons'),
+    });
+    advancedAppBehaviorGroup.add(hideAppLabelsSwitch);
+    advancedAppBehaviorGroup.add(separatorsRow);
 
     const applicationOverflowRow = new Adw.ExpanderRow({
         title: _('Application Overflow'),
@@ -113,12 +119,6 @@ export function addAppBehaviorGroup({
     });
     advancedAppBehaviorGroup.add(applicationOverflowRow);
 
-    const hideAppLabelsSwitch = createSwitchRow(settings, {
-        key: 'hide-app-labels',
-        title: _('Hide App Labels'),
-        subtitle: _('Show only icons on separate window buttons'),
-    });
-    advancedAppBehaviorGroup.add(hideAppLabelsSwitch);
     const syncLabelSensitivity = () => {
         hideAppLabelsSwitch.sensitive =
             !settings.get_boolean(
@@ -144,14 +144,18 @@ export function addAppBehaviorGroup({
         title: _('Isolate Workspaces'),
         subtitle: _('Show running applications from the current workspace only'),
     });
-    advancedAppBehaviorGroup.add(isolateWorkspacesSwitch);
-
     const isolateMonitorsSwitch = createSwitchRow(settings, {
         key: 'isolate-monitors',
         title: _('Isolate Monitors'),
         subtitle: _('Show running applications only on the taskbar for their monitor'),
     });
-    advancedAppBehaviorGroup.add(isolateMonitorsSwitch);
+    const applicationIsolationRow = new Adw.ExpanderRow({
+        title: _('Application Isolation'),
+        subtitle: _('Choose which applications appear on the taskbar'),
+    });
+    applicationIsolationRow.add_row(isolateWorkspacesSwitch);
+    applicationIsolationRow.add_row(isolateMonitorsSwitch);
+    advancedAppBehaviorGroup.add(applicationIsolationRow);
 
     const nautilusPlacesSwitch = createSwitchRow(settings, {
         key: 'nautilus-places-enabled',

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 21:38+0100\n"
+"POT-Creation-Date: 2026-08-25 21:47+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -221,95 +221,105 @@ msgstr ""
 msgid "Choose which separators appear"
 msgstr "选择展示哪些可选的面板项目。"
 
-#: src/prefs/appBehaviorGroup.js:55
+#: src/prefs/appBehaviorGroup.js:54
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
+#: src/prefs/appBehaviorGroup.js:55 src/prefs/appBehaviorGroup.js:59
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/appBehaviorGroup.js:57 src/prefs/appBehaviorGroup.js:61
+#: src/prefs/appBehaviorGroup.js:56 src/prefs/appBehaviorGroup.js:60
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/appBehaviorGroup.js:68
+#: src/prefs/appBehaviorGroup.js:67
 msgid "Combine Application Buttons"
 msgstr "合并应用按钮"
 
-#: src/prefs/appBehaviorGroup.js:69
+#: src/prefs/appBehaviorGroup.js:68
 msgid "Choose when windows share one taskbar button"
 msgstr "选择窗口在何时共用一个任务栏按钮"
 
+#: src/prefs/appBehaviorGroup.js:82
+msgid "Hide App Labels"
+msgstr "隐藏应用标签"
+
 #: src/prefs/appBehaviorGroup.js:83
+msgid "Show only icons on separate window buttons"
+msgstr "在独立的任务栏按钮上仅展示图标"
+
+#: src/prefs/appBehaviorGroup.js:89
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/appBehaviorGroup.js:84
+#: src/prefs/appBehaviorGroup.js:90
 #, fuzzy
 msgid "Choose how overflowing applications are handled"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/appBehaviorGroup.js:88
+#: src/prefs/appBehaviorGroup.js:94
 #, fuzzy
 msgid "Enable Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/appBehaviorGroup.js:90
+#: src/prefs/appBehaviorGroup.js:96
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/appBehaviorGroup.js:100
+#: src/prefs/appBehaviorGroup.js:106
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/appBehaviorGroup.js:102
+#: src/prefs/appBehaviorGroup.js:108
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/appBehaviorGroup.js:103
+#: src/prefs/appBehaviorGroup.js:109
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/appBehaviorGroup.js:117
-msgid "Hide App Labels"
-msgstr "隐藏应用标签"
-
-#: src/prefs/appBehaviorGroup.js:118
-msgid "Show only icons on separate window buttons"
-msgstr "在独立的任务栏按钮上仅展示图标"
-
-#: src/prefs/appBehaviorGroup.js:143 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/appBehaviorGroup.js:144 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/appBehaviorGroup.js:144
+#: src/prefs/appBehaviorGroup.js:145
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:150 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/appBehaviorGroup.js:149 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/appBehaviorGroup.js:151
+#: src/prefs/appBehaviorGroup.js:150
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
-#: src/prefs/appBehaviorGroup.js:157
+#: src/prefs/appBehaviorGroup.js:153
+#, fuzzy
+msgid "Application Isolation"
+msgstr "应用程序图标"
+
+#: src/prefs/appBehaviorGroup.js:154
+#, fuzzy
+msgid "Choose which applications appear on the taskbar"
+msgstr "选择显示哪些应用以及如何将它们分组。"
+
+#: src/prefs/appBehaviorGroup.js:162
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus（文件管理器）文件夹快捷方式"
 
-#: src/prefs/appBehaviorGroup.js:158
+#: src/prefs/appBehaviorGroup.js:163
 msgid "Show common folders in the Files taskbar menu"
 msgstr "在“文件”任务栏菜单中展示常用文件夹"
 
-#: src/prefs/appBehaviorGroup.js:164
+#: src/prefs/appBehaviorGroup.js:169
 msgid "Middle Click Closes Applications"
 msgstr "中键点击以关闭应用"
 
-#: src/prefs/appBehaviorGroup.js:165
+#: src/prefs/appBehaviorGroup.js:170
 msgid "Close all application windows instead of opening a new window"
 msgstr "关闭应用的所有窗口，而不是打开新窗口"
 
