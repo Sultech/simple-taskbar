@@ -247,7 +247,7 @@ export class SecondaryPanelDockController {
             strutGeometry.width,
             strutGeometry.height
         );
-        Main.layoutManager._updateRegions();
+        Main.layoutManager._queueUpdateRegions();
     }
 
     updateTaskbarWidth() {
