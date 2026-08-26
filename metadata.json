@@ -1,7 +1,7 @@
 {
   "uuid": "simple-taskbar@sultech",
   "name": "Simple Taskbar",
-  "description": "Turns GNOME Shell's native panel into a configurable taskbar with pinned and running applications, live window previews, Grid Alt-Tab, auto-hide, workspace and monitor filtering, multi-monitor panels, an application volume mixer, and an optional Eleven-style Start Menu. Choose Taskbar, Default GNOME Panel, or Windows XP Theme mode, then customise the panel's position, size, spacing, transparency, colours, item order and behaviour. Some global search results may request that provider-supplied text be copied to the clipboard when activated.",
+  "description": "A configurable taskbar and Dock for GNOME Shell.\n\n- Pinned and running applications with live previews, grouping, overflow and drag-and-drop ordering.\n- Custom panel and Dock placement, appearance, auto-hide, window dodge, workspace scrolling and multi-monitor support.\n- Configurable panel items, locations, Trash, drives and common-folder shortcuts.\n- Grid Alt-Tab, an application volume mixer and Super+number application shortcuts.\n- Optional Eleven-style Start Menu with search, categories, pinned apps and system shortcuts.\n- Taskbar, Dock, Default GNOME Panel and Windows XP Theme modes.\n- Export and import profiles for panel, Dock and Start Menu settings.\n\nSome global search results may request that provider-supplied text be copied to the clipboard when activated.",
   "donations": {
     "buymeacoffee": "sultech"
   },
