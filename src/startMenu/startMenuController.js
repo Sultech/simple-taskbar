@@ -1377,7 +1377,8 @@ export class StartMenuController {
     }
 
     _pinnedContentHeight(forWidth) {
-        if (!this._pinnedView)
+        if (!this._pinnedView ||
+            this._pinnedView.get_parent() !== this._content)
             return 0;
 
         this._resolveThemeNodes(this._pinnedView);
