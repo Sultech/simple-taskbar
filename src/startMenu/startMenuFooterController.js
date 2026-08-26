@@ -3,7 +3,6 @@
 
 import AccountsService from 'gi://AccountsService';
 import Clutter from 'gi://Clutter';
-import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
@@ -12,6 +11,7 @@ import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {TaskbarLocationsController} from '../taskbar/taskbarLocationsController.js';
+import {openSettingsPanel} from '../shared/settingsPanel.js';
 
 export class StartMenuFooterController {
     constructor({
@@ -89,7 +89,7 @@ export class StartMenuFooterController {
         this._enableNavigation(userButton);
         userButton.connect('clicked', () => {
             this._closeMenu();
-            this._openSettingsPanel('system', ['users']);
+            openSettingsPanel('system', ['users']);
         });
         this._syncButtonClasses(userButton);
 
@@ -176,32 +176,6 @@ export class StartMenuFooterController {
 
     _openSettings() {
         this._appSystem.lookup_app('org.gnome.Settings.desktop').activate();
-    }
-
-    _openSettingsPanel(panel, args = []) {
-        const actionParameter = new GLib.Variant('(sav)', [
-            panel,
-            args.map(argument => new GLib.Variant('s', argument)),
-        ]);
-        const parameters = new GLib.Variant('(sava{sv})', [
-            'launch-panel',
-            [actionParameter],
-            {},
-        ]);
-        Gio.DBus.session.call(
-            'org.gnome.Settings',
-            '/org/gnome/Settings',
-            'org.freedesktop.Application',
-            'ActivateAction',
-            parameters,
-            null,
-            Gio.DBusCallFlags.NONE,
-            -1,
-            null,
-            (connection, result) => {
-                connection.call_finish(result);
-            }
-        );
     }
 
     _createIconButton(iconSource, accessibleName, callback, params = {}) {

@@ -148,6 +148,7 @@ export class SecondaryPanelController {
                 this._taskbarController.closeApp(app, timestamp),
             getInterestingWindows: app =>
                 this._windowController.getInterestingWindows(app),
+            toggleDesktop: () => this._windowController.toggleDesktop(),
             manageKeybindings: false,
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);

@@ -16,6 +16,7 @@ import {
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
+import {StartButtonContextMenuController} from './startButtonContextMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {
@@ -42,6 +43,7 @@ export class StartButtonController {
         manageKeybindings = true,
         toggleFromShortcut = null,
         switcherKeybindings = null,
+        toggleDesktop,
         onMenuOpenStateChanged,
     }) {
         this._extensionDir = extensionDir;
@@ -51,11 +53,13 @@ export class StartButtonController {
         this._closeApp = closeApp;
         this._getInterestingWindows = getInterestingWindows;
         this._toggleFromShortcut = toggleFromShortcut;
+        this._toggleDesktop = toggleDesktop;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
         this._signalHolder = new TransientSignalHolder();
         this._startOpenedOverview = false;
         this._startMenuController = null;
         this._contextMenu = null;
+        this._contextMenuController = null;
         this._menuManager = null;
 
         this._windowsGIcon = new Gio.FileIcon({
@@ -206,6 +210,8 @@ export class StartButtonController {
 
         this._keybindings?.destroy();
         this._keybindings = null;
+        this._contextMenuController.destroy();
+        this._contextMenuController = null;
         this._contextMenu.destroy();
         this._contextMenu = null;
         this._startMenuController?.destroy();
@@ -229,6 +235,7 @@ export class StartButtonController {
         this._closeApp = null;
         this._getInterestingWindows = null;
         this._toggleFromShortcut = null;
+        this._toggleDesktop = null;
         this._onMenuOpenStateChanged = null;
         this._settings = null;
         this._startOpenedOverview = false;
@@ -315,6 +322,13 @@ export class StartButtonController {
             0.5,
             panelArrowSide(this._settings)
         );
+        this._contextMenuController = new StartButtonContextMenuController({
+            settings: this._settings,
+            menu,
+            closeMenus: () => this.closeMenus(),
+            openFileManager: () => this._openFileManager(),
+            toggleDesktop: () => this._toggleDesktop(),
+        });
         menu.addAction(_('Start Menu Settings'), () => {
             this._settings.set_string('target-prefs-page', 'start-menu');
             this._openPreferences();
@@ -507,6 +521,7 @@ export class StartButtonController {
         this._previews.hideTooltip(false);
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
+        this._contextMenuController.sync();
         openPopupMenu(this._contextMenu);
     }
 

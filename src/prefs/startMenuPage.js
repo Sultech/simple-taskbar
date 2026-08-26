@@ -18,6 +18,7 @@ import {
     addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 export function addStartMenuPage({
     window,
@@ -481,6 +482,116 @@ export function addStartMenuPage({
         updateStartMenuLocationControls
     );
     updateStartMenuLocationControls();
+
+    const hasDesktopApp = appId =>
+        Boolean(Gio.DesktopAppInfo.new(appId));
+    const hasSettingsApp = hasDesktopApp('org.gnome.Settings.desktop');
+    const hasTerminalApp = hasDesktopApp('org.gnome.Console.desktop') ||
+        hasDesktopApp('org.gnome.Terminal.desktop');
+    const hasTaskManagerApp = taskManagerCandidates(
+        settings.get_string('task-manager-app')
+    ).some(appId => appId && hasDesktopApp(appId));
+    const hasFileManager = Boolean(
+        Gio.app_info_get_default_for_type('inode/directory', false)
+    );
+    const contextMenuOptions = [
+        {
+            key: 'start-menu-context-installed-apps',
+            title: _('Installed Apps'),
+            subtitle: _('Open installed applications in Settings'),
+            available: hasSettingsApp,
+        },
+        {
+            key: 'start-menu-context-event-viewer',
+            title: _('Event Viewer'),
+            subtitle: _('Open system logs'),
+            available: hasDesktopApp('org.gnome.Logs.desktop'),
+        },
+        {
+            key: 'start-menu-context-system',
+            title: _('System'),
+            subtitle: _('Open system information in Settings'),
+            available: hasSettingsApp,
+        },
+        {
+            key: 'start-menu-context-network',
+            title: _('Network Connections'),
+            subtitle: _('Open network settings'),
+            available: hasSettingsApp,
+        },
+        {
+            key: 'start-menu-context-disk-management',
+            title: _('Disk Management'),
+            subtitle: _('Open GNOME Disks'),
+            available: hasDesktopApp('org.gnome.DiskUtility.desktop'),
+        },
+        {
+            key: 'start-menu-context-terminal',
+            title: _('Terminal'),
+            subtitle: _('Open the available terminal application'),
+            available: hasTerminalApp,
+        },
+        {
+            key: 'start-menu-context-task-manager',
+            title: _('Task Manager'),
+            subtitle: _('Open the configured task manager'),
+            available: hasTaskManagerApp,
+        },
+        {
+            key: 'start-menu-context-file-manager',
+            title: _('File Explorer'),
+            subtitle: _('Open the default file manager'),
+            available: hasFileManager,
+        },
+        {
+            key: 'start-menu-context-run',
+            title: _('Run'),
+            subtitle: _('Open the Run Command dialog'),
+            available: true,
+        },
+        {
+            key: 'start-menu-context-show-desktop',
+            title: _('Desktop'),
+            subtitle: _('Show the desktop'),
+            available: true,
+        },
+    ];
+    const startMenuContextMenuRow = new Adw.ExpanderRow({
+        title: _('Right-click Menu Shortcuts'),
+        subtitle: _('Choose which shortcuts appear when right-clicking the Start button'),
+    });
+    const startMenuContextMenuSwitch = createSwitchRow(settings, {
+        key: 'start-menu-context-menu-enabled',
+        title: _('Show Context Menu Shortcuts'),
+        subtitle: _('Add selected system shortcuts to the Start button context menu'),
+    });
+    startMenuContextMenuRow.add_row(startMenuContextMenuSwitch);
+    const startMenuContextMenuRows = [];
+    for (const option of contextMenuOptions) {
+        if (!option.available)
+            continue;
+
+        const row = createSwitchRow(settings, option);
+        startMenuContextMenuRow.add_row(row);
+        startMenuContextMenuRows.push(row);
+    }
+    startMenuGroup.add(startMenuContextMenuRow);
+    const updateStartMenuContextMenuControls = () => {
+        startMenuContextMenuRow.sensitive = windowsStartMenuSwitch.active;
+        const sensitive = windowsStartMenuSwitch.active &&
+            startMenuContextMenuSwitch.active;
+        for (const row of startMenuContextMenuRows)
+            row.sensitive = sensitive;
+    };
+    windowsStartMenuSwitch.connect(
+        'notify::active',
+        updateStartMenuContextMenuControls
+    );
+    startMenuContextMenuSwitch.connect(
+        'notify::active',
+        updateStartMenuContextMenuControls
+    );
+    updateStartMenuContextMenuControls();
 
     startMenuAppearanceRow.add_row(followPanelThemeSwitch);
     settings.bind(

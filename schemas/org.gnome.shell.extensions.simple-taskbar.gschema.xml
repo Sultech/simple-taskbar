@@ -695,6 +695,50 @@
       <default>false</default>
       <summary>Show the Videos folder in the Start Menu</summary>
     </key>
+    <key name="start-menu-context-menu-enabled" type="b">
+      <default>true</default>
+      <summary>Show selected shortcuts in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-installed-apps" type="b">
+      <default>true</default>
+      <summary>Show the Installed Apps shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-event-viewer" type="b">
+      <default>true</default>
+      <summary>Show the Event Viewer shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-system" type="b">
+      <default>true</default>
+      <summary>Show the System shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-network" type="b">
+      <default>true</default>
+      <summary>Show the Network Connections shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-disk-management" type="b">
+      <default>true</default>
+      <summary>Show the Disk Management shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-terminal" type="b">
+      <default>true</default>
+      <summary>Show the Terminal shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-task-manager" type="b">
+      <default>true</default>
+      <summary>Show the Task Manager shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-file-manager" type="b">
+      <default>true</default>
+      <summary>Show the File Explorer shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-run" type="b">
+      <default>true</default>
+      <summary>Show the Run shortcut in the Start button context menu</summary>
+    </key>
+    <key name="start-menu-context-show-desktop" type="b">
+      <default>true</default>
+      <summary>Show the Desktop shortcut in the Start button context menu</summary>
+    </key>
     <key name="start-menu-show-profile-picture" type="b">
       <default>false</default>
       <summary>Show the account profile picture in the Start Menu</summary>

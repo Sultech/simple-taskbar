@@ -159,6 +159,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._taskbarController.closeApp(app, timestamp),
             getInterestingWindows: app =>
                 this._windowController.getInterestingWindows(app),
+            toggleDesktop: () => this._windowController.toggleDesktop(),
             toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
             switcherKeybindings: this._switcherKeybindings,
             onMenuOpenStateChanged: open => {
