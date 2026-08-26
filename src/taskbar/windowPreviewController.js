@@ -482,6 +482,9 @@ export class WindowPreviewController {
     }
 
     _peekWindow(window) {
+        if (!this._previewItem)
+            return;
+
         if (this._peekedWindow === window)
             return;
 
