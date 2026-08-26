@@ -15,9 +15,10 @@
 </p>
 
 Simple Taskbar turns GNOME Shell's native panel into a configurable desktop
-taskbar. It keeps GNOME's Activities, clock, calendar, Quick Settings and
-extension indicators while adding pinned applications, running applications,
-window previews and an optional Eleven-style Start Menu.
+taskbar and can provide a separate application Dock. It keeps GNOME's
+Activities, clock, calendar, Quick Settings and extension indicators while
+adding pinned applications, running applications, window previews and an
+optional Eleven-style Start Menu.
 
 > Simple Taskbar supports GNOME Shell 48, 49 and 50 only.
 
@@ -42,6 +43,7 @@ window previews and an optional Eleven-style Start Menu.
 | Style | What it does |
 | --- | --- |
 | **Taskbar** | Shows GNOME favourites and running applications on the panel, starts on the desktop, and hides GNOME's original Overview Dash. |
+| **Dock** | Shows application buttons in a separate Dock while leaving the main panel available for GNOME and extension items. |
 | **Default GNOME Panel** | Hides taskbar applications and Start buttons, restores GNOME's original Dash in Overview, and keeps the panel customisation options. |
 | **Windows XP Theme** | Applies a Windows XP-inspired appearance with a 30px panel, 16px application icons, fixed spacing, XP artwork and a classic taskbar layout. |
 
@@ -49,8 +51,8 @@ Default GNOME Panel mode normally keeps GNOME's usual startup Overview. Dash to
 Dock and Ubuntu Dock can change that startup behaviour when they are active.
 
 Windows XP Theme applies its own dimensions and layout. Controls that conflict
-with the XP appearance are disabled while it is active, and standard Taskbar
-defaults are applied when it is turned off.
+with the XP appearance are disabled while it is active, and the previously
+active panel mode and its settings are restored when it is turned off.
 Default GNOME Panel mode keeps panel position, height, themes, item order and
 multi-monitor settings available, while taskbar application and Start button
 controls remain disabled until Taskbar mode is restored.
@@ -62,9 +64,10 @@ controls remain disabled until Taskbar mode is restored.
 Simple Taskbar uses GNOME's application favourites and their order. Changes to
 favourites are reflected in the taskbar and GNOME's original Dash.
 
-The panel can be placed at the top or bottom of the screen. Applications and
-the Start button can be aligned left or centre independently, or the Start
-button can follow the application alignment.
+The panel can be placed at the top, bottom, left or right edge of the screen.
+On horizontal panels, Applications and the Start button can be aligned left or
+centre independently; on vertical panels they can be aligned top or middle.
+The Start button can also follow the application alignment.
 
 ### Application Icons
 
@@ -95,7 +98,8 @@ Overview, including windows on other workspaces.
 - Adjustable transparency.
 - Separate borders for light and dark themes.
 - Optional translucent and blurred styling through Blur My Shell on the
-  primary panel. Secondary panels use Simple Taskbar's own background.
+  primary and secondary panels. Secondary panels use Simple Taskbar's own
+  background when Blur My Shell is not styling them.
 
 <p align="center">
   <img src="docs/images/settings-taskbar.png" alt="Taskbar settings showing general, application icon and panel appearance options" width="100%">
@@ -120,7 +124,8 @@ Overview, including windows on other workspaces.
 
 ### Panel Items
 
-The panel has separate **Left**, **Center** and **Right** item lists. These can
+The panel has three item groups: **Left**, **Center** and **Right** on horizontal
+panels, or **Top**, **Middle** and **Bottom** on vertical panels. These can
 contain:
 
 - Start and Activities buttons.
@@ -134,14 +139,20 @@ contain:
 Activities and Show Desktop can be shown or hidden, and Folder Menu is
 optional. The Folder Menu opens files from a selected directory with their
 default applications. Show Desktop is a narrow button that minimizes or
-restores all windows and is limited to the Left and Right lists.
+restores all windows and is limited to the outer item groups.
 
-Each list also has a fixed box row for other GNOME Shell and extension items.
+Each group also has a fixed box row for other GNOME Shell and extension items.
 Managed items can be placed before or after that row. Move Up and Move Down
-keep each item within its current list.
+keep each item within its current group.
 
 **Reset All Settings** restores the extension defaults without changing the
 taskbar favourites or Start Menu pins, including their order.
+
+### Locations
+
+The taskbar and Dock can show selected common folders, Trash, and connected
+drives and volumes. Drive options can limit entries to mounted drives or
+include network volumes.
 
 <p align="center">
   <img src="docs/images/settings-taskbar-behaviour.png" alt="Taskbar settings showing taskbar behaviour and panel item options" width="100%">
@@ -154,6 +165,17 @@ taskbar favourites or Start Menu pins, including their order.
 </p>
 
 <p align="center"><sub>Taskbar settings: panel item placement and reset.</sub></p>
+
+## Dock
+
+Dock mode moves application buttons out of the main panel into a separate
+Dock. It can be placed at the top, bottom, left or right edge, limited to a
+percentage of the monitor length or extended fully to the monitor edge, and
+shown on every connected monitor.
+
+The Dock has independent appearance and behaviour controls, including themes,
+transparency, borders, Blur My Shell, auto-hide, window dodge, edge reveal and
+workspace scrolling. Its item order contains the Start Menu and Applications.
 
 ## Window Switching
 
@@ -186,8 +208,9 @@ The Eleven-style Start Menu is enabled by default. It provides:
 - Delayed tooltips with application names and descriptions.
 - Keyboard navigation with Tab and the arrow keys.
 - Application menus with open-window, launcher-action, App Details, Quit,
-  Pin to Start and Pin to Taskbar actions.
-- Dragging an application from All Apps onto the taskbar to pin it.
+  Pin to Start, Pin to Taskbar or Dock, and desktop shortcut actions when a
+  supported desktop-icons extension is active.
+- Dragging an application from All Apps onto the taskbar or Dock to pin it.
 - Dark, light or GNOME Shell-following themes.
 - Optional monitor-centred positioning.
 
@@ -198,12 +221,18 @@ Applications button. It can follow application alignment, use a custom
 padding value and use a bundled or personal icon. Both Start buttons can be
 hidden. Right-click the Eleven-style button to open its settings.
 
+Its context menu can also provide Installed Apps, Event Viewer, System,
+Network Connections, Disk Management, Terminal, Task Manager, File Explorer,
+Run and Desktop shortcuts.
+
 ### Keyboard shortcuts
 
 - **Super** opens the Start Menu by default and moves Overview to **Super+Tab**.
 - Turn off the Super shortcut to use **Super+Tab** for the Start Menu instead.
 - When both built-in shortcuts are off, a custom shortcut can open the Start
   Menu.
+- **Super+1** through **Super+9** activate the corresponding GNOME favourite;
+  activating the focused application again minimises its windows.
 
 Shortcuts can be disabled, and the extension checks for conflicts between its
 own shortcuts. It does not change GNOME's saved shortcuts. When the Start Menu
@@ -221,8 +250,8 @@ clipboard when a result is activated.
 
 ## Advanced
 
-Less commonly used taskbar, file manager and Start Menu options are on the
-Advanced page.
+Less commonly used taskbar, Dock, file manager and Start Menu options are
+available in the settings.
 
 ### Appearance
 
@@ -249,13 +278,13 @@ Applications can be displayed in three grouping modes:
 | **Never** | One button for every window. |
 
 When buttons are not combined, window labels can be hidden so that the buttons
-show icons only. If the taskbar is full, application overflow can show extra
-buttons in a popup. When overflow is disabled, a taskbar wider than the
-available panel area can be scrolled horizontally. The overflow popup has a
-taskbar-style flyout and an application-list style. Dragging works across the
-visible and overflow buttons, and the overflow popup remains open while
-dragging. With overflow disabled, scrolling over an overfull taskbar moves
-through its buttons instead of switching workspaces.
+show icons only. If the taskbar or Dock is full, application overflow can show
+extra buttons in a popup. When overflow is disabled, an application bar wider
+than the available panel area can be scrolled along its length. The overflow
+popup has a taskbar-style flyout and an application-list style. Dragging works
+across the visible and overflow buttons, and the overflow popup remains open
+while dragging. With overflow disabled, scrolling over an overfull application
+bar moves through its buttons instead of switching workspaces.
 
 Other taskbar options include:
 
@@ -281,7 +310,7 @@ Other taskbar options include:
 ### Start Menu Options
 
 - Recommended applications can be based on frequently used apps, excluding
-  apps already pinned to the Start Menu or taskbar.
+  apps already pinned to the Start Menu or taskbar or Dock.
 - Open the Start Menu directly in All Apps.
 - Show an account profile picture.
 - Use an optional footer power menu with available Suspend, Restart, Power Off,
@@ -302,6 +331,11 @@ Other taskbar options include:
 
 <p align="center"><sub>Advanced settings: behaviour, file manager and Start Menu options.</sub></p>
 
+## Profiles
+
+The About page can export and import profiles containing panel settings, Dock
+settings and Start Menu pins.
+
 ## Installation
 
 Install Simple Taskbar from
@@ -321,8 +355,8 @@ extension immediately.
 
 ## Open the settings
 
-Use Extension Manager, right-click empty taskbar space and choose **Taskbar
-Settings**, or run:
+Use Extension Manager, right-click empty taskbar, panel or Dock space and
+choose the corresponding settings item, or run:
 
     gnome-extensions prefs simple-taskbar@sultech
 
@@ -333,12 +367,12 @@ not declared until they have been tested.
 
 Dash to Panel is disabled while Simple Taskbar is active because both
 extensions restructure GNOME's main panel. Dash to Dock and Ubuntu Dock are
-disabled only while Taskbar mode is active; both remain available in Default
-GNOME Panel mode.
+disabled whenever Taskbar, Dock or Windows XP Theme mode is active; both remain
+available in Default GNOME Panel mode.
 
-Blur My Shell panel styling is supported on the primary panel. When a supported
-desktop-icons extension is active, Start Menu application menus can also add or
-remove desktop shortcuts.
+Blur My Shell panel styling is supported on the primary and secondary panels.
+When a supported desktop-icons extension is active, Start Menu application
+menus can also add or remove desktop shortcuts.
 
 ## Development
 
