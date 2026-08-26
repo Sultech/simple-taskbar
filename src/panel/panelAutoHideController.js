@@ -67,6 +67,8 @@ export class PanelAutoHideController {
         this._dodgeEnabled = false;
         this._dodgeActive = false;
         this._dodgePointerReveal = false;
+        this._positionTarget = null;
+        this._positionTargetProperty = null;
     }
 
     enable() {
@@ -160,6 +162,8 @@ export class PanelAutoHideController {
         this._isBlockedCallback = null;
         this._trackedActorData = null;
         this._strutActorData = null;
+        this._positionTarget = null;
+        this._positionTargetProperty = null;
     }
 
     setMenuOpen(open) {
@@ -246,16 +250,22 @@ export class PanelAutoHideController {
             this._dodgeActive)
             ? geometry.hiddenOffset
             : geometry.visibleOffset;
+        const property = geometry.vertical ? 'x' : 'y';
+        if (actor.get_transition('x') || actor.get_transition('y')) {
+            if (this._positionTarget !== offset ||
+                this._positionTargetProperty !== property)
+                this._moveTo(offset, true);
+            return;
+        }
         if (animate) {
             this._moveTo(offset, true);
             return;
         }
         actor.remove_transition('x');
         actor.remove_transition('y');
-        if (geometry.vertical)
-            actor.x = offset;
-        else
-            actor.y = offset;
+        actor[property] = offset;
+        this._positionTarget = offset;
+        this._positionTargetProperty = property;
         Main.layoutManager._queueUpdateRegions();
     }
 
@@ -675,6 +685,8 @@ export class PanelAutoHideController {
 
         const vertical = panelIsVertical(this._settings);
         const property = vertical ? 'x' : 'y';
+        this._positionTarget = offset;
+        this._positionTargetProperty = property;
         actor.remove_transition('x');
         actor.remove_transition('y');
         if (!animate) {
