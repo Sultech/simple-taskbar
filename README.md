@@ -137,7 +137,7 @@ with custom indicator colours.
   background when Blur My Shell is not styling them.
 
 <p align="center">
-  <img src="docs/images/settings-taskbar-main.png" alt="Taskbar settings main page showing taskbar mode and application icon options" width="100%">
+  <img src="docs/images/settings-taskbar-wide.png" alt="Taskbar settings main page showing taskbar mode and application icon options">
 </p>
 
 <p align="center"><sub>Taskbar settings main page.</sub></p>
@@ -224,7 +224,7 @@ Applications, and its Locations section can show folders, Trash, drives and
 volumes.
 
 <p align="center">
-  <img src="docs/images/settings-dock-main.png" alt="Dock settings main page showing Dock mode, application icon and Dock options" width="100%">
+  <img src="docs/images/settings-dock-wide.png" alt="Dock settings main page showing Dock mode, application icon and Dock options">
 </p>
 
 <p align="center"><sub>Dock settings main page.</sub></p>
@@ -244,7 +244,7 @@ when Alt is released. Configure:
 - The current monitor or always the primary monitor for the popup.
 
 <p align="center">
-  <img src="docs/images/settings-grid-alt-tab-main.png" alt="Grid Alt-Tab settings main page" width="100%">
+  <img src="docs/images/settings-grid-alt-tab-wide.png" alt="Grid Alt-Tab settings main page">
 </p>
 
 <p align="center"><sub>Window Switching settings main page.</sub></p>
@@ -312,7 +312,7 @@ Global search results can request that provider-supplied text be copied to the
 clipboard when a result is activated.
 
 <p align="center">
-  <img src="docs/images/settings-start-menu-main.png" alt="Start Menu settings main page showing Start button and menu options" width="100%">
+  <img src="docs/images/settings-start-menu-wide.png" alt="Start Menu settings main page showing Start button and menu options">
 </p>
 
 <p align="center"><sub>Start Menu settings main page.</sub></p>
