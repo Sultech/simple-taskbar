@@ -167,7 +167,10 @@ export class SecondaryPanelController {
         this._applicationOverflowController = overflowController;
         this._taskbarBin = overflowController.actor;
 
-        this._panelBox = new St.Widget({name: 'panelBox'});
+        this._panelBox = new St.Widget({
+            name: 'panelBox',
+            clip_to_allocation: true,
+        });
         this.actor = new SecondaryPanelActor();
         this._panelBox.add_child(this.actor);
         this._leftBox = this.actor.leftBox;
