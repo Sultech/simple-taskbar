@@ -83,7 +83,6 @@ export class FolderMenuController {
         );
         this._stSettings.connectObject(
             'notify::color-scheme', () => this._syncTheme(),
-            'notify::shell-color-scheme', () => this._syncTheme(),
             this._signalHolder
         );
         this._syncTheme();

@@ -445,8 +445,6 @@ export class SecondaryPanelDockController {
         stSettings.connectObject(
             'notify::color-scheme',
             () => this.syncTheme(),
-            'notify::shell-color-scheme',
-            () => this.syncTheme(),
             this._signalHolder
         );
         this._settings.connectObject(

@@ -125,7 +125,6 @@ export class PanelThemeController {
         );
         this._stSettings.connectObject(
             'notify::color-scheme', () => this._applySystemTheme(),
-            'notify::shell-color-scheme', () => this._applySystemTheme(),
             this._signalHolder
         );
     }
