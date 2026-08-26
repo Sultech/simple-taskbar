@@ -76,7 +76,7 @@ function addHero(page, extensionPath) {
         margin_bottom: 4,
     }));
     heroBox.append(new Gtk.Label({
-        label: _('GNOME Shell 48–51 • GPL-2.0-or-later'),
+        label: _('GNOME Shell 48–50 • GPL-2.0-or-later'),
         css_classes: ['dim-label', 'caption'],
     }));
 

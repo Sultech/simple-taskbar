@@ -310,6 +310,11 @@ export class StartButtonController {
                 this._settings.set_string('target-prefs-page', 'dock');
                 this._openPreferences();
             });
+        } else {
+            menu.addAction(_('Taskbar Settings'), () => {
+                this._settings.set_string('target-prefs-page', 'taskbar');
+                this._openPreferences();
+            });
         }
         menu.actor.hide();
         Main.uiGroup.add_child(menu.actor);

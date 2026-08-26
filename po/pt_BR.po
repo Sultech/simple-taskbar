@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-26 00:49+0100\n"
+"POT-Creation-Date: 2026-08-26 01:00+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -66,7 +66,8 @@ msgstr ""
 "Uma barra de tarefas, um painel e um Dock configuráveis para o GNOME Shell"
 
 #: src/prefs/aboutPage.js:79
-msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
+#, fuzzy
+msgid "GNOME Shell 48–50 • GPL-2.0-or-later"
 msgstr "GNOME Shell 48–51 • GPL-2.0-or-later"
 
 #: src/prefs/aboutPage.js:90
@@ -481,12 +482,12 @@ msgstr ""
 "desativada"
 
 #: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:285
-#: src/prefs/startMenuPage.js:420
+#: src/prefs/startMenuPage.js:423
 msgid "Light"
 msgstr "Claro"
 
 #: src/prefs/dockAppearanceGroup.js:66 src/prefs/panelAppearancePage.js:286
-#: src/prefs/startMenuPage.js:419
+#: src/prefs/startMenuPage.js:422
 msgid "Dark"
 msgstr "Escuro"
 
@@ -507,7 +508,7 @@ msgid "Make the Dock background transparent"
 msgstr "Tornar o plano de fundo do Dock transparente"
 
 #: src/prefs/dockAppearanceGroup.js:93 src/prefs/panelAppearancePage.js:305
-#: src/prefs/startMenuPage.js:446
+#: src/prefs/startMenuPage.js:449
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr "Desative o desfoque de painel do Blur My Shell para usar esta opção"
 
@@ -1027,7 +1028,7 @@ msgstr "Mostra uma pasta selecionada na barra de tarefas"
 msgid "Folder Menu Location"
 msgstr "Localização do menu de pastas"
 
-#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:158
+#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:161
 msgid "Choose…"
 msgstr "Escolher…"
 
@@ -1068,8 +1069,8 @@ msgstr "Caixa central"
 msgid "Right Box"
 msgstr "Caixa direita"
 
-#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:30
-#: src/prefs/startMenuPage.js:75
+#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:31
+#: src/prefs/startMenuPage.js:78
 msgid "Start Button"
 msgstr "Botão Iniciar"
 
@@ -1086,7 +1087,7 @@ msgid "GNOME workspace overview button"
 msgstr "Botão de panorâmica de espaços de trabalho do GNOME"
 
 #: src/prefs/panelItemsPage.js:194 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:656
+#: src/startMenu/startButtonController.js:661
 msgid "Applications"
 msgstr "Aplicativos"
 
@@ -1229,12 +1230,12 @@ msgstr "Tema do Windows XP"
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Aplica um estilo de barra de tarefas inspirado no Windows XP"
 
-#: src/prefs/panelModeGroup.js:205
+#: src/prefs/panelModeGroup.js:206
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Ícones de aplicativos não estão disponíveis no modo Painel padrão do GNOME."
 
-#: src/prefs/panelModeGroup.js:206
+#: src/prefs/panelModeGroup.js:207
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 "Altere o tamanho, o espaçamento e o posicionamento dos ícones da barra de "
@@ -1366,218 +1367,218 @@ msgstr "Mover para cima"
 msgid "Move Down"
 msgstr "Mover para baixo"
 
-#: src/prefs/startMenuPage.js:31
+#: src/prefs/startMenuPage.js:32
 msgid "Configure the Start button position and appearance."
 msgstr "Configure a posição e a aparência do botão Iniciar."
 
-#: src/prefs/startMenuPage.js:36 src/prefs/startMenuPage.js:211
+#: src/prefs/startMenuPage.js:37 src/prefs/startMenuPage.js:214
 msgid "Eleven-style Start Menu"
 msgstr "Menu Iniciar estilo Eleven"
 
-#: src/prefs/startMenuPage.js:37
+#: src/prefs/startMenuPage.js:38
 msgid "Configure the optional Eleven-style application menu."
 msgstr "Configure o menu de aplicativos opcional estilo Eleven."
 
-#: src/prefs/startMenuPage.js:42
+#: src/prefs/startMenuPage.js:43
 msgid "Keyboard Shortcuts"
 msgstr "Atalhos de teclado"
 
-#: src/prefs/startMenuPage.js:43
+#: src/prefs/startMenuPage.js:44
 msgid "Configure Start menu shortcuts."
 msgstr "Configure os atalhos do menu Iniciar."
 
-#: src/prefs/startMenuPage.js:65
+#: src/prefs/startMenuPage.js:68
 msgid "Start Button Position"
 msgstr "Posição do botão Iniciar"
 
-#: src/prefs/startMenuPage.js:66
+#: src/prefs/startMenuPage.js:69
 msgid "Configure the Start button alignment"
 msgstr "Configure o alinhamento do botão Iniciar"
 
-#: src/prefs/startMenuPage.js:76
+#: src/prefs/startMenuPage.js:79
 msgid "Choose the Start button alignment"
 msgstr "Escolha o alinhamento do botão Iniciar"
 
-#: src/prefs/startMenuPage.js:87
+#: src/prefs/startMenuPage.js:90
 msgid "Follow Application Alignment"
 msgstr "Seguir o alinhamento dos aplicativos"
 
-#: src/prefs/startMenuPage.js:88
+#: src/prefs/startMenuPage.js:91
 msgid "Move the Start button with the application buttons"
 msgstr "Move o botão Iniciar junto com os botões de aplicativos"
 
-#: src/prefs/startMenuPage.js:130
+#: src/prefs/startMenuPage.js:133
 msgid "Start Button Appearance"
 msgstr "Aparência do botão Iniciar"
 
-#: src/prefs/startMenuPage.js:131
+#: src/prefs/startMenuPage.js:134
 msgid "Configure padding, icons, and button visibility"
 msgstr "Configure o espaçamento, os ícones e a visibilidade do botão"
 
-#: src/prefs/startMenuPage.js:140
+#: src/prefs/startMenuPage.js:143
 msgid "Start Button Padding"
 msgstr "Espaçamento do botão Iniciar"
 
-#: src/prefs/startMenuPage.js:141
+#: src/prefs/startMenuPage.js:144
 msgid "Horizontal space around the Start icon in pixels"
 msgstr "Espaço horizontal ao redor do ícone Iniciar, em pixels"
 
-#: src/prefs/startMenuPage.js:150
+#: src/prefs/startMenuPage.js:153
 msgid "Custom Start Button Icon"
 msgstr "Ícone personalizado do botão Iniciar"
 
-#: src/prefs/startMenuPage.js:154
+#: src/prefs/startMenuPage.js:157
 msgid "Use the built-in icon"
 msgstr "Usar o ícone integrado"
 
-#: src/prefs/startMenuPage.js:174
+#: src/prefs/startMenuPage.js:177
 msgid "Using the built-in icon"
 msgstr "Usando o ícone integrado"
 
-#: src/prefs/startMenuPage.js:212
+#: src/prefs/startMenuPage.js:215
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "Substitui a grade de aplicativos do GNOME por um menu estilo Eleven"
 
-#: src/prefs/startMenuPage.js:224
+#: src/prefs/startMenuPage.js:227
 msgid "Start Menu Options"
 msgstr "Opções do Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:225
+#: src/prefs/startMenuPage.js:228
 msgid "Configure Start Menu content and behavior"
 msgstr "Configure o conteúdo e o comportamento do Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:230
+#: src/prefs/startMenuPage.js:233
 msgid "Show Profile Picture"
 msgstr "Mostrar foto de perfil"
 
-#: src/prefs/startMenuPage.js:231
+#: src/prefs/startMenuPage.js:234
 msgid "Use your account picture in the Start Menu"
 msgstr "Usa a foto da sua conta no Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:252
+#: src/prefs/startMenuPage.js:255
 msgid "Power Options in Start Menu"
 msgstr "Opções de energia no Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:254
+#: src/prefs/startMenuPage.js:257
 msgid "Show power actions here instead of in Quick Settings"
 msgstr "Mostra ações de energia aqui em vez de nas Configurações rápidas"
 
-#: src/prefs/startMenuPage.js:276
+#: src/prefs/startMenuPage.js:279
 msgid "Open All Apps by Default"
 msgstr "Abrir todos os aplicativos por padrão"
 
-#: src/prefs/startMenuPage.js:277
+#: src/prefs/startMenuPage.js:280
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr "Pula os Fixados e abre diretamente em aplicativos e categorias"
 
-#: src/prefs/startMenuPage.js:298
+#: src/prefs/startMenuPage.js:301
 msgid "Show Recommended Apps"
 msgstr "Mostrar aplicativos recomendados"
 
-#: src/prefs/startMenuPage.js:299
+#: src/prefs/startMenuPage.js:302
 msgid "Display frequently used applications below pinned apps"
 msgstr "Exibe aplicativos usados com frequência abaixo dos aplicativos fixados"
 
-#: src/prefs/startMenuPage.js:311
+#: src/prefs/startMenuPage.js:314
 msgid "Hide Pinned App Titles"
 msgstr "Ocultar títulos dos aplicativos fixados"
 
-#: src/prefs/startMenuPage.js:313
+#: src/prefs/startMenuPage.js:316
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
 "Oculta os nomes abaixo dos ícones fixados e os mostra em uma dica ao passar "
 "o mouse"
 
-#: src/prefs/startMenuPage.js:347
+#: src/prefs/startMenuPage.js:350
 msgid "Organize All Apps into Categories"
 msgstr "Organizar todos os aplicativos em categorias"
 
-#: src/prefs/startMenuPage.js:348
+#: src/prefs/startMenuPage.js:351
 msgid "Browse applications by category in the Start menu"
 msgstr "Navegue pelos aplicativos por categoria no menu Iniciar"
 
-#: src/prefs/startMenuPage.js:370
+#: src/prefs/startMenuPage.js:373
 msgid "Show Original GNOME Button"
 msgstr "Mostrar botão original do GNOME"
 
-#: src/prefs/startMenuPage.js:371
+#: src/prefs/startMenuPage.js:374
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr ""
 "Mostra o botão Aplicativos quando o Menu Iniciar estilo Eleven está "
 "desativado"
 
-#: src/prefs/startMenuPage.js:392
+#: src/prefs/startMenuPage.js:395
 msgid "Follow Panel Theme"
 msgstr "Seguir o tema do painel"
 
-#: src/prefs/startMenuPage.js:393
+#: src/prefs/startMenuPage.js:396
 msgid "Use the panel’s effective light or dark appearance"
 msgstr "Usa a aparência clara ou escura efetiva do painel"
 
-#: src/prefs/startMenuPage.js:399
+#: src/prefs/startMenuPage.js:402
 msgid "Start Menu Appearance"
 msgstr "Aparência do Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:400
+#: src/prefs/startMenuPage.js:403
 msgid "Configure the Start Menu theme and transparency"
 msgstr "Configure o tema e a transparência do Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:416
+#: src/prefs/startMenuPage.js:419
 msgid "Start Menu Theme"
 msgstr "Tema do Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:417
+#: src/prefs/startMenuPage.js:420
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "Use uma aparência personalizada ou siga o tema do GNOME Shell"
 
-#: src/prefs/startMenuPage.js:421
+#: src/prefs/startMenuPage.js:424
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: src/prefs/startMenuPage.js:443
+#: src/prefs/startMenuPage.js:446
 msgid "Use the panel’s configured transparency level"
 msgstr "Usa o nível de transparência configurado no painel"
 
-#: src/prefs/startMenuPage.js:449
+#: src/prefs/startMenuPage.js:452
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr "Desative o desfoque de pop-up do Blur My Shell para usar esta opção"
 
-#: src/prefs/startMenuPage.js:452
+#: src/prefs/startMenuPage.js:455
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr ""
 "Desative o desfoque de painel e de pop-up do Blur My Shell para usar esta "
 "opção"
 
-#: src/prefs/startMenuPage.js:455
+#: src/prefs/startMenuPage.js:458
 msgid "Follow Panel Transparency"
 msgstr "Seguir a transparência do painel"
 
-#: src/prefs/startMenuPage.js:504
+#: src/prefs/startMenuPage.js:507
 msgid "Center Start Menu on Monitor"
 msgstr "Centralizar o Menu Iniciar no monitor"
 
-#: src/prefs/startMenuPage.js:506
+#: src/prefs/startMenuPage.js:509
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 "Posiciona o menu no verdadeiro centro horizontal, em vez de sobre o botão "
 "Iniciar"
 
-#: src/prefs/startMenuPage.js:547
+#: src/prefs/startMenuPage.js:550
 msgid "Super Opens Start Menu"
 msgstr "Super abre o Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:548
+#: src/prefs/startMenuPage.js:551
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr "Usa Super para o Menu Iniciar e move a Panorâmica para Super+Tab"
 
-#: src/prefs/startMenuPage.js:560
+#: src/prefs/startMenuPage.js:563
 msgid "Super+Tab Opens Start Menu"
 msgstr "Super+Tab abre o Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:562
+#: src/prefs/startMenuPage.js:565
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
@@ -1585,39 +1586,39 @@ msgstr ""
 "Usa o atalho de alternância de aplicativos do GNOME para o Menu Iniciar "
 "estilo Eleven enquanto ele estiver ativado"
 
-#: src/prefs/startMenuPage.js:599
+#: src/prefs/startMenuPage.js:602
 msgid "Super+E Opens File Manager"
 msgstr "Super+E abre o gerenciador de arquivos"
 
-#: src/prefs/startMenuPage.js:601
+#: src/prefs/startMenuPage.js:604
 msgid "Open your home folder with the system’s default file manager"
 msgstr "Abre sua pasta pessoal com o gerenciador de arquivos padrão do sistema"
 
-#: src/prefs/startMenuPage.js:616
+#: src/prefs/startMenuPage.js:619
 msgid "Not set"
 msgstr "Não definido"
 
-#: src/prefs/startMenuPage.js:621
+#: src/prefs/startMenuPage.js:624
 msgid "Set custom shortcut"
 msgstr "Definir atalho personalizado"
 
-#: src/prefs/startMenuPage.js:626
+#: src/prefs/startMenuPage.js:629
 msgid "Clear custom shortcut"
 msgstr "Limpar atalho personalizado"
 
-#: src/prefs/startMenuPage.js:630
+#: src/prefs/startMenuPage.js:633
 msgid "Custom Start Menu Shortcut"
 msgstr "Atalho personalizado do Menu Iniciar"
 
-#: src/prefs/startMenuPage.js:649
+#: src/prefs/startMenuPage.js:652
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr "Desative o atalho Super para usar um atalho personalizado"
 
-#: src/prefs/startMenuPage.js:652
+#: src/prefs/startMenuPage.js:655
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr "Desative o Super+Tab para usar um atalho personalizado"
 
-#: src/prefs/startMenuPage.js:655
+#: src/prefs/startMenuPage.js:658
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 "Escolha qualquer atalho de teclado não usado; nenhum é atribuído por padrão"
@@ -2063,7 +2064,12 @@ msgstr "Configurações do Menu Iniciar"
 msgid "Dock Settings"
 msgstr "Configurações do Dock"
 
-#: src/startMenu/startButtonController.js:656
+#: src/startMenu/startButtonController.js:314
+#: src/panel/panelInteractionController.js:137
+msgid "Taskbar Settings"
+msgstr "Configurações da barra de tarefas"
+
+#: src/startMenu/startButtonController.js:661
 msgid "Start"
 msgstr "Iniciar"
 
@@ -2112,10 +2118,6 @@ msgstr "Gerenciador de tarefas"
 #: src/panel/panelInteractionController.js:105
 msgid "Lock the Taskbar"
 msgstr "Bloquear a barra de tarefas"
-
-#: src/panel/panelInteractionController.js:137
-msgid "Taskbar Settings"
-msgstr "Configurações da barra de tarefas"
 
 #: src/taskbar/windowPreviewController.js:771
 #: src/windowSwitching/gridAltTabPopup.js:221

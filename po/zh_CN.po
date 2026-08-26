@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-26 00:49+0100\n"
+"POT-Creation-Date: 2026-08-26 01:00+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -65,7 +65,8 @@ msgid "A configurable taskbar, panel and dock for GNOME Shell"
 msgstr "可配置的 GNOME Shell 任务栏、面板和 Dock"
 
 #: src/prefs/aboutPage.js:79
-msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
+#, fuzzy
+msgid "GNOME Shell 48–50 • GPL-2.0-or-later"
 msgstr "GNOME Shell 48–51 • GPL-2.0-or-later"
 
 #: src/prefs/aboutPage.js:90
@@ -454,12 +455,12 @@ msgid "Choose the colour scheme when system matching is off"
 msgstr "当系统捕获关闭时选择配色方案"
 
 #: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:285
-#: src/prefs/startMenuPage.js:420
+#: src/prefs/startMenuPage.js:423
 msgid "Light"
 msgstr "浅色"
 
 #: src/prefs/dockAppearanceGroup.js:66 src/prefs/panelAppearancePage.js:286
-#: src/prefs/startMenuPage.js:419
+#: src/prefs/startMenuPage.js:422
 msgid "Dark"
 msgstr "深色"
 
@@ -478,7 +479,7 @@ msgid "Make the Dock background transparent"
 msgstr "使 Dock 背景透明"
 
 #: src/prefs/dockAppearanceGroup.js:93 src/prefs/panelAppearancePage.js:305
-#: src/prefs/startMenuPage.js:446
+#: src/prefs/startMenuPage.js:449
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的面板模糊"
 
@@ -980,7 +981,7 @@ msgstr "在任务栏上展示所选的文件夹"
 msgid "Folder Menu Location"
 msgstr "文件夹菜单位置"
 
-#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:158
+#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:161
 msgid "Choose…"
 msgstr "选择…"
 
@@ -1021,8 +1022,8 @@ msgstr "中间框"
 msgid "Right Box"
 msgstr "右侧框"
 
-#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:30
-#: src/prefs/startMenuPage.js:75
+#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:31
+#: src/prefs/startMenuPage.js:78
 msgid "Start Button"
 msgstr "开始按钮"
 
@@ -1039,7 +1040,7 @@ msgid "GNOME workspace overview button"
 msgstr "GNOME 工作区概览按钮"
 
 #: src/prefs/panelItemsPage.js:194 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:656
+#: src/startMenu/startButtonController.js:661
 msgid "Applications"
 msgstr "应用程序"
 
@@ -1179,11 +1180,11 @@ msgstr "Windows XP 主题"
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "使用 Windows XP 风格的任务栏样式"
 
-#: src/prefs/panelModeGroup.js:205
+#: src/prefs/panelModeGroup.js:206
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "在默认 GNOME 面板模式下，应用程序图标不可用。"
 
-#: src/prefs/panelModeGroup.js:206
+#: src/prefs/panelModeGroup.js:207
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "更改任务栏图标的尺寸、间距与位置。"
 
@@ -1308,248 +1309,248 @@ msgstr "上移"
 msgid "Move Down"
 msgstr "下移"
 
-#: src/prefs/startMenuPage.js:31
+#: src/prefs/startMenuPage.js:32
 msgid "Configure the Start button position and appearance."
 msgstr "配置开始按钮的位置和外观。"
 
-#: src/prefs/startMenuPage.js:36 src/prefs/startMenuPage.js:211
+#: src/prefs/startMenuPage.js:37 src/prefs/startMenuPage.js:214
 msgid "Eleven-style Start Menu"
 msgstr "11 风格开始菜单"
 
-#: src/prefs/startMenuPage.js:37
+#: src/prefs/startMenuPage.js:38
 msgid "Configure the optional Eleven-style application menu."
 msgstr "配置可选的 11 风格应用程序菜单。"
 
-#: src/prefs/startMenuPage.js:42
+#: src/prefs/startMenuPage.js:43
 msgid "Keyboard Shortcuts"
 msgstr "键盘快捷键"
 
-#: src/prefs/startMenuPage.js:43
+#: src/prefs/startMenuPage.js:44
 msgid "Configure Start menu shortcuts."
 msgstr "配置开始菜单快捷键。"
 
-#: src/prefs/startMenuPage.js:65
+#: src/prefs/startMenuPage.js:68
 msgid "Start Button Position"
 msgstr "开始按钮位置"
 
-#: src/prefs/startMenuPage.js:66
+#: src/prefs/startMenuPage.js:69
 msgid "Configure the Start button alignment"
 msgstr "配置开始按钮对齐方式"
 
-#: src/prefs/startMenuPage.js:76
+#: src/prefs/startMenuPage.js:79
 msgid "Choose the Start button alignment"
 msgstr "选择开始按钮对齐方式"
 
-#: src/prefs/startMenuPage.js:87
+#: src/prefs/startMenuPage.js:90
 msgid "Follow Application Alignment"
 msgstr "跟随应用对齐方式"
 
-#: src/prefs/startMenuPage.js:88
+#: src/prefs/startMenuPage.js:91
 msgid "Move the Start button with the application buttons"
 msgstr "使开始按钮与应用按钮一同移动"
 
-#: src/prefs/startMenuPage.js:130
+#: src/prefs/startMenuPage.js:133
 msgid "Start Button Appearance"
 msgstr "开始按钮外观"
 
-#: src/prefs/startMenuPage.js:131
+#: src/prefs/startMenuPage.js:134
 msgid "Configure padding, icons, and button visibility"
 msgstr "配置内边距、图标和按钮可见性"
 
-#: src/prefs/startMenuPage.js:140
+#: src/prefs/startMenuPage.js:143
 msgid "Start Button Padding"
 msgstr "开始按钮内边距"
 
-#: src/prefs/startMenuPage.js:141
+#: src/prefs/startMenuPage.js:144
 msgid "Horizontal space around the Start icon in pixels"
 msgstr "开始图标周围的水平间距（像素）"
 
-#: src/prefs/startMenuPage.js:150
+#: src/prefs/startMenuPage.js:153
 msgid "Custom Start Button Icon"
 msgstr "自定义开始按钮图标"
 
-#: src/prefs/startMenuPage.js:154
+#: src/prefs/startMenuPage.js:157
 msgid "Use the built-in icon"
 msgstr "使用内置图标"
 
-#: src/prefs/startMenuPage.js:174
+#: src/prefs/startMenuPage.js:177
 msgid "Using the built-in icon"
 msgstr "正在使用内置图标"
 
-#: src/prefs/startMenuPage.js:212
+#: src/prefs/startMenuPage.js:215
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "用 11 风格菜单替换 GNOME 应用网格"
 
-#: src/prefs/startMenuPage.js:224
+#: src/prefs/startMenuPage.js:227
 msgid "Start Menu Options"
 msgstr "开始菜单选项"
 
-#: src/prefs/startMenuPage.js:225
+#: src/prefs/startMenuPage.js:228
 msgid "Configure Start Menu content and behavior"
 msgstr "配置开始菜单内容和行为"
 
-#: src/prefs/startMenuPage.js:230
+#: src/prefs/startMenuPage.js:233
 msgid "Show Profile Picture"
 msgstr "展示头像"
 
-#: src/prefs/startMenuPage.js:231
+#: src/prefs/startMenuPage.js:234
 msgid "Use your account picture in the Start Menu"
 msgstr "在开始菜单中使用您的账户头像"
 
-#: src/prefs/startMenuPage.js:252
+#: src/prefs/startMenuPage.js:255
 msgid "Power Options in Start Menu"
 msgstr "开始菜单中的电源选项"
 
-#: src/prefs/startMenuPage.js:254
+#: src/prefs/startMenuPage.js:257
 msgid "Show power actions here instead of in Quick Settings"
 msgstr "在此处而不是在快速设置中展示电源操作"
 
-#: src/prefs/startMenuPage.js:276
+#: src/prefs/startMenuPage.js:279
 msgid "Open All Apps by Default"
 msgstr "默认打开“所有应用”"
 
-#: src/prefs/startMenuPage.js:277
+#: src/prefs/startMenuPage.js:280
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr "跳过“已固定”，直接打开应用与类别"
 
-#: src/prefs/startMenuPage.js:298
+#: src/prefs/startMenuPage.js:301
 msgid "Show Recommended Apps"
 msgstr "展示推荐应用"
 
-#: src/prefs/startMenuPage.js:299
+#: src/prefs/startMenuPage.js:302
 msgid "Display frequently used applications below pinned apps"
 msgstr "在已固定的应用下方展示常用的应用"
 
-#: src/prefs/startMenuPage.js:311
+#: src/prefs/startMenuPage.js:314
 msgid "Hide Pinned App Titles"
 msgstr "隐藏已固定的应用的标题"
 
-#: src/prefs/startMenuPage.js:313
+#: src/prefs/startMenuPage.js:316
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr "隐藏已固定的图标下方的名称，并在悬停时通过提示框显示"
 
-#: src/prefs/startMenuPage.js:347
+#: src/prefs/startMenuPage.js:350
 msgid "Organize All Apps into Categories"
 msgstr "按类别整理所有应用"
 
-#: src/prefs/startMenuPage.js:348
+#: src/prefs/startMenuPage.js:351
 msgid "Browse applications by category in the Start menu"
 msgstr "在开始菜单中按类别浏览应用"
 
-#: src/prefs/startMenuPage.js:370
+#: src/prefs/startMenuPage.js:373
 msgid "Show Original GNOME Button"
 msgstr "展示原始 GNOME 按钮"
 
-#: src/prefs/startMenuPage.js:371
+#: src/prefs/startMenuPage.js:374
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr "当 11 风格开始菜单被禁用时，展示“应用程序”按钮"
 
-#: src/prefs/startMenuPage.js:392
+#: src/prefs/startMenuPage.js:395
 msgid "Follow Panel Theme"
 msgstr "跟随面板的主题"
 
-#: src/prefs/startMenuPage.js:393
+#: src/prefs/startMenuPage.js:396
 msgid "Use the panel’s effective light or dark appearance"
 msgstr "使用面板实际的浅色或深色外观"
 
-#: src/prefs/startMenuPage.js:399
+#: src/prefs/startMenuPage.js:402
 msgid "Start Menu Appearance"
 msgstr "开始菜单外观"
 
-#: src/prefs/startMenuPage.js:400
+#: src/prefs/startMenuPage.js:403
 msgid "Configure the Start Menu theme and transparency"
 msgstr "配置开始菜单主题和透明度"
 
-#: src/prefs/startMenuPage.js:416
+#: src/prefs/startMenuPage.js:419
 msgid "Start Menu Theme"
 msgstr "开始菜单主题"
 
-#: src/prefs/startMenuPage.js:417
+#: src/prefs/startMenuPage.js:420
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "使用自定义外观或跟随 GNOME Shell 主题"
 
-#: src/prefs/startMenuPage.js:421
+#: src/prefs/startMenuPage.js:424
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: src/prefs/startMenuPage.js:443
+#: src/prefs/startMenuPage.js:446
 msgid "Use the panel’s configured transparency level"
 msgstr "使用面板配置的透明度级别"
 
-#: src/prefs/startMenuPage.js:449
+#: src/prefs/startMenuPage.js:452
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的弹出窗口模糊"
 
-#: src/prefs/startMenuPage.js:452
+#: src/prefs/startMenuPage.js:455
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的面板与弹出窗口模糊"
 
-#: src/prefs/startMenuPage.js:455
+#: src/prefs/startMenuPage.js:458
 msgid "Follow Panel Transparency"
 msgstr "跟随面板的透明度"
 
-#: src/prefs/startMenuPage.js:504
+#: src/prefs/startMenuPage.js:507
 msgid "Center Start Menu on Monitor"
 msgstr "在显示器上居中展示开始菜单"
 
-#: src/prefs/startMenuPage.js:506
+#: src/prefs/startMenuPage.js:509
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr "将菜单放置在真正的水平中心，而不是开始按钮上方"
 
-#: src/prefs/startMenuPage.js:547
+#: src/prefs/startMenuPage.js:550
 msgid "Super Opens Start Menu"
 msgstr "按 Super 键以打开开始菜单"
 
-#: src/prefs/startMenuPage.js:548
+#: src/prefs/startMenuPage.js:551
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr "使用 Super 键打开开始菜单，并将概览移到 Super+Tab"
 
-#: src/prefs/startMenuPage.js:560
+#: src/prefs/startMenuPage.js:563
 msgid "Super+Tab Opens Start Menu"
 msgstr "按 Super+Tab 以打开开始菜单"
 
-#: src/prefs/startMenuPage.js:562
+#: src/prefs/startMenuPage.js:565
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
 msgstr "启用后，使用 GNOME 的应用切换快捷键（Super）打开 11 风格开始菜单"
 
-#: src/prefs/startMenuPage.js:599
+#: src/prefs/startMenuPage.js:602
 msgid "Super+E Opens File Manager"
 msgstr "按 Super+E 以打开文件管理器"
 
-#: src/prefs/startMenuPage.js:601
+#: src/prefs/startMenuPage.js:604
 msgid "Open your home folder with the system’s default file manager"
 msgstr "使用系统默认的文件管理器打开主文件夹"
 
-#: src/prefs/startMenuPage.js:616
+#: src/prefs/startMenuPage.js:619
 msgid "Not set"
 msgstr "未设置"
 
-#: src/prefs/startMenuPage.js:621
+#: src/prefs/startMenuPage.js:624
 msgid "Set custom shortcut"
 msgstr "设置自定义快捷键"
 
-#: src/prefs/startMenuPage.js:626
+#: src/prefs/startMenuPage.js:629
 msgid "Clear custom shortcut"
 msgstr "清除自定义快捷键"
 
-#: src/prefs/startMenuPage.js:630
+#: src/prefs/startMenuPage.js:633
 msgid "Custom Start Menu Shortcut"
 msgstr "自定义开始菜单快捷键"
 
-#: src/prefs/startMenuPage.js:649
+#: src/prefs/startMenuPage.js:652
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr "要使用自定义快捷键，请关闭 Super 快捷键"
 
-#: src/prefs/startMenuPage.js:652
+#: src/prefs/startMenuPage.js:655
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr "要使用自定义快捷键，请关闭 Super+Tab"
 
-#: src/prefs/startMenuPage.js:655
+#: src/prefs/startMenuPage.js:658
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr "选择任意的一个未使用的键盘快捷键，默认不分配任何快捷键"
 
@@ -1974,7 +1975,12 @@ msgstr "开始菜单设置"
 msgid "Dock Settings"
 msgstr "Dock 设置"
 
-#: src/startMenu/startButtonController.js:656
+#: src/startMenu/startButtonController.js:314
+#: src/panel/panelInteractionController.js:137
+msgid "Taskbar Settings"
+msgstr "任务栏设置"
+
+#: src/startMenu/startButtonController.js:661
 msgid "Start"
 msgstr "开始"
 
@@ -2023,10 +2029,6 @@ msgstr "任务管理器"
 #: src/panel/panelInteractionController.js:105
 msgid "Lock the Taskbar"
 msgstr "锁定任务栏"
-
-#: src/panel/panelInteractionController.js:137
-msgid "Taskbar Settings"
-msgstr "任务栏设置"
 
 #: src/taskbar/windowPreviewController.js:771
 #: src/windowSwitching/gridAltTabPopup.js:221
