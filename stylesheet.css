@@ -436,6 +436,11 @@
     border-right-width: 6px;
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical .simple-taskbar-start {
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
 #panel.simple-taskbar-panel .simple-taskbar-show-desktop {
     border-top-width: 0;
     border-bottom-width: 0;
