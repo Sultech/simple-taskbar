@@ -24,10 +24,10 @@ window previews and an optional Eleven-style Start Menu.
 ## Preview
 
 <p align="center">
-  <img src="docs/images/taskbars4.png" alt="Simple Taskbar showing light, dark and Windows XP taskbar styles" width="100%">
+  <img src="docs/images/taskbar-dock2.png" alt="Simple Taskbar showing dark and light panel, Windows XP taskbar and dock styles" width="100%">
 </p>
 
-<p align="center"><sub>Taskbar mode and Windows XP Theme.</sub></p>
+<p align="center"><sub>Taskbar, Windows XP Theme and Dock modes.</sub></p>
 
 <br>
 
