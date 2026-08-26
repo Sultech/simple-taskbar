@@ -33,6 +33,9 @@ import {StartButtonController} from './src/startMenu/startButtonController.js';
 import {
     SwitcherKeybindingRouter,
 } from './src/windowSwitching/switcherKeybindingRouter.js';
+import {
+    ApplicationKeybindingRouter,
+} from './src/windowSwitching/applicationKeybindingRouter.js';
 import {TaskbarController} from './src/taskbar/taskbarController.js';
 import {createTaskbarViewport} from './src/taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from './src/integration/volumeMixerController.js';
@@ -114,6 +117,10 @@ export default class SimpleTaskbarExtension extends Extension {
             getTaskbarController: () => this._taskbarController,
             getPreviewController: () => this._windowPreviews,
         });
+        this._applicationKeybindings = new ApplicationKeybindingRouter(
+            app => this._windowController.activateApp(app)
+        );
+        this._applicationKeybindings.enable();
         this._taskbarController = new TaskbarController({
             settings: this._settings,
             appSystem: this._appSystem,
@@ -307,6 +314,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._startButtonController = null;
         this._switcherKeybindings.destroy();
         this._switcherKeybindings = null;
+        this._applicationKeybindings.destroy();
+        this._applicationKeybindings = null;
         this._windowController.destroy();
         this._taskbarController.destroy();
         this._windowPreviews.destroy();
