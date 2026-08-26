@@ -102,10 +102,10 @@ Overview, including windows on other workspaces.
   background when Blur My Shell is not styling them.
 
 <p align="center">
-  <img src="docs/images/settings-taskbar.png" alt="Taskbar settings showing general, application icon and panel appearance options" width="100%">
+  <img src="docs/images/settings-taskbar-main.png" alt="Taskbar settings main page showing taskbar mode and application icon options" width="100%">
 </p>
 
-<p align="center"><sub>Taskbar settings: general, application icons and panel appearance.</sub></p>
+<p align="center"><sub>Taskbar settings main page.</sub></p>
 
 ### Taskbar Behaviour
 
@@ -154,18 +154,6 @@ The taskbar and Dock can show selected common folders, Trash, and connected
 drives and volumes. Drive options can limit entries to mounted drives or
 include network volumes.
 
-<p align="center">
-  <img src="docs/images/settings-taskbar-behaviour.png" alt="Taskbar settings showing taskbar behaviour and panel item options" width="100%">
-</p>
-
-<p align="center"><sub>Taskbar settings: behaviour and optional panel items.</sub></p>
-
-<p align="center">
-  <img src="docs/images/settings-panel-items.png" alt="Taskbar settings showing panel item placement and reset options" width="100%">
-</p>
-
-<p align="center"><sub>Taskbar settings: panel item placement and reset.</sub></p>
-
 ## Dock
 
 Dock mode moves application buttons out of the main panel into a separate
@@ -176,6 +164,12 @@ shown on every connected monitor.
 The Dock has independent appearance and behaviour controls, including themes,
 transparency, borders, Blur My Shell, auto-hide, window dodge, edge reveal and
 workspace scrolling. Its item order contains the Start Menu and Applications.
+
+<p align="center">
+  <img src="docs/images/settings-dock-main.png" alt="Dock settings main page showing Dock mode, application icon and Dock options" width="100%">
+</p>
+
+<p align="center"><sub>Dock settings main page.</sub></p>
 
 ## Window Switching
 
@@ -192,10 +186,10 @@ when Alt is released. Configure:
 - The current monitor or always the primary monitor for the popup.
 
 <p align="center">
-  <img src="docs/images/settings-window-switching.png" alt="Window Switching settings showing Grid Alt-Tab options" width="100%">
+  <img src="docs/images/settings-grid-alt-tab-main.png" alt="Grid Alt-Tab settings main page" width="100%">
 </p>
 
-<p align="center"><sub>Window Switching settings: Grid Alt-Tab options.</sub></p>
+<p align="center"><sub>Window Switching settings main page.</sub></p>
 
 ## Start Menu
 
@@ -243,10 +237,10 @@ Global search results can request that provider-supplied text be copied to the
 clipboard when a result is activated.
 
 <p align="center">
-  <img src="docs/images/settings-start-menu.png" alt="Start Menu settings showing Start button, menu and keyboard shortcut options" width="100%">
+  <img src="docs/images/settings-start-menu-main.png" alt="Start Menu settings main page showing Start button and menu options" width="100%">
 </p>
 
-<p align="center"><sub>Start Menu settings: Start button, menu and keyboard shortcuts.</sub></p>
+<p align="center"><sub>Start Menu settings main page.</sub></p>
 
 ## Advanced
 
@@ -318,18 +312,6 @@ Other taskbar options include:
   power menu while enabled.
 - Follow the panel's transparency in the Start Menu.
 - Hide titles below pinned application icons.
-
-<p align="center">
-  <img src="docs/images/settings-advanced-appearance.png" alt="Advanced settings showing indicator and application behaviour options" width="100%">
-</p>
-
-<p align="center"><sub>Advanced settings: indicator appearance and application behaviour.</sub></p>
-
-<p align="center">
-  <img src="docs/images/settings-advanced-behaviour.png" alt="Advanced settings showing behaviour, file manager and Start Menu options" width="100%">
-</p>
-
-<p align="center"><sub>Advanced settings: behaviour, file manager and Start Menu options.</sub></p>
 
 ## Profiles
 
