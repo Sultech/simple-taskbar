@@ -25,6 +25,7 @@ src/startMenu/startMenuAppMenu.js
 src/startMenu/startMenuAppModel.js
 src/startMenu/startMenuFooterController.js
 src/startMenu/startMenuPowerController.js
+src/startMenu/startButtonContextMenuController.js
 src/folderMenuController.js
 src/integration/fileManagerPlacesSection.js
 src/taskbar/taskbarAppMenu.js
