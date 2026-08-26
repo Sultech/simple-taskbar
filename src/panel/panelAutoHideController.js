@@ -641,8 +641,12 @@ export class PanelAutoHideController {
         const pointerReveal = dodgeActive
             ? this._dodgePointerReveal
             : this._enabled();
-        if (!pointerReveal || !this._hidden ||
-            Main.overview.animationInProgress) {
+        if (!pointerReveal || Main.overview.animationInProgress)
+            return;
+
+        if (!this._hidden) {
+            if (!this._pointerIsInsidePanel())
+                this._scheduleHide();
             return;
         }
 
