@@ -974,8 +974,10 @@ export class TaskbarController {
     }
 
     _clearAppButtons() {
+        const items = [...this._appButtons.values()];
+        this._appButtons.clear();
         this._destroyPinnedSeparator();
-        for (const item of this._appButtons.values()) {
+        for (const item of items) {
             this._getPreviews().removeItem(item);
             this._dragController.releaseDraggable(item);
             this._untrackApp(item._taskbarApp);
@@ -983,7 +985,6 @@ export class TaskbarController {
             item.remove_all_transitions();
             item.destroy();
         }
-        this._appButtons.clear();
         for (const child of this.actor.get_children()) {
             if (child === this._showDesktopItem)
                 continue;
