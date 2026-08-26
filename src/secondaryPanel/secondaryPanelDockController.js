@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
@@ -34,6 +33,7 @@ import {
     constrainTaskbarSize,
     PANEL_ITEM_GAP,
 } from '../taskbar/taskbarLayout.js';
+import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
@@ -96,8 +96,9 @@ export class SecondaryPanelDockController {
         this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = settings.getConfiguredIconSize();
         this._dockPanelLength = null;
-        this._taskbarWidthUpdateId = 0;
-        this._updatingTaskbarWidth = false;
+        this._taskbarWidthUpdater = new TaskbarWidthUpdater(
+            () => this._updateTaskbarWidthInternal()
+        );
         this._dockStrutActor = null;
         this._activeWorkspace = null;
         this._workspaceWindows = new Set();
@@ -115,9 +116,8 @@ export class SecondaryPanelDockController {
     }
 
     destroy() {
-        if (this._taskbarWidthUpdateId)
-            GLib.Source.remove(this._taskbarWidthUpdateId);
-        this._taskbarWidthUpdateId = 0;
+        this._taskbarWidthUpdater.destroy();
+        this._taskbarWidthUpdater = null;
 
         this._signalHolder.destroy();
         this._signalHolder = null;
@@ -149,7 +149,6 @@ export class SecondaryPanelDockController {
         this._isCentered = null;
         this._configuredIconSize = 0;
         this._dockPanelLength = null;
-        this._updatingTaskbarWidth = false;
     }
 
     getPanelLengthPercentage() {
@@ -252,14 +251,7 @@ export class SecondaryPanelDockController {
     }
 
     updateTaskbarWidth() {
-        if (this._updatingTaskbarWidth) {
-            this._queueTaskbarWidthUpdate();
-            return;
-        }
-
-        this._updatingTaskbarWidth = true;
-        this._updateTaskbarWidthInternal();
-        this._updatingTaskbarWidth = false;
+        this._taskbarWidthUpdater.update();
     }
 
     resetIconSize() {
@@ -490,7 +482,7 @@ export class SecondaryPanelDockController {
             if (!this._settings.get_boolean('windows-xp-theme-enabled') &&
                 this._syncIconSize(availableWidth)) {
                 this._onPosition(false);
-                this._queueTaskbarWidthUpdate();
+                this._taskbarWidthUpdater.queue();
                 return;
             }
         }
@@ -509,21 +501,7 @@ export class SecondaryPanelDockController {
 
         this._dockPanelLength = panelLength;
         this._onPosition(false);
-        this._queueTaskbarWidthUpdate();
-    }
-
-    _queueTaskbarWidthUpdate() {
-        if (this._taskbarWidthUpdateId)
-            return;
-
-        this._taskbarWidthUpdateId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
-            () => {
-                this._taskbarWidthUpdateId = 0;
-                this.updateTaskbarWidth();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
+        this._taskbarWidthUpdater.queue();
     }
 
     _syncIconSize(availableLength) {

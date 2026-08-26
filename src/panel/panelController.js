@@ -47,6 +47,7 @@ import {
     allocateExpandedSidePanel,
     constrainTaskbarSize,
 } from '../taskbar/taskbarLayout.js';
+import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const GNOME_PANEL_SIZE = 32;
@@ -81,8 +82,9 @@ export class PanelController {
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signalHolder = new TransientSignalHolder();
         this._layoutRepairId = 0;
-        this._taskbarWidthUpdateId = 0;
-        this._updatingTaskbarWidth = false;
+        this._taskbarWidthUpdater = new TaskbarWidthUpdater(
+            () => this._updateTaskbarWidthInternal()
+        );
         this._applyingLayout = false;
         this._stateController = null;
         this._themeController = null;
@@ -343,28 +345,7 @@ export class PanelController {
     }
 
     updateTaskbarWidth() {
-        if (this._updatingTaskbarWidth) {
-            this._queueTaskbarWidthUpdate();
-            return;
-        }
-
-        this._updatingTaskbarWidth = true;
-        this._updateTaskbarWidthInternal();
-        this._updatingTaskbarWidth = false;
-    }
-
-    _queueTaskbarWidthUpdate() {
-        if (this._taskbarWidthUpdateId)
-            return;
-
-        this._taskbarWidthUpdateId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
-            () => {
-                this._taskbarWidthUpdateId = 0;
-                this.updateTaskbarWidth();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
+        this._taskbarWidthUpdater.update();
     }
 
     _updateTaskbarWidthInternal() {
@@ -406,10 +387,8 @@ export class PanelController {
             GLib.Source.remove(this._layoutRepairId);
             this._layoutRepairId = 0;
         }
-        if (this._taskbarWidthUpdateId) {
-            GLib.Source.remove(this._taskbarWidthUpdateId);
-            this._taskbarWidthUpdateId = 0;
-        }
+        this._taskbarWidthUpdater.destroy();
+        this._taskbarWidthUpdater = null;
         this._signalHolder.destroy();
         this._signalHolder = null;
 

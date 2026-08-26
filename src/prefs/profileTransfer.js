@@ -16,7 +16,6 @@ Gio._promisify(
 );
 
 const PROFILE_FORMAT_VERSION = 1;
-const PROFILE_SCHEMA = 'org.gnome.shell.extensions.simple-taskbar';
 const EXCLUDED_KEYS = new Set([
     'panel-profile-transition',
     'target-prefs-page',
@@ -45,7 +44,7 @@ function createProfile(settings) {
 
     return {
         format: PROFILE_FORMAT_VERSION,
-        schema: PROFILE_SCHEMA,
+        schema: settings.schema_id,
         settings: values,
     };
 }
@@ -53,7 +52,7 @@ function createProfile(settings) {
 function parseProfile(contents, settings) {
     const profile = JSON.parse(new TextDecoder('utf-8').decode(contents));
     if (profile.format !== PROFILE_FORMAT_VERSION ||
-        profile.schema !== PROFILE_SCHEMA ||
+        profile.schema !== settings.schema_id ||
         !profile.settings ||
         typeof profile.settings !== 'object' ||
         Array.isArray(profile.settings)) {
