@@ -663,6 +663,38 @@
       <default>true</default>
       <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>
     </key>
+    <key name="start-menu-show-locations" type="b">
+      <default>false</default>
+      <summary>Show folder shortcuts in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-home" type="b">
+      <default>false</default>
+      <summary>Show the Home folder in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-desktop" type="b">
+      <default>false</default>
+      <summary>Show the Desktop folder in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-documents" type="b">
+      <default>false</default>
+      <summary>Show the Documents folder in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-downloads" type="b">
+      <default>true</default>
+      <summary>Show the Downloads folder in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-music" type="b">
+      <default>false</default>
+      <summary>Show the Music folder in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-pictures" type="b">
+      <default>false</default>
+      <summary>Show the Pictures folder in the Start Menu</summary>
+    </key>
+    <key name="start-menu-show-videos" type="b">
+      <default>false</default>
+      <summary>Show the Videos folder in the Start Menu</summary>
+    </key>
     <key name="start-menu-show-profile-picture" type="b">
       <default>false</default>
       <summary>Show the account profile picture in the Start Menu</summary>

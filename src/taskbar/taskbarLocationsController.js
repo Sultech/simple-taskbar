@@ -14,50 +14,64 @@ import {
 const COMMON_FOLDER_DEFINITIONS = [
     {
         key: 'locations-show-home',
+        startMenuKey: 'start-menu-show-home',
         name: 'Home',
         iconName: 'user-home',
+        startMenuIconName: 'user-home-symbolic',
         directory: null,
         fallback: 'Home',
     },
     {
         key: 'locations-show-desktop',
+        startMenuKey: 'start-menu-show-desktop',
         name: 'Desktop',
         iconName: 'user-desktop',
+        startMenuIconName: 'user-desktop-symbolic',
         directory: GLib.UserDirectory.DIRECTORY_DESKTOP,
         fallback: 'Desktop',
     },
     {
         key: 'locations-show-documents',
+        startMenuKey: 'start-menu-show-documents',
         name: 'Documents',
         iconName: 'folder-documents',
+        startMenuIconName: 'folder-documents-symbolic',
         directory: GLib.UserDirectory.DIRECTORY_DOCUMENTS,
         fallback: 'Documents',
     },
     {
         key: 'locations-show-downloads',
+        startMenuKey: 'start-menu-show-downloads',
         name: 'Downloads',
         iconName: 'folder-download',
+        startMenuIconName: 'folder-download-symbolic',
         directory: GLib.UserDirectory.DIRECTORY_DOWNLOAD,
         fallback: 'Downloads',
     },
     {
         key: 'locations-show-music',
+        startMenuKey: 'start-menu-show-music',
         name: 'Music',
         iconName: 'folder-music',
+        startMenuIconName: 'folder-music-symbolic',
         directory: GLib.UserDirectory.DIRECTORY_MUSIC,
         fallback: 'Music',
     },
     {
         key: 'locations-show-pictures',
+        startMenuKey: 'start-menu-show-pictures',
         name: 'Pictures',
         iconName: 'folder-pictures',
+        startMenuIconName: 'folder-pictures-symbolic',
         directory: GLib.UserDirectory.DIRECTORY_PICTURES,
         fallback: 'Pictures',
     },
     {
         key: 'locations-show-videos',
+        startMenuKey: 'start-menu-show-videos',
         name: 'Videos',
         iconName: 'folder-videos',
+        startMenuIconName: 'folder-videos-symbolic',
         directory: GLib.UserDirectory.DIRECTORY_VIDEOS,
         fallback: 'Videos',
     },
@@ -67,9 +81,12 @@ export class TaskbarLocationsController {
     constructor({settings, scope, onChanged}) {
         this._settings = settings;
         this._onChanged = onChanged;
+        this._folderOnly = scope === 'start-menu';
         this._showLocationsKey = scope === 'dock'
             ? 'dock-show-locations'
-            : 'taskbar-show-locations';
+            : scope === 'start-menu'
+                ? 'start-menu-show-locations'
+                : 'taskbar-show-locations';
         this._showTrashKey = scope === 'dock'
             ? 'dock-show-trash'
             : 'taskbar-show-trash';
@@ -98,7 +115,9 @@ export class TaskbarLocationsController {
             [`changed::${this._showMountedOnlyKey}`, () => this._sync()],
             [`changed::${this._showNetworkKey}`, () => this._sync()],
             ...COMMON_FOLDER_DEFINITIONS.map(folder => [
-                `changed::${folder.key}`,
+                `changed::${this._folderOnly
+                    ? folder.startMenuKey
+                    : folder.key}`,
                 () => this._sync(),
             ]),
         ]) {
@@ -106,33 +125,41 @@ export class TaskbarLocationsController {
                 this._settings.connect(signal, callback)
             );
         }
-        for (const signal of [
-            'volume-added',
-            'volume-removed',
-            'volume-changed',
-            'mount-added',
-            'mount-removed',
-            'mount-changed',
-        ]) {
-            this._monitorSignalIds.push(
-                this._monitor.connect(signal, (_monitor, object) =>
-                    this._queueVolumeEvent(signal, object)
-                )
-            );
+        if (!this._folderOnly) {
+            for (const signal of [
+                'volume-added',
+                'volume-removed',
+                'volume-changed',
+                'mount-added',
+                'mount-removed',
+                'mount-changed',
+            ]) {
+                this._monitorSignalIds.push(
+                    this._monitor.connect(signal, (_monitor, object) =>
+                        this._queueVolumeEvent(signal, object)
+                    )
+                );
+            }
         }
         this._sync(false);
     }
 
     getEntries() {
-        if (!this._settings.get_boolean(this._showLocationsKey)) {
-            return [];
-        }
+        const entries = this.getFolderEntries();
+        if (this._folderOnly)
+            return entries;
 
-        const entries = this._folderApps.map(app => this._createEntry(app));
         entries.push(...this._volumeApps.map(app => this._createEntry(app)));
         if (this._trashApp)
             entries.push(this._createEntry(this._trashApp));
         return entries;
+    }
+
+    getFolderEntries() {
+        if (!this._settings.get_boolean(this._showLocationsKey))
+            return [];
+
+        return this._folderApps.map(app => this._createEntry(app));
     }
 
     _createEntry(app) {
@@ -163,6 +190,7 @@ export class TaskbarLocationsController {
         this._destroyTrashApp();
         this._monitor = null;
         this._onChanged = null;
+        this._folderOnly = false;
         this._settings = null;
     }
 
@@ -174,12 +202,14 @@ export class TaskbarLocationsController {
             this._destroyTrashApp();
         } else {
             this._syncFolderApps();
-            if (this._settings.get_boolean(this._showMountsKey))
+            if (!this._folderOnly &&
+                this._settings.get_boolean(this._showMountsKey))
                 this._syncVolumes();
             else
                 this._destroyVolumeApps();
 
-            if (this._settings.get_boolean(this._showTrashKey))
+            if (!this._folderOnly &&
+                this._settings.get_boolean(this._showTrashKey))
                 this._ensureTrashApp();
             else
                 this._destroyTrashApp();
@@ -191,7 +221,10 @@ export class TaskbarLocationsController {
     _syncFolderApps() {
         this._destroyFolderApps();
         for (const folder of COMMON_FOLDER_DEFINITIONS) {
-            if (!this._settings.get_boolean(folder.key))
+            const settingsKey = this._folderOnly
+                ? folder.startMenuKey
+                : folder.key;
+            if (!this._settings.get_boolean(settingsKey))
                 continue;
 
             const path = folder.directory === null
@@ -203,7 +236,11 @@ export class TaskbarLocationsController {
                 name: _(folder.name),
                 type: 'folder',
                 location: Gio.File.new_for_path(path),
-                icon: Gio.ThemedIcon.new(folder.iconName),
+                icon: Gio.ThemedIcon.new(
+                    this._folderOnly
+                        ? folder.startMenuIconName
+                        : folder.iconName
+                ),
             }));
         }
     }

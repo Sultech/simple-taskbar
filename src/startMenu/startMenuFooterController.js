@@ -11,6 +11,8 @@ import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {TaskbarLocationsController} from '../taskbar/taskbarLocationsController.js';
+
 export class StartMenuFooterController {
     constructor({
         appSystem,
@@ -21,6 +23,7 @@ export class StartMenuFooterController {
         closeMenu,
         enableNavigation,
         syncButtonClasses,
+        onLocationsChanged,
     }) {
         this._appSystem = appSystem;
         this._powerController = powerController;
@@ -28,6 +31,13 @@ export class StartMenuFooterController {
         this._closeMenu = closeMenu;
         this._enableNavigation = enableNavigation;
         this._syncButtonClasses = syncButtonClasses;
+        this._onLocationsChanged = onLocationsChanged;
+        this._locationButtons = [];
+        this._locationController = new TaskbarLocationsController({
+            settings,
+            scope: 'start-menu',
+            onChanged: () => this._syncLocationButtons(),
+        });
         this._defaultUserIcon = null;
         this._userAvatar = null;
         this._userNameLabel = null;
@@ -101,9 +111,34 @@ export class StartMenuFooterController {
             }
         );
         this.actor.add_child(userButton);
+        this._syncLocationButtons(false);
         this.actor.add_child(settingsButton);
         this.actor.add_child(powerButton);
         this._powerController.setButton(powerButton);
+    }
+
+    _syncLocationButtons(notify = true) {
+        for (const button of this._locationButtons)
+            button.destroy();
+        this._locationButtons = [];
+        for (const entry of this._locationController.getFolderEntries()) {
+            const location = entry.app;
+            const button = this._createIconButton(
+                location.icon,
+                location.get_name(),
+                () => {
+                    this._closeMenu();
+                    location.open_new_window();
+                }
+            );
+            this.actor.insert_child_at_index(
+                button,
+                this._locationButtons.length + 1
+            );
+            this._locationButtons.push(button);
+        }
+        if (notify)
+            this._onLocationsChanged();
     }
 
     syncUserAvatar() {
@@ -115,13 +150,17 @@ export class StartMenuFooterController {
     }
 
     destroy() {
+        this._locationController.destroy();
+        this._locationController = null;
         this.actor.destroy();
+        this._locationButtons = null;
         this._userAvatar = null;
         this._defaultUserIcon = null;
         this._userNameLabel = null;
         this._user = null;
         this.actor = null;
         this._syncButtonClasses = null;
+        this._onLocationsChanged = null;
         this._enableNavigation = null;
         this._closeMenu = null;
         this._settings = null;

@@ -13,7 +13,11 @@ import {
 } from './startIconChooser.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
-import {addComboRow, addSpinRow} from './preferencesWidgets.js';
+import {
+    addComboRow,
+    addSpinRow,
+    createSwitchRow,
+} from './preferencesWidgets.js';
 
 export function addStartMenuPage({
     window,
@@ -403,6 +407,81 @@ export function addStartMenuPage({
         subtitle: _('Configure the Start Menu theme and transparency'),
     });
     startMenuGroup.add(startMenuAppearanceRow);
+
+    const startMenuFoldersRow = new Adw.ExpanderRow({
+        title: _('Folder Shortcuts'),
+        subtitle: _('Choose which folders appear beside the Settings icon'),
+    });
+    const startMenuLocationsSwitch = new Adw.SwitchRow({
+        title: _('Show Folder Shortcuts'),
+        subtitle: _('Show selected folders beside the Settings icon in the Start Menu'),
+        active: settings.get_boolean('start-menu-show-locations'),
+    });
+    startMenuFoldersRow.add_row(startMenuLocationsSwitch);
+    settings.bind(
+        'start-menu-show-locations',
+        startMenuLocationsSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    const startMenuFolderRows = [];
+    for (const option of [
+        {
+            key: 'start-menu-show-home',
+            title: _('Home'),
+            subtitle: _('Add the Home folder'),
+        },
+        {
+            key: 'start-menu-show-desktop',
+            title: _('Desktop'),
+            subtitle: _('Add the Desktop folder'),
+        },
+        {
+            key: 'start-menu-show-documents',
+            title: _('Documents'),
+            subtitle: _('Add the Documents folder'),
+        },
+        {
+            key: 'start-menu-show-downloads',
+            title: _('Downloads'),
+            subtitle: _('Add the Downloads folder'),
+        },
+        {
+            key: 'start-menu-show-music',
+            title: _('Music'),
+            subtitle: _('Add the Music folder'),
+        },
+        {
+            key: 'start-menu-show-pictures',
+            title: _('Pictures'),
+            subtitle: _('Add the Pictures folder'),
+        },
+        {
+            key: 'start-menu-show-videos',
+            title: _('Videos'),
+            subtitle: _('Add the Videos folder'),
+        },
+    ]) {
+        const row = createSwitchRow(settings, option);
+        startMenuFoldersRow.add_row(row);
+        startMenuFolderRows.push(row);
+    }
+    startMenuGroup.add(startMenuFoldersRow);
+    const updateStartMenuLocationControls = () => {
+        startMenuFoldersRow.sensitive = windowsStartMenuSwitch.active;
+        for (const row of startMenuFolderRows)
+            row.sensitive = startMenuLocationsSwitch.active;
+    };
+    windowsStartMenuSwitch.connect(
+        'notify::active',
+        updateStartMenuLocationControls
+    );
+    startMenuLocationsSwitch.connect(
+        'notify::active',
+        updateStartMenuLocationControls
+    );
+    updateStartMenuLocationControls();
+
     startMenuAppearanceRow.add_row(followPanelThemeSwitch);
     settings.bind(
         'start-menu-follow-panel-theme',

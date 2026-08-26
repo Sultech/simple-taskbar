@@ -241,6 +241,7 @@ export class StartMenuController {
                 this._navigationController.enable(actor),
             syncButtonClasses: actor =>
                 this._syncShellButtonClasses(actor),
+            onLocationsChanged: () => this._updateSize(),
         });
         this._root.add_child(this._footerController.actor);
         this._showDefaultView();
