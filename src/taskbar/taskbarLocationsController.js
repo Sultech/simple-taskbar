@@ -219,7 +219,10 @@ export class TaskbarLocationsController {
     }
 
     _syncFolderApps() {
-        this._destroyFolderApps();
+        const previousApps = new Map(
+            this._folderApps.map(app => [app.get_id(), app])
+        );
+        this._folderApps = [];
         for (const folder of COMMON_FOLDER_DEFINITIONS) {
             const settingsKey = this._folderOnly
                 ? folder.startMenuKey
@@ -227,22 +230,31 @@ export class TaskbarLocationsController {
             if (!this._settings.get_boolean(settingsKey))
                 continue;
 
-            const path = folder.directory === null
-                ? GLib.get_home_dir()
-                : GLib.get_user_special_dir(folder.directory) ||
-                    `${GLib.get_home_dir()}/${folder.fallback}`;
-            this._folderApps.push(new TaskbarLocation({
-                id: `location:folder:${folder.key}`,
-                name: _(folder.name),
-                type: 'folder',
-                location: Gio.File.new_for_path(path),
-                icon: Gio.ThemedIcon.new(
-                    this._folderOnly
-                        ? folder.startMenuIconName
-                        : folder.iconName
-                ),
-            }));
+            const id = `location:folder:${folder.key}`;
+            let app = previousApps.get(id);
+            if (app) {
+                previousApps.delete(id);
+            } else {
+                const path = folder.directory === null
+                    ? GLib.get_home_dir()
+                    : GLib.get_user_special_dir(folder.directory) ||
+                        `${GLib.get_home_dir()}/${folder.fallback}`;
+                app = new TaskbarLocation({
+                    id,
+                    name: _(folder.name),
+                    type: 'folder',
+                    location: Gio.File.new_for_path(path),
+                    icon: Gio.ThemedIcon.new(
+                        this._folderOnly
+                            ? folder.startMenuIconName
+                            : folder.iconName
+                    ),
+                });
+            }
+            this._folderApps.push(app);
         }
+        for (const app of previousApps.values())
+            app.destroy();
     }
 
     _queueVolumeEvent(signal, object) {
@@ -291,11 +303,19 @@ export class TaskbarLocationsController {
     }
 
     _syncVolumes() {
-        this._destroyVolumeApps();
-        for (const volume of this._monitor.get_volumes()) {
-            if (this._includeVolume(volume))
-                this._addVolume(volume);
+        const volumes = this._monitor.get_volumes().filter(volume =>
+            this._includeVolume(volume)
+        );
+        const includedVolumes = new Set(volumes);
+        for (const [volume] of this._volumeAppsByVolume) {
+            if (!includedVolumes.has(volume))
+                this._removeVolume(volume);
         }
+        for (const volume of volumes)
+            this._addVolume(volume);
+        this._volumeApps = volumes.map(volume =>
+            this._volumeAppsByVolume.get(volume)
+        );
     }
 
     _includeVolume(volume) {
