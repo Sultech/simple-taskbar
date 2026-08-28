@@ -1096,7 +1096,7 @@ export class StartMenuController {
         });
         if (hideTitle)
             content.y_align = Clutter.ActorAlign.CENTER;
-        const icon = app.create_icon_texture(hideTitle ? 40 : 32);
+        const icon = app.create_icon_texture(hideTitle ? 48 : 32);
         content.add_child(icon);
         const label = this._createAppLabel(app.get_name(), 78);
         label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
@@ -1158,7 +1158,7 @@ export class StartMenuController {
             style_class: 'simple-taskbar-windows-start-app-list-content',
             x_expand: true,
         });
-        const icon = app.create_icon_texture(compact ? 28 : 30);
+        const icon = app.create_icon_texture(compact ? 24 : 32);
         content.add_child(icon);
         const label = this._createAppLabel(
             app.get_name(),
