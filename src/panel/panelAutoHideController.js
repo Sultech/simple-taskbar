@@ -5,7 +5,6 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as PointerWatcher from 'resource:///org/gnome/shell/ui/pointerWatcher.js';
 import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
@@ -21,7 +20,6 @@ const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
-const POINTER_WATCH_INTERVAL = 200;
 const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
 export class PanelAutoHideController {
     constructor({
@@ -49,7 +47,8 @@ export class PanelAutoHideController {
         this._getLimitRevealToPanel = getLimitRevealToPanel;
         this._isBlockedCallback = isBlocked;
         this._signalHolder = new TransientSignalHolder();
-        this._pointerWatch = null;
+        this._cursorTracker = global.backend.get_cursor_tracker();
+        this._cursorPositionInvalidatedId = 0;
         this._hideTimeoutId = 0;
         this._fullscreenWatchId = 0;
         this._fullscreenReleasePending = false;
@@ -128,11 +127,11 @@ export class PanelAutoHideController {
     }
 
     destroy() {
-        if (this._pointerWatch)
-            this._pointerWatch.remove();
-        this._pointerWatch = null;
         this._clearHideTimeout();
         this._stopFullscreenWatch();
+        if (this._cursorPositionInvalidatedId)
+            this._cursorTracker.disconnect(this._cursorPositionInvalidatedId);
+        this._cursorPositionInvalidatedId = 0;
         this._signalHolder.destroy();
         this._signalHolder = null;
 
@@ -149,6 +148,7 @@ export class PanelAutoHideController {
         this._restoreStrutTracking();
         this._restoreUnredirect();
 
+        this._cursorTracker = null;
         this._settings = null;
         this._panelActor = null;
         this._positionActor = null;
@@ -322,14 +322,19 @@ export class PanelAutoHideController {
         const shouldWatch = this._enabled() ||
             this._dodgeEnabled && this._dodgeActive &&
             this._dodgePointerReveal;
-        if (shouldWatch && !this._pointerWatch) {
-            this._pointerWatch = PointerWatcher.getPointerWatcher().addWatch(
-                POINTER_WATCH_INTERVAL,
-                (x, y) => this._handlePointerMotion(x, y)
+        if (shouldWatch && !this._cursorPositionInvalidatedId) {
+            this._cursorPositionInvalidatedId = this._cursorTracker.connect(
+                'position-invalidated',
+                () => {
+                    const [x, y] = global.get_pointer();
+                    this._handlePointerMotion(x, y);
+                }
             );
-        } else if (!shouldWatch && this._pointerWatch) {
-            this._pointerWatch.remove();
-            this._pointerWatch = null;
+        } else if (!shouldWatch && this._cursorPositionInvalidatedId) {
+            this._cursorTracker.disconnect(
+                this._cursorPositionInvalidatedId
+            );
+            this._cursorPositionInvalidatedId = 0;
         }
     }
 

@@ -7,6 +7,6 @@
   },
   "gettext-domain": "simple-taskbar@sultech",
   "settings-schema": "org.gnome.shell.extensions.simple-taskbar",
-  "shell-version": ["48", "49", "50"],
+  "shell-version": ["48", "49", "50", "51"],
   "url": "https://github.com/Sultech/simple-taskbar"
 }
