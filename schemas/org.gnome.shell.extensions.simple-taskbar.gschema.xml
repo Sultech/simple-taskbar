@@ -814,7 +814,7 @@
     </key>
     <key name="start-menu-pinned-apps" type="as">
       <default>[]</default>
-      <summary>Applications pinned to the Eleven-style Start Menu</summary>
+      <summary>Applications and folders pinned to the Eleven-style Start Menu</summary>
     </key>
     <key name="target-prefs-page" type="s">
       <default>''</default>

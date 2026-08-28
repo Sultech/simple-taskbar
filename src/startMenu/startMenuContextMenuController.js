@@ -7,10 +7,12 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
 import {panelArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
+import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
 export class StartMenuContextMenuController {
@@ -18,9 +20,11 @@ export class StartMenuContextMenuController {
         applyTheme,
         closeApp,
         closeMenu,
+        defaultFolderName,
         getInterestingWindows,
         hideTooltip,
         refreshAfterPinChange,
+        removeFolderLabel,
     }) {
         this._settings = settings;
         this._closeApp = closeApp;
@@ -28,6 +32,9 @@ export class StartMenuContextMenuController {
         this._getInterestingWindows = getInterestingWindows;
         this._hideTooltip = hideTooltip;
         this._refreshAfterPinChange = refreshAfterPinChange;
+        this._defaultFolderName = defaultFolderName;
+        this._removeFolderLabel = removeFolderLabel;
+        this._pinnedModel = new StartMenuPinnedModel(settings);
         this._transientMenu = new StartMenuTransientMenu(applyTheme);
         this._actionCloseIdleId = 0;
         this._cursor = new St.Widget({
@@ -39,33 +46,41 @@ export class StartMenuContextMenuController {
         Main.uiGroup.add_child(this._cursor);
     }
 
-    addHandler(button, app) {
+    addHandler(button, app, folderId = null) {
+        this._addHandler(button, cursorPosition =>
+            this.open(button, app, {cursorPosition, folderId})
+        );
+    }
+
+    addFolderHandler(button, folderId) {
+        this._addHandler(button, cursorPosition =>
+            this.openFolder(button, folderId, cursorPosition)
+        );
+    }
+
+    _addHandler(button, open) {
         button.connect('button-press-event', (_actor, event) => {
             if (event.get_button() !== Clutter.BUTTON_SECONDARY)
                 return Clutter.EVENT_PROPAGATE;
 
             const [x, y] = event.get_coords();
-            this.open(button, app, {x, y});
+            open({x, y});
             return Clutter.EVENT_STOP;
         });
         button.connect('popup-menu', () => {
-            this.open(button, app);
+            open(null);
             return Clutter.EVENT_STOP;
         });
     }
 
-    open(sourceButton, app, cursorPosition = null) {
+    open(sourceButton, app, {
+        cursorPosition = null,
+        folderId = null,
+    } = {}) {
         this._hideTooltip(true);
         this.close();
 
-        let menuSource = sourceButton;
-        if (cursorPosition) {
-            this._cursor.set_position(
-                Math.round(cursorPosition.x),
-                Math.round(cursorPosition.y)
-            );
-            menuSource = this._cursor;
-        }
+        const menuSource = this._menuSource(sourceButton, cursorPosition);
 
         let refreshAfterClose = false;
         const menu = new StartMenuAppMenu(
@@ -77,6 +92,7 @@ export class StartMenuContextMenuController {
                     refreshAfterClose = true;
                 },
                 onAppAction: () => this._queueCloseAfterAction(),
+                folderId,
                 closeApp: (targetApp, timestamp) =>
                     this._closeApp(targetApp, timestamp),
                 getInterestingWindows: targetApp =>
@@ -91,6 +107,72 @@ export class StartMenuContextMenuController {
 
         menu.setApp(app);
         openPopupMenu(menu);
+    }
+
+    openFolder(sourceButton, folderId, cursorPosition = null) {
+        const folder = this._pinnedModel.getFolder(folderId);
+        if (!folder)
+            return;
+
+        this._hideTooltip(true);
+        this.close();
+        const menuSource = this._menuSource(sourceButton, cursorPosition);
+        const menu = new PopupMenu.PopupMenu(
+            menuSource,
+            0.5,
+            panelArrowSide(this._settings)
+        );
+        const renameItem = new PopupMenu.PopupBaseMenuItem({
+            reactive: false,
+            can_focus: false,
+        });
+        const renameEntry = new St.Entry({
+            style_class: 'simple-taskbar-windows-start-folder-name-entry',
+            text: folder.name,
+            can_focus: true,
+            x_expand: true,
+        });
+        ShellEntry.addContextMenu(renameEntry);
+        const saveButton = new St.Button({
+            style_class: 'simple-taskbar-windows-start-folder-name-save',
+            reactive: true,
+            can_focus: true,
+            child: new St.Icon({
+                icon_name: 'object-select-symbolic',
+                icon_size: 16,
+            }),
+        });
+        renameItem.add_child(renameEntry);
+        renameItem.add_child(saveButton);
+        menu.addMenuItem(renameItem);
+        const removeItem = new PopupMenu.PopupMenuItem(
+            this._removeFolderLabel
+        );
+        menu.addMenuItem(removeItem);
+
+        let refreshAfterClose = false;
+        const saveName = () => {
+            const name = renameEntry.get_text().trim() ||
+                this._defaultFolderName;
+            if (this._pinnedModel.renameFolder(folderId, name))
+                refreshAfterClose = true;
+            menu.close();
+        };
+        renameEntry.clutter_text.connect('activate', saveName);
+        saveButton.connect('clicked', saveName);
+        removeItem.connect('activate', () => {
+            if (this._pinnedModel.removeFolder(folderId))
+                refreshAfterClose = true;
+        });
+
+        const menuManager = new PopupMenu.PopupMenuManager(sourceButton);
+        this._transientMenu.adopt(menu, menuManager, () => {
+            if (refreshAfterClose)
+                this._refreshAfterPinChange();
+        });
+        openPopupMenu(menu);
+        renameEntry.grab_key_focus();
+        renameEntry.clutter_text.set_selection(0, -1);
     }
 
     syncTheme() {
@@ -108,14 +190,28 @@ export class StartMenuContextMenuController {
         }
         this._transientMenu.destroy();
         this._transientMenu = null;
+        this._pinnedModel = null;
         this._cursor.destroy();
         this._cursor = null;
         this._refreshAfterPinChange = null;
+        this._removeFolderLabel = null;
+        this._defaultFolderName = null;
         this._hideTooltip = null;
         this._getInterestingWindows = null;
         this._closeMenu = null;
         this._closeApp = null;
         this._settings = null;
+    }
+
+    _menuSource(sourceButton, cursorPosition) {
+        if (!cursorPosition)
+            return sourceButton;
+
+        this._cursor.set_position(
+            Math.round(cursorPosition.x),
+            Math.round(cursorPosition.y)
+        );
+        return this._cursor;
     }
 
     _queueCloseAfterAction() {

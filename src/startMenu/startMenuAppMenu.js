@@ -9,6 +9,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {extensionIsActive} from '../extensionState.js';
 import {TaskbarAppMenu} from '../taskbar/taskbarAppMenu.js';
+import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 
 const DESKTOP_ICON_EXTENSIONS = [
     'ding@rastersoft.com',
@@ -100,6 +101,8 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         this._settings = settings;
         this._onStartPinsChanged = params.onStartPinsChanged;
         this._onAppAction = params.onAppAction;
+        this._folderId = params.folderId ?? null;
+        this._pinnedModel = new StartMenuPinnedModel(settings);
         this._connectedActionItems = new WeakSet();
         this._shortcutQueryCancellable = null;
 
@@ -108,13 +111,23 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
             this._toggleStartFavorite());
         this.addMenuItem(this._toggleStartItem, 8);
 
+        this._moveOutOfFolderItem = null;
+        if (this._folderId) {
+            this._moveOutOfFolderItem = new PopupMenu.PopupMenuItem(
+                _('Move out of folder')
+            );
+            this._moveOutOfFolderItem.connect('activate', () =>
+                this._moveOutOfFolder());
+            this.addMenuItem(this._moveOutOfFolderItem, 9);
+        }
+
         this._desktopShortcutItem = new PopupMenu.PopupMenuItem(
             _('Create Desktop Shortcut')
         );
         this._desktopShortcutItem.connect('activate', () => {
             void this._toggleDesktopShortcut();
         });
-        this.addMenuItem(this._desktopShortcutItem, 9);
+        this.addMenuItem(this._desktopShortcutItem, this._folderId ? 10 : 9);
 
         this._connectAppAction(this._newWindowItem);
         this._connectAppAction(this._onGpuMenuItem);
@@ -141,7 +154,10 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         this._shortcutQueryCancellable?.cancel();
         this._shortcutQueryCancellable = null;
         this._toggleStartItem = null;
+        this._moveOutOfFolderItem = null;
         this._desktopShortcutItem = null;
+        this._pinnedModel = null;
+        this._folderId = null;
         this._settings = null;
         this._onStartPinsChanged = null;
         this._onAppAction = null;
@@ -171,15 +187,11 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
             return;
 
         const appId = this._app.get_id();
-        const pinnedApps = this._settings.get_strv('start-menu-pinned-apps');
-        const index = pinnedApps.indexOf(appId);
-        if (index >= 0)
-            pinnedApps.splice(index, 1);
-        else
-            pinnedApps.push(appId);
-
-        this._settings.set_strv('start-menu-pinned-apps', pinnedApps);
-        this._onStartPinsChanged();
+        const changed = this._pinnedModel.isPinned(appId)
+            ? this._pinnedModel.unpinApp(appId)
+            : this._pinnedModel.pinApp(appId);
+        if (changed)
+            this._onStartPinsChanged();
     }
 
     _updateStartFavoriteItem() {
@@ -191,12 +203,22 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         if (!appId)
             return;
 
-        const isPinned = this._settings
-            .get_strv('start-menu-pinned-apps')
-            .includes(appId);
+        const isPinned = this._pinnedModel.isPinned(appId);
         this._toggleStartItem.label.text = isPinned
             ? _('Unpin from Start')
             : _('Pin to Start');
+    }
+
+    _moveOutOfFolder() {
+        if (!this._app || !this._folderId)
+            return;
+
+        if (this._pinnedModel.moveAppOutOfFolder(
+            this._app.get_id(),
+            this._folderId
+        )) {
+            this._onStartPinsChanged();
+        }
     }
 
     _desktopShortcutFiles() {

@@ -31,11 +31,34 @@ export class StartMenuTooltipController {
     }
 
     add(button, app, label, alignLeft = false, alwaysShowTitle = false) {
+        this._add(
+            button,
+            () => app.get_name(),
+            () => app.get_description(),
+            label,
+            alignLeft,
+            alwaysShowTitle
+        );
+    }
+
+    addText(button, text) {
+        this._add(
+            button,
+            () => text,
+            () => '',
+            button,
+            false,
+            true
+        );
+    }
+
+    _add(button, getTitle, getDescription, label, alignLeft, alwaysShowTitle) {
         button.connect('notify::hover', () => {
             if (button.hover) {
                 this._queue(
                     button,
-                    app,
+                    getTitle,
+                    getDescription,
                     label,
                     alignLeft,
                     alwaysShowTitle
@@ -81,7 +104,14 @@ export class StartMenuTooltipController {
         this.actor = null;
     }
 
-    _queue(button, app, label, alignLeft, alwaysShowTitle) {
+    _queue(
+        button,
+        getTitle,
+        getDescription,
+        label,
+        alignLeft,
+        alwaysShowTitle
+    ) {
         this.hide(true);
         this._source = button;
         this._timeoutId = GLib.timeout_add(
@@ -93,7 +123,8 @@ export class StartMenuTooltipController {
                     return GLib.SOURCE_REMOVE;
                 this._show(
                     button,
-                    app,
+                    getTitle,
+                    getDescription,
                     label,
                     alignLeft,
                     alwaysShowTitle
@@ -103,9 +134,16 @@ export class StartMenuTooltipController {
         );
     }
 
-    _show(button, app, label, alignLeft, alwaysShowTitle) {
-        const appDescription = app.get_description();
-        const description = appDescription ? appDescription.trim() : '';
+    _show(
+        button,
+        getTitle,
+        getDescription,
+        label,
+        alignLeft,
+        alwaysShowTitle
+    ) {
+        const sourceDescription = getDescription();
+        const description = sourceDescription ? sourceDescription.trim() : '';
         const showTitle = alwaysShowTitle ||
             label.clutter_text.get_layout().is_ellipsized();
         if (!showTitle && !description) {
@@ -115,7 +153,7 @@ export class StartMenuTooltipController {
 
         if (showTitle) {
             this.actor.text = '';
-            const titleMarkup = GLib.markup_escape_text(app.get_name(), -1);
+            const titleMarkup = GLib.markup_escape_text(getTitle(), -1);
             const descriptionMarkup =
                 GLib.markup_escape_text(description, -1);
             this.actor.clutter_text.set_markup(

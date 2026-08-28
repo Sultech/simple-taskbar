@@ -1,21 +1,33 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 
+import {
+    pinnedAppItemKey,
+    pinnedFolderItemKey,
+} from './startMenuPinnedModel.js';
+
 export class StartMenuPinnedDragController {
-    constructor(settings, params) {
-        this._settings = settings;
+    constructor(pinnedModel, params) {
+        this._pinnedModel = pinnedModel;
         this._columns = params.columns;
         this._tileWidth = params.tileWidth;
         this._closeContextMenu = params.closeContextMenu;
-        this._onOrderChanged = params.onOrderChanged;
+        this._defaultFolderName = params.defaultFolderName;
+        this._onChanged = params.onChanged;
+        this._onMoveOut = params.onMoveOut;
         this._draggables = new Map();
+        this._folderDropTarget = null;
+        this._folderDropActors = new Set();
+        this._moveOutButton = null;
     }
 
-    attachGrid(grid) {
+    attachGrid(grid, folderId = null) {
+        grid._startMenuFolderId = folderId;
         grid._delegate = {
             handleDragOver: (source, _actor, x, y) =>
                 this._handleDragOver(grid, source, x, y),
@@ -24,42 +36,59 @@ export class StartMenuPinnedDragController {
         };
     }
 
-    makeDraggable(button, icon, app, grid) {
-        const dragSource = {
-            app,
-            _pinnedTile: button,
-            _pinnedGrid: grid,
-            _originalOrder: null,
-            _dropAccepted: false,
-            getDragActor: () => app.create_icon_texture(40),
-            getDragActorSource: () => icon,
-        };
-        button._delegate = dragSource;
-        button._startMenuPinnedAppId = app.get_id();
+    attachMoveOutTarget(button) {
+        this._moveOutButton = button;
+        button._delegate = {
+            handleDragOver: source => this._canMoveOut(source)
+                ? DND.DragMotionResult.MOVE_DROP
+                : DND.DragMotionResult.CONTINUE,
+            acceptDrop: source => {
+                if (!this._canMoveOut(source))
+                    return false;
 
-        const entry = this._trackDraggable(button);
-        const draggable = DND.makeDraggable(button, {
-            timeoutThreshold: 200,
-            dragActorMaxSize: 48,
+                const folderId = source._pinnedGrid._startMenuFolderId;
+                if (!this._pinnedModel.moveAppOutOfFolder(
+                    source._pinnedAppId,
+                    folderId
+                )) {
+                    return false;
+                }
+
+                source._dropAccepted = true;
+                this._onMoveOut();
+                return true;
+            },
+        };
+    }
+
+    makeDraggable(button, icon, app, grid) {
+        const appId = app.get_id();
+        const itemKey = grid._startMenuFolderId
+            ? appId
+            : pinnedAppItemKey(appId);
+        this._makePinnedDraggable(button, icon, grid, {
+            app,
+            appId,
+            folderId: null,
+            itemKey,
+            itemType: 'app',
+            getDragActor: () => app.create_icon_texture(40),
         });
-        button._startMenuDraggable = draggable;
-        entry.draggable = draggable;
-        entry.handlerIds = [
-            draggable.connect('drag-begin', () => {
-                dragSource._originalOrder = this._gridTiles(grid)
-                    .map(tile => tile._startMenuPinnedAppId);
-                dragSource._dropAccepted = false;
-                button.opacity = 96;
-                this._closeContextMenu();
+    }
+
+    makeFolderDraggable(button, icon, folderId, grid) {
+        this._makePinnedDraggable(button, icon, grid, {
+            app: null,
+            appId: null,
+            folderId,
+            itemKey: pinnedFolderItemKey(folderId),
+            itemType: 'folder',
+            getDragActor: () => new Clutter.Clone({
+                source: icon,
+                width: 40,
+                height: 40,
             }),
-            draggable.connect('drag-end', () => {
-                button.opacity = 255;
-                if (!dragSource._dropAccepted)
-                    this._restoreOrder(grid, dragSource);
-                dragSource._originalOrder = null;
-                dragSource._dropAccepted = false;
-            }),
-        ];
+        });
     }
 
     makeTaskbarDraggable(button, icon, app, onDropAccepted) {
@@ -99,6 +128,56 @@ export class StartMenuPinnedDragController {
         ];
     }
 
+    _makePinnedDraggable(button, icon, grid, data) {
+        const dragSource = {
+            app: data.app,
+            _pinnedTile: button,
+            _pinnedGrid: grid,
+            _pinnedAppId: data.appId,
+            _pinnedFolderId: data.folderId,
+            _pinnedItemKey: data.itemKey,
+            _pinnedItemType: data.itemType,
+            _originalOrder: null,
+            _dropAccepted: false,
+            getDragActor: data.getDragActor,
+            getDragActorSource: () => icon,
+        };
+        button._delegate = dragSource;
+        button._startMenuPinnedItemKey = data.itemKey;
+        button._startMenuPinnedItemType = data.itemType;
+        button._startMenuPinnedAppId = data.appId;
+        button._startMenuPinnedFolderId = data.folderId;
+        button._startMenuFolderDropActor = icon;
+        icon.set_pivot_point(0.5, 0.5);
+
+        const entry = this._trackDraggable(button);
+        const draggable = DND.makeDraggable(button, {
+            timeoutThreshold: 200,
+            dragActorMaxSize: 48,
+        });
+        button._startMenuDraggable = draggable;
+        entry.draggable = draggable;
+        entry.handlerIds = [
+            draggable.connect('drag-begin', () => {
+                this._resetFolderDropActors();
+                dragSource._originalOrder = this._gridTiles(grid)
+                    .map(tile => tile._startMenuPinnedItemKey);
+                dragSource._dropAccepted = false;
+                button.opacity = 96;
+                this._closeContextMenu();
+            }),
+            draggable.connect('drag-end', () => {
+                this._clearFolderDropTarget(false);
+                this._resetFolderDropActors();
+                button.opacity = 255;
+                if (!dragSource._dropAccepted)
+                    this._restoreOrder(grid, dragSource);
+                dragSource._originalOrder = null;
+                dragSource._dropAccepted = false;
+            }),
+        ];
+    }
+
     // GNOME 48's _Draggable connects its own actor 'destroy' handler that
     // calls disconnectAll(). Destroy handlers run in connection order, so
     // this must be connected before DND.makeDraggable(); otherwise
@@ -116,27 +195,51 @@ export class StartMenuPinnedDragController {
     }
 
     _releaseDraggable(button) {
+        if (this._folderDropTarget === button)
+            this._clearFolderDropTarget(false);
+        const dropActor = button._startMenuFolderDropActor;
+        if (dropActor) {
+            dropActor.remove_all_transitions();
+            dropActor.scale_x = 1;
+            dropActor.scale_y = 1;
+            this._folderDropActors.delete(dropActor);
+        }
         const entry = this._draggables.get(button);
         for (const handlerId of entry.handlerIds)
             entry.draggable.disconnect(handlerId);
         button.disconnect(entry.destroyId);
         button._delegate = null;
+        button._startMenuFolderDropActor = null;
         this._draggables.delete(button);
     }
 
     destroy() {
+        this._clearFolderDropTarget(false);
+        this._resetFolderDropActors();
         for (const button of [...this._draggables.keys()])
             this._releaseDraggable(button);
+        this._moveOutButton._delegate = null;
+        this._moveOutButton = null;
+        this._folderDropActors = null;
         this._draggables = null;
-        this._settings = null;
+        this._pinnedModel = null;
         this._closeContextMenu = null;
-        this._onOrderChanged = null;
+        this._defaultFolderName = null;
+        this._onChanged = null;
+        this._onMoveOut = null;
     }
 
     _handleDragOver(grid, source, x, y) {
         if (!this._validSource(grid, source))
             return DND.DragMotionResult.CONTINUE;
 
+        const folderTarget = this._folderTargetAt(grid, source, x, y);
+        if (folderTarget) {
+            this._setFolderDropTarget(folderTarget);
+            return DND.DragMotionResult.MOVE_DROP;
+        }
+
+        this._clearFolderDropTarget();
         this._moveTileToPointer(grid, source, x, y);
         return DND.DragMotionResult.MOVE_DROP;
     }
@@ -145,19 +248,40 @@ export class StartMenuPinnedDragController {
         if (!this._validSource(grid, source))
             return false;
 
+        const folderTarget = this._folderTargetAt(grid, source, x, y);
+        if (folderTarget) {
+            const changed = folderTarget._startMenuPinnedItemType === 'folder'
+                ? this._pinnedModel.moveAppToFolder(
+                    source._pinnedAppId,
+                    folderTarget._startMenuPinnedFolderId
+                )
+                : Boolean(this._pinnedModel.createFolder(
+                    source._pinnedAppId,
+                    folderTarget._startMenuPinnedAppId,
+                    this._defaultFolderName
+                ));
+            this._clearFolderDropTarget(false);
+            this._resetFolderDropActors();
+            if (!changed)
+                return false;
+
+            source._dropAccepted = true;
+            this._onChanged();
+            return true;
+        }
+
         this._moveTileToPointer(grid, source, x, y);
         const visibleOrder = this._gridTiles(grid)
-            .map(tile => tile._startMenuPinnedAppId);
-        const visibleIds = new Set(visibleOrder);
-        let visibleIndex = 0;
-        const pinnedApps = this._settings
-            .get_strv('start-menu-pinned-apps')
-            .map(appId => visibleIds.has(appId)
-                ? visibleOrder[visibleIndex++]
-                : appId);
-
-        this._settings.set_strv('start-menu-pinned-apps', pinnedApps);
-        this._onOrderChanged(visibleOrder);
+            .map(tile => tile._startMenuPinnedItemKey);
+        if (grid._startMenuFolderId) {
+            this._pinnedModel.reorderFolderApps(
+                grid._startMenuFolderId,
+                visibleOrder
+            );
+        } else {
+            this._pinnedModel.reorderVisibleItems(visibleOrder);
+        }
+        this._onChanged();
         source._dropAccepted = true;
         return true;
     }
@@ -166,6 +290,109 @@ export class StartMenuPinnedDragController {
         const tile = source?._pinnedTile;
         return Boolean(tile && source._pinnedGrid === grid &&
             grid.contains(tile));
+    }
+
+    _canMoveOut(source) {
+        return Boolean(
+            source &&
+            source._pinnedItemType === 'app' &&
+            source._pinnedGrid &&
+            source._pinnedGrid._startMenuFolderId
+        );
+    }
+
+    _folderTargetAt(grid, source, x, y) {
+        if (grid._startMenuFolderId || source._pinnedItemType !== 'app')
+            return null;
+
+        const sourceTile = source._pinnedTile;
+        for (const row of grid.get_children()) {
+            for (const tile of row.get_children()) {
+                if (tile === sourceTile || !tile._startMenuPinnedItemKey)
+                    continue;
+
+                const left = row.x + tile.x;
+                const top = row.y + tile.y;
+                const insetX = tile.width * 0.22;
+                const insetY = tile.height * 0.22;
+                if (x >= left + insetX &&
+                    x <= left + tile.width - insetX &&
+                    y >= top + insetY &&
+                    y <= top + tile.height - insetY) {
+                    return tile;
+                }
+            }
+        }
+        return null;
+    }
+
+    _setFolderDropTarget(target) {
+        if (this._folderDropTarget === target)
+            return;
+
+        this._clearFolderDropTarget();
+        this._folderDropTarget = target;
+        target.add_style_class_name(
+            'simple-taskbar-windows-start-folder-drop-target'
+        );
+        if (target._startMenuPinnedItemType !== 'app')
+            return;
+
+        const actor = target._startMenuFolderDropActor;
+        this._folderDropActors.add(actor);
+        actor.remove_all_transitions();
+        actor.ease({
+            scale_x: 0.72,
+            scale_y: 0.72,
+            duration: 90,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onComplete: () => {
+                if (this._folderDropTarget !== target)
+                    return;
+                actor.ease({
+                    scale_x: 0.78,
+                    scale_y: 0.78,
+                    duration: 90,
+                    mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                });
+            },
+        });
+    }
+
+    _clearFolderDropTarget(animate = true) {
+        if (!this._folderDropTarget)
+            return;
+
+        const target = this._folderDropTarget;
+        target.remove_style_class_name(
+            'simple-taskbar-windows-start-folder-drop-target'
+        );
+        this._folderDropTarget = null;
+        if (target._startMenuPinnedItemType !== 'app')
+            return;
+
+        const actor = target._startMenuFolderDropActor;
+        actor.remove_all_transitions();
+        if (!animate) {
+            actor.scale_x = 1;
+            actor.scale_y = 1;
+            return;
+        }
+        actor.ease({
+            scale_x: 1,
+            scale_y: 1,
+            duration: 120,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+    }
+
+    _resetFolderDropActors() {
+        for (const actor of this._folderDropActors) {
+            actor.remove_all_transitions();
+            actor.scale_x = 1;
+            actor.scale_y = 1;
+        }
+        this._folderDropActors.clear();
     }
 
     _moveTileToPointer(grid, source, x, y) {
@@ -205,7 +432,7 @@ export class StartMenuPinnedDragController {
     _gridTiles(grid) {
         return grid.get_children().flatMap(row =>
             row.get_children().filter(child =>
-                Boolean(child._startMenuPinnedAppId)
+                Boolean(child._startMenuPinnedItemKey)
             )
         );
     }
@@ -215,7 +442,7 @@ export class StartMenuPinnedDragController {
         for (const row of rows) {
             for (const child of row.get_children()) {
                 row.remove_child(child);
-                if (!child._startMenuPinnedAppId)
+                if (!child._startMenuPinnedItemKey)
                     child.destroy();
             }
         }
@@ -233,11 +460,11 @@ export class StartMenuPinnedDragController {
             return;
 
         const positions = new Map(
-            source._originalOrder.map((appId, index) => [appId, index])
+            source._originalOrder.map((itemKey, index) => [itemKey, index])
         );
         const tiles = this._gridTiles(grid).sort((a, b) =>
-            positions.get(a._startMenuPinnedAppId) -
-            positions.get(b._startMenuPinnedAppId)
+            positions.get(a._startMenuPinnedItemKey) -
+            positions.get(b._startMenuPinnedItemKey)
         );
         this._reflowGrid(grid, tiles);
     }

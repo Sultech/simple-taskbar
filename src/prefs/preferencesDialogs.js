@@ -14,7 +14,7 @@ export function confirmReset(window, createSettings) {
     const dialog = new Adw.AlertDialog({
         heading: _('Reset all settings?'),
         body: _(
-            'This will restore taskbar and Start Menu settings. Pinned taskbar and Start Menu apps, including their order, will be kept.'
+            'This will restore taskbar and Start Menu settings. Pinned taskbar apps and Start Menu items, including folders and their order, will be kept.'
         ),
     });
     dialog.add_response('cancel', _('Cancel'));
@@ -57,7 +57,7 @@ export function addResetGroup(page, window, createSettings) {
 
     const resetRow = new Adw.ActionRow({
         title: _('Reset All Settings'),
-        subtitle: _('Restore defaults without changing pinned taskbar or Start Menu apps'),
+        subtitle: _('Restore defaults without changing pinned taskbar apps or Start Menu items'),
     });
     const resetButton = new Gtk.Button({
         label: _('Reset…'),

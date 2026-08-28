@@ -79,11 +79,14 @@ export class StartMenuNavigationController {
         if (!target)
             target = this._focusableActorsIn(content)[0] ?? null;
         if (!target) {
-            target = this._getView() === 'all'
+            const view = this._getView();
+            target = view === 'all'
                 ? backButton.visible
                     ? backButton
                     : searchEntry
-                : allAppsButton;
+                : view === 'folder'
+                    ? backButton
+                    : allAppsButton;
         }
 
         target.grab_key_focus();

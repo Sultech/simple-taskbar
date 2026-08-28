@@ -30,6 +30,8 @@ import {StartMenuContextMenuController} from './startMenuContextMenuController.j
 import {StartMenuFooterController} from './startMenuFooterController.js';
 import {StartMenuNavigationController} from './startMenuNavigationController.js';
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
+import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
+import {StartMenuPinnedViewBuilder} from './startMenuPinnedView.js';
 import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 import {StartMenuTooltipController} from './startMenuTooltipController.js';
@@ -77,6 +79,8 @@ export class StartMenuController {
         this._settingsGIcon = params.settingsGIcon;
         this._appSystem = Shell.AppSystem.get_default();
         this._favorites = AppFavorites.getAppFavorites();
+        this._pinnedModel = new StartMenuPinnedModel(settings);
+        const defaultFolderName = _('Folder');
         this._searchController = new StartMenuSearchController();
         this._tooltipController = new StartMenuTooltipController();
         this._contextMenuController = new StartMenuContextMenuController(
@@ -88,8 +92,10 @@ export class StartMenuController {
                 getInterestingWindows: params.getInterestingWindows,
                 hideTooltip: instant =>
                     this._tooltipController.hide(instant),
+                defaultFolderName,
+                removeFolderLabel: _('Remove folder'),
                 refreshAfterPinChange: () => {
-                    if (this._view === 'pinned' &&
+                    if ((this._view === 'pinned' || this._view === 'folder') &&
                         !this._searchEntry.get_text().trim()) {
                         this.refresh();
                     }
@@ -101,16 +107,17 @@ export class StartMenuController {
             applyTheme: actor => this._applyThemeClass(actor),
         });
         this._pinnedDragController = new StartMenuPinnedDragController(
-            settings,
+            this._pinnedModel,
             {
                 columns: GRID_COLUMNS,
                 tileWidth: APP_TILE_WIDTH,
                 closeContextMenu: () => this._contextMenuController.close(),
-                onOrderChanged: appIds => {
-                    this._pinnedApps = appIds
-                        .map(appId => this._appSystem.lookup_app(appId))
-                        .filter(Boolean);
-                    this._firstVisibleApp = this._pinnedApps[0] ?? null;
+                defaultFolderName,
+                onChanged: () => this._queueRefresh(),
+                onMoveOut: () => {
+                    this._view = 'pinned';
+                    this._activeFolderId = null;
+                    this._queueRefresh();
                 },
             }
         );
@@ -130,6 +137,7 @@ export class StartMenuController {
         this._pinnedView = null;
         this._pinnedSignature = null;
         this._pinnedApps = [];
+        this._activeFolderId = null;
         this._selectedAppCategory = 'all';
         this._menuWidth = 0;
         this._menuHeight = 0;
@@ -189,6 +197,18 @@ export class StartMenuController {
             getView: () => this._view,
             setSearchFocusVisible: visible =>
                 this._setSearchFocusVisible(visible),
+        });
+        this._pinnedViewBuilder = new StartMenuPinnedViewBuilder(settings, {
+            columns: GRID_COLUMNS,
+            tileWidth: APP_TILE_WIDTH,
+            navigationController: this._navigationController,
+            tooltipController: this._tooltipController,
+            contextMenuController: this._contextMenuController,
+            pinnedDragController: this._pinnedDragController,
+            createAppLabel: (text, width) => this._createAppLabel(text, width),
+            launchApp: app => this._launchApp(app),
+            showFolder: folderId => this._showPinnedFolder(folderId, true),
+            syncButtonClasses: actor => this._syncShellButtonClasses(actor),
         });
 
         this._createSearchEntry();
@@ -358,6 +378,8 @@ export class StartMenuController {
             this._showSearchResults(query);
         else if (this._view === 'all')
             this._showAllApps(true);
+        else if (this._view === 'folder' && this._activeFolderId)
+            this._showPinnedFolder(this._activeFolderId);
         else
             this._showPinnedApps();
     }
@@ -597,6 +619,7 @@ export class StartMenuController {
             GLib.Source.remove(this._refreshIdleId);
             this._refreshIdleId = 0;
         }
+        this._content.remove_all_transitions();
         this._appSystem.disconnect(this._installedChangedId);
         this._installedChangedId = 0;
         if (this._stageCapturedEventId) {
@@ -609,9 +632,13 @@ export class StartMenuController {
         this._searchClearIcon = null;
         this._pinnedView?.destroy();
         this._pinnedView = null;
+        this._pinnedViewBuilder.destroy();
+        this._pinnedViewBuilder = null;
         this._pinnedDragController.destroy();
         this._pinnedDragController = null;
         this._pinnedApps = null;
+        this._activeFolderId = null;
+        this._pinnedModel = null;
         this._selectedAppCategory = null;
         this._pinnedSignature = null;
         this._searchController.destroy();
@@ -685,6 +712,8 @@ export class StartMenuController {
                 this._showSearchResults(query);
             else if (this._view === 'all')
                 this._showAllApps();
+            else if (this._view === 'folder' && this._activeFolderId)
+                this._showPinnedFolder(this._activeFolderId);
             else
                 this._showPinnedApps();
         });
@@ -725,10 +754,14 @@ export class StartMenuController {
             _('All apps'),
             'go-next-symbolic',
             pointerActivated => {
-                this._view = 'all';
                 this._setSearchText('');
-                this._showAllApps();
-                this._navigationController.focusAfterViewChange(pointerActivated);
+                this._showAllApps(
+                    false,
+                    true,
+                    () => this._navigationController.focusAfterViewChange(
+                        pointerActivated
+                    )
+                );
             }
         );
         this._backButton = this._createTextButton(
@@ -737,11 +770,25 @@ export class StartMenuController {
             pointerActivated => {
                 this._setSearchText('');
                 this._setSearchFocusVisible(false);
-                this._showDefaultView();
-                this._navigationController.focusAfterViewChange(pointerActivated);
+                if (this._view === 'folder' ||
+                    (this._view === 'all' &&
+                    !this._settings.get_boolean('start-menu-open-all-apps'))) {
+                    this._showPinnedApps(
+                        true,
+                        () => this._navigationController.focusAfterViewChange(
+                            pointerActivated
+                        )
+                    );
+                } else {
+                    this._showDefaultView();
+                    this._navigationController.focusAfterViewChange(
+                        pointerActivated
+                    );
+                }
             }
         );
         this._backButton.hide();
+        this._pinnedDragController.attachMoveOutTarget(this._backButton);
         this._header.add_child(this._headerTitle);
         this._header.add_child(this._backButton);
         this._header.add_child(this._allAppsButton);
@@ -800,24 +847,37 @@ export class StartMenuController {
         this._footerController.syncUserAvatar();
     }
 
-    _showPinnedApps() {
-        this._searchController.cancel();
-        this._setCategorySidebarVisible(false);
-        this._setScrollbarPolicy(true, false);
-        this._view = 'pinned';
-        this._headerTitle.text = _('Pinned');
-        this._allAppsButton.show();
-        this._backButton.hide();
-        this._ensurePinnedView();
-        this._firstVisibleApp = this._pinnedApps[0] ?? null;
-        this._firstSearchResult = null;
+    _showPinnedApps(animate = false, onShown = null) {
+        const show = () => {
+            this._searchController.cancel();
+            this._setCategorySidebarVisible(false);
+            this._setScrollbarPolicy(true, false);
+            this._view = 'pinned';
+            this._activeFolderId = null;
+            this._headerTitle.text = _('Pinned');
+            this._allAppsButton.show();
+            this._backButton.hide();
+            this._ensurePinnedView();
+            this._firstVisibleApp = this._pinnedApps[0] ?? null;
+            this._firstSearchResult = null;
 
-        const children = this._content.get_children();
-        if (children.length !== 1 || children[0] !== this._pinnedView) {
-            this._clearContent();
-            this._content.add_child(this._pinnedView);
+            const children = this._content.get_children();
+            if (children.length !== 1 || children[0] !== this._pinnedView) {
+                this._clearContent(false);
+                this._content.add_child(this._pinnedView);
+            }
+            this._updateSize();
+            if (onShown)
+                onShown();
+        };
+        if (animate && this.isOpen &&
+            (this._view === 'folder' || this._view === 'all')) {
+            this._animateContentView(false, show);
+            return;
         }
-        this._updateSize();
+
+        this._resetContentTransition();
+        show();
     }
 
     _showDefaultView() {
@@ -828,10 +888,10 @@ export class StartMenuController {
     }
 
     _ensurePinnedView() {
-        const pinnedApps = this._settings.get_strv('start-menu-pinned-apps')
-            .map(id => this._appSystem.lookup_app(id))
-            .filter(Boolean)
-            .filter(app => appShouldShow(app));
+        const pinnedItems = this._resolvePinnedItems();
+        const pinnedApps = pinnedItems.flatMap(item =>
+            item.type === 'app' ? [item.app] : item.apps
+        );
         const recommended = getRecommendedApps(
             this._settings,
             this._favorites,
@@ -841,7 +901,15 @@ export class StartMenuController {
             'start-menu-hide-pinned-app-titles'
         );
         const signature = JSON.stringify({
-            pinned: pinnedApps.map(app => [app.get_id(), app.get_name()]),
+            pinned: pinnedItems.map(item => item.type === 'app'
+                ? ['app', item.app.get_id(), item.app.get_name()]
+                : [
+                    'folder',
+                    item.id,
+                    item.name,
+                    item.appIds,
+                    item.apps.map(app => [app.get_id(), app.get_name()]),
+                ]),
             recommended: recommended.map(app => [app.get_id(), app.get_name()]),
             hidePinnedAppTitles,
         });
@@ -853,8 +921,8 @@ export class StartMenuController {
             orientation: Clutter.Orientation.VERTICAL,
             x_expand: true,
         });
-        if (pinnedApps.length > 0) {
-            view.add_child(this._createAppGrid(pinnedApps));
+        if (pinnedItems.length > 0) {
+            view.add_child(this._pinnedViewBuilder.createPinnedGrid(pinnedItems));
         } else {
             view.add_child(new St.Label({
                 style_class: 'simple-taskbar-windows-start-empty-pinned',
@@ -878,26 +946,117 @@ export class StartMenuController {
         this._queuePrepare();
     }
 
-    _showAllApps(keepCategory = false) {
-        this._searchController.cancel();
-        this._setScrollbarPolicy(true);
-        this._view = 'all';
-        this._headerTitle.text = _('All apps');
-        this._allAppsButton.hide();
-        this._backButton.visible =
-            !this._settings.get_boolean('start-menu-open-all-apps');
-        const apps = getAllApps(this._appSystem);
-        if (this._settings.get_boolean('start-menu-app-categories')) {
-            if (!keepCategory)
-                this._selectedAppCategory = 'all';
-            const groupedApps = groupAppsByCategory(apps);
-            const selected = this._buildCategorySidebar(apps, groupedApps);
-            this._setCategorySidebarVisible(true);
-            this._displayAppList(selected.apps, true);
-        } else {
-            this._setCategorySidebarVisible(false);
-            this._displayAppList(apps);
+    _showPinnedFolder(folderId, animate = false) {
+        const folderItem = this._pinnedModel.getFolder(folderId);
+        if (!folderItem) {
+            this._showPinnedApps();
+            return;
         }
+
+        const folder = this._resolveFolder(folderItem);
+        const show = () => {
+            this._searchController.cancel();
+            this._setCategorySidebarVisible(false);
+            this._setScrollbarPolicy(true, false);
+            this._view = 'folder';
+            this._activeFolderId = folderId;
+            this._headerTitle.text = folder.name;
+            this._allAppsButton.hide();
+            this._backButton.show();
+            this._firstVisibleApp = folder.apps[0] ?? null;
+            this._firstSearchResult = null;
+
+            const view = new St.BoxLayout({
+                style_class: 'simple-taskbar-windows-start-pinned-view',
+                orientation: Clutter.Orientation.VERTICAL,
+                x_expand: true,
+            });
+            if (folder.apps.length > 0) {
+                view.add_child(this._pinnedViewBuilder.createFolderGrid(folder));
+            } else {
+                view.add_child(new St.Label({
+                    style_class: 'simple-taskbar-windows-start-empty-pinned',
+                    text: _('This folder is empty'),
+                    x_align: Clutter.ActorAlign.CENTER,
+                }));
+            }
+
+            this._clearContent(false);
+            this._content.add_child(view);
+            this._updateSize();
+        };
+        if (animate && this.isOpen && this._view === 'pinned') {
+            this._animateContentView(true, show);
+            return;
+        }
+
+        this._resetContentTransition();
+        show();
+    }
+
+    _resolvePinnedItems() {
+        const items = [];
+        for (const item of this._pinnedModel.getItems()) {
+            if (item.type === 'app') {
+                const app = this._resolvePinnedApp(item.appId);
+                if (app)
+                    items.push({...item, app});
+                continue;
+            }
+
+            const folder = this._resolveFolder(item);
+            if (folder.apps.length > 0)
+                items.push(folder);
+        }
+        return items;
+    }
+
+    _resolveFolder(folder) {
+        return {
+            ...folder,
+            apps: folder.appIds
+                .map(appId => this._resolvePinnedApp(appId))
+                .filter(Boolean),
+        };
+    }
+
+    _resolvePinnedApp(appId) {
+        const app = this._appSystem.lookup_app(appId);
+        return app && appShouldShow(app) ? app : null;
+    }
+
+    _showAllApps(keepCategory = false, animate = false, onShown = null) {
+        const show = () => {
+            this._searchController.cancel();
+            this._setScrollbarPolicy(true);
+            this._view = 'all';
+            this._activeFolderId = null;
+            this._headerTitle.text = _('All apps');
+            this._allAppsButton.hide();
+            this._backButton.visible =
+                !this._settings.get_boolean('start-menu-open-all-apps');
+            const apps = getAllApps(this._appSystem);
+            if (this._settings.get_boolean('start-menu-app-categories')) {
+                if (!keepCategory)
+                    this._selectedAppCategory = 'all';
+                const groupedApps = groupAppsByCategory(apps);
+                const selected = this._buildCategorySidebar(apps, groupedApps);
+                this._setCategorySidebarVisible(true);
+                this._displayAppList(selected.apps, true);
+            } else {
+                this._setCategorySidebarVisible(false);
+                this._displayAppList(apps);
+            }
+            if (onShown)
+                onShown();
+        };
+        if (animate && this.isOpen && this._view === 'pinned') {
+            this._animateContentView(true, show);
+            return;
+        }
+
+        this._resetContentTransition();
+        show();
     }
 
     _showSearchResults(query) {
@@ -1054,7 +1213,9 @@ export class StartMenuController {
             );
     }
 
-    _clearContent() {
+    _clearContent(resetTransition = true) {
+        if (resetTransition)
+            this._resetContentTransition();
         this._tooltipController.hide(true);
         for (const child of this._content.get_children()) {
             if (child === this._pinnedView)
@@ -1064,73 +1225,35 @@ export class StartMenuController {
         }
     }
 
-    _createAppGrid(apps) {
-        const grid = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-app-grid',
-            orientation: Clutter.Orientation.VERTICAL,
+    _animateContentView(forward, show) {
+        this._resetContentTransition();
+        const outgoingX = forward ? -32 : 32;
+        const incomingX = -outgoingX;
+        this._content.ease({
+            translation_x: outgoingX,
+            opacity: 0,
+            duration: 110,
+            mode: Clutter.AnimationMode.EASE_IN_QUAD,
+            onStopped: finished => {
+                if (!finished)
+                    return;
+                show();
+                this._content.translation_x = incomingX;
+                this._content.opacity = 0;
+                this._content.ease({
+                    translation_x: 0,
+                    opacity: 255,
+                    duration: 150,
+                    mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+                });
+            },
         });
-        this._pinnedDragController.attachGrid(grid);
-        for (let index = 0; index < apps.length; index += GRID_COLUMNS) {
-            const row = new St.BoxLayout({
-                style_class: 'simple-taskbar-windows-start-app-row',
-                x_align: Clutter.ActorAlign.CENTER,
-            });
-            const rowApps = apps.slice(index, index + GRID_COLUMNS);
-            for (const app of rowApps)
-                row.add_child(this._createAppTile(app, grid));
-            for (let empty = rowApps.length; empty < GRID_COLUMNS; empty++)
-                row.add_child(new St.Widget({width: APP_TILE_WIDTH}));
-            grid.add_child(row);
-        }
-        return grid;
     }
 
-    _createAppTile(app, pinnedGrid = null) {
-        const hideTitle = this._settings.get_boolean(
-            'start-menu-hide-pinned-app-titles'
-        );
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-app-tile-content',
-            orientation: Clutter.Orientation.VERTICAL,
-            x_align: Clutter.ActorAlign.CENTER,
-        });
-        if (hideTitle)
-            content.y_align = Clutter.ActorAlign.CENTER;
-        const icon = app.create_icon_texture(hideTitle ? 48 : 32);
-        content.add_child(icon);
-        const label = this._createAppLabel(app.get_name(), 78);
-        label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
-        label.visible = !hideTitle;
-        label.x_align = Clutter.ActorAlign.CENTER;
-        label.clutter_text.set({
-            ellipsize: Pango.EllipsizeMode.END,
-            line_wrap: true,
-            line_wrap_mode: Pango.WrapMode.WORD_CHAR,
-        });
-        content.add_child(label);
-        const button = new St.Button({
-            style_class: 'simple-taskbar-windows-start-app-tile',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            width: APP_TILE_WIDTH,
-            accessible_name: app.get_name(),
-            child: content,
-        });
-        this._navigationController.enable(button);
-        this._tooltipController.add(button, app, label, false, hideTitle);
-        button.connect('clicked', () => this._launchApp(app));
-        this._contextMenuController.addHandler(button, app);
-        if (pinnedGrid) {
-            this._pinnedDragController.makeDraggable(
-                button,
-                icon,
-                app,
-                pinnedGrid
-            );
-        }
-        this._syncShellButtonClasses(button);
-        return button;
+    _resetContentTransition() {
+        this._content.remove_all_transitions();
+        this._content.translation_x = 0;
+        this._content.opacity = 255;
     }
 
     _createRecommendedGrid(apps) {
