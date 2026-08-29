@@ -72,8 +72,8 @@ export function animateStartMenuFolderAbsorb(
     targetActor.scale_x = 0.84;
     targetActor.scale_y = 0.84;
     targetActor.ease({
-        scale_x: 1.04,
-        scale_y: 1.04,
+        scale_x: 1,
+        scale_y: 1,
         duration: FOLDER_ABSORB_DURATION,
         mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
     });

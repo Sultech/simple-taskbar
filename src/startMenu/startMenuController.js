@@ -1444,7 +1444,6 @@ export class StartMenuController {
 
         if (change.type === 'folder-create' || change.type === 'folder-add') {
             this.refresh();
-            this._animatePinnedFolderResult(change.folderId);
             return;
         }
 
@@ -1481,14 +1480,6 @@ export class StartMenuController {
 
         this.refresh();
         this._animateVisibleAppResult(change.appId);
-    }
-
-    _animatePinnedFolderResult(folderId) {
-        const actor = this._findContentActor(candidate =>
-            candidate._startMenuFolderId === folderId
-        );
-        if (actor)
-            animateStartMenuItemIn(actor);
     }
 
     _animateVisibleAppResult(appId) {
