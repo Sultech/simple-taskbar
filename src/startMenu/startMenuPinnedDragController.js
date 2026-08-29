@@ -12,6 +12,7 @@ import {
 } from './startMenuPinnedModel.js';
 import {
     animateStartMenuFolderAbsorb,
+    animateStartMenuItemReflow,
 } from './startMenuItemAnimations.js';
 
 export class StartMenuPinnedDragController {
@@ -460,7 +461,7 @@ export class StartMenuPinnedDragController {
 
         tiles.splice(sourceIndex, 1);
         tiles.splice(targetIndex, 0, tile);
-        this._reflowGrid(grid, tiles);
+        this._reflowGrid(grid, tiles, tile);
     }
 
     _gridTiles(grid) {
@@ -471,8 +472,20 @@ export class StartMenuPinnedDragController {
         );
     }
 
-    _reflowGrid(grid, tiles) {
+    _reflowGrid(grid, tiles, draggedTile = null) {
         const rows = grid.get_children();
+        const oldPositions = new Map(tiles.map(tile => [
+            tile,
+            tile.get_transformed_position(),
+        ]));
+        const slotPositions = rows.flatMap(row => {
+            const [rowX, rowY] = row.get_transformed_position();
+            return row.get_children().map(child => [
+                rowX + child.x,
+                rowY + child.y,
+            ]);
+        });
+
         for (const row of rows) {
             for (const child of row.get_children()) {
                 row.remove_child(child);
@@ -483,9 +496,20 @@ export class StartMenuPinnedDragController {
 
         for (let index = 0; index < rows.length * this._columns; index++) {
             const row = rows[Math.floor(index / this._columns)];
-            row.add_child(tiles[index] ?? new St.Widget({
+            const tile = tiles[index];
+            row.add_child(tile ?? new St.Widget({
                 width: this._tileWidth,
             }));
+            if (!tile || tile === draggedTile)
+                continue;
+
+            const [oldX, oldY] = oldPositions.get(tile);
+            const [targetX, targetY] = slotPositions[index];
+            animateStartMenuItemReflow(
+                tile,
+                oldX - targetX,
+                oldY - targetY
+            );
         }
     }
 

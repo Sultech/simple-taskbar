@@ -10,6 +10,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const EXTERNAL_PLACEHOLDER_ANIMATION_TIME = 120;
+const TASKBAR_REFLOW_ANIMATION_TIME = 160;
 
 export class TaskbarDragController {
     constructor({
@@ -50,7 +51,6 @@ export class TaskbarDragController {
         this._externalPlaceholder = null;
         this._externalPlaceholderSize = 0;
         this._externalPlaceholderTargetIndex = -1;
-        this._externalPlaceholderMovePending = false;
         this._externalFavoriteIndex = -1;
         this._externalFavoriteCenters = null;
         this._externalDropAppId = null;
@@ -360,6 +360,13 @@ export class TaskbarDragController {
         for (const item of [...this._draggables.keys()])
             this.releaseDraggable(item);
         this._draggables = null;
+        for (const child of this._taskbarActor.get_children()) {
+            if (!child._taskbarApp)
+                continue;
+            child.remove_all_transitions();
+            child.translation_x = 0;
+            child.translation_y = 0;
+        }
         this._clearExternalPlaceholder(false);
         this._listeners.clear();
         this._dragging = false;
@@ -367,7 +374,6 @@ export class TaskbarDragController {
         this._pinnedDropActive = false;
         this._externalPlaceholderSize = 0;
         this._externalPlaceholderTargetIndex = -1;
-        this._externalPlaceholderMovePending = false;
         this._externalFavoriteIndex = -1;
         this._externalFavoriteCenters = null;
         this._externalDropAppId = null;
@@ -478,17 +484,78 @@ export class TaskbarDragController {
         const insertIndex = targetIndex + (insertBefore ? 0 : 1);
         const desiredChildren = [...remainingChildren];
         desiredChildren.splice(insertIndex, 0, ...sourceGroup.items);
-        let changed = false;
+        const changed = desiredChildren.some((child, index) =>
+            children[index] !== child
+        );
+        if (!changed)
+            return false;
 
+        const vertical = panelIsVertical(this._settings);
+        const sourceLength = sourceGroup.items.reduce((length, item) =>
+            length + (vertical ? item.height : item.width), 0
+        );
+        const visualDirection = this._taskbarVisualDirection(children);
+        const sourceIndex = children.indexOf(sourceGroup.items[0]);
+        const destinationIndex = desiredChildren.indexOf(sourceGroup.items[0]);
         for (let index = 0; index < desiredChildren.length; index++) {
             const child = desiredChildren[index];
-            if (this._taskbarActor.get_child_at_index(index) === child)
+            if (this._taskbarActor.get_child_at_index(index) !== child)
+                this._taskbarActor.set_child_at_index(child, index);
+        }
+        this._animateTaskbarCrossedItems(
+            children,
+            desiredChildren,
+            sourceItems,
+            sourceLength,
+            destinationIndex > sourceIndex ? visualDirection : -visualDirection
+        );
+        return true;
+    }
+
+    _taskbarVisualDirection(children) {
+        const vertical = panelIsVertical(this._settings);
+        let previousPosition = null;
+        for (const child of children) {
+            if (!child.visible)
                 continue;
 
-            this._taskbarActor.set_child_at_index(child, index);
-            changed = true;
+            const position = vertical ? child.y : child.x;
+            if (previousPosition !== null && position !== previousPosition)
+                return position > previousPosition ? 1 : -1;
+            previousPosition = position;
         }
-        return changed;
+        return 1;
+    }
+
+    _animateTaskbarCrossedItems(
+        oldChildren,
+        newChildren,
+        skippedItems,
+        movedLength,
+        direction
+    ) {
+        if (!St.Settings.get().enable_animations || movedLength <= 0)
+            return;
+
+        const vertical = panelIsVertical(this._settings);
+        for (const child of oldChildren) {
+            if (!child._taskbarApp || skippedItems.has(child) ||
+                oldChildren.indexOf(child) === newChildren.indexOf(child)) {
+                continue;
+            }
+
+            child.remove_all_transitions();
+            if (vertical)
+                child.translation_y += direction * movedLength;
+            else
+                child.translation_x += direction * movedLength;
+            child.ease({
+                translation_x: 0,
+                translation_y: 0,
+                duration: TASKBAR_REFLOW_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+            });
+        }
     }
 
     _runningOrder() {
@@ -618,38 +685,34 @@ export class TaskbarDragController {
         if (favoriteIndex === this._externalPlaceholderTargetIndex)
             return;
 
+        const firstPlacement = this._externalFavoriteIndex < 0;
+        const oldChildren = this._taskbarActor.get_children();
+        const oldPlaceholderIndex = oldChildren.indexOf(
+            this._externalPlaceholder
+        );
+        const visualDirection = this._taskbarVisualDirection(oldChildren);
         this._externalPlaceholderTargetIndex = favoriteIndex;
-        if (this._externalFavoriteIndex < 0) {
-            this._placeExternalPlaceholder(favoriteItems);
+        this._placeExternalPlaceholder(favoriteItems);
+        if (firstPlacement) {
             this._expandExternalPlaceholder(property);
             return;
         }
 
-        if (this._externalPlaceholderMovePending)
-            return;
-
-        this._externalPlaceholderMovePending = true;
-        this._externalPlaceholder.remove_all_transitions();
-        if (!St.Settings.get().enable_animations) {
-            this._externalPlaceholder[property] = 0;
-            this._placeExternalPlaceholder(favoriteItems);
-            this._externalPlaceholder[property] = this._externalPlaceholderSize;
-            this._externalPlaceholderMovePending = false;
-            return;
-        }
-
-        this._externalPlaceholder.ease({
-            [property]: 0,
-            duration: EXTERNAL_PLACEHOLDER_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onStopped: finished => {
-                if (!finished || !this._externalPlaceholder)
-                    return;
-                this._placeExternalPlaceholder(favoriteItems);
-                this._externalPlaceholderMovePending = false;
-                this._expandExternalPlaceholder(property);
-            },
-        });
+        const newChildren = this._taskbarActor.get_children();
+        const newPlaceholderIndex = newChildren.indexOf(
+            this._externalPlaceholder
+        );
+        this._animateTaskbarCrossedItems(
+            oldChildren,
+            newChildren,
+            new Set(),
+            vertical
+                ? this._externalPlaceholder.height
+                : this._externalPlaceholder.width,
+            newPlaceholderIndex > oldPlaceholderIndex
+                ? visualDirection
+                : -visualDirection
+        );
     }
 
     _placeExternalPlaceholder(favoriteItems) {
@@ -697,7 +760,6 @@ export class TaskbarDragController {
         placeholder.remove_all_transitions();
         this._externalFavoriteIndex = -1;
         this._externalPlaceholderTargetIndex = -1;
-        this._externalPlaceholderMovePending = false;
         this._externalFavoriteCenters = null;
         if (!animate || !St.Settings.get().enable_animations) {
             placeholder.destroy();

@@ -9,6 +9,7 @@ import * as IconGrid from 'resource:///org/gnome/shell/ui/iconGrid.js';
 const ITEM_EXIT_DURATION = 120;
 const ITEM_ENTER_DURATION = 170;
 const FOLDER_ABSORB_DURATION = 140;
+const ITEM_REFLOW_DURATION = 160;
 
 function canAnimate(actor) {
     return St.Settings.get().enable_animations && actor.get_stage();
@@ -91,4 +92,22 @@ export function animateStartMenuFolderAbsorb(
 export function animateStartMenuLaunch(actor) {
     if (canAnimate(actor) && actor.has_allocation())
         IconGrid.zoomOutActor(actor);
+}
+
+export function animateStartMenuItemReflow(actor, offsetX, offsetY) {
+    actor.remove_all_transitions();
+    actor.translation_x = offsetX;
+    actor.translation_y = offsetY;
+    if (!St.Settings.get().enable_animations) {
+        actor.translation_x = 0;
+        actor.translation_y = 0;
+        return;
+    }
+
+    actor.ease({
+        translation_x: 0,
+        translation_y: 0,
+        duration: ITEM_REFLOW_DURATION,
+        mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+    });
 }
