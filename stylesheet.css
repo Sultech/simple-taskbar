@@ -380,25 +380,29 @@
     -minimum-hpadding: 3px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-3 .simple-taskbar-start,
 #panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
     border-top-width: 3px;
     border-bottom-width: 3px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-4 .simple-taskbar-start,
 #panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
     border-top-width: 4px;
     border-bottom-width: 4px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-5 .simple-taskbar-start,
 #panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
     border-top-width: 5px;
     border-bottom-width: 5px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button:not(.simple-taskbar-show-desktop),
+#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
+#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-6 .simple-taskbar-start,
 #panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
     border-top-width: 6px;
     border-bottom-width: 6px;

@@ -7,7 +7,10 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {IconDominantColorCache} from './iconDominantColor.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
-import {ICON_VERTICAL_RESERVE} from '../shared/panelSizing.js';
+import {
+    taskbarGlassHeight,
+    taskbarVisualPanelHeight,
+} from '../shared/panelSizing.js';
 
 const CONTENT_LEADING_SPACE = 7;
 const ICON_GLASS_MARGIN = 3;
@@ -43,12 +46,12 @@ export class TaskbarAppearanceController {
     }
 
     visualPanelHeight() {
-        if (this._settings.isDock &&
-            !this._settings.get_boolean('dock-panel-mode')) {
-            return this._getIconSize() + ICON_VERTICAL_RESERVE;
-        }
-
-        return this._getPanelHeight();
+        return taskbarVisualPanelHeight(
+            this._getPanelHeight(),
+            this._getIconSize(),
+            this._settings.isDock &&
+                !this._settings.get_boolean('dock-panel-mode')
+        );
     }
 
     updateGlassGeometry(item) {
@@ -145,13 +148,12 @@ export class TaskbarAppearanceController {
     }
 
     glassHeight(panelHeight = this.visualPanelHeight()) {
-        if (this._settings.get_boolean('windows-xp-theme-enabled'))
-            return panelHeight - 5;
-
-        const roundedIndicators = this._settings.get_string(
-            'running-indicator-style'
-        ) === 'rounded';
-        return Math.max(1, panelHeight - (roundedIndicators ? 7 : 8));
+        return taskbarGlassHeight(
+            panelHeight,
+            this._settings.get_string('running-indicator-style') ===
+                'rounded',
+            this._settings.get_boolean('windows-xp-theme-enabled')
+        );
     }
 
     glassY() {

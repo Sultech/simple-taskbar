@@ -30,6 +30,10 @@ import {
     panelIsVertical,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
+import {
+    taskbarGlassHeight,
+    taskbarVisualPanelHeight,
+} from '../shared/panelSizing.js';
 
 export class StartButtonController {
     constructor({
@@ -170,6 +174,29 @@ export class StartButtonController {
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
         this._hover.set_width(iconSize);
+        const vertical = panelIsVertical(this._settings);
+        if (vertical) {
+            this._hover.set_height(-1);
+            this._hover.translation_y = 0;
+            this._hover.y_align = Clutter.ActorAlign.FILL;
+            this._hover.y_expand = true;
+        } else {
+            const visualPanelHeight = taskbarVisualPanelHeight(
+                this._settings.get_int('panel-height'),
+                iconSize,
+                this._settings.isDock &&
+                    !this._settings.get_boolean('dock-panel-mode')
+            );
+            this._hover.set_height(taskbarGlassHeight(
+                visualPanelHeight,
+                this._settings.get_string('running-indicator-style') ===
+                    'rounded',
+                this._settings.get_boolean('windows-xp-theme-enabled')
+            ));
+            this._hover.translation_y = 1;
+            this._hover.y_align = Clutter.ActorAlign.CENTER;
+            this._hover.y_expand = false;
+        }
         const width = this._settings.get_boolean('windows-xp-theme-enabled')
             ? this._windowsXpStartButton.width
             : iconSize + padding * 2;
@@ -183,7 +210,7 @@ export class StartButtonController {
         ) && startButtonPosition === 'left'
             ? padding
             : 0;
-        if (panelIsVertical(this._settings)) {
+        if (vertical) {
             this._content.set_width(-1);
             this._content.set_height(width);
             this.actor.set_width(-1);
@@ -409,13 +436,16 @@ export class StartButtonController {
             this._syncState();
             this._notifyMenuOpenStateChanged();
         }, this._signalHolder);
-        const syncPosition = () => this.applyAppearance(
+        const syncAppearance = () => this.applyAppearance(
             this._icon.icon_size,
             this._settings.get_int('start-button-padding')
         );
         this._settings.connectObject(
-            'changed::start-button-position', syncPosition,
-            'changed::start-button-follow-app-alignment', syncPosition,
+            'changed::start-button-position', syncAppearance,
+            'changed::start-button-follow-app-alignment', syncAppearance,
+            'changed::panel-height', syncAppearance,
+            'changed::running-indicator-style', syncAppearance,
+            'changed::dock-panel-mode', syncAppearance,
             this._signalHolder
         );
         this._settings.connectObject(
