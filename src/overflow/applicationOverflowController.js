@@ -120,6 +120,8 @@ export class ApplicationOverflowController {
         this._button = null;
         this._icon = null;
         this._overflowButtonTargetVisible = false;
+        this._buttonSize = 0;
+        this._buttonSizeAnimating = false;
         this._spacer = new St.Widget({visible: false});
         this._maximumSize = Number.MAX_SAFE_INTEGER;
         this._iconSizeSyncPending = false;
@@ -409,6 +411,8 @@ export class ApplicationOverflowController {
         this._taskbarController = null;
         this._previewController = null;
         this._overflowItems = null;
+        this._buttonSize = 0;
+        this._buttonSizeAnimating = false;
         this._iconSizeSyncPending = false;
         this._layoutSignature = null;
         this._pendingOverflowTransition = null;
@@ -531,6 +535,9 @@ export class ApplicationOverflowController {
         }
 
         const vertical = panelIsVertical(this._settings);
+        const collapseStartSize = vertical
+            ? this._viewport.height
+            : this._viewport.width;
         const panelHeight = this._settings.get_int('panel-height');
         const items = this._taskbarController.getOrderedApplicationItems();
         const previousVisibleCount = Math.max(
@@ -575,11 +582,8 @@ export class ApplicationOverflowController {
             return;
         }
 
-        this._syncOverflowButton(true);
-        this._button.ensure_style();
-        const buttonSize = vertical
-            ? this._button.get_preferred_height(panelHeight)[1]
-            : this._button.get_preferred_width(panelHeight)[1];
+        const buttonAppeared = this._syncOverflowButton(true);
+        const buttonSize = this._overflowButtonSize(vertical, panelHeight);
         const availableSize = Math.max(
             1,
             this._maximumSize - buttonSize - locationSize -
@@ -610,20 +614,18 @@ export class ApplicationOverflowController {
                 separatorSize
             )
             : null;
+        const collapse = buttonAppeared && collapseStartSize > visibleSize;
         this._setViewportSize(
             Math.max(1, visibleSize),
             vertical,
-            revealStartSize,
+            revealStartSize ?? (collapse ? collapseStartSize : null),
             Math.max(1, visibleSize)
         );
-        if (vertical) {
-            this._spacer.set_width(-1);
-            this._spacer.set_height(Math.max(0, availableSize - visibleSize));
-        } else {
-            this._spacer.set_height(-1);
-            this._spacer.set_width(Math.max(0, availableSize - visibleSize));
-        }
-        this._spacer.show();
+        this._setSpacerSize(
+            Math.max(0, availableSize - visibleSize),
+            vertical,
+            collapse ? 0 : null
+        );
         this._setOverflowItems(items.slice(visibleCount));
         this._themeController.sync();
     }
@@ -714,24 +716,30 @@ export class ApplicationOverflowController {
         });
     }
 
-    _syncOverflowButton(visible, releaseSpace = false) {
+    _syncOverflowButton(visible) {
         if (visible === this._overflowButtonTargetVisible)
-            return;
+            return false;
 
         const vertical = panelIsVertical(this._settings);
+        const panelHeight = this._settings.get_int('panel-height');
         const mainProperty = vertical ? 'height' : 'width';
+        const animate = St.Settings.get().enable_animations;
         this._overflowButtonTargetVisible = visible;
         this._button.remove_all_transitions();
         this._button.set_pivot_point(0.5, 0.5);
         if (visible) {
             this._button[mainProperty] = -1;
-            if (!St.Settings.get().enable_animations) {
+            const buttonSize = this._overflowButtonSize(vertical, panelHeight);
+            if (!animate) {
                 this._button.scale_x = 1;
                 this._button.scale_y = 1;
                 this._button.opacity = 255;
                 this._button.show();
-                return;
+                return true;
             }
+
+            this._buttonSizeAnimating = true;
+            this._button[mainProperty] = 0;
             this._button.scale_x = 0.72;
             this._button.scale_y = 0.72;
             this._button.opacity = 0;
@@ -747,27 +755,47 @@ export class ApplicationOverflowController {
                 duration: OVERFLOW_BUTTON_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             });
-            return;
+            this._button.ease({
+                [mainProperty]: buttonSize,
+                duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+                onStopped: finished => {
+                    this._buttonSizeAnimating = false;
+                    if (finished && this._overflowButtonTargetVisible)
+                        this._button[mainProperty] = -1;
+                },
+            });
+            return true;
         }
 
         if (!this._button.visible)
-            return;
-        if (!St.Settings.get().enable_animations) {
+            return false;
+        if (!animate) {
             this._button.hide();
             this._button[mainProperty] = -1;
             this._button.scale_x = 1;
             this._button.scale_y = 1;
             this._button.opacity = 255;
-            return;
+            return true;
         }
 
-        const params = {
+        this._buttonSizeAnimating = true;
+        this._button[mainProperty] = vertical
+            ? this._button.height
+            : this._button.width;
+        this._button.ease({
             scale_x: 0.72,
             scale_y: 0.72,
             opacity: 0,
             duration: OVERFLOW_BUTTON_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_IN_QUAD,
+        });
+        this._button.ease({
+            [mainProperty]: 0,
+            duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
             onStopped: finished => {
+                this._buttonSizeAnimating = false;
                 if (!finished || this._overflowButtonTargetVisible)
                     return;
                 this._button.hide();
@@ -776,15 +804,19 @@ export class ApplicationOverflowController {
                 this._button.scale_y = 1;
                 this._button.opacity = 255;
             },
-        };
-        if (releaseSpace) {
-            this._button[mainProperty] = vertical
-                ? this._button.height
-                : this._button.width;
-            params[mainProperty] = 0;
-            params.duration = OVERFLOW_REVEAL_ANIMATION_TIME;
-        }
-        this._button.ease(params);
+        });
+        return true;
+    }
+
+    _overflowButtonSize(vertical, panelHeight) {
+        if (this._buttonSizeAnimating)
+            return this._buttonSize;
+
+        this._button.ensure_style();
+        this._buttonSize = vertical
+            ? this._button.get_preferred_height(panelHeight)[1]
+            : this._button.get_preferred_width(panelHeight)[1];
+        return this._buttonSize;
     }
 
     _onTaskbarDragEnd() {
@@ -797,12 +829,15 @@ export class ApplicationOverflowController {
         this._taskbarController.setPreserveItemWidths(false);
         this._spacer.hide();
         const vertical = panelIsVertical(this._settings);
+        const releasedViewportSize = vertical
+            ? this._viewport.height
+            : this._viewport.width;
         const panelHeight = this._settings.get_int('panel-height');
         const items = this._taskbarController.getOrderedApplicationItems();
         const locationItems = this._taskbarController.getLocationItems();
         const reveal = previousVisibleCount !== null &&
             previousVisibleCount < items.length;
-        this._syncOverflowButton(false, reveal);
+        const buttonReleasedSpace = this._syncOverflowButton(false);
         this._syncLocationSeparator(
             this._shouldShowLocationSeparator(items, locationItems),
             vertical
@@ -843,7 +878,7 @@ export class ApplicationOverflowController {
                 separatorIndex,
                 separatorSize
             )
-            : null;
+            : (buttonReleasedSpace ? releasedViewportSize : null);
         this._setViewportSize(
             maximumSize,
             vertical,
@@ -873,7 +908,7 @@ export class ApplicationOverflowController {
 
     _setViewportSize(maximumSize, vertical, startSize, targetSize) {
         this._viewport.setMaximumSize(maximumSize, vertical);
-        if (startSize === null || startSize >= targetSize ||
+        if (startSize === null || startSize === targetSize ||
             !St.Settings.get().enable_animations) {
             return;
         }
@@ -889,6 +924,30 @@ export class ApplicationOverflowController {
                 if (finished)
                     this._viewport[property] = -1;
             },
+        });
+    }
+
+    _setSpacerSize(size, vertical, startSize) {
+        const property = vertical ? 'height' : 'width';
+        this._spacer[vertical ? 'width' : 'height'] = -1;
+        this._spacer.show();
+        if (startSize === null) {
+            if (!this._spacer.get_transition(property))
+                this._spacer[property] = size;
+            return;
+        }
+
+        this._spacer.remove_transition(property);
+        if (startSize === size || !St.Settings.get().enable_animations) {
+            this._spacer[property] = size;
+            return;
+        }
+
+        this._spacer[property] = startSize;
+        this._spacer.ease({
+            [property]: size,
+            duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
         });
     }
 
