@@ -28,9 +28,7 @@ export class ApplicationOverflowItemController {
     createTaskbarItem(item) {
         const panelHeight = this._settings.get_int('panel-height');
         const vertical = panelIsVertical(this._settings);
-        const size = vertical
-            ? item.get_preferred_height(panelHeight)[1]
-            : item.get_preferred_width(panelHeight)[1];
+        const size = this._taskbarController.getItemLength(item);
         const source = item._taskbarIsShowDesktop
             ? item.child
             : item._taskbarVisual;

@@ -82,10 +82,11 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         const [, , naturalWidth, naturalHeight] =
             this.child.get_preferred_size();
         const [childScaleX, childScaleY] = this.child.get_scale();
-        const childWidth = this.animatingOut
+        const scaled = this.scale_x !== 1 || this.scale_y !== 1;
+        const childWidth = scaled
             ? naturalWidth * childScaleX
             : Math.min(naturalWidth * childScaleX, availableWidth);
-        const childHeight = this.animatingOut
+        const childHeight = scaled
             ? naturalHeight * childScaleY
             : Math.min(naturalHeight * childScaleY, availableHeight);
         const childBox = new Clutter.ActorBox();

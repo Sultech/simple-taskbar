@@ -554,11 +554,7 @@ export class ApplicationOverflowController {
             ? this._viewport.vadjustment
             : this._viewport.hadjustment;
         adjustment.set_value(0);
-        const itemSizes = this._getItemSizes(
-            items,
-            panelHeight,
-            vertical
-        );
+        const itemSizes = this._getItemSizes(items);
         const locationSize = locationItems.reduce((size, item) => size + (
             vertical
                 ? item.get_preferred_height(panelHeight)[1]
@@ -842,11 +838,7 @@ export class ApplicationOverflowController {
             this._shouldShowLocationSeparator(items, locationItems),
             vertical
         );
-        const itemSizes = this._getItemSizes(
-            items,
-            panelHeight,
-            vertical
-        );
+        const itemSizes = this._getItemSizes(items);
         const locationSize = locationItems
             .reduce((size, item) => size + (
                 vertical
@@ -898,11 +890,9 @@ export class ApplicationOverflowController {
         return size;
     }
 
-    _getItemSizes(items, panelHeight, vertical) {
+    _getItemSizes(items) {
         return items.map(item =>
-            vertical
-                ? item.get_preferred_height(panelHeight)[1]
-                : item.get_preferred_width(panelHeight)[1]
+            this._taskbarController.getItemLength(item)
         );
     }
 
@@ -962,12 +952,8 @@ export class ApplicationOverflowController {
             'application-overflow-style'
         );
         const panelHeight = this._settings.get_int('panel-height');
-        const vertical = panelIsVertical(this._settings);
-        const layoutSignature = items.map(item =>
-            vertical
-                ? item.get_preferred_height(panelHeight)[1]
-                : item.get_preferred_width(panelHeight)[1]
-        ).join(':') + `:${panelHeight}`;
+        const layoutSignature =
+            `${this._getItemSizes(items).join(':')}:${panelHeight}`;
         const matchesCurrent = style === this._style &&
             layoutSignature === this._layoutSignature &&
             items.length === this._overflowItems.length &&
@@ -1199,13 +1185,9 @@ export class ApplicationOverflowController {
                 1,
                 (vertical ? workArea.height : workArea.width) - POPUP_MARGIN
             );
-            const panelHeight = this._settings.get_int('panel-height');
-            const contentSize = this._overflowItems.reduce(
-                (size, item) => size + (vertical
-                    ? item.get_preferred_height(panelHeight)[1]
-                    : item.get_preferred_width(panelHeight)[1]),
-                0
-            );
+            const contentSize = this._getItemSizes(
+                this._overflowItems
+            ).reduce((size, itemSize) => size + itemSize, 0);
             const hasScrollbar = contentSize > maximumSize;
             if (hasScrollbar) {
                 this._menu.box.add_style_class_name(

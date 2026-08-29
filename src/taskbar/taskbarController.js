@@ -618,24 +618,28 @@ export class TaskbarController {
         return this._iconSize;
     }
 
-    getLengthForIconSize(iconSize, items = this.getOrderedItems()) {
-        const vertical = panelIsVertical(this._settings);
-        const length = items.reduce((total, item) => {
-            if (item._taskbarIsShowDesktop) {
-                return total + (vertical
-                    ? item.get_preferred_height(this._panelHeight)[1]
-                    : item.get_preferred_width(this._panelHeight)[1]);
-            }
+    getItemLength(item, iconSize = this._iconSize) {
+        if (item._taskbarIsShowDesktop) {
+            return panelIsVertical(this._settings)
+                ? item.get_preferred_height(this._panelHeight)[1]
+                : item.get_preferred_width(this._panelHeight)[1];
+        }
 
-            return total + this._appearanceController.itemSlotWidth(
-                item._taskbarWindow,
-                item._taskbarIsLauncher,
-                item._taskbarPinnedToRunningGap,
-                item._taskbarIsCombinedApp,
-                item._taskbarTrailingSpacing,
-                iconSize
-            );
-        }, 0);
+        return this._appearanceController.itemSlotWidth(
+            item._taskbarWindow,
+            item._taskbarIsLauncher,
+            item._taskbarPinnedToRunningGap,
+            item._taskbarIsCombinedApp,
+            item._taskbarTrailingSpacing,
+            iconSize
+        );
+    }
+
+    getLengthForIconSize(iconSize, items = this.getOrderedItems()) {
+        const length = items.reduce(
+            (total, item) => total + this.getItemLength(item, iconSize),
+            0
+        );
         return length + this.getPinnedSeparatorLength() +
             this.getLocationSeparatorLength();
     }
