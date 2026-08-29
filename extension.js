@@ -485,7 +485,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings.get_int('start-button-padding')
         );
         this._panelController.syncVerticalItems();
-        this._applicationOverflowController.sync();
+        this._applicationOverflowController.syncIconSizeChange();
         return true;
     }
 

@@ -529,7 +529,7 @@ export class SecondaryPanelDockController {
             this._settings.get_int('start-button-padding')
         );
         this._verticalItemsController.sync();
-        this._applicationOverflowController.sync();
+        this._applicationOverflowController.syncIconSizeChange();
         return true;
     }
 
