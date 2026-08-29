@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+import St from 'gi://St';
+
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
+
+const OVERFLOW_REFLOW_ANIMATION_TIME = 160;
 
 export class ApplicationOverflowDragController {
     constructor(taskbarController, getRecords, getStyle, getVertical) {
@@ -23,11 +28,34 @@ export class ApplicationOverflowDragController {
     }
 
     clearContentBox() {
+        if (!this._contentBox)
+            return;
+
+        for (const child of this._contentBox.get_children()) {
+            child.remove_all_transitions();
+            child.translation_x = 0;
+            child.translation_y = 0;
+        }
         this._contentBox = null;
     }
 
+    matchesVisualOrder(items) {
+        if (!this._contentBox)
+            return false;
+
+        const records = this._getRecords();
+        const children = this._contentBox.get_children();
+        return items.length === children.length &&
+            children.every((child, index) => {
+                const record = records.find(entry =>
+                    entry.auxiliaryItem === child
+                );
+                return record.sourceItem === items[index];
+            });
+    }
+
     destroy() {
-        this._contentBox = null;
+        this.clearContentBox();
         this._getStyle = null;
         this._getVertical = null;
         this._getRecords = null;
@@ -213,12 +241,80 @@ export class ApplicationOverflowDragController {
         const insertIndex = targetIndex + (insertBefore ? 0 : 1);
         const desiredChildren = [...remainingChildren];
         desiredChildren.splice(insertIndex, 0, ...sourceAuxiliaryItems);
+        const changed = desiredChildren.some((child, index) =>
+            children[index] !== child
+        );
+        if (!changed)
+            return;
 
+        const horizontal = this._horizontal();
+        const spacing = this._contentBox.get_theme_node().get_length('spacing');
+        const sourceLength = sourceAuxiliaryItems.reduce(
+            (length, item) =>
+                length + (horizontal ? item.width : item.height),
+            spacing * sourceAuxiliaryItems.length
+        );
+        const visualDirection = this._visualDirection(children, horizontal);
+        const sourceIndex = children.indexOf(sourceAuxiliaryItems[0]);
+        const destinationIndex = desiredChildren.indexOf(sourceAuxiliaryItems[0]);
         for (let index = 0; index < desiredChildren.length; index++) {
             const child = desiredChildren[index];
-            if (this._contentBox.get_child_at_index(index) === child)
+            if (this._contentBox.get_child_at_index(index) !== child)
+                this._contentBox.set_child_at_index(child, index);
+        }
+        this._animateCrossedItems(
+            children,
+            desiredChildren,
+            sourceItems,
+            sourceLength,
+            destinationIndex > sourceIndex ? visualDirection : -visualDirection,
+            horizontal
+        );
+    }
+
+    _horizontal() {
+        return this._getStyle() === 'taskbar' && !this._getVertical();
+    }
+
+    _visualDirection(children, horizontal) {
+        let previousPosition = null;
+        for (const child of children) {
+            const position = horizontal ? child.x : child.y;
+            if (previousPosition !== null && position !== previousPosition)
+                return position > previousPosition ? 1 : -1;
+            previousPosition = position;
+        }
+        return 1;
+    }
+
+    _animateCrossedItems(
+        oldChildren,
+        newChildren,
+        skippedItems,
+        movedLength,
+        direction,
+        horizontal
+    ) {
+        if (!St.Settings.get().enable_animations || movedLength <= 0)
+            return;
+
+        for (const child of oldChildren) {
+            if (skippedItems.has(child) ||
+                oldChildren.indexOf(child) === newChildren.indexOf(child)) {
                 continue;
-            this._contentBox.set_child_at_index(child, index);
+            }
+
+            child.remove_all_transitions();
+            if (horizontal)
+                child.translation_x += direction * movedLength;
+            else
+                child.translation_y += direction * movedLength;
+            child.ease({
+                translation_x: 0,
+                translation_y: 0,
+                duration: OVERFLOW_REFLOW_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+            });
         }
     }
 }

@@ -24,6 +24,7 @@ const MAX_WINDOW_ASPECT = 2.2;
 const POPUP_WIDTH_RATIO = 0.86;
 const POPUP_HEIGHT_RATIO = 0.74;
 const SCROLLBAR_RESERVE = 14;
+const CARD_REMOVE_DURATION = 150;
 
 function getWindowAspect(window) {
     const source = window.get_compositor_private();
@@ -519,7 +520,6 @@ const GridAltTabList = GObject.registerClass({
         this.windows.splice(index, 1);
         this._cardWidths.splice(index, 1);
         card.disconnectObject(this);
-        card.destroy();
         this._rowIndices = this._rowIndices
             .map(row => row
                 .filter(candidate => candidate !== index)
@@ -527,8 +527,35 @@ const GridAltTabList = GObject.registerClass({
                     candidate > index ? candidate - 1 : candidate))
             .filter(row => row.length > 0);
         this._contentWidth = this._maximumRowWidth();
-        this._layoutCards();
         this.emit('item-removed', index);
+
+        const row = card.get_parent();
+        if (!St.Settings.get().enable_animations || !card.mapped) {
+            card.destroy();
+            if (row && row.get_n_children() === 0)
+                row.destroy();
+            return;
+        }
+
+        card.remove_all_transitions();
+        card.set_pivot_point(0.5, 0.5);
+        card.height = Math.max(1, card.height);
+        card.ease({
+            width: 0,
+            height: 0,
+            scale_x: 0.9,
+            scale_y: 0.9,
+            opacity: 0,
+            duration: CARD_REMOVE_DURATION,
+            mode: Clutter.AnimationMode.EASE_IN_QUAD,
+            onStopped: finished => {
+                if (!finished)
+                    return;
+                card.destroy();
+                if (row && row.get_n_children() === 0)
+                    row.destroy();
+            },
+        });
     }
 
     getVerticalIndex(index, direction) {

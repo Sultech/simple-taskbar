@@ -10,6 +10,7 @@ const ITEM_EXIT_DURATION = 120;
 const ITEM_ENTER_DURATION = 170;
 const FOLDER_ABSORB_DURATION = 140;
 const ITEM_REFLOW_DURATION = 160;
+const FOLDER_EXPAND_STAGGER = 24;
 
 function canAnimate(actor) {
     return St.Settings.get().enable_animations && actor.get_stage();
@@ -92,6 +93,28 @@ export function animateStartMenuFolderAbsorb(
 export function animateStartMenuLaunch(actor) {
     if (canAnimate(actor) && actor.has_allocation())
         IconGrid.zoomOutActor(actor);
+}
+
+export function animateStartMenuItemsIn(actors) {
+    for (let index = 0; index < actors.length; index++) {
+        const actor = actors[index];
+        if (!canAnimate(actor))
+            continue;
+
+        actor.remove_all_transitions();
+        actor.set_pivot_point(0.5, 0.5);
+        actor.scale_x = 0.68;
+        actor.scale_y = 0.68;
+        actor.opacity = 0;
+        actor.ease({
+            scale_x: 1,
+            scale_y: 1,
+            opacity: 255,
+            delay: index * FOLDER_EXPAND_STAGGER,
+            duration: ITEM_ENTER_DURATION,
+            mode: Clutter.AnimationMode.EASE_OUT_BACK,
+        });
+    }
 }
 
 export function animateStartMenuItemReflow(actor, offsetX, offsetY) {

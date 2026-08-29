@@ -26,6 +26,8 @@ function normalizeAppIdentifier(value) {
         .replace(/[^a-z0-9]/g, '');
 }
 
+const VOLUME_ROW_ANIMATION_TIME = 150;
+
 const GENERIC_STREAM_NAMES = new Set([
     'audiostream',
     'playback',
@@ -176,6 +178,46 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
         return this._app;
     }
 
+    animateIn() {
+        if (!this.mapped || !St.Settings.get().enable_animations)
+            return;
+
+        const naturalHeight = this.get_preferred_height(-1)[1];
+        this.remove_all_transitions();
+        this.height = 0;
+        this.opacity = 0;
+        this.ease({
+            height: naturalHeight,
+            opacity: 255,
+            duration: VOLUME_ROW_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+            onStopped: finished => {
+                if (finished)
+                    this.height = -1;
+            },
+        });
+    }
+
+    animateOut(onStopped) {
+        if (!this.mapped || !St.Settings.get().enable_animations) {
+            onStopped();
+            return;
+        }
+
+        this.remove_all_transitions();
+        this.height = Math.max(1, this.height);
+        this.ease({
+            height: 0,
+            opacity: 0,
+            duration: VOLUME_ROW_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_IN_CUBIC,
+            onStopped: finished => {
+                if (finished)
+                    onStopped();
+            },
+        });
+    }
+
     setAppStreamCount(count) {
         if (count === this._appStreamCount)
             return;
@@ -277,6 +319,7 @@ class VolumeMixerToggle extends QuickMenuToggle {
         this._control = control;
         this._appSystem = appSystem;
         this._streamRows = new Map();
+        this._exitingRows = new Set();
         this._emptyItem = null;
         this.menuButtonAccessibleName =
             _('Open application volume controls');
@@ -307,12 +350,17 @@ class VolumeMixerToggle extends QuickMenuToggle {
             });
         const streamIds = new Set(streams.map(stream => stream.get_id()));
 
-        for (const [id, row] of this._streamRows) {
+        for (const [id, row] of [...this._streamRows]) {
             if (streamIds.has(id))
                 continue;
 
-            row.destroy();
             this._streamRows.delete(id);
+            this._exitingRows.add(row);
+            row.animateOut(() => {
+                this._exitingRows.delete(row);
+                row.destroy();
+                this._syncEmptyItem();
+            });
         }
 
         for (const stream of streams) {
@@ -327,18 +375,10 @@ class VolumeMixerToggle extends QuickMenuToggle {
             );
             this._streamSection.addMenuItem(row);
             this._streamRows.set(id, row);
+            row.animateIn();
         }
 
-        if (this._streamRows.size === 0 && !this._emptyItem) {
-            this._emptyItem = new PopupMenu.PopupMenuItem(
-                _('No applications are playing audio'),
-                {reactive: false}
-            );
-            this._streamSection.addMenuItem(this._emptyItem);
-        } else if (this._streamRows.size > 0 && this._emptyItem) {
-            this._emptyItem.destroy();
-            this._emptyItem = null;
-        }
+        this._syncEmptyItem();
 
         const appStreamCounts = new Map();
         for (const row of this._streamRows.values()) {
@@ -357,10 +397,28 @@ class VolumeMixerToggle extends QuickMenuToggle {
         }
     }
 
+    _syncEmptyItem() {
+        if (this._streamRows.size === 0 &&
+            this._exitingRows.size === 0 &&
+            !this._emptyItem) {
+            this._emptyItem = new PopupMenu.PopupMenuItem(
+                _('No applications are playing audio'),
+                {reactive: false}
+            );
+            this._streamSection.addMenuItem(this._emptyItem);
+        } else if (this._streamRows.size > 0 && this._emptyItem) {
+            this._emptyItem.destroy();
+            this._emptyItem = null;
+        }
+    }
+
     destroy() {
         for (const row of this._streamRows.values())
             row.destroy();
         this._streamRows.clear();
+        for (const row of this._exitingRows)
+            row.destroy();
+        this._exitingRows.clear();
 
         if (this._emptyItem)
             this._emptyItem.destroy();
@@ -368,6 +426,7 @@ class VolumeMixerToggle extends QuickMenuToggle {
 
         this._streamSection.destroy();
         this._streamSection = null;
+        this._exitingRows = null;
         this._control = null;
         this._appSystem = null;
         super.destroy();

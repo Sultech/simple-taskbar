@@ -44,6 +44,9 @@ const TASKBAR_CONTENT_CLASS =
 const TASKBAR_SCROLLBAR_CLASS =
     'simple-taskbar-application-overflow-taskbar-scrollbar';
 const POPUP_MARGIN = 32;
+const SEPARATOR_ANIMATION_TIME = 150;
+const OVERFLOW_BUTTON_ANIMATION_TIME = 150;
+const OVERFLOW_CONTENT_ANIMATION_TIME = 140;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
@@ -99,6 +102,8 @@ export class ApplicationOverflowController {
             visible: false,
             clip_to_allocation: true,
         });
+        this._locationSeparatorTargetVisible = false;
+        this._locationSeparatorVertical = null;
         this._locationSeparatorLine = new St.Widget({
             style_class: 'simple-taskbar-pinned-app-separator',
             x_align: Clutter.ActorAlign.CENTER,
@@ -112,6 +117,7 @@ export class ApplicationOverflowController {
         this._section = null;
         this._button = null;
         this._icon = null;
+        this._overflowButtonTargetVisible = false;
         this._spacer = new St.Widget({visible: false});
         this._maximumSize = Number.MAX_SAFE_INTEGER;
         this._syncId = 0;
@@ -123,6 +129,7 @@ export class ApplicationOverflowController {
         this._dragController = null;
         this._style = null;
         this._layoutSignature = null;
+        this._pendingOverflowTransition = null;
         this._buttonController = null;
         this._themeController = null;
 
@@ -388,11 +395,14 @@ export class ApplicationOverflowController {
         this._viewport = null;
         this._locationSeparator = null;
         this._locationSeparatorLine = null;
+        this._locationSeparatorTargetVisible = false;
+        this._locationSeparatorVertical = null;
         this._locationActor = null;
         this._taskbarController = null;
         this._previewController = null;
         this._overflowItems = null;
         this._layoutSignature = null;
+        this._pendingOverflowTransition = null;
         this._settings = null;
     }
 
@@ -548,7 +558,7 @@ export class ApplicationOverflowController {
             return;
         }
 
-        this._button.show();
+        this._syncOverflowButton(true);
         this._button.ensure_style();
         const buttonSize = vertical
             ? this._button.get_preferred_height(panelHeight)[1]
@@ -605,6 +615,9 @@ export class ApplicationOverflowController {
     _syncLocationSeparator(visible, vertical) {
         const iconSize = this._taskbarController.getIconSize();
         const mainProperty = vertical ? 'height' : 'width';
+        const orientationChanged =
+            this._locationSeparatorVertical !== vertical;
+        this._locationSeparatorVertical = vertical;
         if (vertical) {
             this._locationSeparator.set_width(iconSize);
             this._locationSeparatorLine.set_size(
@@ -619,18 +632,109 @@ export class ApplicationOverflowController {
             );
         }
 
+        if (orientationChanged) {
+            this._locationSeparator.remove_all_transitions();
+            this._locationSeparator[mainProperty] =
+                this._locationSeparatorTargetVisible
+                    ? TASKBAR_SEPARATOR_EXTENT
+                    : 0;
+            this._locationSeparator.opacity =
+                this._locationSeparatorTargetVisible ? 255 : 0;
+            this._locationSeparator.visible =
+                this._locationSeparatorTargetVisible;
+        }
+        if (visible === this._locationSeparatorTargetVisible)
+            return;
+
+        this._locationSeparatorTargetVisible = visible;
         this._locationSeparator.remove_all_transitions();
         if (visible) {
             this._locationSeparator.show();
-            this._locationSeparator[mainProperty] =
-                TASKBAR_SEPARATOR_EXTENT;
-            this._locationSeparator.opacity = 255;
+            if (!St.Settings.get().enable_animations) {
+                this._locationSeparator[mainProperty] =
+                    TASKBAR_SEPARATOR_EXTENT;
+                this._locationSeparator.opacity = 255;
+                return;
+            }
+            this._locationSeparator.ease({
+                [mainProperty]: TASKBAR_SEPARATOR_EXTENT,
+                opacity: 255,
+                duration: SEPARATOR_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+            });
             return;
         }
 
-        this._locationSeparator.hide();
-        this._locationSeparator[mainProperty] = 0;
-        this._locationSeparator.opacity = 255;
+        if (!St.Settings.get().enable_animations) {
+            this._locationSeparator[mainProperty] = 0;
+            this._locationSeparator.opacity = 0;
+            this._locationSeparator.hide();
+            return;
+        }
+        this._locationSeparator.ease({
+            [mainProperty]: 0,
+            opacity: 0,
+            duration: SEPARATOR_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_IN_CUBIC,
+            onStopped: finished => {
+                if (finished && !this._locationSeparatorTargetVisible)
+                    this._locationSeparator.hide();
+            },
+        });
+    }
+
+    _syncOverflowButton(visible) {
+        if (visible === this._overflowButtonTargetVisible)
+            return;
+
+        this._overflowButtonTargetVisible = visible;
+        this._button.remove_all_transitions();
+        this._button.set_pivot_point(0.5, 0.5);
+        if (visible) {
+            this._button.show();
+            if (!St.Settings.get().enable_animations) {
+                this._button.scale_x = 1;
+                this._button.scale_y = 1;
+                this._button.opacity = 255;
+                return;
+            }
+            this._button.scale_x = 0.72;
+            this._button.scale_y = 0.72;
+            this._button.opacity = 0;
+            this._button.ease({
+                scale_x: 1,
+                scale_y: 1,
+                opacity: 255,
+                duration: OVERFLOW_BUTTON_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_BACK,
+            });
+            return;
+        }
+
+        if (!this._button.visible)
+            return;
+        if (!St.Settings.get().enable_animations) {
+            this._button.hide();
+            this._button.scale_x = 1;
+            this._button.scale_y = 1;
+            this._button.opacity = 255;
+            return;
+        }
+        this._button.ease({
+            scale_x: 0.72,
+            scale_y: 0.72,
+            opacity: 0,
+            duration: OVERFLOW_BUTTON_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_IN_QUAD,
+            onStopped: finished => {
+                if (!finished || this._overflowButtonTargetVisible)
+                    return;
+                this._button.hide();
+                this._button.scale_x = 1;
+                this._button.scale_y = 1;
+                this._button.opacity = 255;
+            },
+        });
     }
 
     _onTaskbarDragEnd() {
@@ -641,7 +745,7 @@ export class ApplicationOverflowController {
 
     _showAllItems() {
         this._taskbarController.setPreserveItemWidths(false);
-        this._button.hide();
+        this._syncOverflowButton(false);
         this._spacer.hide();
         const vertical = panelIsVertical(this._settings);
         const panelHeight = this._settings.get_int('panel-height');
@@ -685,13 +789,107 @@ export class ApplicationOverflowController {
                 ? item.get_preferred_height(panelHeight)[1]
                 : item.get_preferred_width(panelHeight)[1]
         ).join(':') + `:${panelHeight}`;
-        if (style === this._style &&
+        const matchesCurrent = style === this._style &&
             layoutSignature === this._layoutSignature &&
             items.length === this._overflowItems.length &&
-            items.every((item, index) => item === this._overflowItems[index])) {
+            items.every((item, index) => item === this._overflowItems[index]);
+        const sameMembership = style === this._style &&
+            items.length === this._overflowItems.length &&
+            items.every(item => this._overflowItems.includes(item));
+        const reordered = sameMembership && items.some((item, index) =>
+            item !== this._overflowItems[index]
+        );
+        const matchesPending = this._pendingOverflowTransition &&
+            style === this._pendingOverflowTransition.style &&
+            layoutSignature ===
+                this._pendingOverflowTransition.layoutSignature &&
+            items.length === this._pendingOverflowTransition.items.length &&
+            items.every((item, index) =>
+                item === this._pendingOverflowTransition.items[index]);
+        if (matchesPending)
+            return;
+        if (reordered) {
+            if (this._dragController.matchesVisualOrder(items)) {
+                this._overflowItems = items;
+                this._layoutSignature = layoutSignature;
+            } else {
+                this._applyOverflowItems(items, style, layoutSignature);
+            }
             return;
         }
 
+        const content = this._section.actor.get_child_at_index(0);
+        if (matchesCurrent) {
+            if (this._pendingOverflowTransition && content) {
+                content.remove_all_transitions();
+                content.scale_x = 1;
+                content.scale_y = 1;
+                content.opacity = 255;
+                this._pendingOverflowTransition = null;
+            }
+            return;
+        }
+
+        if (this._menu.isOpen && content &&
+            St.Settings.get().enable_animations) {
+            this._animateOverflowContentChange(
+                items,
+                style,
+                layoutSignature,
+                content
+            );
+            return;
+        }
+
+        this._applyOverflowItems(items, style, layoutSignature);
+    }
+
+    _animateOverflowContentChange(items, style, layoutSignature, content) {
+        this._pendingOverflowTransition = {
+            items: [...items],
+            style,
+            layoutSignature,
+        };
+        content.remove_all_transitions();
+        content.set_pivot_point(0.5, 0.5);
+        content.ease({
+            scale_x: 0.96,
+            scale_y: 0.96,
+            opacity: 0,
+            duration: OVERFLOW_CONTENT_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_IN_QUAD,
+            onStopped: finished => {
+                if (!finished)
+                    return;
+
+                const pending = this._pendingOverflowTransition;
+                this._pendingOverflowTransition = null;
+                this._applyOverflowItems(
+                    pending.items,
+                    pending.style,
+                    pending.layoutSignature
+                );
+                const newContent =
+                    this._section.actor.get_child_at_index(0);
+                if (!newContent || !this._menu.isOpen)
+                    return;
+                newContent.set_pivot_point(0.5, 0.5);
+                newContent.scale_x = 0.96;
+                newContent.scale_y = 0.96;
+                newContent.opacity = 0;
+                newContent.ease({
+                    scale_x: 1,
+                    scale_y: 1,
+                    opacity: 255,
+                    duration: OVERFLOW_CONTENT_ANIMATION_TIME,
+                    mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+                });
+            },
+        });
+    }
+
+    _applyOverflowItems(items, style, layoutSignature) {
+        this._pendingOverflowTransition = null;
         this._clearPopupItems();
         this._overflowItems = items;
         this._style = style;

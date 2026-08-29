@@ -151,6 +151,7 @@ export class StartMenuContextMenuController {
         menu.addMenuItem(removeItem);
 
         let refreshAfterClose = false;
+        let pinChange = null;
         const saveName = () => {
             const name = renameEntry.get_text().trim() ||
                 this._defaultFolderName;
@@ -161,14 +162,22 @@ export class StartMenuContextMenuController {
         renameEntry.clutter_text.connect('activate', saveName);
         saveButton.connect('clicked', saveName);
         removeItem.connect('activate', () => {
-            if (this._pinnedModel.removeFolder(folderId))
+            const folder = this._pinnedModel.getFolder(folderId);
+            if (this._pinnedModel.removeFolder(folderId)) {
                 refreshAfterClose = true;
+                pinChange = {
+                    type: 'folder-remove',
+                    folderId,
+                    appIds: [...folder.appIds],
+                    sourceButton,
+                };
+            }
         });
 
         const menuManager = new PopupMenu.PopupMenuManager(sourceButton);
         this._transientMenu.adopt(menu, menuManager, () => {
             if (refreshAfterClose)
-                this._refreshAfterPinChange();
+                this._refreshAfterPinChange(pinChange);
         });
         openPopupMenu(menu);
         renameEntry.grab_key_focus();

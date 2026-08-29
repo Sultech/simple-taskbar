@@ -34,6 +34,7 @@ import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuPinnedViewBuilder} from './startMenuPinnedView.js';
 import {
     animateStartMenuItemIn,
+    animateStartMenuItemsIn,
     animateStartMenuItemOut,
     animateStartMenuLaunch,
 } from './startMenuItemAnimations.js';
@@ -1456,6 +1457,17 @@ export class StartMenuController {
     }
 
     _finishPinnedMutation(change) {
+        if (change.type === 'folder-remove') {
+            this.refresh();
+            const actors = change.appIds
+                .map(appId => this._findContentActor(candidate =>
+                    candidate._startMenuAppId === appId
+                ))
+                .filter(Boolean);
+            animateStartMenuItemsIn(actors);
+            return;
+        }
+
         if (change.folderCollapsed && this._view === 'folder' &&
             this._activeFolderId === change.folderId) {
             this._showPinnedApps(true, () => {

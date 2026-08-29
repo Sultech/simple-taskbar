@@ -41,6 +41,7 @@ import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
+const SEPARATOR_ANIMATION_TIME = 150;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -91,6 +92,7 @@ export class TaskbarController {
         this._appButtons = new Map();
         this._auxiliaryItems = new Set();
         this._pinnedSeparator = null;
+        this._pinnedSeparatorLine = null;
         this._previousPinnedAppIds = new Set();
         this._preserveItemWidths = false;
         this._dragEnabled = null;
@@ -574,6 +576,7 @@ export class TaskbarController {
         this._onRedisplay = null;
         this._auxiliaryItems = null;
         this._pinnedSeparator = null;
+        this._pinnedSeparatorLine = null;
         this._previousPinnedAppIds = null;
         this._preserveItemWidths = false;
         this._activeWorkspace = null;
@@ -1446,22 +1449,36 @@ export class TaskbarController {
 
     _syncPinnedSeparator(entries) {
         if (this._pinnedSeparatorLengthForEntries(entries) === 0) {
-            this._destroyPinnedSeparator();
+            this._destroyPinnedSeparator(true);
             return;
         }
 
+        let created = false;
         if (!this._pinnedSeparator) {
             this._pinnedSeparator = new St.Widget({
+                layout_manager: new Clutter.BinLayout(),
+                x_align: Clutter.ActorAlign.CENTER,
+                y_align: Clutter.ActorAlign.CENTER,
+                reactive: false,
+                clip_to_allocation: true,
+            });
+            this._pinnedSeparatorLine = new St.Widget({
                 style_class: 'simple-taskbar-pinned-app-separator',
                 x_align: Clutter.ActorAlign.CENTER,
                 y_align: Clutter.ActorAlign.CENTER,
                 reactive: false,
             });
+            this._pinnedSeparator.add_child(this._pinnedSeparatorLine);
             this._pinnedSeparator._taskbarIsPinnedSeparator = true;
             this.actor.add_child(this._pinnedSeparator);
+            created = true;
         }
 
         this._syncPinnedSeparatorGeometry();
+        if (!created) {
+            this._pinnedSeparator.remove_all_transitions();
+            this._pinnedSeparator.opacity = 255;
+        }
         const separatorIndex = entries.findIndex(entry =>
             !entry.isLauncher && !entry.isPinnedPrimary
         );
@@ -1471,6 +1488,8 @@ export class TaskbarController {
             separatorIndex,
             this._showDesktopItem
         );
+        if (created)
+            this._animatePinnedSeparatorIn();
     }
 
     _syncPinnedSeparatorGeometry() {
@@ -1479,17 +1498,62 @@ export class TaskbarController {
 
         const vertical = panelIsVertical(this._settings);
         this._pinnedSeparator.set_size(
+            vertical ? this._iconSize : TASKBAR_SEPARATOR_EXTENT,
+            vertical ? TASKBAR_SEPARATOR_EXTENT : this._iconSize
+        );
+        this._pinnedSeparatorLine.set_size(
             vertical ? this._iconSize : TASKBAR_SEPARATOR_LINE_SIZE,
             vertical ? TASKBAR_SEPARATOR_LINE_SIZE : this._iconSize
         );
     }
 
-    _destroyPinnedSeparator() {
+    _animatePinnedSeparatorIn() {
+        const vertical = panelIsVertical(this._settings);
+        const property = vertical ? 'height' : 'width';
+        this._pinnedSeparator.remove_all_transitions();
+        if (!St.Settings.get().enable_animations)
+            return;
+
+        this._pinnedSeparator[property] = 0;
+        this._pinnedSeparator.opacity = 0;
+        this._pinnedSeparator.ease({
+            [property]: TASKBAR_SEPARATOR_EXTENT,
+            opacity: 255,
+            duration: SEPARATOR_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+        });
+    }
+
+    _destroyPinnedSeparator(animate = false) {
         if (!this._pinnedSeparator)
             return;
 
-        this._pinnedSeparator.destroy();
+        const separator = this._pinnedSeparator;
+        separator.remove_all_transitions();
+        if (animate && St.Settings.get().enable_animations &&
+            separator.get_stage()) {
+            const property = panelIsVertical(this._settings)
+                ? 'height'
+                : 'width';
+            separator.ease({
+                [property]: 0,
+                opacity: 0,
+                duration: SEPARATOR_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_IN_CUBIC,
+                onStopped: finished => {
+                    if (!finished || this._pinnedSeparator !== separator)
+                        return;
+                    separator.destroy();
+                    this._pinnedSeparator = null;
+                    this._pinnedSeparatorLine = null;
+                },
+            });
+            return;
+        }
+
+        separator.destroy();
         this._pinnedSeparator = null;
+        this._pinnedSeparatorLine = null;
     }
 
     _sameAppIdSet(left, right) {
