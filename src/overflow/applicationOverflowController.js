@@ -549,17 +549,13 @@ export class ApplicationOverflowController {
             this._shouldShowLocationSeparator(items, locationItems),
             vertical
         );
-        const locationSeparatorSize = this._locationSeparatorSize(vertical);
+        const locationSeparatorSize = this._locationSeparatorSize();
         const adjustment = vertical
             ? this._viewport.vadjustment
             : this._viewport.hadjustment;
         adjustment.set_value(0);
         const itemSizes = this._getItemSizes(items);
-        const locationSize = locationItems.reduce((size, item) => size + (
-            vertical
-                ? item.get_preferred_height(panelHeight)[1]
-                : item.get_preferred_width(panelHeight)[1]
-        ), 0);
+        const locationSize = this._getLocationSize(locationItems);
         const separatorTarget = this._taskbarController.getPinnedSeparatorTarget(
             items
         );
@@ -632,13 +628,10 @@ export class ApplicationOverflowController {
             locationItems.some(item => !item.animatingOut);
     }
 
-    _locationSeparatorSize(vertical) {
-        if (!this._locationSeparator.visible)
-            return 0;
-
-        return vertical
-            ? this._locationSeparator.height
-            : this._locationSeparator.width;
+    _locationSeparatorSize() {
+        return this._locationSeparatorTargetVisible
+            ? TASKBAR_SEPARATOR_EXTENT
+            : 0;
     }
 
     _syncLocationSeparator(visible, vertical) {
@@ -828,7 +821,6 @@ export class ApplicationOverflowController {
         const releasedViewportSize = vertical
             ? this._viewport.height
             : this._viewport.width;
-        const panelHeight = this._settings.get_int('panel-height');
         const items = this._taskbarController.getOrderedApplicationItems();
         const locationItems = this._taskbarController.getLocationItems();
         const reveal = previousVisibleCount !== null &&
@@ -839,13 +831,8 @@ export class ApplicationOverflowController {
             vertical
         );
         const itemSizes = this._getItemSizes(items);
-        const locationSize = locationItems
-            .reduce((size, item) => size + (
-                vertical
-                    ? item.get_preferred_height(panelHeight)[1]
-                    : item.get_preferred_width(panelHeight)[1]
-            ), 0);
-        const locationSeparatorSize = this._locationSeparatorSize(vertical);
+        const locationSize = this._getLocationSize(locationItems);
+        const locationSeparatorSize = this._locationSeparatorSize();
         const maximumSize = Math.max(
             1,
             this._maximumSize - locationSize - locationSeparatorSize
@@ -894,6 +881,12 @@ export class ApplicationOverflowController {
         return items.map(item =>
             this._taskbarController.getItemLength(item)
         );
+    }
+
+    _getLocationSize(locationItems) {
+        return locationItems.reduce((size, item) => item.animatingOut
+            ? size
+            : size + this._taskbarController.getItemLength(item), 0);
     }
 
     _setViewportSize(maximumSize, vertical, startSize, targetSize) {
