@@ -601,6 +601,10 @@ export class TaskbarController {
     }
 
     setIconSize(iconSize) {
+        if (St.Settings.get().enable_animations && !this.isDragging) {
+            for (const item of this.getOrderedItems())
+                item.preparePositionAnimation();
+        }
         this._iconSize = iconSize;
         for (const item of this._appButtons.values()) {
             item._taskbarIcon.icon_size = iconSize;

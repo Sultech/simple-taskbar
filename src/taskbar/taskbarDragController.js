@@ -7,10 +7,12 @@ import St from 'gi://St';
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {
+    TASKBAR_REFLOW_ANIMATION_TIME,
+} from './taskbarItemContainer.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const EXTERNAL_PLACEHOLDER_ANIMATION_TIME = 120;
-const TASKBAR_REFLOW_ANIMATION_TIME = 160;
 
 export class TaskbarDragController {
     constructor({

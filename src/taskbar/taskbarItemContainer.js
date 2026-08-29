@@ -6,6 +6,8 @@ import GObject from 'gi://GObject';
 
 import * as Dash from 'resource:///org/gnome/shell/ui/dash.js';
 
+export const TASKBAR_REFLOW_ANIMATION_TIME = 160;
+
 export const TaskbarItemContainer = GObject.registerClass(
 class TaskbarItemContainer extends Dash.DashItemContainer {
     _init() {
@@ -13,8 +15,17 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         this._preserveNaturalWidth = false;
         this._snapChildAllocation = false;
         this._vertical = false;
+        this._positionAnimationStart = null;
         this.x_expand = false;
         this.y_expand = false;
+    }
+
+    preparePositionAnimation() {
+        if (!this.has_allocation())
+            return;
+
+        const [x, y] = this.get_transformed_position();
+        this._positionAnimationStart = {x, y};
     }
 
     setVertical(vertical) {
@@ -91,5 +102,29 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         childBox.x2 = childBox.x1 + childWidth;
         childBox.y2 = childBox.y1 + childHeight;
         this.child.allocate(childBox);
+
+        if (!this._positionAnimationStart)
+            return;
+
+        const start = this._positionAnimationStart;
+        this._positionAnimationStart = null;
+        this.remove_transition('translation-x');
+        this.remove_transition('translation-y');
+        this.translation_x = 0;
+        this.translation_y = 0;
+        const [targetX, targetY] = this.get_transformed_position();
+        const translationX = start.x - targetX;
+        const translationY = start.y - targetY;
+        if (translationX === 0 && translationY === 0)
+            return;
+
+        this.translation_x = translationX;
+        this.translation_y = translationY;
+        this.ease({
+            translation_x: 0,
+            translation_y: 0,
+            duration: TASKBAR_REFLOW_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+        });
     }
 });
