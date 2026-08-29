@@ -614,9 +614,9 @@ export class TaskbarController {
         return this._iconSize;
     }
 
-    getLengthForIconSize(iconSize) {
+    getLengthForIconSize(iconSize, items = this.getOrderedItems()) {
         const vertical = panelIsVertical(this._settings);
-        const length = this.getOrderedItems().reduce((total, item) => {
+        const length = items.reduce((total, item) => {
             if (item._taskbarIsShowDesktop) {
                 return total + (vertical
                     ? item.get_preferred_height(this._panelHeight)[1]
@@ -666,13 +666,39 @@ export class TaskbarController {
         scalingIconSize = null
     ) {
         const minimum = Math.min(minimumIconSize, maximumIconSize);
+        const items = this.getOrderedItems();
+        const scalableItemCount = items.reduce((count, item) =>
+            count + (item._taskbarIsShowDesktop ? 0 : 1), 0
+        );
+        const maximumLength = this.getLengthForIconSize(
+            maximumIconSize,
+            items
+        );
+        const maximumItemLength = this._appearanceController.itemSlotWidth(
+            null,
+            false,
+            false,
+            false,
+            false,
+            maximumIconSize
+        );
         for (let iconSize = maximumIconSize;
             iconSize >= minimum;
             iconSize--) {
             const available = scalingIconSize === null
                 ? availableLength
                 : availableLength + scalingIconSize - iconSize;
-            if (this.getLengthForIconSize(iconSize) <= available)
+            const itemLength = this._appearanceController.itemSlotWidth(
+                null,
+                false,
+                false,
+                false,
+                false,
+                iconSize
+            );
+            const length = maximumLength + scalableItemCount *
+                (itemLength - maximumItemLength);
+            if (length <= available)
                 return iconSize;
         }
 
