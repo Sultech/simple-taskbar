@@ -981,10 +981,7 @@ export class ApplicationOverflowController {
             let animationsRemaining = closingRecords.length;
             for (const {auxiliaryItem} of closingRecords) {
                 auxiliaryItem.remove_all_transitions();
-                auxiliaryItem.set_pivot_point(0.5, 0.5);
                 auxiliaryItem.ease({
-                    scale_x: 0,
-                    scale_y: 0,
                     opacity: 0,
                     duration: OVERFLOW_ITEM_CLOSE_ANIMATION_TIME,
                     mode: Clutter.AnimationMode.EASE_OUT_QUAD,
