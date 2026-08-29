@@ -31,12 +31,16 @@ export class ApplicationOverflowItemController {
         const size = vertical
             ? item.get_preferred_height(panelHeight)[1]
             : item.get_preferred_width(panelHeight)[1];
-        const clone = new Clutter.Clone({source: item});
+        const source = item._taskbarIsShowDesktop
+            ? item.child
+            : item._taskbarVisual;
+        const clone = new Clutter.Clone({source});
         const button = new St.Button({
             style_class: 'simple-taskbar-app-item simple-taskbar-application-overflow-taskbar-item',
             reactive: true,
             can_focus: true,
             track_hover: true,
+            clip_to_allocation: true,
             width: vertical ? panelHeight : size,
             height: vertical ? size : panelHeight,
             accessible_name: item._taskbarButton.accessible_name,

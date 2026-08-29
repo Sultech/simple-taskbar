@@ -47,6 +47,7 @@ const POPUP_MARGIN = 32;
 const SEPARATOR_ANIMATION_TIME = 150;
 const OVERFLOW_BUTTON_ANIMATION_TIME = 150;
 const OVERFLOW_CONTENT_ANIMATION_TIME = 140;
+const OVERFLOW_ITEM_CLOSE_ANIMATION_TIME = 200;
 const OVERFLOW_REVEAL_ANIMATION_TIME = 160;
 
 const ApplicationOverflowContainer = GObject.registerClass(
@@ -964,6 +965,44 @@ export class ApplicationOverflowController {
             style,
             layoutSignature,
         };
+        const closingItems = style === 'taskbar'
+            ? new Set(this._overflowItems.filter(item =>
+                item.animatingOut && !items.includes(item)))
+            : new Set();
+        if (closingItems.size > 0) {
+            const closingRecords = this._itemController.records.filter(
+                ({sourceItem}) => closingItems.has(sourceItem)
+            );
+            let animationsRemaining = closingRecords.length;
+            for (const {auxiliaryItem} of closingRecords) {
+                auxiliaryItem.remove_all_transitions();
+                auxiliaryItem.set_pivot_point(0.5, 0.5);
+                auxiliaryItem.ease({
+                    scale_x: 0,
+                    scale_y: 0,
+                    opacity: 0,
+                    duration: OVERFLOW_ITEM_CLOSE_ANIMATION_TIME,
+                    mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                    onStopped: finished => {
+                        if (!finished)
+                            return;
+
+                        animationsRemaining--;
+                        if (animationsRemaining > 0)
+                            return;
+
+                        const pending = this._pendingOverflowTransition;
+                        this._pendingOverflowTransition = null;
+                        this._applyOverflowItems(
+                            pending.items,
+                            pending.style,
+                            pending.layoutSignature
+                        );
+                    },
+                });
+            }
+            return;
+        }
         content.remove_all_transitions();
         content.set_pivot_point(0.5, 0.5);
         content.ease({
