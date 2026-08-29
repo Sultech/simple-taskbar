@@ -725,22 +725,27 @@ export class ApplicationOverflowController {
         this._button.set_pivot_point(0.5, 0.5);
         if (visible) {
             this._button[mainProperty] = -1;
-            this._button.show();
             if (!St.Settings.get().enable_animations) {
                 this._button.scale_x = 1;
                 this._button.scale_y = 1;
                 this._button.opacity = 255;
+                this._button.show();
                 return;
             }
             this._button.scale_x = 0.72;
             this._button.scale_y = 0.72;
             this._button.opacity = 0;
+            this._button.show();
             this._button.ease({
                 scale_x: 1,
                 scale_y: 1,
-                opacity: 255,
                 duration: OVERFLOW_BUTTON_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_BACK,
+            });
+            this._button.ease({
+                opacity: 255,
+                duration: OVERFLOW_BUTTON_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             });
             return;
         }
