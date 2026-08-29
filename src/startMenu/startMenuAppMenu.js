@@ -187,11 +187,25 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
             return;
 
         const appId = this._app.get_id();
-        const changed = this._pinnedModel.isPinned(appId)
+        const wasPinned = this._pinnedModel.isPinned(appId);
+        let remainingAppId = null;
+        if (this._folderId) {
+            const folder = this._pinnedModel.getFolder(this._folderId);
+            if (folder.appIds.length === 2)
+                remainingAppId = folder.appIds.find(id => id !== appId);
+        }
+        const changed = wasPinned
             ? this._pinnedModel.unpinApp(appId)
             : this._pinnedModel.pinApp(appId);
-        if (changed)
-            this._onStartPinsChanged();
+        if (changed) {
+            this._onStartPinsChanged({
+                type: wasPinned ? 'unpin' : 'pin',
+                appId,
+                folderId: this._folderId,
+                folderCollapsed: Boolean(remainingAppId),
+                remainingAppId,
+            });
+        }
     }
 
     _updateStartFavoriteItem() {
@@ -213,11 +227,19 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         if (!this._app || !this._folderId)
             return;
 
-        if (this._pinnedModel.moveAppOutOfFolder(
-            this._app.get_id(),
-            this._folderId
-        )) {
-            this._onStartPinsChanged();
+        const appId = this._app.get_id();
+        const folder = this._pinnedModel.getFolder(this._folderId);
+        const remainingAppId = folder.appIds.length === 2
+            ? folder.appIds.find(id => id !== appId)
+            : null;
+        if (this._pinnedModel.moveAppOutOfFolder(appId, this._folderId)) {
+            this._onStartPinsChanged({
+                type: 'move-out',
+                appId,
+                folderId: this._folderId,
+                folderCollapsed: Boolean(remainingAppId),
+                remainingAppId,
+            });
         }
     }
 

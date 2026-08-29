@@ -32,6 +32,11 @@ import {StartMenuNavigationController} from './startMenuNavigationController.js'
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
 import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuPinnedViewBuilder} from './startMenuPinnedView.js';
+import {
+    animateStartMenuItemIn,
+    animateStartMenuItemOut,
+    animateStartMenuLaunch,
+} from './startMenuItemAnimations.js';
 import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 import {StartMenuTooltipController} from './startMenuTooltipController.js';
@@ -94,12 +99,8 @@ export class StartMenuController {
                     this._tooltipController.hide(instant),
                 defaultFolderName,
                 removeFolderLabel: _('Remove folder'),
-                refreshAfterPinChange: () => {
-                    if ((this._view === 'pinned' || this._view === 'folder') &&
-                        !this._searchEntry.get_text().trim()) {
-                        this.refresh();
-                    }
-                },
+                refreshAfterPinChange: change =>
+                    this._animatePinnedMutation(change),
             }
         );
         this._powerController = new StartMenuPowerController(settings, {
@@ -113,11 +114,18 @@ export class StartMenuController {
                 tileWidth: APP_TILE_WIDTH,
                 closeContextMenu: () => this._contextMenuController.close(),
                 defaultFolderName,
-                onChanged: () => this._queueRefresh(),
-                onMoveOut: () => {
-                    this._view = 'pinned';
-                    this._activeFolderId = null;
-                    this._queueRefresh();
+                onChanged: change => {
+                    if (change)
+                        this._animatePinnedMutation(change);
+                    else
+                        this._queueRefresh();
+                },
+                onMoveOut: change => {
+                    if (!change.folderCollapsed) {
+                        this._view = 'pinned';
+                        this._activeFolderId = null;
+                    }
+                    this._animatePinnedMutation(change);
                 },
             }
         );
@@ -206,7 +214,7 @@ export class StartMenuController {
             contextMenuController: this._contextMenuController,
             pinnedDragController: this._pinnedDragController,
             createAppLabel: (text, width) => this._createAppLabel(text, width),
-            launchApp: app => this._launchApp(app),
+            launchApp: (app, actor) => this._launchApp(app, actor),
             showFolder: folderId => this._showPinnedFolder(folderId, true),
             syncButtonClasses: actor => this._syncShellButtonClasses(actor),
         });
@@ -727,11 +735,18 @@ export class StartMenuController {
                 return Clutter.EVENT_PROPAGATE;
 
             if (this._firstSearchResult) {
-                this._activateSearchResult(this._firstSearchResult);
+                const result = this._firstSearchResult;
+                const actor = result.app
+                    ? this._findAppIcon(result.app)
+                    : null;
+                this._activateSearchResult(result, actor);
                 return Clutter.EVENT_STOP;
             }
             if (this._firstVisibleApp) {
-                this._launchApp(this._firstVisibleApp);
+                this._launchApp(
+                    this._firstVisibleApp,
+                    this._findAppIcon(this._firstVisibleApp)
+                );
                 return Clutter.EVENT_STOP;
             }
             return Clutter.EVENT_PROPAGATE;
@@ -1302,7 +1317,9 @@ export class StartMenuController {
         });
         this._navigationController.enable(button);
         this._tooltipController.add(button, app, label, !compact);
-        button.connect('clicked', () => this._launchApp(app));
+        button._startMenuAppId = app.get_id();
+        button._startMenuAppIcon = icon;
+        button.connect('clicked', () => this._launchApp(app, icon));
         this._contextMenuController.addHandler(button, app);
         if (!compact) {
             this._pinnedDragController.makeTaskbarDraggable(
@@ -1335,7 +1352,12 @@ export class StartMenuController {
             child: content,
         });
         this._navigationController.enable(button);
-        button.connect('clicked', () => this._activateSearchResult(result));
+        if (result.app) {
+            button._startMenuAppId = result.app.get_id();
+            button._startMenuAppIcon = icon;
+        }
+        button.connect('clicked', () =>
+            this._activateSearchResult(result, icon));
         if (result.app)
             this._contextMenuController.addHandler(button, result.app);
         this._syncShellButtonClasses(button);
@@ -1375,15 +1397,19 @@ export class StartMenuController {
 
 
 
-    _launchApp(app) {
+    _launchApp(app, actor) {
+        if (actor)
+            animateStartMenuLaunch(actor);
         this.close();
         app.open_new_window(-1);
     }
 
-    _activateSearchResult(result) {
+    _activateSearchResult(result, actor) {
         const isScreenshot = result.id === 'open-screenshot-ui';
         const isSystemAction = result.provider.id === 'applications' &&
             !result.id.endsWith('.desktop');
+        if (result.app && !isScreenshot && !isSystemAction && actor)
+            animateStartMenuLaunch(actor);
         this.close(!isScreenshot);
         if (isScreenshot) {
             showScreenshotUI();
@@ -1402,6 +1428,87 @@ export class StartMenuController {
                 result.meta.clipboardText
             );
         }
+    }
+
+    _animatePinnedMutation(change) {
+        if (!this.isOpen || this._searchEntry.get_text().trim() ||
+            (this._view !== 'pinned' && this._view !== 'folder')) {
+            return;
+        }
+
+        if (!change) {
+            this.refresh();
+            return;
+        }
+
+        if (change.type === 'folder-create' || change.type === 'folder-add') {
+            this.refresh();
+            this._animatePinnedFolderResult(change.folderId);
+            return;
+        }
+
+        const sourceButton = change.sourceButton;
+        const finish = () => this._finishPinnedMutation(change);
+        if (sourceButton && sourceButton.get_stage())
+            animateStartMenuItemOut(sourceButton, finish);
+        else
+            finish();
+    }
+
+    _finishPinnedMutation(change) {
+        if (change.folderCollapsed && this._view === 'folder' &&
+            this._activeFolderId === change.folderId) {
+            this._showPinnedApps(true, () => {
+                const appId = change.type === 'move-out'
+                    ? change.appId
+                    : change.remainingAppId;
+                this._animateVisibleAppResult(appId);
+            });
+            return;
+        }
+
+        this.refresh();
+        this._animateVisibleAppResult(change.appId);
+    }
+
+    _animatePinnedFolderResult(folderId) {
+        const actor = this._findContentActor(candidate =>
+            candidate._startMenuFolderId === folderId
+        );
+        if (actor)
+            animateStartMenuItemIn(actor);
+    }
+
+    _animateVisibleAppResult(appId) {
+        if (!appId)
+            return;
+
+        const actor = this._findContentActor(candidate =>
+            candidate._startMenuAppId === appId
+        );
+        if (actor)
+            animateStartMenuItemIn(actor);
+    }
+
+    _findAppIcon(app) {
+        const appId = app.get_id();
+        const button = this._findContentActor(candidate =>
+            candidate._startMenuAppId === appId
+        );
+        if (!button)
+            return null;
+        return button._startMenuAppIcon;
+    }
+
+    _findContentActor(predicate) {
+        const actors = [this._content];
+        while (actors.length > 0) {
+            const actor = actors.pop();
+            if (predicate(actor))
+                return actor;
+            actors.push(...actor.get_children());
+        }
+        return null;
     }
 
     _setSearchText(text) {

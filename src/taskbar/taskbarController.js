@@ -91,6 +91,7 @@ export class TaskbarController {
         this._appButtons = new Map();
         this._auxiliaryItems = new Set();
         this._pinnedSeparator = null;
+        this._previousPinnedAppIds = new Set();
         this._preserveItemWidths = false;
         this._dragEnabled = null;
         this._suppressMembershipAnimation = false;
@@ -374,8 +375,6 @@ export class TaskbarController {
         }, this._signalHolder);
         this._favorites.connectObject('changed', () => {
             this._queueRedisplay();
-            if (!this.isDragging)
-                this._syncDragEnabled(true);
         }, this._signalHolder);
         global.display.connectObject('notify::focus-window', () => {
             this.syncButtonStates();
@@ -575,6 +574,7 @@ export class TaskbarController {
         this._onRedisplay = null;
         this._auxiliaryItems = null;
         this._pinnedSeparator = null;
+        this._previousPinnedAppIds = null;
         this._preserveItemWidths = false;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = null;
@@ -837,6 +837,19 @@ export class TaskbarController {
         const animateMembershipChanges = animateIndicators &&
             !this._suppressMembershipAnimation;
         this._suppressMembershipAnimation = false;
+        const externalDropAppId =
+            this._dragController.consumeExternalDropAppId();
+        const pinnedAppIds = new Set(
+            this._pinnedApps().map(app => app.get_id())
+        );
+        const newlyPinnedAppIds = new Set([...pinnedAppIds].filter(appId =>
+            !this._previousPinnedAppIds.has(appId)
+        ));
+        const newlyUnpinnedAppIds = new Set(
+            [...this._previousPinnedAppIds].filter(appId =>
+                !pinnedAppIds.has(appId)
+            )
+        );
         const wantedKeys = new Set(entries.map(entry => entry.key));
         const wantedAppIds = new Set(
             entries.map(entry => entry.app.get_id())
@@ -848,14 +861,15 @@ export class TaskbarController {
                 this._dragController.releaseDraggable(item);
                 this._destroyAppMenu(item._taskbarButton);
                 this._appButtons.delete(key);
-                if (this._isPinnedPlaceholder(
-                    item._taskbarApp,
-                    item._taskbarWindow,
-                    item._taskbarIsLauncher
-                ) || !animateMembershipChanges) {
-                    item.destroy();
-                } else {
+                const appId = item._taskbarApp.get_id();
+                const wasPinnedPlaceholder = !item._taskbarWindow &&
+                    (item._taskbarIsLauncher || item._taskbarIsPinnedPrimary);
+                if (animateMembershipChanges &&
+                    (!wasPinnedPlaceholder ||
+                        newlyUnpinnedAppIds.has(appId))) {
                     animateTaskbarItemOutAndDestroy(item);
+                } else {
+                    item.destroy();
                 }
             }
         }
@@ -875,6 +889,17 @@ export class TaskbarController {
                 ? locationEntries.indexOf(entries[index])
                 : applicationEntries.indexOf(entries[index]);
             let item = this._appButtons.get(key);
+            const replaceForDragState = Boolean(item) &&
+                this._dragIsEnabled(item) !==
+                    this._dragIsEnabled(item, isPinnedPrimary);
+            if (replaceForDragState) {
+                this._getPreviews().removeItem(item);
+                this._dragController.releaseDraggable(item);
+                this._destroyAppMenu(item._taskbarButton);
+                this._appButtons.delete(key);
+                item.destroy();
+                item = null;
+            }
             if (item && item._taskbarApp !== app) {
                 this._getPreviews().removeItem(item);
                 this._dragController.releaseDraggable(item);
@@ -907,14 +932,15 @@ export class TaskbarController {
                     isLocation ? null : this._showDesktopItem,
                     isLocation ? [] : [this._pinnedSeparator]
                 );
+                const pinnedPlaceholder = !window &&
+                    (isLauncher || isPinnedPrimary);
                 animateTaskbarItemIn(
                     item,
                     animateMembershipChanges &&
-                        !this._isPinnedPlaceholder(
-                            app,
-                            window,
-                            isLauncher
-                        )
+                        !replaceForDragState &&
+                        (!pinnedPlaceholder ||
+                            newlyPinnedAppIds.has(app.get_id())) &&
+                        app.get_id() !== externalDropAppId
                 );
             } else {
                 placeTaskbarItemAtIndex(
@@ -949,6 +975,7 @@ export class TaskbarController {
                 this._untrackApp(app);
         }
 
+        this._previousPinnedAppIds = pinnedAppIds;
         this._showDesktopController.place();
         this._syncPinnedSeparator(applicationEntries);
         this._syncTaskbarEdgeSpacing();
@@ -1223,13 +1250,6 @@ export class TaskbarController {
             item,
             app => this._interestingWindows(app)
         );
-    }
-
-    _isPinnedPlaceholder(app, window, isLauncher = false) {
-        return !window &&
-            this._favorites.isFavorite(app.get_id()) &&
-            !this._settings.get_boolean('hide-pinned-taskbar-apps') &&
-            (!this._usePinnedAppLaunchers() || isLauncher);
     }
 
     _isPersistentPinned(app) {
@@ -1508,7 +1528,10 @@ export class TaskbarController {
         );
     }
 
-    _dragIsEnabled(item = null) {
+    _dragIsEnabled(
+        item = null,
+        isPinnedPrimary = item ? item._taskbarIsPinnedPrimary : false
+    ) {
         if (!this._ignoreTaskbarLock &&
             this._settings.get_boolean('taskbar-locked'))
             return false;
@@ -1525,8 +1548,7 @@ export class TaskbarController {
         if (item._taskbarIsLauncher)
             return true;
 
-        return !item._taskbarIsPinnedPrimary ||
-            this._combineMode() !== 'never';
+        return !isPinnedPrimary || this._combineMode() !== 'never';
     }
 
     _syncDragEnabled(force = false) {

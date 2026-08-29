@@ -9,6 +9,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {panelIsVertical} from '../panel/panelPosition.js';
 
+const EXTERNAL_PLACEHOLDER_ANIMATION_TIME = 120;
+
 export class TaskbarDragController {
     constructor({
         settings,
@@ -46,8 +48,12 @@ export class TaskbarDragController {
         this._draggables = new Map();
         this._listeners = new Set();
         this._externalPlaceholder = null;
+        this._externalPlaceholderSize = 0;
+        this._externalPlaceholderTargetIndex = -1;
+        this._externalPlaceholderMovePending = false;
         this._externalFavoriteIndex = -1;
         this._externalFavoriteCenters = null;
+        this._externalDropAppId = null;
         this._panelDropActor = null;
         this._previousPanelDropDelegate = null;
         this._dragMonitor = {
@@ -61,6 +67,14 @@ export class TaskbarDragController {
 
     get externalPlaceholder() {
         return this._externalPlaceholder;
+    }
+
+    consumeExternalDropAppId() {
+        const appId = this._externalDropAppId;
+        this._externalDropAppId = null;
+        if (appId)
+            this._clearExternalPlaceholder(false);
+        return appId;
     }
 
     setAlignmentActor(actor) {
@@ -272,7 +286,8 @@ export class TaskbarDragController {
             source._clearTaskbarDropTarget();
             source._taskbarDropTarget = this._dropTarget;
             source._clearTaskbarDropTarget = () => {
-                this._clearExternalPlaceholder();
+                if (!source._taskbarDropAccepted)
+                    this._clearExternalPlaceholder();
                 if (source._taskbarDropTarget === this._dropTarget)
                     source._taskbarDropTarget = null;
             };
@@ -331,13 +346,11 @@ export class TaskbarDragController {
         }
 
         const appId = source.app.get_id();
-        const favoriteIndex = this._externalFavoriteIndex;
+        const favoriteIndex = this._externalPlaceholderTargetIndex;
+        this._externalDropAppId = appId;
         source._taskbarDropAccepted = true;
         source._clearTaskbarDropTarget();
-        if (this._favorites.isFavorite(appId))
-            this._favorites.moveFavoriteToPos(appId, favoriteIndex);
-        else
-            this._favorites.addFavoriteAtPos(appId, favoriteIndex);
+        this._favorites.addFavoriteAtPos(appId, favoriteIndex);
         return true;
     }
 
@@ -347,11 +360,17 @@ export class TaskbarDragController {
         for (const item of [...this._draggables.keys()])
             this.releaseDraggable(item);
         this._draggables = null;
-        this._clearExternalPlaceholder();
+        this._clearExternalPlaceholder(false);
         this._listeners.clear();
         this._dragging = false;
         this._draggingItem = null;
         this._pinnedDropActive = false;
+        this._externalPlaceholderSize = 0;
+        this._externalPlaceholderTargetIndex = -1;
+        this._externalPlaceholderMovePending = false;
+        this._externalFavoriteIndex = -1;
+        this._externalFavoriteCenters = null;
+        this._externalDropAppId = null;
         this._ignoreTaskbarLock = false;
         this._alignmentActor = null;
         this._showDesktopController = null;
@@ -572,10 +591,11 @@ export class TaskbarDragController {
     }
 
     _showExternalPlaceholder(favoriteItems, favoriteIndex) {
+        const vertical = panelIsVertical(this._settings);
+        const property = vertical ? 'height' : 'width';
         if (!this._externalPlaceholder) {
             const reference = favoriteItems[0];
-            const vertical = panelIsVertical(this._settings);
-            const size = Math.max(
+            this._externalPlaceholderSize = Math.max(
                 reference
                     ? vertical ? reference.height : reference.width
                     : 0,
@@ -585,9 +605,9 @@ export class TaskbarDragController {
                 style_class: 'simple-taskbar-drag-placeholder',
                 width: vertical
                     ? Math.max(1, this._getPanelHeight() - 10)
-                    : size,
+                    : 0,
                 height: vertical
-                    ? size
+                    ? 0
                     : Math.max(1, this._getPanelHeight() - 10),
                 x_align: Clutter.ActorAlign.CENTER,
                 y_align: Clutter.ActorAlign.CENTER,
@@ -595,10 +615,45 @@ export class TaskbarDragController {
             this._taskbarActor.add_child(this._externalPlaceholder);
         }
 
-        if (favoriteIndex === this._externalFavoriteIndex)
+        if (favoriteIndex === this._externalPlaceholderTargetIndex)
             return;
 
-        this._externalFavoriteIndex = favoriteIndex;
+        this._externalPlaceholderTargetIndex = favoriteIndex;
+        if (this._externalFavoriteIndex < 0) {
+            this._placeExternalPlaceholder(favoriteItems);
+            this._expandExternalPlaceholder(property);
+            return;
+        }
+
+        if (this._externalPlaceholderMovePending)
+            return;
+
+        this._externalPlaceholderMovePending = true;
+        this._externalPlaceholder.remove_all_transitions();
+        if (!St.Settings.get().enable_animations) {
+            this._externalPlaceholder[property] = 0;
+            this._placeExternalPlaceholder(favoriteItems);
+            this._externalPlaceholder[property] = this._externalPlaceholderSize;
+            this._externalPlaceholderMovePending = false;
+            return;
+        }
+
+        this._externalPlaceholder.ease({
+            [property]: 0,
+            duration: EXTERNAL_PLACEHOLDER_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onStopped: finished => {
+                if (!finished || !this._externalPlaceholder)
+                    return;
+                this._placeExternalPlaceholder(favoriteItems);
+                this._externalPlaceholderMovePending = false;
+                this._expandExternalPlaceholder(property);
+            },
+        });
+    }
+
+    _placeExternalPlaceholder(favoriteItems) {
+        const favoriteIndex = this._externalPlaceholderTargetIndex;
         const beforeItem = favoriteItems[favoriteIndex] ?? null;
         const children = this._taskbarActor.get_children().filter(child =>
             child !== this._externalPlaceholder
@@ -614,15 +669,55 @@ export class TaskbarDragController {
             this._externalPlaceholder,
             actorIndex
         );
+        this._externalFavoriteIndex = favoriteIndex;
     }
 
-    _clearExternalPlaceholder() {
-        if (this._externalPlaceholder)
-            this._externalPlaceholder.destroy();
-        this._externalPlaceholder = null;
-        this._externalFavoriteIndex = -1;
-        this._externalFavoriteCenters = null;
+    _expandExternalPlaceholder(property) {
+        this._externalPlaceholder.remove_all_transitions();
+        if (!St.Settings.get().enable_animations) {
+            this._externalPlaceholder[property] = this._externalPlaceholderSize;
+            return;
+        }
+
+        this._externalPlaceholder.ease({
+            [property]: this._externalPlaceholderSize,
+            duration: EXTERNAL_PLACEHOLDER_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+    }
+
+    _clearExternalPlaceholder(animate = true) {
         this._restorePanelDropTarget();
+        const placeholder = this._externalPlaceholder;
+        if (!placeholder)
+            return;
+
+        const vertical = panelIsVertical(this._settings);
+        const property = vertical ? 'height' : 'width';
+        placeholder.remove_all_transitions();
+        this._externalFavoriteIndex = -1;
+        this._externalPlaceholderTargetIndex = -1;
+        this._externalPlaceholderMovePending = false;
+        this._externalFavoriteCenters = null;
+        if (!animate || !St.Settings.get().enable_animations) {
+            placeholder.destroy();
+            this._externalPlaceholder = null;
+            this._externalPlaceholderSize = 0;
+            return;
+        }
+
+        placeholder.ease({
+            [property]: 0,
+            duration: EXTERNAL_PLACEHOLDER_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onStopped: finished => {
+                if (!finished || this._externalPlaceholder !== placeholder)
+                    return;
+                placeholder.destroy();
+                this._externalPlaceholder = null;
+                this._externalPlaceholderSize = 0;
+            },
+        });
     }
 
     _onDragMotion(event) {

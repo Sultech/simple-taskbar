@@ -10,6 +10,9 @@ import {
     pinnedAppItemKey,
     pinnedFolderItemKey,
 } from './startMenuPinnedModel.js';
+import {
+    animateStartMenuFolderAbsorb,
+} from './startMenuItemAnimations.js';
 
 export class StartMenuPinnedDragController {
     constructor(pinnedModel, params) {
@@ -47,6 +50,10 @@ export class StartMenuPinnedDragController {
                     return false;
 
                 const folderId = source._pinnedGrid._startMenuFolderId;
+                const folder = this._pinnedModel.getFolder(folderId);
+                const remainingAppId = folder.appIds.length === 2
+                    ? folder.appIds.find(id => id !== source._pinnedAppId)
+                    : null;
                 if (!this._pinnedModel.moveAppOutOfFolder(
                     source._pinnedAppId,
                     folderId
@@ -55,7 +62,14 @@ export class StartMenuPinnedDragController {
                 }
 
                 source._dropAccepted = true;
-                this._onMoveOut();
+                this._onMoveOut({
+                    type: 'move-out',
+                    appId: source._pinnedAppId,
+                    folderId,
+                    folderCollapsed: Boolean(remainingAppId),
+                    remainingAppId,
+                    sourceButton: null,
+                });
                 return true;
             },
         };
@@ -139,6 +153,7 @@ export class StartMenuPinnedDragController {
             _pinnedItemType: data.itemType,
             _originalOrder: null,
             _dropAccepted: false,
+            _folderChange: null,
             getDragActor: data.getDragActor,
             getDragActorSource: () => icon,
         };
@@ -170,8 +185,17 @@ export class StartMenuPinnedDragController {
                 this._clearFolderDropTarget(false);
                 this._resetFolderDropActors();
                 button.opacity = 255;
-                if (!dragSource._dropAccepted)
+                if (dragSource._folderChange) {
+                    const change = dragSource._folderChange;
+                    dragSource._folderChange = null;
+                    animateStartMenuFolderAbsorb(
+                        change.sourceActor,
+                        change.targetActor,
+                        () => this._onChanged(change)
+                    );
+                } else if (!dragSource._dropAccepted) {
                     this._restoreOrder(grid, dragSource);
+                }
                 dragSource._originalOrder = null;
                 dragSource._dropAccepted = false;
             }),
@@ -250,23 +274,33 @@ export class StartMenuPinnedDragController {
 
         const folderTarget = this._folderTargetAt(grid, source, x, y);
         if (folderTarget) {
-            const changed = folderTarget._startMenuPinnedItemType === 'folder'
-                ? this._pinnedModel.moveAppToFolder(
-                    source._pinnedAppId,
-                    folderTarget._startMenuPinnedFolderId
-                )
-                : Boolean(this._pinnedModel.createFolder(
+            const targetIsFolder =
+                folderTarget._startMenuPinnedItemType === 'folder';
+            const folderId = targetIsFolder
+                ? folderTarget._startMenuPinnedFolderId
+                : this._pinnedModel.createFolder(
                     source._pinnedAppId,
                     folderTarget._startMenuPinnedAppId,
                     this._defaultFolderName
-                ));
+                );
+            const changed = targetIsFolder
+                ? this._pinnedModel.moveAppToFolder(
+                    source._pinnedAppId,
+                    folderId
+                )
+                : Boolean(folderId);
             this._clearFolderDropTarget(false);
-            this._resetFolderDropActors();
             if (!changed)
                 return false;
 
             source._dropAccepted = true;
-            this._onChanged();
+            source._folderChange = {
+                type: targetIsFolder ? 'folder-add' : 'folder-create',
+                appId: source._pinnedAppId,
+                folderId,
+                sourceActor: source._pinnedTile._startMenuFolderDropActor,
+                targetActor: folderTarget._startMenuFolderDropActor,
+            };
             return true;
         }
 

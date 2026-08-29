@@ -116,7 +116,9 @@ export class StartMenuPinnedViewBuilder {
         });
         this._navigationController.enable(button);
         this._tooltipController.add(button, app, label, false, hideTitle);
-        button.connect('clicked', () => this._launchApp(app));
+        button._startMenuAppId = app.get_id();
+        button._startMenuAppIcon = icon;
+        button.connect('clicked', () => this._launchApp(app, icon));
         this._contextMenuController.addHandler(button, app, folderId);
         if (pinnedGrid) {
             this._pinnedDragController.makeDraggable(
@@ -149,6 +151,7 @@ export class StartMenuPinnedViewBuilder {
             accessible_name: folder.name,
             child: content,
         });
+        button._startMenuFolderId = folder.id;
         this._navigationController.enable(button);
         this._tooltipController.addText(button, folder.name);
         button.connect('clicked', () => this._showFolder(folder.id));

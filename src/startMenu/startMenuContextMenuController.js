@@ -82,14 +82,14 @@ export class StartMenuContextMenuController {
 
         const menuSource = this._menuSource(sourceButton, cursorPosition);
 
-        let refreshAfterClose = false;
+        let pinChange = null;
         const menu = new StartMenuAppMenu(
             menuSource,
             panelArrowSide(this._settings),
             this._settings,
             {
-                onStartPinsChanged: () => {
-                    refreshAfterClose = true;
+                onStartPinsChanged: change => {
+                    pinChange = {...change, sourceButton};
                 },
                 onAppAction: () => this._queueCloseAfterAction(),
                 folderId,
@@ -101,8 +101,8 @@ export class StartMenuContextMenuController {
         );
         const menuManager = new PopupMenu.PopupMenuManager(sourceButton);
         this._transientMenu.adopt(menu, menuManager, () => {
-            if (refreshAfterClose)
-                this._refreshAfterPinChange();
+            if (pinChange)
+                this._refreshAfterPinChange(pinChange);
         });
 
         menu.setApp(app);
