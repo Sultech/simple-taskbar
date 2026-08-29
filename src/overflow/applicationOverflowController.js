@@ -107,7 +107,7 @@ export class ApplicationOverflowController {
         this._locationSeparatorTargetVisible = false;
         this._locationSeparatorVertical = null;
         this._locationSeparatorLine = new St.Widget({
-            style_class: 'simple-taskbar-pinned-app-separator',
+            style_class: 'simple-taskbar-separator',
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
             reactive: false,

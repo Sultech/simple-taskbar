@@ -537,14 +537,14 @@
     spacing: 8px;
 }
 
-.simple-taskbar-pinned-app-separator {
+.simple-taskbar-separator {
     margin-left: 6px;
     margin-right: 6px;
     background-color: rgba(255, 255, 255, 0.26);
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-pinned-app-separator {
+    .simple-taskbar-separator {
     margin-top: 6px;
     margin-bottom: 6px;
     margin-left: 0;
@@ -552,7 +552,7 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light
-    .simple-taskbar-pinned-app-separator {
+    .simple-taskbar-separator {
     background-color: rgba(0, 0, 0, 0.26);
 }
 

@@ -184,7 +184,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController = new PanelController({
             settings: this._settings,
             panelHeight: this._panelHeight,
-            startButton: this._startButtonController.actor,
+            startButton: this._startButtonController.panelActor,
             taskbarBin: this._taskbarBin,
             taskbarActor: this._taskbarController.actor,
             showDesktopButton: this._showDesktopButton,

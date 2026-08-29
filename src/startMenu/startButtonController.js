@@ -34,6 +34,13 @@ import {
     taskbarGlassHeight,
     taskbarVisualPanelHeight,
 } from '../shared/panelSizing.js';
+import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
+import {
+    TASKBAR_SEPARATOR_EXTENT,
+    TASKBAR_SEPARATOR_LINE_SIZE,
+} from '../taskbar/taskbarSeparator.js';
+
+const SEPARATOR_ANIMATION_TIME = 150;
 
 export class StartButtonController {
     constructor({
@@ -120,6 +127,27 @@ export class StartButtonController {
                 ? this._windowsXpStartButton.actor
                 : this._content,
         });
+        this._separator = new St.Widget({
+            layout_manager: new Clutter.BinLayout(),
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+            reactive: false,
+            visible: false,
+            clip_to_allocation: true,
+        });
+        this._separatorLine = new St.Widget({
+            style_class: 'simple-taskbar-separator',
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+            reactive: false,
+        });
+        this._separator.add_child(this._separatorLine);
+        this._separatorTargetVisible = false;
+        this.panelActor = new St.BoxLayout({
+            reactive: false,
+        });
+        this.panelActor.add_child(this.actor);
+        this.panelActor.add_child(this._separator);
         this.actor.connectObject('clicked', () => this._toggleApplications(), this._signalHolder);
         this._syncWindowsXpStartButton();
         this._syncVisibility();
@@ -218,6 +246,7 @@ export class StartButtonController {
             this.actor.set_style(
                 `min-width: 0; padding: 0; margin-top: ${leftMargin}px;`
             );
+            this._syncSeparator(false);
             return;
         }
 
@@ -228,6 +257,7 @@ export class StartButtonController {
         this.actor.set_style(
             `min-width: 0; padding: 0; margin-left: ${leftMargin}px;`
         );
+        this._syncSeparator(false);
     }
 
     destroy() {
@@ -246,9 +276,13 @@ export class StartButtonController {
         this._menuManager = null;
         this._windowsXpStartButton.destroy();
         this._windowsXpStartButton = null;
-        this.actor.destroy();
+        this.panelActor.destroy();
+        this.panelActor = null;
         this.actor = null;
 
+        this._separator = null;
+        this._separatorLine = null;
+        this._separatorTargetVisible = false;
         this._hover = null;
         this._content = null;
         this._icon = null;
@@ -441,11 +475,19 @@ export class StartButtonController {
             this._settings.get_int('start-button-padding')
         );
         this._settings.connectObject(
+            'changed::app-alignment', syncAppearance,
             'changed::start-button-position', syncAppearance,
             'changed::start-button-follow-app-alignment', syncAppearance,
+            'changed::panel-item-order', syncAppearance,
+            'changed::panel-position', syncAppearance,
             'changed::panel-height', syncAppearance,
             'changed::running-indicator-style', syncAppearance,
             'changed::dock-panel-mode', syncAppearance,
+            this._signalHolder
+        );
+        this._settings.connectObject(
+            'changed::show-start-button-separator',
+            () => this._syncSeparator(true),
             this._signalHolder
         );
         this._settings.connectObject(
@@ -716,6 +758,101 @@ export class StartButtonController {
             !this._settings.get_boolean('default-gnome-panel') &&
             (this._windowsModeEnabled() ||
                 this._settings.get_boolean('gnome-start-button-visible'));
+        this.panelActor.visible = this.actor.visible;
+        this._syncSeparator(false);
+    }
+
+    _syncSeparator(animate) {
+        const vertical = panelIsVertical(this._settings);
+        const mainProperty = vertical ? 'height' : 'width';
+        this.panelActor.orientation = vertical
+            ? Clutter.Orientation.VERTICAL
+            : Clutter.Orientation.HORIZONTAL;
+        this.panelActor.x_align = vertical
+            ? Clutter.ActorAlign.FILL
+            : Clutter.ActorAlign.CENTER;
+        this.panelActor.x_expand = vertical;
+        this.panelActor.y_align = vertical
+            ? Clutter.ActorAlign.CENTER
+            : Clutter.ActorAlign.FILL;
+        this.panelActor.y_expand = !vertical;
+        this._separator.set_size(
+            vertical ? this._icon.icon_size : TASKBAR_SEPARATOR_EXTENT,
+            vertical ? TASKBAR_SEPARATOR_EXTENT : this._icon.icon_size
+        );
+        this._separatorLine.set_size(
+            vertical ? this._icon.icon_size : TASKBAR_SEPARATOR_LINE_SIZE,
+            vertical ? TASKBAR_SEPARATOR_LINE_SIZE : this._icon.icon_size
+        );
+        this.panelActor.set_child_at_index(
+            this._separator,
+            this._separatorFollowsButton() ? 1 : 0
+        );
+
+        const visible = this.actor.visible &&
+            !this._settings.get_boolean('windows-xp-theme-enabled') &&
+            this._settings.get_boolean('show-start-button-separator');
+        if (visible === this._separatorTargetVisible)
+            return;
+
+        this._separatorTargetVisible = visible;
+        this._separator.remove_all_transitions();
+        if (visible) {
+            this._separator.show();
+            if (!animate || !St.Settings.get().enable_animations ||
+                !this._separator.get_stage()) {
+                this._separator[mainProperty] = TASKBAR_SEPARATOR_EXTENT;
+                this._separator.opacity = 255;
+                return;
+            }
+            this._separator[mainProperty] = 0;
+            this._separator.opacity = 0;
+            this._separator.ease({
+                [mainProperty]: TASKBAR_SEPARATOR_EXTENT,
+                opacity: 255,
+                duration: SEPARATOR_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+            });
+            return;
+        }
+
+        if (!animate || !St.Settings.get().enable_animations ||
+            !this._separator.get_stage()) {
+            this._separator[mainProperty] = 0;
+            this._separator.opacity = 0;
+            this._separator.hide();
+            return;
+        }
+        this._separator.ease({
+            [mainProperty]: 0,
+            opacity: 0,
+            duration: SEPARATOR_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_IN_CUBIC,
+            onStopped: finished => {
+                if (finished && !this._separatorTargetVisible)
+                    this._separator.hide();
+            },
+        });
+    }
+
+    _separatorFollowsButton() {
+        const startPosition = this._settings.get_boolean(
+            'start-button-follow-app-alignment'
+        )
+            ? this._settings.get_string('app-alignment')
+            : this._settings.get_string('start-button-position');
+        const appPosition = this._settings.get_string('app-alignment');
+        if (startPosition !== appPosition) {
+            const positions = ['left', 'center', 'right'];
+            return positions.indexOf(startPosition) <
+                positions.indexOf(appPosition);
+        }
+
+        const order = normalizePanelItemOrder(
+            this._settings.get_strv('panel-item-order')
+        );
+        return order.indexOf('start-button') <
+            order.indexOf('applications');
     }
 
     _accessibleName() {

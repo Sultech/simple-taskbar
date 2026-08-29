@@ -84,6 +84,7 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
     setBoolean(settings, 'show-pinned-app-separator', false);
     setBoolean(settings, 'show-location-separator', false);
+    setBoolean(settings, 'show-start-button-separator', false);
     setBoolean(settings, 'windows-start-menu-enabled', true);
     setBoolean(settings, 'transparency-enabled', false);
     setBoolean(settings, 'start-menu-follow-panel-transparency', false);

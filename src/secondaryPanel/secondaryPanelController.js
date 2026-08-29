@@ -574,7 +574,7 @@ export class SecondaryPanelController {
             this._taskbarBin.visible && this._appsAreCentered();
         this.actor.expandedSide =
             this._taskbarBin.visible && !this._appsAreCentered();
-        const startButton = this._startButtonController.actor;
+        const startButton = this._startButtonController.panelActor;
         const activities = this._indicatorController.get('activities').container;
         const quickSettings = this._indicatorController.get('quickSettings').container;
         const dateMenu = this._indicatorController.get('dateMenu').container;

@@ -552,6 +552,11 @@
       <summary>Show a separator before locations</summary>
       <description>Show a line between applications and locations</description>
     </key>
+    <key name="show-start-button-separator" type="b">
+      <default>false</default>
+      <summary>Show a separator beside the Start button</summary>
+      <description>Show a line between the Start button and applications</description>
+    </key>
     <key name="combine-app-buttons-mode" type="s">
       <choices>
         <choice value="always"/>

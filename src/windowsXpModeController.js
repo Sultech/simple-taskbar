@@ -25,6 +25,7 @@ const LOCKED_SETTING_KEYS = [
     'hide-unpinned-taskbar-apps',
     'show-pinned-app-separator',
     'show-location-separator',
+    'show-start-button-separator',
     'combine-app-buttons-mode',
     'application-overflow-enabled',
     'hide-app-labels',

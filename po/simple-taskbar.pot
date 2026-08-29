@@ -1359,6 +1359,14 @@ msgstr ""
 msgid "Horizontal space around the Start icon in pixels"
 msgstr ""
 
+#: src/prefs/startMenuPage.js:159
+msgid "Show Start Button Separator"
+msgstr ""
+
+#: src/prefs/startMenuPage.js:160
+msgid "Show a line between the Start button and applications"
+msgstr ""
+
 #: src/prefs/startMenuPage.js:158
 msgid "Custom Start Button Icon"
 msgstr ""

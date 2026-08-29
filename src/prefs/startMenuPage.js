@@ -154,6 +154,13 @@ export function addStartMenuPage({
         connectSettings
     );
 
+    const startButtonSeparatorSwitch = createSwitchRow(settings, {
+        key: 'show-start-button-separator',
+        title: _('Show Start Button Separator'),
+        subtitle: _('Show a line between the Start button and applications'),
+    });
+    startButtonAppearanceRow.add_row(startButtonSeparatorSwitch);
+
     const customIconRow = new Adw.ActionRow({
         title: _('Custom Start Button Icon'),
     });
@@ -206,6 +213,7 @@ export function addStartMenuPage({
             'windows-xp-theme-enabled'
         );
         startButtonPaddingRow.sensitive = !enabled;
+        startButtonSeparatorSwitch.sensitive = !enabled;
         customIconRow.sensitive = !enabled;
     };
     connectSettings(

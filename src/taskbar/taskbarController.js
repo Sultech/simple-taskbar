@@ -1510,7 +1510,7 @@ export class TaskbarController {
                 clip_to_allocation: true,
             });
             this._pinnedSeparatorLine = new St.Widget({
-                style_class: 'simple-taskbar-pinned-app-separator',
+                style_class: 'simple-taskbar-separator',
                 x_align: Clutter.ActorAlign.CENTER,
                 y_align: Clutter.ActorAlign.CENTER,
                 reactive: false,
