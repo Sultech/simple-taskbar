@@ -1563,31 +1563,29 @@ export class TaskbarController {
             return;
 
         const separator = this._pinnedSeparator;
+        this._pinnedSeparator = null;
+        this._pinnedSeparatorLine = null;
         separator.remove_all_transitions();
         if (animate && St.Settings.get().enable_animations &&
             separator.get_stage()) {
             const property = panelIsVertical(this._settings)
                 ? 'height'
                 : 'width';
+            separator.animatingOut = true;
             separator.ease({
                 [property]: 0,
                 opacity: 0,
                 duration: SEPARATOR_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_IN_CUBIC,
                 onStopped: finished => {
-                    if (!finished || this._pinnedSeparator !== separator)
-                        return;
-                    separator.destroy();
-                    this._pinnedSeparator = null;
-                    this._pinnedSeparatorLine = null;
+                    if (finished)
+                        separator.destroy();
                 },
             });
             return;
         }
 
         separator.destroy();
-        this._pinnedSeparator = null;
-        this._pinnedSeparatorLine = null;
     }
 
     _sameAppIdSet(left, right) {
