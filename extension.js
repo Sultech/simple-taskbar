@@ -428,7 +428,6 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._settings.get_boolean('windows-xp-theme-enabled')) {
                     return;
                 }
-                this._resetTaskbarIconSize();
                 this._panelController.updateTaskbarWidth();
             },
             this

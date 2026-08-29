@@ -455,8 +455,7 @@ export class SecondaryPanelDockController {
             },
             'changed::dock-min-icon-size',
             () => {
-                this.resetIconSize();
-                this._onPosition();
+                this.updateTaskbarWidth();
             },
             this._signalHolder
         );
