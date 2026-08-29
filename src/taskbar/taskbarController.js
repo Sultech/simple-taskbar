@@ -93,6 +93,7 @@ export class TaskbarController {
         this._auxiliaryItems = new Set();
         this._pinnedSeparator = null;
         this._pinnedSeparatorLine = null;
+        this._rebuilding = false;
         this._previousPinnedAppIds = new Set();
         this._preserveItemWidths = false;
         this._dragEnabled = null;
@@ -618,6 +619,10 @@ export class TaskbarController {
         return this._iconSize;
     }
 
+    isRebuilding() {
+        return this._rebuilding;
+    }
+
     getItemLength(item, iconSize = this._iconSize) {
         if (item._taskbarIsShowDesktop) {
             return panelIsVertical(this._settings)
@@ -846,14 +851,18 @@ export class TaskbarController {
     }
 
     redisplay() {
-        if (this.isDragging)
-            return;
-
-        if (this._settings.get_boolean('default-gnome-panel')) {
-            this._clearAppButtons();
+        if (this.isDragging) {
+            this._rebuilding = false;
             return;
         }
 
+        if (this._settings.get_boolean('default-gnome-panel')) {
+            this._clearAppButtons();
+            this._rebuilding = false;
+            return;
+        }
+
+        this._rebuilding = true;
         const {combinationChanged, labelWidthChanged} =
             this._syncCombineWhenFull();
         if (combinationChanged) {
@@ -1014,12 +1023,16 @@ export class TaskbarController {
 
         this._previousPinnedAppIds = pinnedAppIds;
         this._showDesktopController.place();
-        this._syncPinnedSeparator(applicationEntries);
+        this._syncPinnedSeparator(
+            applicationEntries,
+            animateMembershipChanges
+        );
         this._syncTaskbarEdgeSpacing();
         this._shownInitially = true;
         this.syncButtonStates(animateIndicators);
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
+        this._rebuilding = false;
         this._onRedisplay();
     }
 
@@ -1481,7 +1494,7 @@ export class TaskbarController {
             : 0;
     }
 
-    _syncPinnedSeparator(entries) {
+    _syncPinnedSeparator(entries, animate) {
         if (this._pinnedSeparatorLengthForEntries(entries) === 0) {
             this._destroyPinnedSeparator(true);
             return;
@@ -1522,7 +1535,7 @@ export class TaskbarController {
             separatorIndex,
             this._showDesktopItem
         );
-        if (created)
+        if (created && animate)
             this._animatePinnedSeparatorIn();
     }
 
@@ -1662,6 +1675,7 @@ export class TaskbarController {
         this._dragEnabled = configuration;
         const sessionOrder = this._entryModel.sessionOrder;
         const shownInitially = this._shownInitially;
+        this._rebuilding = true;
         this._clearAppButtons();
         this._entryModel.setSessionOrder(sessionOrder);
         this._shownInitially = shownInitially;

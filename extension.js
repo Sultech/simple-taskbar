@@ -140,7 +140,10 @@ export default class SimpleTaskbarExtension extends Extension {
             onShowDesktopModeChanged: () =>
                 this._panelController.applyLayout(),
             getPreviewController: () => this._windowPreviews,
-            onRedisplay: () => this._applicationOverflowController.sync(),
+            onRedisplay: () => {
+                this._panelController.updateTaskbarWidth();
+                this._applicationOverflowController.sync();
+            },
         });
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);
         this._windowPreviews = new WindowPreviewController(
@@ -457,7 +460,8 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _syncTaskbarIconSize(availableLength) {
         this._taskbarController.setAvailableWidth(availableLength);
-        if (this._settings.get_boolean('default-gnome-panel') ||
+        if (this._taskbarController.isRebuilding() ||
+            this._settings.get_boolean('default-gnome-panel') ||
             this._settings.get_boolean('dock-mode') ||
             this._settings.get_boolean('windows-xp-theme-enabled')) {
             return false;
