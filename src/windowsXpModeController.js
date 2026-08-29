@@ -26,6 +26,7 @@ const LOCKED_SETTING_KEYS = [
     'show-pinned-app-separator',
     'show-location-separator',
     'show-start-button-separator',
+    'start-menu-running-indicators',
     'combine-app-buttons-mode',
     'application-overflow-enabled',
     'hide-app-labels',

@@ -1432,6 +1432,14 @@ msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
 
+#: src/prefs/startMenuPage.js
+msgid "Show Running App Indicators"
+msgstr ""
+
+#: src/prefs/startMenuPage.js
+msgid "Show taskbar-style indicators below running application icons"
+msgstr ""
+
 #: src/prefs/startMenuPage.js:355
 msgid "Organize All Apps into Categories"
 msgstr ""

@@ -15,6 +15,7 @@ export class StartMenuPinnedViewBuilder {
         this._contextMenuController = params.contextMenuController;
         this._pinnedDragController = params.pinnedDragController;
         this._createAppLabel = params.createAppLabel;
+        this._createRunningIndicator = params.createRunningIndicator;
         this._launchApp = params.launchApp;
         this._showFolder = params.showFolder;
         this._syncButtonClasses = params.syncButtonClasses;
@@ -42,6 +43,7 @@ export class StartMenuPinnedViewBuilder {
         this._syncButtonClasses = null;
         this._showFolder = null;
         this._launchApp = null;
+        this._createRunningIndicator = null;
         this._createAppLabel = null;
         this._pinnedDragController = null;
         this._contextMenuController = null;
@@ -85,16 +87,17 @@ export class StartMenuPinnedViewBuilder {
         if (hideTitle)
             content.y_align = Clutter.ActorAlign.CENTER;
         const icon = app.create_icon_texture(hideTitle ? 48 : 32);
-        if (hideTitle) {
-            content.add_child(icon);
-        } else {
-            content.add_child(new St.Bin({
+        const iconContent = hideTitle
+            ? icon
+            : new St.Bin({
                 child: icon,
                 height: 39,
                 x_align: Clutter.ActorAlign.CENTER,
                 y_align: Clutter.ActorAlign.END,
-            }));
-        }
+            });
+        content.add_child(hideTitle
+            ? this._createRunningIndicator(app, iconContent)
+            : iconContent);
         const label = this._createAppLabel(app.get_name(), 78);
         label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
         label.visible = !hideTitle;

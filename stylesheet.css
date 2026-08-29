@@ -1063,6 +1063,23 @@
     spacing: 0;
 }
 
+.simple-taskbar-windows-start-running-indicator {
+    height: 3px;
+    border-radius: 3px;
+    background-color: #8d8d8d;
+    transition-duration: 150ms;
+}
+
+.simple-taskbar-windows-start-running-indicator.rounded {
+    height: 4px;
+    border-radius: 999px;
+}
+
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-running-indicator {
+    background-color: #555a60;
+}
+
 .simple-taskbar-windows-start-folder-tile {
     background-color: transparent;
 }

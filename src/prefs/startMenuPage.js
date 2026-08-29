@@ -338,11 +338,25 @@ export function addStartMenuPage({
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
+    const runningIndicatorsSwitch = new Adw.SwitchRow({
+        title: _('Show Running App Indicators'),
+        subtitle: _('Show taskbar-style indicators below running application icons'),
+        active: settings.get_boolean(
+            'start-menu-running-indicators'
+        ),
+    });
+    settings.bind(
+        'start-menu-running-indicators',
+        runningIndicatorsSwitch,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
     startMenuOptionsRow.add_row(recommendedAppsSwitch);
     startMenuOptionsRow.add_row(powerOptionsSwitch);
     startMenuOptionsRow.add_row(openAllAppsSwitch);
     startMenuOptionsRow.add_row(profilePictureSwitch);
     startMenuOptionsRow.add_row(hidePinnedAppTitlesSwitch);
+    startMenuOptionsRow.add_row(runningIndicatorsSwitch);
     const updateRecommendedAppsSwitch = () => {
         const sensitive = windowsStartMenuSwitch.active &&
             !openAllAppsSwitch.active;
@@ -358,6 +372,20 @@ export function addStartMenuPage({
         updateRecommendedAppsSwitch
     );
     updateRecommendedAppsSwitch();
+    const updateRunningIndicatorsSwitch = () => {
+        runningIndicatorsSwitch.sensitive = windowsStartMenuSwitch.active &&
+            !settings.get_boolean('windows-xp-theme-enabled');
+    };
+    windowsStartMenuSwitch.connect(
+        'notify::active',
+        updateRunningIndicatorsSwitch
+    );
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        updateRunningIndicatorsSwitch
+    );
+    updateRunningIndicatorsSwitch();
 
     const appCategoriesSwitch = new Adw.SwitchRow({
         title: _('Organize All Apps into Categories'),

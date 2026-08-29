@@ -764,6 +764,11 @@
       <default>true</default>
       <summary>Hide names below pinned Start Menu application icons</summary>
     </key>
+    <key name="start-menu-running-indicators" type="b">
+      <default>true</default>
+      <summary>Show running indicators in the Start Menu</summary>
+      <description>Show taskbar-style indicators below running application icons</description>
+    </key>
     <key name="start-menu-app-categories" type="b">
       <default>true</default>
       <summary>Organize All Apps into selectable application categories</summary>

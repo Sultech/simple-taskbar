@@ -33,6 +33,9 @@ import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js'
 import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuPinnedViewBuilder} from './startMenuPinnedView.js';
 import {
+    StartMenuRunningIndicatorController,
+} from './startMenuRunningIndicatorController.js';
+import {
     animateStartMenuItemIn,
     animateStartMenuItemsIn,
     animateStartMenuItemOut,
@@ -86,6 +89,11 @@ export class StartMenuController {
         this._appSystem = Shell.AppSystem.get_default();
         this._favorites = AppFavorites.getAppFavorites();
         this._pinnedModel = new StartMenuPinnedModel(settings);
+        this._runningIndicatorController =
+            new StartMenuRunningIndicatorController(
+                settings,
+                params.getInterestingWindows
+            );
         const defaultFolderName = _('Folder');
         this._searchController = new StartMenuSearchController();
         this._tooltipController = new StartMenuTooltipController();
@@ -215,6 +223,8 @@ export class StartMenuController {
             contextMenuController: this._contextMenuController,
             pinnedDragController: this._pinnedDragController,
             createAppLabel: (text, width) => this._createAppLabel(text, width),
+            createRunningIndicator: (app, icon) =>
+                this._runningIndicatorController.createIconStack(app, icon),
             launchApp: (app, actor) => this._launchApp(app, actor),
             showFolder: folderId => this._showPinnedFolder(folderId, true),
             syncButtonClasses: actor => this._syncShellButtonClasses(actor),
@@ -658,6 +668,8 @@ export class StartMenuController {
         this._footerController = null;
         this._menu.destroy();
         this._menu = null;
+        this._runningIndicatorController.destroy();
+        this._runningIndicatorController = null;
         this._navigationController.destroy();
         this._navigationController = null;
         this._contextMenuController.destroy();
@@ -1298,7 +1310,9 @@ export class StartMenuController {
             x_expand: true,
         });
         const icon = app.create_icon_texture(compact ? 24 : 32);
-        content.add_child(icon);
+        content.add_child(
+            this._runningIndicatorController.createIconStack(app, icon)
+        );
         const label = this._createAppLabel(
             app.get_name(),
             compact ? 190 : categorized ? 330 : 480
@@ -1340,7 +1354,12 @@ export class StartMenuController {
             x_expand: true,
         });
         const icon = this._createSearchResultIcon(result);
-        content.add_child(icon);
+        content.add_child(result.app
+            ? this._runningIndicatorController.createIconStack(
+                result.app,
+                icon
+            )
+            : icon);
         content.add_child(this._createAppLabel(result.name, 480));
         const button = new St.Button({
             style_class: 'simple-taskbar-windows-start-app-list-button',
