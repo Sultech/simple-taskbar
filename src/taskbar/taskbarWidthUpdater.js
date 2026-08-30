@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 
 export class TaskbarWidthUpdater {
     constructor(updateWidth) {
@@ -25,8 +26,9 @@ export class TaskbarWidthUpdater {
         if (this._queuedId)
             return;
 
-        this._queuedId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
+        const laters = global.compositor.get_laters();
+        this._queuedId = laters.add(
+            Meta.LaterType.BEFORE_REDRAW,
             () => {
                 this._queuedId = 0;
                 this.update();
@@ -37,7 +39,7 @@ export class TaskbarWidthUpdater {
 
     destroy() {
         if (this._queuedId) {
-            GLib.Source.remove(this._queuedId);
+            global.compositor.get_laters().remove(this._queuedId);
             this._queuedId = 0;
         }
         this._updating = false;
