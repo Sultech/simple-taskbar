@@ -257,9 +257,11 @@ export function addDockAppearanceGroup({
             !followSystemThemeSwitch.active;
     };
     const syncTransparencyControls = () => {
+        const panelBlurAvailable = blurMyShellPanelBlurEnabled();
         const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
-            blurMyShellPanelBlurEnabled();
+            panelBlurAvailable;
         const available = dockAvailable();
+        dockPanelBlurSwitch.sensitive = available && panelBlurAvailable;
         transparencySwitch.sensitive = available && !blocked;
         transparencySwitch.subtitle = blocked
             ? panelBlurTransparencySubtitle
@@ -312,7 +314,6 @@ export function addDockAppearanceGroup({
     const syncAvailability = () => {
         const available = dockAvailable();
         group.sensitive = available;
-        dockPanelBlurSwitch.sensitive = available;
         syncThemeControls();
         syncTransparencyControls();
         syncCustomColorControls();
