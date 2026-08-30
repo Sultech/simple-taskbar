@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 05:05+0100\n"
+"POT-Creation-Date: 2026-08-30 08:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Show desktop"
 msgstr ""
 
-#: src/overflow/applicationOverflowController.js:482
+#: src/overflow/applicationOverflowController.js:486
 msgid "Application overflow"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgid "A configurable taskbar, panel and dock for GNOME Shell"
 msgstr ""
 
 #: src/prefs/aboutPage.js:79
-msgid "GNOME Shell 48–50 • GPL-2.0-or-later"
+msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
 msgstr ""
 
 #: src/prefs/aboutPage.js:90
@@ -272,158 +272,158 @@ msgid "Show only icons on separate window buttons"
 msgstr ""
 
 #: src/prefs/applicationIconsGroup.js:253
-msgid "Show Pinned App Separator"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:254
-msgid "Show a line between pinned and running applications"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:260
-msgid "Show Location Separator"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:261
-msgid "Show a line between applications and locations"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:323
-msgid "Running Indicators"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:324
-msgid "Configure indicators beneath running application icons"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:333
-msgid "Running Indicator Style"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:335
-msgid "Choose the shape of indicators beneath running applications"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:338
-msgid "Rounded"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:339
-msgid "Straight"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:346
-msgid "Custom Indicator Colors"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:347
-msgid "Choose colors for running application indicators"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:360
-msgid "Match Icon Color"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:362
-msgid "Color the focused indicator from the application icon"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:378
-msgid "Focused Indicator Color"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:388
-msgid "Unfocused Indicator Color"
-msgstr ""
-
-#: src/prefs/applicationIconsGroup.js:432
 msgid "Show Notification Badges"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:433
+#: src/prefs/applicationIconsGroup.js:254
 msgid "Display unread counts on application icons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:451
+#: src/prefs/applicationIconsGroup.js:260
+msgid "Show Pinned App Separator"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:261
+msgid "Show a line between pinned and running applications"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:267
+msgid "Show Location Separator"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:268
+msgid "Show a line between applications and locations"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:330
+msgid "Running Indicators"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:331
+msgid "Configure indicators beneath running application icons"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:340
+msgid "Running Indicator Style"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:342
+msgid "Choose the shape of indicators beneath running applications"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:345
+msgid "Rounded"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:346
+msgid "Straight"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:353
+msgid "Custom Indicator Colors"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:354
+msgid "Choose colors for running application indicators"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:367
+msgid "Match Icon Color"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:369
+msgid "Color the focused indicator from the application icon"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:385
+msgid "Focused Indicator Color"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:395
+msgid "Unfocused Indicator Color"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:444
 msgid "Application Overflow"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:452
+#: src/prefs/applicationIconsGroup.js:445
 msgid "Choose how overflowing applications are handled"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:458
+#: src/prefs/applicationIconsGroup.js:451
 msgid "Enable Application Overflow"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:468
+#: src/prefs/applicationIconsGroup.js:461
 msgid "Overflow Style"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:470
+#: src/prefs/applicationIconsGroup.js:463
 msgid "Taskbar Flyout"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:471
+#: src/prefs/applicationIconsGroup.js:464
 msgid "Application List"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:504 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:497 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:505
+#: src/prefs/applicationIconsGroup.js:498
 msgid "Show running applications from the current workspace only"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:509 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:502 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:513
+#: src/prefs/applicationIconsGroup.js:506
 msgid "Application Isolation"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:530
-#: src/prefs/applicationIconsGroup.js:597
+#: src/prefs/applicationIconsGroup.js:523
+#: src/prefs/applicationIconsGroup.js:589
 msgid "Application Icons"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:532
+#: src/prefs/applicationIconsGroup.js:525
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:547
+#: src/prefs/applicationIconsGroup.js:540
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the Dock"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:553
+#: src/prefs/applicationIconsGroup.js:546
 msgid "Choose which applications appear on the Dock"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:555
+#: src/prefs/applicationIconsGroup.js:548
 msgid "Show running applications only in the Dock for their monitor"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:599
+#: src/prefs/applicationIconsGroup.js:591
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:620
+#: src/prefs/applicationIconsGroup.js:612
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:626
+#: src/prefs/applicationIconsGroup.js:618
 msgid "Choose which applications appear on the taskbar"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:628
+#: src/prefs/applicationIconsGroup.js:620
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 
@@ -1044,7 +1044,7 @@ msgid "GNOME workspace overview button"
 msgstr ""
 
 #: src/prefs/panelItemsPage.js:194 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:839
+#: src/startMenu/startButtonController.js:843
 msgid "Applications"
 msgstr ""
 
@@ -2106,25 +2106,25 @@ msgid "Trash"
 msgstr ""
 
 #: src/taskbar/taskbarAppearanceController.js:417
-#: src/taskbar/taskbarController.js:1139 src/taskbar/taskbarController.js:1141
+#: src/taskbar/taskbarController.js:1140 src/taskbar/taskbarController.js:1142
 msgid "running"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:383
+#: src/startMenu/startButtonController.js:387
 msgid "Start Menu Settings"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:388
+#: src/startMenu/startButtonController.js:392
 #: src/panel/panelInteractionController.js:137
 msgid "Dock Settings"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:393
+#: src/startMenu/startButtonController.js:397
 #: src/panel/panelInteractionController.js:137
 msgid "Taskbar Settings"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:839
+#: src/startMenu/startButtonController.js:843
 msgid "Start"
 msgstr ""
 
