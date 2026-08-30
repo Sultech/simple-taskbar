@@ -69,6 +69,7 @@ export class DockPanelManager {
         );
         Main.layoutManager.connectObject(
             'monitors-changed', () => this._queueRebuild(),
+            'startup-complete', () => this._queueBlurMyShellSync(),
             this._signalHolder
         );
         Main.extensionManager.connectObject(
@@ -83,7 +84,7 @@ export class DockPanelManager {
             getBlurMyShellSettings(),
             'panel'
         );
-        for (const key of ['corner-radius', 'pipeline', 'static-blur']) {
+        for (const key of ['blur', 'corner-radius', 'pipeline', 'static-blur']) {
             if (!blurMyShellHasKey(panelSettings, key))
                 continue;
 
