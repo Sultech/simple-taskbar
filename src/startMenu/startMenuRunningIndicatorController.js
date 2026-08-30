@@ -21,6 +21,7 @@ class StartMenuRunningIndicator extends St.Widget {
             style_class: 'simple-taskbar-windows-start-running-indicator',
             visible: false,
         });
+        // C-side actor disposal can bypass a custom destroy() override.
         this.connect('destroy', () => onDestroy(this));
     }
 });
