@@ -26,6 +26,7 @@ import {
     openPopupMenu,
 } from '../shared/popupMenuUtils.js';
 import {StartMenuContextMenuController} from './startMenuContextMenuController.js';
+import {StartMenuCategorySidebar} from './startMenuCategorySidebar.js';
 import {StartMenuFooterController} from './startMenuFooterController.js';
 import {StartMenuNavigationController} from './startMenuNavigationController.js';
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
@@ -39,7 +40,9 @@ import {
     animateStartMenuItemIn,
     animateStartMenuItemsIn,
     animateStartMenuItemOut,
+    animateStartMenuContentView,
     animateStartMenuLaunch,
+    resetStartMenuContentTransition,
 } from './startMenuItemAnimations.js';
 import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
@@ -57,7 +60,6 @@ import {
     getPopupBlur,
 } from '../integration/blurMyShellRuntime.js';
 import {
-    APP_CATEGORIES,
     appShouldShow,
     getAllApps,
     getRecommendedApps,
@@ -155,7 +157,6 @@ export class StartMenuController {
         this._pinnedSignature = null;
         this._pinnedApps = [];
         this._activeFolderId = null;
-        this._selectedAppCategory = 'all';
         this._menuWidth = 0;
         this._menuHeight = 0;
         this._menu = new PopupMenu.PopupMenu(
@@ -205,7 +206,7 @@ export class StartMenuController {
             getActors: () => ({
                 allAppsButton: this._allAppsButton,
                 backButton: this._backButton,
-                categorySidebar: this._categorySidebar,
+                categorySidebar: this._categorySidebarController.actor,
                 content: this._content,
                 root: this._root,
                 scrollView: this._scrollView,
@@ -265,18 +266,19 @@ export class StartMenuController {
             x_expand: true,
         });
         this._scrollView.add_child(this._content);
-        this._categorySidebar = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-categories',
-            orientation: Clutter.Orientation.VERTICAL,
-            y_expand: true,
-            visible: false,
-        });
         this._body = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start-body',
             x_expand: true,
             y_expand: true,
         });
-        this._body.add_child(this._categorySidebar);
+        this._categorySidebarController = new StartMenuCategorySidebar({
+            body: this._body,
+            scrollView: this._scrollView,
+            navigationController: this._navigationController,
+            syncButtonClasses: actor => this._syncShellButtonClasses(actor),
+            displayAppList: (apps, categorized) =>
+                this._displayAppList(apps, categorized),
+        });
         this._body.add_child(this._scrollView);
         this._root.add_child(this._body);
 
@@ -666,12 +668,13 @@ export class StartMenuController {
         this._listViewBuilder = null;
         this._pinnedViewBuilder.destroy();
         this._pinnedViewBuilder = null;
+        this._categorySidebarController.destroy();
+        this._categorySidebarController = null;
         this._pinnedDragController.destroy();
         this._pinnedDragController = null;
         this._pinnedApps = null;
         this._activeFolderId = null;
         this._pinnedModel = null;
-        this._selectedAppCategory = null;
         this._pinnedSignature = null;
         this._searchController.destroy();
         this._searchController = null;
@@ -691,7 +694,6 @@ export class StartMenuController {
         this._powerController = null;
         this._tooltipController.destroy();
         this._tooltipController = null;
-        this._categorySidebar = null;
         this._body = null;
         this._sourceActor = null;
         this._powerGIcon = null;
@@ -891,7 +893,7 @@ export class StartMenuController {
     _showPinnedApps(animate = false, onShown = null) {
         const show = () => {
             this._searchController.cancel();
-            this._setCategorySidebarVisible(false);
+            this._categorySidebarController.setVisible(false);
             this._setScrollbarPolicy(true, false);
             this._view = 'pinned';
             this._activeFolderId = null;
@@ -913,11 +915,11 @@ export class StartMenuController {
         };
         if (animate && this.isOpen &&
             (this._view === 'folder' || this._view === 'all')) {
-            this._animateContentView(false, show);
+            animateStartMenuContentView(this._content, false, show);
             return;
         }
 
-        this._resetContentTransition();
+        resetStartMenuContentTransition(this._content);
         show();
     }
 
@@ -999,7 +1001,7 @@ export class StartMenuController {
         const folder = this._resolveFolder(folderItem);
         const show = () => {
             this._searchController.cancel();
-            this._setCategorySidebarVisible(false);
+            this._categorySidebarController.setVisible(false);
             this._setScrollbarPolicy(true, false);
             this._view = 'folder';
             this._activeFolderId = folderId;
@@ -1029,11 +1031,11 @@ export class StartMenuController {
             this._updateSize();
         };
         if (animate && this.isOpen && this._view === 'pinned') {
-            this._animateContentView(true, show);
+            animateStartMenuContentView(this._content, true, show);
             return;
         }
 
-        this._resetContentTransition();
+        resetStartMenuContentTransition(this._content);
         show();
     }
 
@@ -1081,29 +1083,30 @@ export class StartMenuController {
             const apps = getAllApps(this._appSystem);
             if (this._settings.get_boolean('start-menu-app-categories')) {
                 if (!keepCategory)
-                    this._selectedAppCategory = 'all';
+                    this._categorySidebarController.resetSelection();
                 const groupedApps = groupAppsByCategory(apps);
-                const selected = this._buildCategorySidebar(apps, groupedApps);
-                this._setCategorySidebarVisible(true);
+                const selected = this._categorySidebarController
+                    .buildCategorySidebar(apps, groupedApps);
+                this._categorySidebarController.setVisible(true);
                 this._displayAppList(selected.apps, true);
             } else {
-                this._setCategorySidebarVisible(false);
+                this._categorySidebarController.setVisible(false);
                 this._displayAppList(apps);
             }
             if (onShown)
                 onShown();
         };
         if (animate && this.isOpen && this._view === 'pinned') {
-            this._animateContentView(true, show);
+            animateStartMenuContentView(this._content, true, show);
             return;
         }
 
-        this._resetContentTransition();
+        resetStartMenuContentTransition(this._content);
         show();
     }
 
     _showSearchResults(query) {
-        this._setCategorySidebarVisible(false);
+        this._categorySidebarController.setVisible(false);
         this._setScrollbarPolicy(false);
         this._headerTitle.text = _('Search results');
         this._allAppsButton.hide();
@@ -1188,85 +1191,9 @@ export class StartMenuController {
         this._content.add_child(list);
     }
 
-
-    _buildCategorySidebar(allApps, groupedApps) {
-        this._categorySidebar.destroy_all_children();
-        const categories = [
-            {id: 'all', label: _('All'), apps: allApps},
-            ...APP_CATEGORIES
-                .map(category => ({
-                    id: category.id,
-                    label: category.label(),
-                    apps: groupedApps.get(category.id),
-                }))
-                .filter(category => category.apps.length > 0),
-        ];
-        const otherApps = groupedApps.get('other');
-        if (otherApps.length > 0) {
-            categories.push({
-                id: 'other',
-                label: _('Other'),
-                apps: otherApps,
-            });
-        }
-        if (!categories.some(
-            category => category.id === this._selectedAppCategory
-        ))
-            this._selectedAppCategory = 'all';
-
-        for (const category of categories) {
-            const button = new St.Button({
-                style_class: 'simple-taskbar-windows-start-category',
-                reactive: true,
-                can_focus: true,
-                track_hover: true,
-                toggle_mode: true,
-                checked: category.id === this._selectedAppCategory,
-                x_expand: true,
-                x_align: Clutter.ActorAlign.FILL,
-                accessible_name: category.label,
-                child: new St.Label({
-                    text: category.label,
-                    x_align: Clutter.ActorAlign.START,
-                    y_align: Clutter.ActorAlign.CENTER,
-                    x_expand: true,
-                }),
-            });
-            button._startMenuCategoryId = category.id;
-            this._navigationController.enable(button);
-            button.connect('clicked', () => {
-                this._selectedAppCategory = category.id;
-                for (const child of this._categorySidebar.get_children()) {
-                    child.checked =
-                        child._startMenuCategoryId === category.id;
-                }
-                this._scrollView.vadjustment.value = 0;
-                this._displayAppList(category.apps, true);
-            });
-            this._syncShellButtonClasses(button);
-            this._categorySidebar.add_child(button);
-        }
-
-        return categories.find(
-            category => category.id === this._selectedAppCategory
-        );
-    }
-
-    _setCategorySidebarVisible(visible) {
-        this._categorySidebar.visible = visible;
-        if (visible)
-            this._body.add_style_class_name(
-                'simple-taskbar-windows-start-categorized'
-            );
-        else
-            this._body.remove_style_class_name(
-                'simple-taskbar-windows-start-categorized'
-            );
-    }
-
     _clearContent(resetTransition = true) {
         if (resetTransition)
-            this._resetContentTransition();
+            resetStartMenuContentTransition(this._content);
         this._tooltipController.hide(true);
         for (const child of this._content.get_children()) {
             if (child === this._pinnedView)
@@ -1274,37 +1201,6 @@ export class StartMenuController {
             else
                 child.destroy();
         }
-    }
-
-    _animateContentView(forward, show) {
-        this._resetContentTransition();
-        const outgoingX = forward ? -32 : 32;
-        const incomingX = -outgoingX;
-        this._content.ease({
-            translation_x: outgoingX,
-            opacity: 0,
-            duration: 110,
-            mode: Clutter.AnimationMode.EASE_IN_QUAD,
-            onStopped: finished => {
-                if (!finished)
-                    return;
-                show();
-                this._content.translation_x = incomingX;
-                this._content.opacity = 0;
-                this._content.ease({
-                    translation_x: 0,
-                    opacity: 255,
-                    duration: 150,
-                    mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-                });
-            },
-        });
-    }
-
-    _resetContentTransition() {
-        this._content.remove_all_transitions();
-        this._content.translation_x = 0;
-        this._content.opacity = 255;
     }
 
     _launchApp(app, actor) {

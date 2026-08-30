@@ -6,6 +6,8 @@ import St from 'gi://St';
 
 import * as IconGrid from 'resource:///org/gnome/shell/ui/iconGrid.js';
 
+const CONTENT_VIEW_EXIT_DURATION = 110;
+const CONTENT_VIEW_ENTER_DURATION = 150;
 const ITEM_EXIT_DURATION = 120;
 const ITEM_ENTER_DURATION = 170;
 const FOLDER_ABSORB_DURATION = 140;
@@ -14,6 +16,37 @@ const FOLDER_EXPAND_STAGGER = 24;
 
 function canAnimate(actor) {
     return St.Settings.get().enable_animations && actor.get_stage();
+}
+
+export function animateStartMenuContentView(content, forward, show) {
+    resetStartMenuContentTransition(content);
+    const outgoingX = forward ? -32 : 32;
+    const incomingX = -outgoingX;
+    content.ease({
+        translation_x: outgoingX,
+        opacity: 0,
+        duration: CONTENT_VIEW_EXIT_DURATION,
+        mode: Clutter.AnimationMode.EASE_IN_QUAD,
+        onStopped: finished => {
+            if (!finished)
+                return;
+            show();
+            content.translation_x = incomingX;
+            content.opacity = 0;
+            content.ease({
+                translation_x: 0,
+                opacity: 255,
+                duration: CONTENT_VIEW_ENTER_DURATION,
+                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+            });
+        },
+    });
+}
+
+export function resetStartMenuContentTransition(content) {
+    content.remove_all_transitions();
+    content.translation_x = 0;
+    content.opacity = 255;
 }
 
 export function animateStartMenuItemOut(actor, onStopped) {

@@ -21,6 +21,7 @@ src/prefs/taskbarBehaviorGroup.js
 src/prefs/windowDodgeGroup.js
 src/prefs/windowSwitchingPage.js
 src/startMenu/startMenuController.js
+src/startMenu/startMenuCategorySidebar.js
 src/startMenu/startMenuAppMenu.js
 src/startMenu/startMenuAppModel.js
 src/startMenu/startMenuFooterController.js

@@ -3,7 +3,6 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
-import Mtk from 'gi://Mtk';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -30,6 +29,9 @@ import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {
     TaskbarShowDesktopController,
 } from './taskbarShowDesktopController.js';
+import {
+    TaskbarIconGeometryController,
+} from './taskbarIconGeometryController.js';
 import {
     TaskbarLocationsController,
 } from './taskbarLocationsController.js';
@@ -100,7 +102,6 @@ export class TaskbarController {
         this._preserveItemWidths = false;
         this._dragEnabled = null;
         this._suppressMembershipAnimation = false;
-        this._iconGeometryUpdateId = 0;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = [];
         this._shownInitially = false;
@@ -127,6 +128,12 @@ export class TaskbarController {
             visible: !this._settings.get_boolean('default-gnome-panel'),
         });
         this.actor._delegate = this;
+        this._iconGeometryController = new TaskbarIconGeometryController({
+            settings: this._settings,
+            taskbarActor: this.actor,
+            appButtons: this._appButtons,
+            windowsForItem: item => this._windowsForItem(item),
+        });
         this._locationActor = new St.BoxLayout({
             style_class: 'simple-taskbar-locations',
             orientation: panelIsVertical(this._settings)
@@ -516,9 +523,8 @@ export class TaskbarController {
     }
 
     destroy() {
-        if (this._iconGeometryUpdateId)
-            GLib.Source.remove(this._iconGeometryUpdateId);
-        this._iconGeometryUpdateId = 0;
+        this._iconGeometryController.destroy();
+        this._iconGeometryController = null;
         if (this._startupSettleId)
             GLib.Source.remove(this._startupSettleId);
         this._startupSettleId = 0;
@@ -1128,59 +1134,15 @@ export class TaskbarController {
     }
 
     queueIconGeometryUpdate() {
-        if (this._iconGeometryUpdateId)
-            return;
-
-        this._iconGeometryUpdateId = GLib.idle_add(
-            GLib.PRIORITY_LOW,
-            () => {
-                this._iconGeometryUpdateId = 0;
-                this.updateWindowIconGeometries();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
+        this._iconGeometryController.queueIconGeometryUpdate();
     }
 
     updateWindowIconGeometries() {
-        for (const item of this._appButtons.values())
-            this._updateItemIconGeometry(item);
+        this._iconGeometryController.updateWindowIconGeometries();
     }
 
     updateAppIconGeometry(app) {
-        if (!app)
-            return;
-
-        for (const item of this._appButtons.values()) {
-            if (item._taskbarApp === app)
-                this._updateItemIconGeometry(item);
-        }
-    }
-
-    _updateItemIconGeometry(item) {
-        const icon = item._taskbarIcon;
-        if (!icon.get_stage() || !icon.has_allocation())
-            return;
-
-        const [x, y] = icon.get_transformed_position();
-        const [width, height] = icon.get_transformed_size();
-        if (width <= 0 || height <= 0)
-            return;
-
-        const geometry = new Mtk.Rectangle();
-        geometry.x = Math.round(x);
-        geometry.y = Math.round(y);
-        geometry.width = Math.max(1, Math.round(width));
-        geometry.height = Math.max(1, Math.round(height));
-        const monitor = Main.layoutManager.findMonitorForActor(this.actor);
-        const monitorScoped =
-            this._settings.get_boolean('multi-monitor-panels') &&
-            Main.layoutManager.monitors.length > 1;
-        for (const window of this._windowsForItem(item)) {
-            if (monitorScoped && monitor &&
-                window.get_monitor() !== monitor.index)
-                continue;
-            window.set_icon_geometry(geometry);
-        }
+        this._iconGeometryController.updateAppIconGeometry(app);
     }
 
     reorderTaskbarItem(sourceItem, targetItem, insertBefore) {
