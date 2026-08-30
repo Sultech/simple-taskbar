@@ -1046,8 +1046,12 @@
     background-color: transparent;
 }
 
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-tile:hover,
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-tile:focus,
+.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-app-tile:hover
+    .simple-taskbar-windows-start-app-surface,
+.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-app-tile:focus
+    .simple-taskbar-windows-start-app-surface,
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-recommended:hover,
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-recommended:focus,
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:hover,
@@ -1087,6 +1091,11 @@
 .simple-taskbar-windows-start-folder-surface {
     border-radius: 8px;
     border: 1px solid transparent;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-app-surface {
+    border-radius: 7px;
     background-color: transparent;
 }
 
@@ -1339,8 +1348,12 @@
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-nav:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-category:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-category:focus,
-.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:hover,
-.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:focus,
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-app-tile:hover
+    .simple-taskbar-windows-start-app-surface,
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-app-tile:focus
+    .simple-taskbar-windows-start-app-surface,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-recommended:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-recommended:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-list-button:hover,
@@ -1488,8 +1501,12 @@
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-nav:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:focus,
-.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:hover,
-.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:focus,
+.simple-taskbar-windows-start-shell
+    .simple-taskbar-windows-start-app-tile:hover
+    .simple-taskbar-windows-start-app-surface,
+.simple-taskbar-windows-start-shell
+    .simple-taskbar-windows-start-app-tile:focus
+    .simple-taskbar-windows-start-app-surface,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button:hover,
@@ -1501,10 +1518,16 @@
     background-color: rgba(128, 128, 128, 0.18);
 }
 
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-folder-tile:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-tile:hover,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-tile:focus,
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-folder-tile:focus,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-folder-tile:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:hover,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-tile:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-folder-tile:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-folder-tile:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:hover,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-tile:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-folder-tile:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-folder-tile:focus {
     background-color: transparent;

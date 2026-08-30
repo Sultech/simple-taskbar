@@ -7,6 +7,9 @@ import St from 'gi://St';
 
 import {createAppLabel} from './startMenuListView.js';
 
+const TILE_SURFACE_WIDTH = 76;
+const TILE_SURFACE_HEIGHT = 78;
+
 export class StartMenuPinnedViewBuilder {
     constructor(settings, params) {
         this._settings = settings;
@@ -108,6 +111,14 @@ export class StartMenuPinnedViewBuilder {
             line_wrap_mode: Pango.WrapMode.WORD_CHAR,
         });
         content.add_child(label);
+        const surface = new St.Bin({
+            style_class: 'simple-taskbar-windows-start-app-surface',
+            child: content,
+            width: TILE_SURFACE_WIDTH,
+            height: TILE_SURFACE_HEIGHT,
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
         const button = new St.Button({
             style_class: 'simple-taskbar-windows-start-app-tile',
             reactive: true,
@@ -115,7 +126,7 @@ export class StartMenuPinnedViewBuilder {
             track_hover: true,
             width: this._tileWidth,
             accessible_name: app.get_name(),
-            child: content,
+            child: surface,
         });
         this._navigationController.enable(button);
         this._tooltipController.add(button, app, label, false, hideTitle);
@@ -140,8 +151,8 @@ export class StartMenuPinnedViewBuilder {
         const content = new St.Bin({
             style_class: 'simple-taskbar-windows-start-folder-surface',
             child: preview,
-            width: 76,
-            height: 78,
+            width: TILE_SURFACE_WIDTH,
+            height: TILE_SURFACE_HEIGHT,
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
         });
