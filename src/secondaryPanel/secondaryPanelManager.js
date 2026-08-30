@@ -22,6 +22,7 @@ export class SecondaryPanelManager {
         appSystem,
         tracker,
         favorites,
+        notificationBadgeModel,
         spreadAppWindows,
         openPreferences,
     }) {
@@ -30,6 +31,7 @@ export class SecondaryPanelManager {
         this._appSystem = appSystem;
         this._tracker = tracker;
         this._favorites = favorites;
+        this._notificationBadgeModel = notificationBadgeModel;
         this._spreadAppWindows = spreadAppWindows;
         this._openPreferences = openPreferences;
         this._signalHolder = new TransientSignalHolder();
@@ -75,6 +77,7 @@ export class SecondaryPanelManager {
         this._appSystem = null;
         this._tracker = null;
         this._favorites = null;
+        this._notificationBadgeModel = null;
         this._spreadAppWindows = null;
         this._openPreferences = null;
     }
@@ -136,6 +139,7 @@ export class SecondaryPanelManager {
                 appSystem: this._appSystem,
                 tracker: this._tracker,
                 favorites: this._favorites,
+                notificationBadgeModel: this._notificationBadgeModel,
                 spreadAppWindows: this._spreadAppWindows,
                 monitor,
                 openPreferences: this._openPreferences,

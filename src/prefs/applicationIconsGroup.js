@@ -248,6 +248,13 @@ function addApplicationLayoutControls({
     });
     layoutGroup.add_row(hideAppLabelsSwitch);
 
+    const notificationBadgeSwitch = createSwitchRow(settings, {
+        key: 'show-notification-badges',
+        title: _('Show Notification Badges'),
+        subtitle: _('Display unread counts on application icons'),
+    });
+    layoutGroup.add_row(notificationBadgeSwitch);
+
     const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
         key: 'show-pinned-app-separator',
         title: _('Show Pinned App Separator'),

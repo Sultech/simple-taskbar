@@ -62,6 +62,7 @@ export class TaskbarController {
         appSystem,
         tracker,
         favorites,
+        notificationBadgeModel,
         iconSize,
         panelHeight,
         getInterestingWindows,
@@ -79,6 +80,7 @@ export class TaskbarController {
         this._appSystem = appSystem;
         this._tracker = tracker;
         this._favorites = favorites;
+        this._notificationBadgeModel = notificationBadgeModel;
         this._iconSize = iconSize;
         this._panelHeight = panelHeight;
         this._getInterestingWindows = getInterestingWindows;
@@ -241,6 +243,7 @@ export class TaskbarController {
             handleMiddleClick: item => this.handleItemMiddleClick(item),
             initializeAppearance: item => {
                 this._syncIndicatorVisibility(item);
+                this._syncNotificationBadgeGeometry(item);
                 this._updateGlassGeometry(item);
             },
             makeDraggable: (item, button, icon, app) =>
@@ -388,6 +391,10 @@ export class TaskbarController {
         this._favorites.connectObject('changed', () => {
             this._queueRedisplay();
         }, this._signalHolder);
+        this._notificationBadgeModel.connectObject(
+            'changed', () => this._syncNotificationBadges(),
+            this._signalHolder
+        );
         global.display.connectObject('notify::focus-window', () => {
             this.syncButtonStates();
         }, this._signalHolder);
@@ -494,6 +501,11 @@ export class TaskbarController {
             this._signalHolder
         );
         this._settings.connectObject(
+            'changed::show-notification-badges',
+            () => this._syncNotificationBadges(),
+            this._signalHolder
+        );
+        this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => this.applyAppearance(),
             this._signalHolder
@@ -576,6 +588,7 @@ export class TaskbarController {
         this._appSystem = null;
         this._tracker = null;
         this._favorites = null;
+        this._notificationBadgeModel = null;
         this._getInterestingWindows = null;
         this._onAppClicked = null;
         this._onWindowClicked = null;
@@ -617,8 +630,10 @@ export class TaskbarController {
         this._iconSize = iconSize;
         for (const item of this._appButtons.values()) {
             item._taskbarIcon.icon_size = iconSize;
+            this._syncNotificationBadgeGeometry(item);
             this._updateGlassGeometry(item);
         }
+        this._syncNotificationBadges();
         this._syncPinnedSeparatorGeometry();
         this.queueIconGeometryUpdate();
     }
@@ -1038,6 +1053,7 @@ export class TaskbarController {
         this._syncTaskbarEdgeSpacing();
         this._shownInitially = true;
         this.syncButtonStates(animateIndicators);
+        this._syncNotificationBadges();
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
         this._rebuilding = false;
@@ -1689,6 +1705,87 @@ export class TaskbarController {
 
     _syncIndicatorVisibility(item) {
         this._appearanceController.syncIndicatorVisibility(item);
+    }
+
+    _syncNotificationBadges() {
+        for (const item of this._appButtons.values())
+            item._taskbarNotificationBadge.hide();
+
+        if (!this._settings.get_boolean('show-notification-badges'))
+            return;
+
+        const itemsByAppId = new Map();
+        for (const item of this.getOrderedApplicationItems()) {
+            if (!item._taskbarApp)
+                continue;
+
+            const appId = item._taskbarApp.get_id();
+            let items = itemsByAppId.get(appId);
+            if (!items) {
+                items = [];
+                itemsByAppId.set(appId, items);
+            }
+            items.push(item);
+        }
+
+        for (const [appId, items] of itemsByAppId) {
+            const count = this._notificationBadgeModel.getCount(appId);
+            if (count <= 0)
+                continue;
+
+            const target = items.find(item => item._taskbarIsLauncher) ??
+                items.find(item => item._taskbarIsPinnedPrimary) ??
+                items.find(item => item._taskbarIsCombinedApp) ??
+                items[0];
+            if (this._iconSize <= 31 && count > 9) {
+                target._taskbarNotificationBadgeLabel.text = '9';
+            } else if (count > 99) {
+                target._taskbarNotificationBadgeLabel.text =
+                    this._iconSize <= 35 ? '99' : '99+';
+            } else {
+                target._taskbarNotificationBadgeLabel.text = count.toString();
+            }
+            this._syncNotificationBadgeGeometry(target);
+            target._taskbarNotificationBadge.show();
+        }
+    }
+
+    _syncNotificationBadgeGeometry(item) {
+        const fontSize = Math.max(
+            5,
+            Math.min(
+                this._iconSize < 56 ? 11 : 12,
+                Math.floor(this._iconSize * 0.25)
+            )
+        );
+        const horizontalPadding = Math.max(
+            1,
+            Math.min(4, Math.round(this._iconSize * 0.07))
+        );
+        const badgeTextLength =
+            item._taskbarNotificationBadgeLabel.text.length;
+        const singleDigit = badgeTextLength === 1;
+        const singleDigitSize = fontSize + 2;
+        const maximumOutwardOffset = Math.min(4, badgeTextLength + 1);
+        const outwardOffset = Math.max(
+            0,
+            Math.min(
+                maximumOutwardOffset,
+                Math.round((48 - this._iconSize) / 4)
+            )
+        );
+        item._taskbarIconContainer.set_size(
+            this._iconSize,
+            this._iconSize
+        );
+        item._taskbarNotificationBadge.set_style(
+            `font-size: ${fontSize}px;` +
+            `min-width: ${singleDigit ? singleDigitSize : 0}px;` +
+            `min-height: ${singleDigit ? singleDigitSize : 0}px;` +
+            `padding: 0 ${singleDigit ? 0 : horizontalPadding}px;`
+        );
+        item._taskbarNotificationBadgeBin.translation_x = outwardOffset;
+        item._taskbarNotificationBadgeBin.translation_y = -outwardOffset;
     }
 
     _buttonWidth(

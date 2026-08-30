@@ -154,13 +154,38 @@ export class TaskbarAppItemFactory {
         const icon = app.create_icon_texture(this._getIconSize());
         icon.x_align = Clutter.ActorAlign.CENTER;
         icon.y_align = Clutter.ActorAlign.CENTER;
+        const iconContainer = new St.Widget({
+            layout_manager: new Clutter.BinLayout(),
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+            width: this._getIconSize(),
+            height: this._getIconSize(),
+        });
+        iconContainer.add_child(icon);
+        const notificationBadgeLabel = new St.Label({
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        const notificationBadge = new St.Bin({
+            style_class: 'simple-taskbar-notification-badge',
+            child: notificationBadgeLabel,
+            visible: false,
+        });
+        const notificationBadgeBin = new St.Bin({
+            child: notificationBadge,
+            x_align: Clutter.ActorAlign.END,
+            y_align: Clutter.ActorAlign.START,
+            x_expand: true,
+            y_expand: true,
+        });
+        iconContainer.add_child(notificationBadgeBin);
         const buttonContent = new St.BoxLayout({
             style_class: 'simple-taskbar-app-button-content',
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
             height: this._getButtonContentHeight(),
         });
-        buttonContent.add_child(icon);
+        buttonContent.add_child(iconContainer);
         const windowTitle = window ? window.get_title() : null;
         const label = new St.Label({
             style_class: 'simple-taskbar-app-label',
@@ -218,6 +243,10 @@ export class TaskbarAppItemFactory {
             _taskbarButton: button,
             _taskbarButtonContent: buttonContent,
             _taskbarIcon: icon,
+            _taskbarIconContainer: iconContainer,
+            _taskbarNotificationBadge: notificationBadge,
+            _taskbarNotificationBadgeLabel: notificationBadgeLabel,
+            _taskbarNotificationBadgeBin: notificationBadgeBin,
             _taskbarLabel: label,
             _taskbarSlot: slot,
             _taskbarTopSpacer: topSpacer,

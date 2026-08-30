@@ -81,6 +81,7 @@ export class SecondaryPanelController {
         appSystem,
         tracker,
         favorites,
+        notificationBadgeModel,
         spreadAppWindows,
         monitor,
         openPreferences,
@@ -114,6 +115,7 @@ export class SecondaryPanelController {
             appSystem,
             tracker,
             favorites,
+            notificationBadgeModel,
             iconSize: this._iconSize,
             panelHeight: this._panelHeight,
             getInterestingWindows: app =>

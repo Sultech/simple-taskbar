@@ -69,6 +69,11 @@
       <default>3</default>
       <summary>Space between application buttons</summary>
     </key>
+    <key name="show-notification-badges" type="b">
+      <default>true</default>
+      <summary>Show notification badges</summary>
+      <description>Show unread notification counts on application icons</description>
+    </key>
     <key name="running-indicator-style" type="s">
       <choices>
         <choice value="rounded"/>

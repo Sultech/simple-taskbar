@@ -37,6 +37,9 @@ import {
     ApplicationKeybindingRouter,
 } from './src/windowSwitching/applicationKeybindingRouter.js';
 import {TaskbarController} from './src/taskbar/taskbarController.js';
+import {
+    NotificationBadgeModel,
+} from './src/taskbar/notificationBadgeModel.js';
 import {createTaskbarViewport} from './src/taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from './src/integration/volumeMixerController.js';
 import {WindowController} from './src/taskbar/windowController.js';
@@ -59,6 +62,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._extensionConflictController =
             new ExtensionConflictController(this._settings);
         this._extensionConflictController.enable();
+        this._notificationBadgeModel = new NotificationBadgeModel();
         this._favoritesIntegration = new FavoritesIntegration(this._settings);
         this._favoritesIntegration.enable();
         this._notificationBannerController =
@@ -126,6 +130,7 @@ export default class SimpleTaskbarExtension extends Extension {
             appSystem: this._appSystem,
             tracker: this._tracker,
             favorites: this._favorites,
+            notificationBadgeModel: this._notificationBadgeModel,
             iconSize: this._iconSize,
             panelHeight: this._panelHeight,
             getInterestingWindows: app =>
@@ -240,6 +245,7 @@ export default class SimpleTaskbarExtension extends Extension {
             appSystem: this._appSystem,
             tracker: this._tracker,
             favorites: this._favorites,
+            notificationBadgeModel: this._notificationBadgeModel,
             spreadAppWindows: app =>
                 this._overviewIntegration.showAppWindows(app),
             openPreferences: () => this.openPreferences(),
@@ -251,6 +257,7 @@ export default class SimpleTaskbarExtension extends Extension {
             appSystem: this._appSystem,
             tracker: this._tracker,
             favorites: this._favorites,
+            notificationBadgeModel: this._notificationBadgeModel,
             spreadAppWindows: app =>
                 this._overviewIntegration.showAppWindows(app),
             openPreferences: () => this.openPreferences(),
@@ -322,6 +329,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applicationKeybindings = null;
         this._windowController.destroy();
         this._taskbarController.destroy();
+        this._notificationBadgeModel.destroy();
+        this._notificationBadgeModel = null;
         this._windowPreviews.destroy();
         this._windowPreviews = null;
         this._taskbarController = null;

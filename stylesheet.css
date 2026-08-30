@@ -537,6 +537,15 @@
     spacing: 8px;
 }
 
+.simple-taskbar-notification-badge {
+    color: white;
+    background-color: #e01b24;
+    border-radius: 999px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
 .simple-taskbar-separator {
     margin-left: 6px;
     margin-right: 6px;

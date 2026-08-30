@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 01:02+0100\n"
+"POT-Creation-Date: 2026-08-30 05:05+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Show desktop"
 msgstr "Mostrar a área de trabalho"
 
-#: src/overflow/applicationOverflowController.js:485
+#: src/overflow/applicationOverflowController.js:482
 msgid "Application overflow"
 msgstr "Excedente de aplicativos"
 
@@ -352,59 +352,67 @@ msgstr "Cor do indicador focado"
 msgid "Unfocused Indicator Color"
 msgstr "Cor do indicador não focado"
 
-#: src/prefs/applicationIconsGroup.js:437
+#: src/prefs/applicationIconsGroup.js:432
+msgid "Show Notification Badges"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:433
+msgid "Display unread counts on application icons"
+msgstr ""
+
+#: src/prefs/applicationIconsGroup.js:451
 msgid "Application Overflow"
 msgstr "Excedente de aplicativos"
 
-#: src/prefs/applicationIconsGroup.js:438
+#: src/prefs/applicationIconsGroup.js:452
 msgid "Choose how overflowing applications are handled"
 msgstr "Escolha como os aplicativos excedentes são tratados"
 
-#: src/prefs/applicationIconsGroup.js:444
+#: src/prefs/applicationIconsGroup.js:458
 msgid "Enable Application Overflow"
 msgstr "Ativar excedente de aplicativos"
 
-#: src/prefs/applicationIconsGroup.js:454
+#: src/prefs/applicationIconsGroup.js:468
 msgid "Overflow Style"
 msgstr "Estilo do excedente"
 
-#: src/prefs/applicationIconsGroup.js:456
+#: src/prefs/applicationIconsGroup.js:470
 msgid "Taskbar Flyout"
 msgstr "Painel flutuante da barra de tarefas"
 
-#: src/prefs/applicationIconsGroup.js:457
+#: src/prefs/applicationIconsGroup.js:471
 msgid "Application List"
 msgstr "Lista de aplicativos"
 
-#: src/prefs/applicationIconsGroup.js:490 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:504 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Isolar espaços de trabalho"
 
-#: src/prefs/applicationIconsGroup.js:491
+#: src/prefs/applicationIconsGroup.js:505
 msgid "Show running applications from the current workspace only"
 msgstr "Mostra apenas os aplicativos em execução do espaço de trabalho atual"
 
-#: src/prefs/applicationIconsGroup.js:495 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:509 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Isolar monitores"
 
-#: src/prefs/applicationIconsGroup.js:499
+#: src/prefs/applicationIconsGroup.js:513
 msgid "Application Isolation"
 msgstr "Isolamento de aplicativos"
 
-#: src/prefs/applicationIconsGroup.js:516
-#: src/prefs/applicationIconsGroup.js:582
+#: src/prefs/applicationIconsGroup.js:530
+#: src/prefs/applicationIconsGroup.js:597
 msgid "Application Icons"
 msgstr "Ícones de aplicativos"
 
-#: src/prefs/applicationIconsGroup.js:518
+#: src/prefs/applicationIconsGroup.js:532
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr ""
 "Altere o tamanho, o espaçamento, a posição e os indicadores de execução dos "
 "ícones do Dock."
 
-#: src/prefs/applicationIconsGroup.js:533
+#: src/prefs/applicationIconsGroup.js:547
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the Dock"
@@ -412,16 +420,16 @@ msgstr ""
 "Mostrar botões de aplicativos que não cabem em uma janela pop-up de "
 "excedentes em vez de rolar o Dock"
 
-#: src/prefs/applicationIconsGroup.js:539
+#: src/prefs/applicationIconsGroup.js:553
 msgid "Choose which applications appear on the Dock"
 msgstr "Escolha quais aplicativos aparecem no Dock"
 
-#: src/prefs/applicationIconsGroup.js:541
+#: src/prefs/applicationIconsGroup.js:555
 msgid "Show running applications only in the Dock for their monitor"
 msgstr ""
 "Mostrar aplicativos em execução apenas no Dock do monitor correspondente"
 
-#: src/prefs/applicationIconsGroup.js:584
+#: src/prefs/applicationIconsGroup.js:599
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
@@ -429,7 +437,7 @@ msgstr ""
 "Altere o tamanho, o espaçamento, a posição e os indicadores de execução dos "
 "ícones da barra de tarefas."
 
-#: src/prefs/applicationIconsGroup.js:605
+#: src/prefs/applicationIconsGroup.js:620
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -437,11 +445,11 @@ msgstr ""
 "Mostra em um pop-up de excedente os botões de aplicativos que não cabem, em "
 "vez de rolar a barra de tarefas"
 
-#: src/prefs/applicationIconsGroup.js:611
+#: src/prefs/applicationIconsGroup.js:626
 msgid "Choose which applications appear on the taskbar"
 msgstr "Escolha quais aplicativos aparecem na barra de tarefas"
 
-#: src/prefs/applicationIconsGroup.js:613
+#: src/prefs/applicationIconsGroup.js:628
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Mostra os aplicativos em execução apenas na barra de tarefas do monitor deles"
@@ -1087,7 +1095,7 @@ msgid "GNOME workspace overview button"
 msgstr "Botão de panorâmica de espaços de trabalho do GNOME"
 
 #: src/prefs/panelItemsPage.js:194 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:859
+#: src/startMenu/startButtonController.js:839
 msgid "Applications"
 msgstr "Aplicativos"
 
@@ -1967,58 +1975,58 @@ msgstr "Mostrar no monitor primário"
 msgid "Always display the switcher on the primary monitor"
 msgstr "Sempre exibe o alternador no monitor primário"
 
-#: src/startMenu/startMenuController.js:97
+#: src/startMenu/startMenuController.js:101
 msgid "Folder"
 msgstr "Pasta"
 
-#: src/startMenu/startMenuController.js:110
+#: src/startMenu/startMenuController.js:114
 msgid "Remove folder"
 msgstr "Remover pasta"
 
-#: src/startMenu/startMenuController.js:697
+#: src/startMenu/startMenuController.js:722
 msgid "Type here to search"
 msgstr "Digite aqui para pesquisar"
 
-#: src/startMenu/startMenuController.js:777
-#: src/startMenu/startMenuController.js:885
+#: src/startMenu/startMenuController.js:802
+#: src/startMenu/startMenuController.js:910
 msgid "Pinned"
 msgstr "Fixados"
 
-#: src/startMenu/startMenuController.js:782
-#: src/startMenu/startMenuController.js:1062
+#: src/startMenu/startMenuController.js:807
+#: src/startMenu/startMenuController.js:1089
 msgid "All apps"
 msgstr "Todos os aplicativos"
 
-#: src/startMenu/startMenuController.js:796
+#: src/startMenu/startMenuController.js:821
 msgid "Back"
 msgstr "Voltar"
 
-#: src/startMenu/startMenuController.js:957
+#: src/startMenu/startMenuController.js:982
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Escolha Todos e clique com o botão direito em um aplicativo para fixá-lo"
 
-#: src/startMenu/startMenuController.js:965
+#: src/startMenu/startMenuController.js:990
 msgid "Recommended"
 msgstr "Recomendados"
 
-#: src/startMenu/startMenuController.js:1007 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1034 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Esta pasta está vazia"
 
-#: src/startMenu/startMenuController.js:1093
+#: src/startMenu/startMenuController.js:1121
 msgid "Search results"
 msgstr "Resultados da pesquisa"
 
-#: src/startMenu/startMenuController.js:1118
+#: src/startMenu/startMenuController.js:1146
 msgid "No results found"
 msgstr "Nenhum resultado encontrado"
 
-#: src/startMenu/startMenuController.js:1172
+#: src/startMenu/startMenuCategorySidebar.js:45
 msgid "All"
 msgstr "Todos"
 
-#: src/startMenu/startMenuController.js:1185
+#: src/startMenu/startMenuCategorySidebar.js:58
 msgid "Other"
 msgstr "Outros"
 
@@ -2200,25 +2208,25 @@ msgid "Trash"
 msgstr "Lixeira"
 
 #: src/taskbar/taskbarAppearanceController.js:417
-#: src/taskbar/taskbarController.js:1116 src/taskbar/taskbarController.js:1118
+#: src/taskbar/taskbarController.js:1139 src/taskbar/taskbarController.js:1141
 msgid "running"
 msgstr "em execução"
 
-#: src/startMenu/startButtonController.js:393
+#: src/startMenu/startButtonController.js:383
 msgid "Start Menu Settings"
 msgstr "Configurações do Menu Iniciar"
 
-#: src/startMenu/startButtonController.js:398
+#: src/startMenu/startButtonController.js:388
 #: src/panel/panelInteractionController.js:137
 msgid "Dock Settings"
 msgstr "Configurações do Dock"
 
-#: src/startMenu/startButtonController.js:403
+#: src/startMenu/startButtonController.js:393
 #: src/panel/panelInteractionController.js:137
 msgid "Taskbar Settings"
 msgstr "Configurações da barra de tarefas"
 
-#: src/startMenu/startButtonController.js:859
+#: src/startMenu/startButtonController.js:839
 msgid "Start"
 msgstr "Iniciar"
 
