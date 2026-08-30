@@ -1515,7 +1515,7 @@
     background-gradient-direction: vertical;
     background-gradient-start: rgba(0, 0, 0, 0.16);
     background-gradient-end: rgba(0, 0, 0, 0.30);
-    border-color: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.06);
 }
 
 .simple-taskbar-windows-start-dark
@@ -1527,7 +1527,7 @@
     background-gradient-direction: vertical;
     background-gradient-start: rgba(0, 0, 0, 0.26);
     background-gradient-end: rgba(0, 0, 0, 0.42);
-    border-color: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.09);
 }
 
 .simple-taskbar-windows-start-light
@@ -1575,7 +1575,7 @@
     background-gradient-direction: vertical;
     background-gradient-start: rgba(0, 0, 0, 0.24);
     background-gradient-end: rgba(0, 0, 0, 0.38);
-    border-color: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.07);
 }
 
 .simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
@@ -1587,7 +1587,7 @@
     background-gradient-direction: vertical;
     background-gradient-start: rgba(0, 0, 0, 0.34);
     background-gradient-end: rgba(0, 0, 0, 0.50);
-    border-color: rgba(255, 255, 255, 0.26);
+    border-color: rgba(255, 255, 255, 0.11);
 }
 
 .simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
