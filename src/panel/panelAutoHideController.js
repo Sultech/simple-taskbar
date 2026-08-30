@@ -50,10 +50,12 @@ export class PanelAutoHideController {
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._cursorPositionInvalidatedId = 0;
         this._hideTimeoutId = 0;
+        this._hideAfterReveal = false;
         this._fullscreenWatchId = 0;
         this._fullscreenReleasePending = false;
         this._pointerButtonPressed = false;
         this._hidden = false;
+        this._hideAfterReveal = false;
         this._overviewSuspended = false;
         this._overviewEdgeRevealBlocked = false;
         this._trackedActorData = null;
@@ -491,8 +493,7 @@ export class PanelAutoHideController {
         this._pointerButtonPressed = false;
     }
 
-    _scheduleHide(delay = this._dodgeActive &&
-        this._dodgePointerReveal ? 0 : HIDE_DELAY) {
+    _scheduleHide(delay = HIDE_DELAY) {
         const canHide = this._enabled() ||
             this._dodgeEnabled && this._dodgeActive &&
             this._dodgePointerReveal;
@@ -500,6 +501,12 @@ export class PanelAutoHideController {
             this._overviewSuspended ||
             this._fullscreenVisibilityHeld || this._hidden ||
             this._hideTimeoutId) {
+            return;
+        }
+
+        const property = panelIsVertical(this._settings) ? 'x' : 'y';
+        if (this._positionActor.get_transition(property)) {
+            this._hideAfterReveal = true;
             return;
         }
 
@@ -533,6 +540,7 @@ export class PanelAutoHideController {
         if (this._hideTimeoutId)
             GLib.Source.remove(this._hideTimeoutId);
         this._hideTimeoutId = 0;
+        this._hideAfterReveal = false;
     }
 
     _suspendForOverview() {
@@ -568,6 +576,7 @@ export class PanelAutoHideController {
     }
 
     _hide(animate = true) {
+        this._hideAfterReveal = false;
         this._hidden = true;
         this._moveTo(
             this._geometry(this._getMonitor()).hiddenOffset,
@@ -707,7 +716,13 @@ export class PanelAutoHideController {
         const params = {
             duration: ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => Main.layoutManager._queueUpdateRegions(),
+            onComplete: () => {
+                Main.layoutManager._queueUpdateRegions();
+                if (!this._hidden && this._hideAfterReveal) {
+                    this._hideAfterReveal = false;
+                    this._scheduleHide();
+                }
+            },
         };
         params[property] = offset;
         actor.ease(params);
