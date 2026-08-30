@@ -20,7 +20,7 @@ Activities, clock, calendar, Quick Settings and extension indicators while
 adding pinned applications, running applications, window previews and an
 optional Eleven-style Start Menu.
 
-> Simple Taskbar supports GNOME Shell 48, 49 and 50 only.
+> Simple Taskbar supports GNOME Shell 48, 49, 50 and 51 only.
 
 ## Preview
 
