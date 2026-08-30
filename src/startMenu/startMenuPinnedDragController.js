@@ -15,6 +15,8 @@ import {
     animateStartMenuItemReflow,
 } from './startMenuItemAnimations.js';
 
+const FOLDER_DROP_RESTORE_TIME = 120;
+
 export class StartMenuPinnedDragController {
     constructor(pinnedModel, params) {
         this._pinnedModel = pinnedModel;
@@ -416,9 +418,21 @@ export class StartMenuPinnedDragController {
         actor.ease({
             scale_x: 1,
             scale_y: 1,
-            duration: 120,
+            duration: FOLDER_DROP_RESTORE_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         });
+    }
+
+    _restoreFolderDropActors() {
+        for (const actor of this._folderDropActors) {
+            actor.remove_all_transitions();
+            actor.ease({
+                scale_x: 1,
+                scale_y: 1,
+                duration: FOLDER_DROP_RESTORE_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+        }
     }
 
     _resetFolderDropActors() {
@@ -511,6 +525,8 @@ export class StartMenuPinnedDragController {
                 oldY - targetY
             );
         }
+
+        this._restoreFolderDropActors();
     }
 
     _restoreOrder(grid, source) {
