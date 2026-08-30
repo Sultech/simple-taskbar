@@ -34,14 +34,16 @@ import {
     TaskbarLocationsController,
 } from './taskbarLocationsController.js';
 import {
+    animateSeparatorIn,
+    animateSeparatorOut,
+    createTaskbarSeparator,
+    syncSeparatorGeometry,
     TASKBAR_SEPARATOR_EXTENT,
-    TASKBAR_SEPARATOR_LINE_SIZE,
 } from './taskbarSeparator.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
-const SEPARATOR_ANIMATION_TIME = 150;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -1502,20 +1504,9 @@ export class TaskbarController {
 
         let created = false;
         if (!this._pinnedSeparator) {
-            this._pinnedSeparator = new St.Widget({
-                layout_manager: new Clutter.BinLayout(),
-                x_align: Clutter.ActorAlign.CENTER,
-                y_align: Clutter.ActorAlign.CENTER,
-                reactive: false,
-                clip_to_allocation: true,
-            });
-            this._pinnedSeparatorLine = new St.Widget({
-                style_class: 'simple-taskbar-separator',
-                x_align: Clutter.ActorAlign.CENTER,
-                y_align: Clutter.ActorAlign.CENTER,
-                reactive: false,
-            });
-            this._pinnedSeparator.add_child(this._pinnedSeparatorLine);
+            const {separator, line} = createTaskbarSeparator();
+            this._pinnedSeparator = separator;
+            this._pinnedSeparatorLine = line;
             this._pinnedSeparator._taskbarIsPinnedSeparator = true;
             this.actor.add_child(this._pinnedSeparator);
             created = true;
@@ -1536,7 +1527,10 @@ export class TaskbarController {
             this._showDesktopItem
         );
         if (created && animate)
-            this._animatePinnedSeparatorIn();
+            animateSeparatorIn(
+                this._pinnedSeparator,
+                panelIsVertical(this._settings)
+            );
     }
 
     _syncPinnedSeparatorGeometry() {
@@ -1544,31 +1538,15 @@ export class TaskbarController {
             return;
 
         const vertical = panelIsVertical(this._settings);
-        this._pinnedSeparator.set_size(
-            vertical ? this._iconSize : TASKBAR_SEPARATOR_EXTENT,
-            vertical ? TASKBAR_SEPARATOR_EXTENT : this._iconSize
+        syncSeparatorGeometry(
+            this._pinnedSeparator,
+            this._pinnedSeparatorLine,
+            vertical,
+            this._iconSize
         );
-        this._pinnedSeparatorLine.set_size(
-            vertical ? this._iconSize : TASKBAR_SEPARATOR_LINE_SIZE,
-            vertical ? TASKBAR_SEPARATOR_LINE_SIZE : this._iconSize
-        );
-    }
-
-    _animatePinnedSeparatorIn() {
-        const vertical = panelIsVertical(this._settings);
-        const property = vertical ? 'height' : 'width';
-        this._pinnedSeparator.remove_all_transitions();
-        if (!St.Settings.get().enable_animations)
-            return;
-
-        this._pinnedSeparator[property] = 0;
-        this._pinnedSeparator.opacity = 0;
-        this._pinnedSeparator.ease({
-            [property]: TASKBAR_SEPARATOR_EXTENT,
-            opacity: 255,
-            duration: SEPARATOR_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-        });
+        this._pinnedSeparator[
+            vertical ? 'height' : 'width'
+        ] = TASKBAR_SEPARATOR_EXTENT;
     }
 
     _destroyPinnedSeparator(animate = false) {
@@ -1578,25 +1556,14 @@ export class TaskbarController {
         const separator = this._pinnedSeparator;
         this._pinnedSeparator = null;
         this._pinnedSeparatorLine = null;
-        separator.remove_all_transitions();
-        if (animate && St.Settings.get().enable_animations &&
-            separator.get_stage()) {
-            const property = panelIsVertical(this._settings)
-                ? 'height'
-                : 'width';
-            separator.animatingOut = true;
-            separator.ease({
-                [property]: 0,
-                opacity: 0,
-                duration: SEPARATOR_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_IN_CUBIC,
-                onStopped: finished => {
-                    if (finished)
-                        separator.destroy();
-                },
-            });
+        separator.animatingOut = true;
+        if (animateSeparatorOut(
+            separator,
+            panelIsVertical(this._settings),
+            () => separator.destroy(),
+            animate && separator.get_stage()
+        ))
             return;
-        }
 
         separator.destroy();
     }

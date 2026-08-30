@@ -5,6 +5,8 @@ import Clutter from 'gi://Clutter';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 
+import {createAppLabel} from './startMenuListView.js';
+
 export class StartMenuPinnedViewBuilder {
     constructor(settings, params) {
         this._settings = settings;
@@ -14,7 +16,6 @@ export class StartMenuPinnedViewBuilder {
         this._tooltipController = params.tooltipController;
         this._contextMenuController = params.contextMenuController;
         this._pinnedDragController = params.pinnedDragController;
-        this._createAppLabel = params.createAppLabel;
         this._createRunningIndicator = params.createRunningIndicator;
         this._launchApp = params.launchApp;
         this._showFolder = params.showFolder;
@@ -44,7 +45,6 @@ export class StartMenuPinnedViewBuilder {
         this._showFolder = null;
         this._launchApp = null;
         this._createRunningIndicator = null;
-        this._createAppLabel = null;
         this._pinnedDragController = null;
         this._contextMenuController = null;
         this._tooltipController = null;
@@ -98,7 +98,7 @@ export class StartMenuPinnedViewBuilder {
         content.add_child(hideTitle
             ? this._createRunningIndicator(app, iconContent)
             : iconContent);
-        const label = this._createAppLabel(app.get_name(), 78);
+        const label = createAppLabel(app.get_name(), 78);
         label.add_style_class_name('simple-taskbar-windows-start-app-tile-label');
         label.visible = !hideTitle;
         label.x_align = Clutter.ActorAlign.CENTER;

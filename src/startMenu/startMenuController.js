@@ -3,7 +3,6 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
-import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -32,6 +31,7 @@ import {StartMenuNavigationController} from './startMenuNavigationController.js'
 import {StartMenuPinnedDragController} from './startMenuPinnedDragController.js';
 import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuPinnedViewBuilder} from './startMenuPinnedView.js';
+import {StartMenuListViewBuilder} from './startMenuListView.js';
 import {
     StartMenuRunningIndicatorController,
 } from './startMenuRunningIndicatorController.js';
@@ -222,12 +222,23 @@ export class StartMenuController {
             tooltipController: this._tooltipController,
             contextMenuController: this._contextMenuController,
             pinnedDragController: this._pinnedDragController,
-            createAppLabel: (text, width) => this._createAppLabel(text, width),
             createRunningIndicator: (app, icon) =>
                 this._runningIndicatorController.createIconStack(app, icon),
             launchApp: (app, actor) => this._launchApp(app, actor),
             showFolder: folderId => this._showPinnedFolder(folderId, true),
             syncButtonClasses: actor => this._syncShellButtonClasses(actor),
+        });
+        this._listViewBuilder = new StartMenuListViewBuilder({
+            navigationController: this._navigationController,
+            tooltipController: this._tooltipController,
+            contextMenuController: this._contextMenuController,
+            pinnedDragController: this._pinnedDragController,
+            runningIndicatorController: this._runningIndicatorController,
+            launchApp: (app, actor) => this._launchApp(app, actor),
+            activateSearchResult: (result, actor) =>
+                this._activateSearchResult(result, actor),
+            syncButtonClasses: actor => this._syncShellButtonClasses(actor),
+            closeMenu: () => this.close(),
         });
 
         this._createSearchEntry();
@@ -651,6 +662,8 @@ export class StartMenuController {
         this._searchClearIcon = null;
         this._pinnedView?.destroy();
         this._pinnedView = null;
+        this._listViewBuilder.destroy();
+        this._listViewBuilder = null;
         this._pinnedViewBuilder.destroy();
         this._pinnedViewBuilder = null;
         this._pinnedDragController.destroy();
@@ -964,7 +977,9 @@ export class StartMenuController {
                 style_class: 'simple-taskbar-windows-start-section-heading',
                 text: _('Recommended'),
             }));
-            view.add_child(this._createRecommendedGrid(recommended));
+            view.add_child(
+                this._listViewBuilder.createRecommendedGrid(recommended)
+            );
         }
 
         this._pinnedView?.destroy();
@@ -1142,7 +1157,9 @@ export class StartMenuController {
                 orientation: Clutter.Orientation.VERTICAL,
             });
             for (const result of group.results)
-                list.add_child(this._createSearchResultButton(result));
+                list.add_child(
+                    this._listViewBuilder.createSearchResultButton(result)
+                );
             this._content.add_child(list);
         }
     }
@@ -1161,7 +1178,13 @@ export class StartMenuController {
             orientation: Clutter.Orientation.VERTICAL,
         });
         for (const app of apps)
-            list.add_child(this._createAppListButton(app, false, categorized));
+            list.add_child(
+                this._listViewBuilder.createAppListButton(
+                    app,
+                    false,
+                    categorized
+                )
+            );
         this._content.add_child(list);
     }
 
@@ -1283,139 +1306,6 @@ export class StartMenuController {
         this._content.translation_x = 0;
         this._content.opacity = 255;
     }
-
-    _createRecommendedGrid(apps) {
-        const grid = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-recommended-grid',
-            orientation: Clutter.Orientation.VERTICAL,
-        });
-        for (let index = 0; index < apps.length; index += 2) {
-            const row = new St.BoxLayout({
-                style_class: 'simple-taskbar-windows-start-recommended-row',
-                x_expand: true,
-            });
-            const rowApps = apps.slice(index, index + 2);
-            for (const app of rowApps)
-                row.add_child(this._createAppListButton(app, true));
-            if (rowApps.length === 1)
-                row.add_child(new St.Widget({x_expand: true}));
-            grid.add_child(row);
-        }
-        return grid;
-    }
-
-    _createAppListButton(app, compact = false, categorized = false) {
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-app-list-content',
-            x_expand: true,
-        });
-        const icon = app.create_icon_texture(compact ? 24 : 32);
-        content.add_child(
-            this._runningIndicatorController.createIconStack(app, icon)
-        );
-        const label = this._createAppLabel(
-            app.get_name(),
-            compact ? 190 : categorized ? 330 : 480
-        );
-        content.add_child(label);
-        const button = new St.Button({
-            style_class: compact
-                ? 'simple-taskbar-windows-start-recommended'
-                : 'simple-taskbar-windows-start-app-list-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            x_expand: true,
-            x_align: Clutter.ActorAlign.FILL,
-            accessible_name: app.get_name(),
-            child: content,
-        });
-        this._navigationController.enable(button);
-        this._tooltipController.add(button, app, label, !compact);
-        button._startMenuAppId = app.get_id();
-        button._startMenuAppIcon = icon;
-        button.connect('clicked', () => this._launchApp(app, icon));
-        this._contextMenuController.addHandler(button, app);
-        if (!compact) {
-            this._pinnedDragController.makeTaskbarDraggable(
-                button,
-                icon,
-                app,
-                () => this.close()
-            );
-        }
-        this._syncShellButtonClasses(button);
-        return button;
-    }
-
-    _createSearchResultButton(result) {
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-app-list-content',
-            x_expand: true,
-        });
-        const icon = this._createSearchResultIcon(result);
-        content.add_child(result.app
-            ? this._runningIndicatorController.createIconStack(
-                result.app,
-                icon
-            )
-            : icon);
-        content.add_child(this._createAppLabel(result.name, 480));
-        const button = new St.Button({
-            style_class: 'simple-taskbar-windows-start-app-list-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            x_expand: true,
-            x_align: Clutter.ActorAlign.FILL,
-            accessible_name: result.name,
-            child: content,
-        });
-        this._navigationController.enable(button);
-        if (result.app) {
-            button._startMenuAppId = result.app.get_id();
-            button._startMenuAppIcon = icon;
-        }
-        button.connect('clicked', () =>
-            this._activateSearchResult(result, icon));
-        if (result.app)
-            this._contextMenuController.addHandler(button, result.app);
-        this._syncShellButtonClasses(button);
-        return button;
-    }
-
-    _createSearchResultIcon(result) {
-        if (result.provider.id === 'org.gnome.Characters.desktop') {
-            return new St.Label({
-                style_class: 'simple-taskbar-windows-start-character-icon',
-                text: result.id,
-                width: 30,
-                y_align: Clutter.ActorAlign.CENTER,
-                x_align: Clutter.ActorAlign.CENTER,
-            });
-        }
-
-        let icon = result.meta.createIcon(30);
-        icon ??= new St.Icon({
-            icon_name: 'system-search-symbolic',
-            icon_size: 30,
-        });
-        icon.style_class = 'popup-menu-icon';
-        return icon;
-    }
-
-
-    _createAppLabel(text, width) {
-        const label = new St.Label({
-            text,
-            width,
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-        label.clutter_text.ellipsize = Pango.EllipsizeMode.END;
-        return label;
-    }
-
-
 
     _launchApp(app, actor) {
         if (actor)

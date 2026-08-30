@@ -36,11 +36,12 @@ import {
 } from '../shared/panelSizing.js';
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
+    animateSeparatorIn,
+    animateSeparatorOut,
+    createTaskbarSeparator,
+    syncSeparatorGeometry,
     TASKBAR_SEPARATOR_EXTENT,
-    TASKBAR_SEPARATOR_LINE_SIZE,
 } from '../taskbar/taskbarSeparator.js';
-
-const SEPARATOR_ANIMATION_TIME = 150;
 
 export class StartButtonController {
     constructor({
@@ -127,21 +128,10 @@ export class StartButtonController {
                 ? this._windowsXpStartButton.actor
                 : this._content,
         });
-        this._separator = new St.Widget({
-            layout_manager: new Clutter.BinLayout(),
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.CENTER,
-            reactive: false,
-            visible: false,
-            clip_to_allocation: true,
-        });
-        this._separatorLine = new St.Widget({
-            style_class: 'simple-taskbar-separator',
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.CENTER,
-            reactive: false,
-        });
-        this._separator.add_child(this._separatorLine);
+        const {separator, line} = createTaskbarSeparator();
+        this._separator = separator;
+        this._separator.visible = false;
+        this._separatorLine = line;
         this._separatorTargetVisible = false;
         this.panelActor = new St.BoxLayout({
             reactive: false,
@@ -776,14 +766,13 @@ export class StartButtonController {
             ? Clutter.ActorAlign.CENTER
             : Clutter.ActorAlign.FILL;
         this.panelActor.y_expand = !vertical;
-        this._separator.set_size(
-            vertical ? this._icon.icon_size : TASKBAR_SEPARATOR_EXTENT,
-            vertical ? TASKBAR_SEPARATOR_EXTENT : this._icon.icon_size
+        syncSeparatorGeometry(
+            this._separator,
+            this._separatorLine,
+            vertical,
+            this._icon.icon_size
         );
-        this._separatorLine.set_size(
-            vertical ? this._icon.icon_size : TASKBAR_SEPARATOR_LINE_SIZE,
-            vertical ? TASKBAR_SEPARATOR_LINE_SIZE : this._icon.icon_size
-        );
+        this._separator[mainProperty] = TASKBAR_SEPARATOR_EXTENT;
         this.panelActor.set_child_at_index(
             this._separator,
             this._separatorFollowsButton() ? 1 : 0
@@ -796,43 +785,34 @@ export class StartButtonController {
             return;
 
         this._separatorTargetVisible = visible;
-        this._separator.remove_all_transitions();
         if (visible) {
             this._separator.show();
-            if (!animate || !St.Settings.get().enable_animations ||
-                !this._separator.get_stage()) {
+            if (!animateSeparatorIn(
+                this._separator,
+                vertical,
+                animate && this._separator.get_stage()
+            )) {
                 this._separator[mainProperty] = TASKBAR_SEPARATOR_EXTENT;
                 this._separator.opacity = 255;
                 return;
             }
-            this._separator[mainProperty] = 0;
-            this._separator.opacity = 0;
-            this._separator.ease({
-                [mainProperty]: TASKBAR_SEPARATOR_EXTENT,
-                opacity: 255,
-                duration: SEPARATOR_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-            });
             return;
         }
 
-        if (!animate || !St.Settings.get().enable_animations ||
-            !this._separator.get_stage()) {
+        if (!animateSeparatorOut(
+            this._separator,
+            vertical,
+            () => {
+                if (!this._separatorTargetVisible)
+                    this._separator.hide();
+            },
+            animate && this._separator.get_stage()
+        )) {
             this._separator[mainProperty] = 0;
             this._separator.opacity = 0;
             this._separator.hide();
             return;
         }
-        this._separator.ease({
-            [mainProperty]: 0,
-            opacity: 0,
-            duration: SEPARATOR_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_IN_CUBIC,
-            onStopped: finished => {
-                if (finished && !this._separatorTargetVisible)
-                    this._separator.hide();
-            },
-        });
     }
 
     _separatorFollowsButton() {

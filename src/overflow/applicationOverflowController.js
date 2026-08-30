@@ -19,11 +19,13 @@ import {
     panelIsVertical,
     syncPanelMenuPosition,
 } from '../panel/panelPosition.js';
-import {getScrollDelta} from '../scrollUtils.js';
 import {MaximumSizeClamp} from '../taskbar/maximumSizeClamp.js';
 import {
+    animateSeparatorIn,
+    animateSeparatorOut,
+    createTaskbarSeparator,
+    syncSeparatorGeometry,
     TASKBAR_SEPARATOR_EXTENT,
-    TASKBAR_SEPARATOR_LINE_SIZE,
 } from '../taskbar/taskbarSeparator.js';
 import {
     ApplicationOverflowButtonController,
@@ -37,17 +39,14 @@ import {
 import {
     ApplicationOverflowThemeController,
 } from './applicationOverflowThemeController.js';
+import {
+    ApplicationOverflowPopupController,
+    TASKBAR_SCROLLBAR_CLASS,
+} from './applicationOverflowPopupController.js';
 import {closePopupMenu} from '../shared/popupMenuUtils.js';
 
-const TASKBAR_CONTENT_CLASS =
-    'simple-taskbar-application-overflow-taskbar-content';
-const TASKBAR_SCROLLBAR_CLASS =
-    'simple-taskbar-application-overflow-taskbar-scrollbar';
 const POPUP_MARGIN = 32;
-const SEPARATOR_ANIMATION_TIME = 150;
 const OVERFLOW_BUTTON_ANIMATION_TIME = 150;
-const OVERFLOW_CONTENT_ANIMATION_TIME = 140;
-const OVERFLOW_ITEM_CLOSE_ANIMATION_TIME = 200;
 const OVERFLOW_REVEAL_ANIMATION_TIME = 160;
 
 const ApplicationOverflowContainer = GObject.registerClass(
@@ -96,23 +95,15 @@ export class ApplicationOverflowController {
         this._previewController = previewController;
         this._viewport = viewport;
         this._locationActor = taskbarController.getLocationActor();
-        this._locationSeparator = new St.Widget({
-            layout_manager: new Clutter.BinLayout(),
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.CENTER,
-            reactive: false,
-            visible: false,
-            clip_to_allocation: true,
-        });
+        const {
+            separator: locationSeparator,
+            line: locationSeparatorLine,
+        } = createTaskbarSeparator();
+        this._locationSeparator = locationSeparator;
+        this._locationSeparator.visible = false;
         this._locationSeparatorTargetVisible = false;
         this._locationSeparatorVertical = null;
-        this._locationSeparatorLine = new St.Widget({
-            style_class: 'simple-taskbar-separator',
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.CENTER,
-            reactive: false,
-        });
-        this._locationSeparator.add_child(this._locationSeparatorLine);
+        this._locationSeparatorLine = locationSeparatorLine;
         this._signalHolder = new TransientSignalHolder();
         this._grab = null;
         this._menu = null;
@@ -129,12 +120,9 @@ export class ApplicationOverflowController {
         this._dragEndListener = () => this._onTaskbarDragEnd();
         this._dragEndListenerRegistered = false;
         this._dragSyncPending = false;
-        this._overflowItems = [];
         this._itemController = null;
         this._dragController = null;
-        this._style = null;
-        this._layoutSignature = null;
-        this._pendingOverflowTransition = null;
+        this._popupController = null;
         this._buttonController = null;
         this._themeController = null;
 
@@ -175,9 +163,19 @@ export class ApplicationOverflowController {
         this._dragController = new ApplicationOverflowDragController(
             this._taskbarController,
             () => this._itemController.records,
-            () => this._style,
+            () => this._popupController.style,
             () => panelIsVertical(this._settings)
         );
+        this._popupController = new ApplicationOverflowPopupController({
+            settings: this._settings,
+            menu: this._menu,
+            section: this._section,
+            itemController: this._itemController,
+            dragController: this._dragController,
+            getItemSizes: items => this._getItemSizes(items),
+            close: () => this.close(),
+            syncGeometry: () => this._syncPopupGeometry(),
+        });
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
         this._buttonController = new ApplicationOverflowButtonController(
@@ -189,7 +187,7 @@ export class ApplicationOverflowController {
         this._themeController = new ApplicationOverflowThemeController(
             this._settings,
             this._menu,
-            () => this._style
+            () => this._popupController.style
         );
 
         this._menu.connectObject('open-state-changed', (_menu, open) => {
@@ -217,7 +215,7 @@ export class ApplicationOverflowController {
         this._settings.connectObject(
             'changed::application-overflow-style',
             () => {
-                this._style = null;
+                this._popupController.resetStyle();
                 this._queueSync();
             },
             this._signalHolder
@@ -381,6 +379,8 @@ export class ApplicationOverflowController {
             this._grab = null;
         }
 
+        this._popupController.destroy();
+        this._popupController = null;
         this._dragController.destroy();
         this._dragController = null;
         this._itemController.destroy();
@@ -410,12 +410,9 @@ export class ApplicationOverflowController {
         this._locationActor = null;
         this._taskbarController = null;
         this._previewController = null;
-        this._overflowItems = null;
         this._buttonSize = 0;
         this._buttonSizeAnimating = false;
         this._iconSizeSyncPending = false;
-        this._layoutSignature = null;
-        this._pendingOverflowTransition = null;
         this._settings = null;
     }
 
@@ -542,7 +539,7 @@ export class ApplicationOverflowController {
         const items = this._taskbarController.getOrderedApplicationItems();
         const previousVisibleCount = Math.max(
             0,
-            items.length - this._overflowItems.length
+            items.length - this._popupController.overflowItems.length
         );
         const locationItems = this._taskbarController.getLocationItems();
         this._syncLocationSeparator(
@@ -618,7 +615,7 @@ export class ApplicationOverflowController {
             vertical,
             collapse ? 0 : null
         );
-        this._setOverflowItems(items.slice(visibleCount));
+        this._popupController.setOverflowItems(items.slice(visibleCount));
         this._themeController.sync();
     }
 
@@ -640,19 +637,12 @@ export class ApplicationOverflowController {
         const orientationChanged =
             this._locationSeparatorVertical !== vertical;
         this._locationSeparatorVertical = vertical;
-        if (vertical) {
-            this._locationSeparator.set_width(iconSize);
-            this._locationSeparatorLine.set_size(
-                iconSize,
-                TASKBAR_SEPARATOR_LINE_SIZE
-            );
-        } else {
-            this._locationSeparator.set_height(iconSize);
-            this._locationSeparatorLine.set_size(
-                TASKBAR_SEPARATOR_LINE_SIZE,
-                iconSize
-            );
-        }
+        syncSeparatorGeometry(
+            this._locationSeparator,
+            this._locationSeparatorLine,
+            vertical,
+            iconSize
+        );
 
         if (orientationChanged) {
             this._locationSeparator.remove_all_transitions();
@@ -669,40 +659,30 @@ export class ApplicationOverflowController {
             return;
 
         this._locationSeparatorTargetVisible = visible;
-        this._locationSeparator.remove_all_transitions();
         if (visible) {
             this._locationSeparator.show();
-            if (!St.Settings.get().enable_animations) {
+            if (!animateSeparatorIn(this._locationSeparator, vertical)) {
                 this._locationSeparator[mainProperty] =
                     TASKBAR_SEPARATOR_EXTENT;
                 this._locationSeparator.opacity = 255;
                 return;
             }
-            this._locationSeparator.ease({
-                [mainProperty]: TASKBAR_SEPARATOR_EXTENT,
-                opacity: 255,
-                duration: SEPARATOR_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-            });
             return;
         }
 
-        if (!St.Settings.get().enable_animations) {
+        if (!animateSeparatorOut(
+            this._locationSeparator,
+            vertical,
+            () => {
+                if (!this._locationSeparatorTargetVisible)
+                    this._locationSeparator.hide();
+            }
+        )) {
             this._locationSeparator[mainProperty] = 0;
             this._locationSeparator.opacity = 0;
             this._locationSeparator.hide();
             return;
         }
-        this._locationSeparator.ease({
-            [mainProperty]: 0,
-            opacity: 0,
-            duration: SEPARATOR_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_IN_CUBIC,
-            onStopped: finished => {
-                if (finished && !this._locationSeparatorTargetVisible)
-                    this._locationSeparator.hide();
-            },
-        });
     }
 
     _syncOverflowButton(visible) {
@@ -935,235 +915,7 @@ export class ApplicationOverflowController {
     }
 
     _clearOverflow() {
-        this.close();
-        if (this._overflowItems.length > 0)
-            this._setOverflowItems([]);
-    }
-
-    _setOverflowItems(items) {
-        const style = this._settings.get_string(
-            'application-overflow-style'
-        );
-        const panelHeight = this._settings.get_int('panel-height');
-        const layoutSignature =
-            `${this._getItemSizes(items).join(':')}:${panelHeight}`;
-        const matchesCurrent = style === this._style &&
-            layoutSignature === this._layoutSignature &&
-            items.length === this._overflowItems.length &&
-            items.every((item, index) => item === this._overflowItems[index]);
-        const sameMembership = style === this._style &&
-            items.length === this._overflowItems.length &&
-            items.every(item => this._overflowItems.includes(item));
-        const reordered = sameMembership && items.some((item, index) =>
-            item !== this._overflowItems[index]
-        );
-        const matchesPending = this._pendingOverflowTransition &&
-            style === this._pendingOverflowTransition.style &&
-            layoutSignature ===
-                this._pendingOverflowTransition.layoutSignature &&
-            items.length === this._pendingOverflowTransition.items.length &&
-            items.every((item, index) =>
-                item === this._pendingOverflowTransition.items[index]);
-        if (matchesPending)
-            return;
-        if (reordered) {
-            if (this._dragController.matchesVisualOrder(items)) {
-                this._overflowItems = items;
-                this._layoutSignature = layoutSignature;
-            } else {
-                this._applyOverflowItems(items, style, layoutSignature);
-            }
-            return;
-        }
-
-        const content = this._section.actor.get_child_at_index(0);
-        if (matchesCurrent) {
-            if (this._pendingOverflowTransition && content) {
-                content.remove_all_transitions();
-                content.scale_x = 1;
-                content.scale_y = 1;
-                content.opacity = 255;
-                this._pendingOverflowTransition = null;
-            }
-            return;
-        }
-
-        if (this._menu.isOpen && content &&
-            St.Settings.get().enable_animations) {
-            this._animateOverflowContentChange(
-                items,
-                style,
-                layoutSignature,
-                content
-            );
-            return;
-        }
-
-        this._applyOverflowItems(items, style, layoutSignature);
-    }
-
-    _animateOverflowContentChange(items, style, layoutSignature, content) {
-        this._pendingOverflowTransition = {
-            items: [...items],
-            style,
-            layoutSignature,
-        };
-        const closingItems = style === 'taskbar'
-            ? new Set(this._overflowItems.filter(item =>
-                item.animatingOut && !items.includes(item)))
-            : new Set();
-        if (closingItems.size > 0) {
-            const closingRecords = this._itemController.records.filter(
-                ({sourceItem}) => closingItems.has(sourceItem)
-            );
-            let animationsRemaining = closingRecords.length;
-            for (const {auxiliaryItem} of closingRecords) {
-                auxiliaryItem.remove_all_transitions();
-                auxiliaryItem.ease({
-                    opacity: 0,
-                    duration: OVERFLOW_ITEM_CLOSE_ANIMATION_TIME,
-                    mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-                    onStopped: finished => {
-                        if (!finished)
-                            return;
-
-                        animationsRemaining--;
-                        if (animationsRemaining > 0)
-                            return;
-
-                        const pending = this._pendingOverflowTransition;
-                        this._pendingOverflowTransition = null;
-                        this._applyOverflowItems(
-                            pending.items,
-                            pending.style,
-                            pending.layoutSignature
-                        );
-                    },
-                });
-            }
-            return;
-        }
-        content.remove_all_transitions();
-        content.set_pivot_point(0.5, 0.5);
-        content.ease({
-            scale_x: 0.96,
-            scale_y: 0.96,
-            opacity: 0,
-            duration: OVERFLOW_CONTENT_ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_IN_QUAD,
-            onStopped: finished => {
-                if (!finished)
-                    return;
-
-                const pending = this._pendingOverflowTransition;
-                this._pendingOverflowTransition = null;
-                this._applyOverflowItems(
-                    pending.items,
-                    pending.style,
-                    pending.layoutSignature
-                );
-                const newContent =
-                    this._section.actor.get_child_at_index(0);
-                if (!newContent || !this._menu.isOpen)
-                    return;
-                newContent.set_pivot_point(0.5, 0.5);
-                newContent.scale_x = 0.96;
-                newContent.scale_y = 0.96;
-                newContent.opacity = 0;
-                newContent.ease({
-                    scale_x: 1,
-                    scale_y: 1,
-                    opacity: 255,
-                    duration: OVERFLOW_CONTENT_ANIMATION_TIME,
-                    mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-                });
-            },
-        });
-    }
-
-    _applyOverflowItems(items, style, layoutSignature) {
-        this._pendingOverflowTransition = null;
-        this._clearPopupItems();
-        this._overflowItems = items;
-        this._style = style;
-        this._layoutSignature = layoutSignature;
-        if (items.length === 0) {
-            this.close();
-            return;
-        }
-
-        if (style === 'taskbar')
-            this._buildTaskbarFlyout(items);
-        else
-            this._buildApplicationList(items);
-        this._syncPopupGeometry();
-    }
-
-    _buildTaskbarFlyout(items) {
-        this._menu.box.add_style_class_name(TASKBAR_CONTENT_CLASS);
-        const box = new St.BoxLayout({
-            style_class: 'simple-taskbar-application-overflow-taskbar',
-            orientation: panelIsVertical(this._settings)
-                ? Clutter.Orientation.VERTICAL
-                : Clutter.Orientation.HORIZONTAL,
-        });
-        for (const item of items)
-            box.add_child(this._itemController.createTaskbarItem(item));
-        this._dragController.setContentBox(box);
-
-        const scrollView = new St.ScrollView({
-            style_class: 'simple-taskbar-application-overflow-scroll',
-            hscrollbar_policy: St.PolicyType.NEVER,
-            vscrollbar_policy: St.PolicyType.NEVER,
-            enable_mouse_scrolling: true,
-            overlay_scrollbars: false,
-            child: box,
-        });
-        scrollView.connect('scroll-event', (_actor, event) => {
-            const adjustment = panelIsVertical(this._settings)
-                ? scrollView.vadjustment
-                : scrollView.hadjustment;
-            const increment = Math.max(
-                adjustment.step_increment,
-                this._settings.get_int('panel-height')
-            );
-            const delta = getScrollDelta(event, increment);
-            adjustment.set_value(adjustment.get_value() + delta);
-            return Clutter.EVENT_STOP;
-        });
-        this._section.actor.add_child(scrollView);
-    }
-
-    _buildApplicationList(items) {
-        const box = new St.BoxLayout({
-            style_class: 'simple-taskbar-application-overflow-list',
-            orientation: Clutter.Orientation.VERTICAL,
-        });
-        for (const item of items)
-            box.add_child(this._itemController.createListItem(item));
-        this._dragController.setContentBox(box);
-
-        const viewport = new St.Viewport({
-            layout_manager: new Clutter.BinLayout(),
-        });
-        viewport.add_child(box);
-        const scrollView = new St.ScrollView({
-            style_class: 'simple-taskbar-application-overflow-scroll',
-            hscrollbar_policy: St.PolicyType.NEVER,
-            vscrollbar_policy: St.PolicyType.AUTOMATIC,
-            enable_mouse_scrolling: true,
-            overlay_scrollbars: false,
-            child: viewport,
-        });
-        this._section.actor.add_child(scrollView);
-    }
-
-
-    _clearPopupItems() {
-        this._menu.box.remove_style_class_name(TASKBAR_CONTENT_CLASS);
-        this._menu.box.remove_style_class_name(TASKBAR_SCROLLBAR_CLASS);
-        this._dragController.clearContentBox();
-        this._itemController.clear();
+        this._popupController.clear();
     }
 
     _syncPopupGeometry() {
@@ -1172,14 +924,14 @@ export class ApplicationOverflowController {
             monitor.index
         );
         const scrollView = this._section.actor.get_child_at_index(0);
-        if (this._style === 'taskbar') {
+        if (this._popupController.style === 'taskbar') {
             const vertical = panelIsVertical(this._settings);
             const maximumSize = Math.max(
                 1,
                 (vertical ? workArea.height : workArea.width) - POPUP_MARGIN
             );
             const contentSize = this._getItemSizes(
-                this._overflowItems
+                this._popupController.overflowItems
             ).reduce((size, itemSize) => size + itemSize, 0);
             const hasScrollbar = contentSize > maximumSize;
             if (hasScrollbar) {
