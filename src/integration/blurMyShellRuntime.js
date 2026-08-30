@@ -106,6 +106,7 @@ export function removePanelBlurForPanel(panel) {
     const actors = panelBlur.actors_list.find(
         actors => actors.widgets.panel === panel
     );
+    panelBlur.connections.disconnect_all_for(panel);
     if (actors)
         panelBlur.destroy_blur(actors, false);
 }

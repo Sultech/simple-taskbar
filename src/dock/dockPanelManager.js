@@ -213,8 +213,10 @@ export class DockPanelManager {
     }
 
     _destroyPanels() {
-        for (const panel of this._panels)
+        for (const panel of this._panels) {
+            removePanelBlurForPanel(panel.actor);
             panel.destroy();
+        }
         this._panels = [];
     }
 
