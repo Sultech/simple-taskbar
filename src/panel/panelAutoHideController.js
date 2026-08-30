@@ -55,7 +55,6 @@ export class PanelAutoHideController {
         this._fullscreenReleasePending = false;
         this._pointerButtonPressed = false;
         this._hidden = false;
-        this._hideAfterReveal = false;
         this._overviewSuspended = false;
         this._overviewEdgeRevealBlocked = false;
         this._trackedActorData = null;

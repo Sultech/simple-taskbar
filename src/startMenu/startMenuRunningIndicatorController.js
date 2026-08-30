@@ -21,13 +21,7 @@ class StartMenuRunningIndicator extends St.Widget {
             style_class: 'simple-taskbar-windows-start-running-indicator',
             visible: false,
         });
-        this._onDestroy = onDestroy;
-    }
-
-    destroy() {
-        this._onDestroy(this);
-        this._onDestroy = null;
-        super.destroy();
+        this.connect('destroy', () => onDestroy(this));
     }
 });
 
@@ -123,6 +117,7 @@ export class StartMenuRunningIndicatorController {
 
     createIconStack(app, icon) {
         const indicator = new StartMenuRunningIndicator(actor => {
+            app.disconnectObject(actor);
             this._indicators.delete(actor);
         });
         const stack = new StartMenuIconStack(icon, indicator);
