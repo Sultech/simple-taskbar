@@ -445,8 +445,8 @@ export class SecondaryPanelController {
             this._rightBox,
         ]) {
             box.connectObject(
-                'notify::width', () => this._updateTaskbarWidth(),
-                'notify::height', () => this._updateTaskbarWidth(),
+                'notify::width', () => this._queueTaskbarWidth(),
+                'notify::height', () => this._queueTaskbarWidth(),
                 this._signalHolder
             );
         }
@@ -735,6 +735,15 @@ export class SecondaryPanelController {
         });
         if (availableWidth !== undefined)
             this._taskbarController.setAvailableWidth(availableWidth);
+    }
+
+    _queueTaskbarWidth() {
+        if (this._dockController) {
+            this._dockController.queueTaskbarWidth();
+            return;
+        }
+
+        this._updateTaskbarWidth();
     }
 
     syncTheme() {

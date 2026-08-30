@@ -254,6 +254,10 @@ export class SecondaryPanelDockController {
         this._taskbarWidthUpdater.update();
     }
 
+    queueTaskbarWidth() {
+        this._taskbarWidthUpdater.queue();
+    }
+
     resetIconSize() {
         this._configuredIconSize = this._settings.getConfiguredIconSize();
         this._settings.setRuntimeIconSize(this._configuredIconSize);
