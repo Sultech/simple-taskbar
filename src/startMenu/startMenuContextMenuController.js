@@ -10,7 +10,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
 import {panelArrowSide} from '../panel/panelPosition.js';
-import {openPopupMenu} from '../shared/popupMenuUtils.js';
+import {closePopupMenu, openPopupMenu} from '../shared/popupMenuUtils.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
@@ -133,6 +133,10 @@ export class StartMenuContextMenuController {
             x_expand: true,
         });
         ShellEntry.addContextMenu(renameEntry);
+        renameEntry.connect('enter-event', () => {
+            renameEntry.grab_key_focus();
+            return Clutter.EVENT_PROPAGATE;
+        });
         const saveButton = new St.Button({
             style_class: 'simple-taskbar-windows-start-folder-name-save',
             reactive: true,
@@ -157,7 +161,7 @@ export class StartMenuContextMenuController {
                 this._defaultFolderName;
             if (this._pinnedModel.renameFolder(folderId, name))
                 refreshAfterClose = true;
-            menu.close();
+            closePopupMenu(menu);
         };
         renameEntry.clutter_text.connect('activate', saveName);
         saveButton.connect('clicked', saveName);

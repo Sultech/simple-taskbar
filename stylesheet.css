@@ -1163,6 +1163,7 @@
 .simple-taskbar-windows-start-folder-name-save {
     padding: 6px;
     border-radius: 6px;
+    transition-duration: 150ms;
 }
 
 .simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
@@ -1179,6 +1180,30 @@
     .simple-taskbar-windows-start-folder-name-save {
     background-color: rgba(24, 28, 34, 0.08);
     color: #20242a;
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-folder-name-save:hover,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-folder-name-save:focus {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-folder-name-save:active {
+    background-color: rgba(255, 255, 255, 0.30);
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-folder-name-save:hover,
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-folder-name-save:focus {
+    background-color: rgba(24, 28, 34, 0.14);
+}
+
+.simple-taskbar-windows-start-context.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-folder-name-save:active {
+    background-color: rgba(24, 28, 34, 0.24);
 }
 
 .simple-taskbar-windows-start-recommended {
