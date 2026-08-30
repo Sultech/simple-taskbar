@@ -192,6 +192,9 @@ export class StartButtonController {
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
         this._hover.set_width(iconSize);
+        const windowsXpTheme = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
         const vertical = panelIsVertical(this._settings);
         if (vertical) {
             this._hover.set_height(-1);
@@ -209,13 +212,13 @@ export class StartButtonController {
                 visualPanelHeight,
                 this._settings.get_string('running-indicator-style') ===
                     'rounded',
-                this._settings.get_boolean('windows-xp-theme-enabled')
+                windowsXpTheme
             ));
             this._hover.translation_y = 1;
             this._hover.y_align = Clutter.ActorAlign.CENTER;
             this._hover.y_expand = false;
         }
-        const width = this._settings.get_boolean('windows-xp-theme-enabled')
+        const width = windowsXpTheme
             ? this._windowsXpStartButton.width
             : iconSize + padding * 2;
         const startButtonPosition = this._settings.get_boolean(
@@ -223,18 +226,18 @@ export class StartButtonController {
         )
             ? this._settings.get_string('app-alignment')
             : this._settings.get_string('start-button-position');
-        const leftMargin = !this._settings.get_boolean(
-            'windows-xp-theme-enabled'
-        ) && startButtonPosition === 'left'
+        const leftMargin = !windowsXpTheme && startButtonPosition === 'left'
             ? padding
             : 0;
+        const rightMargin = windowsXpTheme ? 6 : 0;
         if (vertical) {
             this._content.set_width(-1);
             this._content.set_height(width);
             this.actor.set_width(-1);
             this.actor.set_height(width);
             this.actor.set_style(
-                `min-width: 0; padding: 0; margin-top: ${leftMargin}px;`
+                `min-width: 0; padding: 0; margin-top: ${leftMargin}px;` +
+                `margin-right: ${rightMargin}px;`
             );
             this._syncSeparator(false);
             return;
@@ -245,7 +248,8 @@ export class StartButtonController {
         this._content.set_width(width);
         this.actor.set_width(width);
         this.actor.set_style(
-            `min-width: 0; padding: 0; margin-left: ${leftMargin}px;`
+            `min-width: 0; padding: 0; margin-left: ${leftMargin}px;` +
+            `margin-right: ${rightMargin}px;`
         );
         this._syncSeparator(false);
     }
