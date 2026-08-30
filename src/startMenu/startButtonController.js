@@ -42,6 +42,9 @@ import {
     syncSeparatorGeometry,
     TASKBAR_SEPARATOR_EXTENT,
 } from '../taskbar/taskbarSeparator.js';
+import {
+    TASKBAR_REFLOW_ANIMATION_TIME,
+} from '../taskbar/taskbarItemContainer.js';
 
 export class StartButtonController {
     constructor({
@@ -73,6 +76,7 @@ export class StartButtonController {
         this._contextMenu = null;
         this._contextMenuController = null;
         this._menuManager = null;
+        this._positionAnimationStart = null;
 
         this._windowsGIcon = new Gio.FileIcon({
             file: extensionDir
@@ -138,6 +142,10 @@ export class StartButtonController {
         });
         this.panelActor.add_child(this.actor);
         this.panelActor.add_child(this._separator);
+        this.panelActor.connectObject(
+            'notify::allocation', () => this._animatePosition(),
+            this._signalHolder
+        );
         this.actor.connectObject('clicked', () => this._toggleApplications(), this._signalHolder);
         this._syncWindowsXpStartButton();
         this._syncVisibility();
@@ -254,6 +262,16 @@ export class StartButtonController {
         this._syncSeparator(false);
     }
 
+    preparePositionAnimation() {
+        if (!St.Settings.get().enable_animations ||
+            !this.panelActor.has_allocation()) {
+            return;
+        }
+
+        const [x, y] = this.panelActor.get_transformed_position();
+        this._positionAnimationStart = {x, y};
+    }
+
     destroy() {
         this._signalHolder.destroy();
         this._signalHolder = null;
@@ -294,6 +312,34 @@ export class StartButtonController {
         this._onMenuOpenStateChanged = null;
         this._settings = null;
         this._startOpenedOverview = false;
+        this._positionAnimationStart = null;
+    }
+
+    _animatePosition() {
+        if (!this._positionAnimationStart)
+            return;
+
+        const start = this._positionAnimationStart;
+        this._positionAnimationStart = null;
+        this.panelActor.remove_transition('translation-x');
+        this.panelActor.remove_transition('translation-y');
+        this.panelActor.translation_x = 0;
+        this.panelActor.translation_y = 0;
+        const [targetX, targetY] =
+            this.panelActor.get_transformed_position();
+        const translationX = start.x - targetX;
+        const translationY = start.y - targetY;
+        if (translationX === 0 && translationY === 0)
+            return;
+
+        this.panelActor.translation_x = translationX;
+        this.panelActor.translation_y = translationY;
+        this.panelActor.ease({
+            translation_x: 0,
+            translation_y: 0,
+            duration: TASKBAR_REFLOW_ANIMATION_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+        });
     }
 
     _connectBlurMyShellSignals() {

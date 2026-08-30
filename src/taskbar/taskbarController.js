@@ -642,6 +642,22 @@ export class TaskbarController {
         return this._iconSize;
     }
 
+    finishItemShowAnimations() {
+        for (const item of this.getOrderedItems()) {
+            if (item.animatingOut ||
+                item.scale_x === 1 && item.scale_y === 1) {
+                continue;
+            }
+
+            item.remove_transition('scale-x');
+            item.remove_transition('scale-y');
+            item.remove_transition('opacity');
+            item.scale_x = 1;
+            item.scale_y = 1;
+            item.opacity = 255;
+        }
+    }
+
     isRebuilding() {
         return this._rebuilding;
     }

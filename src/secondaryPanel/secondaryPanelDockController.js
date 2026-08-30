@@ -518,6 +518,8 @@ export class SecondaryPanelDockController {
         if (iconSize === this._getIconSize())
             return false;
 
+        this._startButtonController.preparePositionAnimation();
+        this._taskbarController.finishItemShowAnimations();
         this._settings.setRuntimeIconSize(iconSize);
         this._setIconSize(iconSize);
         this._setPanelHeight(this._settings.get_int('panel-height'));
