@@ -86,6 +86,13 @@ export class PanelAutoHideController {
             },
             this._signalHolder
         );
+        this._positionActor.connectObject(
+            'notify::x', () => this._syncMonitorClip(),
+            'notify::y', () => this._syncMonitorClip(),
+            'notify::width', () => this._syncMonitorClip(),
+            'notify::height', () => this._syncMonitorClip(),
+            this._signalHolder
+        );
         global.stage.connectObject(
             'captured-event', (_stage, event) => {
                 if (event.type() !== Clutter.EventType.MOTION)
@@ -146,6 +153,7 @@ export class PanelAutoHideController {
         this._positionActor.remove_transition('x');
         this._positionActor.remove_transition('y');
         this.syncPosition();
+        this._positionActor.remove_clip();
         this._restoreStrutTracking();
         this._restoreUnredirect();
 
@@ -267,6 +275,7 @@ export class PanelAutoHideController {
         actor[property] = offset;
         this._positionTarget = offset;
         this._positionTargetProperty = property;
+        this._syncMonitorClip();
         Main.layoutManager._queueUpdateRegions();
     }
 
@@ -695,6 +704,33 @@ export class PanelAutoHideController {
         };
     }
 
+    _syncMonitorClip() {
+        const actor = this._positionActor;
+        const monitor = this._getMonitor();
+        if (!monitor) {
+            actor.remove_clip();
+            return;
+        }
+
+        const vertical = panelIsVertical(this._settings);
+        const offset = vertical ? actor.x : actor.y;
+        const size = vertical ? actor.width : actor.height;
+        const monitorStart = vertical ? monitor.x : monitor.y;
+        const monitorSize = vertical ? monitor.width : monitor.height;
+        const clipStart = Math.max(0, monitorStart - offset);
+        const clipEnd = Math.min(size, monitorStart + monitorSize - offset);
+        if (clipStart <= 0 && clipEnd >= size) {
+            actor.remove_clip();
+            return;
+        }
+
+        const clipSize = Math.max(0, clipEnd - clipStart);
+        if (vertical)
+            actor.set_clip(clipStart, 0, clipSize, actor.height);
+        else
+            actor.set_clip(0, clipStart, actor.width, clipSize);
+    }
+
     _moveTo(offset, animate) {
         const actor = this._positionActor;
         if (!actor || offset === undefined)
@@ -708,6 +744,7 @@ export class PanelAutoHideController {
         actor.remove_transition('y');
         if (!animate) {
             actor[property] = offset;
+            this._syncMonitorClip();
             Main.layoutManager._queueUpdateRegions();
             return;
         }
@@ -716,6 +753,7 @@ export class PanelAutoHideController {
             duration: ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             onComplete: () => {
+                this._syncMonitorClip();
                 Main.layoutManager._queueUpdateRegions();
                 if (!this._hidden && this._hideAfterReveal) {
                     this._hideAfterReveal = false;
