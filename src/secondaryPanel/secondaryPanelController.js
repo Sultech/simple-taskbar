@@ -649,7 +649,16 @@ export class SecondaryPanelController {
         if (!animateEdgeGapRequested ||
             !positionState ||
             positionState.edgeGapChanged && !positionState.animateEdgeGap) {
-            this._panelBox.set_position(geometry.x, geometry.y);
+            const property = geometry.vertical ? 'x' : 'y';
+            if (this._autoHideController &&
+                this._panelBox.get_transition(property)) {
+                if (geometry.vertical)
+                    this._panelBox.y = geometry.y;
+                else
+                    this._panelBox.x = geometry.x;
+            } else {
+                this._panelBox.set_position(geometry.x, geometry.y);
+            }
         }
         if (this._dockController)
             this._dockController.syncStrut();
