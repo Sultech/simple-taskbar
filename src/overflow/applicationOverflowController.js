@@ -130,6 +130,10 @@ export class ApplicationOverflowController {
             this._maximumSize = size;
             this._queueSync();
         });
+        this.actor.connectObject(
+            'notify::parent', () => this._queueSync(),
+            this._signalHolder
+        );
         this._createButton();
         this.actor.add_child(this._viewport);
         this.actor.add_child(this._locationSeparator);
@@ -517,6 +521,9 @@ export class ApplicationOverflowController {
             this._dragSyncPending = true;
             return;
         }
+
+        if (!this.actor.get_stage())
+            return;
 
         this._dragSyncPending = false;
         const iconSizeSyncPending = this._iconSizeSyncPending;
