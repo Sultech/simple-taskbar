@@ -72,6 +72,8 @@ const MENU_MIN_HEIGHT = 420;
 const MENU_BASE_HEIGHT = 610;
 const MENU_MAX_HEIGHT = 810;
 const MENU_MONITOR_MARGIN = 96;
+const BLURRED_CLASS =
+    'simple-taskbar-windows-start-blurred';
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
 const BLUR_MY_SHELL_POPUP_CLASSES = [
@@ -474,6 +476,10 @@ export class StartMenuController {
     }
 
     syncTransparency() {
+        if (this._blurMyShellBlursPopup())
+            this._menu.actor.add_style_class_name(BLURRED_CLASS);
+        else
+            this._menu.actor.remove_style_class_name(BLURRED_CLASS);
         if (this._blurMyShellOwnsTransparency()) {
             this._menu.box.set_style(this._blurMyShellCornerStyle());
             return;
@@ -518,13 +524,17 @@ export class StartMenuController {
         return `border-radius: ${radius}px;`;
     }
 
-    _blurMyShellOwnsTransparency() {
-        if (getPopupBlur() || getPanelBlur())
+    _blurMyShellBlursPopup() {
+        if (getPopupBlur())
             return true;
 
         return BLUR_MY_SHELL_POPUP_CLASSES.some(styleClass =>
             Main.uiGroup.has_style_class_name(styleClass)
         );
+    }
+
+    _blurMyShellOwnsTransparency() {
+        return this._blurMyShellBlursPopup() || getPanelBlur();
     }
 
     _applyThemeClass(actor, theme = this._effectiveTheme()) {

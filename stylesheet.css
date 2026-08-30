@@ -1509,25 +1509,94 @@
     background-color: transparent;
 }
 
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-folder-tile:hover
-    .simple-taskbar-windows-start-folder-surface,
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-folder-tile:focus
+.simple-taskbar-windows-start-dark
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(0, 0, 0, 0.22);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
 }
 
-.simple-taskbar-windows-start-light .simple-taskbar-windows-start-folder-tile:hover
+.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-folder-tile:hover
     .simple-taskbar-windows-start-folder-surface,
-.simple-taskbar-windows-start-light .simple-taskbar-windows-start-folder-tile:focus
+.simple-taskbar-windows-start-dark
+    .simple-taskbar-windows-start-folder-tile:focus
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(0, 0, 0, 0.34);
+}
+
+.simple-taskbar-windows-start-light
     .simple-taskbar-windows-start-folder-surface {
     background-color: rgba(26, 36, 52, 0.09);
+    box-shadow: inset 0 0 0 1px rgba(26, 36, 52, 0.11);
 }
 
-.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-folder-tile:hover
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-folder-tile:hover
     .simple-taskbar-windows-start-folder-surface,
-.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-folder-tile:focus
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(128, 128, 128, 0.18);
+    background-color: rgba(26, 36, 52, 0.17);
+}
+
+.simple-taskbar-windows-start-shell
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(128, 128, 128, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.14);
+}
+
+.simple-taskbar-windows-start-shell
+    .simple-taskbar-windows-start-folder-tile:hover
+    .simple-taskbar-windows-start-folder-surface,
+.simple-taskbar-windows-start-shell
+    .simple-taskbar-windows-start-folder-tile:focus
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(128, 128, 128, 0.20);
+}
+
+.simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(0, 0, 0, 0.30);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-tile:hover
+    .simple-taskbar-windows-start-folder-surface,
+.simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-tile:focus
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(0, 0, 0, 0.42);
+}
+
+.simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(26, 36, 52, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(26, 36, 52, 0.12);
+}
+
+.simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-tile:hover
+    .simple-taskbar-windows-start-folder-surface,
+.simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-tile:focus
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(26, 36, 52, 0.22);
+}
+
+.simple-taskbar-windows-start-shell.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(128, 128, 128, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.18);
+}
+
+.simple-taskbar-windows-start-shell.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-tile:hover
+    .simple-taskbar-windows-start-folder-surface,
+.simple-taskbar-windows-start-shell.simple-taskbar-windows-start-blurred
+    .simple-taskbar-windows-start-folder-tile:focus
+    .simple-taskbar-windows-start-folder-surface {
+    background-color: rgba(128, 128, 128, 0.26);
 }
 
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:checked {
