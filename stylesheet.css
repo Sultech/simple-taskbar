@@ -1086,7 +1086,8 @@
 
 .simple-taskbar-windows-start-folder-surface {
     border-radius: 8px;
-    background-color: rgba(128, 128, 128, 0.10);
+    border: 1px solid transparent;
+    background-color: transparent;
 }
 
 .simple-taskbar-windows-start-folder-preview-grid {
@@ -1511,8 +1512,10 @@
 
 .simple-taskbar-windows-start-dark
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(0, 0, 0, 0.22);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.16);
+    background-gradient-end: rgba(0, 0, 0, 0.30);
+    border-color: rgba(255, 255, 255, 0.14);
 }
 
 .simple-taskbar-windows-start-dark
@@ -1521,13 +1524,18 @@
 .simple-taskbar-windows-start-dark
     .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(0, 0, 0, 0.34);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.26);
+    background-gradient-end: rgba(0, 0, 0, 0.42);
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 .simple-taskbar-windows-start-light
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(26, 36, 52, 0.09);
-    box-shadow: inset 0 0 0 1px rgba(26, 36, 52, 0.11);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(26, 36, 52, 0.05);
+    background-gradient-end: rgba(26, 36, 52, 0.13);
+    border-color: rgba(26, 36, 52, 0.14);
 }
 
 .simple-taskbar-windows-start-light
@@ -1536,13 +1544,18 @@
 .simple-taskbar-windows-start-light
     .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(26, 36, 52, 0.17);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(26, 36, 52, 0.11);
+    background-gradient-end: rgba(26, 36, 52, 0.21);
+    border-color: rgba(26, 36, 52, 0.20);
 }
 
 .simple-taskbar-windows-start-shell
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(128, 128, 128, 0.12);
-    box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.14);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(128, 128, 128, 0.08);
+    background-gradient-end: rgba(128, 128, 128, 0.16);
+    border-color: rgba(128, 128, 128, 0.18);
 }
 
 .simple-taskbar-windows-start-shell
@@ -1551,13 +1564,18 @@
 .simple-taskbar-windows-start-shell
     .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(128, 128, 128, 0.20);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(128, 128, 128, 0.15);
+    background-gradient-end: rgba(128, 128, 128, 0.25);
+    border-color: rgba(128, 128, 128, 0.24);
 }
 
 .simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(0, 0, 0, 0.30);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.24);
+    background-gradient-end: rgba(0, 0, 0, 0.38);
+    border-color: rgba(255, 255, 255, 0.18);
 }
 
 .simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
@@ -1566,13 +1584,18 @@
 .simple-taskbar-windows-start-dark.simple-taskbar-windows-start-blurred
     .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(0, 0, 0, 0.42);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(0, 0, 0, 0.34);
+    background-gradient-end: rgba(0, 0, 0, 0.50);
+    border-color: rgba(255, 255, 255, 0.26);
 }
 
 .simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(26, 36, 52, 0.14);
-    box-shadow: inset 0 0 0 1px rgba(26, 36, 52, 0.12);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(26, 36, 52, 0.09);
+    background-gradient-end: rgba(26, 36, 52, 0.19);
+    border-color: rgba(26, 36, 52, 0.16);
 }
 
 .simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
@@ -1581,13 +1604,18 @@
 .simple-taskbar-windows-start-light.simple-taskbar-windows-start-blurred
     .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(26, 36, 52, 0.22);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(26, 36, 52, 0.16);
+    background-gradient-end: rgba(26, 36, 52, 0.28);
+    border-color: rgba(26, 36, 52, 0.22);
 }
 
 .simple-taskbar-windows-start-shell.simple-taskbar-windows-start-blurred
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(128, 128, 128, 0.16);
-    box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.18);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(128, 128, 128, 0.11);
+    background-gradient-end: rgba(128, 128, 128, 0.21);
+    border-color: rgba(128, 128, 128, 0.22);
 }
 
 .simple-taskbar-windows-start-shell.simple-taskbar-windows-start-blurred
@@ -1596,7 +1624,10 @@
 .simple-taskbar-windows-start-shell.simple-taskbar-windows-start-blurred
     .simple-taskbar-windows-start-folder-tile:focus
     .simple-taskbar-windows-start-folder-surface {
-    background-color: rgba(128, 128, 128, 0.26);
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(128, 128, 128, 0.20);
+    background-gradient-end: rgba(128, 128, 128, 0.32);
+    border-color: rgba(128, 128, 128, 0.28);
 }
 
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-category:checked {
