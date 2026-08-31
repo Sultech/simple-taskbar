@@ -193,12 +193,13 @@ export class PanelInteractionController {
             eventType !== Clutter.EventType.SCROLL)
             return Clutter.EVENT_PROPAGATE;
 
-        const scrollOverOverflowApp = target &&
-            this._settings.get_boolean('application-overflow-enabled') &&
-            this._taskbarController.hasTarget(target);
-        if (!this._isFreePanelTarget(target) && !scrollOverOverflowApp)
+        const scrollOverApp = target &&
+            this._taskbarController.hasTarget(target) &&
+            (this._settings.get_boolean('application-overflow-enabled') ||
+                !this._taskbarHasOverflow());
+        if (!this._isFreePanelTarget(target) && !scrollOverApp)
             return Clutter.EVENT_PROPAGATE;
-        if (scrollOverOverflowApp) {
+        if (scrollOverApp) {
             this._previews.hideTooltip(false);
             this._previews.hide();
         }
@@ -243,9 +244,7 @@ export class PanelInteractionController {
         if (this._settings.get_boolean('application-overflow-enabled'))
             return false;
 
-        const adjustment = panelIsVertical(this._settings)
-            ? this._taskbarBin.vadjustment
-            : this._taskbarBin.hadjustment;
+        const adjustment = this._getTaskbarAdjustment();
         const [value, , upper, stepIncrement, , pageSize] =
             adjustment.get_values();
         if (upper <= pageSize + 1)
@@ -259,6 +258,18 @@ export class PanelInteractionController {
 
         adjustment.set_value(value + delta);
         return true;
+    }
+
+    _taskbarHasOverflow() {
+        const adjustment = this._getTaskbarAdjustment();
+        const [, , upper, , , pageSize] = adjustment.get_values();
+        return upper > pageSize + 1;
+    }
+
+    _getTaskbarAdjustment() {
+        return panelIsVertical(this._settings)
+            ? this._taskbarBin.vadjustment
+            : this._taskbarBin.hadjustment;
     }
 
     _getScrollDirection(event, previousDirection, nextDirection) {
