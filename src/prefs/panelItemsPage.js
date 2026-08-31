@@ -60,24 +60,12 @@ export function addPanelItemsPage({
     );
     syncPanelButtonPaddingSensitivity();
 
-    const panelItemsRow = new Adw.ExpanderRow({
-        title: _('Panel Item Visibility'),
-        subtitle: _('Choose which additional panel features appear.'),
-    });
-    panelGroup.add(panelItemsRow);
-
     const volumeMixerSwitch = createSwitchRow(settings, {
         key: 'volume-mixer-enabled',
         title: _('Application Volume Mixer'),
         subtitle: _('Add per-application volume controls to Quick Settings'),
     });
-    panelItemsRow.add_row(volumeMixerSwitch);
-
-    const folderMenuGroup = new Adw.ExpanderRow({
-        title: _('Folder Menu'),
-        subtitle: _('Show and configure a selected folder on the taskbar'),
-    });
-    panelGroup.add(folderMenuGroup);
+    panelGroup.add(volumeMixerSwitch);
 
     const folderMenuLocationRow = new Adw.ActionRow({
         title: _('Folder Menu Location'),
@@ -88,7 +76,7 @@ export function addPanelItemsPage({
     });
     folderMenuLocationRow.add_suffix(chooseFolderButton);
     folderMenuLocationRow.activatable_widget = chooseFolderButton;
-    folderMenuGroup.add_row(folderMenuLocationRow);
+    panelGroup.add(folderMenuLocationRow);
 
     const updateFolderMenuRow = () => {
         const location = settings.get_string('folder-menu-uri');
@@ -100,9 +88,6 @@ export function addPanelItemsPage({
         } else {
             folderMenuLocationRow.subtitle = _('No folder selected');
         }
-        folderMenuLocationRow.sensitive = settings.get_boolean(
-            'folder-menu-enabled'
-        );
     };
     chooseFolderButton.connect('clicked', () => {
         selectFolderMenuLocation(window);
@@ -227,7 +212,7 @@ export function addPanelItemsPage({
         ['tray-overflow', {
             key: 'tray-overflow-position',
             visibleKey: 'tray-overflow-enabled',
-            title: _('Tray icons'),
+            title: _('Tray Icon Arrow'),
             subtitle: _('Gather application tray icons behind a panel arrow'),
             choices: initialPositions,
         }],
