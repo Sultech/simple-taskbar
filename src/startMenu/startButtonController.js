@@ -37,9 +37,9 @@ import {
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
     createTaskbarSeparator,
+    resetSeparatorToTarget,
     syncSeparatorGeometry,
     syncSeparatorVisibility,
-    TASKBAR_SEPARATOR_EXTENT,
 } from '../taskbar/taskbarSeparator.js';
 import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
 
@@ -133,6 +133,7 @@ export class StartButtonController {
         this._separator = separator;
         this._separator.visible = false;
         this._separatorLine = line;
+        this._separatorVertical = null;
         this.panelActor = new St.BoxLayout({
             reactive: false,
         });
@@ -290,6 +291,7 @@ export class StartButtonController {
 
         this._separator = null;
         this._separatorLine = null;
+        this._separatorVertical = null;
         this._hover = null;
         this._content = null;
         this._icon = null;
@@ -799,6 +801,8 @@ export class StartButtonController {
 
     _syncSeparator(animate) {
         const vertical = panelIsVertical(this._settings);
+        const orientationChanged = this._separatorVertical !== vertical;
+        this._separatorVertical = vertical;
         this.panelActor.orientation = vertical
             ? Clutter.Orientation.VERTICAL
             : Clutter.Orientation.HORIZONTAL;
@@ -816,8 +820,8 @@ export class StartButtonController {
             vertical,
             this._icon.icon_size
         );
-        this._separator[vertical ? 'height' : 'width'] =
-            TASKBAR_SEPARATOR_EXTENT;
+        if (orientationChanged)
+            resetSeparatorToTarget(this._separator, vertical);
         this.panelActor.set_child_at_index(
             this._separator,
             this._separatorFollowsButton() ? 1 : 0
