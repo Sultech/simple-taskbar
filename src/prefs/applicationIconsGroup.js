@@ -200,6 +200,16 @@ function addApplicationIconControls({
         margin_start: 12,
         margin_end: 12,
     });
+    const followPanelDelayCheck = new Gtk.CheckButton({
+        label: _('Follow Panel Delay'),
+    });
+    settings.bind(
+        'scroll-icon-follow-panel-delay',
+        followPanelDelayCheck,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    scrollDelayBox.append(followPanelDelayCheck);
     scrollDelayBox.append(scrollDelayRow);
     const scrollDelayPopover = new Gtk.Popover({
         child: scrollDelayBox,
@@ -223,16 +233,11 @@ function addApplicationIconControls({
     scrollActionRow.add_suffix(scrollActionBox);
     scrollActionRow.activatable_widget = scrollActionDropDown;
     windowInteractionRow.add_row(scrollActionRow);
-    const syncScrollDelayButton = () => {
-        scrollDelayButton.sensitive = settings.get_string('scroll-icon-action') ===
-            SCROLL_ACTION.CYCLE_WINDOWS;
+    const syncScrollDelayRow = () => {
+        scrollDelayRow.sensitive = !followPanelDelayCheck.active;
     };
-    connectSettings(
-        settings,
-        'changed::scroll-icon-action',
-        syncScrollDelayButton
-    );
-    syncScrollDelayButton();
+    followPanelDelayCheck.connect('notify::active', syncScrollDelayRow);
+    syncScrollDelayRow();
     windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'window-previews-enabled',
         title: _('Window Previews'),

@@ -7,6 +7,7 @@ import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -18,8 +19,11 @@ import {
 } from './panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
+import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+
+const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
 export class PanelInteractionController {
     constructor({
@@ -30,6 +34,8 @@ export class PanelInteractionController {
         previewController,
         openPreferences,
         onAppScrolled,
+        onPanelScrolled,
+        volumeIndicator,
         panelActor = Main.panel,
         panelBoxes = [
             Main.panel._leftBox,
@@ -45,6 +51,8 @@ export class PanelInteractionController {
         this._previews = previewController;
         this._openPreferences = openPreferences;
         this._onAppScrolled = onAppScrolled;
+        this._onPanelScrolled = onPanelScrolled;
+        this._volumeIndicator = volumeIndicator;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
@@ -97,6 +105,8 @@ export class PanelInteractionController {
         this._settings = null;
         this._openPreferences = null;
         this._onAppScrolled = null;
+        this._onPanelScrolled = null;
+        this._volumeIndicator = null;
     }
 
     _createContextMenu() {
@@ -191,13 +201,14 @@ export class PanelInteractionController {
             return Clutter.EVENT_STOP;
         }
 
+        let item = null;
         if (eventType === Clutter.EventType.SCROLL) {
             if (target && this._taskbarBin.contains(target) &&
                 this._scrollTaskbar(event)) {
                 return Clutter.EVENT_STOP;
             }
 
-            const item = target &&
+            item = target &&
                 this._taskbarController.getItemAtTarget(target);
             const action = this._settings.get_string('scroll-icon-action');
             if (item && action !== SCROLL_ACTION.SWITCH_WORKSPACE) {
@@ -214,7 +225,7 @@ export class PanelInteractionController {
                     if (direction && !this._appScrollTimeoutId) {
                         this._appScrollTimeoutId = GLib.timeout_add(
                             GLib.PRIORITY_DEFAULT,
-                            this._settings.get_int('scroll-icon-delay'),
+                            this._getScrollDelay(true),
                             () => {
                                 this._appScrollTimeoutId = 0;
                                 return GLib.SOURCE_REMOVE;
@@ -227,8 +238,11 @@ export class PanelInteractionController {
             }
         }
 
-        if (!this._settings.get_boolean('workspace-scroll-enabled') ||
-            eventType !== Clutter.EventType.SCROLL)
+        if (eventType !== Clutter.EventType.SCROLL)
+            return Clutter.EVENT_PROPAGATE;
+
+        const configuredPanelAction = this._getWorkspaceScrollAction();
+        if (!configuredPanelAction)
             return Clutter.EVENT_PROPAGATE;
 
         const scrollOverApp = target &&
@@ -242,6 +256,21 @@ export class PanelInteractionController {
             this._previews.hide();
         }
 
+        const panelAction = item
+            ? PANEL_SCROLL_ACTION.SWITCH_WORKSPACE
+            : configuredPanelAction;
+        if (panelAction === PANEL_SCROLL_ACTION.DO_NOTHING)
+            return Clutter.EVENT_STOP;
+        if (this._workspaceScrollTimeoutId)
+            return Clutter.EVENT_STOP;
+
+        if (panelAction === PANEL_SCROLL_ACTION.CHANGE_VOLUME) {
+            if (!this._changeVolume(event))
+                return Clutter.EVENT_PROPAGATE;
+            this._startWorkspaceScrollTimeout();
+            return Clutter.EVENT_STOP;
+        }
+
         const [previousDirection, nextDirection] =
             this._getWorkspaceScrollDirections();
         const direction = this._getScrollDirection(
@@ -252,15 +281,42 @@ export class PanelInteractionController {
 
         if (!direction)
             return Clutter.EVENT_PROPAGATE;
-        if (this._workspaceScrollTimeoutId)
+
+        if (panelAction === PANEL_SCROLL_ACTION.CYCLE_WINDOWS) {
+            if (this._onPanelScrolled(direction))
+                this._startWorkspaceScrollTimeout(Boolean(item));
             return Clutter.EVENT_STOP;
+        }
 
         const activeWorkspace = global.workspace_manager.get_active_workspace();
         const targetWorkspace = activeWorkspace.get_neighbor(direction);
         if (!targetWorkspace || targetWorkspace === activeWorkspace)
             return Clutter.EVENT_STOP;
 
-        const scrollDelay = this._settings.get_int('workspace-scroll-delay');
+        this._startWorkspaceScrollTimeout(Boolean(item));
+        Main.wm.actionMoveWorkspace(targetWorkspace);
+        return Clutter.EVENT_STOP;
+    }
+
+    _getWorkspaceScrollAction() {
+        if (this._settings.isDock)
+            return this._settings.get_boolean('workspace-scroll-enabled')
+                ? PANEL_SCROLL_ACTION.SWITCH_WORKSPACE
+                : null;
+
+        return this._settings.get_string('workspace-scroll-action');
+    }
+
+    _getScrollDelay(forApp = false) {
+        if (forApp &&
+            !this._settings.get_boolean('scroll-icon-follow-panel-delay'))
+            return this._settings.get_int('scroll-icon-delay');
+
+        return this._settings.get_int('workspace-scroll-delay');
+    }
+
+    _startWorkspaceScrollTimeout(forApp = false) {
+        const scrollDelay = this._getScrollDelay(forApp);
         if (scrollDelay > 0) {
             this._workspaceScrollTimeoutId = GLib.timeout_add(
                 GLib.PRIORITY_DEFAULT,
@@ -271,8 +327,36 @@ export class PanelInteractionController {
                 }
             );
         }
-        Main.wm.actionMoveWorkspace(targetWorkspace);
-        return Clutter.EVENT_STOP;
+    }
+
+    _changeVolume(event) {
+        if (event.get_flags() & Clutter.EventFlags.FLAG_POINTER_EMULATED)
+            return false;
+
+        if (SHELL_VERSION === 51) {
+            const direction = event.get_scroll_direction();
+            let delta = 0;
+            if (direction === Clutter.ScrollDirection.UP)
+                delta = -1;
+            else if (direction === Clutter.ScrollDirection.DOWN)
+                delta = 1;
+            else if (direction === Clutter.ScrollDirection.SMOOTH) {
+                [, delta] = event.get_scroll_delta();
+                if (event.get_scroll_flags() & Clutter.ScrollFlags.INVERTED)
+                    delta *= -1;
+            }
+            this._volumeIndicator._handleScroll(
+                this._volumeIndicator._output,
+                delta
+            );
+        } else {
+            this._volumeIndicator._handleScrollEvent(
+                this._volumeIndicator._output,
+                event
+            );
+        }
+
+        return true;
     }
 
     _scrollTaskbar(event) {

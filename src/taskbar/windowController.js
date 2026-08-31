@@ -258,6 +258,43 @@ export class WindowController {
         Main.overview.hide();
     }
 
+    handlePanelScrolled(direction) {
+        const apps = new Set();
+        const windows = [];
+        for (const item of this._getTaskbar().getItems()) {
+            const app = item._taskbarApp;
+            if (!app || app._simpleTaskbarLocation || apps.has(app))
+                continue;
+
+            apps.add(app);
+            windows.push(...this.getInterestingWindows(app));
+        }
+        if (windows.length === 0)
+            return false;
+
+        windows.sort((a, b) =>
+            a.get_stable_sequence() - b.get_stable_sequence()
+        );
+        const focusWindow = global.display.focus_window;
+        let index = windows.indexOf(focusWindow);
+        if (index < 0)
+            index = 0;
+        else {
+            const step = direction === Meta.MotionDirection.UP ||
+                direction === Meta.MotionDirection.LEFT
+                ? -1
+                : 1;
+            index = (index + step + windows.length) % windows.length;
+        }
+
+        if (windows[index] === focusWindow)
+            return false;
+
+        Main.activateWindow(windows[index]);
+        Main.overview.hide();
+        return true;
+    }
+
     handleAppClicked(item, app) {
         const previews = this._getPreviews();
         const windows = this.getInterestingWindows(app);

@@ -8,6 +8,7 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
+import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {
     addComboRow,
     addSpinRow,
@@ -99,14 +100,37 @@ export function addTaskbarBehaviorGroup({
 
     const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Workspace Scroll'),
-        subtitle: _('Scroll over empty taskbar space to switch workspaces'),
+        subtitle: _('Choose what happens when scrolling over the taskbar'),
     });
-    const workspaceScrollSwitch = createSwitchRow(settings, {
-        key: 'workspace-scroll-enabled',
-        title: _('Enable Workspace Scroll'),
-        subtitle: _('Scroll over empty taskbar space to switch workspaces'),
-    });
-    workspaceScrollRow.add_row(workspaceScrollSwitch);
+    const workspaceScrollActionRow = addComboRow(
+        workspaceScrollRow,
+        settings,
+        {
+            key: 'workspace-scroll-action',
+            title: _('Scroll Action'),
+            subtitle: _('Action used when scrolling over empty taskbar space'),
+            choices: [
+                {
+                    value: PANEL_SCROLL_ACTION.SWITCH_WORKSPACE,
+                    label: _('Switch Workspace'),
+                },
+                {
+                    value: PANEL_SCROLL_ACTION.CYCLE_WINDOWS,
+                    label: _('Cycle Windows'),
+                },
+                {
+                    value: PANEL_SCROLL_ACTION.CHANGE_VOLUME,
+                    label: _('Change Volume'),
+                },
+                {
+                    value: PANEL_SCROLL_ACTION.DO_NOTHING,
+                    label: _('Do Nothing'),
+                },
+            ],
+            addRow: row => workspaceScrollRow.add_row(row),
+        },
+        connectSettings
+    );
 
     const workspaceScrollDelayRow = addSpinRow(
         workspaceScrollRow,
@@ -114,7 +138,7 @@ export function addTaskbarBehaviorGroup({
         {
             key: 'workspace-scroll-delay',
             title: _('Workspace Scroll Delay'),
-            subtitle: _('Minimum delay between workspace changes in milliseconds'),
+            subtitle: _('Minimum delay between taskbar scroll actions in milliseconds'),
             lower: 5,
             upper: 250,
             step: 5,
@@ -123,10 +147,17 @@ export function addTaskbarBehaviorGroup({
         connectSettings
     );
     behaviorGroup.add(workspaceScrollRow);
-    workspaceScrollDelayRow.sensitive = workspaceScrollSwitch.active;
-    workspaceScrollSwitch.connect('notify::active', widget => {
-        workspaceScrollDelayRow.sensitive = widget.active;
-    });
+    const syncWorkspaceScrollDelaySensitivity = () => {
+        workspaceScrollDelayRow.sensitive =
+            settings.get_string('workspace-scroll-action') !==
+            PANEL_SCROLL_ACTION.DO_NOTHING;
+    };
+    connectSettings(
+        settings,
+        'changed::workspace-scroll-action',
+        syncWorkspaceScrollDelaySensitivity
+    );
+    syncWorkspaceScrollDelaySensitivity();
 
     const panelNotificationRow = new Adw.ExpanderRow({
         title: _('Panel and Notification Behavior'),

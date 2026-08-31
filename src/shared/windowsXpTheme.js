@@ -6,6 +6,7 @@ import {
 } from './panelItemOrder.js';
 import {CLICK_ACTION} from './applicationClickActions.js';
 import {SCROLL_ACTION} from './applicationScrollActions.js';
+import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
 import {
     setBoolean,
     setInteger,
@@ -38,11 +39,16 @@ export function applyWindowsXpThemeBehaviorDefaults(settings) {
         'scroll-icon-action',
         SCROLL_ACTION.SWITCH_WORKSPACE
     );
+    setString(
+        settings,
+        'workspace-scroll-action',
+        PANEL_SCROLL_ACTION.SWITCH_WORKSPACE
+    );
     setInteger(settings, 'scroll-icon-delay', 5);
+    setBoolean(settings, 'scroll-icon-follow-panel-delay', true);
     setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'hot-edge-overview-enabled', true);
-    setBoolean(settings, 'workspace-scroll-enabled', true);
     setBoolean(settings, 'multi-monitor-panels', true);
     setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'tray-overflow-enabled', true);

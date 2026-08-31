@@ -151,14 +151,20 @@
       <default>'dark'</default>
       <summary>Taskbar colour scheme when not following the system</summary>
     </key>
-    <key name="workspace-scroll-enabled" type="b">
-      <default>true</default>
-      <summary>Switch workspaces by scrolling over empty taskbar space</summary>
+    <key name="workspace-scroll-action" type="s">
+      <choices>
+        <choice value="switch-workspace"/>
+        <choice value="cycle-windows"/>
+        <choice value="change-volume"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'switch-workspace'</default>
+      <summary>Action when scrolling over empty taskbar space</summary>
     </key>
     <key name="workspace-scroll-delay" type="i">
       <range min="5" max="250"/>
       <default>5</default>
-      <summary>Minimum delay between scroll workspace changes in milliseconds</summary>
+      <summary>Minimum delay between taskbar scroll actions in milliseconds</summary>
     </key>
     <key name="middle-click-close-apps" type="b">
       <default>false</default>
@@ -622,6 +628,10 @@
       <range min="5" max="250"/>
       <default>5</default>
       <summary>Minimum delay between application icon scrolls in milliseconds</summary>
+    </key>
+    <key name="scroll-icon-follow-panel-delay" type="b">
+      <default>true</default>
+      <summary>Use the taskbar scroll delay for application icon scrolling</summary>
     </key>
     <key name="window-previews-enabled" type="b">
       <default>true</default>
