@@ -12,7 +12,6 @@ import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 import {panelArrowSide} from '../panel/panelPosition.js';
 import {closePopupMenu, openPopupMenu} from '../shared/popupMenuUtils.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
-import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
 export class StartMenuContextMenuController {
@@ -23,6 +22,7 @@ export class StartMenuContextMenuController {
         defaultFolderName,
         getInterestingWindows,
         hideTooltip,
+        pinnedModel,
         refreshAfterPinChange,
         removeFolderLabel,
     }) {
@@ -34,7 +34,7 @@ export class StartMenuContextMenuController {
         this._refreshAfterPinChange = refreshAfterPinChange;
         this._defaultFolderName = defaultFolderName;
         this._removeFolderLabel = removeFolderLabel;
-        this._pinnedModel = new StartMenuPinnedModel(settings);
+        this._pinnedModel = pinnedModel;
         this._transientMenu = new StartMenuTransientMenu(applyTheme);
         this._actionCloseIdleId = 0;
         this._cursor = new St.Widget({
@@ -93,6 +93,7 @@ export class StartMenuContextMenuController {
                 },
                 onAppAction: () => this._queueCloseAfterAction(),
                 folderId,
+                pinnedModel: this._pinnedModel,
                 closeApp: (targetApp, timestamp) =>
                     this._closeApp(targetApp, timestamp),
                 getInterestingWindows: targetApp =>

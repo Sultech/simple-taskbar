@@ -52,37 +52,6 @@ export class ApplicationOverflowPopupController {
     }
 
     setOverflowItems(items) {
-        this._setOverflowItems(items);
-    }
-
-    clear() {
-        this._close();
-        if (this._overflowItems.length > 0)
-            this._setOverflowItems([]);
-    }
-
-    destroy() {
-        this._pendingOverflowTransition = null;
-        const content = this._section.actor.get_child_at_index(0);
-        if (content)
-            content.remove_all_transitions();
-        for (const {auxiliaryItem} of this._itemController.records)
-            auxiliaryItem.remove_all_transitions();
-
-        this._syncGeometry = null;
-        this._close = null;
-        this._getItemSizes = null;
-        this._dragController = null;
-        this._itemController = null;
-        this._section = null;
-        this._menu = null;
-        this._overflowItems = null;
-        this._style = null;
-        this._layoutSignature = null;
-        this._settings = null;
-    }
-
-    _setOverflowItems(items) {
         const style = this._settings.get_string(
             'application-overflow-style'
         );
@@ -142,6 +111,33 @@ export class ApplicationOverflowPopupController {
         }
 
         this._applyOverflowItems(items, style, layoutSignature);
+    }
+
+    clear() {
+        this._close();
+        if (this._overflowItems.length > 0)
+            this.setOverflowItems([]);
+    }
+
+    destroy() {
+        this._pendingOverflowTransition = null;
+        const content = this._section.actor.get_child_at_index(0);
+        if (content)
+            content.remove_all_transitions();
+        for (const {auxiliaryItem} of this._itemController.records)
+            auxiliaryItem.remove_all_transitions();
+
+        this._syncGeometry = null;
+        this._close = null;
+        this._getItemSizes = null;
+        this._dragController = null;
+        this._itemController = null;
+        this._section = null;
+        this._menu = null;
+        this._overflowItems = null;
+        this._style = null;
+        this._layoutSignature = null;
+        this._settings = null;
     }
 
     _animateOverflowContentChange(items, style, layoutSignature, content) {

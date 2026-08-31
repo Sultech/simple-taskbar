@@ -322,7 +322,6 @@ const GridAltTabList = GObject.registerClass({
     Signals: {
         'item-activated': {param_types: [GObject.TYPE_INT]},
         'item-entered': {param_types: [GObject.TYPE_INT]},
-        'item-removed': {param_types: [GObject.TYPE_INT]},
     },
 }, class GridAltTabList extends St.ScrollView {
     _init(windows, monitor, maxPreviewHeight) {
@@ -527,7 +526,6 @@ const GridAltTabList = GObject.registerClass({
                     candidate > index ? candidate - 1 : candidate))
             .filter(row => row.length > 0);
         this._contentWidth = this._maximumRowWidth();
-        this.emit('item-removed', index);
 
         const row = card.get_parent();
         if (!St.Settings.get().enable_animations || !card.mapped) {

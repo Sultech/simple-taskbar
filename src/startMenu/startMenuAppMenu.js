@@ -9,7 +9,6 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {extensionIsActive} from '../extensionState.js';
 import {TaskbarAppMenu} from '../taskbar/taskbarAppMenu.js';
-import {StartMenuPinnedModel} from './startMenuPinnedModel.js';
 
 const DESKTOP_ICON_EXTENSIONS = [
     'ding@rastersoft.com',
@@ -102,7 +101,7 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
         this._onStartPinsChanged = params.onStartPinsChanged;
         this._onAppAction = params.onAppAction;
         this._folderId = params.folderId ?? null;
-        this._pinnedModel = new StartMenuPinnedModel(settings);
+        this._pinnedModel = params.pinnedModel;
         this._connectedActionItems = new WeakSet();
         this._shortcutQueryCancellable = null;
 

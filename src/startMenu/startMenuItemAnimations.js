@@ -20,6 +20,11 @@ function canAnimate(actor) {
 
 export function animateStartMenuContentView(content, forward, show) {
     resetStartMenuContentTransition(content);
+    if (!canAnimate(content)) {
+        show();
+        return;
+    }
+
     const outgoingX = forward ? -32 : 32;
     const incomingX = -outgoingX;
     content.ease({
@@ -152,14 +157,14 @@ export function animateStartMenuItemsIn(actors) {
 
 export function animateStartMenuItemReflow(actor, offsetX, offsetY) {
     actor.remove_all_transitions();
-    actor.translation_x = offsetX;
-    actor.translation_y = offsetY;
-    if (!St.Settings.get().enable_animations) {
+    if (!canAnimate(actor)) {
         actor.translation_x = 0;
         actor.translation_y = 0;
         return;
     }
 
+    actor.translation_x = offsetX;
+    actor.translation_y = offsetY;
     actor.ease({
         translation_x: 0,
         translation_y: 0,

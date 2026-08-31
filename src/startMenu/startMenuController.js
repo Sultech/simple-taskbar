@@ -110,6 +110,7 @@ export class StartMenuController {
                 getInterestingWindows: params.getInterestingWindows,
                 hideTooltip: instant =>
                     this._tooltipController.hide(instant),
+                pinnedModel: this._pinnedModel,
                 defaultFolderName,
                 removeFolderLabel: _('Remove folder'),
                 refreshAfterPinChange: change =>

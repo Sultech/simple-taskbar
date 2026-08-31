@@ -46,6 +46,20 @@ import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 140;
+const BADGE_SINGLE_DIGIT_ICON_SIZE = 31;
+const BADGE_TWO_DIGIT_ICON_SIZE = 35;
+const BADGE_LARGE_FONT_ICON_SIZE = 56;
+const BADGE_REFERENCE_ICON_SIZE = 48;
+const BADGE_MINIMUM_FONT_SIZE = 5;
+const BADGE_FONT_SIZE = 11;
+const BADGE_LARGE_FONT_SIZE = 12;
+const BADGE_FONT_SIZE_RATIO = 0.25;
+const BADGE_PADDING_RATIO = 0.07;
+const BADGE_MINIMUM_PADDING = 1;
+const BADGE_MAXIMUM_PADDING = 4;
+const BADGE_SINGLE_DIGIT_MARGIN = 2;
+const BADGE_MAXIMUM_OUTWARD_OFFSET = 4;
+const BADGE_OUTWARD_OFFSET_DIVISOR = 4;
 const ROUNDED_INDICATORS_CLASS =
     'simple-taskbar-rounded-indicators';
 
@@ -904,11 +918,12 @@ export class TaskbarController {
         this._rebuilding = true;
         const {combinationChanged, labelWidthChanged} =
             this._syncCombineWhenFull();
+        let rebuildQueued = false;
         if (combinationChanged) {
             this._shownInitially = false;
             this._getPreviews().hideTooltip(false);
             this._getPreviews().hide();
-            this._syncDragEnabled();
+            rebuildQueued = this._syncDragEnabled();
         }
         const entries = this._orderedEntries(this._startupSettling);
         const applicationEntries = entries.filter(entry =>
@@ -947,8 +962,11 @@ export class TaskbarController {
                 this._destroyAppMenu(item._taskbarButton);
                 this._appButtons.delete(key);
                 const appId = item._taskbarApp.get_id();
-                const wasPinnedPlaceholder = !item._taskbarWindow &&
-                    (item._taskbarIsLauncher || item._taskbarIsPinnedPrimary);
+                const wasPinnedPlaceholder = this._isPinnedPlaceholder(
+                    item._taskbarWindow,
+                    item._taskbarIsLauncher,
+                    item._taskbarIsPinnedPrimary
+                );
                 if (animateMembershipChanges &&
                     (!wasPinnedPlaceholder ||
                         newlyUnpinnedAppIds.has(appId))) {
@@ -1017,8 +1035,11 @@ export class TaskbarController {
                     isLocation ? null : this._showDesktopItem,
                     isLocation ? [] : [this._pinnedSeparator]
                 );
-                const pinnedPlaceholder = !window &&
-                    (isLauncher || isPinnedPrimary);
+                const pinnedPlaceholder = this._isPinnedPlaceholder(
+                    window,
+                    isLauncher,
+                    isPinnedPrimary
+                );
                 animateTaskbarItemIn(
                     item,
                     animateMembershipChanges &&
@@ -1072,7 +1093,7 @@ export class TaskbarController {
         this._syncNotificationBadges();
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
-        this._rebuilding = false;
+        this._rebuilding = rebuildQueued;
         this._onRedisplay();
     }
 
@@ -1296,6 +1317,10 @@ export class TaskbarController {
             item,
             app => this._interestingWindows(app)
         );
+    }
+
+    _isPinnedPlaceholder(window, isLauncher, isPinnedPrimary) {
+        return !window && (isLauncher || isPinnedPrimary);
     }
 
     _isPersistentPinned(app) {
@@ -1631,7 +1656,7 @@ export class TaskbarController {
             this._settings.get_boolean('hide-pinned-taskbar-apps'),
         ].join(':');
         if (!force && configuration === this._dragEnabled)
-            return;
+            return false;
 
         this._dragEnabled = configuration;
         const sessionOrder = this._entryModel.sessionOrder;
@@ -1643,6 +1668,7 @@ export class TaskbarController {
         this._suppressMembershipAnimation = true;
         this._showDesktopController.syncDraggable();
         this._queueRedisplay();
+        return true;
     }
 
     _syncFileManagerPlaces() {
@@ -1753,41 +1779,56 @@ export class TaskbarController {
                 items.find(item => item._taskbarIsPinnedPrimary) ??
                 items.find(item => item._taskbarIsCombinedApp) ??
                 items[0];
-            if (this._iconSize <= 31 && count > 9) {
-                target._taskbarNotificationBadgeLabel.text = '9';
-            } else if (count > 99) {
-                target._taskbarNotificationBadgeLabel.text =
-                    this._iconSize <= 35 ? '99' : '99+';
-            } else {
-                target._taskbarNotificationBadgeLabel.text = count.toString();
-            }
+            target._taskbarNotificationBadgeLabel.text =
+                this._notificationBadgeText(count);
             this._syncNotificationBadgeGeometry(target);
             target._taskbarNotificationBadge.show();
         }
     }
 
+    _notificationBadgeText(count) {
+        if (this._iconSize <= BADGE_SINGLE_DIGIT_ICON_SIZE && count > 9)
+            return '9';
+
+        if (count <= 99)
+            return count.toString();
+
+        return this._iconSize <= BADGE_TWO_DIGIT_ICON_SIZE ? '99' : '99+';
+    }
+
     _syncNotificationBadgeGeometry(item) {
         const fontSize = Math.max(
-            5,
+            BADGE_MINIMUM_FONT_SIZE,
             Math.min(
-                this._iconSize < 56 ? 11 : 12,
-                Math.floor(this._iconSize * 0.25)
+                this._iconSize < BADGE_LARGE_FONT_ICON_SIZE
+                    ? BADGE_FONT_SIZE
+                    : BADGE_LARGE_FONT_SIZE,
+                Math.floor(this._iconSize * BADGE_FONT_SIZE_RATIO)
             )
         );
         const horizontalPadding = Math.max(
-            1,
-            Math.min(4, Math.round(this._iconSize * 0.07))
+            BADGE_MINIMUM_PADDING,
+            Math.min(
+                BADGE_MAXIMUM_PADDING,
+                Math.round(this._iconSize * BADGE_PADDING_RATIO)
+            )
         );
         const badgeTextLength =
             item._taskbarNotificationBadgeLabel.text.length;
         const singleDigit = badgeTextLength === 1;
-        const singleDigitSize = fontSize + 2;
-        const maximumOutwardOffset = Math.min(4, badgeTextLength + 1);
+        const singleDigitSize = fontSize + BADGE_SINGLE_DIGIT_MARGIN;
+        const maximumOutwardOffset = Math.min(
+            BADGE_MAXIMUM_OUTWARD_OFFSET,
+            badgeTextLength + 1
+        );
         const outwardOffset = Math.max(
             0,
             Math.min(
                 maximumOutwardOffset,
-                Math.round((48 - this._iconSize) / 4)
+                Math.round(
+                    (BADGE_REFERENCE_ICON_SIZE - this._iconSize) /
+                    BADGE_OUTWARD_OFFSET_DIVISOR
+                )
             )
         );
         item._taskbarIconContainer.set_size(
