@@ -394,16 +394,19 @@ class RunningIndicator extends St.Widget {
             bar = PILL_MULTIPLE_LENGTH - parity;
 
         const show = this._focused && multiple;
+        const segmentGap = container % 2 === 0
+            ? SEGMENT_GAP
+            : SEGMENT_GAP + 1;
         const secondaryLength = Math.max(
             1,
-            Math.floor((container - SEGMENT_GAP) / 2)
+            Math.floor((container - segmentGap) / 2)
         );
         const primaryLength = show
-            ? bar - SEGMENT_GAP - secondaryLength
+            ? bar - segmentGap - secondaryLength
             : bar;
         const primaryOffset = (container - bar) / 2;
         const secondaryOffset = show
-            ? primaryOffset + primaryLength + SEGMENT_GAP
+            ? primaryOffset + primaryLength + segmentGap
             : primaryOffset + primaryLength;
         const key = `${container}:${primaryLength}:${primaryOffset}:` +
             `${secondaryOffset}:${show}`;

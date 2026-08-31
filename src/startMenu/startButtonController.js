@@ -217,7 +217,7 @@ export class StartButtonController {
                 visualPanelHeight,
                 windowsXpTheme
             ));
-            this._hover.translation_y = 1;
+            this._hover.translation_y = 0;
             this._hover.y_align = Clutter.ActorAlign.CENTER;
             this._hover.y_expand = false;
         }
