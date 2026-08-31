@@ -181,6 +181,7 @@ export function addComboRow(group, settings, {
     subtitle = '',
     choices,
     initialValue = null,
+    getValue = () => settings.get_string(key),
     choicesProvider = () => choices,
     choicesChangedKey = null,
     choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
@@ -201,7 +202,7 @@ export function addComboRow(group, settings, {
         subtitle,
         model: createModel(currentChoices),
     });
-    const currentValue = initialValue ?? settings.get_string(key);
+    const currentValue = initialValue ?? getValue();
     const selected = currentChoices.findIndex(
         choice => choice.value === currentValue
     );
@@ -215,7 +216,7 @@ export function addComboRow(group, settings, {
             setValue(choice.value);
     });
     connectSettings(settings, `changed::${key}`, () => {
-        const value = settings.get_string(key);
+        const value = getValue();
         const index = currentChoices.findIndex(
             choice => choice.value === value
         );
@@ -227,7 +228,7 @@ export function addComboRow(group, settings, {
             currentChoices = choicesProvider();
             syncingChoices = true;
             row.set_model(createModel(currentChoices));
-            const value = settings.get_string(key);
+            const value = getValue();
             const index = currentChoices.findIndex(
                 choice => choice.value === value
             );

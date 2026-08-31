@@ -96,11 +96,30 @@ function addApplicationIconControls({
         title: _('Window Previews'),
         subtitle: _('Show live window previews when hovering application icons'),
     }));
-    windowInteractionRow.add_row(createSwitchRow(settings, {
-        key: 'multi-window-click-spread',
-        title: _('Spread Multiple Windows'),
-        subtitle: _('Click an app with multiple windows to show only its windows in Overview, across all workspaces'),
-    }));
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'multi-window-click-spread',
+            title: _('Multiple Window Action'),
+            subtitle: _(
+                'Choose what happens when an application with multiple windows is clicked'
+            ),
+            choices: [
+                {value: true, label: _('Spread Multiple Windows')},
+                {value: false, label: _('Show Window Previews')},
+            ],
+            getValue: () => settings.get_boolean(
+                'multi-window-click-spread'
+            ),
+            setValue: value => settings.set_boolean(
+                'multi-window-click-spread',
+                value
+            ),
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
     windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'middle-click-close-apps',
         title: _('Middle Click Closes Applications'),
