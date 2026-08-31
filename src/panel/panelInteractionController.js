@@ -17,6 +17,7 @@ import {
     syncMenuArrowSide,
 } from './panelPosition.js';
 import {getScrollDelta} from '../scrollUtils.js';
+import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
@@ -28,6 +29,7 @@ export class PanelInteractionController {
         taskbarContainer,
         previewController,
         openPreferences,
+        onAppScrolled,
         panelActor = Main.panel,
         panelBoxes = [
             Main.panel._leftBox,
@@ -42,11 +44,13 @@ export class PanelInteractionController {
         this._taskbarContainer = taskbarContainer;
         this._previews = previewController;
         this._openPreferences = openPreferences;
+        this._onAppScrolled = onAppScrolled;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
         this._capturedEventId = 0;
         this._workspaceScrollTimeoutId = 0;
+        this._appScrollTimeoutId = 0;
         this._contextMenu = null;
         this._contextMenuManager = null;
         this._lockChangedId = 0;
@@ -68,6 +72,9 @@ export class PanelInteractionController {
         if (this._workspaceScrollTimeoutId)
             GLib.Source.remove(this._workspaceScrollTimeoutId);
         this._workspaceScrollTimeoutId = 0;
+        if (this._appScrollTimeoutId)
+            GLib.Source.remove(this._appScrollTimeoutId);
+        this._appScrollTimeoutId = 0;
 
         if (this._capturedEventId)
             this._panelActor.disconnect(this._capturedEventId);
@@ -89,6 +96,7 @@ export class PanelInteractionController {
         this._allowTaskbarLock = false;
         this._settings = null;
         this._openPreferences = null;
+        this._onAppScrolled = null;
     }
 
     _createContextMenu() {
@@ -183,10 +191,40 @@ export class PanelInteractionController {
             return Clutter.EVENT_STOP;
         }
 
-        if (target && eventType === Clutter.EventType.SCROLL &&
-            this._taskbarBin.contains(target) &&
-            this._scrollTaskbar(event)) {
-            return Clutter.EVENT_STOP;
+        if (eventType === Clutter.EventType.SCROLL) {
+            if (target && this._taskbarBin.contains(target) &&
+                this._scrollTaskbar(event)) {
+                return Clutter.EVENT_STOP;
+            }
+
+            const item = target &&
+                this._taskbarController.getItemAtTarget(target);
+            const action = this._settings.get_string('scroll-icon-action');
+            if (item && action !== SCROLL_ACTION.SWITCH_WORKSPACE) {
+                if (action === SCROLL_ACTION.CYCLE_WINDOWS) {
+                    this._previews.hideTooltip(false);
+                    this._previews.hide();
+                    const [previousDirection, nextDirection] =
+                        this._getWorkspaceScrollDirections();
+                    const direction = this._getDiscreteScrollDirection(
+                        event,
+                        previousDirection,
+                        nextDirection
+                    );
+                    if (direction && !this._appScrollTimeoutId) {
+                        this._appScrollTimeoutId = GLib.timeout_add(
+                            GLib.PRIORITY_DEFAULT,
+                            0,
+                            () => {
+                                this._appScrollTimeoutId = 0;
+                                return GLib.SOURCE_REMOVE;
+                            }
+                        );
+                        this._onAppScrolled(item, direction);
+                    }
+                }
+                return Clutter.EVENT_STOP;
+            }
         }
 
         if (!this._settings.get_boolean('workspace-scroll-enabled') ||
@@ -205,10 +243,7 @@ export class PanelInteractionController {
         }
 
         const [previousDirection, nextDirection] =
-            global.workspace_manager.layout_columns >
-            global.workspace_manager.layout_rows
-                ? [Meta.MotionDirection.UP, Meta.MotionDirection.DOWN]
-                : [Meta.MotionDirection.LEFT, Meta.MotionDirection.RIGHT];
+            this._getWorkspaceScrollDirections();
         const direction = this._getScrollDirection(
             event,
             previousDirection,
@@ -272,6 +307,13 @@ export class PanelInteractionController {
             : this._taskbarBin.hadjustment;
     }
 
+    _getWorkspaceScrollDirections() {
+        return global.workspace_manager.layout_columns >
+            global.workspace_manager.layout_rows
+            ? [Meta.MotionDirection.UP, Meta.MotionDirection.DOWN]
+            : [Meta.MotionDirection.LEFT, Meta.MotionDirection.RIGHT];
+    }
+
     _getScrollDirection(event, previousDirection, nextDirection) {
         switch (event.get_scroll_direction()) {
         case Clutter.ScrollDirection.UP:
@@ -289,6 +331,19 @@ export class PanelInteractionController {
                 return nextDirection;
             break;
         }
+        }
+
+        return null;
+    }
+
+    _getDiscreteScrollDirection(event, previousDirection, nextDirection) {
+        switch (event.get_scroll_direction()) {
+        case Clutter.ScrollDirection.UP:
+        case Clutter.ScrollDirection.LEFT:
+            return previousDirection;
+        case Clutter.ScrollDirection.DOWN:
+        case Clutter.ScrollDirection.RIGHT:
+            return nextDirection;
         }
 
         return null;

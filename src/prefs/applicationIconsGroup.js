@@ -8,6 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {axisPanelPositions} from './panelAxis.js';
 import {CLICK_ACTION} from '../shared/applicationClickActions.js';
+import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {
     addColorRow,
     addComboRow,
@@ -131,6 +132,31 @@ function addApplicationIconControls({
                 {
                     value: CLICK_ACTION.LAUNCH,
                     label: _('Launch New Instance'),
+                },
+            ],
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'scroll-icon-action',
+            title: _('Scroll App/Icon Action'),
+            subtitle: _('Choose what happens when scrolling over an application icon'),
+            choices: [
+                {
+                    value: SCROLL_ACTION.SWITCH_WORKSPACE,
+                    label: _('Switch Workspace'),
+                },
+                {
+                    value: SCROLL_ACTION.CYCLE_WINDOWS,
+                    label: _('Cycle Windows'),
+                },
+                {
+                    value: SCROLL_ACTION.DO_NOTHING,
+                    label: _('Do Nothing'),
                 },
             ],
             addRow: row => windowInteractionRow.add_row(row),

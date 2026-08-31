@@ -211,6 +211,8 @@ export default class SimpleTaskbarExtension extends Extension {
             taskbarContainer: this._taskbarBin,
             previewController: this._windowPreviews,
             openPreferences: () => this.openPreferences(),
+            onAppScrolled: (item, direction) =>
+                this._windowController.handleAppScrolled(item, direction),
         });
         this._applicationOverflowController.enable();
         this._panelController.enable();

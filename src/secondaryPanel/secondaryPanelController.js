@@ -297,6 +297,8 @@ export class SecondaryPanelController {
             taskbarContainer: this._taskbarBin,
             previewController: this._windowPreviews,
             openPreferences: this._openPreferencesCallback,
+            onAppScrolled: (item, direction) =>
+                this._windowController.handleAppScrolled(item, direction),
             panelActor: this.actor,
             panelBoxes: [this._leftBox, this._centerBox, this._rightBox],
             allowTaskbarLock: !this._dockController,

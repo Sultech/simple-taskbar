@@ -609,6 +609,15 @@
       <default>'toggle-spread'</default>
       <summary>Action when a running application is clicked</summary>
     </key>
+    <key name="scroll-icon-action" type="s">
+      <choices>
+        <choice value="switch-workspace"/>
+        <choice value="cycle-windows"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'switch-workspace'</default>
+      <summary>Action when scrolling over an application icon</summary>
+    </key>
     <key name="window-previews-enabled" type="b">
       <default>true</default>
       <summary>Show live window previews when hovering application icons</summary>

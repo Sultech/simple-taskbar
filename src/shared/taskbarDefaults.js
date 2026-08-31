@@ -3,6 +3,7 @@
 
 import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
 import {CLICK_ACTION} from './applicationClickActions.js';
+import {SCROLL_ACTION} from './applicationScrollActions.js';
 import {
     setBoolean,
     setInteger,
@@ -59,6 +60,11 @@ export function applyDefaultTaskbarSettings(settings) {
         settings,
         'application-click-action',
         CLICK_ACTION.TOGGLE_SPREAD
+    );
+    setString(
+        settings,
+        'scroll-icon-action',
+        SCROLL_ACTION.SWITCH_WORKSPACE
     );
     setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);

@@ -373,16 +373,27 @@ export class TaskbarController {
     }
 
     hasTarget(target) {
-        for (const item of this._appButtons.values()) {
-            if (item === target || item.contains(target))
-                return true;
-        }
+        if (this.getItemAtTarget(target))
+            return true;
         if (this._showDesktopItem &&
             (this._showDesktopItem === target ||
                 this._showDesktopItem.contains(target))) {
             return true;
         }
         return false;
+    }
+
+    getItemAtTarget(target) {
+        for (const item of [
+            ...this._appButtons.values(),
+            ...this._auxiliaryItems,
+        ]) {
+            if (item._taskbarApp &&
+                (item === target || item.contains(target))) {
+                return item;
+            }
+        }
+        return null;
     }
 
     enable() {

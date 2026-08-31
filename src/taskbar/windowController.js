@@ -235,6 +235,29 @@ export class WindowController {
         this._cycleState = null;
     }
 
+    handleAppScrolled(item, direction) {
+        const windows = this.getInterestingWindows(item._taskbarApp);
+        if (windows.length < 2)
+            return;
+
+        windows.sort((a, b) =>
+            a.get_stable_sequence() - b.get_stable_sequence()
+        );
+        let index = windows.indexOf(global.display.focus_window);
+        if (index < 0)
+            index = windows.indexOf(item._taskbarWindow);
+        if (index < 0)
+            index = 0;
+
+        const step = direction === Meta.MotionDirection.UP ||
+            direction === Meta.MotionDirection.LEFT
+            ? -1
+            : 1;
+        const nextIndex = (index + step + windows.length) % windows.length;
+        Main.activateWindow(windows[nextIndex]);
+        Main.overview.hide();
+    }
+
     handleAppClicked(item, app) {
         const previews = this._getPreviews();
         const windows = this.getInterestingWindows(app);
