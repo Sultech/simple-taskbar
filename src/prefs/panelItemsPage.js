@@ -62,23 +62,9 @@ export function addPanelItemsPage({
 
     const panelItemsRow = new Adw.ExpanderRow({
         title: _('Panel Item Visibility'),
-        subtitle: _('Choose which optional panel items appear.'),
+        subtitle: _('Choose which additional panel features appear.'),
     });
     panelGroup.add(panelItemsRow);
-
-    const activitiesButtonSwitch = createSwitchRow(settings, {
-        key: 'activities-button-visible',
-        title: _('Show Activities Button'),
-        subtitle: _('Display GNOME’s workspace overview button on the taskbar'),
-    });
-    panelItemsRow.add_row(activitiesButtonSwitch);
-
-    const showDesktopSwitch = createSwitchRow(settings, {
-        key: 'show-desktop-button-visible',
-        title: _('Show Desktop Button'),
-        subtitle: _('Display a button that minimizes or restores all windows'),
-    });
-    panelItemsRow.add_row(showDesktopSwitch);
 
     const volumeMixerSwitch = createSwitchRow(settings, {
         key: 'volume-mixer-enabled',
@@ -87,24 +73,11 @@ export function addPanelItemsPage({
     });
     panelItemsRow.add_row(volumeMixerSwitch);
 
-    const trayOverflowSwitch = createSwitchRow(settings, {
-        key: 'tray-overflow-enabled',
-        title: _('Collect Tray Icons'),
-        subtitle: _('Gather application tray icons behind a panel arrow'),
-    });
-    panelItemsRow.add_row(trayOverflowSwitch);
-
     const folderMenuGroup = new Adw.ExpanderRow({
         title: _('Folder Menu'),
         subtitle: _('Show and configure a selected folder on the taskbar'),
     });
     panelGroup.add(folderMenuGroup);
-    const folderMenuSwitch = createSwitchRow(settings, {
-        key: 'folder-menu-enabled',
-        title: _('Show Folder Menu'),
-        subtitle: _('Show a selected folder on the taskbar'),
-    });
-    folderMenuGroup.add_row(folderMenuSwitch);
 
     const folderMenuLocationRow = new Adw.ActionRow({
         title: _('Folder Menu Location'),
@@ -127,7 +100,9 @@ export function addPanelItemsPage({
         } else {
             folderMenuLocationRow.subtitle = _('No folder selected');
         }
-        folderMenuLocationRow.sensitive = folderMenuSwitch.active;
+        folderMenuLocationRow.sensitive = settings.get_boolean(
+            'folder-menu-enabled'
+        );
     };
     chooseFolderButton.connect('clicked', () => {
         selectFolderMenuLocation(window);
@@ -137,7 +112,11 @@ export function addPanelItemsPage({
         'changed::folder-menu-uri',
         updateFolderMenuRow
     );
-    folderMenuSwitch.connect('notify::active', updateFolderMenuRow);
+    connectSettings(
+        settings,
+        'changed::folder-menu-enabled',
+        updateFolderMenuRow
+    );
     updateFolderMenuRow();
 
     const initialPositions = axisPanelPositions(settings, panelPositions);
@@ -185,6 +164,7 @@ export function addPanelItemsPage({
         }],
         ['activities', {
             key: 'activities-button-position',
+            visibleKey: 'activities-button-visible',
             title: _('Activities'),
             subtitle: _('GNOME workspace overview button'),
             choices: initialPositions,
@@ -197,12 +177,14 @@ export function addPanelItemsPage({
         }],
         ['folder-menu', {
             key: 'folder-menu-position',
+            visibleKey: 'folder-menu-enabled',
             title: _('Folder Menu'),
             subtitle: _('Selected folder shortcuts'),
             choices: initialPositions,
         }],
         ['tray-overflow', {
             key: 'tray-overflow-position',
+            visibleKey: 'tray-overflow-enabled',
             title: _('Tray icons'),
             subtitle: _('Gather application tray icons behind a panel arrow'),
             choices: initialPositions,
@@ -220,6 +202,7 @@ export function addPanelItemsPage({
         }],
         ['show-desktop', {
             key: 'show-desktop-button-position',
+            visibleKey: 'show-desktop-button-visible',
             title: _('Show Desktop Button'),
             subtitle: _('Minimize or restore all windows'),
             choices: initialPositions.filter(
@@ -461,13 +444,15 @@ export function addPanelItemsPage({
         panelOrderRows.get('clock').positionDropDown.sensitive =
             !windowsXpTheme;
         panelOrderRows.get('activities').positionDropDown.sensitive =
-            activitiesButtonSwitch.active;
+            settings.get_boolean('activities-button-visible');
         panelOrderRows.get('folder-menu').positionDropDown.sensitive =
-            !windowsXpTheme && folderMenuSwitch.active;
+            !windowsXpTheme && settings.get_boolean('folder-menu-enabled');
         panelOrderRows.get('tray-overflow').positionDropDown.sensitive =
-            !windowsXpTheme && trayOverflowSwitch.active;
+            !windowsXpTheme && settings.get_boolean('tray-overflow-enabled');
         panelOrderRows.get('show-desktop').positionDropDown.sensitive =
-            !windowsXpTheme && showDesktopSwitch.active;
+            !windowsXpTheme && settings.get_boolean(
+                'show-desktop-button-visible'
+            );
     };
     followAppAlignmentSwitch.connect(
         'notify::active',
@@ -476,22 +461,18 @@ export function addPanelItemsPage({
             syncPanelItemOrder();
         }
     );
-    activitiesButtonSwitch.connect(
-        'notify::active',
-        syncPanelPositionSensitivity
-    );
-    folderMenuSwitch.connect(
-        'notify::active',
-        syncPanelPositionSensitivity
-    );
-    trayOverflowSwitch.connect(
-        'notify::active',
-        syncPanelPositionSensitivity
-    );
-    showDesktopSwitch.connect(
-        'notify::active',
-        syncPanelPositionSensitivity
-    );
+    for (const key of [
+        'activities-button-visible',
+        'folder-menu-enabled',
+        'tray-overflow-enabled',
+        'show-desktop-button-visible',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncPanelPositionSensitivity
+        );
+    }
     connectSettings(
         settings,
         'changed::default-gnome-panel',

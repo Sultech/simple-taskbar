@@ -58,6 +58,7 @@ export function createPanelOrderRow(settings, {
     subtitle = '',
     choices,
     fixedPosition = null,
+    visibleKey = null,
 }, connectSettings) {
     let currentChoices = choices;
     const createModel = availableChoices => {
@@ -132,14 +133,33 @@ export function createPanelOrderRow(settings, {
     moveBox.append(upButton);
     moveBox.append(downButton);
 
+    const visibleButton = visibleKey
+        ? new Gtk.ToggleButton({
+            label: _('Visible'),
+            active: settings.get_boolean(visibleKey),
+            valign: Gtk.Align.CENTER,
+        })
+        : null;
+    if (visibleButton) {
+        settings.bind(
+            visibleKey,
+            visibleButton,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+    }
+
     const row = new Adw.ActionRow({title, subtitle});
     row.add_prefix(moveBox);
+    if (visibleButton)
+        row.add_suffix(visibleButton);
     row.add_suffix(positionDropDown);
     row.activatable_widget = positionDropDown;
 
     return {
         row,
         positionDropDown,
+        visibleButton,
         upButton,
         downButton,
         setChoices,
