@@ -6,6 +6,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {TaskbarLocationMenu} from './taskbarLocationMenu.js';
+import {CLICK_ACTION} from '../shared/applicationClickActions.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 
@@ -59,8 +60,10 @@ export class TaskbarItemInteractionController {
         }
 
         const keepOpen = this._getInterestingWindows(app).length > 1 &&
-            !this._settings.get_boolean('multi-window-click-spread') &&
-            previews.previewsEnabled;
+            this._settings.get_string('application-click-action') ===
+                CLICK_ACTION.TOGGLE_SHOW_PREVIEW &&
+            previews.previewsEnabled &&
+            !Main.overview._shown;
         this._onAppClicked(interactionItem, app);
         return keepOpen;
     }

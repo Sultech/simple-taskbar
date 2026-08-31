@@ -7,6 +7,7 @@ import Gio from 'gi://Gio';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {axisPanelPositions} from './panelAxis.js';
+import {CLICK_ACTION} from '../shared/applicationClickActions.js';
 import {
     addColorRow,
     addComboRow,
@@ -91,35 +92,56 @@ function addApplicationIconControls({
         subtitle: _('Configure previews, multi-window actions, and clicks'),
     });
     group.add(windowInteractionRow);
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'application-click-action',
+            title: _('Click Action'),
+            subtitle: _('Choose what happens when a running application is clicked'),
+            choices: [
+                {
+                    value: CLICK_ACTION.CYCLE_MINIMIZE,
+                    label: _('Cycle Windows + Minimize'),
+                },
+                {
+                    value: CLICK_ACTION.CYCLE,
+                    label: _('Cycle Through Windows'),
+                },
+                {
+                    value: CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
+                    label: _('Show Window Previews'),
+                },
+                {
+                    value: CLICK_ACTION.TOGGLE_CYCLE,
+                    label: _('Toggle Single / Cycle Multiple'),
+                },
+                {
+                    value: CLICK_ACTION.TOGGLE_SPREAD,
+                    label: _('Spread Multiple Windows'),
+                },
+                {
+                    value: CLICK_ACTION.TOGGLE_WINDOWS,
+                    label: _('Toggle Windows'),
+                },
+                {
+                    value: CLICK_ACTION.RAISE_WINDOWS,
+                    label: _('Raise Windows'),
+                },
+                {
+                    value: CLICK_ACTION.LAUNCH,
+                    label: _('Launch New Instance'),
+                },
+            ],
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
     windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'window-previews-enabled',
         title: _('Window Previews'),
         subtitle: _('Show live window previews when hovering application icons'),
     }));
-    addComboRow(
-        windowInteractionRow,
-        settings,
-        {
-            key: 'multi-window-click-spread',
-            title: _('Multiple Window Action'),
-            subtitle: _(
-                'Choose what happens when an application with multiple windows is clicked'
-            ),
-            choices: [
-                {value: true, label: _('Spread Multiple Windows')},
-                {value: false, label: _('Show Window Previews')},
-            ],
-            getValue: () => settings.get_boolean(
-                'multi-window-click-spread'
-            ),
-            setValue: value => settings.set_boolean(
-                'multi-window-click-spread',
-                value
-            ),
-            addRow: row => windowInteractionRow.add_row(row),
-        },
-        connectSettings
-    );
     windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'middle-click-close-apps',
         title: _('Middle Click Closes Applications'),

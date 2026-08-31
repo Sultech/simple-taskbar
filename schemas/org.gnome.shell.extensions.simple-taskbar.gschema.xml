@@ -595,9 +595,19 @@
       <default>false</default>
       <summary>Show running applications only on the taskbar for their monitor</summary>
     </key>
-    <key name="multi-window-click-spread" type="b">
-      <default>true</default>
-      <summary>Show an application window spread when its taskbar icon is clicked</summary>
+    <key name="application-click-action" type="s">
+      <choices>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="cycle-windows"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="toggle-windows"/>
+        <choice value="raise-windows"/>
+        <choice value="launch-new-instance"/>
+      </choices>
+      <default>'toggle-spread'</default>
+      <summary>Action when a running application is clicked</summary>
     </key>
     <key name="window-previews-enabled" type="b">
       <default>true</default>

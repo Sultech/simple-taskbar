@@ -26,7 +26,6 @@ import {addStartMenuPage} from './src/prefs/startMenuPage.js';
 import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
 import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
 import {addAboutPage} from './src/prefs/aboutPage.js';
-
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         Gtk.IconTheme.get_for_display(window.get_display()).add_search_path(

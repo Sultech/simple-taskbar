@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
+import {CLICK_ACTION} from '../shared/applicationClickActions.js';
+
+const CYCLE_MEMORY_TIME = 3000;
 
 export class WindowController {
     constructor(tracker, {
@@ -22,6 +27,8 @@ export class WindowController {
         this._showDesktopButton = null;
         this._desktopStates = new Map();
         this._minimizedWindowSignals = new Map();
+        this._cycleState = null;
+        this._cycleResetId = 0;
         this._workspaceSignalIds = [
             global.workspace_manager.connect(
                 'active-workspace-changed',
@@ -105,36 +112,202 @@ export class WindowController {
         Main.activateWindow(windows[0]);
     }
 
+    _raiseAppWindows(app) {
+        const windows = this.getInterestingWindows(app);
+        if (windows.length === 0) {
+            this.activateApp(app);
+            return;
+        }
+
+        Main.activateWindow(windows[0]);
+        const workspace =
+            global.workspace_manager.get_active_workspace();
+        for (let index = windows.length - 1; index >= 0; index--) {
+            if (windows[index].get_workspace() === workspace)
+                Main.activateWindow(windows[index]);
+        }
+        Main.overview.hide();
+    }
+
+    _minimizeWindows(windows) {
+        const workspace =
+            global.workspace_manager.get_active_workspace();
+        for (const window of windows) {
+            if (window.get_workspace() === workspace &&
+                window.showing_on_its_workspace()) {
+                window.minimize();
+            }
+        }
+        Main.overview.hide();
+    }
+
+    _toggleAppWindows(app) {
+        const windows = this.getInterestingWindows(app);
+        if (windows.length === 0) {
+            this.activateApp(app);
+            return;
+        }
+
+        if (this._tracker.focus_app !== app) {
+            this._raiseAppWindows(app);
+            return;
+        }
+
+        const workspace =
+            global.workspace_manager.get_active_workspace();
+        const hasVisibleWindow = windows.some(window =>
+            window.get_workspace() === workspace &&
+            window.showing_on_its_workspace()
+        );
+        if (!hasVisibleWindow) {
+            this._raiseAppWindows(app);
+            return;
+        }
+
+        this._minimizeWindows(windows);
+    }
+
+    _cycleAppWindows(app, action) {
+        const windows = this.getInterestingWindows(app);
+        if (windows.length === 0) {
+            this._resetCycleState();
+            this.activateApp(app);
+            return;
+        }
+
+        if (this._tracker.focus_app !== app) {
+            this._resetCycleState();
+            Main.activateWindow(windows[0]);
+            Main.overview.hide();
+            return;
+        }
+
+        const state = this._cycleState;
+        const sameWindows = state && state.app === app &&
+            state.action === action &&
+            state.windows.length === windows.length &&
+            state.windows.every(window => windows.includes(window));
+        if (!sameWindows) {
+            this._cycleState = {
+                app,
+                action,
+                windows: [...windows],
+                index: Math.max(
+                    windows.indexOf(global.display.focus_window),
+                    0
+                ),
+            };
+        }
+
+        const minimizeAfterCycle = action === CLICK_ACTION.CYCLE_MINIMIZE;
+        const cycleLength = this._cycleState.windows.length +
+            (minimizeAfterCycle ? 1 : 0);
+        this._cycleState.index++;
+        const index = this._cycleState.index % cycleLength;
+        this._restartCycleReset();
+        if (minimizeAfterCycle && index === this._cycleState.windows.length)
+            this._minimizeWindows(this._cycleState.windows);
+        else {
+            Main.activateWindow(this._cycleState.windows[index]);
+            Main.overview.hide();
+        }
+    }
+
+    _restartCycleReset() {
+        if (this._cycleResetId)
+            GLib.Source.remove(this._cycleResetId);
+        this._cycleResetId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            CYCLE_MEMORY_TIME,
+            () => {
+                this._cycleResetId = 0;
+                this._cycleState = null;
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
+    _resetCycleState() {
+        if (this._cycleResetId) {
+            GLib.Source.remove(this._cycleResetId);
+            this._cycleResetId = 0;
+        }
+        this._cycleState = null;
+    }
+
     handleAppClicked(item, app) {
         const previews = this._getPreviews();
         const windows = this.getInterestingWindows(app);
-        if (windows.length > 1 &&
-            this._settings.get_boolean('multi-window-click-spread')) {
+        const action = this._settings.get_string('application-click-action');
+        const isCycleAction = action === CLICK_ACTION.CYCLE_MINIMIZE ||
+            action === CLICK_ACTION.CYCLE ||
+            action === CLICK_ACTION.TOGGLE_CYCLE;
+        if (!isCycleAction)
+            this._resetCycleState();
+
+        if (action === CLICK_ACTION.TOGGLE_SPREAD && windows.length > 1) {
             previews.hideTooltip(false);
             previews.hide();
             this._spreadAppWindows(app);
             return;
         }
 
-        if (Main.overview._shown) {
-            previews.hide();
-            this.activateApp(app);
-            return;
-        }
-
-        if (windows.length > 1) {
-            if (previews.previewsEnabled) {
-                previews.show(item);
-                return;
-            }
-
-            previews.hide();
-            this.activateApp(app);
+        if (action === CLICK_ACTION.TOGGLE_SHOW_PREVIEW &&
+            windows.length > 1 &&
+            !Main.overview._shown &&
+            previews.previewsEnabled) {
+            previews.show(item);
             return;
         }
 
         previews.hide();
-        this.activateApp(app);
+        if (action === CLICK_ACTION.TOGGLE_SPREAD ||
+            action === CLICK_ACTION.TOGGLE_SHOW_PREVIEW) {
+            this._resetCycleState();
+            this.activateApp(app);
+            return;
+        }
+
+        switch (action) {
+        case CLICK_ACTION.CYCLE_MINIMIZE:
+            if (Main.overview._shown) {
+                this._resetCycleState();
+                this.activateApp(app);
+            } else {
+                this._cycleAppWindows(app, action);
+            }
+            break;
+        case CLICK_ACTION.CYCLE:
+            if (Main.overview._shown) {
+                this._resetCycleState();
+                this.activateApp(app);
+            } else {
+                this._cycleAppWindows(app, action);
+            }
+            break;
+        case CLICK_ACTION.TOGGLE_CYCLE:
+            if (Main.overview._shown || windows.length <= 1) {
+                this._resetCycleState();
+                this.activateApp(app);
+            } else {
+                this._cycleAppWindows(app, action);
+            }
+            break;
+        case CLICK_ACTION.TOGGLE_WINDOWS:
+            if (Main.overview._shown) {
+                this._resetCycleState();
+                this.activateApp(app);
+            } else {
+                this._toggleAppWindows(app);
+            }
+            break;
+        case CLICK_ACTION.RAISE_WINDOWS:
+            this._raiseAppWindows(app);
+            break;
+        case CLICK_ACTION.LAUNCH:
+            this.openNewWindow(app);
+            break;
+        }
     }
 
     handleWindowClicked(window) {
@@ -272,6 +445,7 @@ export class WindowController {
     }
 
     destroy() {
+        this._resetCycleState();
         for (const id of this._workspaceSignalIds)
             global.workspace_manager.disconnect(id);
         this._workspaceSignalIds = [];

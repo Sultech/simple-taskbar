@@ -4,6 +4,7 @@
 import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
+import {CLICK_ACTION} from './applicationClickActions.js';
 import {
     setBoolean,
     setInteger,
@@ -26,7 +27,11 @@ export function applyWindowsXpThemeAppearance(settings) {
 }
 
 export function applyWindowsXpThemeBehaviorDefaults(settings) {
-    setBoolean(settings, 'multi-window-click-spread', true);
+    setString(
+        settings,
+        'application-click-action',
+        CLICK_ACTION.TOGGLE_SPREAD
+    );
     setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'hot-edge-overview-enabled', true);

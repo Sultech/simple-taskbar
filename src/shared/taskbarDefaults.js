@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
+import {CLICK_ACTION} from './applicationClickActions.js';
 import {
     setBoolean,
     setInteger,
@@ -54,7 +55,11 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'hide-app-labels', false);
     setBoolean(settings, 'hide-pinned-taskbar-apps', false);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
-    setBoolean(settings, 'multi-window-click-spread', true);
+    setString(
+        settings,
+        'application-click-action',
+        CLICK_ACTION.TOGGLE_SPREAD
+    );
     setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'nautilus-places-enabled', true);

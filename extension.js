@@ -49,6 +49,7 @@ import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
 import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
+import {CLICK_ACTION} from './src/shared/applicationClickActions.js';
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
@@ -414,11 +415,10 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _connectSignals() {
         this._settings.connectObject(
-            'changed::multi-window-click-spread',
+            'changed::application-click-action',
             () => {
-                if (!this._settings.get_boolean(
-                    'multi-window-click-spread'
-                )) {
+                if (this._settings.get_string('application-click-action') !==
+                    CLICK_ACTION.TOGGLE_SPREAD) {
                     this._overviewIntegration.cancelAppSpread();
                 }
             },
