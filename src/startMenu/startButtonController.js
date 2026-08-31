@@ -39,6 +39,7 @@ import {
     createTaskbarSeparator,
     syncSeparatorGeometry,
     syncSeparatorVisibility,
+    TASKBAR_SEPARATOR_EXTENT,
 } from '../taskbar/taskbarSeparator.js';
 import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
 
@@ -815,6 +816,8 @@ export class StartButtonController {
             vertical,
             this._icon.icon_size
         );
+        this._separator[vertical ? 'height' : 'width'] =
+            TASKBAR_SEPARATOR_EXTENT;
         this.panelActor.set_child_at_index(
             this._separator,
             this._separatorFollowsButton() ? 1 : 0

@@ -46,16 +46,11 @@ export function syncSeparatorVisibility(
     visible,
     animate = true
 ) {
-    const mainProperty = vertical ? 'height' : 'width';
-    if (visible === separator._targetVisible) {
-        if (!separator.get_transition(mainProperty)) {
-            separator[mainProperty] = visible ? TASKBAR_SEPARATOR_EXTENT : 0;
-            separator.opacity = visible ? 255 : 0;
-        }
+    if (visible === separator._targetVisible)
         return false;
-    }
 
     separator._targetVisible = visible;
+    const mainProperty = vertical ? 'height' : 'width';
     const animateChange = animate && separator.get_stage() !== null;
     if (visible) {
         separator.show();
