@@ -643,9 +643,14 @@
       <default>true</default>
       <summary>Use the active taskbar or Dock scroll delay for application icon scrolling</summary>
     </key>
-    <key name="window-previews-enabled" type="b">
-      <default>true</default>
-      <summary>Show live window previews when hovering application icons</summary>
+    <key name="application-hover-action" type="s">
+      <choices>
+        <choice value="show-previews"/>
+        <choice value="show-tooltip"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'show-previews'</default>
+      <summary>Action when hovering over an application icon</summary>
     </key>
     <key name="grid-alt-tab-enabled" type="b">
       <default>true</default>

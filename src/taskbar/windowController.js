@@ -314,8 +314,7 @@ export class WindowController {
 
         if (action === CLICK_ACTION.TOGGLE_SHOW_PREVIEW &&
             windows.length > 1 &&
-            !Main.overview._shown &&
-            previews.previewsEnabled) {
+            !Main.overview._shown) {
             previews.show(item);
             return;
         }

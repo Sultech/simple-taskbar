@@ -12,6 +12,7 @@ import {
     CLICK_ACTION,
     MIDDLE_CLICK_ACTION,
 } from '../shared/applicationClickActions.js';
+import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {
     addColorRow,
@@ -248,11 +249,33 @@ function addApplicationIconControls({
     };
     followScrollDelayCheck.connect('notify::active', syncScrollDelayRow);
     syncScrollDelayRow();
-    windowInteractionRow.add_row(createSwitchRow(settings, {
-        key: 'window-previews-enabled',
-        title: _('Window Previews'),
-        subtitle: _('Show live window previews when hovering application icons'),
-    }));
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'application-hover-action',
+            title: _('Application Hover Action'),
+            subtitle: _(
+                'Choose what happens when hovering over an application icon'
+            ),
+            choices: [
+                {
+                    value: HOVER_ACTION.SHOW_PREVIEWS,
+                    label: _('Show Previews'),
+                },
+                {
+                    value: HOVER_ACTION.SHOW_TOOLTIP,
+                    label: _('Show Tooltip'),
+                },
+                {
+                    value: HOVER_ACTION.DO_NOTHING,
+                    label: _('Do Nothing'),
+                },
+            ],
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
     addComboRow(
         windowInteractionRow,
         settings,

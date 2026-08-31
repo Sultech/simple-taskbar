@@ -10,6 +10,7 @@ import {
     CLICK_ACTION,
     MIDDLE_CLICK_ACTION,
 } from '../shared/applicationClickActions.js';
+import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 
@@ -65,7 +66,6 @@ export class TaskbarItemInteractionController {
         const keepOpen = this._getInterestingWindows(app).length > 1 &&
             this._settings.get_string('application-click-action') ===
                 CLICK_ACTION.TOGGLE_SHOW_PREVIEW &&
-            previews.previewsEnabled &&
             !Main.overview._shown;
         this._onAppClicked(interactionItem, app);
         return keepOpen;
@@ -97,14 +97,20 @@ export class TaskbarItemInteractionController {
         const previews = this._getPreviewController();
         if (hovering) {
             styleItem.add_style_pseudo_class('hover');
-            const windowCount = item._taskbarIsLauncher
-                ? 0
-                : this._windowsForItem(item).length;
-            if (!previews.previewsEnabled) {
+            const hoverAction = previews.hoverAction;
+            if (hoverAction === HOVER_ACTION.DO_NOTHING) {
+                previews.hideTooltip();
+                previews.hide();
+                return;
+            }
+            if (hoverAction === HOVER_ACTION.SHOW_TOOLTIP) {
                 previews.hide();
                 previews.scheduleTooltip(item);
                 return;
             }
+            const windowCount = item._taskbarIsLauncher
+                ? 0
+                : this._windowsForItem(item).length;
             if (previews.currentItem && previews.currentItem !== item) {
                 if (windowCount > 0)
                     previews.scheduleSwitch(item);

@@ -19,6 +19,7 @@ import {
     closePopupMenu,
     openPopupMenu,
 } from '../shared/popupMenuUtils.js';
+import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
@@ -59,11 +60,11 @@ export class WindowPreviewController {
         this._appTooltip = null;
         this._tooltipItem = null;
         this._tooltipTimeoutId = 0;
-        this._previewEnabledChangedId = settings.connect(
-            'changed::window-previews-enabled',
+        this._hoverActionChangedId = settings.connect(
+            'changed::application-hover-action',
             () => {
                 const item = this._taskbarItemAtPointer();
-                if (this.previewsEnabled) {
+                if (this.hoverAction === HOVER_ACTION.SHOW_PREVIEWS) {
                     this.hideTooltip();
                     if (!item)
                         return;
@@ -75,8 +76,10 @@ export class WindowPreviewController {
                 }
 
                 this.hide();
-                if (item)
+                if (this.hoverAction === HOVER_ACTION.SHOW_TOOLTIP && item)
                     this.scheduleTooltip(item);
+                else
+                    this.hideTooltip();
             }
         );
         this._overviewShowingId = Main.overview.connect('showing', () => {
@@ -103,8 +106,8 @@ export class WindowPreviewController {
         );
     }
 
-    get previewsEnabled() {
-        return this._settings.get_boolean('window-previews-enabled');
+    get hoverAction() {
+        return this._settings.get_string('application-hover-action');
     }
 
     destroy() {
@@ -112,8 +115,8 @@ export class WindowPreviewController {
         this._clearTimeout('_tooltipTimeoutId');
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
-        this._settings.disconnect(this._previewEnabledChangedId);
-        this._previewEnabledChangedId = 0;
+        this._settings.disconnect(this._hoverActionChangedId);
+        this._hoverActionChangedId = 0;
         this._hideTooltip(false);
         this._hidePreview(false);
         this._appTooltip?.destroy();
@@ -164,7 +167,7 @@ export class WindowPreviewController {
     schedule(item) {
         this._clearTimeout('_previewCloseId');
         this._clearTimeout('_previewOpenId');
-        if (!this.previewsEnabled)
+        if (this.hoverAction !== HOVER_ACTION.SHOW_PREVIEWS)
             return;
         if (this._overviewIsVisible()) {
             this.hide();
@@ -208,7 +211,7 @@ export class WindowPreviewController {
     scheduleSwitch(item) {
         this._clearTimeout('_previewOpenId');
         this._clearTimeout('_previewCloseId');
-        if (!this.previewsEnabled) {
+        if (this.hoverAction !== HOVER_ACTION.SHOW_PREVIEWS) {
             this.hide();
             return;
         }
@@ -232,8 +235,6 @@ export class WindowPreviewController {
     }
 
     scheduleTooltip(item) {
-        if (this.previewsEnabled && this._windowsForItem(item).length > 0)
-            return;
         if (this._tooltipItem === item &&
             (this._tooltipTimeoutId || this._appTooltip?.visible))
             return;
@@ -284,10 +285,6 @@ export class WindowPreviewController {
     }
 
     show(item) {
-        if (!this.previewsEnabled) {
-            this.hide();
-            return;
-        }
         this._clearTimeouts();
         this.hideTooltip();
         if (this._overviewIsVisible()) {

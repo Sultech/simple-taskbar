@@ -3,6 +3,7 @@
 
 import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
 import {CLICK_ACTION} from './applicationClickActions.js';
+import {HOVER_ACTION} from './applicationHoverActions.js';
 import {SCROLL_ACTION} from './applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
 import {
@@ -74,7 +75,11 @@ export function applyDefaultTaskbarSettings(settings) {
     );
     setInteger(settings, 'scroll-icon-delay', 5);
     setBoolean(settings, 'scroll-icon-follow-panel-delay', true);
-    setBoolean(settings, 'window-previews-enabled', true);
+    setString(
+        settings,
+        'application-hover-action',
+        HOVER_ACTION.SHOW_PREVIEWS
+    );
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'nautilus-places-enabled', true);
     setBoolean(settings, 'start-menu-follow-panel-theme', true);
