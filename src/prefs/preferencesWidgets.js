@@ -185,6 +185,7 @@ export function addComboRow(group, settings, {
     choicesChangedKey = null,
     choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
     setValue = value => settings.set_string(key, value),
+    configureDropDown = () => {},
     addRow = row => group.add(row),
 }, connectSettings) {
     const createModel = availableChoices => {
@@ -196,21 +197,24 @@ export function addComboRow(group, settings, {
     let currentChoices = choicesProvider();
     let syncingChoices = false;
 
-    const row = new Adw.ComboRow({
-        title,
-        subtitle,
+    const dropDown = new Gtk.DropDown({
         model: createModel(currentChoices),
+        valign: Gtk.Align.CENTER,
     });
+    const row = new Adw.ActionRow({title, subtitle});
+    row.add_suffix(dropDown);
+    row.activatable_widget = dropDown;
+    configureDropDown(dropDown);
     const currentValue = initialValue ?? settings.get_string(key);
     const selected = currentChoices.findIndex(
         choice => choice.value === currentValue
     );
-    row.set_selected(Math.max(selected, 0));
-    row.connect('notify::selected', widget => {
+    dropDown.selected = Math.max(selected, 0);
+    dropDown.connect('notify::selected', widget => {
         if (syncingChoices)
             return;
 
-        const choice = currentChoices[widget.get_selected()];
+        const choice = currentChoices[widget.selected];
         if (choice)
             setValue(choice.value);
     });
@@ -219,19 +223,19 @@ export function addComboRow(group, settings, {
         const index = currentChoices.findIndex(
             choice => choice.value === value
         );
-        if (index >= 0 && row.get_selected() !== index)
-            row.set_selected(index);
+        if (index >= 0 && dropDown.selected !== index)
+            dropDown.selected = index;
     });
     for (const changedKey of choicesChangedKeys) {
         connectSettings(settings, `changed::${changedKey}`, () => {
             currentChoices = choicesProvider();
             syncingChoices = true;
-            row.set_model(createModel(currentChoices));
+            dropDown.set_model(createModel(currentChoices));
             const value = settings.get_string(key);
             const index = currentChoices.findIndex(
                 choice => choice.value === value
             );
-            row.set_selected(Math.max(index, 0));
+            dropDown.selected = Math.max(index, 0);
             syncingChoices = false;
         });
     }

@@ -183,17 +183,19 @@ export function addTaskbarBehaviorGroup({
             subtitle: _('Application opened from the taskbar context menu'),
             choices: taskManagerApps,
             initialValue: effectiveTaskManager ?? configuredTaskManager,
+            configureDropDown: dropDown => {
+                dropDown.expression = Gtk.PropertyExpression.new(
+                    Gtk.StringObject.$gtype,
+                    null,
+                    'string'
+                );
+                dropDown.search_match_mode =
+                    Gtk.StringFilterMatchMode.SUBSTRING;
+                dropDown.enable_search = true;
+            },
         },
         connectSettings
     );
-    taskManagerAppRow.expression = Gtk.PropertyExpression.new(
-        Gtk.StringObject.$gtype,
-        null,
-        'string'
-    );
-    taskManagerAppRow.search_match_mode =
-        Gtk.StringFilterMatchMode.SUBSTRING;
-    taskManagerAppRow.enable_search = true;
 
     const multiMonitorPanelsSwitch = createSwitchRow(settings, {
         key: 'multi-monitor-panels',
