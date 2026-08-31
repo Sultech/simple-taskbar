@@ -618,6 +618,11 @@
       <default>'switch-workspace'</default>
       <summary>Action when scrolling over an application icon</summary>
     </key>
+    <key name="scroll-icon-delay" type="i">
+      <range min="5" max="250"/>
+      <default>5</default>
+      <summary>Minimum delay between application icon scrolls in milliseconds</summary>
+    </key>
     <key name="window-previews-enabled" type="b">
       <default>true</default>
       <summary>Show live window previews when hovering application icons</summary>

@@ -214,7 +214,7 @@ export class PanelInteractionController {
                     if (direction && !this._appScrollTimeoutId) {
                         this._appScrollTimeoutId = GLib.timeout_add(
                             GLib.PRIORITY_DEFAULT,
-                            0,
+                            this._settings.get_int('scroll-icon-delay'),
                             () => {
                                 this._appScrollTimeoutId = 0;
                                 return GLib.SOURCE_REMOVE;

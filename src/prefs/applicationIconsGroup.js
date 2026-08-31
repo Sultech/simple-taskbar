@@ -3,6 +3,7 @@
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
+import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
@@ -138,31 +139,100 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    addComboRow(
-        windowInteractionRow,
-        settings,
+    const scrollActionChoices = [
         {
-            key: 'scroll-icon-action',
-            title: _('Scroll App/Icon Action'),
-            subtitle: _('Choose what happens when scrolling over an application icon'),
-            choices: [
-                {
-                    value: SCROLL_ACTION.SWITCH_WORKSPACE,
-                    label: _('Switch Workspace'),
-                },
-                {
-                    value: SCROLL_ACTION.CYCLE_WINDOWS,
-                    label: _('Cycle Windows'),
-                },
-                {
-                    value: SCROLL_ACTION.DO_NOTHING,
-                    label: _('Do Nothing'),
-                },
-            ],
-            addRow: row => windowInteractionRow.add_row(row),
+            value: SCROLL_ACTION.SWITCH_WORKSPACE,
+            label: _('Switch Workspace'),
         },
-        connectSettings
+        {
+            value: SCROLL_ACTION.CYCLE_WINDOWS,
+            label: _('Cycle Windows'),
+        },
+        {
+            value: SCROLL_ACTION.DO_NOTHING,
+            label: _('Do Nothing'),
+        },
+    ];
+    const scrollActionModel = new Gtk.StringList();
+    for (const choice of scrollActionChoices)
+        scrollActionModel.append(choice.label);
+    const scrollActionDropDown = new Gtk.DropDown({
+        model: scrollActionModel,
+        valign: Gtk.Align.CENTER,
+    });
+    const scrollActionRow = new Adw.ActionRow({
+        title: _('Scroll App/Icon Action'),
+        subtitle: _('Choose what happens when scrolling over an application icon'),
+    });
+    const syncScrollAction = () => {
+        const index = scrollActionChoices.findIndex(
+            choice => choice.value === settings.get_string('scroll-icon-action')
+        );
+        if (index >= 0 && scrollActionDropDown.selected !== index)
+            scrollActionDropDown.selected = index;
+    };
+    scrollActionDropDown.connect('notify::selected', widget => {
+        const choice = scrollActionChoices[widget.selected];
+        if (choice)
+            settings.set_string('scroll-icon-action', choice.value);
+    });
+    connectSettings(settings, 'changed::scroll-icon-action', syncScrollAction);
+    syncScrollAction();
+    const scrollDelayRow = Adw.SpinRow.new_with_range(5, 250, 5);
+    scrollDelayRow.title = _('Scroll Delay');
+    scrollDelayRow.subtitle = _(
+        'Minimum delay between app icon scrolls in milliseconds'
     );
+    scrollDelayRow.set_value(settings.get_int('scroll-icon-delay'));
+    scrollDelayRow.connect('notify::value', widget => {
+        settings.set_int('scroll-icon-delay', Math.round(widget.get_value()));
+    });
+    connectSettings(settings, 'changed::scroll-icon-delay', () => {
+        const value = settings.get_int('scroll-icon-delay');
+        if (scrollDelayRow.get_value() !== value)
+            scrollDelayRow.set_value(value);
+    });
+
+    const scrollDelayBox = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        margin_top: 12,
+        margin_bottom: 12,
+        margin_start: 12,
+        margin_end: 12,
+    });
+    scrollDelayBox.append(scrollDelayRow);
+    const scrollDelayPopover = new Gtk.Popover({
+        child: scrollDelayBox,
+        has_arrow: false,
+    });
+    const scrollDelayButton = new Gtk.MenuButton({
+        always_show_arrow: false,
+        popover: scrollDelayPopover,
+        icon_name: 'emblem-system-symbolic',
+        tooltip_text: _('Configure Scroll Delay'),
+        valign: Gtk.Align.CENTER,
+        css_classes: ['flat', 'circular'],
+    });
+    const scrollActionBox = new Gtk.Box({
+        orientation: Gtk.Orientation.HORIZONTAL,
+        spacing: 6,
+        valign: Gtk.Align.CENTER,
+    });
+    scrollActionBox.append(scrollDelayButton);
+    scrollActionBox.append(scrollActionDropDown);
+    scrollActionRow.add_suffix(scrollActionBox);
+    scrollActionRow.activatable_widget = scrollActionDropDown;
+    windowInteractionRow.add_row(scrollActionRow);
+    const syncScrollDelayButton = () => {
+        scrollDelayButton.sensitive = settings.get_string('scroll-icon-action') ===
+            SCROLL_ACTION.CYCLE_WINDOWS;
+    };
+    connectSettings(
+        settings,
+        'changed::scroll-icon-action',
+        syncScrollDelayButton
+    );
+    syncScrollDelayButton();
     windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'window-previews-enabled',
         title: _('Window Previews'),

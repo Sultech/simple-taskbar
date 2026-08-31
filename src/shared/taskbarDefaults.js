@@ -66,6 +66,7 @@ export function applyDefaultTaskbarSettings(settings) {
         'scroll-icon-action',
         SCROLL_ACTION.SWITCH_WORKSPACE
     );
+    setInteger(settings, 'scroll-icon-delay', 5);
     setBoolean(settings, 'window-previews-enabled', true);
     setBoolean(settings, 'panel-autohide-enabled', false);
     setBoolean(settings, 'nautilus-places-enabled', true);
