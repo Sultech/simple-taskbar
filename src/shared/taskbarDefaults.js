@@ -13,7 +13,7 @@ import {
     setStringArray,
 } from './settingsUtils.js';
 
-export const DEFAULT_TASKBAR_PANEL_HEIGHT = 49;
+export const DEFAULT_TASKBAR_PANEL_HEIGHT = 51;
 export const DEFAULT_TASKBAR_ICON_SIZE = 32;
 export const DEFAULT_TASKBAR_ICON_SPACING = 3;
 export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
