@@ -59,6 +59,7 @@ export function createPanelOrderRow(settings, {
     choices,
     fixedPosition = null,
     visibleKey = null,
+    visibleState = null,
 }, connectSettings) {
     let currentChoices = choices;
     const createModel = availableChoices => {
@@ -133,20 +134,37 @@ export function createPanelOrderRow(settings, {
     moveBox.append(upButton);
     moveBox.append(downButton);
 
-    const visibleButton = visibleKey
+    const visibility = visibleState ?? (visibleKey
+        ? {
+            get: () => settings.get_boolean(visibleKey),
+            set: value => settings.set_boolean(visibleKey, value),
+            changedKeys: [visibleKey],
+        }
+        : null);
+    const visibleButton = visibility
         ? new Gtk.ToggleButton({
             label: _('Visible'),
-            active: settings.get_boolean(visibleKey),
+            active: visibility.get(),
             valign: Gtk.Align.CENTER,
         })
         : null;
     if (visibleButton) {
-        settings.bind(
-            visibleKey,
-            visibleButton,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        );
+        let syncingVisibility = false;
+        const syncVisibility = () => {
+            const active = visibility.get();
+            if (visibleButton.active === active)
+                return;
+
+            syncingVisibility = true;
+            visibleButton.active = active;
+            syncingVisibility = false;
+        };
+        visibleButton.connect('notify::active', widget => {
+            if (!syncingVisibility)
+                visibility.set(widget.active);
+        });
+        for (const key of visibility.changedKeys)
+            connectSettings(settings, `changed::${key}`, syncVisibility);
     }
 
     const row = new Adw.ActionRow({title, subtitle});

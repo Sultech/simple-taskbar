@@ -250,6 +250,8 @@ function applyDefaultPanelSettings(settings) {
     settings.set_boolean('multi-monitor-panels', true);
     settings.set_boolean('windows-start-menu-enabled', false);
     settings.set_boolean('gnome-start-button-visible', false);
+    settings.set_boolean('system-menu-visible', true);
+    settings.set_boolean('clock-visible', true);
     settings.set_boolean('show-desktop-button-visible', false);
     settings.set_boolean('panel-border-enabled', false);
     settings.set_boolean('panel-border-light-enabled', false);

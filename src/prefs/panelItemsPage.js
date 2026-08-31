@@ -119,6 +119,46 @@ export function addPanelItemsPage({
     );
     updateFolderMenuRow();
 
+    const applicationsAreVisible = () =>
+        !settings.get_boolean('default-gnome-panel') &&
+        !(settings.get_boolean('hide-pinned-taskbar-apps') &&
+            settings.get_boolean('hide-unpinned-taskbar-apps'));
+    const startButtonVisibility = {
+        get: () => !settings.get_boolean('default-gnome-panel') &&
+            (settings.get_boolean('windows-start-menu-enabled') ||
+                settings.get_boolean('gnome-start-button-visible')),
+        set: visible => settings.set_boolean(
+            'gnome-start-button-visible',
+            visible
+        ),
+        changedKeys: [
+            'default-gnome-panel',
+            'windows-start-menu-enabled',
+            'gnome-start-button-visible',
+        ],
+    };
+    const applicationsVisibility = {
+        get: applicationsAreVisible,
+        set: visible => {
+            const hidden = !visible;
+            settings.set_boolean('hide-pinned-taskbar-apps', hidden);
+            settings.set_boolean('hide-unpinned-taskbar-apps', hidden);
+        },
+        changedKeys: [
+            'default-gnome-panel',
+            'hide-pinned-taskbar-apps',
+            'hide-unpinned-taskbar-apps',
+        ],
+    };
+    const systemMenuVisibility = {
+        get: () => settings.get_boolean('system-menu-visible') &&
+            !settings.get_boolean('windows-xp-theme-enabled'),
+        set: visible => settings.set_boolean('system-menu-visible', visible),
+        changedKeys: [
+            'system-menu-visible',
+            'windows-xp-theme-enabled',
+        ],
+    };
     const initialPositions = axisPanelPositions(settings, panelPositions);
     const panelOrderGroups = new Map([
         ['left', new Adw.PreferencesGroup({
@@ -158,6 +198,7 @@ export function addPanelItemsPage({
         }],
         ['start-button', {
             key: 'start-button-position',
+            visibleState: startButtonVisibility,
             title: _('Start Button'),
             subtitle: _('Eleven-style or original GNOME Start button'),
             choices: initialPositions.slice(0, 2),
@@ -171,6 +212,7 @@ export function addPanelItemsPage({
         }],
         ['applications', {
             key: 'app-alignment',
+            visibleState: applicationsVisibility,
             title: _('Applications'),
             subtitle: _('Taskbar application buttons'),
             choices: initialPositions.slice(0, 2),
@@ -191,12 +233,14 @@ export function addPanelItemsPage({
         }],
         ['system-menu', {
             key: 'system-menu-position',
+            visibleState: systemMenuVisibility,
             title: _('System Menu'),
             subtitle: _('Quick Settings, volume, network, and power'),
             choices: initialPositions,
         }],
         ['clock', {
             key: 'clock-position',
+            visibleKey: 'clock-visible',
             title: _('Clock'),
             choices: initialPositions,
         }],
@@ -436,12 +480,20 @@ export function addPanelItemsPage({
         panelOrderRows.get('applications').row.sensitive = !dockMode;
         panelOrderRows.get('start-button').positionDropDown.sensitive =
             !defaultPanel && !windowsXpTheme &&
-            !followAppAlignmentSwitch.active;
+            !followAppAlignmentSwitch.active &&
+            startButtonVisibility.get();
         panelOrderRows.get('applications').positionDropDown.sensitive =
-            !defaultPanel && !windowsXpTheme;
+            !defaultPanel && !windowsXpTheme && applicationsAreVisible();
         panelOrderRows.get('system-menu').positionDropDown.sensitive =
-            !windowsXpTheme;
+            !windowsXpTheme && systemMenuVisibility.get();
         panelOrderRows.get('clock').positionDropDown.sensitive =
+            !windowsXpTheme && settings.get_boolean('clock-visible');
+        panelOrderRows.get('start-button').visibleButton.sensitive =
+            !dockMode && !defaultPanel &&
+            !settings.get_boolean('windows-start-menu-enabled');
+        panelOrderRows.get('applications').visibleButton.sensitive =
+            !dockMode && !defaultPanel;
+        panelOrderRows.get('system-menu').visibleButton.sensitive =
             !windowsXpTheme;
         panelOrderRows.get('activities').positionDropDown.sensitive =
             settings.get_boolean('activities-button-visible');
@@ -466,6 +518,12 @@ export function addPanelItemsPage({
         'folder-menu-enabled',
         'tray-overflow-enabled',
         'show-desktop-button-visible',
+        'windows-start-menu-enabled',
+        'gnome-start-button-visible',
+        'hide-pinned-taskbar-apps',
+        'hide-unpinned-taskbar-apps',
+        'system-menu-visible',
+        'clock-visible',
     ]) {
         connectSettings(
             settings,

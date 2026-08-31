@@ -17,6 +17,10 @@ export function createPanelItems({
         !settings.get_boolean('default-gnome-panel') &&
         (settings.get_boolean('windows-start-menu-enabled') ||
             settings.get_boolean('gnome-start-button-visible'));
+    const applicationsVisible =
+        !settings.get_boolean('default-gnome-panel') &&
+        !(settings.get_boolean('hide-pinned-taskbar-apps') &&
+            settings.get_boolean('hide-unpinned-taskbar-apps'));
     const items = [
         {
             id: 'start-button',
@@ -34,7 +38,7 @@ export function createPanelItems({
             id: 'applications',
             actor: actors.taskbar,
             position: settings.get_string('app-alignment'),
-            visible: true,
+            visible: applicationsVisible,
         },
         {
             id: 'folder-menu',
@@ -56,7 +60,7 @@ export function createPanelItems({
             id: 'clock',
             actor: actors.notificationArea,
             position: settings.get_string('clock-position'),
-            visible: true,
+            visible: settings.get_boolean('clock-visible'),
         });
     } else {
         items.push(
@@ -64,13 +68,13 @@ export function createPanelItems({
                 id: 'system-menu',
                 actor: actors.quickSettings,
                 position: settings.get_string('system-menu-position'),
-                visible: true,
+                visible: settings.get_boolean('system-menu-visible'),
             },
             {
                 id: 'clock',
                 actor: actors.dateMenu,
                 position: settings.get_string('clock-position'),
-                visible: true,
+                visible: settings.get_boolean('clock-visible'),
             }
         );
     }

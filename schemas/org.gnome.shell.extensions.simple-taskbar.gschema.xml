@@ -718,6 +718,14 @@
       <default>true</default>
       <summary>Show the original GNOME Applications button</summary>
     </key>
+    <key name="system-menu-visible" type="b">
+      <default>true</default>
+      <summary>Show the Quick Settings button</summary>
+    </key>
+    <key name="clock-visible" type="b">
+      <default>true</default>
+      <summary>Show the clock</summary>
+    </key>
     <key name="windows-start-menu-enabled" type="b">
       <default>true</default>
       <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>

@@ -661,6 +661,10 @@ export class PanelController {
         for (const key of [
             'windows-start-menu-enabled',
             'gnome-start-button-visible',
+            'system-menu-visible',
+            'clock-visible',
+            'hide-pinned-taskbar-apps',
+            'hide-unpinned-taskbar-apps',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this.applyLayout();

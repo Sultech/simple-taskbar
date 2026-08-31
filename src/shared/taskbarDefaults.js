@@ -49,6 +49,8 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'windows-start-menu-enabled', true);
     setBoolean(settings, 'start-button-follow-app-alignment', true);
     setBoolean(settings, 'gnome-start-button-visible', true);
+    setBoolean(settings, 'system-menu-visible', true);
+    setBoolean(settings, 'clock-visible', true);
     setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'panel-theme-follow-system', true);
     setBoolean(settings, 'transparency-enabled', true);
