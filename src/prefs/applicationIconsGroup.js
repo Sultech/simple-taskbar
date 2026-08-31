@@ -8,7 +8,10 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {axisPanelPositions} from './panelAxis.js';
-import {CLICK_ACTION} from '../shared/applicationClickActions.js';
+import {
+    CLICK_ACTION,
+    MIDDLE_CLICK_ACTION,
+} from '../shared/applicationClickActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {
     addColorRow,
@@ -250,11 +253,29 @@ function addApplicationIconControls({
         title: _('Window Previews'),
         subtitle: _('Show live window previews when hovering application icons'),
     }));
-    windowInteractionRow.add_row(createSwitchRow(settings, {
-        key: 'middle-click-close-apps',
-        title: _('Middle Click Closes Applications'),
-        subtitle: _('Close all application windows instead of opening a new window'),
-    }));
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'middle-click-action',
+            title: _('Middle Click Action'),
+            subtitle: _(
+                'Choose what happens when middle-clicking a running application'
+            ),
+            choices: [
+                {
+                    value: MIDDLE_CLICK_ACTION.OPEN_NEW_WINDOW,
+                    label: _('Open New Window'),
+                },
+                {
+                    value: MIDDLE_CLICK_ACTION.CLOSE_APPLICATIONS,
+                    label: _('Close Application'),
+                },
+            ],
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
 
     const syncMinimumIconSize = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&

@@ -11,3 +11,8 @@ export const CLICK_ACTION = {
     RAISE_WINDOWS: 'raise-windows',
     LAUNCH: 'launch-new-instance',
 };
+
+export const MIDDLE_CLICK_ACTION = {
+    OPEN_NEW_WINDOW: 'open-new-window',
+    CLOSE_APPLICATIONS: 'close-applications',
+};

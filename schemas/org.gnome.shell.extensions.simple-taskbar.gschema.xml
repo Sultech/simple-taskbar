@@ -166,9 +166,13 @@
       <default>5</default>
       <summary>Minimum delay between taskbar scroll actions in milliseconds</summary>
     </key>
-    <key name="middle-click-close-apps" type="b">
-      <default>false</default>
-      <summary>Close applications with the middle mouse button</summary>
+    <key name="middle-click-action" type="s">
+      <choices>
+        <choice value="open-new-window"/>
+        <choice value="close-applications"/>
+      </choices>
+      <default>'open-new-window'</default>
+      <summary>Action when middle-clicking a running application</summary>
     </key>
     <key name="panel-menu-click-only" type="b">
       <default>true</default>

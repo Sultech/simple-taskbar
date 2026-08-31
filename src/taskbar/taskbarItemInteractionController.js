@@ -6,7 +6,10 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {TaskbarLocationMenu} from './taskbarLocationMenu.js';
-import {CLICK_ACTION} from '../shared/applicationClickActions.js';
+import {
+    CLICK_ACTION,
+    MIDDLE_CLICK_ACTION,
+} from '../shared/applicationClickActions.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
 
@@ -77,7 +80,8 @@ export class TaskbarItemInteractionController {
             this._openNewWindow(app);
             return;
         }
-        if (this._settings.get_boolean('middle-click-close-apps')) {
+        if (this._settings.get_string('middle-click-action') ===
+            MIDDLE_CLICK_ACTION.CLOSE_APPLICATIONS) {
             app.request_quit();
         } else {
             if (this._favorites.isFavorite(app.get_id()))
