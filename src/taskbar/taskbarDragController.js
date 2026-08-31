@@ -8,8 +8,9 @@ import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
-    TASKBAR_REFLOW_ANIMATION_TIME,
-} from './taskbarItemContainer.js';
+    animateReflowCrossedItems,
+    reflowVisualDirection,
+} from './reflowAnimation.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const EXTERNAL_PLACEHOLDER_ANIMATION_TIME = 120;
@@ -515,18 +516,11 @@ export class TaskbarDragController {
     }
 
     _taskbarVisualDirection(children) {
-        const vertical = panelIsVertical(this._settings);
-        let previousPosition = null;
-        for (const child of children) {
-            if (!child.visible)
-                continue;
-
-            const position = vertical ? child.y : child.x;
-            if (previousPosition !== null && position !== previousPosition)
-                return position > previousPosition ? 1 : -1;
-            previousPosition = position;
-        }
-        return 1;
+        return reflowVisualDirection(
+            children,
+            panelIsVertical(this._settings),
+            child => child.visible
+        );
     }
 
     _animateTaskbarCrossedItems(
@@ -536,28 +530,15 @@ export class TaskbarDragController {
         movedLength,
         direction
     ) {
-        if (!St.Settings.get().enable_animations || movedLength <= 0)
-            return;
-
-        const vertical = panelIsVertical(this._settings);
-        for (const child of oldChildren) {
-            if (!child._taskbarApp || skippedItems.has(child) ||
-                oldChildren.indexOf(child) === newChildren.indexOf(child)) {
-                continue;
-            }
-
-            child.remove_all_transitions();
-            if (vertical)
-                child.translation_y += direction * movedLength;
-            else
-                child.translation_x += direction * movedLength;
-            child.ease({
-                translation_x: 0,
-                translation_y: 0,
-                duration: TASKBAR_REFLOW_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-            });
-        }
+        animateReflowCrossedItems({
+            oldChildren,
+            newChildren,
+            skippedItems,
+            movedLength,
+            direction,
+            vertical: panelIsVertical(this._settings),
+            includeChild: child => Boolean(child._taskbarApp),
+        });
     }
 
     _runningOrder() {

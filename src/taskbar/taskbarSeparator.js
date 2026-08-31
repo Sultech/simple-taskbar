@@ -24,7 +24,58 @@ export function createTaskbarSeparator() {
         reactive: false,
     });
     separator.add_child(line);
+    separator._targetVisible = false;
     return {separator, line};
+}
+
+export function separatorTargetLength(separator) {
+    return separator._targetVisible ? TASKBAR_SEPARATOR_EXTENT : 0;
+}
+
+export function resetSeparatorToTarget(separator, vertical) {
+    separator.remove_all_transitions();
+    separator[vertical ? 'height' : 'width'] =
+        separator._targetVisible ? TASKBAR_SEPARATOR_EXTENT : 0;
+    separator.opacity = separator._targetVisible ? 255 : 0;
+    separator.visible = separator._targetVisible;
+}
+
+export function syncSeparatorVisibility(
+    separator,
+    vertical,
+    visible,
+    animate = true
+) {
+    const mainProperty = vertical ? 'height' : 'width';
+    if (visible === separator._targetVisible) {
+        if (!separator.get_transition(mainProperty)) {
+            separator[mainProperty] = visible ? TASKBAR_SEPARATOR_EXTENT : 0;
+            separator.opacity = visible ? 255 : 0;
+        }
+        return false;
+    }
+
+    separator._targetVisible = visible;
+    const animateChange = animate && separator.get_stage() !== null;
+    if (visible) {
+        separator.show();
+        if (!animateSeparatorIn(separator, vertical, animateChange)) {
+            separator[mainProperty] = TASKBAR_SEPARATOR_EXTENT;
+            separator.opacity = 255;
+        }
+        return true;
+    }
+
+    const finish = () => {
+        if (!separator._targetVisible)
+            separator.hide();
+    };
+    if (!animateSeparatorOut(separator, vertical, finish, animateChange)) {
+        separator[mainProperty] = 0;
+        separator.opacity = 0;
+        separator.hide();
+    }
+    return true;
 }
 
 export function syncSeparatorGeometry(separator, line, vertical, iconSize) {

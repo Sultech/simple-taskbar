@@ -36,15 +36,11 @@ import {
 } from '../shared/panelSizing.js';
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
-    animateSeparatorIn,
-    animateSeparatorOut,
     createTaskbarSeparator,
     syncSeparatorGeometry,
-    TASKBAR_SEPARATOR_EXTENT,
+    syncSeparatorVisibility,
 } from '../taskbar/taskbarSeparator.js';
-import {
-    TASKBAR_REFLOW_ANIMATION_TIME,
-} from '../taskbar/taskbarItemContainer.js';
+import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
 
 export class StartButtonController {
     constructor({
@@ -136,7 +132,6 @@ export class StartButtonController {
         this._separator = separator;
         this._separator.visible = false;
         this._separatorLine = line;
-        this._separatorTargetVisible = false;
         this.panelActor = new St.BoxLayout({
             reactive: false,
         });
@@ -294,7 +289,6 @@ export class StartButtonController {
 
         this._separator = null;
         this._separatorLine = null;
-        this._separatorTargetVisible = false;
         this._hover = null;
         this._content = null;
         this._icon = null;
@@ -337,7 +331,7 @@ export class StartButtonController {
         this.panelActor.ease({
             translation_x: 0,
             translation_y: 0,
-            duration: TASKBAR_REFLOW_ANIMATION_TIME,
+            duration: REFLOW_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
         });
     }
@@ -804,7 +798,6 @@ export class StartButtonController {
 
     _syncSeparator(animate) {
         const vertical = panelIsVertical(this._settings);
-        const mainProperty = vertical ? 'height' : 'width';
         this.panelActor.orientation = vertical
             ? Clutter.Orientation.VERTICAL
             : Clutter.Orientation.HORIZONTAL;
@@ -822,7 +815,6 @@ export class StartButtonController {
             vertical,
             this._icon.icon_size
         );
-        this._separator[mainProperty] = TASKBAR_SEPARATOR_EXTENT;
         this.panelActor.set_child_at_index(
             this._separator,
             this._separatorFollowsButton() ? 1 : 0
@@ -831,38 +823,7 @@ export class StartButtonController {
         const visible = this.actor.visible &&
             !this._settings.get_boolean('windows-xp-theme-enabled') &&
             this._settings.get_boolean('show-start-button-separator');
-        if (visible === this._separatorTargetVisible)
-            return;
-
-        this._separatorTargetVisible = visible;
-        if (visible) {
-            this._separator.show();
-            if (!animateSeparatorIn(
-                this._separator,
-                vertical,
-                animate && this._separator.get_stage()
-            )) {
-                this._separator[mainProperty] = TASKBAR_SEPARATOR_EXTENT;
-                this._separator.opacity = 255;
-                return;
-            }
-            return;
-        }
-
-        if (!animateSeparatorOut(
-            this._separator,
-            vertical,
-            () => {
-                if (!this._separatorTargetVisible)
-                    this._separator.hide();
-            },
-            animate && this._separator.get_stage()
-        )) {
-            this._separator[mainProperty] = 0;
-            this._separator.opacity = 0;
-            this._separator.hide();
-            return;
-        }
+        syncSeparatorVisibility(this._separator, vertical, visible, animate);
     }
 
     _separatorFollowsButton() {

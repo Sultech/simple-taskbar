@@ -6,7 +6,7 @@ import GObject from 'gi://GObject';
 
 import * as Dash from 'resource:///org/gnome/shell/ui/dash.js';
 
-export const TASKBAR_REFLOW_ANIMATION_TIME = 160;
+import {REFLOW_ANIMATION_TIME} from './reflowAnimation.js';
 
 export const TaskbarItemContainer = GObject.registerClass(
 class TaskbarItemContainer extends Dash.DashItemContainer {
@@ -122,7 +122,7 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         this.ease({
             translation_x: 0,
             translation_y: 0,
-            duration: TASKBAR_REFLOW_ANIMATION_TIME,
+            duration: REFLOW_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
         });
     }

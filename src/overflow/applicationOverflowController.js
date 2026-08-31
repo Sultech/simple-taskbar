@@ -21,12 +21,13 @@ import {
 } from '../panel/panelPosition.js';
 import {MaximumSizeClamp} from '../taskbar/maximumSizeClamp.js';
 import {
-    animateSeparatorIn,
-    animateSeparatorOut,
     createTaskbarSeparator,
+    resetSeparatorToTarget,
+    separatorTargetLength,
     syncSeparatorGeometry,
-    TASKBAR_SEPARATOR_EXTENT,
+    syncSeparatorVisibility,
 } from '../taskbar/taskbarSeparator.js';
+import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
 import {
     ApplicationOverflowButtonController,
 } from './applicationOverflowButtonController.js';
@@ -47,7 +48,6 @@ import {closePopupMenu} from '../shared/popupMenuUtils.js';
 
 const POPUP_MARGIN = 32;
 const OVERFLOW_BUTTON_ANIMATION_TIME = 150;
-const OVERFLOW_REVEAL_ANIMATION_TIME = 160;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
@@ -101,7 +101,6 @@ export class ApplicationOverflowController {
         } = createTaskbarSeparator();
         this._locationSeparator = locationSeparator;
         this._locationSeparator.visible = false;
-        this._locationSeparatorTargetVisible = false;
         this._locationSeparatorVertical = null;
         this._locationSeparatorLine = locationSeparatorLine;
         this._signalHolder = new TransientSignalHolder();
@@ -409,7 +408,6 @@ export class ApplicationOverflowController {
         this._viewport = null;
         this._locationSeparator = null;
         this._locationSeparatorLine = null;
-        this._locationSeparatorTargetVisible = false;
         this._locationSeparatorVertical = null;
         this._locationActor = null;
         this._taskbarController = null;
@@ -633,14 +631,10 @@ export class ApplicationOverflowController {
     }
 
     _locationSeparatorSize() {
-        return this._locationSeparatorTargetVisible
-            ? TASKBAR_SEPARATOR_EXTENT
-            : 0;
+        return separatorTargetLength(this._locationSeparator);
     }
 
     _syncLocationSeparator(visible, vertical) {
-        const iconSize = this._taskbarController.getIconSize();
-        const mainProperty = vertical ? 'height' : 'width';
         const orientationChanged =
             this._locationSeparatorVertical !== vertical;
         this._locationSeparatorVertical = vertical;
@@ -648,48 +642,12 @@ export class ApplicationOverflowController {
             this._locationSeparator,
             this._locationSeparatorLine,
             vertical,
-            iconSize
+            this._taskbarController.getIconSize()
         );
+        if (orientationChanged)
+            resetSeparatorToTarget(this._locationSeparator, vertical);
 
-        if (orientationChanged) {
-            this._locationSeparator.remove_all_transitions();
-            this._locationSeparator[mainProperty] =
-                this._locationSeparatorTargetVisible
-                    ? TASKBAR_SEPARATOR_EXTENT
-                    : 0;
-            this._locationSeparator.opacity =
-                this._locationSeparatorTargetVisible ? 255 : 0;
-            this._locationSeparator.visible =
-                this._locationSeparatorTargetVisible;
-        }
-        if (visible === this._locationSeparatorTargetVisible)
-            return;
-
-        this._locationSeparatorTargetVisible = visible;
-        if (visible) {
-            this._locationSeparator.show();
-            if (!animateSeparatorIn(this._locationSeparator, vertical)) {
-                this._locationSeparator[mainProperty] =
-                    TASKBAR_SEPARATOR_EXTENT;
-                this._locationSeparator.opacity = 255;
-                return;
-            }
-            return;
-        }
-
-        if (!animateSeparatorOut(
-            this._locationSeparator,
-            vertical,
-            () => {
-                if (!this._locationSeparatorTargetVisible)
-                    this._locationSeparator.hide();
-            }
-        )) {
-            this._locationSeparator[mainProperty] = 0;
-            this._locationSeparator.opacity = 0;
-            this._locationSeparator.hide();
-            return;
-        }
+        syncSeparatorVisibility(this._locationSeparator, vertical, visible);
     }
 
     _syncOverflowButton(visible) {
@@ -733,7 +691,7 @@ export class ApplicationOverflowController {
             });
             this._button.ease({
                 [mainProperty]: buttonSize,
-                duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+                duration: REFLOW_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
                 onStopped: finished => {
                     this._buttonSizeAnimating = false;
@@ -768,7 +726,7 @@ export class ApplicationOverflowController {
         });
         this._button.ease({
             [mainProperty]: 0,
-            duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+            duration: REFLOW_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
             onStopped: finished => {
                 this._buttonSizeAnimating = false;
@@ -888,7 +846,7 @@ export class ApplicationOverflowController {
         this._viewport[property] = Math.max(1, startSize);
         this._viewport.ease({
             [property]: Math.max(1, targetSize),
-            duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+            duration: REFLOW_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
             onStopped: finished => {
                 if (finished)
@@ -916,7 +874,7 @@ export class ApplicationOverflowController {
         this._spacer[property] = startSize;
         this._spacer.ease({
             [property]: size,
-            duration: OVERFLOW_REVEAL_ANIMATION_TIME,
+            duration: REFLOW_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
         });
     }

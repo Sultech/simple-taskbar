@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Clutter from 'gi://Clutter';
-import St from 'gi://St';
-
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 
-const OVERFLOW_REFLOW_ANIMATION_TIME = 160;
+import {
+    animateReflowCrossedItems,
+    reflowVisualDirection,
+} from '../taskbar/reflowAnimation.js';
 
 export class ApplicationOverflowDragController {
     constructor(taskbarController, getRecords, getStyle, getVertical) {
@@ -254,7 +254,7 @@ export class ApplicationOverflowDragController {
                 length + (horizontal ? item.width : item.height),
             spacing * sourceAuxiliaryItems.length
         );
-        const visualDirection = this._visualDirection(children, horizontal);
+        const visualDirection = reflowVisualDirection(children, !horizontal);
         const sourceIndex = children.indexOf(sourceAuxiliaryItems[0]);
         const destinationIndex = desiredChildren.indexOf(sourceAuxiliaryItems[0]);
         for (let index = 0; index < desiredChildren.length; index++) {
@@ -262,59 +262,19 @@ export class ApplicationOverflowDragController {
             if (this._contentBox.get_child_at_index(index) !== child)
                 this._contentBox.set_child_at_index(child, index);
         }
-        this._animateCrossedItems(
-            children,
-            desiredChildren,
-            sourceItems,
-            sourceLength,
-            destinationIndex > sourceIndex ? visualDirection : -visualDirection,
-            horizontal
-        );
+        animateReflowCrossedItems({
+            oldChildren: children,
+            newChildren: desiredChildren,
+            skippedItems: sourceItems,
+            movedLength: sourceLength,
+            direction: destinationIndex > sourceIndex
+                ? visualDirection
+                : -visualDirection,
+            vertical: !horizontal,
+        });
     }
 
     _horizontal() {
         return this._getStyle() === 'taskbar' && !this._getVertical();
-    }
-
-    _visualDirection(children, horizontal) {
-        let previousPosition = null;
-        for (const child of children) {
-            const position = horizontal ? child.x : child.y;
-            if (previousPosition !== null && position !== previousPosition)
-                return position > previousPosition ? 1 : -1;
-            previousPosition = position;
-        }
-        return 1;
-    }
-
-    _animateCrossedItems(
-        oldChildren,
-        newChildren,
-        skippedItems,
-        movedLength,
-        direction,
-        horizontal
-    ) {
-        if (!St.Settings.get().enable_animations || movedLength <= 0)
-            return;
-
-        for (const child of oldChildren) {
-            if (skippedItems.has(child) ||
-                oldChildren.indexOf(child) === newChildren.indexOf(child)) {
-                continue;
-            }
-
-            child.remove_all_transitions();
-            if (horizontal)
-                child.translation_x += direction * movedLength;
-            else
-                child.translation_y += direction * movedLength;
-            child.ease({
-                translation_x: 0,
-                translation_y: 0,
-                duration: OVERFLOW_REFLOW_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-            });
-        }
     }
 }
