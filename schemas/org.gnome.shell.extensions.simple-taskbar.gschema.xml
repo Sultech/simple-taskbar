@@ -432,14 +432,20 @@
       <default>false</default>
       <summary>Show the Dock border in light mode</summary>
     </key>
-    <key name="dock-workspace-scroll-enabled" type="b">
-      <default>true</default>
-      <summary>Switch workspaces by scrolling over empty Dock space</summary>
+    <key name="dock-workspace-scroll-action" type="s">
+      <choices>
+        <choice value="switch-workspace"/>
+        <choice value="cycle-windows"/>
+        <choice value="change-volume"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'switch-workspace'</default>
+      <summary>Action when scrolling over empty Dock space</summary>
     </key>
     <key name="dock-workspace-scroll-delay" type="i">
       <range min="5" max="250"/>
       <default>5</default>
-      <summary>Minimum delay between Dock workspace changes in milliseconds</summary>
+      <summary>Minimum delay between Dock scroll actions in milliseconds</summary>
     </key>
     <key name="windows-xp-theme-enabled" type="b">
       <default>false</default>
@@ -631,7 +637,7 @@
     </key>
     <key name="scroll-icon-follow-panel-delay" type="b">
       <default>true</default>
-      <summary>Use the taskbar scroll delay for application icon scrolling</summary>
+      <summary>Use the active taskbar or Dock scroll delay for application icon scrolling</summary>
     </key>
     <key name="window-previews-enabled" type="b">
       <default>true</default>

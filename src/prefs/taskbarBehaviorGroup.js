@@ -99,7 +99,7 @@ export function addTaskbarBehaviorGroup({
     behaviorGroup.add(hotEdgeRow);
 
     const workspaceScrollRow = new Adw.ExpanderRow({
-        title: _('Workspace Scroll'),
+        title: _('Taskbar Scroll'),
         subtitle: _('Choose what happens when scrolling over the taskbar'),
     });
     const workspaceScrollActionRow = addComboRow(
@@ -137,7 +137,7 @@ export function addTaskbarBehaviorGroup({
         settings,
         {
             key: 'workspace-scroll-delay',
-            title: _('Workspace Scroll Delay'),
+            title: _('Scroll Delay'),
             subtitle: _('Minimum delay between taskbar scroll actions in milliseconds'),
             lower: 5,
             upper: 250,

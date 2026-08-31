@@ -200,16 +200,16 @@ function addApplicationIconControls({
         margin_start: 12,
         margin_end: 12,
     });
-    const followPanelDelayCheck = new Gtk.CheckButton({
-        label: _('Follow Panel Delay'),
+    const followScrollDelayCheck = new Gtk.CheckButton({
+        label: _('Follow Taskbar Scroll Delay'),
     });
     settings.bind(
         'scroll-icon-follow-panel-delay',
-        followPanelDelayCheck,
+        followScrollDelayCheck,
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
-    scrollDelayBox.append(followPanelDelayCheck);
+    scrollDelayBox.append(followScrollDelayCheck);
     scrollDelayBox.append(scrollDelayRow);
     const scrollDelayPopover = new Gtk.Popover({
         child: scrollDelayBox,
@@ -233,10 +233,17 @@ function addApplicationIconControls({
     scrollActionRow.add_suffix(scrollActionBox);
     scrollActionRow.activatable_widget = scrollActionDropDown;
     windowInteractionRow.add_row(scrollActionRow);
-    const syncScrollDelayRow = () => {
-        scrollDelayRow.sensitive = !followPanelDelayCheck.active;
+    const syncFollowScrollDelayLabel = () => {
+        followScrollDelayCheck.label = settings.get_boolean('dock-mode')
+            ? _('Follow Dock Scroll Delay')
+            : _('Follow Taskbar Scroll Delay');
     };
-    followPanelDelayCheck.connect('notify::active', syncScrollDelayRow);
+    connectSettings(settings, 'changed::dock-mode', syncFollowScrollDelayLabel);
+    syncFollowScrollDelayLabel();
+    const syncScrollDelayRow = () => {
+        scrollDelayRow.sensitive = !followScrollDelayCheck.active;
+    };
+    followScrollDelayCheck.connect('notify::active', syncScrollDelayRow);
     syncScrollDelayRow();
     windowInteractionRow.add_row(createSwitchRow(settings, {
         key: 'window-previews-enabled',

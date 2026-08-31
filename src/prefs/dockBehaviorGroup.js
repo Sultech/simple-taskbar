@@ -4,7 +4,9 @@
 import Adw from 'gi://Adw';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {
+    addComboRow,
     addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
@@ -45,23 +47,46 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     );
 
     const workspaceScrollRow = new Adw.ExpanderRow({
-        title: _('Workspace Scroll'),
-        subtitle: _('Scroll over empty Dock space to switch workspaces'),
+        title: _('Dock Scroll'),
+        subtitle: _('Choose what happens when scrolling over the Dock'),
     });
-    const workspaceScrollSwitch = createSwitchRow(settings, {
-        key: 'dock-workspace-scroll-enabled',
-        title: _('Enable Workspace Scroll'),
-        subtitle: _('Scroll over empty Dock space to switch workspaces'),
-    });
-    workspaceScrollRow.add_row(workspaceScrollSwitch);
+    const workspaceScrollActionRow = addComboRow(
+        workspaceScrollRow,
+        settings,
+        {
+            key: 'dock-workspace-scroll-action',
+            title: _('Scroll Action'),
+            subtitle: _('Action used when scrolling over empty Dock space'),
+            choices: [
+                {
+                    value: PANEL_SCROLL_ACTION.SWITCH_WORKSPACE,
+                    label: _('Switch Workspace'),
+                },
+                {
+                    value: PANEL_SCROLL_ACTION.CYCLE_WINDOWS,
+                    label: _('Cycle Windows'),
+                },
+                {
+                    value: PANEL_SCROLL_ACTION.CHANGE_VOLUME,
+                    label: _('Change Volume'),
+                },
+                {
+                    value: PANEL_SCROLL_ACTION.DO_NOTHING,
+                    label: _('Do Nothing'),
+                },
+            ],
+            addRow: row => workspaceScrollRow.add_row(row),
+        },
+        connectSettings
+    );
 
     const workspaceScrollDelayRow = addSpinRow(
         workspaceScrollRow,
         settings,
         {
             key: 'dock-workspace-scroll-delay',
-            title: _('Workspace Scroll Delay'),
-            subtitle: _('Minimum delay between workspace changes in milliseconds'),
+            title: _('Scroll Delay'),
+            subtitle: _('Minimum delay between Dock scroll actions in milliseconds'),
             lower: 5,
             upper: 250,
             step: 5,
@@ -79,8 +104,13 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     group.add(multiMonitorSwitch);
 
     const syncWorkspaceScrollControls = () => {
+        const dockPanelModeEnabled = settings.get_boolean('dock-panel-mode');
+        workspaceScrollActionRow.sensitive = group.sensitive &&
+            dockPanelModeEnabled;
         workspaceScrollDelayRow.sensitive = group.sensitive &&
-            workspaceScrollSwitch.active;
+            (!dockPanelModeEnabled ||
+                settings.get_string('dock-workspace-scroll-action') !==
+                PANEL_SCROLL_ACTION.DO_NOTHING);
     };
     const syncAvailability = () => {
         const available = settings.get_boolean('dock-mode') &&
@@ -91,10 +121,6 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         dodgeWindows.syncAvailability();
         syncWorkspaceScrollControls();
     };
-    workspaceScrollSwitch.connect(
-        'notify::active',
-        syncWorkspaceScrollControls
-    );
     for (const key of [
         'dock-mode',
         'dock-panel-mode',
@@ -104,7 +130,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     }
     connectSettings(
         settings,
-        'changed::dock-workspace-scroll-enabled',
+        'changed::dock-workspace-scroll-action',
         syncWorkspaceScrollControls
     );
     syncAvailability();

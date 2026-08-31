@@ -90,7 +90,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-panel-blur-enabled',
     'dock-panel-border-enabled',
     'dock-panel-border-light-enabled',
-    'dock-workspace-scroll-enabled',
+    'dock-workspace-scroll-action',
     'dock-workspace-scroll-delay',
     'dock-panel-mode',
     'dock-position',

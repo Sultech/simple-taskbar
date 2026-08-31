@@ -299,10 +299,11 @@ export class PanelInteractionController {
     }
 
     _getWorkspaceScrollAction() {
-        if (this._settings.isDock)
-            return this._settings.get_boolean('workspace-scroll-enabled')
-                ? PANEL_SCROLL_ACTION.SWITCH_WORKSPACE
-                : null;
+        if (this._settings.isDock) {
+            if (!this._settings.get_boolean('dock-panel-mode'))
+                return PANEL_SCROLL_ACTION.SWITCH_WORKSPACE;
+            return this._settings.get_string('workspace-scroll-action');
+        }
 
         return this._settings.get_string('workspace-scroll-action');
     }

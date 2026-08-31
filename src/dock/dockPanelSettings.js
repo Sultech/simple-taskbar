@@ -18,7 +18,7 @@ const DOCK_SETTING_KEYS = new Map([
     ['panel-autohide-enabled', 'dock-autohide-enabled'],
     ['edge-reveal-enabled', 'dock-edge-reveal-enabled'],
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],
-    ['workspace-scroll-enabled', 'dock-workspace-scroll-enabled'],
+    ['workspace-scroll-action', 'dock-workspace-scroll-action'],
     ['workspace-scroll-delay', 'dock-workspace-scroll-delay'],
     ['panel-item-order', 'dock-item-order'],
     ['panel-dodge-windows-enabled', 'dock-dodge-windows-enabled'],
