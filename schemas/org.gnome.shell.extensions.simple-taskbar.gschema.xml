@@ -77,10 +77,35 @@
     <key name="running-indicator-style" type="s">
       <choices>
         <choice value="rounded"/>
-        <choice value="straight"/>
+        <choice value="dots"/>
+        <choice value="squares"/>
+        <choice value="dashes"/>
+        <choice value="segmented"/>
+        <choice value="solid"/>
+        <choice value="ciliora"/>
+        <choice value="metro"/>
       </choices>
       <default>'rounded'</default>
       <summary>Running application indicator style</summary>
+    </key>
+    <key name="running-indicator-position" type="s">
+      <choices>
+        <choice value="top"/>
+        <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
+      </choices>
+      <default>'bottom'</default>
+      <summary>Running application indicator position</summary>
+    </key>
+    <key name="running-indicator-size" type="i">
+      <range min="1" max="5"/>
+      <default>4</default>
+      <summary>Running application indicator thickness</summary>
+    </key>
+    <key name="running-indicator-full-length" type="b">
+      <default>true</default>
+      <summary>Stretch running indicators across the application button</summary>
     </key>
     <key name="custom-indicator-colors-enabled" type="b">
       <default>false</default>

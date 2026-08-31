@@ -8,14 +8,19 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {IconDominantColorCache} from './iconDominantColor.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 import {
+    RUNNING_INDICATOR_LENGTH_RATIO,
+    RUNNING_INDICATOR_RESERVE,
+    runningIndicatorFillsLength,
+    runningIndicatorPositionIsHorizontal,
+} from '../shared/runningIndicatorSettings.js';
+import {
+    GLASS_VERTICAL_INSET,
     taskbarGlassHeight,
     taskbarVisualPanelHeight,
 } from '../shared/panelSizing.js';
 
 const CONTENT_LEADING_SPACE = 7;
 const ICON_GLASS_MARGIN = 3;
-const INDICATOR_ANIMATION_DURATION = 150;
-const INDICATOR_SEGMENT_GAP = 2;
 const APP_LABEL_SPACING = 8;
 const APP_CONTENT_VERTICAL_RESERVE = 14;
 const WINDOWS_XP_BUTTON_Y = 3;
@@ -83,6 +88,9 @@ export class TaskbarAppearanceController {
         item._taskbarTopSpacer.set_height(
             vertical ? 0 : CONTENT_LEADING_SPACE
         );
+        item._taskbarBottomSpacer.set_height(
+            vertical ? RUNNING_INDICATOR_RESERVE : CONTENT_LEADING_SPACE
+        );
         item._taskbarButtonContent.set_height(
             vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
         );
@@ -101,6 +109,7 @@ export class TaskbarAppearanceController {
         );
         item._taskbarVisual.set_size(itemWidth, itemHeight);
         item._taskbarGlassHost.set_size(itemWidth, itemHeight);
+        item._taskbarIndicatorHost.set_size(itemWidth, itemHeight);
         const glassInset = this.glassInset();
         const glassOuterHeight = vertical ? itemHeight : glassHeight;
         const glassX = vertical
@@ -133,25 +142,33 @@ export class TaskbarAppearanceController {
                 item._taskbarIsCombinedApp
             )
         );
-        this.updateIndicatorGeometry(item, false, glassWidth);
+        this.updateIndicatorGeometry(item, false, {
+            x: glassX,
+            y: glassY,
+            width: glassWidth,
+            height: glassOuterHeight,
+        });
     }
 
-    indicatorBarHeight() {
-        return this._settings.get_string(
-            'running-indicator-style'
-        ) === 'rounded' ? 4 : 3;
+    indicatorThickness() {
+        return this._settings.get_int('running-indicator-size');
+    }
+
+    indicatorPosition() {
+        return this._settings.get_string('running-indicator-position');
+    }
+
+    indicatorStyle() {
+        return this._settings.get_string('running-indicator-style');
     }
 
     verticalItemExtent(iconSize = this._getIconSize()) {
-        return iconSize + ICON_GLASS_MARGIN * 2 +
-            this.indicatorBarHeight();
+        return iconSize + ICON_GLASS_MARGIN * 2 + RUNNING_INDICATOR_RESERVE;
     }
 
     glassHeight(panelHeight = this.visualPanelHeight()) {
         return taskbarGlassHeight(
             panelHeight,
-            this._settings.get_string('running-indicator-style') ===
-                'rounded',
             this._settings.get_boolean('windows-xp-theme-enabled')
         );
     }
@@ -159,7 +176,7 @@ export class TaskbarAppearanceController {
     glassY() {
         return this._settings.get_boolean('windows-xp-theme-enabled')
             ? WINDOWS_XP_BUTTON_Y
-            : 4;
+            : GLASS_VERTICAL_INSET;
     }
 
     glassInset() {
@@ -168,116 +185,68 @@ export class TaskbarAppearanceController {
             : 0;
     }
 
-    updateIndicatorGeometry(
-        item,
-        animate = false,
-        glassWidth = this.buttonWidth(
+    glassRect(item) {
+        const glassWidth = this.buttonWidth(
             item._taskbarWindow,
             this._showAppLabels(),
             this._getAppLabelWidth(),
             item._taskbarIsCombinedApp
-        )
-    ) {
-        const evenWidth = glassWidth % 2 === 0;
-        const containerWidth = evenWidth ? 20 : 21;
-        let barWidth = evenWidth ? 8 : 7;
+        );
+        const vertical = panelIsVertical(this._settings);
+        const visualPanelHeight = this.visualPanelHeight();
+        const itemWidth = vertical ? visualPanelHeight : glassWidth;
+        return {
+            x: vertical ? Math.floor((itemWidth - glassWidth) / 2) : 0,
+            y: vertical ? 0 : this.glassY(),
+            width: glassWidth,
+            height: vertical
+                ? this.verticalItemExtent()
+                : this.glassHeight(visualPanelHeight),
+        };
+    }
 
-        if (item._taskbarFocused)
-            barWidth = containerWidth;
-        else if (item._taskbarMultipleWindows)
-            barWidth = evenWidth ? 18 : 17;
-
-        const show = item._taskbarShowSecondary;
-        const secondaryWidth = Math.max(1, Math.floor(
-            (containerWidth - INDICATOR_SEGMENT_GAP) / 2
-        ));
-        const primaryWidth = show
-            ? barWidth - INDICATOR_SEGMENT_GAP - secondaryWidth
-            : barWidth;
-        const primaryX = (containerWidth - barWidth) / 2;
-        const secondaryX = show
-            ? primaryX + primaryWidth + INDICATOR_SEGMENT_GAP
-            : primaryX + primaryWidth;
-
-        if (item._taskbarIndicatorWidth === containerWidth &&
-            item._taskbarIndicatorPrimaryWidth === primaryWidth &&
-            item._taskbarIndicatorPrimaryX === primaryX &&
-            item._taskbarIndicatorSecondaryX === secondaryX &&
-            item._taskbarIndicatorSecondaryShown === show) {
-            return;
-        }
-
-        item._taskbarIndicatorWidth = containerWidth;
-        item._taskbarIndicatorPrimaryWidth = primaryWidth;
-        item._taskbarIndicatorPrimaryX = primaryX;
-        item._taskbarIndicatorSecondaryX = secondaryX;
-        item._taskbarIndicatorSecondaryShown = show;
-
-        const indicator = item._taskbarIndicator;
-        const primary = item._taskbarIndicatorPrimary;
-        const secondary = item._taskbarIndicatorSecondary;
-        indicator.set_width(containerWidth);
-        secondary.set_width(secondaryWidth);
-
-        if (!animate) {
-            primary.remove_transition('width');
-            primary.remove_transition('x');
-            secondary.remove_transition('x');
-            secondary.remove_transition('opacity');
-            primary.set_width(primaryWidth);
-            primary.set_x(primaryX);
-            secondary.set_x(secondaryX);
-            secondary.opacity = 255;
-            secondary.visible = show;
-            return;
-        }
-
-        primary.ease({
-            width: primaryWidth,
-            x: primaryX,
-            duration: INDICATOR_ANIMATION_DURATION,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
-
-        if (show) {
-            if (!secondary.visible) {
-                secondary.set_x(primaryX + barWidth);
-                secondary.opacity = 0;
-                secondary.visible = true;
-            }
-            secondary.ease({
-                x: secondaryX,
-                opacity: 255,
-                duration: INDICATOR_ANIMATION_DURATION,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
-            return;
-        }
-
-        secondary.ease({
-            x: secondaryX,
-            opacity: 0,
-            duration: INDICATOR_ANIMATION_DURATION,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => {
-                secondary.visible = false;
-                secondary.opacity = 255;
-            },
-        });
+    updateIndicatorGeometry(item, animate = false, rect = null) {
+        const glass = rect ?? this.glassRect(item);
+        const position = this.indicatorPosition();
+        const style = this.indicatorStyle();
+        const horizontal = runningIndicatorPositionIsHorizontal(position);
+        const glassLength = horizontal ? glass.width : glass.height;
+        const thickness = Math.min(
+            this.indicatorThickness(),
+            horizontal ? glass.height : glass.width
+        );
+        const inset = runningIndicatorFillsLength(style) &&
+            !this._settings.get_boolean('running-indicator-full-length')
+            ? Math.round(
+                glassLength * (1 - RUNNING_INDICATOR_LENGTH_RATIO) / 2
+            )
+            : 0;
+        const length = Math.max(1, glassLength - inset * 2);
+        item._taskbarIndicator.update({
+            x: position === 'right'
+                ? glass.x + glass.width - thickness
+                : glass.x + (horizontal ? inset : 0),
+            y: position === 'bottom'
+                ? glass.y + glass.height - thickness
+                : glass.y + (horizontal ? 0 : inset),
+            length,
+            inset,
+            cross: horizontal ? glass.height : glass.width,
+            thickness,
+            position,
+            style,
+            count: item._taskbarWindowCount,
+            focused: item._taskbarFocused,
+            color: item._taskbarRunning ? this._indicatorColor(item) : null,
+        }, animate);
     }
 
     syncIndicatorColor(item) {
-        const color = item._taskbarRunning
-            ? this._indicatorColor(item)
-            : null;
-        const style = color ? `background-color: ${color};` : null;
-
-        for (const segment of item._taskbarIndicator.get_children())
-            segment.set_style(style);
+        this.updateIndicatorGeometry(item, false);
     }
 
     _indicatorColor(item) {
-        if (item._taskbarFocused &&
+        if (!this._settings.get_boolean('custom-indicator-colors-enabled') &&
             this._settings.get_boolean('match-icon-color')) {
             const iconColor = this._iconColors.getColor(item._taskbarApp);
             if (iconColor)

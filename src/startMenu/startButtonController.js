@@ -215,8 +215,6 @@ export class StartButtonController {
             );
             this._hover.set_height(taskbarGlassHeight(
                 visualPanelHeight,
-                this._settings.get_string('running-indicator-style') ===
-                    'rounded',
                 windowsXpTheme
             ));
             this._hover.translation_y = 1;
@@ -518,7 +516,6 @@ export class StartButtonController {
             'changed::panel-item-order', syncAppearance,
             'changed::panel-position', syncAppearance,
             'changed::panel-height', syncAppearance,
-            'changed::running-indicator-style', syncAppearance,
             'changed::dock-panel-mode', syncAppearance,
             this._signalHolder
         );

@@ -569,65 +569,62 @@
     color: rgba(255, 255, 255, 0.92);
 }
 
-.simple-taskbar-running-indicator {
-    height: 3px;
-    margin-bottom: 4px;
+.simple-taskbar-running-indicator,
+.simple-taskbar-running-indicator-color-source {
     background-color: transparent;
 }
 
 .simple-taskbar-running-indicator-segment {
-    height: 3px;
-    border-radius: 3px;
     background-color: transparent;
     transition-duration: 150ms;
 }
 
-.simple-taskbar-apps.simple-taskbar-rounded-indicators
-    .simple-taskbar-running-indicator {
-    height: 4px;
-    margin-bottom: 3px;
-}
-
-.simple-taskbar-apps.simple-taskbar-rounded-indicators
-    .simple-taskbar-running-indicator-segment {
-    height: 4px;
-    border-radius: 999px;
-}
-
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-running-indicator {
-    margin-bottom: 0;
-}
-
-.simple-taskbar-app-item.running .simple-taskbar-running-indicator-segment {
+.simple-taskbar-app-item.running .simple-taskbar-running-indicator-segment,
+.simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-color-source {
     background-color: #8d8d8d;
 }
 
-.simple-taskbar-app-item.running.focused .simple-taskbar-running-indicator-segment {
+.simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-segment,
+.simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-color-source {
     background-color: #60aef7;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light
     .simple-taskbar-app-item.running
-    .simple-taskbar-running-indicator-segment {
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-color-source {
     background-color: #555a60;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
     .simple-taskbar-app-item.running
-    .simple-taskbar-running-indicator-segment {
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-color-source {
     background-color: #3c4045;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light
     .simple-taskbar-app-item.running.focused
-    .simple-taskbar-running-indicator-segment {
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-color-source {
     background-color: #2b82d0;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
     .simple-taskbar-app-item.running.focused
-    .simple-taskbar-running-indicator-segment {
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light.simple-taskbar-blur-my-shell-active
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-color-source {
     background-color: #0067c0;
 }
 
@@ -1077,19 +1074,19 @@
 }
 
 .simple-taskbar-windows-start-running-indicator {
-    height: 3px;
-    border-radius: 3px;
+    background-color: transparent;
+}
+
+.simple-taskbar-windows-start-running-indicator-segment,
+.simple-taskbar-windows-start-running-indicator-color-source {
     background-color: #8d8d8d;
     transition-duration: 150ms;
 }
 
-.simple-taskbar-windows-start-running-indicator.rounded {
-    height: 4px;
-    border-radius: 999px;
-}
-
 .simple-taskbar-windows-start-light
-    .simple-taskbar-windows-start-running-indicator {
+    .simple-taskbar-windows-start-running-indicator-segment,
+.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-running-indicator-color-source {
     background-color: #555a60;
 }
 

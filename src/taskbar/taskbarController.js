@@ -35,6 +35,7 @@ import {
 import {
     TaskbarLocationsController,
 } from './taskbarLocationsController.js';
+import {MAX_RUNNING_INDICATORS} from '../shared/runningIndicatorSettings.js';
 import {
     animateSeparatorIn,
     animateSeparatorOut,
@@ -60,8 +61,6 @@ const BADGE_MAXIMUM_PADDING = 4;
 const BADGE_SINGLE_DIGIT_MARGIN = 2;
 const BADGE_MAXIMUM_OUTWARD_OFFSET = 4;
 const BADGE_OUTWARD_OFFSET_DIVISOR = 4;
-const ROUNDED_INDICATORS_CLASS =
-    'simple-taskbar-rounded-indicators';
 
 function taskbarFocusWindow() {
     let window = global.display.focus_window;
@@ -520,11 +519,18 @@ export class TaskbarController {
             () => this._syncFileManagerPlaces(),
             this._signalHolder
         );
-        this._settings.connectObject(
-            'changed::running-indicator-style',
-            () => this.applyAppearance(),
-            this._signalHolder
-        );
+        for (const key of [
+            'running-indicator-style',
+            'running-indicator-position',
+            'running-indicator-size',
+            'running-indicator-full-length',
+        ]) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this.applyAppearance(),
+                this._signalHolder
+            );
+        }
         this._settings.connectObject(
             'changed::show-notification-badges',
             () => this._syncNotificationBadges(),
@@ -822,7 +828,6 @@ export class TaskbarController {
         this._locationActor.y_align = this.actor.y_align;
         this._locationActor.y_expand = this.actor.y_expand;
         this._locationActor.set_style('spacing: 0;');
-        this._syncIndicatorStyle();
         this._syncPinnedSeparatorGeometry();
         for (const item of this._appButtons.values()) {
             this._syncIndicatorVisibility(item);
@@ -901,17 +906,6 @@ export class TaskbarController {
             styleItem,
             retainForPreview
         );
-    }
-
-
-    _syncIndicatorStyle() {
-        const rounded = this._settings.get_string(
-            'running-indicator-style'
-        ) === 'rounded';
-        if (rounded)
-            this.actor.add_style_class_name(ROUNDED_INDICATORS_CLASS);
-        else
-            this.actor.remove_style_class_name(ROUNDED_INDICATORS_CLASS);
     }
 
     redisplay() {
@@ -1179,11 +1173,11 @@ export class TaskbarController {
         );
         item._taskbarFocused = focused;
         item._taskbarRunning = running;
-        item._taskbarMultipleWindows = !window && windowCount > 1;
-        item._taskbarShowSecondary =
-            !window && focused && windowCount > 1;
+        item._taskbarWindowCount = Math.min(
+            windowCount,
+            MAX_RUNNING_INDICATORS
+        );
         this._updateIndicatorGeometry(item, animate);
-        this._syncIndicatorColor(item);
         button.accessible_name = window
             ? `${window.get_title() || app.get_name()}, ${_('running')}`
             : running
@@ -1740,16 +1734,8 @@ export class TaskbarController {
         return this._appearanceController.glassInset();
     }
 
-    _updateIndicatorGeometry(item, animate = false, glassWidth = null) {
-        if (glassWidth === null) {
-            this._appearanceController.updateIndicatorGeometry(item, animate);
-        } else {
-            this._appearanceController.updateIndicatorGeometry(
-                item,
-                animate,
-                glassWidth
-            );
-        }
+    _updateIndicatorGeometry(item, animate = false) {
+        this._appearanceController.updateIndicatorGeometry(item, animate);
     }
 
     _syncIndicatorColor(item) {

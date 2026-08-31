@@ -15,6 +15,11 @@ import {
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {
+    RUNNING_INDICATOR_POSITIONS,
+    RUNNING_INDICATOR_STYLES,
+    runningIndicatorFillsLength,
+} from '../shared/runningIndicatorSettings.js';
+import {
     addColorRow,
     addComboRow,
     addSpinRow,
@@ -524,10 +529,41 @@ function addIndicatorControls({
 }) {
     const indicatorGroup = new Adw.ExpanderRow({
         title: _('Running Indicators'),
-        subtitle: _('Configure indicators beneath running application icons'),
+        subtitle: _('Configure indicators around running application icons'),
     });
     group.add(indicatorGroup);
+    const positionLabels = {
+        top: _('Top'),
+        bottom: _('Bottom'),
+        left: _('Left'),
+        right: _('Right'),
+    };
+    const styleLabels = {
+        rounded: _('Rounded'),
+        dots: _('Dots'),
+        squares: _('Squares'),
+        dashes: _('Dashes'),
+        segmented: _('Segmented'),
+        solid: _('Solid'),
+        ciliora: _('Ciliora'),
+        metro: _('Metro'),
+    };
 
+    const indicatorPositionRow = addComboRow(
+        indicatorGroup,
+        settings,
+        {
+            key: 'running-indicator-position',
+            title: _('Running Indicator Position'),
+            subtitle: _('Choose which edge of the application button to use'),
+            choices: RUNNING_INDICATOR_POSITIONS.map(value => ({
+                value,
+                label: positionLabels[value],
+            })),
+            addRow: row => indicatorGroup.add_row(row),
+        },
+        connectSettings
+    );
     const indicatorStyleRow = addComboRow(
         indicatorGroup,
         settings,
@@ -535,16 +571,37 @@ function addIndicatorControls({
             key: 'running-indicator-style',
             title: _('Running Indicator Style'),
             subtitle: _(
-                'Choose the shape of indicators beneath running applications'
+                'Choose the shape of indicators around running applications'
             ),
-            choices: [
-                {value: 'rounded', label: _('Rounded')},
-                {value: 'straight', label: _('Straight')},
-            ],
+            choices: RUNNING_INDICATOR_STYLES.map(value => ({
+                value,
+                label: styleLabels[value],
+            })),
             addRow: row => indicatorGroup.add_row(row),
         },
         connectSettings
     );
+    const indicatorSizeRow = addSpinRow(
+        indicatorGroup,
+        settings,
+        {
+            key: 'running-indicator-size',
+            title: _('Running Indicator Size'),
+            subtitle: _('Choose the indicator thickness in pixels'),
+            lower: 1,
+            upper: 5,
+            addRow: row => indicatorGroup.add_row(row),
+        },
+        connectSettings
+    );
+    const indicatorFullLengthSwitch = createSwitchRow(settings, {
+        key: 'running-indicator-full-length',
+        title: _('Stretch Indicators'),
+        subtitle: _(
+            'Run indicators the full length of the application button'
+        ),
+    });
+    indicatorGroup.add_row(indicatorFullLengthSwitch);
     const customIndicatorColorsSwitch = new Adw.SwitchRow({
         title: _('Custom Indicator Colors'),
         subtitle: _('Choose colors for running application indicators'),
@@ -599,7 +656,13 @@ function addIndicatorControls({
             (settings.get_boolean('default-gnome-panel') &&
                 !settings.get_boolean('dock-mode'));
         const enabled = customIndicatorColorsSwitch.active;
+        indicatorPositionRow.sensitive = !blocked;
         indicatorStyleRow.sensitive = !blocked;
+        indicatorSizeRow.sensitive = !blocked;
+        indicatorFullLengthSwitch.sensitive = !blocked &&
+            runningIndicatorFillsLength(
+                settings.get_string('running-indicator-style')
+            );
         customIndicatorColorsSwitch.sensitive = !blocked;
         matchIconColorSwitch.sensitive = !blocked;
         focusedIndicatorColorRow.visible = enabled;
@@ -620,6 +683,7 @@ function addIndicatorControls({
         'windows-xp-theme-enabled',
         'default-gnome-panel',
         'dock-mode',
+        'running-indicator-style',
     ]) {
         connectSettings(
             settings,

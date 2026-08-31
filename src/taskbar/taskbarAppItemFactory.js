@@ -5,6 +5,7 @@ import Clutter from 'gi://Clutter';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 
+import {RunningIndicator} from './runningIndicator.js';
 import {TaskbarItemContainer} from './taskbarItemContainer.js';
 
 export class TaskbarAppItemFactory {
@@ -143,6 +144,7 @@ export class TaskbarAppItemFactory {
             y_expand: true,
         });
         const topSpacer = new St.Widget();
+        const bottomSpacer = new St.Widget();
         const content = new St.Widget({
             style_class: 'simple-taskbar-app-content',
             layout_manager: new Clutter.BinLayout(),
@@ -211,24 +213,26 @@ export class TaskbarAppItemFactory {
             accessible_name: app.get_name(),
             child: layout,
         });
-        const indicator = new St.Widget({
-            style_class: 'simple-taskbar-running-indicator',
+        const indicatorHost = new St.Widget({
+            layout_manager: new Clutter.FixedLayout(),
             x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.FILL,
+            y_expand: true,
+            width: glassWidth,
+            height: panelHeight,
+            clip_to_allocation: false,
         });
-        const indicatorPrimary = new St.Widget({
-            style_class: 'simple-taskbar-running-indicator-segment',
-        });
-        const indicatorSecondary = new St.Widget({
-            style_class: 'simple-taskbar-running-indicator-segment',
-            visible: false,
-        });
-        indicator.add_child(indicatorPrimary);
-        indicator.add_child(indicatorSecondary);
+        const indicator = new RunningIndicator(
+            'simple-taskbar-running-indicator',
+            glass
+        );
+        indicatorHost.add_child(indicator);
         layout.add_child(topSpacer);
         layout.add_child(content);
-        layout.add_child(indicator);
+        layout.add_child(bottomSpacer);
         visual.add_child(glassHost);
         visual.add_child(button);
+        visual.add_child(indicatorHost);
         slot.add_child(visual);
         item.setChild(slot);
 
@@ -250,18 +254,17 @@ export class TaskbarAppItemFactory {
             _taskbarLabel: label,
             _taskbarSlot: slot,
             _taskbarTopSpacer: topSpacer,
+            _taskbarBottomSpacer: bottomSpacer,
             _taskbarVisual: visual,
             _taskbarGlassHost: glassHost,
             _taskbarGlass: glass,
             _taskbarGlassTexture: glassTexture,
             _taskbarGlassBorder: glassBorder,
             _taskbarIndicator: indicator,
-            _taskbarIndicatorPrimary: indicatorPrimary,
-            _taskbarIndicatorSecondary: indicatorSecondary,
+            _taskbarIndicatorHost: indicatorHost,
             _taskbarFocused: false,
             _taskbarRunning: false,
-            _taskbarMultipleWindows: false,
-            _taskbarShowSecondary: false,
+            _taskbarWindowCount: 0,
         });
         this._syncLauncherIconPosition(item);
         this._initializeAppearance(item);

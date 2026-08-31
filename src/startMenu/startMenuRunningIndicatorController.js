@@ -10,21 +10,10 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-const SINGLE_WINDOW_WIDTH = 8;
-const MULTIPLE_WINDOW_WIDTH = 18;
-const INDICATOR_GAP = 2;
+import {RunningIndicator} from '../taskbar/runningIndicator.js';
 
-const StartMenuRunningIndicator = GObject.registerClass(
-class StartMenuRunningIndicator extends St.Widget {
-    _init(onDestroy) {
-        super._init({
-            style_class: 'simple-taskbar-windows-start-running-indicator',
-            visible: false,
-        });
-        // C-side actor disposal can bypass a custom destroy() override.
-        this.connect('destroy', () => onDestroy(this));
-    }
-});
+const INDICATOR_GAP = 2;
+const INDICATOR_LENGTH = 24;
 
 const StartMenuIconStack = GObject.registerClass(
 class StartMenuIconStack extends St.Widget {
@@ -35,8 +24,17 @@ class StartMenuIconStack extends St.Widget {
         });
         this._icon = icon;
         this._indicator = indicator;
+        this._edge = 'bottom';
         this.add_child(icon);
         this.add_child(indicator);
+    }
+
+    setIndicatorEdge(edge) {
+        if (this._edge === edge)
+            return;
+
+        this._edge = edge;
+        this.queue_relayout();
     }
 
     vfunc_get_preferred_width(forHeight) {
@@ -72,8 +70,17 @@ class StartMenuIconStack extends St.Widget {
             this._indicator.get_preferred_width(-1);
         const [, indicatorHeight] =
             this._indicator.get_preferred_height(indicatorWidth);
-        const x = Math.floor((width - indicatorWidth) / 2);
-        const y = height + INDICATOR_GAP;
+        let x = Math.floor((width - indicatorWidth) / 2);
+        let y = Math.floor((height - indicatorHeight) / 2);
+        if (this._edge === 'top')
+            y = -indicatorHeight - INDICATOR_GAP;
+        else if (this._edge === 'left')
+            x = -indicatorWidth - INDICATOR_GAP;
+        else if (this._edge === 'right')
+            x = width + INDICATOR_GAP;
+        else
+            y = height + INDICATOR_GAP;
+
         this._indicator.allocate(new Clutter.ActorBox({
             x1: x,
             y1: y,
@@ -93,6 +100,8 @@ export class StartMenuRunningIndicatorController {
         for (const key of [
             'start-menu-running-indicators',
             'running-indicator-style',
+            'running-indicator-position',
+            'running-indicator-size',
             'custom-indicator-colors-enabled',
             'unfocused-indicator-color',
             'windows-xp-theme-enabled',
@@ -117,12 +126,18 @@ export class StartMenuRunningIndicatorController {
     }
 
     createIconStack(app, icon) {
-        const indicator = new StartMenuRunningIndicator(actor => {
-            app.disconnectObject(actor);
-            this._indicators.delete(actor);
-        });
+        const indicator = new RunningIndicator(
+            'simple-taskbar-windows-start-running-indicator'
+        );
+        indicator.visible = false;
         const stack = new StartMenuIconStack(icon, indicator);
+        indicator._startMenuStack = stack;
         this._indicators.set(indicator, app);
+        // C-side actor disposal can bypass a custom destroy() override.
+        indicator.connect('destroy', () => {
+            app.disconnectObject(indicator);
+            this._indicators.delete(indicator);
+        });
         app.connectObject(
             'windows-changed', () => this._syncIndicator(indicator, app),
             'notify::state', () => this._syncIndicator(indicator, app),
@@ -157,25 +172,26 @@ export class StartMenuRunningIndicatorController {
         if (!indicator.visible)
             return;
 
-        indicator.set_width(
-            windows.length > 1
-                ? MULTIPLE_WINDOW_WIDTH
-                : SINGLE_WINDOW_WIDTH
+        const position = this._settings.get_string(
+            'running-indicator-position'
         );
-        const rounded = this._settings.get_string(
-            'running-indicator-style'
-        ) === 'rounded';
-        indicator.set_style_class_name(
-            'simple-taskbar-windows-start-running-indicator' +
-            (rounded ? ' rounded' : '')
-        );
-        const color = this._settings.get_boolean(
-            'custom-indicator-colors-enabled'
-        )
-            ? this._settings.get_string('unfocused-indicator-color')
-            : null;
-        indicator.set_style(
-            color ? `background-color: ${color};` : null
-        );
+        indicator._startMenuStack.setIndicatorEdge(position);
+        indicator.update({
+            x: 0,
+            y: 0,
+            length: INDICATOR_LENGTH,
+            cross: 0,
+            inset: 0,
+            thickness: this._settings.get_int('running-indicator-size'),
+            position,
+            style: this._settings.get_string('running-indicator-style'),
+            count: windows.length,
+            focused: false,
+            color: this._settings.get_boolean(
+                'custom-indicator-colors-enabled'
+            )
+                ? this._settings.get_string('unfocused-indicator-color')
+                : null,
+        });
     }
 }
