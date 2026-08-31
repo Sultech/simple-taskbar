@@ -414,6 +414,35 @@ function addApplicationLayoutControls({
         {value: 'when-full', label: _('Only When Full')},
         {value: 'never', label: _('Never')},
     ];
+    const hideAppLabelsBox = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        margin_top: 12,
+        margin_bottom: 12,
+        margin_start: 12,
+        margin_end: 12,
+    });
+    const hideAppLabelsCheck = new Gtk.CheckButton({
+        label: _('Hide App Labels'),
+    });
+    settings.bind(
+        'hide-app-labels',
+        hideAppLabelsCheck,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+    hideAppLabelsBox.append(hideAppLabelsCheck);
+    const combineOptionsPopover = new Gtk.Popover({
+        child: hideAppLabelsBox,
+        has_arrow: false,
+    });
+    const combineOptionsButton = new Gtk.MenuButton({
+        always_show_arrow: false,
+        popover: combineOptionsPopover,
+        icon_name: 'emblem-system-symbolic',
+        tooltip_text: _('Configure Application Button Options'),
+        valign: Gtk.Align.CENTER,
+        css_classes: ['flat', 'circular'],
+    });
     const combineAppButtonsRow = addComboRow(
         layoutGroup,
         settings,
@@ -429,17 +458,11 @@ function addApplicationLayoutControls({
                     ? windowsXpCombineAppButtonsChoices
                     : combineAppButtonsChoices,
             choicesChangedKey: 'windows-xp-theme-enabled',
+            addSuffix: row => row.add_suffix(combineOptionsButton),
             addRow: row => layoutGroup.add_row(row),
         },
         connectSettings
     );
-
-    const hideAppLabelsSwitch = createSwitchRow(settings, {
-        key: 'hide-app-labels',
-        title: _('Hide App Labels'),
-        subtitle: _('Show only icons on separate window buttons'),
-    });
-    layoutGroup.add_row(hideAppLabelsSwitch);
 
     const notificationBadgeSwitch = createSwitchRow(settings, {
         key: 'show-notification-badges',
@@ -477,21 +500,22 @@ function addApplicationLayoutControls({
     syncSeparatorSensitivity();
 
     const syncLabelSensitivity = () => {
-        hideAppLabelsSwitch.sensitive =
-            !settings.get_boolean(
-                'windows-xp-theme-enabled'
-            ) && !['left', 'right'].includes(settings.get_string(
-                'panel-position'
-            )) && settings.get_string(
-                'combine-app-buttons-mode'
-            ) !== 'always';
+        const enabled = !settings.get_boolean(
+            'windows-xp-theme-enabled'
+        ) && !['left', 'right'].includes(settings.get_string(
+            'panel-position'
+        )) && settings.get_string(
+            'combine-app-buttons-mode'
+        ) !== 'always';
+        hideAppLabelsCheck.sensitive = enabled;
+        combineOptionsButton.sensitive = enabled;
     };
-    combineAppButtonsRow.connect('notify::selected', syncLabelSensitivity);
-    connectSettings(
-        settings,
-        'changed::panel-position',
-        syncLabelSensitivity
-    );
+    for (const key of [
+        'combine-app-buttons-mode',
+        'panel-position',
+        'windows-xp-theme-enabled',
+    ])
+        connectSettings(settings, `changed::${key}`, syncLabelSensitivity);
     syncLabelSensitivity();
 
     const syncPinnedAppsAsLaunchersSensitivity = () => {

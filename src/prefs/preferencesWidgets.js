@@ -186,6 +186,7 @@ export function addComboRow(group, settings, {
     choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
     setValue = value => settings.set_string(key, value),
     configureDropDown = () => {},
+    addSuffix = () => {},
     addRow = row => group.add(row),
 }, connectSettings) {
     const createModel = availableChoices => {
@@ -202,6 +203,7 @@ export function addComboRow(group, settings, {
         valign: Gtk.Align.CENTER,
     });
     const row = new Adw.ActionRow({title, subtitle});
+    addSuffix(row);
     row.add_suffix(dropDown);
     row.activatable_widget = dropDown;
     configureDropDown(dropDown);
