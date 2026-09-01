@@ -477,8 +477,10 @@ export function addPanelItemsPage({
             !dockMode && !defaultPanel &&
             !settings.get_boolean('windows-start-menu-enabled');
         panelOrderRows.get('applications').visibleButton.sensitive =
-            !dockMode && !defaultPanel;
+            !dockMode && !defaultPanel && !windowsXpTheme;
         panelOrderRows.get('system-menu').visibleButton.sensitive =
+            !windowsXpTheme;
+        panelOrderRows.get('clock').visibleButton.sensitive =
             !windowsXpTheme;
         panelOrderRows.get('activities').positionDropDown.sensitive =
             settings.get_boolean('activities-button-visible');

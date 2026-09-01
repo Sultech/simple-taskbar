@@ -38,6 +38,7 @@ const LOCKED_SETTING_KEYS = [
     'panel-border-light-enabled',
     'panel-position',
     'clock-position',
+    'clock-visible',
     'system-menu-position',
     'transparency-enabled',
     'start-menu-follow-panel-transparency',

@@ -110,6 +110,7 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'show-start-button-separator', false);
     setBoolean(settings, 'start-menu-running-indicators', false);
     setBoolean(settings, 'windows-start-menu-enabled', true);
+    setBoolean(settings, 'clock-visible', true);
     setBoolean(settings, 'transparency-enabled', false);
     setBoolean(settings, 'start-menu-follow-panel-transparency', false);
     setBoolean(settings, 'start-menu-super-key', true);
