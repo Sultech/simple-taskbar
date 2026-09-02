@@ -18,6 +18,9 @@ import {
 import {
     createApplicationGroupingOptionsButton,
 } from './applicationGroupingDialog.js';
+import {
+    createWindowPreviewOptionsButton,
+} from './windowPreviewDialog.js';
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
@@ -113,6 +116,7 @@ function addApplicationIconControls({
     group.add(windowInteractionRow);
     const clickActionOptionsButton =
         createApplicationClickActionOptionsButton(settings);
+    const previewOptionsButton = createWindowPreviewOptionsButton(settings);
     addComboRow(
         windowInteractionRow,
         settings,
@@ -255,10 +259,22 @@ function addApplicationIconControls({
                     label: _('Do Nothing'),
                 },
             ],
+            addSuffix: row => row.add_suffix(previewOptionsButton),
             addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
     );
+    const syncPreviewOptionsButtonSensitivity = () => {
+        previewOptionsButton.sensitive = settings.get_string(
+            'application-hover-action'
+        ) === HOVER_ACTION.SHOW_PREVIEWS;
+    };
+    connectSettings(
+        settings,
+        'changed::application-hover-action',
+        syncPreviewOptionsButtonSensitivity
+    );
+    syncPreviewOptionsButtonSensitivity();
     const animateHoverSwitch = createSwitchRow(settings, {
         key: 'animate-appicon-hover',
         title: _('Animate Hovering App Icons'),

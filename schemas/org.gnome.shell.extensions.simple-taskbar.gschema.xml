@@ -800,6 +800,34 @@
       <default>'show-previews'</default>
       <summary>Action when hovering over an application icon</summary>
     </key>
+    <key name="show-window-previews-timeout" type="i">
+      <range min="0" max="9999"/>
+      <default>320</default>
+      <summary>Delay before showing window previews</summary>
+    </key>
+    <key name="leave-timeout" type="i">
+      <range min="0" max="9999"/>
+      <default>300</default>
+      <summary>Delay before hiding window previews</summary>
+    </key>
+    <key name="peek-mode" type="b">
+      <default>true</default>
+      <summary>Enable window preview peeking</summary>
+    </key>
+    <key name="enter-peek-mode-timeout" type="i">
+      <range min="50" max="9999"/>
+      <default>50</default>
+      <summary>Delay before window preview peeking</summary>
+    </key>
+    <key name="peek-mode-opacity" type="i">
+      <range min="0" max="255"/>
+      <default>40</default>
+      <summary>Opacity of other windows while peeking</summary>
+    </key>
+    <key name="preview-middle-click-close" type="b">
+      <default>true</default>
+      <summary>Close a window when its preview is middle-clicked</summary>
+    </key>
     <key name="grid-alt-tab-enabled" type="b">
       <default>true</default>
       <summary>Replace the application switcher with a grid of open windows</summary>

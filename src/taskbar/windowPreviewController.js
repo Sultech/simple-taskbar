@@ -25,15 +25,13 @@ import {getScrollDelta} from '../scrollUtils.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 
-const PREVIEW_OPEN_DELAY = 320;
-const PREVIEW_CLOSE_DELAY = 300;
 const PREVIEW_WIDTH = 260;
 const PREVIEW_HEIGHT = 146;
-const PREVIEW_PEEK_OPACITY = 40;
 const PREVIEW_PEEK_DURATION = 250;
 const APP_TOOLTIP_DELAY = 300;
 const APP_TOOLTIP_SHOW_TIME = 150;
 const APP_TOOLTIP_HIDE_TIME = 100;
+const APP_TOOLTIP_CLOSE_DELAY = 300;
 
 export class WindowPreviewController {
     constructor(
@@ -59,6 +57,7 @@ export class WindowPreviewController {
         this._previewSwitchItem = null;
         this._previewRefreshId = 0;
         this._previewHoverItem = null;
+        this._peekTimeoutId = 0;
         this._peekedWindow = null;
         this._peekedWindowStack = null;
         this._closingPreviewMenus = new Set();
@@ -66,6 +65,14 @@ export class WindowPreviewController {
         this._tooltipItem = null;
         this._tooltipTimeoutId = 0;
         this._tooltipCloseId = 0;
+        this._peekModeChangedId = settings.connect(
+            'changed::peek-mode',
+            () => {
+                this._clearTimeout('_peekTimeoutId');
+                if (!settings.get_boolean('peek-mode'))
+                    this._restorePeek();
+            }
+        );
         this._hoverActionChangedId = settings.connect(
             'changed::application-hover-action',
             () => {
@@ -124,6 +131,8 @@ export class WindowPreviewController {
         this._overviewShowingId = 0;
         this._settings.disconnect(this._hoverActionChangedId);
         this._hoverActionChangedId = 0;
+        this._settings.disconnect(this._peekModeChangedId);
+        this._peekModeChangedId = 0;
         this._hideTooltip(false);
         this._hidePreview(false);
         this._appTooltip?.destroy();
@@ -190,7 +199,7 @@ export class WindowPreviewController {
         this._previewPendingItem = item;
         this._previewOpenId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
-            PREVIEW_OPEN_DELAY,
+            this._settings.get_int('show-window-previews-timeout'),
             () => {
                 this._previewOpenId = 0;
                 this._previewPendingItem = null;
@@ -206,7 +215,7 @@ export class WindowPreviewController {
             return;
         this._previewCloseId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
-            PREVIEW_CLOSE_DELAY,
+            this._settings.get_int('leave-timeout'),
             () => {
                 if (this._pointerIsOverPreview(this._previewItem)) {
                     this._previewCloseId = 0;
@@ -288,7 +297,7 @@ export class WindowPreviewController {
 
         this._tooltipCloseId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
-            PREVIEW_CLOSE_DELAY,
+            APP_TOOLTIP_CLOSE_DELAY,
             () => {
                 if (!this.isPointerInMagnifyBounds() ||
                     this._taskbarItemAtPointer() !== this._tooltipItem) {
@@ -541,6 +550,25 @@ export class WindowPreviewController {
             this._previewPendingItem = null;
     }
 
+    _schedulePeek(window, preview) {
+        this._clearTimeout('_peekTimeoutId');
+        if (!this._settings.get_boolean('peek-mode'))
+            return;
+        if (this._peekedWindow === window)
+            return;
+
+        this._peekTimeoutId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            this._settings.get_int('enter-peek-mode-timeout'),
+            () => {
+                this._peekTimeoutId = 0;
+                if (preview.hover)
+                    this._peekWindow(window);
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
     _peekWindow(window) {
         if (!this._previewItem)
             return;
@@ -557,7 +585,10 @@ export class WindowPreviewController {
 
         this._restorePeekedWindowStack();
         this._peekedWindow = window;
-        this._focusMetaWindow(PREVIEW_PEEK_OPACITY, window);
+        this._focusMetaWindow(
+            this._settings.get_int('peek-mode-opacity'),
+            window
+        );
     }
 
     _focusMetaWindow(dimOpacity, window, ignoreFocus = false) {
@@ -652,6 +683,7 @@ export class WindowPreviewController {
     _clearTimeouts() {
         this._clearTimeout('_previewOpenId');
         this._clearTimeout('_previewCloseId');
+        this._clearTimeout('_peekTimeoutId');
         this._clearSwitch();
         if (this._previewRefreshId)
             GLib.Source.remove(this._previewRefreshId);
@@ -798,6 +830,7 @@ export class WindowPreviewController {
             return;
         }
 
+        this._clearTimeout('_peekTimeoutId');
         this._restorePeek();
         previewBox.destroy_all_children();
         for (const window of windows) {
@@ -865,6 +898,16 @@ export class WindowPreviewController {
             accessible_name: title,
             child: content,
         });
+        previewButton.connect('button-press-event', (_actor, event) => {
+            if (event.get_button() !== Clutter.BUTTON_MIDDLE ||
+                !this._settings.get_boolean('preview-middle-click-close') ||
+                !window.can_close())
+                return Clutter.EVENT_PROPAGATE;
+
+            this.hide();
+            window.delete(global.get_current_time());
+            return Clutter.EVENT_STOP;
+        });
         previewButton.connect('clicked', () => {
             this.hide();
             this._onPreviewActivated();
@@ -881,7 +924,11 @@ export class WindowPreviewController {
         preview.add_child(previewButton);
         preview.connect('notify::hover', actor => {
             if (actor.hover)
-                this._peekWindow(window);
+                this._schedulePeek(window, actor);
+            else {
+                this._clearTimeout('_peekTimeoutId');
+                this._restorePeek();
+            }
         });
 
         if (window.can_close()) {
