@@ -276,7 +276,8 @@ export class TaskbarIconHoverAnimationController {
             Meta.LaterType.BEFORE_REDRAW,
             () => {
                 if (!this._animator.isMagnifyActive() &&
-                    !this._cloneController.hasClones()) {
+                    !this._cloneController.hasClones() &&
+                    !this._cloneController.hasUnsettledStretches()) {
                     this._magnifyFrameId = 0;
                     return GLib.SOURCE_REMOVE;
                 }
