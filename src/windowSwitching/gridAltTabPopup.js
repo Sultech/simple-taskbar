@@ -322,6 +322,7 @@ const GridAltTabList = GObject.registerClass({
     Signals: {
         'item-activated': {param_types: [GObject.TYPE_INT]},
         'item-entered': {param_types: [GObject.TYPE_INT]},
+        'item-removed': {param_types: [GObject.TYPE_INT]},
     },
 }, class GridAltTabList extends St.ScrollView {
     _init(windows, monitor, maxPreviewHeight) {
@@ -532,6 +533,7 @@ const GridAltTabList = GObject.registerClass({
             card.destroy();
             if (row && row.get_n_children() === 0)
                 row.destroy();
+            this.emit('item-removed', index);
             return;
         }
 
@@ -554,6 +556,8 @@ const GridAltTabList = GObject.registerClass({
                     row.destroy();
             },
         });
+
+        this.emit('item-removed', index);
     }
 
     getVerticalIndex(index, direction) {
