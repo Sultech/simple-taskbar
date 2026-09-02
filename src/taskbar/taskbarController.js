@@ -237,7 +237,8 @@ export class TaskbarController {
                 getInterestingWindows: app => this._interestingWindows(app),
                 getPreviewController: () => this._getPreviews(),
                 isDragging: () => this.isDragging,
-                onAppClicked: (item, app) => this._onAppClicked(item, app),
+                onAppClicked: (item, app, action) =>
+                    this._onAppClicked(item, app, action),
                 onWindowClicked: window => this._onWindowClicked(window),
                 onMenuOpenStateChanged: isOpen => {
                     if (isOpen)
@@ -272,7 +273,9 @@ export class TaskbarController {
                 ),
             handleHover: (item, hovering) =>
                 this.handleItemHover(item, hovering),
-            handleMiddleClick: item => this.handleItemMiddleClick(item),
+            handleMiddleClick: (item, shifted) =>
+                this.handleItemMiddleClick(item, shifted),
+            handleShiftClick: item => this.handleItemShiftClick(item),
             initializeAppearance: item => {
                 this._syncItemLabel(item);
                 this._syncIndicatorVisibility(item);
@@ -310,11 +313,18 @@ export class TaskbarController {
                     this._onHoverAnimationReserveChanged(),
                 onCloneButtonPress: (item, event) => {
                     const mouseButton = event.get_button();
-                    if (mouseButton === 2) {
-                        this.handleItemMiddleClick(item);
+                    const shifted = Boolean(
+                        event.get_state() & Clutter.ModifierType.SHIFT_MASK
+                    );
+                    if (mouseButton === Clutter.BUTTON_PRIMARY && shifted) {
+                        this.handleItemShiftClick(item);
                         return Clutter.EVENT_STOP;
                     }
-                    if (mouseButton === 3) {
+                    if (mouseButton === Clutter.BUTTON_MIDDLE) {
+                        this.handleItemMiddleClick(item, shifted);
+                        return Clutter.EVENT_STOP;
+                    }
+                    if (mouseButton === Clutter.BUTTON_SECONDARY) {
                         this.popupItemMenu(item);
                         return Clutter.EVENT_STOP;
                     }
@@ -998,8 +1008,12 @@ export class TaskbarController {
         );
     }
 
-    handleItemMiddleClick(item) {
-        this._itemInteractionController.middleClick(item);
+    handleItemShiftClick(item) {
+        return this._itemInteractionController.shiftClick(item);
+    }
+
+    handleItemMiddleClick(item, shifted = false) {
+        return this._itemInteractionController.middleClick(item, shifted);
     }
 
     popupItemMenu(item, button = item._taskbarButton) {

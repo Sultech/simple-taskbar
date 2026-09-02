@@ -8,7 +8,7 @@ import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {TaskbarLocationMenu} from './taskbarLocationMenu.js';
 import {
     CLICK_ACTION,
-    MIDDLE_CLICK_ACTION,
+    normalizeLegacyMiddleClickAction,
 } from '../shared/applicationClickActions.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
@@ -65,15 +65,38 @@ export class TaskbarItemInteractionController {
             return false;
         }
 
-        const keepOpen = this._getInterestingWindows(app).length > 1 &&
-            this._settings.get_string('application-click-action') ===
-                CLICK_ACTION.TOGGLE_SHOW_PREVIEW &&
-            !Main.overview._shown;
+        const keepOpen = this._shouldKeepPreviewOpen(
+            item,
+            this._settings.get_string('application-click-action')
+        );
         this._onAppClicked(interactionItem, app);
         return keepOpen;
     }
 
-    middleClick(item) {
+    shiftClick(item) {
+        const previews = this._getPreviewController();
+        const app = item._taskbarApp;
+        const action = this._settings.get_string('shift-click-action');
+        previews.hideTooltip();
+        if (item._taskbarIsLauncher) {
+            previews.hide();
+            this._animatePinnedLaunch(item);
+            this._openNewWindow(app);
+            return false;
+        }
+        if (app._simpleTaskbarLocation) {
+            previews.hide();
+            this._openNewWindow(app);
+            return false;
+        }
+
+        previews.hide();
+        const keepOpen = this._shouldKeepPreviewOpen(item, action);
+        this._onAppClicked(item, app, action);
+        return keepOpen;
+    }
+
+    middleClick(item, shifted = false) {
         const previews = this._getPreviewController();
         const app = item._taskbarApp;
         previews.hideTooltip();
@@ -82,14 +105,14 @@ export class TaskbarItemInteractionController {
             this._openNewWindow(app);
             return;
         }
-        if (this._settings.get_string('middle-click-action') ===
-            MIDDLE_CLICK_ACTION.CLOSE_APPLICATIONS) {
-            app.request_quit();
-        } else {
-            if (this._favorites.isFavorite(app.get_id()))
-                this._animatePinnedLaunch(item);
-            this._openNewWindow(app);
+        const action = shifted
+            ? this._settings.get_string('shift-middle-click-action')
+            : normalizeLegacyMiddleClickAction(this._settings);
+        if (action === CLICK_ACTION.LAUNCH &&
+            this._favorites.isFavorite(app.get_id())) {
+            this._animatePinnedLaunch(item);
         }
+        this._onAppClicked(item, app, action);
     }
 
     hover(item, hovering, styleItem = item, retainForPreview = true) {
@@ -240,5 +263,11 @@ export class TaskbarItemInteractionController {
 
         button._taskbarMenu = menu;
         button._taskbarMenuManager = menuManager;
+    }
+
+    _shouldKeepPreviewOpen(item, action) {
+        return this._getInterestingWindows(item._taskbarApp).length > 1 &&
+            action === CLICK_ACTION.TOGGLE_SHOW_PREVIEW &&
+            !Main.overview._shown;
     }
 }

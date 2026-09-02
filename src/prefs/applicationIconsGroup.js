@@ -9,16 +9,16 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {axisPanelPositions} from './panelAxis.js';
 import {
+    createApplicationClickActionOptionsButton,
+    getApplicationClickActionChoices,
+} from './applicationClickActionDialog.js';
+import {
     createApplicationHoverAnimationOptionsButton,
 } from './applicationHoverAnimationDialog.js';
 import {
     createApplicationGroupingOptionsButton,
 } from './applicationGroupingDialog.js';
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
-import {
-    CLICK_ACTION,
-    MIDDLE_CLICK_ACTION,
-} from '../shared/applicationClickActions.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {
@@ -111,6 +111,8 @@ function addApplicationIconControls({
         subtitle: _('Configure previews, multi-window actions, and clicks'),
     });
     group.add(windowInteractionRow);
+    const clickActionOptionsButton =
+        createApplicationClickActionOptionsButton(settings);
     addComboRow(
         windowInteractionRow,
         settings,
@@ -118,40 +120,8 @@ function addApplicationIconControls({
             key: 'application-click-action',
             title: _('Click Action'),
             subtitle: _('Choose what happens when a running application is clicked'),
-            choices: [
-                {
-                    value: CLICK_ACTION.CYCLE_MINIMIZE,
-                    label: _('Cycle Windows + Minimize'),
-                },
-                {
-                    value: CLICK_ACTION.CYCLE,
-                    label: _('Cycle Through Windows'),
-                },
-                {
-                    value: CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
-                    label: _('Show Window Previews'),
-                },
-                {
-                    value: CLICK_ACTION.TOGGLE_CYCLE,
-                    label: _('Toggle Single / Cycle Multiple'),
-                },
-                {
-                    value: CLICK_ACTION.TOGGLE_SPREAD,
-                    label: _('Spread Multiple Windows'),
-                },
-                {
-                    value: CLICK_ACTION.TOGGLE_WINDOWS,
-                    label: _('Toggle Windows'),
-                },
-                {
-                    value: CLICK_ACTION.RAISE_WINDOWS,
-                    label: _('Raise Windows'),
-                },
-                {
-                    value: CLICK_ACTION.LAUNCH,
-                    label: _('Launch New Instance'),
-                },
-            ],
+            choices: getApplicationClickActionChoices(),
+            addSuffix: row => row.add_suffix(clickActionOptionsButton),
             addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
@@ -338,30 +308,6 @@ function addApplicationIconControls({
         syncAnimationTypeSensitivity
     );
     syncAnimationTypeSensitivity();
-    addComboRow(
-        windowInteractionRow,
-        settings,
-        {
-            key: 'middle-click-action',
-            title: _('Middle Click Action'),
-            subtitle: _(
-                'Choose what happens when middle-clicking a running application'
-            ),
-            choices: [
-                {
-                    value: MIDDLE_CLICK_ACTION.OPEN_NEW_WINDOW,
-                    label: _('Open New Window'),
-                },
-                {
-                    value: MIDDLE_CLICK_ACTION.CLOSE_APPLICATIONS,
-                    label: _('Close Application'),
-                },
-            ],
-            addRow: row => windowInteractionRow.add_row(row),
-        },
-        connectSettings
-    );
-
     const syncMinimumIconSize = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
             (!settings.get_boolean('default-gnome-panel') ||

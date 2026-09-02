@@ -10,9 +10,25 @@ export const CLICK_ACTION = {
     TOGGLE_WINDOWS: 'toggle-windows',
     RAISE_WINDOWS: 'raise-windows',
     LAUNCH: 'launch-new-instance',
+    MINIMIZE: 'minimize-window',
+    QUIT: 'quit-applications',
 };
 
-export const MIDDLE_CLICK_ACTION = {
+export const LEGACY_MIDDLE_CLICK_ACTION = {
     OPEN_NEW_WINDOW: 'open-new-window',
     CLOSE_APPLICATIONS: 'close-applications',
 };
+
+export function normalizeLegacyMiddleClickAction(settings) {
+    const action = settings.get_string('middle-click-action');
+    if (action === LEGACY_MIDDLE_CLICK_ACTION.OPEN_NEW_WINDOW) {
+        settings.set_string('middle-click-action', CLICK_ACTION.LAUNCH);
+        return CLICK_ACTION.LAUNCH;
+    }
+    if (action === LEGACY_MIDDLE_CLICK_ACTION.CLOSE_APPLICATIONS) {
+        settings.set_string('middle-click-action', CLICK_ACTION.QUIT);
+        return CLICK_ACTION.QUIT;
+    }
+
+    return action;
+}

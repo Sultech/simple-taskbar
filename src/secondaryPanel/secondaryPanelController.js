@@ -124,8 +124,8 @@ export class SecondaryPanelController {
             getInterestingWindows: app =>
                 this._windowController.getInterestingWindows(app),
             ignoreTaskbarLock: isDock,
-            onAppClicked: (item, app) =>
-                this._windowController.handleAppClicked(item, app),
+            onAppClicked: (item, app, action) =>
+                this._windowController.handleAppClicked(item, app, action),
             onWindowClicked: window =>
                 this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),

@@ -23,6 +23,7 @@ export class TaskbarAppItemFactory {
         getSlotWidth,
         handleHover,
         handleMiddleClick,
+        handleShiftClick,
         initializeAppearance,
         makeDraggable,
         popupMenu,
@@ -45,6 +46,7 @@ export class TaskbarAppItemFactory {
         this._getSlotWidth = getSlotWidth;
         this._handleHover = handleHover;
         this._handleMiddleClick = handleMiddleClick;
+        this._handleShiftClick = handleShiftClick;
         this._initializeAppearance = initializeAppearance;
         this._makeDraggable = makeDraggable;
         this._popupMenu = popupMenu;
@@ -291,11 +293,19 @@ export class TaskbarAppItemFactory {
         });
         button.connect('button-press-event', (_actor, event) => {
             const mouseButton = event.get_button();
-            if (mouseButton === 2) {
-                this._handleMiddleClick(item);
+            if (mouseButton === Clutter.BUTTON_PRIMARY &&
+                event.get_state() & Clutter.ModifierType.SHIFT_MASK) {
+                this._handleShiftClick(item);
                 return Clutter.EVENT_STOP;
             }
-            if (mouseButton === 3) {
+            if (mouseButton === Clutter.BUTTON_MIDDLE) {
+                this._handleMiddleClick(
+                    item,
+                    Boolean(event.get_state() & Clutter.ModifierType.SHIFT_MASK)
+                );
+                return Clutter.EVENT_STOP;
+            }
+            if (mouseButton === Clutter.BUTTON_SECONDARY) {
                 this._popupMenu(item, button);
                 return Clutter.EVENT_STOP;
             }
@@ -325,6 +335,7 @@ export class TaskbarAppItemFactory {
         this._popupMenu = null;
         this._makeDraggable = null;
         this._initializeAppearance = null;
+        this._handleShiftClick = null;
         this._handleMiddleClick = null;
         this._handleHover = null;
         this._getSlotWidth = null;

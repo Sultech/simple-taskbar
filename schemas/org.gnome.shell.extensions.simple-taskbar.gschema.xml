@@ -234,10 +234,19 @@
     </key>
     <key name="middle-click-action" type="s">
       <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
         <choice value="open-new-window"/>
         <choice value="close-applications"/>
       </choices>
-      <default>'open-new-window'</default>
+      <default>'launch-new-instance'</default>
       <summary>Action when middle-clicking a running application</summary>
     </key>
     <key name="panel-menu-click-only" type="b">
@@ -733,6 +742,36 @@
       </choices>
       <default>'toggle-spread'</default>
       <summary>Action when a running application is clicked</summary>
+    </key>
+    <key name="shift-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+      </choices>
+      <default>'minimize-window'</default>
+      <summary>Action when Shift-clicking a running application</summary>
+    </key>
+    <key name="shift-middle-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+      </choices>
+      <default>'launch-new-instance'</default>
+      <summary>Action when Shift-middle-clicking a running application</summary>
     </key>
     <key name="scroll-icon-action" type="s">
       <choices>

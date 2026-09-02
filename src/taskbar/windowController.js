@@ -129,13 +129,15 @@ export class WindowController {
         Main.overview.hide();
     }
 
-    _minimizeWindows(windows) {
+    _minimizeWindows(windows, allWindows = true) {
         const workspace =
             global.workspace_manager.get_active_workspace();
         for (const window of windows) {
             if (window.get_workspace() === workspace &&
                 window.showing_on_its_workspace()) {
                 window.minimize();
+                if (!allWindows)
+                    break;
             }
         }
         Main.overview.hide();
@@ -295,13 +297,22 @@ export class WindowController {
         return true;
     }
 
-    handleAppClicked(item, app) {
+    handleAppClicked(
+        item,
+        app,
+        action = this._settings.get_string('application-click-action')
+    ) {
         const previews = this._getPreviews();
         const windows = this.getInterestingWindows(app);
-        const action = this._settings.get_string('application-click-action');
         const isCycleAction = action === CLICK_ACTION.CYCLE_MINIMIZE ||
             action === CLICK_ACTION.CYCLE ||
             action === CLICK_ACTION.TOGGLE_CYCLE;
+        if (item._taskbarWindow) {
+            this._resetCycleState();
+            previews.hide();
+            this._handleWindowAction(item._taskbarWindow, action);
+            return;
+        }
         if (!isCycleAction)
             this._resetCycleState();
 
@@ -360,13 +371,62 @@ export class WindowController {
                 this._toggleAppWindows(app);
             }
             break;
+        case CLICK_ACTION.MINIMIZE:
+            if (windows.length === 0)
+                this.activateApp(app);
+            else
+                this._minimizeWindows(windows, false);
+            break;
         case CLICK_ACTION.RAISE_WINDOWS:
             this._raiseAppWindows(app);
             break;
         case CLICK_ACTION.LAUNCH:
             this.openNewWindow(app);
             break;
+        case CLICK_ACTION.QUIT:
+            this._getTaskbar().closeApp(app, global.get_current_time());
+            break;
         }
+    }
+
+    _handleWindowAction(window, action) {
+        const app = this._tracker.get_window_app(window);
+        if (action === CLICK_ACTION.LAUNCH) {
+            this.openNewWindow(app);
+            return;
+        }
+
+        if (action === CLICK_ACTION.QUIT) {
+            window.delete(global.get_current_time());
+            return;
+        }
+
+        if (action === CLICK_ACTION.MINIMIZE) {
+            if (Main.overview._shown)
+                Main.activateWindow(window);
+            else {
+                this._getTaskbar().updateAppIconGeometry(app);
+                window.minimize();
+                Main.overview.hide();
+            }
+            return;
+        }
+
+        const minimizeFocusedActions = [
+            CLICK_ACTION.CYCLE_MINIMIZE,
+            CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
+            CLICK_ACTION.TOGGLE_CYCLE,
+            CLICK_ACTION.TOGGLE_SPREAD,
+        ];
+        if (!Main.overview._shown &&
+            global.display.focus_window === window &&
+            minimizeFocusedActions.includes(action)) {
+            this._getTaskbar().updateAppIconGeometry(app);
+            window.minimize();
+            return;
+        }
+
+        this.handleWindowClicked(window);
     }
 
     handleWindowClicked(window) {

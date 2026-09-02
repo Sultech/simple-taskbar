@@ -35,6 +35,13 @@ export function applyWindowsXpThemeBehaviorDefaults(settings) {
         'application-click-action',
         CLICK_ACTION.TOGGLE_SPREAD
     );
+    setString(settings, 'shift-click-action', CLICK_ACTION.MINIMIZE);
+    setString(settings, 'middle-click-action', CLICK_ACTION.LAUNCH);
+    setString(
+        settings,
+        'shift-middle-click-action',
+        CLICK_ACTION.LAUNCH
+    );
     setString(
         settings,
         'scroll-icon-action',

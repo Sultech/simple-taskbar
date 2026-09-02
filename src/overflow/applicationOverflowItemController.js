@@ -210,8 +210,22 @@ export class ApplicationOverflowItemController {
         });
         auxiliaryItem.connect('button-press-event', (_button, event) => {
             const mouseButton = event.get_button();
+            const shifted = Boolean(
+                event.get_state() & Clutter.ModifierType.SHIFT_MASK
+            );
+            if (mouseButton === Clutter.BUTTON_PRIMARY && shifted) {
+                const keepOpen = this._taskbarController.handleItemShiftClick(
+                    sourceItem
+                );
+                if (!keepOpen)
+                    closePopupMenu(this._menu);
+                return Clutter.EVENT_STOP;
+            }
             if (mouseButton === Clutter.BUTTON_MIDDLE) {
-                this._taskbarController.handleItemMiddleClick(sourceItem);
+                this._taskbarController.handleItemMiddleClick(
+                    sourceItem,
+                    shifted
+                );
                 closePopupMenu(this._menu);
                 return Clutter.EVENT_STOP;
             }
