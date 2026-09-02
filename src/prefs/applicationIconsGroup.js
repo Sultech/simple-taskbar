@@ -11,6 +11,9 @@ import {axisPanelPositions} from './panelAxis.js';
 import {
     createApplicationHoverAnimationOptionsButton,
 } from './applicationHoverAnimationDialog.js';
+import {
+    createApplicationGroupingOptionsButton,
+} from './applicationGroupingDialog.js';
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 import {
     CLICK_ACTION,
@@ -452,35 +455,8 @@ function addApplicationLayoutControls({
         {value: 'when-full', label: _('Only When Full')},
         {value: 'never', label: _('Never')},
     ];
-    const hideAppLabelsBox = new Gtk.Box({
-        orientation: Gtk.Orientation.VERTICAL,
-        margin_top: 12,
-        margin_bottom: 12,
-        margin_start: 12,
-        margin_end: 12,
-    });
-    const hideAppLabelsCheck = new Gtk.CheckButton({
-        label: _('Hide App Labels'),
-    });
-    settings.bind(
-        'hide-app-labels',
-        hideAppLabelsCheck,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-    hideAppLabelsBox.append(hideAppLabelsCheck);
-    const combineOptionsPopover = new Gtk.Popover({
-        child: hideAppLabelsBox,
-        has_arrow: false,
-    });
-    const combineOptionsButton = new Gtk.MenuButton({
-        always_show_arrow: false,
-        popover: combineOptionsPopover,
-        tooltip_text: _('Configure Application Button Options'),
-        valign: Gtk.Align.CENTER,
-        css_classes: ['flat', 'circular'],
-    });
-    setButtonIcon(combineOptionsButton, 'emblem-system-symbolic');
+    const combineOptionsButton =
+        createApplicationGroupingOptionsButton(settings);
     const combineAppButtonsRow = addComboRow(
         layoutGroup,
         settings,
@@ -545,7 +521,6 @@ function addApplicationLayoutControls({
         )) && settings.get_string(
             'combine-app-buttons-mode'
         ) !== 'always';
-        hideAppLabelsCheck.sensitive = enabled;
         combineOptionsButton.sensitive = enabled;
     };
     for (const key of [

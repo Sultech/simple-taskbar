@@ -49,7 +49,7 @@ import {
 import {panelIsVertical} from '../panel/panelPosition.js';
 
 const STARTUP_SETTLE_DELAY = 750;
-const APP_LABEL_WIDTH = 140;
+const APP_LABEL_WIDTH = 160;
 const BADGE_SINGLE_DIGIT_ICON_SIZE = 31;
 const BADGE_TWO_DIGIT_ICON_SIZE = 35;
 const BADGE_LARGE_FONT_ICON_SIZE = 56;
@@ -274,6 +274,7 @@ export class TaskbarController {
                 this.handleItemHover(item, hovering),
             handleMiddleClick: item => this.handleItemMiddleClick(item),
             initializeAppearance: item => {
+                this._syncItemLabel(item);
                 this._syncIndicatorVisibility(item);
                 this._syncNotificationBadgeGeometry(item);
                 this._updateGlassGeometry(item);
@@ -286,6 +287,10 @@ export class TaskbarController {
             syncItemLabel: item => this._syncItemLabel(item),
             syncLauncherIconPosition: item =>
                 this._syncLauncherIconPosition(item),
+            updateItemGeometry: item => {
+                this._updateGlassGeometry(item);
+                this._queueRedisplay();
+            },
         });
         this._iconHoverAnimationController =
             new TaskbarIconHoverAnimationController({
@@ -575,6 +580,18 @@ export class TaskbarController {
             }
             this.queueIconGeometryUpdate();
         }, this._signalHolder);
+        for (const key of [
+            'group-apps-label-font-size',
+            'group-apps-label-font-weight',
+            'group-apps-label-max-width',
+            'group-apps-use-fixed-width',
+        ]) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this._syncLabelSettings(),
+                this._signalHolder
+            );
+        }
         this._settings.connectObject(
             'changed::nautilus-places-enabled',
             () => this._syncFileManagerPlaces(),
@@ -795,7 +812,8 @@ export class TaskbarController {
             item._taskbarPinnedToRunningGap,
             item._taskbarIsCombinedApp,
             item._taskbarTrailingSpacing,
-            iconSize
+            iconSize,
+            item._taskbarLabel
         );
     }
 
@@ -1465,8 +1483,10 @@ export class TaskbarController {
     }
 
     _syncCombineWhenFull() {
+        const labelWidth = this._appearanceController.labelMaxWidth();
+        const labelWidthChanged = labelWidth !== this._appLabelWidth;
+        this._appLabelWidth = labelWidth;
         let combinedAppIds = new Set();
-        let labelWidth = APP_LABEL_WIDTH;
         if (this._combineMode() === 'when-full' &&
             this._availableWidth > 0) {
             const layout = this._calculateWhenFullLayout();
@@ -1477,12 +1497,10 @@ export class TaskbarController {
             combinedAppIds,
             this._whenFullCombinedApps
         );
-        const labelWidthChanged = labelWidth !== this._appLabelWidth;
         if (!combinationChanged && !labelWidthChanged)
             return {combinationChanged: false, labelWidthChanged: false};
 
         this._whenFullCombinedApps = combinedAppIds;
-        this._appLabelWidth = labelWidth;
         if (labelWidthChanged)
             this._applyCurrentButtonWidths();
         return {combinationChanged, labelWidthChanged};
@@ -1556,6 +1574,7 @@ export class TaskbarController {
             const pinnedToRunningGap = !entry.app._simpleTaskbarLocation &&
                 entry.isLauncher && Boolean(nextApplicationEntry) &&
                 !nextApplicationEntry.isLauncher;
+            const item = this._appButtons.get(entry.key);
             const transitionGap =
                 this._appearanceController.transitionGap(
                     pinnedToRunningGap
@@ -1568,8 +1587,10 @@ export class TaskbarController {
             return total + this._appearanceController.itemMainExtent(
                 entry.window,
                 entryShowLabels,
-                APP_LABEL_WIDTH,
-                entry.isCombined
+                this._appLabelWidth,
+                entry.isCombined,
+                this._iconSize,
+                item ? item._taskbarLabel : null
             ) + iconSpacing + transitionGap + trailingSpacing;
         }, 0);
         return width + this._pinnedSeparatorLengthForEntries(
@@ -1986,6 +2007,24 @@ export class TaskbarController {
 
     _syncItemLabel(item) {
         this._appearanceController.syncItemLabel(item);
+    }
+
+    _syncLabelSettings() {
+        for (const item of this._appButtons.values())
+            this._syncItemLabel(item);
+
+        const {combinationChanged, labelWidthChanged} =
+            this._syncCombineWhenFull();
+        if (!labelWidthChanged)
+            this._applyCurrentButtonWidths();
+        if (combinationChanged) {
+            this._shownInitially = false;
+            this._getPreviews().hideTooltip(false);
+            this._getPreviews().hide();
+            this._syncDragEnabled();
+        }
+        this._queueRedisplay();
+        this.queueIconGeometryUpdate();
     }
 
 }

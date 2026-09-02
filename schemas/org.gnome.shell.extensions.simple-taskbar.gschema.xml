@@ -683,6 +683,35 @@
       <default>false</default>
       <summary>Hide window title labels when application buttons are not combined</summary>
     </key>
+    <key name="group-apps-label-font-size" type="i">
+      <range min="6" max="24"/>
+      <default>14</default>
+      <summary>Application title font size</summary>
+      <description>Font size for window title labels on uncombined application buttons</description>
+    </key>
+    <key name="group-apps-label-font-weight" type="s">
+      <choices>
+        <choice value="inherit"/>
+        <choice value="normal"/>
+        <choice value="lighter"/>
+        <choice value="bold"/>
+        <choice value="bolder"/>
+      </choices>
+      <default>'inherit'</default>
+      <summary>Application title font weight</summary>
+      <description>Font weight for window title labels on uncombined application buttons</description>
+    </key>
+    <key name="group-apps-label-max-width" type="i">
+      <range min="0" max="1000"/>
+      <default>160</default>
+      <summary>Application title maximum width</summary>
+      <description>Maximum width in pixels for window title labels on uncombined application buttons</description>
+    </key>
+    <key name="group-apps-use-fixed-width" type="b">
+      <default>true</default>
+      <summary>Use a fixed application title width</summary>
+      <description>Use the maximum label width for every uncombined application button</description>
+    </key>
     <key name="isolate-workspaces" type="b">
       <default>false</default>
       <summary>Show running applications from the active workspace only</summary>

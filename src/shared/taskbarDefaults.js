@@ -58,6 +58,10 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
+    setInteger(settings, 'group-apps-label-font-size', 14);
+    setString(settings, 'group-apps-label-font-weight', 'inherit');
+    setInteger(settings, 'group-apps-label-max-width', 160);
+    setBoolean(settings, 'group-apps-use-fixed-width', true);
     setBoolean(settings, 'hide-pinned-taskbar-apps', false);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
     setString(

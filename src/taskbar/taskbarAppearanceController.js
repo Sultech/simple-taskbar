@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import St from 'gi://St';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
@@ -29,6 +30,10 @@ const WINDOWS_XP_TASKBUTTON_WIDTH = 160;
 const WINDOWS_XP_TASKBUTTON_HORIZONTAL_PADDING = 8;
 const WINDOWS_XP_TASKBUTTON_ICON_SPACING = 4;
 const WINDOWS_XP_PINNED_TO_RUNNING_GAP = 6;
+
+function settingsScale(value) {
+    return value * St.ThemeContext.get_for_stage(global.stage).scale_factor;
+}
 
 export class TaskbarAppearanceController {
     constructor({
@@ -64,14 +69,18 @@ export class TaskbarAppearanceController {
             item._taskbarWindow,
             this._showAppLabels(),
             this._getAppLabelWidth(),
-            item._taskbarIsCombinedApp
+            item._taskbarIsCombinedApp,
+            this._getIconSize(),
+            item._taskbarLabel
         );
         const slotWidth = this.itemSlotWidth(
             item._taskbarWindow,
             item._taskbarIsLauncher,
             item._taskbarPinnedToRunningGap,
             item._taskbarIsCombinedApp,
-            item._taskbarTrailingSpacing
+            item._taskbarTrailingSpacing,
+            this._getIconSize(),
+            item._taskbarLabel
         );
         const panelHeight = this._getPanelHeight();
         const visualPanelHeight = this.visualPanelHeight();
@@ -139,7 +148,8 @@ export class TaskbarAppearanceController {
         item._taskbarLabel.set_width(
             this.labelWidthForButton(
                 item._taskbarWindow,
-                item._taskbarIsCombinedApp
+                item._taskbarIsCombinedApp,
+                item._taskbarLabel
             )
         );
         this.updateIndicatorGeometry(item, false, {
@@ -160,6 +170,12 @@ export class TaskbarAppearanceController {
 
     indicatorStyle() {
         return this._settings.get_string('running-indicator-style');
+    }
+
+    labelMaxWidth() {
+        return settingsScale(
+            this._settings.get_int('group-apps-label-max-width')
+        );
     }
 
     verticalItemExtent(iconSize = this._getIconSize()) {
@@ -190,7 +206,9 @@ export class TaskbarAppearanceController {
             item._taskbarWindow,
             this._showAppLabels(),
             this._getAppLabelWidth(),
-            item._taskbarIsCombinedApp
+            item._taskbarIsCombinedApp,
+            this._getIconSize(),
+            item._taskbarLabel
         );
         const vertical = panelIsVertical(this._settings);
         const visualPanelHeight = this.visualPanelHeight();
@@ -274,7 +292,8 @@ export class TaskbarAppearanceController {
         showLabels = this._showAppLabels(),
         labelWidth = this._getAppLabelWidth(),
         isCombined = false,
-        iconSize = this._getIconSize()
+        iconSize = this._getIconSize(),
+        label = null
     ) {
         const hasLabel = (Boolean(window) || isCombined) &&
             !panelIsVertical(this._settings);
@@ -285,19 +304,28 @@ export class TaskbarAppearanceController {
 
         const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
         const iconWidth = Math.max(iconSize, minimumIconWidth) + 8;
-        return hasLabel && showLabels
-            ? iconWidth + APP_LABEL_SPACING + labelWidth
+        const actualLabelWidth = label
+            ? this.labelWidthForButton(window, isCombined, label)
+            : labelWidth;
+        return hasLabel && showLabels && actualLabelWidth > 0
+            ? iconWidth + APP_LABEL_SPACING + actualLabelWidth
             : iconWidth;
     }
 
-    labelWidthForButton(window, isCombined = false) {
+    labelWidthForButton(window, isCombined = false, label = null) {
         if (this._settings.get_boolean('windows-xp-theme-enabled') &&
             (window || isCombined)) {
             return WINDOWS_XP_TASKBUTTON_WIDTH - this._getIconSize() -
                 WINDOWS_XP_TASKBUTTON_ICON_SPACING -
                 WINDOWS_XP_TASKBUTTON_HORIZONTAL_PADDING * 2;
         }
-        return this._getAppLabelWidth();
+        if (!label || this._settings.get_boolean('group-apps-use-fixed-width'))
+            return this._getAppLabelWidth();
+
+        return Math.min(
+            label.get_preferred_width(-1)[1],
+            this.labelMaxWidth()
+        );
     }
 
     buttonContentHeight(panelHeight = this.visualPanelHeight()) {
@@ -335,7 +363,8 @@ export class TaskbarAppearanceController {
         showLabels = this._showAppLabels(),
         labelWidth = this._getAppLabelWidth(),
         isCombined = false,
-        iconSize = this._getIconSize()
+        iconSize = this._getIconSize(),
+        label = null
     ) {
         return panelIsVertical(this._settings)
             ? this.verticalItemExtent(iconSize)
@@ -344,7 +373,8 @@ export class TaskbarAppearanceController {
                 showLabels,
                 labelWidth,
                 isCombined,
-                iconSize
+                iconSize,
+                label
             );
     }
 
@@ -354,7 +384,8 @@ export class TaskbarAppearanceController {
         pinnedToRunningGap = false,
         isCombined = false,
         trailing = false,
-        iconSize = this._getIconSize()
+        iconSize = this._getIconSize(),
+        label = null
     ) {
         const transitionGap = this.transitionGap(pinnedToRunningGap);
         const iconSpacing = this.iconSpacing(isLauncher);
@@ -363,7 +394,8 @@ export class TaskbarAppearanceController {
             this._showAppLabels(),
             this._getAppLabelWidth(),
             isCombined,
-            iconSize
+            iconSize,
+            label
         ) + iconSpacing + transitionGap +
             (trailing && iconSpacing < 0 ? -iconSpacing : 0);
     }
@@ -378,10 +410,39 @@ export class TaskbarAppearanceController {
         const window = item._taskbarWindow;
         const windowTitle = window ? window.get_title() : null;
         const text = windowTitle || item._taskbarApp.get_name();
+        const maxLabelWidth = this.labelMaxWidth();
+        const fixedWidth = this._settings.get_boolean(
+            'group-apps-use-fixed-width'
+        );
+        const windowsXpTheme = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const hasLabel = (Boolean(window) || item._taskbarIsCombinedApp) &&
+            this._showAppLabels() &&
+            !panelIsVertical(this._settings);
         item._taskbarLabel.text = text;
-        item._taskbarLabel.visible =
-            (Boolean(window) || item._taskbarIsCombinedApp) &&
-            this._showAppLabels() && !panelIsVertical(this._settings);
+        if (windowsXpTheme) {
+            item._taskbarLabel.set_style(null);
+            item._taskbarLabel.clutter_text.natural_width = 0;
+            item._taskbarLabel.clutter_text.natural_width_set = false;
+        } else {
+            item._taskbarLabel.set_style(
+                `font-size: ${this._settings.get_int(
+                    'group-apps-label-font-size'
+                )}px;` +
+                `font-weight: ${this._settings.get_string(
+                    'group-apps-label-font-weight'
+                )};` +
+                (fixedWidth ? '' : `max-width: ${maxLabelWidth}px;`)
+            );
+            item._taskbarLabel.set_width(fixedWidth ? maxLabelWidth : -1);
+            item._taskbarLabel.clutter_text.natural_width = fixedWidth
+                ? maxLabelWidth
+                : 0;
+            item._taskbarLabel.clutter_text.natural_width_set = fixedWidth;
+        }
+        item._taskbarLabel.visible = hasLabel &&
+            (windowsXpTheme || maxLabelWidth > 0);
         if (window)
             item._taskbarButton.accessible_name = `${text}, ${_('running')}`;
     }
@@ -389,11 +450,11 @@ export class TaskbarAppearanceController {
     destroy() {
         this._iconColors.destroy();
         this._iconColors = null;
+        this._getAppItems = null;
         this._showAppLabels = null;
         this._getPanelHeight = null;
         this._getIconSize = null;
         this._getAppLabelWidth = null;
-        this._getAppItems = null;
         this._taskbarActor = null;
         this._settings = null;
     }

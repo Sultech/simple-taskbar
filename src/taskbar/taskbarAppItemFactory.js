@@ -30,6 +30,7 @@ export class TaskbarAppItemFactory {
         showAppLabels,
         syncItemLabel,
         syncLauncherIconPosition,
+        updateItemGeometry,
     }) {
         this._activateItem = activateItem;
         this._getButtonContentHeight = getButtonContentHeight;
@@ -51,6 +52,7 @@ export class TaskbarAppItemFactory {
         this._showAppLabels = showAppLabels;
         this._syncItemLabel = syncItemLabel;
         this._syncLauncherIconPosition = syncLauncherIconPosition;
+        this._updateItemGeometry = updateItemGeometry;
     }
 
     create(
@@ -271,7 +273,10 @@ export class TaskbarAppItemFactory {
         if (window) {
             window.connectObject(
                 'notify::title',
-                () => this._syncItemLabel(item),
+                () => {
+                    this._syncItemLabel(item);
+                    this._updateItemGeometry(item);
+                },
                 item
             );
         }
@@ -313,6 +318,7 @@ export class TaskbarAppItemFactory {
 
     destroy() {
         this._syncLauncherIconPosition = null;
+        this._updateItemGeometry = null;
         this._syncItemLabel = null;
         this._showAppLabels = null;
         this._queueIconGeometryUpdate = null;
