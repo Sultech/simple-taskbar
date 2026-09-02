@@ -281,6 +281,20 @@
       <default>'right'</default>
       <summary>Place the Show Desktop button on the left or right</summary>
     </key>
+    <key name="show-desktop-button-width" type="i">
+      <range min="1" max="40"/>
+      <default>12</default>
+      <summary>Show Desktop button width</summary>
+      <description>Customize the Show Desktop button width in pixels</description>
+    </key>
+    <key name="show-desktop-button-custom-line-color-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom Show Desktop separator color</summary>
+    </key>
+    <key name="show-desktop-button-custom-line-color" type="s">
+      <default>'rgba(255,255,255,0.28)'</default>
+      <summary>Show Desktop separator color</summary>
+    </key>
     <key name="windows-xp-show-desktop-position" type="i">
       <default>0</default>
       <summary>Position of Show Desktop among XP pinned applications</summary>

@@ -66,6 +66,7 @@ export function createPanelOrderRow(settings, {
     fixedPosition = null,
     visibleKey = null,
     visibleState = null,
+    optionsButton = null,
 }, connectSettings) {
     let currentChoices = choices;
     const createModel = availableChoices => {
@@ -175,6 +176,8 @@ export function createPanelOrderRow(settings, {
 
     const row = new Adw.ActionRow({title, subtitle});
     row.add_prefix(moveBox);
+    if (optionsButton)
+        row.add_suffix(optionsButton);
     if (visibleButton)
         row.add_suffix(visibleButton);
     row.add_suffix(positionDropDown);
@@ -184,6 +187,7 @@ export function createPanelOrderRow(settings, {
         row,
         positionDropDown,
         visibleButton,
+        optionsButton,
         upButton,
         downButton,
         setChoices,

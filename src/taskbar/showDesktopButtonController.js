@@ -7,6 +7,7 @@ import St from 'gi://St';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {WINDOWS_XP_PANEL_HEIGHT} from '../shared/windowsXpTheme.js';
 
 export class ShowDesktopButtonController {
@@ -27,7 +28,16 @@ export class ShowDesktopButtonController {
     enable() {
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
-            () => this._syncIcon(),
+            () => {
+                this._syncIcon();
+                this._syncStyle();
+            },
+            'changed::show-desktop-button-width',
+            () => this._syncStyle(),
+            'changed::show-desktop-button-custom-line-color-enabled',
+            () => this._syncStyle(),
+            'changed::show-desktop-button-custom-line-color',
+            () => this._syncStyle(),
             this
         );
     }
@@ -121,6 +131,7 @@ export class ShowDesktopButtonController {
             this
         );
         this._syncIcon();
+        this._syncStyle();
     }
 
     _syncIcon() {
@@ -128,6 +139,32 @@ export class ShowDesktopButtonController {
             this._settings.get_boolean('windows-xp-theme-enabled')
                 ? this._visual
                 : null;
+    }
+
+    _syncStyle() {
+        const vertical = panelIsVertical(this._settings);
+        if (this._settings.get_boolean('windows-xp-theme-enabled')) {
+            this._button.set_style(null);
+            this._button.x_expand = false;
+            this._button.y_expand = false;
+            return;
+        }
+
+        const width = this._settings.get_int('show-desktop-button-width');
+        const dimension = vertical
+            ? `height: ${width}px; min-height: ${width}px;`
+            : `width: ${width}px; min-width: ${width}px;`;
+        const customLineColor = this._settings.get_boolean(
+            'show-desktop-button-custom-line-color-enabled'
+        );
+        const lineColor = customLineColor
+            ? ` border-color: ${this._settings.get_string(
+                'show-desktop-button-custom-line-color'
+            )};`
+            : '';
+        this._button.set_style(`${dimension}${lineColor}`);
+        this._button.x_expand = vertical;
+        this._button.y_expand = !vertical;
     }
 
     _destroyButton() {

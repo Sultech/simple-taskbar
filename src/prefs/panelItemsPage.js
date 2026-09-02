@@ -15,6 +15,9 @@ import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {
+    createShowDesktopButtonOptionsButton,
+} from './showDesktopButtonDialog.js';
+import {
     addSpinRow,
     createPanelOrderRow,
     createSwitchRow,
@@ -162,6 +165,8 @@ export function addPanelItemsPage({
     for (const group of panelOrderGroups.values())
         page.add(group);
 
+    const showDesktopOptionsButton =
+        createShowDesktopButtonOptionsButton(settings);
     const panelOrderDefinitions = new Map([
         ['left-box', {
             title: _('Left Box'),
@@ -237,6 +242,7 @@ export function addPanelItemsPage({
             choices: initialPositions.filter(
                 position => position.value !== 'center'
             ),
+            optionsButton: showDesktopOptionsButton,
         }],
     ]);
     const panelOrderRows = new Map();
@@ -291,6 +297,11 @@ export function addPanelItemsPage({
         ])
             panelOrderRows.get(id).setChoices(positions);
     };
+    const syncShowDesktopOptionsButton = () => {
+        showDesktopOptionsButton.sensitive =
+            !settings.get_boolean('windows-xp-theme-enabled') &&
+            settings.get_boolean('show-desktop-button-visible');
+    };
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
@@ -298,10 +309,21 @@ export function addPanelItemsPage({
     );
     connectSettings(
         settings,
+        'changed::windows-xp-theme-enabled',
+        syncShowDesktopOptionsButton
+    );
+    connectSettings(
+        settings,
+        'changed::show-desktop-button-visible',
+        syncShowDesktopOptionsButton
+    );
+    connectSettings(
+        settings,
         'changed::panel-position',
         syncPanelAxis
     );
     syncPanelAxis();
+    syncShowDesktopOptionsButton();
 
     const getPanelItemPosition = id => {
         const definition = panelOrderDefinitions.get(id);
