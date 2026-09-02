@@ -103,6 +103,7 @@ export class SecondaryPanelDockController {
         this._activeWorkspace = null;
         this._workspaceWindows = new Set();
         this._lastPanelEdgeGap = null;
+        this._lastHoverReserve = null;
     }
 
     get strutActor() {
@@ -149,6 +150,7 @@ export class SecondaryPanelDockController {
         this._isCentered = null;
         this._configuredIconSize = 0;
         this._dockPanelLength = null;
+        this._lastHoverReserve = null;
     }
 
     getPanelLengthPercentage() {
@@ -491,17 +493,26 @@ export class SecondaryPanelDockController {
         if (this._settings.get_boolean('dock-panel-mode'))
             return;
 
-        const requiredLength = this._panelContentLength(vertical);
+        const hoverReserve =
+            this._taskbarController.getHoverAnimationReserve();
+        const baseRequiredLength = this._panelContentLength(vertical, 0);
         const maximumLength = vertical ? geometry.height : geometry.width;
         const panelLength = Math.min(
             maximumLength,
-            Math.max(1, Math.ceil(requiredLength))
-        );
-        if (panelLength === this._dockPanelLength)
+            Math.max(1, Math.ceil(baseRequiredLength))
+        ) + hoverReserve;
+        const lengthChanged = panelLength !== this._dockPanelLength;
+        if (!lengthChanged) {
+            this._lastHoverReserve = hoverReserve;
             return;
+        }
 
+        const animateDockLength = this._lastHoverReserve !== null &&
+            this._dockPanelLength !== null &&
+            hoverReserve !== this._lastHoverReserve;
         this._dockPanelLength = panelLength;
-        this._onPosition(false);
+        this._lastHoverReserve = hoverReserve;
+        this._onPosition(false, false, animateDockLength);
         this._taskbarWidthUpdater.queue();
     }
 
@@ -603,7 +614,10 @@ export class SecondaryPanelDockController {
         return false;
     }
 
-    _panelContentLength(vertical) {
+    _panelContentLength(
+        vertical,
+        hoverReserve = this._taskbarController.getHoverAnimationReserve()
+    ) {
         const crossSize = this._getPanelHeight();
         const contentLength = this._boxes.reduce((length, box) => {
             box.queue_relayout();
@@ -611,7 +625,8 @@ export class SecondaryPanelDockController {
                 ? box.get_preferred_height(crossSize)[1]
                 : box.get_preferred_width(crossSize)[1]);
         }, 0);
-        return contentLength + PANEL_ITEM_GAP * 2;
+        return contentLength + PANEL_ITEM_GAP * 2 +
+            hoverReserve;
     }
 
     _connectToMainPanel(geometry) {

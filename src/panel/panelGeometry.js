@@ -23,7 +23,7 @@ export function panelGeometry(
         ? lengthPercentage === null
             ? fullLength
             : Math.floor(fullLength * lengthPercentage / 100)
-        : Math.min(fullLength, Math.floor(lengthOverride));
+        : Math.max(1, Math.min(fullLength, Math.floor(lengthOverride)));
     const width = vertical ? thickness : length;
     const height = vertical ? length : thickness;
     const x = vertical && !minimumEdge

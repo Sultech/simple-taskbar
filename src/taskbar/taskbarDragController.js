@@ -50,6 +50,8 @@ export class TaskbarDragController {
         this._draggingItem = null;
         this._pinnedDropActive = false;
         this._draggables = new Map();
+        this._cloneDraggables = new Map();
+        this._draggingClone = null;
         this._listeners = new Set();
         this._externalPlaceholder = null;
         this._externalPlaceholderSize = 0;
@@ -151,6 +153,52 @@ export class TaskbarDragController {
             }),
             endId: draggable.connect('drag-end', () => this.finish(item)),
         });
+    }
+
+    makeCloneDraggable(item, clone) {
+        if (!this._dragIsEnabled(item))
+            return;
+
+        const button = item._taskbarButton;
+        const dragSource = button._delegate;
+        clone._delegate = dragSource;
+        const draggable = DND.makeDraggable(clone, {
+            timeoutThreshold: 200,
+            dragActorMaxSize: this._getIconSize(),
+        });
+        this._cloneDraggables.set(clone, {
+            draggable,
+            pendingRelease: false,
+            beginId: draggable.connect('drag-begin', () => {
+                dragSource._taskbarDropAccepted = false;
+                this._draggingClone = clone;
+                this.begin(item);
+                button._taskbarMenu?.close();
+            }),
+            endId: draggable.connect('drag-end', () => {
+                this._draggingClone = null;
+                this.finish(item);
+                const pending = this._cloneDraggables.get(clone);
+                if (pending && pending.pendingRelease)
+                    this.releaseCloneDraggable(clone);
+            }),
+        });
+    }
+
+    releaseCloneDraggable(clone) {
+        const entry = this._cloneDraggables.get(clone);
+        if (!entry)
+            return;
+
+        if (this._draggingClone === clone) {
+            entry.pendingRelease = true;
+            return;
+        }
+
+        entry.draggable.disconnect(entry.beginId);
+        entry.draggable.disconnect(entry.endId);
+        clone._delegate = null;
+        this._cloneDraggables.delete(clone);
     }
 
     releaseDraggable(item) {
@@ -360,6 +408,10 @@ export class TaskbarDragController {
     destroy() {
         DND.removeDragMonitor(this._dragMonitor);
         this._dragMonitor = null;
+        this._draggingClone = null;
+        for (const clone of [...this._cloneDraggables.keys()])
+            this.releaseCloneDraggable(clone);
+        this._cloneDraggables = null;
         for (const item of [...this._draggables.keys()])
             this.releaseDraggable(item);
         this._draggables = null;

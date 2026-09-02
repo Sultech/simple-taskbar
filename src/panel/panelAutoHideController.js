@@ -34,6 +34,8 @@ export class PanelAutoHideController {
         getPanelEdgeGap = () => 0,
         getLimitRevealToPanel = () => true,
         isBlocked,
+        getOutwardReserve,
+        onHidden,
     }) {
         this._settings = settings;
         this._panelActor = panelActor;
@@ -46,6 +48,8 @@ export class PanelAutoHideController {
         this._getPanelEdgeGap = getPanelEdgeGap;
         this._getLimitRevealToPanel = getLimitRevealToPanel;
         this._isBlockedCallback = isBlocked;
+        this._getOutwardReserve = getOutwardReserve;
+        this._onHidden = onHidden;
         this._signalHolder = new TransientSignalHolder();
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._cursorPositionInvalidatedId = 0;
@@ -169,6 +173,8 @@ export class PanelAutoHideController {
         this._getPanelEdgeGap = null;
         this._getLimitRevealToPanel = null;
         this._isBlockedCallback = null;
+        this._getOutwardReserve = null;
+        this._onHidden = null;
         this._trackedActorData = null;
         this._strutActorData = null;
         this._positionTarget = null;
@@ -206,6 +212,7 @@ export class PanelAutoHideController {
     }
 
     setDodgeState(enabled, active, pointerReveal) {
+        const wasActive = this._dodgeActive;
         this._dodgeEnabled = enabled;
         this._dodgeActive = active;
         this._dodgePointerReveal = pointerReveal;
@@ -240,8 +247,12 @@ export class PanelAutoHideController {
             return;
         }
 
-        if (!this._hidden)
-            this._hide();
+        if (!this._hidden) {
+            if (wasActive)
+                this._scheduleHide();
+            else
+                this._hide();
+        }
         if (pointerReveal) {
             const [x, y] = global.get_pointer();
             this._handlePointerMotion(x, y);
@@ -590,6 +601,7 @@ export class PanelAutoHideController {
             this._geometry(this._getMonitor()).hiddenOffset,
             animate
         );
+        this._onHidden();
     }
 
     _isBlocked() {
@@ -622,6 +634,15 @@ export class PanelAutoHideController {
 
         const [x, y] = global.get_pointer();
         const geometry = this._geometry(monitor);
+        const reserve = this._getOutwardReserve();
+        if (reserve > 0) {
+            const vertical = panelIsVertical(this._settings);
+            const size = vertical ? 'width' : 'height';
+            if (!panelIsMinimumEdge(this._settings))
+                geometry[vertical ? 'x' : 'y'] -= reserve;
+            geometry[size] += reserve;
+        }
+
         return x >= geometry.x && x < geometry.x + geometry.width &&
             y >= geometry.y && y < geometry.y + geometry.height;
     }

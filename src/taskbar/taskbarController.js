@@ -33,6 +33,9 @@ import {
     TaskbarIconGeometryController,
 } from './taskbarIconGeometryController.js';
 import {
+    TaskbarIconHoverAnimationController,
+} from './taskbarIconHoverAnimationController.js';
+import {
     TaskbarLocationsController,
 } from './taskbarLocationsController.js';
 import {MAX_RUNNING_INDICATORS} from '../shared/runningIndicatorSettings.js';
@@ -86,6 +89,12 @@ export class TaskbarController {
         onShowDesktopModeChanged,
         getPreviewController,
         onRedisplay = () => {},
+        getPositionActor,
+        getHoverAnimationMonitor,
+        getPanelInteractionController,
+        getHoverAnimationNeighbours,
+        onHoverAnimationReserveChanged,
+        isHoverAnimationBlocked,
         ignoreTaskbarLock = false,
         locationScope = 'taskbar',
     }) {
@@ -103,6 +112,12 @@ export class TaskbarController {
         this._onShowDesktopClicked = onShowDesktopClicked;
         this._onShowDesktopModeChanged = onShowDesktopModeChanged;
         this._onRedisplay = onRedisplay;
+        this._getPositionActor = getPositionActor;
+        this._getHoverAnimationMonitor = getHoverAnimationMonitor;
+        this._getPanelInteractionController = getPanelInteractionController;
+        this._getHoverAnimationNeighbours = getHoverAnimationNeighbours;
+        this._onHoverAnimationReserveChanged = onHoverAnimationReserveChanged;
+        this._isHoverAnimationBlocked = isHoverAnimationBlocked;
         this._getPreviews = getPreviewController;
         this._ignoreTaskbarLock = ignoreTaskbarLock;
         this._alignmentActor = null;
@@ -224,6 +239,10 @@ export class TaskbarController {
                 isDragging: () => this.isDragging,
                 onAppClicked: (item, app) => this._onAppClicked(item, app),
                 onWindowClicked: window => this._onWindowClicked(window),
+                onMenuOpenStateChanged: isOpen => {
+                    if (isOpen)
+                        this._iconHoverAnimationController.dropAnimations();
+                },
                 openNewWindow: app => this._openNewWindow(app),
                 windowsForItem: item => this._windowsForItem(item),
             });
@@ -268,6 +287,47 @@ export class TaskbarController {
             syncLauncherIconPosition: item =>
                 this._syncLauncherIconPosition(item),
         });
+        this._iconHoverAnimationController =
+            new TaskbarIconHoverAnimationController({
+                settings: this._settings,
+                taskbarActor: this.actor,
+                getIconSize: () => this._iconSize,
+                getPanelThickness: () => this._panelHeight,
+                getVertical: () => panelIsVertical(this._settings),
+                isDragging: () => this.isDragging,
+                isBlocked: () => this._isHoverAnimationBlocked(),
+                getMonitor: () => this._getHoverAnimationMonitor(),
+                getPositionActor: () => this._getPositionActor(),
+                getNeighbourActors: () =>
+                    this._getHoverAnimationNeighbours(),
+                raiseOverlays: () => this._getPreviews().raiseOverlays(),
+                onReserveChanged: () =>
+                    this._onHoverAnimationReserveChanged(),
+                onCloneButtonPress: (item, event) => {
+                    const mouseButton = event.get_button();
+                    if (mouseButton === 2) {
+                        this.handleItemMiddleClick(item);
+                        return Clutter.EVENT_STOP;
+                    }
+                    if (mouseButton === 3) {
+                        this.popupItemMenu(item);
+                        return Clutter.EVENT_STOP;
+                    }
+                    return Clutter.EVENT_PROPAGATE;
+                },
+                onCloneActivate: item => this.activateItem(item),
+                onCloneScroll: (item, event) => {
+                    const interaction = this._getPanelInteractionController();
+                    if (!interaction)
+                        return Clutter.EVENT_PROPAGATE;
+
+                    return interaction.handleTargetedEvent(item, event);
+                },
+                onCloneCreated: (item, clone) =>
+                    this._dragController.makeCloneDraggable(item, clone),
+                onCloneDestroyed: clone =>
+                    this._dragController.releaseCloneDraggable(clone),
+            });
     }
 
     get _showDesktopItem() {
@@ -396,6 +456,7 @@ export class TaskbarController {
     }
 
     enable() {
+        this._iconHoverAnimationController.enable();
         this._dragController.enable();
         if (this._startupSettling) {
             Main.layoutManager.connectObject('startup-complete', () => {
@@ -566,6 +627,8 @@ export class TaskbarController {
     }
 
     destroy() {
+        this._iconHoverAnimationController.destroy();
+        this._iconHoverAnimationController = null;
         this._iconGeometryController.destroy();
         this._iconGeometryController = null;
         if (this._startupSettleId)
@@ -627,6 +690,12 @@ export class TaskbarController {
         this._onShowDesktopClicked = null;
         this._onShowDesktopModeChanged = null;
         this._onRedisplay = null;
+        this._getPositionActor = null;
+        this._getHoverAnimationMonitor = null;
+        this._getPanelInteractionController = null;
+        this._getHoverAnimationNeighbours = null;
+        this._onHoverAnimationReserveChanged = null;
+        this._isHoverAnimationBlocked = null;
         this._auxiliaryItems = null;
         this._pinnedSeparator = null;
         this._pinnedSeparatorLine = null;
@@ -660,7 +729,7 @@ export class TaskbarController {
         }
         this._iconSize = iconSize;
         for (const item of this._appButtons.values()) {
-            item._taskbarIcon.icon_size = iconSize;
+            this._iconHoverAnimationController.syncIconResolution(item);
             this._syncNotificationBadgeGeometry(item);
             this._updateGlassGeometry(item);
         }
@@ -671,6 +740,26 @@ export class TaskbarController {
 
     getIconSize() {
         return this._iconSize;
+    }
+
+    dropHoverAnimations() {
+        this._iconHoverAnimationController.dropAnimations();
+    }
+
+    getHoverAnimationOutwardReserve() {
+        return this._iconHoverAnimationController.getOutwardReserve();
+    }
+
+    getHoverAnimationExpansionDuration() {
+        return this._iconHoverAnimationController.getExpansionDuration();
+    }
+
+    isPointerInMagnifyBounds() {
+        return this._iconHoverAnimationController.isPointerInMagnifyBounds();
+    }
+
+    getHoverAnimationReserve() {
+        return this._iconHoverAnimationController.getReserve();
     }
 
     finishItemShowAnimations() {

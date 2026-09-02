@@ -110,6 +110,10 @@ export class DockPanelSettings {
         );
     }
 
+    get_value(key) {
+        return this._settings.get_value(dockSettingKey(key));
+    }
+
     get_strv(...args) {
         if (args[0] === 'panel-item-order')
             return this._settings.get_strv('dock-item-order');

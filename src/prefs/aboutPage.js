@@ -10,6 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {addProfileTransferGroup} from './profileTransfer.js';
 import {addResetGroup} from './preferencesDialogs.js';
+import {setButtonIcon} from './preferencesWidgets.js';
 
 const GITHUB_URL = 'https://github.com/Sultech/simple-taskbar';
 const ISSUES_URL = `${GITHUB_URL}/issues`;
@@ -182,11 +183,11 @@ function addCryptoAddress(group, window, name, symbol, address) {
         icon_name: CRYPTO_ADDRESS_ICON,
     });
     const copyButton = new Gtk.Button({
-        icon_name: 'edit-copy-symbolic',
         valign: Gtk.Align.CENTER,
         css_classes: ['flat', 'circular'],
         tooltip_text: _('Copy %s address').replace('%s', name),
     });
+    setButtonIcon(copyButton, 'edit-copy-symbolic');
     copyButton.connect('clicked', () => {
         window.get_display().get_clipboard().set_content(
             Gdk.ContentProvider.new_for_value(address)

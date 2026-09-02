@@ -69,6 +69,47 @@
       <default>3</default>
       <summary>Space between application buttons</summary>
     </key>
+    <key name="animate-appicon-hover" type="b">
+      <default>false</default>
+      <summary>Animate hovering application icons</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-type" type="s">
+      <choices>
+        <choice value="simple"/>
+        <choice value="ripple"/>
+        <choice value="magnify"/>
+      </choices>
+      <default>'simple'</default>
+      <summary>Application icon hover animation type</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-convexity" type="a{sd}">
+      <default>{'ripple':2,'magnify':1}</default>
+      <summary>Application icon hover animation curve convexity</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-duration" type="a{su}">
+      <default>{'simple':160,'ripple':130}</default>
+      <summary>Application icon hover animation duration</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-expansion" type="a{su}">
+      <default>{'magnify':100}</default>
+      <summary>Application icon hover animation dock expansion time</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-extent" type="a{si}">
+      <default>{'ripple':4,'magnify':7}</default>
+      <summary>Application icon hover animation extent</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-rotation" type="a{si}">
+      <default>{'simple':0,'ripple':10,'magnify':0}</default>
+      <summary>Application icon hover animation rotation</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-travel" type="a{sd}">
+      <default>{'simple':0.30,'ripple':0.40,'magnify':0}</default>
+      <summary>Application icon hover animation travel</summary>
+    </key>
+    <key name="animate-appicon-hover-animation-zoom" type="a{sd}">
+      <default>{'simple':1,'ripple':1.25,'magnify':2}</default>
+      <summary>Application icon hover animation zoom</summary>
+    </key>
     <key name="show-notification-badges" type="b">
       <default>true</default>
       <summary>Show notification badges</summary>

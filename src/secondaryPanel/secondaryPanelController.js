@@ -59,6 +59,9 @@ import {
 } from './secondaryPanelIndicatorController.js';
 import {StartButtonController} from '../startMenu/startButtonController.js';
 import {TaskbarController} from '../taskbar/taskbarController.js';
+import {
+    getTaskbarHoverAnimationNeighbours,
+} from '../taskbar/taskbarHoverAnimationUtils.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
 import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
@@ -133,12 +136,25 @@ export class SecondaryPanelController {
                 this._applicationOverflowController.sync();
             },
             locationScope: isDock ? 'dock' : 'taskbar',
+            getPositionActor: () => this._panelBox,
+            getHoverAnimationMonitor: () => this._monitor,
+            getPanelInteractionController: () => this._interactionController,
+            getHoverAnimationNeighbours: () =>
+                getTaskbarHoverAnimationNeighbours(
+                    this._taskbarBin,
+                    this._startButtonController.panelActor,
+                    this._taskbarViewport
+                ),
+            onHoverAnimationReserveChanged: () => this._updateTaskbarWidth(),
+            isHoverAnimationBlocked: () => this._interactionIsBlocked(false),
         });
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
             app => this._windowController.getInterestingWindows(app),
             settings,
-            () => this._applicationOverflowController.closeWithAnimation()
+            () => this._applicationOverflowController.closeWithAnimation(),
+            () => this._taskbarController.getHoverAnimationOutwardReserve(),
+            () => this._taskbarController.isPointerInMagnifyBounds()
         );
         this._startButtonController = new StartButtonController({
             extensionDir,
@@ -155,8 +171,10 @@ export class SecondaryPanelController {
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
                 this._autoHideController.setMenuOpen(open);
-                if (open)
+                if (open) {
+                    this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
+                }
             },
         });
         this._folderMenuController = new FolderMenuController(settings);
@@ -225,8 +243,15 @@ export class SecondaryPanelController {
                 getIconSize: () => this._iconSize,
                 setIconSize: iconSize => this._iconSize = iconSize,
                 setPanelHeight: panelHeight => this._panelHeight = panelHeight,
-                onPosition: (updateTaskbarWidth, animateEdgeGap) =>
-                    this._position(updateTaskbarWidth, animateEdgeGap),
+                onPosition: (
+                    updateTaskbarWidth,
+                    animateEdgeGap,
+                    animateDockLength
+                ) => this._position(
+                    updateTaskbarWidth,
+                    animateEdgeGap,
+                    animateDockLength
+                ),
                 isCentered: () => this._appsAreCentered(),
             });
         }
@@ -311,6 +336,12 @@ export class SecondaryPanelController {
             settings: this._settings,
             panelActor: this.actor,
             positionActor: this._panelBox,
+            onHidden: () => {
+                this._taskbarController.dropHoverAnimations();
+                this._windowPreviews.hideTooltip(false);
+            },
+            getOutwardReserve: () =>
+                this._taskbarController.getHoverAnimationOutwardReserve(),
             strutActor: this._dockController
                 ? this._dockController.strutActor
                 : null,
@@ -644,7 +675,11 @@ export class SecondaryPanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _position(updateTaskbarWidth = true, animateEdgeGapRequested = false) {
+    _position(
+        updateTaskbarWidth = true,
+        animateEdgeGapRequested = false,
+        animateDockLength = false
+    ) {
         const positionState = this._dockController
             ? this._dockController.getPositionState(
                 animateEdgeGapRequested
@@ -653,20 +688,61 @@ export class SecondaryPanelController {
         const geometry = positionState
             ? positionState.geometry
             : this._panelGeometry();
-        this._panelBox.set_size(geometry.width, geometry.height);
-        this.actor.set_size(geometry.width, geometry.height);
-        if (!animateEdgeGapRequested ||
-            !positionState ||
-            positionState.edgeGapChanged && !positionState.animateEdgeGap) {
-            const property = geometry.vertical ? 'x' : 'y';
-            if (this._autoHideController &&
-                this._panelBox.get_transition(property)) {
-                if (geometry.vertical)
-                    this._panelBox.y = geometry.y;
-                else
-                    this._panelBox.x = geometry.x;
-            } else {
-                this._panelBox.set_position(geometry.x, geometry.y);
+        const property = geometry.vertical ? 'x' : 'y';
+        const lengthProperty = geometry.vertical ? 'height' : 'width';
+        const positionProperty = geometry.vertical ? 'y' : 'x';
+        const crossProperty = geometry.vertical ? 'width' : 'height';
+        const translationProperty = geometry.vertical
+            ? 'translation_y'
+            : 'translation_x';
+        const animateDockGeometry = animateDockLength &&
+            this._dockController &&
+            !animateEdgeGapRequested;
+        if (animateDockGeometry) {
+            const currentPosition = this._panelBox[positionProperty] +
+                this._panelBox[translationProperty];
+            this._panelBox.remove_transition(lengthProperty);
+            this._panelBox.remove_transition(translationProperty);
+            this._panelBox[crossProperty] = geometry[crossProperty];
+            this.actor.remove_transition(lengthProperty);
+            this.actor[crossProperty] = geometry[crossProperty];
+            if (!this._panelBox.get_transition(property))
+                this._panelBox[property] = geometry[property];
+            this._panelBox[positionProperty] = geometry[positionProperty];
+            this._panelBox[translationProperty] = currentPosition -
+                geometry[positionProperty];
+            const duration = this._taskbarController
+                .getHoverAnimationExpansionDuration();
+            this._panelBox.ease({
+                [lengthProperty]: geometry[lengthProperty],
+                [translationProperty]: 0,
+                duration,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+            this.actor.ease({
+                [lengthProperty]: geometry[lengthProperty],
+                duration,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+        } else {
+            this._panelBox.remove_transition(lengthProperty);
+            this._panelBox.remove_transition(translationProperty);
+            this._panelBox[translationProperty] = 0;
+            this.actor.remove_transition(lengthProperty);
+            this._panelBox.set_size(geometry.width, geometry.height);
+            this.actor.set_size(geometry.width, geometry.height);
+            if (!animateEdgeGapRequested ||
+                !positionState ||
+                positionState.edgeGapChanged && !positionState.animateEdgeGap) {
+                if (this._autoHideController &&
+                    this._panelBox.get_transition(property)) {
+                    if (geometry.vertical)
+                        this._panelBox.y = geometry.y;
+                    else
+                        this._panelBox.x = geometry.x;
+                } else {
+                    this._panelBox.set_position(geometry.x, geometry.y);
+                }
             }
         }
         if (this._dockController)
@@ -720,12 +796,16 @@ export class SecondaryPanelController {
     }
 
     _autoHideIsBlocked() {
+        return this._interactionIsBlocked(true);
+    }
+
+    _interactionIsBlocked(includeWindowPreviews) {
         return Boolean(
             this._interactionController.menuIsOpen ||
             this._startButtonController.menuIsOpen ||
             this._folderMenuController.menuIsOpen ||
             this._applicationOverflowController.menuIsOpen ||
-            this._windowPreviews.isOpen ||
+            (includeWindowPreviews && this._windowPreviews.isOpen) ||
             this._taskbarController.isDragging ||
             this._taskbarController.hasOpenMenu() ||
             this._menuManager.activeMenu?.isOpen

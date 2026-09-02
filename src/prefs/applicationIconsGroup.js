@@ -9,6 +9,10 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {axisPanelPositions} from './panelAxis.js';
 import {
+    createApplicationHoverAnimationOptionsButton,
+} from './applicationHoverAnimationDialog.js';
+import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
+import {
     CLICK_ACTION,
     MIDDLE_CLICK_ACTION,
 } from '../shared/applicationClickActions.js';
@@ -24,6 +28,7 @@ import {
     addComboRow,
     addSpinRow,
     createSwitchRow,
+    setButtonIcon,
 } from './preferencesWidgets.js';
 
 const MAX_ICON_SIZE = 63;
@@ -227,11 +232,11 @@ function addApplicationIconControls({
     const scrollDelayButton = new Gtk.MenuButton({
         always_show_arrow: false,
         popover: scrollDelayPopover,
-        icon_name: 'emblem-system-symbolic',
         tooltip_text: _('Configure Scroll Delay'),
         valign: Gtk.Align.CENTER,
         css_classes: ['flat', 'circular'],
     });
+    setButtonIcon(scrollDelayButton, 'emblem-system-symbolic');
     const scrollActionBox = new Gtk.Box({
         orientation: Gtk.Orientation.HORIZONTAL,
         spacing: 6,
@@ -281,6 +286,55 @@ function addApplicationIconControls({
         },
         connectSettings
     );
+    const animateHoverSwitch = createSwitchRow(settings, {
+        key: 'animate-appicon-hover',
+        title: _('Animate Hovering App Icons'),
+        subtitle: _(
+            'Animate application icons when the pointer moves over the taskbar'
+        ),
+    });
+    windowInteractionRow.add_row(animateHoverSwitch);
+    const animationOptionsButton =
+        createApplicationHoverAnimationOptionsButton(settings);
+    const animationTypeRow = addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'animate-appicon-hover-animation-type',
+            title: _('Hover Animation Type'),
+            subtitle: _(
+                'Choose the animation style for application icon hover'
+            ),
+            choices: [
+                {
+                    value: APP_ICON_HOVER_ANIMATION.SIMPLE,
+                    label: _('Simple'),
+                },
+                {
+                    value: APP_ICON_HOVER_ANIMATION.RIPPLE,
+                    label: _('Ripple'),
+                },
+                {
+                    value: APP_ICON_HOVER_ANIMATION.MAGNIFY,
+                    label: _('Magnify'),
+                },
+            ],
+            addSuffix: row => row.add_suffix(animationOptionsButton),
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
+    const syncAnimationTypeSensitivity = () => {
+        animationTypeRow.sensitive = settings.get_boolean(
+            'animate-appicon-hover'
+        );
+    };
+    connectSettings(
+        settings,
+        'changed::animate-appicon-hover',
+        syncAnimationTypeSensitivity
+    );
+    syncAnimationTypeSensitivity();
     addComboRow(
         windowInteractionRow,
         settings,
@@ -422,11 +476,11 @@ function addApplicationLayoutControls({
     const combineOptionsButton = new Gtk.MenuButton({
         always_show_arrow: false,
         popover: combineOptionsPopover,
-        icon_name: 'emblem-system-symbolic',
         tooltip_text: _('Configure Application Button Options'),
         valign: Gtk.Align.CENTER,
         css_classes: ['flat', 'circular'],
     });
+    setButtonIcon(combineOptionsButton, 'emblem-system-symbolic');
     const combineAppButtonsRow = addComboRow(
         layoutGroup,
         settings,

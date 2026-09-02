@@ -25,6 +25,7 @@ export class TaskbarItemInteractionController {
         isDragging,
         onAppClicked,
         onWindowClicked,
+        onMenuOpenStateChanged,
         openNewWindow,
         windowsForItem,
     }) {
@@ -37,6 +38,7 @@ export class TaskbarItemInteractionController {
         this._isDragging = isDragging;
         this._onAppClicked = onAppClicked;
         this._onWindowClicked = onWindowClicked;
+        this._onMenuOpenStateChanged = onMenuOpenStateChanged;
         this._openNewWindow = openNewWindow;
         this._windowsForItem = windowsForItem;
     }
@@ -128,8 +130,12 @@ export class TaskbarItemInteractionController {
 
         if (!retainForPreview || previews.hoverItem !== item)
             styleItem.remove_style_pseudo_class('hover');
-        if (previews.tooltipItem === item)
-            previews.hideTooltip();
+        if (previews.tooltipItem === item) {
+            if (previews.isPointerInMagnifyBounds())
+                previews.scheduleTooltipClose();
+            else
+                previews.hideTooltip();
+        }
         previews.scheduleClose();
     }
 
@@ -174,6 +180,7 @@ export class TaskbarItemInteractionController {
     }
 
     destroy() {
+        this._onMenuOpenStateChanged = null;
         this._windowsForItem = null;
         this._openNewWindow = null;
         this._onWindowClicked = null;
@@ -219,6 +226,7 @@ export class TaskbarItemInteractionController {
         const menuManager = new PopupMenu.PopupMenuManager(button);
 
         menu.connect('open-state-changed', (_popup, isOpen) => {
+            this._onMenuOpenStateChanged(isOpen);
             if (isOpen) {
                 item.add_style_pseudo_class('hover');
             } else if (!item.hover &&

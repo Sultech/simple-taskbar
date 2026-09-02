@@ -38,6 +38,9 @@ import {
 } from './src/windowSwitching/applicationKeybindingRouter.js';
 import {TaskbarController} from './src/taskbar/taskbarController.js';
 import {
+    getTaskbarHoverAnimationNeighbours,
+} from './src/taskbar/taskbarHoverAnimationUtils.js';
+import {
     NotificationBadgeModel,
 } from './src/taskbar/notificationBadgeModel.js';
 import {createTaskbarViewport} from './src/taskbar/taskbarViewportFactory.js';
@@ -141,6 +144,21 @@ export default class SimpleTaskbarExtension extends Extension {
             onWindowClicked: window =>
                 this._windowController.handleWindowClicked(window),
             openNewWindow: app => this._windowController.openNewWindow(app),
+            getPositionActor: () => Main.layoutManager.panelBox,
+            getHoverAnimationMonitor: () =>
+                Main.layoutManager.primaryMonitor,
+            getPanelInteractionController: () =>
+                this._panelInteractionController,
+            getHoverAnimationNeighbours: () =>
+                getTaskbarHoverAnimationNeighbours(
+                    this._taskbarBin,
+                    this._startButtonController.panelActor,
+                    this._taskbarViewport
+                ),
+            onHoverAnimationReserveChanged: () =>
+                this._panelController.updateTaskbarWidth(),
+            isHoverAnimationBlocked: () =>
+                this._panelInteractionIsBlocked(false),
             onShowDesktopClicked: () =>
                 this._windowController.toggleDesktop(),
             onShowDesktopModeChanged: () =>
@@ -156,7 +174,9 @@ export default class SimpleTaskbarExtension extends Extension {
             () => this._taskbarController.getItems(),
             app => this._windowController.getInterestingWindows(app),
             this._settings,
-            () => this._applicationOverflowController.closeWithAnimation()
+            () => this._applicationOverflowController.closeWithAnimation(),
+            () => this._taskbarController.getHoverAnimationOutwardReserve(),
+            () => this._taskbarController.isPointerInMagnifyBounds()
         );
         this._startButtonController = new StartButtonController({
             extensionDir: this.dir,
@@ -175,6 +195,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._taskbarController.setStartMenuOpen(open);
                 this._panelController.setStartMenuOpen(open);
                 if (open) {
+                    this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
                     this._trayOverflowController.close();
                 }
@@ -190,6 +211,12 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController = new PanelController({
             settings: this._settings,
             panelHeight: this._panelHeight,
+            onPanelHidden: () => {
+                this._taskbarController.dropHoverAnimations();
+                this._windowPreviews.hideTooltip(false);
+            },
+            getHoverAnimationOutwardReserve: () =>
+                this._taskbarController.getHoverAnimationOutwardReserve(),
             startButton: this._startButtonController.panelActor,
             taskbarBin: this._taskbarBin,
             taskbarActor: this._taskbarController.actor,

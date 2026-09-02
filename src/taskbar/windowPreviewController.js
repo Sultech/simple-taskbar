@@ -40,12 +40,17 @@ export class WindowPreviewController {
         getTaskbarItems,
         getInterestingWindows,
         settings,
-        onPreviewActivated
+        onPreviewActivated,
+        getHoverAnimationOutwardReserve,
+        isPointerInMagnifyBounds
     ) {
         this._getTaskbarItems = getTaskbarItems;
         this._getInterestingWindows = getInterestingWindows;
         this._settings = settings;
         this._onPreviewActivated = onPreviewActivated;
+        this._getHoverAnimationOutwardReserve =
+            getHoverAnimationOutwardReserve;
+        this._isPointerInMagnifyBounds = isPointerInMagnifyBounds;
         this._previewItem = null;
         this._previewPendingItem = null;
         this._previewOpenId = 0;
@@ -60,6 +65,7 @@ export class WindowPreviewController {
         this._appTooltip = null;
         this._tooltipItem = null;
         this._tooltipTimeoutId = 0;
+        this._tooltipCloseId = 0;
         this._hoverActionChangedId = settings.connect(
             'changed::application-hover-action',
             () => {
@@ -113,6 +119,7 @@ export class WindowPreviewController {
     destroy() {
         this._clearTimeouts();
         this._clearTimeout('_tooltipTimeoutId');
+        this._clearTimeout('_tooltipCloseId');
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
         this._settings.disconnect(this._hoverActionChangedId);
@@ -130,6 +137,8 @@ export class WindowPreviewController {
         this._getTaskbarItems = null;
         this._getInterestingWindows = null;
         this._onPreviewActivated = null;
+        this._getHoverAnimationOutwardReserve = null;
+        this._isPointerInMagnifyBounds = null;
         this._settings = null;
         this._previewHoverItem = null;
         this._tooltipItem = null;
@@ -199,9 +208,14 @@ export class WindowPreviewController {
             GLib.PRIORITY_DEFAULT,
             PREVIEW_CLOSE_DELAY,
             () => {
-                this._previewCloseId = 0;
-                if (this._pointerIsOverPreview(this._previewItem))
+                if (this._pointerIsOverPreview(this._previewItem)) {
+                    this._previewCloseId = 0;
                     return GLib.SOURCE_REMOVE;
+                }
+                if (this.isPointerInMagnifyBounds() &&
+                    this._taskbarItemAtPointer() === this._previewItem)
+                    return GLib.SOURCE_CONTINUE;
+                this._previewCloseId = 0;
                 this.hide(true);
                 return GLib.SOURCE_REMOVE;
             }
@@ -235,6 +249,7 @@ export class WindowPreviewController {
     }
 
     scheduleTooltip(item) {
+        this._clearTimeout('_tooltipCloseId');
         if (this._tooltipItem === item &&
             (this._tooltipTimeoutId || this._appTooltip?.visible))
             return;
@@ -257,7 +272,38 @@ export class WindowPreviewController {
 
     hideTooltip(animate = true) {
         this._clearTimeout('_tooltipTimeoutId');
+        this._clearTimeout('_tooltipCloseId');
         this._hideTooltip(animate);
+    }
+
+    scheduleTooltipClose() {
+        if (!this._tooltipItem)
+            return;
+        if (!this._appTooltip?.visible) {
+            this.hideTooltip();
+            return;
+        }
+        if (this._tooltipCloseId)
+            return;
+
+        this._tooltipCloseId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            PREVIEW_CLOSE_DELAY,
+            () => {
+                if (!this.isPointerInMagnifyBounds() ||
+                    this._taskbarItemAtPointer() !== this._tooltipItem) {
+                    this._tooltipCloseId = 0;
+                    this.hideTooltip();
+                    return GLib.SOURCE_REMOVE;
+                }
+
+                return GLib.SOURCE_CONTINUE;
+            }
+        );
+    }
+
+    isPointerInMagnifyBounds() {
+        return this._isPointerInMagnifyBounds();
     }
 
     _hideTooltip(animate) {
@@ -419,6 +465,7 @@ export class WindowPreviewController {
         });
 
         openPopupMenu(menu);
+        this._positionPreviewAboveMagnification(menu);
     }
 
     hide(animate = false) {
@@ -452,6 +499,22 @@ export class WindowPreviewController {
                 menu.destroy();
         });
         closePopupMenu(menu);
+    }
+
+    _positionPreviewAboveMagnification(menu) {
+        const outward = this._getHoverAnimationOutwardReserve();
+        if (!outward)
+            return;
+
+        const position = panelPosition(this._settings);
+        const property = position === 'top' || position === 'bottom'
+            ? 'translation_y'
+            : 'translation_x';
+        const direction = position === 'top' || position === 'left'
+            ? 1
+            : -1;
+        menu.actor.remove_transition(property);
+        menu.actor[property] = direction * outward;
     }
 
     _interestingWindows(app) {
@@ -638,6 +701,15 @@ export class WindowPreviewController {
             this.hideTooltip();
     }
 
+    raiseOverlays() {
+        const menuActor =
+            this._previewItem?._taskbarButton._taskbarPreviewMenu?.actor;
+        if (menuActor)
+            Main.uiGroup.set_child_above_sibling(menuActor, null);
+        if (this._appTooltip)
+            Main.uiGroup.set_child_above_sibling(this._appTooltip, null);
+    }
+
     _releaseHoverItem() {
         const item = this._previewHoverItem;
         this._previewHoverItem = null;
@@ -653,6 +725,7 @@ export class WindowPreviewController {
         }
 
         const label = this._appTooltip;
+        this.raiseOverlays();
         label.remove_all_transitions();
         label.set_text(item._taskbarApp.get_name());
         label.opacity = 0;
@@ -666,15 +739,16 @@ export class WindowPreviewController {
         const itemWidth = item.allocation.get_width();
         const itemHeight = item.allocation.get_height();
         const position = panelPosition(this._settings);
+        const outward = this._getHoverAnimationOutwardReserve();
         let x;
         let y;
         if (position === 'left' || position === 'right') {
             x = position === 'left'
                 ? Math.min(
                     monitor.x + monitor.width - labelWidth,
-                    stageX + itemWidth + 8
+                    stageX + itemWidth + 8 + outward
                 )
-                : Math.max(monitor.x, stageX - labelWidth - 8);
+                : Math.max(monitor.x, stageX - labelWidth - 8 - outward);
             y = Math.clamp(
                 stageY + Math.floor((itemHeight - labelHeight) / 2),
                 monitor.y,
@@ -689,9 +763,9 @@ export class WindowPreviewController {
             y = panelIsTop(this._settings)
                 ? Math.min(
                     monitor.y + monitor.height - labelHeight,
-                    stageY + itemHeight + 8
+                    stageY + itemHeight + 8 + outward
                 )
-                : Math.max(monitor.y, stageY - labelHeight - 8);
+                : Math.max(monitor.y, stageY - labelHeight - 8 - outward);
         }
         label.set_position(x, y);
         label.ease({

@@ -56,6 +56,8 @@ export class PanelController {
     constructor({
         settings,
         panelHeight,
+        onPanelHidden,
+        getHoverAnimationOutwardReserve,
         startButton,
         taskbarBin,
         taskbarActor,
@@ -117,6 +119,8 @@ export class PanelController {
             getMonitor: () => Main.layoutManager.primaryMonitor,
             getPanelHeight: () => this._panelHeight,
             isBlocked: () => this._isAutoHideBlocked(),
+            getOutwardReserve: getHoverAnimationOutwardReserve,
+            onHidden: onPanelHidden,
         });
         this._windowDodgeController = new PanelWindowDodgeController({
             settings,

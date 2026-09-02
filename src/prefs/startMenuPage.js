@@ -17,6 +17,7 @@ import {
     addComboRow,
     addSpinRow,
     createSwitchRow,
+    setButtonIcon,
 } from './preferencesWidgets.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
@@ -165,10 +166,10 @@ export function addStartMenuPage({
         title: _('Custom Start Button Icon'),
     });
     const clearCustomIconButton = new Gtk.Button({
-        icon_name: 'edit-clear-symbolic',
         tooltip_text: _('Use the built-in icon'),
         valign: Gtk.Align.CENTER,
     });
+    setButtonIcon(clearCustomIconButton, 'edit-clear-symbolic');
     const chooseCustomIconButton = new Gtk.Button({
         label: _('Choose…'),
         valign: Gtk.Align.CENTER,
@@ -846,15 +847,15 @@ export function addStartMenuPage({
         valign: Gtk.Align.CENTER,
     });
     const editCustomShortcutButton = new Gtk.Button({
-        icon_name: 'document-edit-symbolic',
         tooltip_text: _('Set custom shortcut'),
         valign: Gtk.Align.CENTER,
     });
+    setButtonIcon(editCustomShortcutButton, 'document-edit-symbolic');
     const clearCustomShortcutButton = new Gtk.Button({
-        icon_name: 'edit-clear-symbolic',
         tooltip_text: _('Clear custom shortcut'),
         valign: Gtk.Align.CENTER,
     });
+    setButtonIcon(clearCustomShortcutButton, 'edit-clear-symbolic');
     const customShortcutRow = new Adw.ActionRow({
         title: _('Custom Start Menu Shortcut'),
         activatable_widget: editCustomShortcutButton,

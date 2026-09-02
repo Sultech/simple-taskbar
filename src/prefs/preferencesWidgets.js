@@ -8,6 +8,12 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+export function setButtonIcon(button, iconName) {
+    button.set_child(new Gtk.Image({
+        icon_name: iconName,
+    }));
+}
+
 export function createSwitchRow(settings, {
     key,
     title,
@@ -115,15 +121,15 @@ export function createPanelOrderRow(settings, {
     }
 
     const upButton = new Gtk.Button({
-        icon_name: 'go-up-symbolic',
         tooltip_text: _('Move Up'),
         valign: Gtk.Align.CENTER,
     });
     const downButton = new Gtk.Button({
-        icon_name: 'go-down-symbolic',
         tooltip_text: _('Move Down'),
         valign: Gtk.Align.CENTER,
     });
+    setButtonIcon(upButton, 'go-up-symbolic');
+    setButtonIcon(downButton, 'go-down-symbolic');
     upButton.add_css_class('flat');
     downButton.add_css_class('flat');
     const moveBox = new Gtk.Box({
@@ -188,15 +194,15 @@ export function createPanelOrderRow(settings, {
 
 export function createItemOrderRow({title, subtitle = ''}) {
     const upButton = new Gtk.Button({
-        icon_name: 'go-up-symbolic',
         tooltip_text: _('Move Up'),
         valign: Gtk.Align.CENTER,
     });
     const downButton = new Gtk.Button({
-        icon_name: 'go-down-symbolic',
         tooltip_text: _('Move Down'),
         valign: Gtk.Align.CENTER,
     });
+    setButtonIcon(upButton, 'go-up-symbolic');
+    setButtonIcon(downButton, 'go-down-symbolic');
     upButton.add_css_class('flat');
     downButton.add_css_class('flat');
     const moveBox = new Gtk.Box({

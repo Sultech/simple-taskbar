@@ -190,9 +190,13 @@ export class PanelInteractionController {
         );
     }
 
-    _onCapturedEvent(event) {
+    handleTargetedEvent(target, event) {
+        return this._onCapturedEvent(event, target);
+    }
+
+    _onCapturedEvent(event, targetOverride = null) {
         const eventType = event.type();
-        const target = global.stage.get_event_actor(event);
+        const target = targetOverride ?? global.stage.get_event_actor(event);
 
         if (eventType === Clutter.EventType.BUTTON_PRESS &&
             event.get_button() === Clutter.BUTTON_SECONDARY &&
@@ -437,6 +441,7 @@ export class PanelInteractionController {
     _openContextMenu(event) {
         const [stageX, stageY] = event.get_coords();
         Main.layoutManager.setDummyCursorGeometry(stageX, stageY, 0, 0);
+        this._taskbarController.dropHoverAnimations();
         this._previews.hideTooltip(false);
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
