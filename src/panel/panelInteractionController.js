@@ -35,7 +35,7 @@ export class PanelInteractionController {
         openPreferences,
         onAppScrolled,
         onPanelScrolled,
-        volumeIndicator,
+        getVolumeIndicator,
         panelActor = Main.panel,
         panelBoxes = [
             Main.panel._leftBox,
@@ -52,7 +52,7 @@ export class PanelInteractionController {
         this._openPreferences = openPreferences;
         this._onAppScrolled = onAppScrolled;
         this._onPanelScrolled = onPanelScrolled;
-        this._volumeIndicator = volumeIndicator;
+        this._getVolumeIndicator = getVolumeIndicator;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
@@ -106,7 +106,7 @@ export class PanelInteractionController {
         this._openPreferences = null;
         this._onAppScrolled = null;
         this._onPanelScrolled = null;
-        this._volumeIndicator = null;
+        this._getVolumeIndicator = null;
     }
 
     _createContextMenu() {
@@ -338,6 +338,10 @@ export class PanelInteractionController {
         if (event.get_flags() & Clutter.EventFlags.FLAG_POINTER_EMULATED)
             return false;
 
+        const volumeIndicator = this._getVolumeIndicator();
+        if (!volumeIndicator)
+            return false;
+
         if (SHELL_VERSION === 51) {
             const direction = event.get_scroll_direction();
             let delta = 0;
@@ -350,13 +354,13 @@ export class PanelInteractionController {
                 if (event.get_scroll_flags() & Clutter.ScrollFlags.INVERTED)
                     delta *= -1;
             }
-            this._volumeIndicator._handleScroll(
-                this._volumeIndicator._output,
+            volumeIndicator._handleScroll(
+                volumeIndicator._output,
                 delta
             );
         } else {
-            this._volumeIndicator._handleScrollEvent(
-                this._volumeIndicator._output,
+            volumeIndicator._handleScrollEvent(
+                volumeIndicator._output,
                 event
             );
         }

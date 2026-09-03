@@ -247,7 +247,8 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._windowController.handleAppScrolled(item, direction),
             onPanelScrolled: direction =>
                 this._windowController.handlePanelScrolled(direction),
-            volumeIndicator: Main.panel.statusArea.quickSettings._volumeOutput,
+            getVolumeIndicator: () =>
+                Main.panel.statusArea.quickSettings._volumeOutput,
         });
         this._applicationOverflowController.enable();
         this._panelController.enable();

@@ -287,29 +287,6 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    addComboRow(
-        windowInteractionRow,
-        settings,
-        {
-            key: 'window-minimize-effect',
-            title: _('Window Minimize Effect'),
-            subtitle: _(
-                'Choose the effect shown when a window is minimized or restored'
-            ),
-            choices: [
-                {
-                    value: WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT,
-                    label: _('GNOME Default'),
-                },
-                {
-                    value: WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP,
-                    label: _('Magic Lamp'),
-                },
-            ],
-            addRow: row => windowInteractionRow.add_row(row),
-        },
-        connectSettings
-    );
     const scrollActionChoices = [
         {
             value: SCROLL_ACTION.SWITCH_WORKSPACE,
@@ -496,6 +473,29 @@ function addApplicationIconControls({
                 },
             ],
             addSuffix: row => row.add_suffix(animationOptionsButton),
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'window-minimize-effect',
+            title: _('Window Minimize Effect'),
+            subtitle: _(
+                'Choose the effect shown when a window is minimized or restored'
+            ),
+            choices: [
+                {
+                    value: WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT,
+                    label: _('GNOME Default'),
+                },
+                {
+                    value: WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP,
+                    label: _('Magic Lamp'),
+                },
+            ],
             addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
