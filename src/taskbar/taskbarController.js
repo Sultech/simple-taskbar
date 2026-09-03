@@ -40,6 +40,9 @@ import {
 } from './taskbarLocationsController.js';
 import {MAX_RUNNING_INDICATORS} from '../shared/runningIndicatorSettings.js';
 import {
+    TASKBAR_HIGHLIGHT_SETTING_KEYS,
+} from '../shared/classicHighlightSettings.js';
+import {
     animateSeparatorIn,
     animateSeparatorOut,
     createTaskbarSeparator,
@@ -287,6 +290,7 @@ export class TaskbarController {
             popupMenu: (item, button) => this.popupItemMenu(item, button),
             queueIconGeometryUpdate: () => this.queueIconGeometryUpdate(),
             showAppLabels: () => this._showAppLabels(),
+            syncClassicHighlight: item => this._syncClassicHighlight(item),
             syncItemLabel: item => this._syncItemLabel(item),
             syncLauncherIconPosition: item =>
                 this._syncLauncherIconPosition(item),
@@ -632,6 +636,12 @@ export class TaskbarController {
             () => this._syncNotificationBadges(),
             this._signalHolder
         );
+        for (const key of TASKBAR_HIGHLIGHT_SETTING_KEYS) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                for (const item of this._appButtons.values())
+                    this._syncClassicHighlight(item);
+            }, this._signalHolder);
+        }
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => this.applyAppearance(),
@@ -1306,6 +1316,7 @@ export class TaskbarController {
             windowCount,
             MAX_RUNNING_INDICATORS
         );
+        this._syncClassicHighlight(item);
         this._updateIndicatorGeometry(item, animate);
         button.accessible_name = window
             ? `${window.get_title() || app.get_name()}, ${_('running')}`
@@ -1872,6 +1883,10 @@ export class TaskbarController {
 
     _syncIndicatorColor(item) {
         this._appearanceController.syncIndicatorColor(item);
+    }
+
+    _syncClassicHighlight(item) {
+        this._appearanceController.syncClassicHighlight(item);
     }
 
     _syncIndicatorVisibility(item) {

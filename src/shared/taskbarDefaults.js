@@ -6,6 +6,7 @@ import {CLICK_ACTION} from './applicationClickActions.js';
 import {HOVER_ACTION} from './applicationHoverActions.js';
 import {SCROLL_ACTION} from './applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
+import {TASKBAR_HIGHLIGHT_STYLE} from './classicHighlightSettings.js';
 import {
     setBoolean,
     setInteger,
@@ -24,6 +25,11 @@ export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'panel-button-padding', -1);
     setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);
     setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
+    setString(
+        settings,
+        'taskbar-highlight-style',
+        TASKBAR_HIGHLIGHT_STYLE.GLASS
+    );
     setInteger(settings, 'start-button-padding', 3);
     setString(settings, 'app-alignment', DEFAULT_TASKBAR_ALIGNMENT);
     setString(settings, 'activities-button-position', 'left');

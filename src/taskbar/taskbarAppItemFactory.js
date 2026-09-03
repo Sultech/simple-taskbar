@@ -29,6 +29,7 @@ export class TaskbarAppItemFactory {
         popupMenu,
         queueIconGeometryUpdate,
         showAppLabels,
+        syncClassicHighlight,
         syncItemLabel,
         syncLauncherIconPosition,
         updateItemGeometry,
@@ -52,6 +53,7 @@ export class TaskbarAppItemFactory {
         this._popupMenu = popupMenu;
         this._queueIconGeometryUpdate = queueIconGeometryUpdate;
         this._showAppLabels = showAppLabels;
+        this._syncClassicHighlight = syncClassicHighlight;
         this._syncItemLabel = syncItemLabel;
         this._syncLauncherIconPosition = syncLauncherIconPosition;
         this._updateItemGeometry = updateItemGeometry;
@@ -111,6 +113,16 @@ export class TaskbarAppItemFactory {
             height: panelHeight,
             clip_to_allocation: false,
         });
+        const classicHover = new St.Widget({
+            style_class: 'simple-taskbar-classic-hover',
+            visible: false,
+        });
+        classicHover.set_pivot_point(0, 0);
+        const classicFocus = new St.Widget({
+            style_class: 'simple-taskbar-classic-focus',
+            visible: false,
+        });
+        classicFocus.set_pivot_point(0, 0);
         const glass = new St.Widget({
             style_class: 'simple-taskbar-app-glass',
             x: glassInset,
@@ -138,6 +150,8 @@ export class TaskbarAppItemFactory {
         glassTexture.set_style(
             `background-size: ${glassContentWidth}px ${glassContentHeight}px;`
         );
+        glassHost.add_child(classicHover);
+        glassHost.add_child(classicFocus);
         glassHost.add_child(glass);
         glassHost.add_child(glassTexture);
         glassHost.add_child(glassBorder);
@@ -264,6 +278,9 @@ export class TaskbarAppItemFactory {
             _taskbarBottomSpacer: bottomSpacer,
             _taskbarVisual: visual,
             _taskbarGlassHost: glassHost,
+            _taskbarClassicHover: classicHover,
+            _taskbarClassicFocus: classicFocus,
+            _taskbarClassicRenderScale: 1,
             _taskbarGlass: glass,
             _taskbarGlassTexture: glassTexture,
             _taskbarGlassBorder: glassBorder,
@@ -288,11 +305,18 @@ export class TaskbarAppItemFactory {
 
         item.connect('notify::hover', () => {
             this._handleHover(item, item.hover);
+            this._syncClassicHighlight(item);
+        });
+        item.connect('notify::pseudo-class', () => {
+            this._syncClassicHighlight(item);
         });
 
         this._makeDraggable(item, button, icon, app);
         button.connect('clicked', () => {
             this._activateItem(item);
+        });
+        button.connect('notify::pressed', () => {
+            this._syncClassicHighlight(item);
         });
         button.connect('button-press-event', (_actor, event) => {
             const mouseButton = event.get_button();
@@ -338,6 +362,7 @@ export class TaskbarAppItemFactory {
         this._popupMenu = null;
         this._makeDraggable = null;
         this._initializeAppearance = null;
+        this._syncClassicHighlight = null;
         this._handleShiftClick = null;
         this._handleMiddleClick = null;
         this._handleHover = null;

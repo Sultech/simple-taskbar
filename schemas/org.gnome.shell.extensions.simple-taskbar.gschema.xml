@@ -69,6 +69,48 @@
       <default>3</default>
       <summary>Space between application buttons</summary>
     </key>
+    <key name="taskbar-highlight-style" type="s">
+      <choices>
+        <choice value="glass"/>
+        <choice value="classic"/>
+      </choices>
+      <default>'glass'</default>
+      <summary>Application hover and focus effect</summary>
+    </key>
+    <key name="classic-highlight-appicon-hover" type="b">
+      <default>true</default>
+      <summary>Highlight hovering application icons</summary>
+    </key>
+    <key name="classic-highlight-appicon-hover-background-color" type="s">
+      <default>'rgba(238, 238, 236, 0.1)'</default>
+      <summary>Hover highlight color</summary>
+    </key>
+    <key name="classic-highlight-appicon-pressed-background-color" type="s">
+      <default>'rgba(238, 238, 236, 0.18)'</default>
+      <summary>Pressed highlight color</summary>
+    </key>
+    <key name="classic-highlight-appicon-hover-border-radius" type="i">
+      <range min="0" max="10"/>
+      <default>8</default>
+      <summary>Hover highlight border radius</summary>
+    </key>
+    <key name="classic-focus-highlight" type="b">
+      <default>true</default>
+      <summary>Highlight the focused application</summary>
+    </key>
+    <key name="classic-focus-highlight-dominant" type="b">
+      <default>false</default>
+      <summary>Use the focused application's dominant icon color</summary>
+    </key>
+    <key name="classic-focus-highlight-color" type="s">
+      <default>'#EEEEEE'</default>
+      <summary>Focused application highlight color</summary>
+    </key>
+    <key name="classic-focus-highlight-opacity" type="i">
+      <range min="5" max="100"/>
+      <default>25</default>
+      <summary>Focused application highlight opacity</summary>
+    </key>
     <key name="animate-appicon-hover" type="b">
       <default>false</default>
       <summary>Animate hovering application icons</summary>

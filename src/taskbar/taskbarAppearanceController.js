@@ -9,6 +9,10 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {IconDominantColorCache} from './iconDominantColor.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 import {
+    CLASSIC_HIGHLIGHT_SETTINGS,
+    TASKBAR_HIGHLIGHT_STYLE,
+} from '../shared/classicHighlightSettings.js';
+import {
     RUNNING_INDICATOR_LENGTH_RATIO,
     RUNNING_INDICATOR_RESERVE,
     runningIndicatorFillsLength,
@@ -191,6 +195,19 @@ export class TaskbarAppearanceController {
                 }px;`
                 : null
         );
+        for (const actor of [
+            item._taskbarClassicHover,
+            item._taskbarClassicFocus,
+        ]) {
+            actor.set_position(glassX, glassY);
+            actor.set_size(
+                glassWidth * renderScale,
+                glassOuterHeight * renderScale
+            );
+            actor.set_scale(inverseRenderScale, inverseRenderScale);
+        }
+        item._taskbarClassicRenderScale = renderScale;
+        this.syncClassicHighlight(item);
         item._taskbarLabel.set_width(
             this.labelWidthForButton(
                 item._taskbarWindow,
@@ -309,6 +326,72 @@ export class TaskbarAppearanceController {
         this.updateIndicatorGeometry(item, false);
     }
 
+    syncClassicHighlight(item) {
+        const classic = this._settings.get_string(
+            'taskbar-highlight-style'
+        ) === TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+        const windowsXpTheme = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const enabled = classic && !windowsXpTheme;
+        for (const actor of [
+            item._taskbarGlass,
+            item._taskbarGlassTexture,
+            item._taskbarGlassBorder,
+        ]) {
+            actor.visible = !enabled;
+        }
+        item._taskbarClassicHover.visible = enabled;
+        item._taskbarClassicFocus.visible = enabled;
+        if (windowsXpTheme) {
+            item._taskbarGlass.set_style(null);
+            item._taskbarGlass.opacity = 255;
+            item._taskbarClassicHover.opacity = 0;
+            item._taskbarClassicFocus.opacity = 0;
+            return;
+        }
+        if (!enabled) {
+            return;
+        }
+
+        const radius = this._settings.get_int(
+            CLASSIC_HIGHLIGHT_SETTINGS.borderRadius
+        ) * item._taskbarClassicRenderScale;
+        const radiusStyle = `border-radius: ${radius}px;`;
+        const pressed = item._taskbarButton.pressed;
+        const hoverColorKey = pressed
+            ? CLASSIC_HIGHLIGHT_SETTINGS.pressedColor
+            : CLASSIC_HIGHLIGHT_SETTINGS.hoverColor;
+        item._taskbarClassicHover.set_style(
+            `background-color: ${this._settings.get_string(
+                hoverColorKey
+            )};${radiusStyle}`
+        );
+        const focusEnabled = this._settings.get_boolean(
+            CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled
+        );
+        if (focusEnabled) {
+            item._taskbarClassicFocus.set_style(
+                `background-color: ${this._classicFocusColor(item)};${radiusStyle}`
+            );
+        }
+
+        const hovered = item.hover || item.has_style_pseudo_class('hover');
+        const hoverEnabled = this._settings.get_boolean(
+            CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
+        );
+        item._taskbarClassicHover.opacity = hoverEnabled &&
+            (hovered || pressed) ? 255 : 0;
+        const focused = item._taskbarFocused && focusEnabled;
+        item._taskbarClassicFocus.opacity = focused
+            ? Math.round(
+                this._settings.get_int(
+                    CLASSIC_HIGHLIGHT_SETTINGS.focusOpacity
+                ) * 2.55
+            )
+            : 0;
+    }
+
     _indicatorColor(item) {
         if (!this._settings.get_boolean('custom-indicator-colors-enabled') &&
             this._settings.get_boolean('match-icon-color')) {
@@ -324,6 +407,20 @@ export class TaskbarAppearanceController {
             item._taskbarFocused
                 ? 'focused-indicator-color'
                 : 'unfocused-indicator-color'
+        );
+    }
+
+    _classicFocusColor(item) {
+        if (this._settings.get_boolean(
+            CLASSIC_HIGHLIGHT_SETTINGS.focusDominant
+        )) {
+            const color = this._iconColors.getColor(item._taskbarApp);
+            if (color)
+                return color;
+        }
+
+        return this._settings.get_string(
+            CLASSIC_HIGHLIGHT_SETTINGS.focusColor
         );
     }
 

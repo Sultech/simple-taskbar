@@ -37,6 +37,11 @@ import {
     taskbarVisualPanelHeight,
     taskbarVerticalItemExtent,
 } from '../shared/panelSizing.js';
+import {
+    CLASSIC_HIGHLIGHT_SETTINGS,
+    TASKBAR_HIGHLIGHT_SETTING_KEYS,
+    TASKBAR_HIGHLIGHT_STYLE,
+} from '../shared/classicHighlightSettings.js';
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
     createTaskbarSeparator,
@@ -129,7 +134,17 @@ export class StartButtonController {
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
         });
+        this._classicHover = new St.Widget({
+            style_class: 'simple-taskbar-start-classic-hover',
+            reactive: false,
+            visible: false,
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.FILL,
+            y_expand: true,
+        });
+        this._classicHover.set_pivot_point(0, 0);
         this._content.add_child(this._hover);
+        this._content.add_child(this._classicHover);
         this._content.add_child(this._icon);
         this.actor = new St.Button({
             style_class: 'panel-button simple-taskbar-start',
@@ -156,7 +171,14 @@ export class StartButtonController {
             'notify::allocation', () => this._animatePosition(),
             this._signalHolder
         );
-        this.actor.connectObject('clicked', () => this._toggleApplications(), this._signalHolder);
+        this.actor.connectObject(
+            'clicked', () => this._toggleApplications(),
+            'notify::hover', () => this._syncClassicHighlight(),
+            'notify::pressed', () => this._syncClassicHighlight(),
+            'notify::checked', () => this._syncClassicHighlight(),
+            'notify::pseudo-class', () => this._syncClassicHighlight(),
+            this._signalHolder
+        );
         this._syncWindowsXpStartButton();
         this._syncVisibility();
 
@@ -170,6 +192,7 @@ export class StartButtonController {
             )
             : null;
         this.applyAppearance(iconSize, settings.get_int('start-button-padding'));
+        this._syncClassicHighlight();
     }
 
     enable() {
@@ -236,6 +259,8 @@ export class StartButtonController {
             : (vertical ? glassMainExtent : glassWidth) + iconSpacing;
         this._hover.set_width(glassWidth);
         this._hover.set_height(glassMainExtent);
+        this._classicHover.set_width(glassWidth);
+        this._classicHover.set_height(glassMainExtent);
         if (vertical) {
             this._hover.translation_y = 0;
             this._hover.y_align = Clutter.ActorAlign.CENTER;
@@ -245,6 +270,9 @@ export class StartButtonController {
             this._hover.y_align = Clutter.ActorAlign.CENTER;
             this._hover.y_expand = false;
         }
+        this._classicHover.translation_y = 0;
+        this._classicHover.y_align = Clutter.ActorAlign.CENTER;
+        this._classicHover.y_expand = false;
         const startButtonPosition = this._settings.get_boolean(
             'start-button-follow-app-alignment'
         )
@@ -322,6 +350,7 @@ export class StartButtonController {
         this._separatorLine = null;
         this._separatorVertical = null;
         this._hover = null;
+        this._classicHover = null;
         this._contentContainer = null;
         this._content = null;
         this._icon = null;
@@ -551,6 +580,13 @@ export class StartButtonController {
             'changed::dock-panel-mode', syncAppearance,
             this._signalHolder
         );
+        for (const key of TASKBAR_HIGHLIGHT_SETTING_KEYS) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this._syncClassicHighlight(),
+                this._signalHolder
+            );
+        }
         this._settings.connectObject(
             'changed::show-start-button-separator',
             () => this._syncSeparator(true),
@@ -764,7 +800,43 @@ export class StartButtonController {
             ? this._windowsXpStartButton.actor
             : this._contentContainer;
         this._icon.visible = !enabled;
-        this._hover.visible = !enabled;
+        this._syncClassicHighlight();
+    }
+
+    _syncClassicHighlight() {
+        const classic = this._settings.get_string(
+            'taskbar-highlight-style'
+        ) === TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+        const windowsXpTheme = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const enabled = classic && !windowsXpTheme;
+        this._hover.visible = !classic && !windowsXpTheme;
+        this._classicHover.visible = enabled;
+        this._classicHover.opacity = 0;
+        const radius = this._settings.get_int(
+            CLASSIC_HIGHLIGHT_SETTINGS.borderRadius
+        );
+        const pressed = this.actor.pressed || this.actor.checked;
+        const colorKey = pressed
+            ? CLASSIC_HIGHLIGHT_SETTINGS.pressedColor
+            : CLASSIC_HIGHLIGHT_SETTINGS.hoverColor;
+        this._classicHover.set_style(
+            `background-color: ${this._settings.get_string(
+                colorKey
+            )};border-radius: ${radius}px;`
+        );
+        const hovered = this.actor.hover ||
+            this.actor.has_style_pseudo_class('hover') ||
+            this.actor.has_style_pseudo_class('focus');
+        const hoverEnabled = this._settings.get_boolean(
+            CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
+        );
+        if (windowsXpTheme)
+            return;
+
+        const active = hoverEnabled && (hovered || pressed);
+        this._classicHover.opacity = active && classic ? 255 : 0;
     }
 
     _currentGIcon() {

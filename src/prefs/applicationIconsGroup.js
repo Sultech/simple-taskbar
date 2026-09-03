@@ -19,11 +19,15 @@ import {
     createApplicationGroupingOptionsButton,
 } from './applicationGroupingDialog.js';
 import {
+    createClassicHighlightOptionsButton,
+} from './classicHighlightDialog.js';
+import {
     createWindowPreviewOptionsButton,
 } from './windowPreviewDialog.js';
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
+import {TASKBAR_HIGHLIGHT_STYLE} from '../shared/classicHighlightSettings.js';
 import {
     RUNNING_INDICATOR_POSITIONS,
     RUNNING_INDICATOR_STYLES,
@@ -46,7 +50,7 @@ function addApplicationIconControls({
     panelPositions,
 }) {
     const iconSizingRow = new Adw.ExpanderRow({
-        title: _('Icon Sizing and Spacing'),
+        title: _('Application Icon Appearance'),
         subtitle: _('Adjust application icon sizes and the space between them'),
     });
     group.add(iconSizingRow);
@@ -90,6 +94,40 @@ function addApplicationIconControls({
             subtitle: _('Space between application buttons'),
             lower: 0,
             upper: 16,
+            addRow: row => iconSizingRow.add_row(row),
+        },
+        connectSettings
+    );
+    const classicOptionsButton = createClassicHighlightOptionsButton(settings);
+    const syncClassicOptionsSensitivity = () => {
+        classicOptionsButton.sensitive = settings.get_string(
+            'taskbar-highlight-style'
+        ) === TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+    };
+    connectSettings(
+        settings,
+        'changed::taskbar-highlight-style',
+        syncClassicOptionsSensitivity
+    );
+    syncClassicOptionsSensitivity();
+    addComboRow(
+        iconSizingRow,
+        settings,
+        {
+            key: 'taskbar-highlight-style',
+            title: _('Hover and Focus Effect'),
+            subtitle: _('Choose the effect used by application buttons'),
+            choices: [
+                {
+                    value: TASKBAR_HIGHLIGHT_STYLE.GLASS,
+                    label: _('Glass'),
+                },
+                {
+                    value: TASKBAR_HIGHLIGHT_STYLE.CLASSIC,
+                    label: _('Classic'),
+                },
+            ],
+            addSuffix: row => row.add_suffix(classicOptionsButton),
             addRow: row => iconSizingRow.add_row(row),
         },
         connectSettings
