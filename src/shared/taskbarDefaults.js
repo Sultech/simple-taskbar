@@ -84,7 +84,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setString(
         settings,
         'application-click-animation',
-        APPLICATION_CLICK_ANIMATION.TADA
+        APPLICATION_CLICK_ANIMATION.GNOME_ZOOM_OUT
     );
     setString(
         settings,

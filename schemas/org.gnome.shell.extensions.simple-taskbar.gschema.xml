@@ -809,7 +809,7 @@
         <choice value="enlarge"/>
         <choice value="shrink"/>
       </choices>
-      <default>'tada'</default>
+      <default>'gnome-zoom-out'</default>
       <summary>Application click animation</summary>
     </key>
     <key name="window-minimize-effect" type="s">
