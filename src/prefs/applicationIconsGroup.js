@@ -19,6 +19,9 @@ import {
     createApplicationGroupingOptionsButton,
 } from './applicationGroupingDialog.js';
 import {
+    createPinnedApplicationBehaviorOptionsButton,
+} from './pinnedApplicationBehaviorDialog.js';
+import {
     createClassicHighlightOptionsButton,
 } from './classicHighlightDialog.js';
 import {
@@ -566,42 +569,15 @@ function addApplicationLayoutControls({
     });
     group.add(layoutGroup);
 
-    const hidePinnedAppsSwitch = createSwitchRow(settings, {
-        key: 'hide-pinned-taskbar-apps',
-        title: _('Hide Pinned Applications'),
-        subtitle: _(
-            'Show pinned taskbar applications only while they are running'
-        ),
+    const pinnedBehaviorOptionsButton =
+        createPinnedApplicationBehaviorOptionsButton(settings);
+    const pinnedBehaviorRow = new Adw.ActionRow({
+        title: _('Pinned Application Behavior'),
+        subtitle: _('Choose how pinned and running applications appear'),
+        activatable_widget: pinnedBehaviorOptionsButton,
     });
-    layoutGroup.add_row(hidePinnedAppsSwitch);
-
-    const pinnedAppsAsLaunchersSwitch = createSwitchRow(settings, {
-        key: 'use-pinned-apps-as-launchers',
-        title: _('Use Pinned Apps as Application Launchers'),
-        subtitle: _(
-            'Keep pinned applications as launchers and show running applications separately'
-        ),
-    });
-    layoutGroup.add_row(pinnedAppsAsLaunchersSwitch);
-
-    const hideUnpinnedAppsSwitch = createSwitchRow(settings, {
-        key: 'hide-unpinned-taskbar-apps',
-        title: _('Hide Unpinned Applications'),
-        subtitle: _(
-            'Show only pinned applications and their running windows'
-        ),
-    });
-    layoutGroup.add_row(hideUnpinnedAppsSwitch);
-    const syncHideUnpinnedAppsSensitivity = () => {
-        hideUnpinnedAppsSwitch.sensitive =
-            !settings.get_boolean('windows-xp-theme-enabled');
-    };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncHideUnpinnedAppsSensitivity
-    );
-    syncHideUnpinnedAppsSensitivity();
+    pinnedBehaviorRow.add_suffix(pinnedBehaviorOptionsButton);
+    layoutGroup.add_row(pinnedBehaviorRow);
 
     const combineAppButtonsChoices = [
         {value: 'always', label: _('Always')},
@@ -688,19 +664,7 @@ function addApplicationLayoutControls({
         connectSettings(settings, `changed::${key}`, syncLabelSensitivity);
     syncLabelSensitivity();
 
-    const syncPinnedAppsAsLaunchersSensitivity = () => {
-        pinnedAppsAsLaunchersSwitch.sensitive =
-            !settings.get_boolean('windows-xp-theme-enabled');
-    };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncPinnedAppsAsLaunchersSensitivity
-    );
-    syncPinnedAppsAsLaunchersSensitivity();
-
     return {
-        pinnedAppsAsLaunchersSwitch,
         combineAppButtonsRow,
         syncLabelSensitivity,
         pinnedAppSeparatorSwitch,
@@ -1082,8 +1046,6 @@ export function addApplicationIconsGroup({
         iconSizeRow: controls.iconSizeRow,
         iconSpacingRow: controls.iconSpacingRow,
         appAlignmentRow: controls.appAlignmentRow,
-        pinnedAppsAsLaunchersSwitch:
-            layoutControls.pinnedAppsAsLaunchersSwitch,
         combineAppButtonsRow: layoutControls.combineAppButtonsRow,
         syncLabelSensitivity: layoutControls.syncLabelSensitivity,
         pinnedAppSeparatorSwitch: layoutControls.pinnedAppSeparatorSwitch,

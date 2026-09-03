@@ -117,8 +117,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const iconSizeRow = icons.iconSizeRow;
         const iconSpacingRow = icons.iconSpacingRow;
         const appAlignmentRow = icons.appAlignmentRow;
-        const pinnedAppsAsLaunchersSwitch =
-            icons.pinnedAppsAsLaunchersSwitch;
         const combineAppButtonsRow = icons.combineAppButtonsRow;
         const syncLabelSensitivity = icons.syncLabelSensitivity;
         const applicationOverflowSwitch =
@@ -174,7 +172,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             dockMaxLengthRow,
             dockPanelModeSwitch,
             appAlignmentRow,
-            pinnedAppsAsLaunchersSwitch,
             combineAppButtonsRow,
             syncLabelSensitivity,
         });

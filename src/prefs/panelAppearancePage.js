@@ -43,7 +43,6 @@ export function addPanelAppearancePage({
     dockMaxLengthRow,
     dockPanelModeSwitch,
     appAlignmentRow,
-    pinnedAppsAsLaunchersSwitch,
     combineAppButtonsRow,
     syncLabelSensitivity,
 }) {
@@ -169,7 +168,6 @@ export function addPanelAppearancePage({
         appAlignmentRow.sensitive = !enabled &&
             (!settings.get_boolean('dock-mode') ||
                 settings.get_boolean('dock-panel-mode'));
-        pinnedAppsAsLaunchersSwitch.sensitive = !enabled;
         combineAppButtonsRow.sensitive = true;
         syncLabelSensitivity();
         syncingWindowsXpTheme = false;

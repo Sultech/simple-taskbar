@@ -261,6 +261,9 @@ export class TaskbarHoverAnimationCloneController {
 
     _updateHostClip() {
         const monitor = this._getMonitor();
+        if (!monitor)
+            return;
+
         const geometry = {
             stageWidth: global.stage.width,
             stageHeight: global.stage.height,
