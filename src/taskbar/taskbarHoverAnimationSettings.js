@@ -18,12 +18,12 @@ export class TaskbarHoverAnimationSettings {
 
     getAnimationType() {
         if (this._animationTypeCache === null) {
-            this._animationTypeCache =
-                this._settings.get_boolean('animate-appicon-hover')
-                    ? this._settings.get_string(
-                        'animate-appicon-hover-animation-type'
-                    )
-                    : '';
+            const type = this._settings.get_string(
+                'animate-appicon-hover-animation-type'
+            );
+            this._animationTypeCache = type === APP_ICON_HOVER_ANIMATION.NONE
+                ? ''
+                : type;
         }
 
         return this._animationTypeCache;
@@ -58,7 +58,7 @@ export class TaskbarHoverAnimationSettings {
     }
 
     getRenderScale() {
-        return this._settings.get_boolean('animate-appicon-hover')
+        return this.getAnimationType()
             ? APP_ICON_HOVER_RENDER_SCALE
             : 1;
     }

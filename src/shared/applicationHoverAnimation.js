@@ -1,4 +1,5 @@
 export const APP_ICON_HOVER_ANIMATION = {
+    NONE: 'none',
     SIMPLE: 'simple',
     RIPPLE: 'ripple',
     MAGNIFY: 'magnify',

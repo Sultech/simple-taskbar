@@ -25,6 +25,9 @@ import {
     createWindowPreviewOptionsButton,
 } from './windowPreviewDialog.js';
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
+import {
+    APPLICATION_CLICK_ANIMATION,
+} from '../shared/applicationClickAnimation.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {TASKBAR_HIGHLIGHT_STYLE} from '../shared/classicHighlightSettings.js';
@@ -42,6 +45,107 @@ import {
 } from './preferencesWidgets.js';
 
 const MAX_ICON_SIZE = 63;
+
+function getApplicationClickAnimationChoices() {
+    return [
+        {
+            value: APPLICATION_CLICK_ANIMATION.NONE,
+            label: _('None'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.GNOME_ZOOM_OUT,
+            label: _('GNOME Launch Zoom'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.BOUNCE,
+            label: _('Bounce'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.JUMP,
+            label: _('Jump'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.HEARTBEAT,
+            label: _('Heartbeat'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SQUISH,
+            label: _('Squish'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.JELLY,
+            label: _('Jelly'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SPIN,
+            label: _('Spin'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SPIN_3D,
+            label: _('3D Spin'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.FLIP,
+            label: _('Horizontal Flip'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.ROLL,
+            label: _('Roll'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.ZOOM_FADE,
+            label: _('Zoom Out & Fade'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SQUEEZE,
+            label: _('Squeeze'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.GLOW,
+            label: _('Glow'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.DIM,
+            label: _('Dim'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.TADA,
+            label: _('Tada'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SWING,
+            label: _('Swing'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SHAKE,
+            label: _('Shake'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.MOVE_UP,
+            label: _('Nudge Up'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.MOVE_DOWN,
+            label: _('Nudge Down'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.MOVE_LEFT,
+            label: _('Nudge Left'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.MOVE_RIGHT,
+            label: _('Nudge Right'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.ENLARGE,
+            label: _('Pulse Larger'),
+        },
+        {
+            value: APPLICATION_CLICK_ANIMATION.SHRINK,
+            label: _('Pulse Smaller'),
+        },
+    ];
+}
 
 function addApplicationIconControls({
     group,
@@ -164,6 +268,18 @@ function addApplicationIconControls({
             subtitle: _('Choose what happens when a running application is clicked'),
             choices: getApplicationClickActionChoices(),
             addSuffix: row => row.add_suffix(clickActionOptionsButton),
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'application-click-animation',
+            title: _('Click Animation'),
+            subtitle: _('Choose the animation shown when an application is clicked'),
+            choices: getApplicationClickAnimationChoices(),
             addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
@@ -313,17 +429,9 @@ function addApplicationIconControls({
         syncPreviewOptionsButtonSensitivity
     );
     syncPreviewOptionsButtonSensitivity();
-    const animateHoverSwitch = createSwitchRow(settings, {
-        key: 'animate-appicon-hover',
-        title: _('Animate Hovering App Icons'),
-        subtitle: _(
-            'Animate application icons when the pointer moves over the taskbar'
-        ),
-    });
-    windowInteractionRow.add_row(animateHoverSwitch);
     const animationOptionsButton =
         createApplicationHoverAnimationOptionsButton(settings);
-    const animationTypeRow = addComboRow(
+    addComboRow(
         windowInteractionRow,
         settings,
         {
@@ -333,6 +441,10 @@ function addApplicationIconControls({
                 'Choose the animation style for application icon hover'
             ),
             choices: [
+                {
+                    value: APP_ICON_HOVER_ANIMATION.NONE,
+                    label: _('None'),
+                },
                 {
                     value: APP_ICON_HOVER_ANIMATION.SIMPLE,
                     label: _('Simple'),
@@ -351,17 +463,17 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    const syncAnimationTypeSensitivity = () => {
-        animationTypeRow.sensitive = settings.get_boolean(
-            'animate-appicon-hover'
-        );
+    const syncAnimationOptionsSensitivity = () => {
+        animationOptionsButton.sensitive = settings.get_string(
+            'animate-appicon-hover-animation-type'
+        ) !== APP_ICON_HOVER_ANIMATION.NONE;
     };
     connectSettings(
         settings,
-        'changed::animate-appicon-hover',
-        syncAnimationTypeSensitivity
+        'changed::animate-appicon-hover-animation-type',
+        syncAnimationOptionsSensitivity
     );
-    syncAnimationTypeSensitivity();
+    syncAnimationOptionsSensitivity();
     const syncMinimumIconSize = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
             (!settings.get_boolean('default-gnome-panel') ||

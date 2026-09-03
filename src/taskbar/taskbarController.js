@@ -38,7 +38,13 @@ import {
 import {
     TaskbarLocationsController,
 } from './taskbarLocationsController.js';
+import {
+    animateTaskbarIconClick,
+} from './taskbarClickAnimation.js';
 import {MAX_RUNNING_INDICATORS} from '../shared/runningIndicatorSettings.js';
+import {
+    APPLICATION_CLICK_ANIMATION,
+} from '../shared/applicationClickAnimation.js';
 import {
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
 } from '../shared/classicHighlightSettings.js';
@@ -235,7 +241,8 @@ export class TaskbarController {
             new TaskbarItemInteractionController({
                 settings: this._settings,
                 favorites: this._favorites,
-                animatePinnedLaunch: item => animatePinnedLaunch(item),
+                animateClick: item => this._animateClick(item),
+                animatePinnedLaunch: item => this._animatePinnedLaunch(item),
                 closeApp: (app, timestamp) => this.closeApp(app, timestamp),
                 getInterestingWindows: app => this._interestingWindows(app),
                 getPreviewController: () => this._getPreviews(),
@@ -624,7 +631,7 @@ export class TaskbarController {
             );
         }
         this._settings.connectObject(
-            'changed::animate-appicon-hover',
+            'changed::animate-appicon-hover-animation-type',
             () => {
                 for (const item of this._appButtons.values())
                     this._updateGlassGeometry(item);
@@ -1887,6 +1894,27 @@ export class TaskbarController {
 
     _syncClassicHighlight(item) {
         this._appearanceController.syncClassicHighlight(item);
+    }
+
+    _animateClick(item) {
+        const animation = this._settings.get_string(
+            'application-click-animation'
+        );
+        if (animation === APPLICATION_CLICK_ANIMATION.NONE ||
+            animation === APPLICATION_CLICK_ANIMATION.GNOME_ZOOM_OUT ||
+            item._taskbarApp._simpleTaskbarLocation) {
+            return;
+        }
+
+        animateTaskbarIconClick(item, animation);
+    }
+
+    _animatePinnedLaunch(item) {
+        if (this._settings.get_string(
+            'application-click-animation'
+        ) === APPLICATION_CLICK_ANIMATION.GNOME_ZOOM_OUT) {
+            animatePinnedLaunch(item);
+        }
     }
 
     _syncIndicatorVisibility(item) {

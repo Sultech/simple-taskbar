@@ -18,7 +18,7 @@ export function animateTaskbarItemOutAndDestroy(item) {
 }
 
 export function animatePinnedLaunch(item) {
-    const icon = item._taskbarIcon;
+    const icon = item._taskbarIconContainer;
     if (icon.get_stage() && icon.has_allocation())
         IconGrid.zoomOutActor(icon);
 }

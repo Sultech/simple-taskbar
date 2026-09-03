@@ -3,6 +3,9 @@
 
 import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
 import {CLICK_ACTION} from './applicationClickActions.js';
+import {
+    APPLICATION_CLICK_ANIMATION,
+} from './applicationClickAnimation.js';
 import {HOVER_ACTION} from './applicationHoverActions.js';
 import {SCROLL_ACTION} from './applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
@@ -74,6 +77,11 @@ export function applyDefaultTaskbarSettings(settings) {
         settings,
         'application-click-action',
         CLICK_ACTION.TOGGLE_SPREAD
+    );
+    setString(
+        settings,
+        'application-click-animation',
+        APPLICATION_CLICK_ANIMATION.TADA
     );
     setString(settings, 'shift-click-action', CLICK_ACTION.MINIMIZE);
     setString(settings, 'middle-click-action', CLICK_ACTION.LAUNCH);

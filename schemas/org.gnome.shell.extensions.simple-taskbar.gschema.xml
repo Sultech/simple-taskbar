@@ -111,17 +111,14 @@
       <default>25</default>
       <summary>Focused application highlight opacity</summary>
     </key>
-    <key name="animate-appicon-hover" type="b">
-      <default>false</default>
-      <summary>Animate hovering application icons</summary>
-    </key>
     <key name="animate-appicon-hover-animation-type" type="s">
       <choices>
+        <choice value="none"/>
         <choice value="simple"/>
         <choice value="ripple"/>
         <choice value="magnify"/>
       </choices>
-      <default>'simple'</default>
+      <default>'none'</default>
       <summary>Application icon hover animation type</summary>
     </key>
     <key name="animate-appicon-hover-animation-convexity" type="a{sd}">
@@ -784,6 +781,36 @@
       </choices>
       <default>'toggle-spread'</default>
       <summary>Action when a running application is clicked</summary>
+    </key>
+    <key name="application-click-animation" type="s">
+      <choices>
+        <choice value="none"/>
+        <choice value="gnome-zoom-out"/>
+        <choice value="bounce"/>
+        <choice value="jump"/>
+        <choice value="heartbeat"/>
+        <choice value="squish"/>
+        <choice value="jelly"/>
+        <choice value="spin"/>
+        <choice value="spin_3d"/>
+        <choice value="flip"/>
+        <choice value="roll"/>
+        <choice value="zoom_fade"/>
+        <choice value="squeeze"/>
+        <choice value="glow"/>
+        <choice value="dim"/>
+        <choice value="tada"/>
+        <choice value="swing"/>
+        <choice value="shake"/>
+        <choice value="move_up"/>
+        <choice value="move_down"/>
+        <choice value="move_left"/>
+        <choice value="move_right"/>
+        <choice value="enlarge"/>
+        <choice value="shrink"/>
+      </choices>
+      <default>'tada'</default>
+      <summary>Application click animation</summary>
     </key>
     <key name="shift-click-action" type="s">
       <choices>

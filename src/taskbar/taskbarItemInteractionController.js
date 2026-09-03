@@ -18,6 +18,7 @@ export class TaskbarItemInteractionController {
     constructor({
         settings,
         favorites,
+        animateClick,
         animatePinnedLaunch,
         closeApp,
         getInterestingWindows,
@@ -31,6 +32,7 @@ export class TaskbarItemInteractionController {
     }) {
         this._settings = settings;
         this._favorites = favorites;
+        this._animateClick = animateClick;
         this._animatePinnedLaunch = animatePinnedLaunch;
         this._closeApp = closeApp;
         this._getInterestingWindows = getInterestingWindows;
@@ -46,6 +48,7 @@ export class TaskbarItemInteractionController {
     activate(item, interactionItem = item) {
         const previews = this._getPreviewController();
         const app = item._taskbarApp;
+        this._animateClick(item);
         previews.hideTooltip();
         if (item._taskbarIsLauncher) {
             previews.hide();
@@ -76,6 +79,7 @@ export class TaskbarItemInteractionController {
     shiftClick(item) {
         const previews = this._getPreviewController();
         const app = item._taskbarApp;
+        this._animateClick(item);
         const action = this._settings.get_string('shift-click-action');
         previews.hideTooltip();
         if (item._taskbarIsLauncher) {
@@ -99,6 +103,7 @@ export class TaskbarItemInteractionController {
     middleClick(item, shifted = false) {
         const previews = this._getPreviewController();
         const app = item._taskbarApp;
+        this._animateClick(item);
         previews.hideTooltip();
         previews.hide();
         if (app._simpleTaskbarLocation) {
@@ -212,6 +217,7 @@ export class TaskbarItemInteractionController {
         this._getPreviewController = null;
         this._getInterestingWindows = null;
         this._closeApp = null;
+        this._animateClick = null;
         this._animatePinnedLaunch = null;
         this._favorites = null;
         this._settings = null;

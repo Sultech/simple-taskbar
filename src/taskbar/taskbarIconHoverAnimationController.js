@@ -139,10 +139,8 @@ export class TaskbarIconHoverAnimationController {
             this._signalHolder
         );
         this._settings.connectObject(
-            'changed::animate-appicon-hover',
-            () => this._onAnimationEnabledChanged(),
             'changed::animate-appicon-hover-animation-type',
-            () => this._onAnimationSettingsChanged(),
+            () => this._onAnimationTypeChanged(),
             'changed::panel-position',
             () => this._settingsController.invalidate(),
             this._signalHolder
@@ -298,7 +296,7 @@ export class TaskbarIconHoverAnimationController {
         this._animator.resetAnimations();
     }
 
-    _onAnimationEnabledChanged() {
+    _onAnimationTypeChanged() {
         this._onAnimationSettingsChanged();
         for (const item of this._trackedItems)
             this.syncIconResolution(item);
