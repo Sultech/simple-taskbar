@@ -4,6 +4,8 @@ export const APP_ICON_HOVER_ANIMATION = {
     MAGNIFY: 'magnify',
 };
 
+export const APP_ICON_HOVER_RENDER_SCALE = 2;
+
 export const APP_ICON_HOVER_ANIMATION_SETTINGS = {
     duration: 'animate-appicon-hover-animation-duration',
     expansion: 'animate-appicon-hover-animation-expansion',

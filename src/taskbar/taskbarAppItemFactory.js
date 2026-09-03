@@ -118,6 +118,7 @@ export class TaskbarAppItemFactory {
             width: glassContentWidth,
             height: glassContentHeight,
         });
+        glass.set_pivot_point(0, 0);
         const glassBorder = new St.Widget({
             style_class: 'simple-taskbar-app-glass-border',
             x: 0,
@@ -125,6 +126,7 @@ export class TaskbarAppItemFactory {
             width: glassWidth,
             height: glassHeight,
         });
+        glassBorder.set_pivot_point(0, 0);
         const glassTexture = new St.Widget({
             style_class: 'simple-taskbar-app-glass-texture',
             x: glassInset,
@@ -132,6 +134,7 @@ export class TaskbarAppItemFactory {
             width: glassContentWidth,
             height: glassContentHeight,
         });
+        glassTexture.set_pivot_point(0, 0);
         glassTexture.set_style(
             `background-size: ${glassContentWidth}px ${glassContentHeight}px;`
         );

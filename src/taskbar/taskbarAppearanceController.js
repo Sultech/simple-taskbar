@@ -19,6 +19,9 @@ import {
     taskbarGlassHeight,
     taskbarVisualPanelHeight,
 } from '../shared/panelSizing.js';
+import {
+    APP_ICON_HOVER_RENDER_SCALE,
+} from '../shared/applicationHoverAnimation.js';
 
 const CONTENT_LEADING_SPACE = 7;
 const ICON_GLASS_MARGIN = 3;
@@ -127,24 +130,66 @@ export class TaskbarAppearanceController {
         const glassY = vertical ? 0 : this.glassY();
         const glassContentWidth = glassWidth - glassInset * 2;
         const glassContentHeight = glassOuterHeight - glassInset * 2;
+        const windowsXpTheme = this._settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const renderScale = this._settings.get_boolean('animate-appicon-hover')
+            ? APP_ICON_HOVER_RENDER_SCALE
+            : 1;
+        const inverseRenderScale = 1 / renderScale;
         item._taskbarGlass.set_position(
             glassX + glassInset,
             glassY + glassInset
         );
-        item._taskbarGlass.set_size(glassContentWidth, glassContentHeight);
+        item._taskbarGlass.set_size(
+            glassContentWidth * renderScale,
+            glassContentHeight * renderScale
+        );
+        item._taskbarGlass.set_scale(
+            inverseRenderScale,
+            inverseRenderScale
+        );
+        item._taskbarGlass.set_style(
+            renderScale === 1 || windowsXpTheme
+                ? null
+                : `border-radius: ${8 * renderScale}px;` +
+                    `border-width: ${renderScale}px;`
+        );
         item._taskbarGlassTexture.set_position(
             glassX + glassInset,
             glassY + glassInset
         );
         item._taskbarGlassTexture.set_size(
-            glassContentWidth,
-            glassContentHeight
+            glassContentWidth * renderScale,
+            glassContentHeight * renderScale
+        );
+        item._taskbarGlassTexture.set_scale(
+            inverseRenderScale,
+            inverseRenderScale
         );
         item._taskbarGlassTexture.set_style(
-            `background-size: ${glassContentWidth}px ${glassContentHeight}px;`
+            `background-size: ${glassContentWidth * renderScale}px ` +
+                `${glassContentHeight * renderScale}px;`
         );
-        item._taskbarGlassBorder.set_position(glassX, glassY);
-        item._taskbarGlassBorder.set_size(glassWidth, glassOuterHeight);
+        item._taskbarGlassBorder.set_position(
+            glassX,
+            glassY
+        );
+        item._taskbarGlassBorder.set_size(
+            glassWidth * renderScale,
+            glassOuterHeight * renderScale
+        );
+        item._taskbarGlassBorder.set_scale(
+            inverseRenderScale,
+            inverseRenderScale
+        );
+        item._taskbarGlassBorder.set_style(
+            windowsXpTheme && renderScale !== 1
+                ? `border-width: ${
+                    WINDOWS_XP_BUTTON_BORDER_WIDTH * renderScale
+                }px;`
+                : null
+        );
         item._taskbarLabel.set_width(
             this.labelWidthForButton(
                 item._taskbarWindow,

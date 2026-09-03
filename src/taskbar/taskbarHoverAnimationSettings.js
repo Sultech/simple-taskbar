@@ -4,9 +4,8 @@
 import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
+    APP_ICON_HOVER_RENDER_SCALE,
 } from '../shared/applicationHoverAnimation.js';
-
-const ICON_RESOLUTION_SCALE = 2;
 
 export class TaskbarHoverAnimationSettings {
     constructor({settings, getIconSize}) {
@@ -58,16 +57,24 @@ export class TaskbarHoverAnimationSettings {
         ).expansion;
     }
 
+    getRenderScale() {
+        return this._settings.get_boolean('animate-appicon-hover')
+            ? APP_ICON_HOVER_RENDER_SCALE
+            : 1;
+    }
+
     syncIconResolution(item) {
         const iconSize = this._getIconSize();
         const icon = item._taskbarIcon;
-        if (this._settings.get_boolean('animate-appicon-hover')) {
-            icon.icon_size = iconSize * ICON_RESOLUTION_SCALE;
+        const renderScale = this.getRenderScale();
+        if (renderScale === APP_ICON_HOVER_RENDER_SCALE) {
+            icon.icon_size = iconSize * APP_ICON_HOVER_RENDER_SCALE;
             icon.set_size(iconSize, iconSize);
         } else {
             icon.icon_size = iconSize;
             icon.set_size(-1, -1);
         }
+        item._taskbarIndicator.setRenderScale(renderScale);
     }
 
     invalidate() {

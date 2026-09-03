@@ -620,6 +620,14 @@ export class TaskbarController {
             );
         }
         this._settings.connectObject(
+            'changed::animate-appicon-hover',
+            () => {
+                for (const item of this._appButtons.values())
+                    this._updateGlassGeometry(item);
+            },
+            this._signalHolder
+        );
+        this._settings.connectObject(
             'changed::show-notification-badges',
             () => this._syncNotificationBadges(),
             this._signalHolder

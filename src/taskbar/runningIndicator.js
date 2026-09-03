@@ -238,6 +238,9 @@ class RunningIndicator extends St.Widget {
             layout_manager: new Clutter.FixedLayout(),
             visible: false,
         });
+        this._area.set_pivot_point(0, 0);
+        this._fadeArea.set_pivot_point(0, 0);
+        this._pill.set_pivot_point(0, 0);
         this._primary = new St.Widget({
             style_class: `${styleClass}-segment`,
         });
@@ -253,6 +256,7 @@ class RunningIndicator extends St.Widget {
         this.add_child(this._pill);
         this._style = 'rounded';
         this._position = 'bottom';
+        this._renderScale = 1;
         this._length = 0;
         this._thickness = 0;
         this._cross = 0;
@@ -271,6 +275,37 @@ class RunningIndicator extends St.Widget {
             this._drawState));
         this._fadeArea.connect('repaint', () => this._paint(this._fadeArea,
             this._fadeState));
+    }
+
+    setRenderScale(scale) {
+        if (this._renderScale === scale)
+            return;
+
+        this._renderScale = scale;
+        const inverseScale = 1 / scale;
+        this._area.set_scale(inverseScale, inverseScale);
+        this._fadeArea.set_scale(inverseScale, inverseScale);
+        this._pill.set_scale(inverseScale, inverseScale);
+        this._pillKey = null;
+
+        if (this._length < 1)
+            return;
+
+        const horizontal = runningIndicatorPositionIsHorizontal(
+            this._position
+        );
+        const width = horizontal ? this._length : this._thickness;
+        const height = horizontal ? this._thickness : this._length;
+        for (const area of [this._area, this._fadeArea])
+            this._setPaintAreaSize(area, width, height);
+
+        if (runningIndicatorIsPill(this._style)) {
+            this._syncPill(false);
+            return;
+        }
+
+        this._area.queue_repaint();
+        this._fadeArea.queue_repaint();
     }
 
     update({x, y, length, thickness, cross, inset, position, style, count,
@@ -296,8 +331,7 @@ class RunningIndicator extends St.Widget {
         this.set_position(x, y);
         this.set_size(width, height);
         for (const area of [this._area, this._fadeArea]) {
-            area.set_position(0, 0);
-            area.set_size(width, height);
+            this._setPaintAreaSize(area, width, height);
         }
         if (moved)
             this._pillKey = null;
@@ -420,8 +454,8 @@ class RunningIndicator extends St.Widget {
             horizontal ? 0 : containerOffset
         );
         this._pill.set_size(
-            horizontal ? container : this._thickness,
-            horizontal ? this._thickness : container
+            (horizontal ? container : this._thickness) * this._renderScale,
+            (horizontal ? this._thickness : container) * this._renderScale
         );
         this._setCrossExtent(this._primary);
         this._setCrossExtent(this._secondary);
@@ -444,8 +478,8 @@ class RunningIndicator extends St.Widget {
         }
 
         this._primary.ease({
-            [mainSize]: primaryLength,
-            [mainPosition]: primaryOffset,
+            [mainSize]: primaryLength * this._renderScale,
+            [mainPosition]: primaryOffset * this._renderScale,
             duration: ANIMATION_DURATION,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         });
@@ -457,7 +491,7 @@ class RunningIndicator extends St.Widget {
                 this._secondary.visible = true;
             }
             this._secondary.ease({
-                [mainPosition]: secondaryOffset,
+                [mainPosition]: secondaryOffset * this._renderScale,
                 opacity: 255,
                 duration: ANIMATION_DURATION,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
@@ -466,7 +500,7 @@ class RunningIndicator extends St.Widget {
         }
 
         this._secondary.ease({
-            [mainPosition]: secondaryOffset,
+            [mainPosition]: secondaryOffset * this._renderScale,
             opacity: 0,
             duration: ANIMATION_DURATION,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
@@ -478,6 +512,7 @@ class RunningIndicator extends St.Widget {
     }
 
     _setMainExtent(segment, length) {
+        length *= this._renderScale;
         if (runningIndicatorPositionIsHorizontal(this._position))
             segment.set_width(length);
         else
@@ -485,6 +520,7 @@ class RunningIndicator extends St.Widget {
     }
 
     _setMainOffset(segment, offset) {
+        offset *= this._renderScale;
         if (runningIndicatorPositionIsHorizontal(this._position))
             segment.set_x(offset);
         else
@@ -493,12 +529,20 @@ class RunningIndicator extends St.Widget {
 
     _setCrossExtent(segment) {
         if (runningIndicatorPositionIsHorizontal(this._position)) {
-            segment.set_height(this._thickness);
+            segment.set_height(this._thickness * this._renderScale);
             segment.set_y(0);
         } else {
-            segment.set_width(this._thickness);
+            segment.set_width(this._thickness * this._renderScale);
             segment.set_x(0);
         }
+    }
+
+    _setPaintAreaSize(area, width, height) {
+        area.set_position(0, 0);
+        area.set_size(
+            width * this._renderScale,
+            height * this._renderScale
+        );
     }
 
     _cornerRadius() {
