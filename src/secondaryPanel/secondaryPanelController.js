@@ -55,6 +55,9 @@ import {
     SecondaryPanelDockController,
 } from './secondaryPanelDockController.js';
 import {
+    SecondaryPanelWindowDragController,
+} from './secondaryPanelWindowDragController.js';
+import {
     SecondaryPanelIndicatorController,
 } from './secondaryPanelIndicatorController.js';
 import {StartButtonController} from '../startMenu/startButtonController.js';
@@ -98,6 +101,7 @@ export class SecondaryPanelController {
         this._visiblePanelItemIds = visiblePanelItemIds;
         this._windowDodgeController = null;
         this._dockController = null;
+        this._windowDragController = null;
         this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
         const configuredIconSize = isDock
@@ -194,6 +198,14 @@ export class SecondaryPanelController {
         });
         this.actor = new SecondaryPanelActor();
         this._panelBox.add_child(this.actor);
+        if (!isDock) {
+            this._windowDragController =
+                new SecondaryPanelWindowDragController({
+                    settings,
+                    monitor,
+                    panelActor: this.actor,
+                });
+        }
         this._leftBox = this.actor.leftBox;
         this._centerBox = this.actor.centerBox;
         this._rightBox = this.actor.rightBox;
@@ -378,6 +390,8 @@ export class SecondaryPanelController {
             dodgePointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
         });
         this._windowDodgeController.enable();
+        if (this._windowDragController)
+            this._windowDragController.enable();
         this._connectSignals();
     }
 
@@ -402,6 +416,10 @@ export class SecondaryPanelController {
     }
 
     destroy() {
+        if (this._windowDragController) {
+            this._windowDragController.destroy();
+            this._windowDragController = null;
+        }
         this._signalHolder.destroy();
         this._signalHolder = null;
 
