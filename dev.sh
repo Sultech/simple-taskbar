@@ -63,8 +63,8 @@ else
     echo "Linked $TARGET_DIR -> $SOURCE_DIR"
 fi
 
-for EXTRA_DIR in "$EXTENSIONS_DIR/$UUID".*; do
-    if [ -d "$EXTRA_DIR" ]; then
+for EXTRA_DIR in "$EXTENSIONS_DIR/$UUID"*; do
+    if [ -d "$EXTRA_DIR" ] && [ "$EXTRA_DIR" != "$TARGET_DIR" ]; then
         echo "Warning: move this backup outside the extensions directory:" >&2
         echo "  $EXTRA_DIR" >&2
     fi
