@@ -14,6 +14,14 @@ import {
 } from './taskbarHoverAnimationConstants.js';
 import {applySmoothedProperties} from './taskbarHoverAnimationUtils.js';
 
+const HoverAnimationCloneHost = GObject.registerClass(
+class HoverAnimationCloneHost extends Clutter.Actor {
+    vfunc_pick(pickContext) {
+        for (const child of this.get_children())
+            child.pick(pickContext);
+    }
+});
+
 export class TaskbarHoverAnimationCloneController {
     constructor({
         geometry,
@@ -42,7 +50,7 @@ export class TaskbarHoverAnimationCloneController {
         this._clones = new Map();
         this._stretchActors = new Map();
         this._hoveredCloneItem = null;
-        this._host = new Clutter.Actor({
+        this._host = new HoverAnimationCloneHost({
             name: 'simple-taskbar-hover-animation-clones',
             layout_manager: new Clutter.FixedLayout(),
             reactive: false,
