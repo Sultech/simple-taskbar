@@ -394,6 +394,17 @@ function addApplicationIconControls({
         css_classes: ['flat', 'circular'],
     });
     setButtonIcon(scrollDelayButton, 'emblem-system-symbolic');
+    const syncScrollActionButtonSensitivity = () => {
+        scrollDelayButton.sensitive = settings.get_string(
+            'scroll-icon-action'
+        ) !== SCROLL_ACTION.DO_NOTHING;
+    };
+    connectSettings(
+        settings,
+        'changed::scroll-icon-action',
+        syncScrollActionButtonSensitivity
+    );
+    syncScrollActionButtonSensitivity();
     const scrollActionBox = new Gtk.Box({
         orientation: Gtk.Orientation.HORIZONTAL,
         spacing: 6,
