@@ -30,6 +30,7 @@ const LOCKED_SETTING_KEYS = [
     'combine-app-buttons-mode',
     'application-overflow-enabled',
     'hide-app-labels',
+    'animate-appicon-hover-animation-type',
     'custom-indicator-colors-enabled',
     'match-icon-color',
     'custom-panel-color-enabled',

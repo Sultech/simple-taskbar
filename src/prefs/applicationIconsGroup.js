@@ -275,7 +275,7 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    addComboRow(
+    const hoverAnimationTypeRow = addComboRow(
         windowInteractionRow,
         settings,
         {
@@ -501,13 +501,21 @@ function addApplicationIconControls({
         connectSettings
     );
     const syncAnimationOptionsSensitivity = () => {
-        animationOptionsButton.sensitive = settings.get_string(
-            'animate-appicon-hover-animation-type'
-        ) !== APP_ICON_HOVER_ANIMATION.NONE;
+        const enabled = !settings.get_boolean('windows-xp-theme-enabled');
+        hoverAnimationTypeRow.sensitive = enabled;
+        animationOptionsButton.sensitive = enabled &&
+            settings.get_string(
+                'animate-appicon-hover-animation-type'
+            ) !== APP_ICON_HOVER_ANIMATION.NONE;
     };
     connectSettings(
         settings,
         'changed::animate-appicon-hover-animation-type',
+        syncAnimationOptionsSensitivity
+    );
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
         syncAnimationOptionsSensitivity
     );
     syncAnimationOptionsSensitivity();

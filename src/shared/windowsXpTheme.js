@@ -5,6 +5,7 @@ import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
 import {CLICK_ACTION} from './applicationClickActions.js';
+import {APP_ICON_HOVER_ANIMATION} from './applicationHoverAnimation.js';
 import {HOVER_ACTION} from './applicationHoverActions.js';
 import {SCROLL_ACTION} from './applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
@@ -128,6 +129,11 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);
     setBoolean(settings, 'hide-app-labels', false);
+    setString(
+        settings,
+        'animate-appicon-hover-animation-type',
+        APP_ICON_HOVER_ANIMATION.NONE
+    );
     if (settings.get_string('combine-app-buttons-mode') === 'always') {
         setString(
             settings,
