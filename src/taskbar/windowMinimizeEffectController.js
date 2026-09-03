@@ -135,12 +135,15 @@ export class WindowMinimizeEffectController {
         if (restore)
             actor.show();
 
+        const panelPosition = this._settings.get_boolean('dock-mode')
+            ? this._settings.get_string('dock-position')
+            : this._settings.get_string('panel-position');
         this._activeActors.add(actor);
         actor.add_effect_with_name(
             MAGIC_LAMP_EFFECT_NAME,
             new MagicLampEffect(
                 iconGeometry,
-                this._settings.get_string('panel-position'),
+                panelPosition,
                 restore,
                 effectActor => this._onEffectDone(effectActor, restore)
             )
