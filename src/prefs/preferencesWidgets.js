@@ -8,6 +8,62 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {SettingsSignalTracker} from './settingsSignalTracker.js';
+
+export function createPreferencesDialogContent(dialog, cleanup = null) {
+    const signalTracker = new SettingsSignalTracker();
+    const toolbarView = new Adw.ToolbarView();
+    dialog.content = toolbarView;
+
+    const headerBar = new Adw.HeaderBar({
+        show_end_title_buttons: false,
+        show_start_title_buttons: false,
+    });
+    toolbarView.add_top_bar(headerBar);
+
+    const resetButton = new Gtk.Button({
+        label: _('Reset to Defaults'),
+        valign: Gtk.Align.CENTER,
+    });
+    resetButton.connect('clicked', () => dialog._reset());
+    headerBar.pack_start(resetButton);
+
+    const closeButton = new Gtk.Button({
+        label: _('Close'),
+        valign: Gtk.Align.CENTER,
+    });
+    closeButton.connect('clicked', () => dialog.close());
+    headerBar.pack_end(closeButton);
+
+    const content = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 24,
+        margin_top: 24,
+        margin_bottom: 24,
+        margin_start: 24,
+        margin_end: 24,
+    });
+    toolbarView.content = new Gtk.ScrolledWindow({
+        child: content,
+        hscrollbar_policy: Gtk.PolicyType.NEVER,
+        vscrollbar_policy: Gtk.PolicyType.AUTOMATIC,
+        vexpand: true,
+    });
+
+    dialog.connect('close-request', () => {
+        signalTracker.destroy();
+        if (cleanup)
+            cleanup();
+        dialog._settings = null;
+    });
+
+    return {
+        content,
+        connectSettings: (object, signal, callback) =>
+            signalTracker.connect(object, signal, callback),
+    };
+}
+
 export function setButtonIcon(button, iconName) {
     button.set_child(new Gtk.Image({
         icon_name: iconName,

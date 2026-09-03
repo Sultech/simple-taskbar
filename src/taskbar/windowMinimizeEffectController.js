@@ -84,7 +84,7 @@ export class WindowMinimizeEffectController {
         for (const actor of [...this._activeActors]) {
             const effect = actor.get_effect(MAGIC_LAMP_EFFECT_NAME);
             if (effect)
-                effect.cancel();
+                effect.finish();
         }
         this._activeActors.clear();
         this._pendingActors.clear();
@@ -126,7 +126,7 @@ export class WindowMinimizeEffectController {
     _startEffect(actor, iconGeometry, restore) {
         const oldEffect = actor.get_effect(MAGIC_LAMP_EFFECT_NAME);
         if (oldEffect)
-            oldEffect.cancel();
+            oldEffect.finish();
 
         actor.remove_all_transitions();
         actor.set_scale(1, 1);

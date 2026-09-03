@@ -61,7 +61,7 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         timeline.connectObject(
             'new-frame', source => {
                 if (!this.get_actor()) {
-                    this._finish();
+                    this.finish();
                     return;
                 }
 
@@ -72,10 +72,10 @@ export class MagicLampEffect extends Clutter.DeformEffect {
                     parent.queue_redraw();
                 this.invalidate();
             },
-            'completed', () => this._finish(),
+            'completed', () => this.finish(),
             this
         );
-        actor.connectObject('destroy', () => this._finish(), this);
+        actor.connectObject('destroy', () => this.finish(), this);
         timeline.start();
     }
 
@@ -171,7 +171,7 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         }
     }
 
-    _finish() {
+    finish() {
         if (!this._timeline)
             return;
 

@@ -10,7 +10,10 @@ import {
 import {
     APP_ICON_HOVER_ANIMATION_SETTINGS,
 } from '../shared/applicationHoverAnimation.js';
-import {setButtonIcon} from './preferencesWidgets.js';
+import {
+    createPreferencesDialogContent,
+    setButtonIcon,
+} from './preferencesWidgets.js';
 
 function controlDefinitions() {
     return [
@@ -142,41 +145,15 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
         this._settings = settings;
         this._controlDefinitions = controlDefinitions();
         this._scales = new Map();
-        this._settingsConnections = [];
-        this._scaleConnections = [];
         this._syncing = false;
-
-        const toolbarView = new Adw.ToolbarView();
-        this.content = toolbarView;
-
-        const headerBar = new Adw.HeaderBar({
-            show_end_title_buttons: false,
-            show_start_title_buttons: false,
-        });
-        toolbarView.add_top_bar(headerBar);
-
-        const resetButton = new Gtk.Button({
-            label: _('Reset to Defaults'),
-            valign: Gtk.Align.CENTER,
-        });
-        resetButton.connect('clicked', () => this._reset());
-        headerBar.pack_start(resetButton);
-
-        const closeButton = new Gtk.Button({
-            label: _('Close'),
-            valign: Gtk.Align.CENTER,
-        });
-        closeButton.connect('clicked', () => this.close());
-        headerBar.pack_end(closeButton);
-
-        const content = new Gtk.Box({
-            orientation: Gtk.Orientation.VERTICAL,
-            spacing: 24,
-            margin_top: 24,
-            margin_bottom: 24,
-            margin_start: 24,
-            margin_end: 24,
-        });
+        const {content, connectSettings} = createPreferencesDialogContent(
+            this,
+            () => {
+                this._scales.clear();
+                this._scales = null;
+                this._controlDefinitions = null;
+            }
+        );
         const optionsGroup = new Adw.PreferencesGroup({
             title: _('Animation Profile'),
             description: _(
@@ -188,11 +165,11 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
         for (const definition of this._controlDefinitions) {
             const scale = this._createScale(definition);
             this._scales.set(definition.property, scale);
-            const scaleConnectionId = scale.connect(
+            connectSettings(
+                scale,
                 'value-changed',
-                () => this._setValue(definition, scale),
+                () => this._setValue(definition, scale)
             );
-            this._scaleConnections.push({scale, id: scaleConnectionId});
             const row = new Adw.ActionRow({
                 title: definition.title,
                 subtitle: definition.subtitle,
@@ -202,40 +179,25 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
             optionsGroup.add(row);
         }
 
-        const scrolledWindow = new Gtk.ScrolledWindow({
-            child: content,
-            hscrollbar_policy: Gtk.PolicyType.NEVER,
-            vscrollbar_policy: Gtk.PolicyType.AUTOMATIC,
-            vexpand: true,
-        });
-        toolbarView.content = scrolledWindow;
-
-        this._settingsConnections.push(settings.connect(
+        connectSettings(
+            settings,
             'changed::animate-appicon-hover-animation-type',
             () => this._sync()
-        ));
+        );
         for (const key of ['dock-mode', 'dock-panel-mode']) {
-            this._settingsConnections.push(settings.connect(
+            connectSettings(
+                settings,
                 `changed::${key}`,
                 () => this._sync()
-            ));
+            );
         }
         for (const key of Object.values(APP_ICON_HOVER_ANIMATION_SETTINGS)) {
-            this._settingsConnections.push(settings.connect(
+            connectSettings(
+                settings,
                 `changed::${key}`,
                 () => this._sync()
-            ));
+            );
         }
-        this.connect('close-request', () => {
-            for (const id of this._settingsConnections)
-                settings.disconnect(id);
-            for (const {scale, id} of this._scaleConnections)
-                scale.disconnect(id);
-            this._settingsConnections = null;
-            this._scaleConnections = null;
-            this._scales.clear();
-            this._settings = null;
-        });
         this._sync();
     }
 

@@ -10,6 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     addComboRow,
     addSpinRow,
+    createPreferencesDialogContent,
     createSwitchRow,
     setButtonIcon,
 } from './preferencesWidgets.js';
@@ -52,44 +53,8 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
         });
 
         this._settings = settings;
-        this._settingsConnections = [];
-
-        const connectSettings = (object, signal, callback) => {
-            const id = object.connect(signal, callback);
-            this._settingsConnections.push({object, id});
-        };
-
-        const toolbarView = new Adw.ToolbarView();
-        this.content = toolbarView;
-
-        const headerBar = new Adw.HeaderBar({
-            show_end_title_buttons: false,
-            show_start_title_buttons: false,
-        });
-        toolbarView.add_top_bar(headerBar);
-
-        const resetButton = new Gtk.Button({
-            label: _('Reset to Defaults'),
-            valign: Gtk.Align.CENTER,
-        });
-        resetButton.connect('clicked', () => this._reset());
-        headerBar.pack_start(resetButton);
-
-        const closeButton = new Gtk.Button({
-            label: _('Close'),
-            valign: Gtk.Align.CENTER,
-        });
-        closeButton.connect('clicked', () => this.close());
-        headerBar.pack_end(closeButton);
-
-        const content = new Gtk.Box({
-            orientation: Gtk.Orientation.VERTICAL,
-            spacing: 24,
-            margin_top: 24,
-            margin_bottom: 24,
-            margin_start: 24,
-            margin_end: 24,
-        });
+        const {content, connectSettings} =
+            createPreferencesDialogContent(this);
 
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Application Labels'),
@@ -179,20 +144,6 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
         );
         syncLabelOptionSensitivity();
 
-        const scrolledWindow = new Gtk.ScrolledWindow({
-            child: content,
-            hscrollbar_policy: Gtk.PolicyType.NEVER,
-            vscrollbar_policy: Gtk.PolicyType.AUTOMATIC,
-            vexpand: true,
-        });
-        toolbarView.content = scrolledWindow;
-
-        this.connect('close-request', () => {
-            for (const {object, id} of this._settingsConnections)
-                object.disconnect(id);
-            this._settingsConnections = null;
-            this._settings = null;
-        });
     }
 
     _reset() {

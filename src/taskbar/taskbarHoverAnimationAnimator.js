@@ -391,8 +391,6 @@ export class TaskbarHoverAnimationAnimator {
             : size * (profile.travel + (profile.zoom - 1) / 2);
         const translationEnd = translationMax * level;
         const translationDone = entry.clone[translationProperty];
-        const translationTodo = Math.sign(profile.travel) *
-            Math.abs(translationEnd - translationDone);
         const rotationDirection = this._rotationDirection(item, items);
         const targets = {
             scale_x: 1 + (profile.zoom - 1) * level,
@@ -412,11 +410,26 @@ export class TaskbarHoverAnimationAnimator {
             return;
         }
 
+        const scaleRange = Math.abs(profile.zoom - 1);
+        const translationRange = Math.abs(translationMax);
+        const rotationRange = Math.abs(rotationDirection * profile.rotation);
+        const progressRemaining = Math.max(
+            scaleRange
+                ? Math.abs(targets.scale_x - entry.clone.scale_x) / scaleRange
+                : 0,
+            translationRange
+                ? Math.abs(targets[translationProperty] - translationDone) /
+                    translationRange
+                : 0,
+            rotationRange
+                ? Math.abs(targets.rotation_angle_z -
+                    entry.clone.rotation_angle_z) / rotationRange
+                : 0
+        );
+
         entry.clone.ease({
             ...targets,
-            duration: Math.abs(
-                profile.duration * translationTodo / translationMax
-            ),
+            duration: profile.duration * Math.min(progressRemaining, 1),
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             onComplete: () => {
                 if (level === 0 && !rowTranslation &&

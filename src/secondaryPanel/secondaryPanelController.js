@@ -338,7 +338,7 @@ export class SecondaryPanelController {
                 this._windowController.handleAppScrolled(item, direction),
             onPanelScrolled: direction =>
                 this._windowController.handlePanelScrolled(direction),
-            volumeIndicator: quickSettings._volumeOutput,
+            getVolumeIndicator: () => quickSettings._volumeOutput,
             panelActor: this.actor,
             panelBoxes: [this._leftBox, this._centerBox, this._rightBox],
             allowTaskbarLock: !this._dockController,
