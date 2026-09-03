@@ -399,7 +399,7 @@ export default class SimpleTaskbarExtension extends Extension {
         if (this._rebuildId)
             return;
 
-        this._rebuildId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+        this._rebuildId = GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
             this._rebuildId = 0;
             this.disable();
             this.enable();
