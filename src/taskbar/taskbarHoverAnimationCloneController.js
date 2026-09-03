@@ -46,6 +46,8 @@ export class TaskbarHoverAnimationCloneController {
             name: 'simple-taskbar-hover-animation-clones',
             reactive: false,
         });
+        this._hostGeometry = null;
+        this._updateHostClip();
         Main.uiGroup.add_child(this._host);
     }
 
@@ -240,6 +242,7 @@ export class TaskbarHoverAnimationCloneController {
         this.reset();
         this._host.destroy();
         this._host = null;
+        this._hostGeometry = null;
         this._getMonitor = null;
         this._clones = null;
         this._stretchActors = null;
@@ -258,11 +261,27 @@ export class TaskbarHoverAnimationCloneController {
 
     _updateHostClip() {
         const monitor = this._getMonitor();
+        const geometry = {
+            stageWidth: global.stage.width,
+            stageHeight: global.stage.height,
+            x: monitor.x,
+            y: monitor.y,
+            width: monitor.width,
+            height: monitor.height,
+        };
+        if (this._hostGeometry &&
+            Object.keys(geometry).every(key =>
+                geometry[key] === this._hostGeometry[key])) {
+            return;
+        }
+
+        this._hostGeometry = geometry;
+        this._host.set_size(geometry.stageWidth, geometry.stageHeight);
         this._host.set_clip(
-            monitor.x,
-            monitor.y,
-            monitor.width,
-            monitor.height
+            geometry.x,
+            geometry.y,
+            geometry.width,
+            geometry.height
         );
     }
 
