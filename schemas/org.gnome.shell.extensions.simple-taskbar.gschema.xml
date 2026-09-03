@@ -812,6 +812,14 @@
       <default>'tada'</default>
       <summary>Application click animation</summary>
     </key>
+    <key name="window-minimize-effect" type="s">
+      <choices>
+        <choice value="gnome-default"/>
+        <choice value="magic-lamp"/>
+      </choices>
+      <default>'gnome-default'</default>
+      <summary>Window minimize effect</summary>
+    </key>
     <key name="shift-click-action" type="s">
       <choices>
         <choice value="raise-windows"/>

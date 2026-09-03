@@ -46,6 +46,9 @@ import {
 import {createTaskbarViewport} from './src/taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from './src/integration/volumeMixerController.js';
 import {WindowController} from './src/taskbar/windowController.js';
+import {
+    WindowMinimizeEffectController,
+} from './src/taskbar/windowMinimizeEffectController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
 import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
@@ -169,6 +172,8 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._applicationOverflowController.sync();
             },
         });
+        this._windowMinimizeEffectController =
+            new WindowMinimizeEffectController(this._settings);
         this._taskbarController.setAlignmentActor(Main.panel._centerBox);
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
@@ -313,6 +318,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._startButtonController.syncKeybindings();
         this._panelController.position();
         this._taskbarController.enable();
+        this._windowMinimizeEffectController.enable();
     }
 
     disable() {
@@ -360,6 +366,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._switcherKeybindings = null;
         this._applicationKeybindings.destroy();
         this._applicationKeybindings = null;
+        this._windowMinimizeEffectController.destroy();
+        this._windowMinimizeEffectController = null;
         this._windowController.destroy();
         this._taskbarController.destroy();
         this._notificationBadgeModel.destroy();

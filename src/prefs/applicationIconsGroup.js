@@ -28,6 +28,9 @@ import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 import {
     APPLICATION_CLICK_ANIMATION,
 } from '../shared/applicationClickAnimation.js';
+import {
+    WINDOW_MINIMIZE_EFFECT,
+} from '../shared/windowMinimizeEffect.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {TASKBAR_HIGHLIGHT_STYLE} from '../shared/classicHighlightSettings.js';
@@ -280,6 +283,29 @@ function addApplicationIconControls({
             title: _('Click Animation'),
             subtitle: _('Choose the animation shown when an application is clicked'),
             choices: getApplicationClickAnimationChoices(),
+            addRow: row => windowInteractionRow.add_row(row),
+        },
+        connectSettings
+    );
+    addComboRow(
+        windowInteractionRow,
+        settings,
+        {
+            key: 'window-minimize-effect',
+            title: _('Window Minimize Effect'),
+            subtitle: _(
+                'Choose the effect shown when a window is minimized or restored'
+            ),
+            choices: [
+                {
+                    value: WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT,
+                    label: _('GNOME Default'),
+                },
+                {
+                    value: WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP,
+                    label: _('Magic Lamp'),
+                },
+            ],
             addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
