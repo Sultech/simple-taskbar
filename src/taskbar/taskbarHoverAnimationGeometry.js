@@ -39,7 +39,11 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     getRowItemBaseGeometry(item, getStretchEntry) {
-        const geometry = this.getActorGeometry(this.getCloneSource(item));
+        const actor = this._getAnimationType() ===
+            APP_ICON_HOVER_ANIMATION.MAGNIFY
+            ? item._taskbarVisual || item
+            : this.getCloneSource(item);
+        const geometry = this.getActorGeometry(actor);
         if (!geometry)
             return null;
 
@@ -84,7 +88,7 @@ export class TaskbarHoverAnimationGeometry {
 
     getCloneSource(item) {
         if (this._getAnimationType() === APP_ICON_HOVER_ANIMATION.MAGNIFY)
-            return item._taskbarVisual || item;
+            return item._taskbarSlot || item;
 
         return item._taskbarIconContainer;
     }

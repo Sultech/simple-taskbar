@@ -89,7 +89,7 @@ export class TaskbarHoverAnimationCloneController {
         const stretchProperty = this._getVertical()
             ? 'translation_y'
             : 'translation_x';
-        const stretchActor = item._taskbarVisual;
+        const stretchActor = this._getStretchActor(item);
         const stretchOffset = stretchActor[stretchProperty];
         const clone = new Clutter.Clone({
             source,
@@ -155,7 +155,7 @@ export class TaskbarHoverAnimationCloneController {
             : 'translation_x';
         let entry = this._stretchActors.get(item);
         if (!entry) {
-            const actor = item._taskbarVisual || item;
+            const actor = this._getStretchActor(item);
             entry = {
                 actor,
                 base: actor[property],
@@ -189,6 +189,12 @@ export class TaskbarHoverAnimationCloneController {
             duration,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         });
+    }
+
+    _getStretchActor(item) {
+        return this._getAnimationType() === APP_ICON_HOVER_ANIMATION.MAGNIFY
+            ? item._taskbarSlot || item
+            : item._taskbarVisual || item;
     }
 
     resetStretch(item) {
