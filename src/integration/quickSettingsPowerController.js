@@ -21,6 +21,8 @@ export class QuickSettingsPowerController {
             this._sync.bind(this),
             'changed::default-gnome-panel',
             this._sync.bind(this),
+            'changed::dock-mode',
+            this._sync.bind(this),
             this
         );
         const grid = this._quickSettings.menu._grid;
@@ -143,6 +145,7 @@ export class QuickSettingsPowerController {
         );
         return powerOptionsEnabled &&
             this._settings.get_boolean('windows-start-menu-enabled') &&
-            !this._settings.get_boolean('default-gnome-panel');
+            (!this._settings.get_boolean('default-gnome-panel') ||
+                this._settings.get_boolean('dock-mode'));
     }
 }
