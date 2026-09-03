@@ -352,6 +352,10 @@ export class PanelController {
         this._taskbarWidthUpdater.update();
     }
 
+    queueTaskbarWidth() {
+        this._taskbarWidthUpdater.queue();
+    }
+
     _updateTaskbarWidthInternal() {
         const monitor = Main.layoutManager.primaryMonitor;
         const leftBox = Main.panel._leftBox;
@@ -606,8 +610,8 @@ export class PanelController {
             Main.panel._rightBox,
         ]) {
             box.connectObject(
-                'notify::width', () => this.updateTaskbarWidth(),
-                'notify::height', () => this.updateTaskbarWidth(),
+                'notify::width', () => this.queueTaskbarWidth(),
+                'notify::height', () => this.queueTaskbarWidth(),
                 this._signalHolder
             );
         }
