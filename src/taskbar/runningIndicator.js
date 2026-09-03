@@ -551,7 +551,7 @@ class RunningIndicator extends St.Widget {
 
         return this._radiusSource.get_theme_node().get_border_radius(
             St.Corner.TOPLEFT
-        );
+        ) / this._renderScale;
     }
 
     _paint(area, state) {
