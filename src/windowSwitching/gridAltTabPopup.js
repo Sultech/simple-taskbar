@@ -322,6 +322,7 @@ const GridAltTabList = GObject.registerClass({
     Signals: {
         'item-activated': {param_types: [GObject.TYPE_INT]},
         'item-entered': {param_types: [GObject.TYPE_INT]},
+        'item-removed': {param_types: [GObject.TYPE_INT]},
     },
 }, class GridAltTabList extends St.ScrollView {
     _init(windows, monitor, maxPreviewHeight) {
@@ -532,28 +533,29 @@ const GridAltTabList = GObject.registerClass({
             card.destroy();
             if (row && row.get_n_children() === 0)
                 row.destroy();
-            return;
+        } else {
+            card.remove_all_transitions();
+            card.set_pivot_point(0.5, 0.5);
+            card.height = Math.max(1, card.height);
+            card.ease({
+                width: 0,
+                height: 0,
+                scale_x: 0.9,
+                scale_y: 0.9,
+                opacity: 0,
+                duration: CARD_REMOVE_DURATION,
+                mode: Clutter.AnimationMode.EASE_IN_QUAD,
+                onStopped: finished => {
+                    if (!finished)
+                        return;
+                    card.destroy();
+                    if (row && row.get_n_children() === 0)
+                        row.destroy();
+                },
+            });
         }
 
-        card.remove_all_transitions();
-        card.set_pivot_point(0.5, 0.5);
-        card.height = Math.max(1, card.height);
-        card.ease({
-            width: 0,
-            height: 0,
-            scale_x: 0.9,
-            scale_y: 0.9,
-            opacity: 0,
-            duration: CARD_REMOVE_DURATION,
-            mode: Clutter.AnimationMode.EASE_IN_QUAD,
-            onStopped: finished => {
-                if (!finished)
-                    return;
-                card.destroy();
-                if (row && row.get_n_children() === 0)
-                    row.destroy();
-            },
-        });
+        this.emit('item-removed', index);
     }
 
     getVerticalIndex(index, direction) {
