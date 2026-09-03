@@ -19,6 +19,7 @@ import {StartMenuController} from './startMenuController.js';
 import {StartButtonContextMenuController} from './startButtonContextMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
 import {openPopupMenu} from '../shared/popupMenuUtils.js';
+import {TaskbarItemContainer} from '../taskbar/taskbarItemContainer.js';
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
@@ -111,6 +112,16 @@ export class StartButtonController {
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
         });
+        this._contentContainer = new TaskbarItemContainer();
+        this._contentContainer.setSnapChildAllocation(true);
+        this._contentContainer.x_align = Clutter.ActorAlign.FILL;
+        this._contentContainer.y_align = Clutter.ActorAlign.FILL;
+        this._contentContainer.x_expand = true;
+        this._contentContainer.y_expand = true;
+        this._contentContainer.scale_x = 1;
+        this._contentContainer.scale_y = 1;
+        this._contentContainer.opacity = 255;
+        this._contentContainer.setChild(this._content);
         this._hover = new St.Widget({
             style_class: 'simple-taskbar-start-hover',
             reactive: false,
@@ -129,7 +140,7 @@ export class StartButtonController {
             accessible_name: this._accessibleName(),
             child: this._settings.get_boolean('windows-xp-theme-enabled')
                 ? this._windowsXpStartButton.actor
-                : this._content,
+                : this._contentContainer,
         });
         const {separator, line} = createTaskbarSeparator();
         this._separator = separator;
@@ -202,6 +213,8 @@ export class StartButtonController {
             'windows-xp-theme-enabled'
         );
         const vertical = panelIsVertical(this._settings);
+        const floatingDock = this._settings.isDock &&
+            !this._settings.get_boolean('dock-panel-mode');
         const glassWidth = windowsXpTheme
             ? this._windowsXpStartButton.width
             : taskbarIconButtonWidth(iconSize);
@@ -214,8 +227,7 @@ export class StartButtonController {
                 taskbarVisualPanelHeight(
                     this._settings.get_int('panel-height'),
                     iconSize,
-                    this._settings.isDock &&
-                        !this._settings.get_boolean('dock-panel-mode')
+                    floatingDock
                 ),
                 windowsXpTheme
             );
@@ -255,13 +267,23 @@ export class StartButtonController {
             return;
         }
 
-        this._content.set_height(-1);
+        this._content.set_height(
+            taskbarVisualPanelHeight(
+                this._settings.get_int('panel-height'),
+                iconSize,
+                floatingDock
+            )
+        );
         this.actor.set_height(-1);
         this._content.set_width(width);
         this.actor.set_width(width);
+        const borderStyle = floatingDock && !windowsXpTheme
+            ? ' border-width: 0;'
+            : '';
         this.actor.set_style(
-            `min-width: 0; padding: 0; margin-left: ${leftMargin}px;` +
-            `margin-right: ${rightMargin}px;`
+            `min-width: 0; padding: 0;${borderStyle}` +
+                ` margin-left: ${leftMargin}px;` +
+                `margin-right: ${rightMargin}px;`
         );
         this._syncSeparator(false);
     }
@@ -300,6 +322,7 @@ export class StartButtonController {
         this._separatorLine = null;
         this._separatorVertical = null;
         this._hover = null;
+        this._contentContainer = null;
         this._content = null;
         this._icon = null;
         this._windowsGIcon = null;
@@ -739,7 +762,7 @@ export class StartButtonController {
         );
         this.actor.child = enabled
             ? this._windowsXpStartButton.actor
-            : this._content;
+            : this._contentContainer;
         this._icon.visible = !enabled;
         this._hover.visible = !enabled;
     }
