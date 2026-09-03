@@ -70,6 +70,18 @@ export function refreshPanelBlurVisibility(panelBlur) {
     panelBlur.update_visibility();
 }
 
+export function syncPanelBlurGeometry(panel) {
+    const panelBlur = getPanelBlur();
+    if (!panelBlur)
+        return;
+
+    const actors = panelBlur.actors_list.find(
+        actors => actors.widgets.panel === panel
+    );
+    if (actors)
+        panelBlur.update_size(actors);
+}
+
 export function resetPanelBlur() {
     const panelBlur = getPanelBlur();
     if (!panelBlur)

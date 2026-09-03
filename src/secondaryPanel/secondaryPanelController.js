@@ -11,7 +11,10 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
-import {panelBlurIsActive} from '../integration/blurMyShellRuntime.js';
+import {
+    panelBlurIsActive,
+    syncPanelBlurGeometry,
+} from '../integration/blurMyShellRuntime.js';
 import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
 import {
     PANEL_BLUR_CLASSES,
@@ -742,6 +745,7 @@ export class SecondaryPanelController {
                 [lengthProperty]: geometry[lengthProperty],
                 duration,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                onComplete: () => syncPanelBlurGeometry(this.actor),
             });
         } else {
             this._panelBox.remove_transition(lengthProperty);
@@ -763,6 +767,8 @@ export class SecondaryPanelController {
                     this._panelBox.set_position(geometry.x, geometry.y);
                 }
             }
+            if (this._dockController)
+                syncPanelBlurGeometry(this.actor);
         }
         if (this._dockController)
             this._dockController.syncStrut();
