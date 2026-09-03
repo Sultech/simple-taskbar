@@ -36,7 +36,7 @@ export function applyDefaultTaskbarSettings(settings) {
         'taskbar-highlight-style',
         TASKBAR_HIGHLIGHT_STYLE.GLASS
     );
-    setInteger(settings, 'start-button-padding', 3);
+    setInteger(settings, 'start-button-padding', 0);
     setString(settings, 'app-alignment', DEFAULT_TASKBAR_ALIGNMENT);
     setString(settings, 'activities-button-position', 'left');
     setString(settings, 'panel-position', 'bottom');

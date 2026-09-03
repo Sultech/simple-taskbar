@@ -278,18 +278,23 @@ export class StartButtonController {
         )
             ? this._settings.get_string('app-alignment')
             : this._settings.get_string('start-button-position');
-        const leftMargin = !windowsXpTheme && startButtonPosition === 'left'
+        const leadingMargin = !windowsXpTheme &&
+            startButtonPosition === 'left'
             ? padding
             : 0;
-        const rightMargin = windowsXpTheme ? 6 : 0;
+        const trailingMargin = !windowsXpTheme &&
+            startButtonPosition === 'right'
+            ? padding
+            : 0;
         if (vertical) {
             this._content.set_width(-1);
             this._content.set_height(width);
             this.actor.set_width(-1);
             this.actor.set_height(width);
             this.actor.set_style(
-                `min-width: 0; padding: 0; margin-top: ${leftMargin}px;` +
-                `margin-right: ${rightMargin}px;`
+                `min-width: 0; padding: 0; margin-top: ${leadingMargin}px;` +
+                `margin-bottom: ${trailingMargin}px;` +
+                `margin-right: ${windowsXpTheme ? 6 : 0}px;`
             );
             this._syncSeparator(false);
             return;
@@ -310,8 +315,8 @@ export class StartButtonController {
             : '';
         this.actor.set_style(
             `min-width: 0; padding: 0;${borderStyle}` +
-                ` margin-left: ${leftMargin}px;` +
-                `margin-right: ${rightMargin}px;`
+                ` margin-left: ${leadingMargin}px;` +
+                `margin-right: ${trailingMargin}px;`
         );
         this._syncSeparator(false);
     }

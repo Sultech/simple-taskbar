@@ -204,6 +204,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             page: dockPage,
             settings: window._settings,
             connectSettings,
+            panelPositions,
         });
 
         addLocationsGroup({

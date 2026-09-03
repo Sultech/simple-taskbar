@@ -112,9 +112,12 @@ export function addStartMenuPage({
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const dockMode = settings.get_boolean('dock-mode');
+        const dockPanelMode = settings.get_boolean('dock-panel-mode');
         startPositionRow.sensitive =
             !defaultPanel && !windowsXpTheme &&
-            !followAppAlignmentSwitch.active;
+            !followAppAlignmentSwitch.active &&
+            (!dockMode || dockPanelMode);
         followAppAlignmentSwitch.sensitive =
             !defaultPanel && !windowsXpTheme;
     };
@@ -165,7 +168,8 @@ export function addStartMenuPage({
         const startButtonPosition = followAppAlignmentSwitch.active
             ? settings.get_string('app-alignment')
             : settings.get_string('start-button-position');
-        const available = startButtonPosition === 'left' &&
+        const available = (startButtonPosition === 'left' ||
+            startButtonPosition === 'right') &&
             (!dockMode || dockPanelMode);
         startButtonPaddingRow.sensitive =
             !defaultPanel && !windowsXpTheme && available;
@@ -780,10 +784,14 @@ export function addStartMenuPage({
     );
 
     const updateCenterStartMenuRow = () => {
-        const centered = followAppAlignmentSwitch.active
+        let centered = followAppAlignmentSwitch.active
             ? settings.get_string('app-alignment') === 'center'
             : settings.get_string('start-button-position') ===
                 'center';
+        if (settings.get_boolean('dock-mode') &&
+            !settings.get_boolean('dock-panel-mode')) {
+            centered = true;
+        }
         centerStartMenuRow.sensitive =
             windowsStartMenuSwitch.active && centered;
     };
@@ -799,6 +807,16 @@ export function addStartMenuPage({
     connectSettings(
         settings,
         'changed::app-alignment',
+        updateCenterStartMenuRow
+    );
+    connectSettings(
+        settings,
+        'changed::dock-mode',
+        updateCenterStartMenuRow
+    );
+    connectSettings(
+        settings,
+        'changed::dock-panel-mode',
         updateCenterStartMenuRow
     );
     windowsStartMenuSwitch.connect(

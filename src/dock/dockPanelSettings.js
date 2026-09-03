@@ -88,6 +88,10 @@ export class DockPanelSettings {
             !this._settings.get_boolean('dock-panel-mode')) {
             return 'center';
         }
+        if (key === 'start-button-position' &&
+            !this._settings.get_boolean('dock-panel-mode')) {
+            return 'center';
+        }
 
         return this._settings.get_string(dockSettingKey(key));
     }
