@@ -275,7 +275,7 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    const hoverAnimationTypeRow = addComboRow(
+    addComboRow(
         windowInteractionRow,
         settings,
         {
@@ -445,7 +445,7 @@ function addApplicationIconControls({
     syncPreviewOptionsButtonSensitivity();
     const animationOptionsButton =
         createApplicationHoverAnimationOptionsButton(settings);
-    addComboRow(
+    const hoverAnimationTypeRow = addComboRow(
         windowInteractionRow,
         settings,
         {
