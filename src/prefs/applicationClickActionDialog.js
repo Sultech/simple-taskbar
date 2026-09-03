@@ -28,7 +28,7 @@ export function getApplicationClickActionChoices() {
         },
         {
             value: CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
-            label: _('Show Window Previews'),
+            label: _('Toggle Single / Preview Multiple'),
         },
         {
             value: CLICK_ACTION.TOGGLE_CYCLE,
