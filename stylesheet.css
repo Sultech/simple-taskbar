@@ -1823,7 +1823,7 @@
     background-color: #1941a5 !important;
     background-image: url('icons/taskbar/xp/xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;
-    background-position: top left !important;
+    background-position: 0 0 !important;
     background-size: 1px 30px !important;
     border-radius: 8px !important;
 }
@@ -1848,7 +1848,7 @@
     .popup-menu-content.simple-taskbar-application-overflow-taskbar-content.simple-taskbar-application-overflow-taskbar-scrollbar {
     background-image: url('icons/taskbar/xp/xp-overflow-gradient.svg') !important;
     background-repeat: repeat !important;
-    background-position: top left !important;
+    background-position: 0 0 !important;
     background-size: 1px 39px !important;
 }
 
@@ -2068,7 +2068,7 @@
     background-color: #1941a5 !important;
     background-image: url('icons/taskbar/xp/xp-panel-gradient.svg') !important;
     background-repeat: repeat !important;
-    background-position: top left !important;
+    background-position: 0 0 !important;
     background-size: 1px 30px !important;
 }
 
@@ -2403,7 +2403,7 @@
     padding: 0;
     background-color: transparent;
     background-image: url('icons/taskbar/xp/notification-area/taskband_tray_horz_body.png');
-    background-size: 1px 100%;
+    background-size: 1px 30px;
     background-repeat: repeat-x;
     border-style: solid;
     border-width: 5px 0 3px 16px;
