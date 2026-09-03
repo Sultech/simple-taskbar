@@ -232,6 +232,7 @@ export class TaskbarAppItemFactory {
             y_expand: true,
             width: glassWidth,
             accessible_name: app.get_name(),
+            child: layout,
         });
         const indicatorHost = new St.Widget({
             layout_manager: new Clutter.FixedLayout(),
@@ -251,7 +252,6 @@ export class TaskbarAppItemFactory {
         layout.add_child(content);
         layout.add_child(bottomSpacer);
         visual.add_child(glassHost);
-        visual.add_child(layout);
         visual.add_child(indicatorHost);
         slot.add_child(visual);
         slot.add_child(button);
