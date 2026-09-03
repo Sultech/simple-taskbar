@@ -861,6 +861,8 @@ export class StartButtonController {
         if (!location)
             return null;
 
+        if (location === 'theme:app-grid')
+            return this._gnomeGIcon;
         if (location === 'builtin:gnome') {
             return new Gio.FileIcon({
                 file: this._extensionDir

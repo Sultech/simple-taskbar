@@ -95,6 +95,8 @@ function bundledIconFile(extensionPath, location) {
 }
 
 export function getStartIconDisplayName(location) {
+    if (location === 'theme:app-grid')
+        return _('Default Icon');
     if (location === 'builtin:gnome')
         return _('GNOME');
     if (location === 'builtin:eleven')
@@ -210,6 +212,12 @@ class StartIconChooserDialog extends Adw.Window {
     _populateIcons() {
         const entries = [
             {
+                location: 'theme:app-grid',
+                displayName: _('Default Icon'),
+                searchText: 'default icon theme app grid',
+                iconName: 'view-app-grid-symbolic',
+            },
+            {
                 location: 'builtin:gnome',
                 displayName: _('GNOME'),
                 searchText: 'gnome built in',
@@ -249,8 +257,10 @@ class StartIconChooserDialog extends Adw.Window {
         enumerator.close(null);
 
         entries.sort((a, b) => {
-            const aBuiltIn = a.location.startsWith('builtin:');
-            const bBuiltIn = b.location.startsWith('builtin:');
+            const aBuiltIn = a.location.startsWith('builtin:') ||
+                a.location.startsWith('theme:');
+            const bBuiltIn = b.location.startsWith('builtin:') ||
+                b.location.startsWith('theme:');
             if (aBuiltIn !== bBuiltIn)
                 return aBuiltIn ? -1 : 1;
             return a.displayName.localeCompare(b.displayName);
@@ -272,10 +282,15 @@ class StartIconChooserDialog extends Adw.Window {
             this._extensionPath,
             entry.location
         );
-        const image = new Gtk.Image({
-            gicon: new Gio.FileIcon({file}),
-            pixel_size: 40,
-        });
+        const image = entry.iconName
+            ? new Gtk.Image({
+                icon_name: entry.iconName,
+                pixel_size: 40,
+            })
+            : new Gtk.Image({
+                gicon: new Gio.FileIcon({file}),
+                pixel_size: 40,
+            });
         const label = new Gtk.Label({
             label: entry.displayName,
             ellipsize: Pango.EllipsizeMode.END,

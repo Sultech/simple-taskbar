@@ -966,7 +966,7 @@
     </key>
     <key name="start-button-custom-icon" type="s">
       <default>''</default>
-      <summary>Bundled icon identifier, URI, or path for the Start button</summary>
+      <summary>Bundled icon, icon theme identifier, URI, or path for the Start button</summary>
     </key>
     <key name="gnome-start-button-visible" type="b">
       <default>true</default>
