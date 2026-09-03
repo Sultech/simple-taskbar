@@ -154,6 +154,40 @@ export function addStartMenuPage({
         },
         connectSettings
     );
+    const updateStartButtonPaddingRow = () => {
+        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('dock-mode');
+        const dockMode = settings.get_boolean('dock-mode');
+        const dockPanelMode = settings.get_boolean('dock-panel-mode');
+        const windowsXpTheme = settings.get_boolean(
+            'windows-xp-theme-enabled'
+        );
+        const startButtonPosition = followAppAlignmentSwitch.active
+            ? settings.get_string('app-alignment')
+            : settings.get_string('start-button-position');
+        const available = startButtonPosition === 'left' &&
+            (!dockMode || dockPanelMode);
+        startButtonPaddingRow.sensitive =
+            !defaultPanel && !windowsXpTheme && available;
+    };
+    followAppAlignmentSwitch.connect(
+        'notify::active',
+        updateStartButtonPaddingRow
+    );
+    for (const key of [
+        'app-alignment',
+        'start-button-position',
+        'dock-mode',
+        'dock-panel-mode',
+        'default-gnome-panel',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            updateStartButtonPaddingRow
+        );
+    }
+    updateStartButtonPaddingRow();
 
     const startButtonSeparatorSwitch = createSwitchRow(settings, {
         key: 'show-start-button-separator',
@@ -213,7 +247,7 @@ export function addStartMenuPage({
         const enabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        startButtonPaddingRow.sensitive = !enabled;
+        updateStartButtonPaddingRow();
         startButtonSeparatorSwitch.sensitive = !enabled;
         customIconRow.sensitive = !enabled;
     };

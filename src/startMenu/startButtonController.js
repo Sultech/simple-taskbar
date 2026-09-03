@@ -32,7 +32,9 @@ import {
 } from '../panel/panelPosition.js';
 import {
     taskbarGlassHeight,
+    taskbarIconButtonWidth,
     taskbarVisualPanelHeight,
+    taskbarVerticalItemExtent,
 } from '../shared/panelSizing.js';
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
@@ -196,34 +198,41 @@ export class StartButtonController {
 
     applyAppearance(iconSize, padding) {
         this._icon.icon_size = iconSize;
-        this._hover.set_width(iconSize);
         const windowsXpTheme = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
         const vertical = panelIsVertical(this._settings);
-        if (vertical) {
-            this._hover.set_height(-1);
-            this._hover.translation_y = 0;
-            this._hover.y_align = Clutter.ActorAlign.FILL;
-            this._hover.y_expand = true;
-        } else {
-            const visualPanelHeight = taskbarVisualPanelHeight(
-                this._settings.get_int('panel-height'),
-                iconSize,
-                this._settings.isDock &&
-                    !this._settings.get_boolean('dock-panel-mode')
-            );
-            this._hover.set_height(taskbarGlassHeight(
-                visualPanelHeight,
+        const glassWidth = windowsXpTheme
+            ? this._windowsXpStartButton.width
+            : taskbarIconButtonWidth(iconSize);
+        const iconSpacing = windowsXpTheme
+            ? 0
+            : Math.max(this._settings.get_int('icon-spacing'), 0);
+        const glassMainExtent = vertical
+            ? taskbarVerticalItemExtent(iconSize)
+            : taskbarGlassHeight(
+                taskbarVisualPanelHeight(
+                    this._settings.get_int('panel-height'),
+                    iconSize,
+                    this._settings.isDock &&
+                        !this._settings.get_boolean('dock-panel-mode')
+                ),
                 windowsXpTheme
-            ));
+            );
+        const width = windowsXpTheme
+            ? this._windowsXpStartButton.width
+            : (vertical ? glassMainExtent : glassWidth) + iconSpacing;
+        this._hover.set_width(glassWidth);
+        this._hover.set_height(glassMainExtent);
+        if (vertical) {
+            this._hover.translation_y = 0;
+            this._hover.y_align = Clutter.ActorAlign.CENTER;
+            this._hover.y_expand = false;
+        } else {
             this._hover.translation_y = 0;
             this._hover.y_align = Clutter.ActorAlign.CENTER;
             this._hover.y_expand = false;
         }
-        const width = windowsXpTheme
-            ? this._windowsXpStartButton.width
-            : iconSize + padding * 2;
         const startButtonPosition = this._settings.get_boolean(
             'start-button-follow-app-alignment'
         )

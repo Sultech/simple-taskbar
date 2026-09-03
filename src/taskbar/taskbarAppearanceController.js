@@ -17,14 +17,15 @@ import {
 import {
     GLASS_VERTICAL_INSET,
     taskbarGlassHeight,
+    taskbarIconButtonWidth,
     taskbarVisualPanelHeight,
+    taskbarVerticalItemExtent,
 } from '../shared/panelSizing.js';
 import {
     APP_ICON_HOVER_RENDER_SCALE,
 } from '../shared/applicationHoverAnimation.js';
 
 const CONTENT_LEADING_SPACE = 7;
-const ICON_GLASS_MARGIN = 3;
 const APP_LABEL_SPACING = 8;
 const APP_CONTENT_VERTICAL_RESERVE = 14;
 const WINDOWS_XP_BUTTON_Y = 3;
@@ -224,7 +225,7 @@ export class TaskbarAppearanceController {
     }
 
     verticalItemExtent(iconSize = this._getIconSize()) {
-        return iconSize + ICON_GLASS_MARGIN * 2 + RUNNING_INDICATOR_RESERVE;
+        return taskbarVerticalItemExtent(iconSize);
     }
 
     glassHeight(panelHeight = this.visualPanelHeight()) {
@@ -347,8 +348,7 @@ export class TaskbarAppearanceController {
             return WINDOWS_XP_TASKBUTTON_WIDTH;
         }
 
-        const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
-        const iconWidth = Math.max(iconSize, minimumIconWidth) + 8;
+        const iconWidth = taskbarIconButtonWidth(iconSize);
         const actualLabelWidth = label
             ? this.labelWidthForButton(window, isCombined, label)
             : labelWidth;

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {RUNNING_INDICATOR_RESERVE} from './runningIndicatorSettings.js';
+
 export const MIN_PANEL_HEIGHT = 30;
 export const STANDARD_MIN_PANEL_HEIGHT = 32;
 export const ICON_VERTICAL_RESERVE = 19;
@@ -21,4 +23,13 @@ export function taskbarGlassHeight(panelHeight, windowsXpTheme) {
         return panelHeight - 5;
 
     return Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2);
+}
+
+export function taskbarIconButtonWidth(iconSize) {
+    const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
+    return Math.max(iconSize, minimumIconWidth) + 8;
+}
+
+export function taskbarVerticalItemExtent(iconSize) {
+    return iconSize + GLASS_VERTICAL_INSET * 2 + RUNNING_INDICATOR_RESERVE;
 }
