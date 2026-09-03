@@ -950,6 +950,7 @@
       <choices>
         <choice value="left"/>
         <choice value="center"/>
+        <choice value="right"/>
       </choices>
       <default>'center'</default>
       <summary>Start button position</summary>

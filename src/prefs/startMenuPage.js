@@ -83,9 +83,9 @@ export function addStartMenuPage({
             key: 'start-button-position',
             title: _('Start Button'),
             subtitle: _('Choose the Start button alignment'),
-            choices: panelPositions.slice(0, 2),
+            choices: panelPositions,
             choicesProvider: () =>
-                axisPanelPositions(settings, panelPositions).slice(0, 2),
+                axisPanelPositions(settings, panelPositions),
             choicesChangedKey: 'panel-position',
             addRow: row => startButtonPositionRow.add_row(row),
         },

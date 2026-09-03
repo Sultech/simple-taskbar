@@ -191,7 +191,7 @@ export function addPanelItemsPage({
             visibleState: startButtonVisibility,
             title: _('Start Button'),
             subtitle: _('Eleven-style or original GNOME Start button'),
-            choices: initialPositions.slice(0, 2),
+            choices: initialPositions,
         }],
         ['activities', {
             key: 'activities-button-position',
@@ -274,9 +274,7 @@ export function addPanelItemsPage({
                 positions[index],
             ]);
         }
-        panelOrderRows.get('start-button').setChoices(
-            positions.slice(0, 2)
-        );
+        panelOrderRows.get('start-button').setChoices(positions);
         panelOrderRows.get('applications').setChoices(
             positions.slice(0, 2)
         );
