@@ -416,6 +416,7 @@ export class SecondaryPanelController {
     }
 
     destroy() {
+        this._taskbarController.disableHoverAnimations();
         if (this._windowDragController) {
             this._windowDragController.destroy();
             this._windowDragController = null;
@@ -445,10 +446,10 @@ export class SecondaryPanelController {
         this._clockController = null;
         this._startButtonController.destroy();
         this._startButtonController = null;
-        this._windowController.destroy();
         this._applicationOverflowController.destroy();
         this._applicationOverflowController = null;
         this._taskbarController.destroy();
+        this._windowController.destroy();
         this._windowPreviews.destroy();
         this._windowPreviews = null;
         this._taskbarController = null;

@@ -121,6 +121,25 @@ export class TaskbarHoverAnimationGeometry {
         return {x, y, width, height};
     }
 
+    positionCloneContainer(
+        cloneContainer,
+        geometry,
+        stretchProperty,
+        stretchOffset
+    ) {
+        cloneContainer.set_position(
+            geometry.x - (stretchProperty === 'translation_x'
+                ? stretchOffset
+                : 0),
+            geometry.y - (stretchProperty === 'translation_y'
+                ? stretchOffset
+                : 0)
+        );
+        cloneContainer.allocate_preferred_size(
+            ...cloneContainer.get_position()
+        );
+    }
+
     updateCloneGeometry(entry) {
         const geometry = this.getActorGeometry(entry.source);
         if (!geometry)
@@ -129,16 +148,14 @@ export class TaskbarHoverAnimationGeometry {
         const stretchOffset = entry.stretchActor
             ? entry.stretchActor[entry.stretchProperty]
             : 0;
-        entry.cloneContainer.set_position(
-            geometry.x - (entry.stretchProperty === 'translation_x'
-                ? stretchOffset
-                : 0),
-            geometry.y - (entry.stretchProperty === 'translation_y'
-                ? stretchOffset
-                : 0)
-        );
         entry.cloneContainer.set_size(geometry.width, geometry.height);
         entry.clone.set_size(geometry.width, geometry.height);
+        this.positionCloneContainer(
+            entry.cloneContainer,
+            geometry,
+            entry.stretchProperty,
+            stretchOffset
+        );
     }
 
     destroy() {

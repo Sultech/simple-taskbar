@@ -24,7 +24,6 @@ export class TaskbarAppItemFactory {
         handleHover,
         handleMiddleClick,
         handleShiftClick,
-        initializeAppearance,
         makeDraggable,
         popupMenu,
         queueIconGeometryUpdate,
@@ -48,7 +47,6 @@ export class TaskbarAppItemFactory {
         this._handleHover = handleHover;
         this._handleMiddleClick = handleMiddleClick;
         this._handleShiftClick = handleShiftClick;
-        this._initializeAppearance = initializeAppearance;
         this._makeDraggable = makeDraggable;
         this._popupMenu = popupMenu;
         this._queueIconGeometryUpdate = queueIconGeometryUpdate;
@@ -291,7 +289,6 @@ export class TaskbarAppItemFactory {
             _taskbarWindowCount: 0,
         });
         this._syncLauncherIconPosition(item);
-        this._initializeAppearance(item);
         if (window) {
             window.connectObject(
                 'notify::title',
@@ -361,7 +358,6 @@ export class TaskbarAppItemFactory {
         this._queueIconGeometryUpdate = null;
         this._popupMenu = null;
         this._makeDraggable = null;
-        this._initializeAppearance = null;
         this._syncClassicHighlight = null;
         this._handleShiftClick = null;
         this._handleMiddleClick = null;

@@ -286,12 +286,6 @@ export class TaskbarController {
             handleMiddleClick: (item, shifted) =>
                 this.handleItemMiddleClick(item, shifted),
             handleShiftClick: item => this.handleItemShiftClick(item),
-            initializeAppearance: item => {
-                this._syncItemLabel(item);
-                this._syncIndicatorVisibility(item);
-                this._syncNotificationBadgeGeometry(item);
-                this._updateGlassGeometry(item);
-            },
             makeDraggable: (item, button, icon, app) =>
                 this._dragController.makeDraggable(item, button, icon, app),
             popupMenu: (item, button) => this.popupItemMenu(item, button),
@@ -679,8 +673,6 @@ export class TaskbarController {
     }
 
     destroy() {
-        this._iconHoverAnimationController.destroy();
-        this._iconHoverAnimationController = null;
         this._iconGeometryController.destroy();
         this._iconGeometryController = null;
         if (this._startupSettleId)
@@ -699,8 +691,6 @@ export class TaskbarController {
 
         this._showDesktopController.destroy();
         this._showDesktopController = null;
-        this._dragController.destroy();
-        this._dragController = null;
         this._destroyPinnedSeparator();
 
         for (const item of [...this._auxiliaryItems])
@@ -713,6 +703,10 @@ export class TaskbarController {
             item.destroy();
         }
         this._appButtons.clear();
+        this._iconHoverAnimationController.destroy();
+        this._iconHoverAnimationController = null;
+        this._dragController.destroy();
+        this._dragController = null;
         this._appItemFactory.destroy();
         this._appItemFactory = null;
         this._itemInteractionController.destroy();
@@ -792,6 +786,10 @@ export class TaskbarController {
 
     getIconSize() {
         return this._iconSize;
+    }
+
+    disableHoverAnimations() {
+        this._iconHoverAnimationController.disable();
     }
 
     dropHoverAnimations() {
@@ -1186,6 +1184,7 @@ export class TaskbarController {
                     isLocation ? null : this._showDesktopItem,
                     isLocation ? [] : [this._pinnedSeparator]
                 );
+                this._initializeItemAppearance(item);
                 const pinnedPlaceholder = this._isPinnedPlaceholder(
                     window,
                     isLauncher,
@@ -1776,6 +1775,13 @@ export class TaskbarController {
             isCombined,
             isPinnedPrimary
         );
+    }
+
+    _initializeItemAppearance(item) {
+        this._syncItemLabel(item);
+        this._syncIndicatorVisibility(item);
+        this._syncNotificationBadgeGeometry(item);
+        this._updateGlassGeometry(item);
     }
 
     _dragIsEnabled(

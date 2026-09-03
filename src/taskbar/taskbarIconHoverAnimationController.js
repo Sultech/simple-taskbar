@@ -157,7 +157,7 @@ export class TaskbarIconHoverAnimationController {
             this._trackItem(child);
     }
 
-    destroy() {
+    disable() {
         if (this._magnifyUpdateId) {
             global.compositor.get_laters().remove(this._magnifyUpdateId);
             this._magnifyUpdateId = 0;
@@ -168,6 +168,19 @@ export class TaskbarIconHoverAnimationController {
         }
         this._signalHolder.destroy();
         this._signalHolder = null;
+        this._animator.resetAnimations();
+        this._trackedItems.clear();
+    }
+
+    destroy() {
+        if (this._magnifyUpdateId) {
+            global.compositor.get_laters().remove(this._magnifyUpdateId);
+            this._magnifyUpdateId = 0;
+        }
+        if (this._magnifyFrameId) {
+            global.compositor.get_laters().remove(this._magnifyFrameId);
+            this._magnifyFrameId = 0;
+        }
         this._animator.destroy();
         this._animator = null;
         this._cloneController.destroy();
@@ -176,7 +189,6 @@ export class TaskbarIconHoverAnimationController {
         this._settingsController = null;
         this._geometry.destroy();
         this._geometry = null;
-        this._trackedItems.clear();
         this._trackedItems = null;
         this._cursorTracker = null;
         this._viewport = null;

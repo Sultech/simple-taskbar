@@ -266,7 +266,11 @@ export class TaskbarHoverAnimationAnimator {
                 this._raise(item, 0, items, 0);
         }
 
-        this._setMagnifyActive(true);
+        if (!this._magnifyActive) {
+            this._setMagnifyActive(true);
+            this._queueMagnifyFrames();
+            return;
+        }
         entries.sort((left, right) => left.center - right.center);
 
         const radius = this._getIconSize() * profile.extent / 2;

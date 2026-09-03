@@ -328,6 +328,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._rebuildId = 0;
         }
         this._settings.disconnectObject(this);
+        this._taskbarController.disableHoverAnimations();
         this._windowsXpModeController.destroy();
         this._windowsXpModeController = null;
 
@@ -369,8 +370,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applicationKeybindings = null;
         this._windowMinimizeEffectController.destroy();
         this._windowMinimizeEffectController = null;
-        this._windowController.destroy();
         this._taskbarController.destroy();
+        this._windowController.destroy();
         this._notificationBadgeModel.destroy();
         this._notificationBadgeModel = null;
         this._windowPreviews.destroy();

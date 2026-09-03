@@ -44,6 +44,7 @@ export class TaskbarHoverAnimationCloneController {
         this._hoveredCloneItem = null;
         this._host = new Clutter.Actor({
             name: 'simple-taskbar-hover-animation-clones',
+            layout_manager: new Clutter.FixedLayout(),
             reactive: false,
         });
         this._hostGeometry = null;
@@ -100,8 +101,9 @@ export class TaskbarHoverAnimationCloneController {
             reactive: interactive,
             pivot_point: this._geometry.getClonePivot(),
         });
-        if (interactive)
-            this._connectInput(item, clone);
+        const inputSignalIds = interactive
+            ? this._connectInput(item, clone)
+            : [];
         const cloneContainer = new St.Bin({
             child: clone,
             width: geometry.width,
@@ -109,14 +111,6 @@ export class TaskbarHoverAnimationCloneController {
             clip_to_allocation: false,
             reactive: false,
         });
-        cloneContainer.set_position(
-            geometry.x - (stretchProperty === 'translation_x'
-                ? stretchOffset
-                : 0),
-            geometry.y - (stretchProperty === 'translation_y'
-                ? stretchOffset
-                : 0)
-        );
         stretchActor.bind_property(
             stretchProperty,
             cloneContainer,
@@ -127,16 +121,28 @@ export class TaskbarHoverAnimationCloneController {
         source.opacity = 0;
         this._updateHostClip();
         this._host.add_child(cloneContainer);
+        this._geometry.positionCloneContainer(
+            cloneContainer,
+            geometry,
+            stretchProperty,
+            stretchOffset
+        );
         this._raiseOverlays();
         const entry = {
             clone,
             cloneContainer,
+            inputSignalIds,
             source,
             sourceOpacity,
+            sourceDestroyId: 0,
             stretchActor,
             stretchProperty,
         };
         this._clones.set(item, entry);
+        entry.sourceDestroyId = source.connect('destroy', () => {
+            entry.sourceDestroyId = 0;
+            this._removeClone(item, false);
+        });
         return entry;
     }
 
@@ -218,18 +224,30 @@ export class TaskbarHoverAnimationCloneController {
     }
 
     remove(item) {
+        this._removeClone(item, true);
+    }
+
+    _removeClone(item, restoreSource) {
         const entry = this._clones.get(item);
         if (!entry)
             return;
 
-        if (this._hoveredCloneItem === item)
-            this._setCloneHover(item, false);
+        this._clones.delete(item);
+        if (entry.sourceDestroyId)
+            entry.source.disconnect(entry.sourceDestroyId);
+        for (const id of entry.inputSignalIds)
+            entry.clone.disconnect(id);
+        if (this._hoveredCloneItem === item) {
+            this._hoveredCloneItem = null;
+            if (restoreSource)
+                item.hover = false;
+        }
 
         this._onCloneDestroyed(entry.clone);
         entry.clone.remove_all_transitions();
-        entry.source.opacity = entry.sourceOpacity;
+        if (restoreSource)
+            entry.source.opacity = entry.sourceOpacity;
         entry.cloneContainer.destroy();
-        this._clones.delete(item);
     }
 
     reset() {
@@ -289,30 +307,32 @@ export class TaskbarHoverAnimationCloneController {
     }
 
     _connectInput(item, clone) {
-        clone.connect(
+        const signalIds = [];
+        signalIds.push(clone.connect(
             'button-press-event',
             (_actor, event) => this._onCloneButtonPress(item, event)
-        );
-        clone.connect('button-release-event', (_actor, event) => {
+        ));
+        signalIds.push(clone.connect('button-release-event', (_actor, event) => {
             if (event.get_button() !== 1 || this._isDragging())
                 return Clutter.EVENT_PROPAGATE;
 
             this._onCloneActivate(item);
             return Clutter.EVENT_STOP;
-        });
-        clone.connect('enter-event', () => {
+        }));
+        signalIds.push(clone.connect('enter-event', () => {
             this._setCloneHover(item, true);
             return Clutter.EVENT_PROPAGATE;
-        });
-        clone.connect('leave-event', () => {
+        }));
+        signalIds.push(clone.connect('leave-event', () => {
             this._setCloneHover(item, false);
             return Clutter.EVENT_PROPAGATE;
-        });
-        clone.connect(
+        }));
+        signalIds.push(clone.connect(
             'scroll-event',
             (_actor, event) => this._onCloneScroll(item, event)
-        );
+        ));
         this._onCloneCreated(item, clone);
+        return signalIds;
     }
 
     _setCloneHover(item, hovering) {
