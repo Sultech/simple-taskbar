@@ -384,7 +384,7 @@ function animateFrames(actor, frames, clearStyle) {
 }
 
 export function animateTaskbarIconClick(item, effect) {
-    const actor = item._taskbarIconContainer;
+    const actor = item._taskbarIconClickTarget;
     if (!canAnimate(actor) || effect === APPLICATION_CLICK_ANIMATION.NONE)
         return;
 

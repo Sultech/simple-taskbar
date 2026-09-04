@@ -182,7 +182,15 @@ export class TaskbarAppItemFactory {
             width: this._getIconSize(),
             height: this._getIconSize(),
         });
-        iconContainer.add_child(icon);
+        const iconClickTarget = new St.Widget({
+            layout_manager: new Clutter.BinLayout(),
+            x_align: Clutter.ActorAlign.FILL,
+            y_align: Clutter.ActorAlign.FILL,
+            x_expand: true,
+            y_expand: true,
+        });
+        iconContainer.add_child(iconClickTarget);
+        iconClickTarget.add_child(icon);
         const notificationBadgeLabel = new St.Label({
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
@@ -199,7 +207,7 @@ export class TaskbarAppItemFactory {
             x_expand: true,
             y_expand: true,
         });
-        iconContainer.add_child(notificationBadgeBin);
+        iconClickTarget.add_child(notificationBadgeBin);
         const buttonContent = new St.BoxLayout({
             style_class: 'simple-taskbar-app-button-content',
             x_align: Clutter.ActorAlign.CENTER,
@@ -267,6 +275,7 @@ export class TaskbarAppItemFactory {
             _taskbarButtonContent: buttonContent,
             _taskbarIcon: icon,
             _taskbarIconContainer: iconContainer,
+            _taskbarIconClickTarget: iconClickTarget,
             _taskbarNotificationBadge: notificationBadge,
             _taskbarNotificationBadgeLabel: notificationBadgeLabel,
             _taskbarNotificationBadgeBin: notificationBadgeBin,
