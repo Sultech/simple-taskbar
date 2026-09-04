@@ -140,21 +140,29 @@ export class TaskbarDragController {
         if (!this._dragIsEnabled(item))
             return;
 
+        const entry = {
+            draggable: null,
+            button,
+            beginId: 0,
+            endId: 0,
+            destroyId: button.connect(
+                'destroy',
+                () => this.releaseDraggable(item)
+            ),
+        };
+        this._draggables.set(item, entry);
         const draggable = DND.makeDraggable(button, {
             timeoutThreshold: 200,
             dragActorMaxSize: this._getIconSize(),
         });
         item._taskbarDraggable = draggable;
-        this._draggables.set(item, {
-            draggable,
-            button,
-            beginId: draggable.connect('drag-begin', () => {
-                dragSource._taskbarDropAccepted = false;
-                this.begin(item);
-                button._taskbarMenu?.close();
-            }),
-            endId: draggable.connect('drag-end', () => this.finish(item)),
+        entry.draggable = draggable;
+        entry.beginId = draggable.connect('drag-begin', () => {
+            dragSource._taskbarDropAccepted = false;
+            this.begin(item);
+            button._taskbarMenu?.close();
         });
+        entry.endId = draggable.connect('drag-end', () => this.finish(item));
     }
 
     makeCloneDraggable(item, clone) {
@@ -164,26 +172,35 @@ export class TaskbarDragController {
         const button = item._taskbarButton;
         const dragSource = button._delegate;
         clone._delegate = dragSource;
+        const entry = {
+            draggable: null,
+            pendingRelease: false,
+            beginId: 0,
+            endId: 0,
+            destroyId: clone.connect('destroy', () => {
+                if (this._draggingClone === clone)
+                    this._draggingClone = null;
+                this._releaseCloneEntry(clone, entry);
+            }),
+        };
+        this._cloneDraggables.set(clone, entry);
         const draggable = DND.makeDraggable(clone, {
             timeoutThreshold: 200,
             dragActorMaxSize: this._getIconSize(),
         });
-        this._cloneDraggables.set(clone, {
-            draggable,
-            pendingRelease: false,
-            beginId: draggable.connect('drag-begin', () => {
-                dragSource._taskbarDropAccepted = false;
-                this._draggingClone = clone;
-                this.begin(item);
-                button._taskbarMenu?.close();
-            }),
-            endId: draggable.connect('drag-end', () => {
-                this._draggingClone = null;
-                this.finish(item);
-                const pending = this._cloneDraggables.get(clone);
-                if (pending && pending.pendingRelease)
-                    this.releaseCloneDraggable(clone);
-            }),
+        entry.draggable = draggable;
+        entry.beginId = draggable.connect('drag-begin', () => {
+            dragSource._taskbarDropAccepted = false;
+            this._draggingClone = clone;
+            this.begin(item);
+            button._taskbarMenu?.close();
+        });
+        entry.endId = draggable.connect('drag-end', () => {
+            this._draggingClone = null;
+            this.finish(item);
+            const pending = this._cloneDraggables.get(clone);
+            if (pending && pending.pendingRelease)
+                this.releaseCloneDraggable(clone);
         });
     }
 
@@ -197,8 +214,13 @@ export class TaskbarDragController {
             return;
         }
 
+        this._releaseCloneEntry(clone, entry);
+    }
+
+    _releaseCloneEntry(clone, entry) {
         entry.draggable.disconnect(entry.beginId);
         entry.draggable.disconnect(entry.endId);
+        clone.disconnect(entry.destroyId);
         clone._delegate = null;
         this._cloneDraggables.delete(clone);
     }
@@ -210,6 +232,7 @@ export class TaskbarDragController {
 
         entry.draggable.disconnect(entry.beginId);
         entry.draggable.disconnect(entry.endId);
+        entry.button.disconnect(entry.destroyId);
         entry.button._delegate = null;
         item._taskbarDraggable = null;
         this._draggables.delete(item);
