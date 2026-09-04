@@ -31,7 +31,7 @@ export class ApplicationOverflowItemController {
         const size = this._taskbarController.getItemLength(item);
         const source = item._taskbarIsShowDesktop
             ? item.child
-            : item._taskbarVisual;
+            : item._taskbarSlot;
         const clone = new Clutter.Clone({source});
         const button = new St.Button({
             style_class: 'simple-taskbar-app-item simple-taskbar-application-overflow-taskbar-item',
