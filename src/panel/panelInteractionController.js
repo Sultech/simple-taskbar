@@ -312,6 +312,10 @@ export class PanelInteractionController {
     }
 
     _startWorkspaceScrollTimeout(forApp = false) {
+        if (this._workspaceScrollTimeoutId) {
+            GLib.Source.remove(this._workspaceScrollTimeoutId);
+            this._workspaceScrollTimeoutId = 0;
+        }
         const scrollDelay = this._getScrollDelay(forApp);
         if (scrollDelay > 0) {
             this._workspaceScrollTimeoutId = GLib.timeout_add(
