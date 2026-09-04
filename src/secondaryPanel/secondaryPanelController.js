@@ -2,6 +2,8 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -105,6 +107,7 @@ export class SecondaryPanelController {
         this._windowDodgeController = null;
         this._dockController = null;
         this._windowDragController = null;
+        this._panelBlurSyncId = 0;
         this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
         const configuredIconSize = isDock
@@ -419,6 +422,10 @@ export class SecondaryPanelController {
     }
 
     destroy() {
+        if (this._panelBlurSyncId) {
+            global.compositor.get_laters().remove(this._panelBlurSyncId);
+            this._panelBlurSyncId = 0;
+        }
         this._taskbarController.disableHoverAnimations();
         if (this._windowDragController) {
             this._windowDragController.destroy();
@@ -697,6 +704,20 @@ export class SecondaryPanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
+    _queuePanelBlurSync() {
+        if (this._panelBlurSyncId)
+            return;
+
+        this._panelBlurSyncId = global.compositor.get_laters().add(
+            Meta.LaterType.BEFORE_REDRAW,
+            () => {
+                this._panelBlurSyncId = 0;
+                syncPanelBlurGeometry(this.actor);
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
     _position(
         updateTaskbarWidth = true,
         animateEdgeGapRequested = false,
@@ -745,7 +766,7 @@ export class SecondaryPanelController {
                 [lengthProperty]: geometry[lengthProperty],
                 duration,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-                onComplete: () => syncPanelBlurGeometry(this.actor),
+                onStopped: () => this._queuePanelBlurSync(),
             });
         } else {
             this._panelBox.remove_transition(lengthProperty);
@@ -768,7 +789,7 @@ export class SecondaryPanelController {
                 }
             }
             if (this._dockController)
-                syncPanelBlurGeometry(this.actor);
+                this._queuePanelBlurSync();
         }
         if (this._dockController)
             this._dockController.syncStrut();
