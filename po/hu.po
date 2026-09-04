@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 08:05+0100\n"
+"POT-Creation-Date: 2026-09-04 11:45+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -16,86 +16,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/taskbar/showDesktopButtonController.js:116
+#: src/taskbar/showDesktopButtonController.js:126
 #: src/overflow/applicationOverflowItemController.js:137
 msgid "Show desktop"
 msgstr "Asztal megjelenítése"
 
-#: src/overflow/applicationOverflowController.js:486
+#: src/overflow/applicationOverflowController.js:493
 msgid "Application overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: prefs.js:47 src/prefs/panelAppearancePage.js:82
-#: src/prefs/panelModeGroup.js:70
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:309
+#: src/prefs/panelAppearancePage.js:81 src/prefs/panelModeGroup.js:70
 msgid "Left"
 msgstr "Bal"
 
-#: prefs.js:48
+#: prefs.js:47
 msgid "Center"
 msgstr "Közép"
 
-#: prefs.js:49 src/prefs/panelAppearancePage.js:83
-#: src/prefs/panelModeGroup.js:71
+#: prefs.js:48 src/prefs/applicationIconsGroup.js:310
+#: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:71
 msgid "Right"
 msgstr "Jobb"
 
-#: prefs.js:53 src/prefs/locationsGroup.js:88
+#: prefs.js:52
 msgid "Taskbar"
 msgstr "Tálca"
 
-#: prefs.js:59 src/prefs/locationsGroup.js:112
+#: prefs.js:58
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:65 src/prefs/dockItemsPage.js:23
+#: prefs.js:64 src/prefs/dockItemsPage.js:68
 msgid "Start Menu"
 msgstr "Start menü"
 
-#: src/prefs/aboutPage.js:38
+#: src/prefs/aboutPage.js:39
 msgid "About"
 msgstr "Névjegy"
 
-#: src/prefs/aboutPage.js:69
+#: src/prefs/aboutPage.js:70
 msgid "Simple Taskbar"
 msgstr "Simple Taskbar"
 
-#: src/prefs/aboutPage.js:74
-msgid "A configurable taskbar, panel and dock for GNOME Shell"
-msgstr "Beállítható tálca, panel és Dock a GNOME Shellhez"
+#: src/prefs/aboutPage.js:75
+msgid "A configurable taskbar, GNOME panel, and Dock for GNOME Shell"
+msgstr "Beállítható tálca, GNOME-panel és Dock a GNOME Shellhez"
 
-#: src/prefs/aboutPage.js:79
+#: src/prefs/aboutPage.js:80
 msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
 msgstr "GNOME Shell 48–51 • GPL-2.0-or-later"
 
-#: src/prefs/aboutPage.js:90
+#: src/prefs/aboutPage.js:91
 msgid "Links"
 msgstr "Hivatkozások"
 
-#: src/prefs/aboutPage.js:97
+#: src/prefs/aboutPage.js:98
 msgid "GitHub Repository"
 msgstr "GitHub-tárhely"
 
-#: src/prefs/aboutPage.js:105
+#: src/prefs/aboutPage.js:106
 msgid "Report an Issue"
 msgstr "Hiba jelentése"
 
-#: src/prefs/aboutPage.js:135
+#: src/prefs/aboutPage.js:136
 msgid "Credits"
 msgstr "Közreműködők"
 
-#: src/prefs/aboutPage.js:140
+#: src/prefs/aboutPage.js:141
 msgid "Sultech"
 msgstr "Sultech"
 
-#: src/prefs/aboutPage.js:141
+#: src/prefs/aboutPage.js:142
 msgid "Author"
 msgstr "Szerző"
 
-#: src/prefs/aboutPage.js:145
+#: src/prefs/aboutPage.js:146
 msgid "Features"
 msgstr "Funkciók"
 
-#: src/prefs/aboutPage.js:146
+#: src/prefs/aboutPage.js:147
 msgid ""
 "Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
 "Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
@@ -104,26 +104,26 @@ msgstr ""
 "módok · Élő ablakelőnézetek · Rácsos Alt-Tab · Start menü · Többmonitoros "
 "támogatás"
 
-#: src/prefs/aboutPage.js:150
+#: src/prefs/aboutPage.js:151
 msgid "License"
 msgstr "Licenc"
 
-#: src/prefs/aboutPage.js:151
+#: src/prefs/aboutPage.js:152
 msgid "Simple Taskbar is distributed under GPL-2.0-or-later"
 msgstr "A Simple Taskbar a GPL-2.0-or-later licenc alatt kerül terjesztésre"
 
-#: src/prefs/aboutPage.js:158
+#: src/prefs/aboutPage.js:159
 msgid "Support Development"
 msgstr "Fejlesztés támogatása"
 
-#: src/prefs/aboutPage.js:159
+#: src/prefs/aboutPage.js:160
 msgid ""
 "If Simple Taskbar is useful to you, consider supporting its development."
 msgstr ""
 "Ha hasznosnak találja a Simple Taskbart, fontolja meg a fejlesztés "
 "támogatását."
 
-#: src/prefs/aboutPage.js:166
+#: src/prefs/aboutPage.js:167
 msgid "Buy Me a Coffee"
 msgstr "Buy Me a Coffee"
 
@@ -132,283 +132,293 @@ msgstr "Buy Me a Coffee"
 msgid "Copy %s address"
 msgstr "„%s” címének másolása"
 
-#: src/prefs/aboutPage.js:195
+#: src/prefs/aboutPage.js:196
 #, javascript-format
 msgid "%s address copied"
 msgstr "„%s” címe kimásolva"
 
-#: src/prefs/applicationIconsGroup.js:26
-msgid "Icon Sizing and Spacing"
-msgstr "Ikonméret és térköz"
+#: src/prefs/applicationIconsGroup.js:42
+msgid "Application Icon Appearance"
+msgstr "Alkalmazásikonok megjelenése"
 
-#: src/prefs/applicationIconsGroup.js:27
-msgid "Adjust application icon sizes and the space between them"
-msgstr "Alkalmazásikonok méretének és térközének beállítása"
+#: src/prefs/applicationIconsGroup.js:43
+msgid "Adjust icon size, spacing, and hover/focus effects"
+msgstr "Az ikonok méretének, térközének és rámutatási/fókuszeffektusainak beállítása"
 
-#: src/prefs/applicationIconsGroup.js:36
+#: src/prefs/applicationIconsGroup.js:52
 msgid "Icon Size"
 msgstr "Ikonméret"
 
-#: src/prefs/applicationIconsGroup.js:38
+#: src/prefs/applicationIconsGroup.js:54
 msgid "The panel grows automatically when larger icons need more room"
 msgstr ""
 "A panel automatikusan megnő, ha a nagyobb ikonoknak több helyre van szükségük"
 
-#: src/prefs/applicationIconsGroup.js:51
+#: src/prefs/applicationIconsGroup.js:67
 msgid "Minimum Icon Size"
 msgstr "Minimális ikonméret"
 
-#: src/prefs/applicationIconsGroup.js:53
+#: src/prefs/applicationIconsGroup.js:69
 msgid "Smallest application icon size used when space is limited"
 msgstr "Korlátozott hely esetén használt legkisebb alkalmazásikon-méret"
 
-#: src/prefs/applicationIconsGroup.js:66
+#: src/prefs/applicationIconsGroup.js:82
 msgid "Icon Spacing"
 msgstr "Ikontérköz"
 
-#: src/prefs/applicationIconsGroup.js:67
+#: src/prefs/applicationIconsGroup.js:83
 msgid "Space between application buttons"
 msgstr "Térköz az alkalmazásgombok között"
 
-#: src/prefs/applicationIconsGroup.js:79
+#: src/prefs/applicationIconsGroup.js:107
+msgid "Hover and Focus Effect"
+msgstr "Rámutatási és fókuszeffektus"
+
+#: src/prefs/applicationIconsGroup.js:108
+msgid "Choose the effect used by application buttons"
+msgstr "Válassza ki az alkalmazásgombokhoz használt effektust"
+
+#: src/prefs/applicationIconsGroup.js:112
+msgid "Glass"
+msgstr "Üveg"
+
+#: src/prefs/applicationIconsGroup.js:116
+msgid "Classic"
+msgstr "Klasszikus"
+
+#: src/prefs/applicationIconsGroup.js:129
 msgid "Icon Alignment"
 msgstr "Ikonok igazítása"
 
-#: src/prefs/applicationIconsGroup.js:80
+#: src/prefs/applicationIconsGroup.js:130
 msgid "Choose the application icon alignment"
 msgstr "Válassza ki az alkalmazásikonok igazítását"
 
-#: src/prefs/applicationIconsGroup.js:90
-msgid "Application Interaction"
-msgstr "Alkalmazás-interakció"
+#: src/prefs/applicationIconsGroup.js:184
+msgid "Application Layout and Behavior"
+msgstr "Alkalmazások elrendezése és viselkedése"
 
-#: src/prefs/applicationIconsGroup.js:91
-msgid "Configure previews, multi-window actions, and clicks"
-msgstr "Az előnézetek, a többablakos műveletek és a kattintások beállítása"
-
-#: src/prefs/applicationIconsGroup.js:96
-msgid "Window Previews"
-msgstr "Ablakelőnézetek"
-
-#: src/prefs/applicationIconsGroup.js:97
-msgid "Show live window previews when hovering application icons"
-msgstr ""
-"Élő ablak-előnézetek megjelenítése, amikor az egérmutatót az "
-"alkalmazásikonok fölé viszi"
-
-#: src/prefs/applicationIconsGroup.js:101
-msgid "Spread Multiple Windows"
-msgstr "Több ablak szétterítése"
-
-#: src/prefs/applicationIconsGroup.js:102
+#: src/prefs/applicationIconsGroup.js:186
 msgid ""
-"Click an app with multiple windows to show only its windows in Overview, "
-"across all workspaces"
-msgstr ""
-"Kattintson egy több ablakkal rendelkező alkalmazásra, hogy csak annak "
-"ablakai jelenjenek meg az Áttekintésben, az összes munkaterületen"
+"Choose which applications appear and how their buttons are grouped and "
+"indicated"
+msgstr "Válassza ki, mely alkalmazások jelenjenek meg, és hogyan legyenek csoportosítva és jelölve a gombjaik"
 
-#: src/prefs/applicationIconsGroup.js:106
-msgid "Middle Click Closes Applications"
-msgstr "Középső kattintás bezárja az alkalmazásokat"
+#: src/prefs/applicationIconsGroup.js:194
+#: src/prefs/pinnedApplicationBehaviorDialog.js:25
+#: src/prefs/pinnedApplicationBehaviorDialog.js:45
+msgid "Pinned Application Behavior"
+msgstr "A rögzített alkalmazások viselkedése"
 
-#: src/prefs/applicationIconsGroup.js:107
-msgid "Close all application windows instead of opening a new window"
-msgstr "Az összes alkalmazásablak bezárása új ablak nyitása helyett"
+#: src/prefs/applicationIconsGroup.js:195
+msgid "Choose how pinned and running applications appear"
+msgstr "Válassza ki, hogyan jelenjenek meg a rögzített és futó alkalmazások"
 
-#: src/prefs/applicationIconsGroup.js:150
-msgid "Application Layout"
-msgstr "Alkalmazások elrendezése"
-
-#: src/prefs/applicationIconsGroup.js:152
-msgid "Choose which applications appear and how their buttons are shown"
-msgstr ""
-"Válassza ki, mely alkalmazások jelenjenek meg, és hogyan nézzenek ki a "
-"gombjaik"
-
-#: src/prefs/applicationIconsGroup.js:159
-msgid "Hide Pinned Applications"
-msgstr "Rögzített alkalmazások elrejtése"
-
-#: src/prefs/applicationIconsGroup.js:161
-msgid "Show pinned taskbar applications only while they are running"
-msgstr "A rögzített tálcaalkalmazások megjelenítése csak futás közben"
-
-#: src/prefs/applicationIconsGroup.js:168
-msgid "Use Pinned Apps as Application Launchers"
-msgstr "Rögzített alkalmazások használata indítóként"
-
-#: src/prefs/applicationIconsGroup.js:170
-msgid ""
-"Keep pinned applications as launchers and show running applications "
-"separately"
-msgstr ""
-"A rögzített alkalmazások megtartása indítóként, és a futó alkalmazások külön "
-"megjelenítése"
-
-#: src/prefs/applicationIconsGroup.js:177
-msgid "Hide Unpinned Applications"
-msgstr "Rögzítetlen alkalmazások elrejtése"
-
-#: src/prefs/applicationIconsGroup.js:179
-msgid "Show only pinned applications and their running windows"
-msgstr "Csak a rögzített alkalmazások és azok futó ablakainak megjelenítése"
-
-#: src/prefs/applicationIconsGroup.js:216
+#: src/prefs/applicationIconsGroup.js:202
 msgid "Always"
 msgstr "Mindig"
 
-#: src/prefs/applicationIconsGroup.js:217
-#: src/prefs/applicationIconsGroup.js:221
+#: src/prefs/applicationIconsGroup.js:203
+#: src/prefs/applicationIconsGroup.js:207
 msgid "Only When Full"
 msgstr "Csak ha megtelt"
 
-#: src/prefs/applicationIconsGroup.js:218
-#: src/prefs/applicationIconsGroup.js:222
+#: src/prefs/applicationIconsGroup.js:204
+#: src/prefs/applicationIconsGroup.js:208
 msgid "Never"
 msgstr "Soha"
 
-#: src/prefs/applicationIconsGroup.js:229
+#: src/prefs/applicationIconsGroup.js:217
 msgid "Combine Application Buttons"
 msgstr "Alkalmazásgombok összevonása"
 
-#: src/prefs/applicationIconsGroup.js:230
+#: src/prefs/applicationIconsGroup.js:218
 msgid "Choose when windows share one taskbar button"
 msgstr "Válassza ki, mikor osztozzanak az ablakok egyetlen tálcagombon"
 
-#: src/prefs/applicationIconsGroup.js:246
-msgid "Hide App Labels"
-msgstr "Alkalmazáscímkék elrejtése"
-
-#: src/prefs/applicationIconsGroup.js:247
-msgid "Show only icons on separate window buttons"
-msgstr "Csak ikonok megjelenítése a különálló ablakgombokon"
-
-#: src/prefs/applicationIconsGroup.js:253
+#: src/prefs/applicationIconsGroup.js:235
 msgid "Show Notification Badges"
 msgstr "Értesítési jelvények megjelenítése"
 
-#: src/prefs/applicationIconsGroup.js:254
+#: src/prefs/applicationIconsGroup.js:236
 msgid "Display unread counts on application icons"
 msgstr "Olvasatlan értesítések számának megjelenítése az alkalmazásikonokon"
 
-#: src/prefs/applicationIconsGroup.js:260
+#: src/prefs/applicationIconsGroup.js:242
 msgid "Show Pinned App Separator"
 msgstr "Rögzített alkalmazások elválasztójának megjelenítése"
 
-#: src/prefs/applicationIconsGroup.js:261
+#: src/prefs/applicationIconsGroup.js:243
 msgid "Show a line between pinned and running applications"
 msgstr "Elválasztóvonal megjelenítése a rögzített és futó alkalmazások között"
 
-#: src/prefs/applicationIconsGroup.js:267
+#: src/prefs/applicationIconsGroup.js:249
 msgid "Show Location Separator"
 msgstr "Helyek elválasztójának megjelenítése"
 
-#: src/prefs/applicationIconsGroup.js:268
+#: src/prefs/applicationIconsGroup.js:250
 msgid "Show a line between applications and locations"
 msgstr "Elválasztóvonal megjelenítése az alkalmazások és a helyek között"
 
-#: src/prefs/applicationIconsGroup.js:330
+#: src/prefs/applicationIconsGroup.js:300
 msgid "Running Indicators"
 msgstr "Futásjelzők"
 
-#: src/prefs/applicationIconsGroup.js:331
-msgid "Configure indicators beneath running application icons"
-msgstr "A futó alkalmazások ikonjai alatti jelzők beállítása"
+#: src/prefs/applicationIconsGroup.js:302
+msgid "Configure the position, style, size, and colours of running indicators"
+msgstr "A futásjelzők helyzetének, stílusának, méretének és színeinek beállítása"
 
-#: src/prefs/applicationIconsGroup.js:340
-msgid "Running Indicator Style"
-msgstr "Futó alkalmazás jelzőfény stílusa"
+#: src/prefs/applicationIconsGroup.js:307 src/prefs/panelAppearancePage.js:79
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
+msgid "Top"
+msgstr "Fent"
 
-#: src/prefs/applicationIconsGroup.js:342
-msgid "Choose the shape of indicators beneath running applications"
-msgstr "Válassza ki a futó alkalmazások alatti jelzők alakját"
+#: src/prefs/applicationIconsGroup.js:308 src/prefs/panelAppearancePage.js:80
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
+msgid "Bottom"
+msgstr "Lent"
 
-#: src/prefs/applicationIconsGroup.js:345
+#: src/prefs/applicationIconsGroup.js:313
 msgid "Rounded"
 msgstr "Lekerekített"
 
-#: src/prefs/applicationIconsGroup.js:346
-msgid "Straight"
-msgstr "Egyenes"
+#: src/prefs/applicationIconsGroup.js:314
+msgid "Dots"
+msgstr "Pontok"
 
-#: src/prefs/applicationIconsGroup.js:353
+#: src/prefs/applicationIconsGroup.js:315
+msgid "Squares"
+msgstr "Négyzetek"
+
+#: src/prefs/applicationIconsGroup.js:316
+msgid "Dashes"
+msgstr "Vonások"
+
+#: src/prefs/applicationIconsGroup.js:317
+msgid "Segmented"
+msgstr "Szegmentált"
+
+#: src/prefs/applicationIconsGroup.js:318
+msgid "Solid"
+msgstr "Egyszínű"
+
+#: src/prefs/applicationIconsGroup.js:319
+msgid "Ciliora"
+msgstr "Ciliora"
+
+#: src/prefs/applicationIconsGroup.js:320
+msgid "Metro"
+msgstr "Metro"
+
+#: src/prefs/applicationIconsGroup.js:328
+msgid "Running Indicator Position"
+msgstr "Futásjelzők pozíciója"
+
+#: src/prefs/applicationIconsGroup.js:329
+msgid "Choose which edge of the application button to use"
+msgstr "Válassza ki, az alkalmazásgomb melyik széle legyen használva"
+
+#: src/prefs/applicationIconsGroup.js:343
+msgid "Running Indicator Style"
+msgstr "Futó alkalmazás jelzőfény stílusa"
+
+#: src/prefs/applicationIconsGroup.js:345
+msgid "Choose the shape of indicators around running applications"
+msgstr "Válassza ki a futó alkalmazások körüli jelzők alakját"
+
+#: src/prefs/applicationIconsGroup.js:360
+msgid "Running Indicator Size"
+msgstr "Futásjelzők mérete"
+
+#: src/prefs/applicationIconsGroup.js:361
+msgid "Choose the indicator thickness in pixels"
+msgstr "Válassza ki a jelző vastagságát képpontban"
+
+#: src/prefs/applicationIconsGroup.js:370
+msgid "Stretch Indicators"
+msgstr "Jelzők nyújtása"
+
+#: src/prefs/applicationIconsGroup.js:372
+msgid "Run indicators the full length of the application button"
+msgstr "A jelzők a teljes alkalmazásgomb hosszában jelenjenek meg"
+
+#: src/prefs/applicationIconsGroup.js:377
 msgid "Custom Indicator Colors"
 msgstr "Egyéni jelzőszínek"
 
-#: src/prefs/applicationIconsGroup.js:354
+#: src/prefs/applicationIconsGroup.js:378
 msgid "Choose colors for running application indicators"
 msgstr "Színek kiválasztása a futó alkalmazások jelzőihez"
 
-#: src/prefs/applicationIconsGroup.js:367
+#: src/prefs/applicationIconsGroup.js:391
 msgid "Match Icon Color"
 msgstr "Ikonszín egyeztetése"
 
-#: src/prefs/applicationIconsGroup.js:369
+#: src/prefs/applicationIconsGroup.js:393
 msgid "Color the focused indicator from the application icon"
 msgstr "A fókuszált jelző színezése az alkalmazás ikonjának színével"
 
-#: src/prefs/applicationIconsGroup.js:385
+#: src/prefs/applicationIconsGroup.js:409
 msgid "Focused Indicator Color"
 msgstr "Fókuszált jelző színe"
 
-#: src/prefs/applicationIconsGroup.js:395
+#: src/prefs/applicationIconsGroup.js:419
 msgid "Unfocused Indicator Color"
 msgstr "Nem fókuszált jelző színe"
 
-#: src/prefs/applicationIconsGroup.js:444
+#: src/prefs/applicationIconsGroup.js:475
 msgid "Application Overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: src/prefs/applicationIconsGroup.js:445
+#: src/prefs/applicationIconsGroup.js:476
 msgid "Choose how overflowing applications are handled"
 msgstr "Válassza ki a túlcsorduló alkalmazások kezelését"
 
-#: src/prefs/applicationIconsGroup.js:451
+#: src/prefs/applicationIconsGroup.js:482
 msgid "Enable Application Overflow"
 msgstr "Alkalmazástúlcsordulás engedélyezése"
 
-#: src/prefs/applicationIconsGroup.js:461
+#: src/prefs/applicationIconsGroup.js:492
 msgid "Overflow Style"
 msgstr "Túlfolyás stílusa"
 
-#: src/prefs/applicationIconsGroup.js:463
+#: src/prefs/applicationIconsGroup.js:494
 msgid "Taskbar Flyout"
 msgstr "Tálca felbukkanó menü"
 
-#: src/prefs/applicationIconsGroup.js:464
+#: src/prefs/applicationIconsGroup.js:495
 msgid "Application List"
 msgstr "Alkalmazáslista"
 
-#: src/prefs/applicationIconsGroup.js:497 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:528 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Munkaterületek elkülönítése"
 
-#: src/prefs/applicationIconsGroup.js:498
+#: src/prefs/applicationIconsGroup.js:529
 msgid "Show running applications from the current workspace only"
 msgstr "Futó alkalmazások megjelenítése csak az aktuális munkaterületről"
 
-#: src/prefs/applicationIconsGroup.js:502 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:533 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Monitorok elkülönítése"
 
-#: src/prefs/applicationIconsGroup.js:506
-msgid "Application Isolation"
-msgstr "Alkalmazások elkülönítése"
+#: src/prefs/applicationIconsGroup.js:537
+msgid "Running Application Isolation"
+msgstr "Futó alkalmazások elkülönítése"
 
-#: src/prefs/applicationIconsGroup.js:523
-#: src/prefs/applicationIconsGroup.js:589
+#: src/prefs/applicationIconsGroup.js:554
+#: src/prefs/applicationIconsGroup.js:622
 msgid "Application Icons"
 msgstr "Alkalmazásikonok"
 
-#: src/prefs/applicationIconsGroup.js:525
+#: src/prefs/applicationIconsGroup.js:556
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr ""
 "A Dock ikonjainak méretét, térközét, elhelyezését és futásjelzőit állíthatja "
 "be."
 
-#: src/prefs/applicationIconsGroup.js:540
+#: src/prefs/applicationIconsGroup.js:571
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the Dock"
@@ -416,15 +426,16 @@ msgstr ""
 "A nem elférő alkalmazásgombok megjelenítése túlcsorduló felugró ablakban a "
 "Dock görgetése helyett"
 
-#: src/prefs/applicationIconsGroup.js:546
-msgid "Choose which applications appear on the Dock"
-msgstr "Válassza ki, mely alkalmazások jelenjenek meg a Dockban"
+#: src/prefs/applicationIconsGroup.js:578
+#: src/prefs/applicationIconsGroup.js:652
+msgid "Limit running applications to the current workspace or monitor"
+msgstr "A futó alkalmazások korlátozása az aktuális munkaterületre vagy monitorra"
 
-#: src/prefs/applicationIconsGroup.js:548
+#: src/prefs/applicationIconsGroup.js:581
 msgid "Show running applications only in the Dock for their monitor"
 msgstr "A futó alkalmazások csak az adott monitor Dockján jelenjenek meg"
 
-#: src/prefs/applicationIconsGroup.js:591
+#: src/prefs/applicationIconsGroup.js:624
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
@@ -432,7 +443,7 @@ msgstr ""
 "A tálca ikonjainak méretét, térközét, elhelyezését és futásjelzőit "
 "állíthatja be."
 
-#: src/prefs/applicationIconsGroup.js:612
+#: src/prefs/applicationIconsGroup.js:645
 msgid ""
 "Show application buttons that do not fit in an overflow popup instead of "
 "scrolling the taskbar"
@@ -440,61 +451,102 @@ msgstr ""
 "A nem illeszkedő alkalmazásgombok megjelenítése túlfolyó ablakban a tálca "
 "görgetése helyett"
 
-#: src/prefs/applicationIconsGroup.js:618
-msgid "Choose which applications appear on the taskbar"
-msgstr "Válassza ki, mely alkalmazások jelenjenek meg a tálcán"
-
-#: src/prefs/applicationIconsGroup.js:620
+#: src/prefs/applicationIconsGroup.js:655
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "Futó alkalmazások megjelenítése csak a saját monitoruk tálcáján"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:56
+msgid "Pinned and Running Applications"
+msgstr "Rögzített és futó alkalmazások"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:57
+msgid "Control which applications appear on the taskbar"
+msgstr "A tálcán megjelenő alkalmazások kiválasztása"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:63
+msgid "Hide Pinned Applications"
+msgstr "Rögzített alkalmazások elrejtése"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:65
+msgid "Show pinned taskbar applications only while they are running"
+msgstr "A rögzített tálcaalkalmazások megjelenítése csak futás közben"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:72
+msgid "Hide Pinned Applications on Secondary Monitors"
+msgstr "Rögzített alkalmazások elrejtése a másodlagos monitorokon"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:74
+msgid "Show pinned applications only on the primary monitor"
+msgstr "A rögzített alkalmazások csak az elsődleges monitoron jelenjenek meg"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:81
+msgid "Hide Unpinned Applications"
+msgstr "Rögzítetlen alkalmazások elrejtése"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:83
+msgid "Show only pinned applications and their running windows"
+msgstr "Csak a rögzített alkalmazások és azok futó ablakainak megjelenítése"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:90
+msgid "Use Pinned Apps as Application Launchers"
+msgstr "Rögzített alkalmazások használata indítóként"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:92
+msgid ""
+"Keep pinned applications as launchers and show running applications "
+"separately"
+msgstr ""
+"A rögzített alkalmazások megtartása indítóként, és a futó alkalmazások külön "
+"megjelenítése"
 
 #: src/prefs/dockAppearanceGroup.js:26
 msgid "Dock Appearance"
 msgstr "Dock megjelenése"
 
 #: src/prefs/dockAppearanceGroup.js:27
-msgid "Configure the Dock independently of the main panel."
-msgstr "A Dock beállítása a főpaneltől függetlenül."
+msgid "Configure the Dock independently of the taskbar."
+msgstr "A Dock beállítása a tálcától függetlenül."
 
-#: src/prefs/dockAppearanceGroup.js:39 src/prefs/panelAppearancePage.js:259
-msgid "Theme"
-msgstr "Téma"
+#: src/prefs/dockAppearanceGroup.js:39 src/prefs/panelAppearancePage.js:257
+msgid "Theme and Styling"
+msgstr "Téma és stílus"
 
-#: src/prefs/dockAppearanceGroup.js:40
-msgid "Choose the Dock colour scheme"
-msgstr "Válassza ki a Dock színsémáját"
+#: src/prefs/dockAppearanceGroup.js:41
+msgid ""
+"Choose the Dock theme, colours, gradient, corner radius, and text appearance"
+msgstr "Válassza ki a Dock témáját, színeit, színátmenetét, sarokkerekítését és a szöveg megjelenését"
 
-#: src/prefs/dockAppearanceGroup.js:45 src/prefs/panelAppearancePage.js:265
+#: src/prefs/dockAppearanceGroup.js:47 src/prefs/panelAppearancePage.js:265
 msgid "Follow System Theme"
 msgstr "Rendszertéma követése"
 
-#: src/prefs/dockAppearanceGroup.js:46
+#: src/prefs/dockAppearanceGroup.js:48
 msgid "Match the active GNOME Shell theme"
 msgstr "Az aktív GNOME Shell-téma követése"
 
-#: src/prefs/dockAppearanceGroup.js:62
+#: src/prefs/dockAppearanceGroup.js:64
 msgid "Dock Theme"
 msgstr "Dock-téma"
 
-#: src/prefs/dockAppearanceGroup.js:63 src/prefs/panelAppearancePage.js:283
+#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:283
 msgid "Choose the colour scheme when system matching is off"
 msgstr "Színskála kiválasztása, ha a rendszerhez igazodás ki van kapcsolva"
 
-#: src/prefs/dockAppearanceGroup.js:65 src/prefs/panelAppearancePage.js:285
-#: src/prefs/startMenuPage.js:649
+#: src/prefs/dockAppearanceGroup.js:67 src/prefs/panelAppearancePage.js:285
+#: src/prefs/startMenuPage.js:692
 msgid "Light"
 msgstr "Világos"
 
-#: src/prefs/dockAppearanceGroup.js:66 src/prefs/panelAppearancePage.js:286
-#: src/prefs/startMenuPage.js:648
+#: src/prefs/dockAppearanceGroup.js:68 src/prefs/panelAppearancePage.js:286
+#: src/prefs/startMenuPage.js:691
 msgid "Dark"
 msgstr "Sötét"
 
-#: src/prefs/dockAppearanceGroup.js:78
+#: src/prefs/dockAppearanceGroup.js:80
 msgid "Dock Corner Radius"
 msgstr "Dock sarokkerekítése"
 
-#: src/prefs/dockAppearanceGroup.js:80
+#: src/prefs/dockAppearanceGroup.js:82
 msgid ""
 "Applies to the floating Dock without blur and with Dynamic Blur; Static Blur "
 "is not supported"
@@ -502,183 +554,225 @@ msgstr ""
 "Az elmosás nélküli és a dinamikus elmosást használó lebegő Dockra érvényes; "
 "a statikus elmosás nem támogatott"
 
-#: src/prefs/dockAppearanceGroup.js:90
+#: src/prefs/dockAppearanceGroup.js:92
 msgid "Make the Dock background transparent"
 msgstr "A Dock hátterének átlátszóvá tétele"
 
-#: src/prefs/dockAppearanceGroup.js:93 src/prefs/panelAppearancePage.js:305
-#: src/prefs/startMenuPage.js:675
+#: src/prefs/dockAppearanceGroup.js:95 src/prefs/panelAppearancePage.js:305
+#: src/prefs/startMenuPage.js:718
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "A Blur My Shell panel elmosásának kikapcsolása a lehetőség használatához"
 
-#: src/prefs/dockAppearanceGroup.js:96 src/prefs/dockAppearanceGroup.js:128
-#: src/prefs/panelAppearancePage.js:308 src/prefs/panelAppearancePage.js:334
-msgid "Transparency"
-msgstr "Átlátszóság"
+#: src/prefs/dockAppearanceGroup.js:98
+msgid "Transparency and Blur"
+msgstr "Átlátszóság és elmosás"
 
-#: src/prefs/dockAppearanceGroup.js:97
-msgid "Control the Dock background transparency"
-msgstr "A Dock hátterének átlátszóságának beállítása"
+#: src/prefs/dockAppearanceGroup.js:99
+msgid "Configure Dock transparency and Blur My Shell integration"
+msgstr "A Dock átlátszóságának és a Blur My Shell-integrációnak a beállítása"
 
-#: src/prefs/dockAppearanceGroup.js:102 src/prefs/panelAppearancePage.js:314
+#: src/prefs/dockAppearanceGroup.js:104 src/prefs/panelAppearancePage.js:314
 msgid "Enable Transparency"
 msgstr "Átlátszóság engedélyezése"
 
-#: src/prefs/dockAppearanceGroup.js:115
+#: src/prefs/dockAppearanceGroup.js:117
 msgid "Blur Dock with Blur My Shell"
 msgstr "A Dock elmosása a Blur My Shell használatával"
 
-#: src/prefs/dockAppearanceGroup.js:116
+#: src/prefs/dockAppearanceGroup.js:118
 msgid "Apply Blur My Shell panel blur to the Dock"
 msgstr "A Blur My Shell panelelmosásának alkalmazása a Dockon"
 
-#: src/prefs/dockAppearanceGroup.js:121 src/prefs/panelAppearancePage.js:327
+#: src/prefs/dockAppearanceGroup.js:123 src/prefs/panelAppearancePage.js:327
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "A 0% teljesen fedett, a 100% teljesen átlátszó"
 
-#: src/prefs/dockAppearanceGroup.js:138 src/prefs/panelAppearancePage.js:370
+#: src/prefs/dockAppearanceGroup.js:130 src/prefs/panelAppearancePage.js:308
+#: src/prefs/panelAppearancePage.js:334
+msgid "Transparency"
+msgstr "Átlátszóság"
+
+#: src/prefs/dockAppearanceGroup.js:140 src/prefs/panelAppearancePage.js:370
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr "Egyéni szín használata a világos vagy sötét témaszín helyett"
 
-#: src/prefs/dockAppearanceGroup.js:141
+#: src/prefs/dockAppearanceGroup.js:143
 msgid "Custom Dock Color"
 msgstr "Egyéni Dock-szín"
 
-#: src/prefs/dockAppearanceGroup.js:158
+#: src/prefs/dockAppearanceGroup.js:160
 msgid "Dock Color"
 msgstr "Dock színe"
 
-#: src/prefs/dockAppearanceGroup.js:164
+#: src/prefs/dockAppearanceGroup.js:166
 msgid "Use Dock Gradient"
 msgstr "Színátmenet használata a Dockon"
 
-#: src/prefs/dockAppearanceGroup.js:165
+#: src/prefs/dockAppearanceGroup.js:167
 msgid "Blend the Dock color with a second color"
 msgstr "A Dock színének keverése egy második színnel"
 
-#: src/prefs/dockAppearanceGroup.js:182
+#: src/prefs/dockAppearanceGroup.js:184
 msgid "Dock Gradient Color"
 msgstr "Dock színátmenetének színe"
 
-#: src/prefs/dockAppearanceGroup.js:192
+#: src/prefs/dockAppearanceGroup.js:194
 msgid "Dock Gradient Direction"
 msgstr "A Dock színátmenetének iránya"
 
-#: src/prefs/dockAppearanceGroup.js:193 src/prefs/panelAppearancePage.js:424
+#: src/prefs/dockAppearanceGroup.js:195 src/prefs/panelAppearancePage.js:424
 msgid "Choose how the gradient flows"
 msgstr "Válassza ki a színátmenet irányát"
 
-#: src/prefs/dockAppearanceGroup.js:195 src/prefs/panelAppearancePage.js:426
+#: src/prefs/dockAppearanceGroup.js:197 src/prefs/panelAppearancePage.js:426
 msgid "Vertical"
 msgstr "Függőleges"
 
-#: src/prefs/dockAppearanceGroup.js:196 src/prefs/panelAppearancePage.js:427
+#: src/prefs/dockAppearanceGroup.js:198 src/prefs/panelAppearancePage.js:427
 msgid "Horizontal"
 msgstr "Vízszintes"
 
-#: src/prefs/dockAppearanceGroup.js:203
+#: src/prefs/dockAppearanceGroup.js:205
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr ""
 "A fehér szöveg a sötét Dock-témát, a fekete szöveg a világos Dock-témát "
 "használja"
 
-#: src/prefs/dockAppearanceGroup.js:210
+#: src/prefs/dockAppearanceGroup.js:212
 msgid "Dock Text Color"
 msgstr "Dock szövegszíne"
 
-#: src/prefs/dockAppearanceGroup.js:213 src/prefs/panelAppearancePage.js:444
+#: src/prefs/dockAppearanceGroup.js:215 src/prefs/panelAppearancePage.js:444
 msgid "White"
 msgstr "Fehér"
 
-#: src/prefs/dockAppearanceGroup.js:214 src/prefs/panelAppearancePage.js:445
+#: src/prefs/dockAppearanceGroup.js:216 src/prefs/panelAppearancePage.js:445
 msgid "Black"
 msgstr "Fekete"
 
-#: src/prefs/dockAppearanceGroup.js:222 src/prefs/panelAppearancePage.js:546
+#: src/prefs/dockAppearanceGroup.js:224 src/prefs/panelAppearancePage.js:546
 msgid "Borders"
 msgstr "Szegélyek"
 
-#: src/prefs/dockAppearanceGroup.js:223
-msgid "Choose which borders appear around the Dock"
-msgstr "Válassza ki a Dock körül megjelenő szegélyeket"
+#: src/prefs/dockAppearanceGroup.js:225 src/prefs/panelAppearancePage.js:547
+msgid "Choose whether to show a border in light and dark themes"
+msgstr "Válassza ki, hogy jelenjen-e meg szegély világos és sötét témákban"
 
-#: src/prefs/dockAppearanceGroup.js:228 src/prefs/panelAppearancePage.js:552
+#: src/prefs/dockAppearanceGroup.js:230 src/prefs/panelAppearancePage.js:552
 msgid "Show Border in Dark Mode"
 msgstr "Keret megjelenítése sötét módban"
 
-#: src/prefs/dockAppearanceGroup.js:229 src/prefs/dockAppearanceGroup.js:242
+#: src/prefs/dockAppearanceGroup.js:231 src/prefs/dockAppearanceGroup.js:244
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr "Vékony szegély megjelenítése a munkaterület felőli Dock-szélen"
 
-#: src/prefs/dockAppearanceGroup.js:241 src/prefs/panelAppearancePage.js:565
+#: src/prefs/dockAppearanceGroup.js:243 src/prefs/panelAppearancePage.js:565
 msgid "Show Border in Light Mode"
 msgstr "Keret megjelenítése világos módban"
 
-#: src/prefs/dockBehaviorGroup.js:15
+#: src/prefs/dockBehaviorGroup.js:17
 msgid "Dock Behavior"
 msgstr "Dock viselkedése"
 
-#: src/prefs/dockBehaviorGroup.js:16
-msgid "Configure Dock interaction independently of the main panel."
-msgstr "A Dock interakciójának beállítása a főpaneltől függetlenül."
+#: src/prefs/dockBehaviorGroup.js:18
+msgid "Configure Dock interaction independently of the taskbar."
+msgstr "A Dock interakciójának beállítása a tálcától függetlenül."
 
-#: src/prefs/dockBehaviorGroup.js:22
+#: src/prefs/dockBehaviorGroup.js:24
 msgid "Auto-hide Dock"
 msgstr "Dock automatikus elrejtése"
 
-#: src/prefs/dockBehaviorGroup.js:23
+#: src/prefs/dockBehaviorGroup.js:25
 msgid "Reveal the Dock when the pointer reaches its screen edge"
 msgstr "A Dock megjelenítése, amikor a mutató eléri a képernyő szélét"
 
-#: src/prefs/dockBehaviorGroup.js:27
+#: src/prefs/dockBehaviorGroup.js:29
 msgid "Limit Reveal to Dock Edge"
 msgstr "Megjelenítés korlátozása a Dock szélére"
 
-#: src/prefs/dockBehaviorGroup.js:28
+#: src/prefs/dockBehaviorGroup.js:30
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
 msgstr "Lebegő Dock megjelenítése csak akkor, amikor a mutató eléri a szélét"
 
-#: src/prefs/dockBehaviorGroup.js:40
+#: src/prefs/dockBehaviorGroup.js:41
+msgid "Dock Auto-hide and Window Dodge"
+msgstr "A Dock automatikus elrejtése és ablakkerülése"
+
+#: src/prefs/dockBehaviorGroup.js:43
 msgid "Choose when the Dock hides and how it is revealed"
 msgstr "Válassza ki, mikor rejtse el a Dockot, és hogyan jelenjen meg"
 
-#: src/prefs/dockBehaviorGroup.js:48 src/prefs/taskbarBehaviorGroup.js:101
-msgid "Workspace Scroll"
-msgstr "Görgetés munkaterületek között"
+#: src/prefs/dockBehaviorGroup.js:46
+msgid "Hide the Dock when a qualifying window overlaps it"
+msgstr "A Dock elrejtése, ha egy megfelelő ablak átfedi"
 
-#: src/prefs/dockBehaviorGroup.js:49 src/prefs/dockBehaviorGroup.js:54
-msgid "Scroll over empty Dock space to switch workspaces"
-msgstr "Görgetés a Dock üres területén a munkaterületek közötti váltáshoz"
+#: src/prefs/dockBehaviorGroup.js:48
+msgid "Choose which windows make the Dock hide"
+msgstr "Válassza ki, mely ablakok rejtsék el a Dockot"
 
-#: src/prefs/dockBehaviorGroup.js:53 src/prefs/taskbarBehaviorGroup.js:106
-msgid "Enable Workspace Scroll"
-msgstr "Munkaterület-görgetés engedélyezése"
+#: src/prefs/dockBehaviorGroup.js:50
+msgid ""
+"Reveal the Dock when the pointer reaches its screen edge while dodging a "
+"window"
+msgstr "A Dock megjelenítése, amikor a mutató egy ablak elkerülése közben eléri a képernyő szélét"
 
-#: src/prefs/dockBehaviorGroup.js:63 src/prefs/taskbarBehaviorGroup.js:116
-msgid "Workspace Scroll Delay"
-msgstr "Munkaterület-görgetés késleltetése"
+#: src/prefs/dockBehaviorGroup.js:58
+msgid "Dock Scroll"
+msgstr "Görgetés a Dockban"
 
-#: src/prefs/dockBehaviorGroup.js:64 src/prefs/taskbarBehaviorGroup.js:117
-msgid "Minimum delay between workspace changes in milliseconds"
-msgstr "Munkaterület-váltások közötti minimális késleltetés ezredmásodpercben"
+#: src/prefs/dockBehaviorGroup.js:59
+msgid "Configure scrolling over empty Dock space"
+msgstr "A Dock üres területén történő görgetés beállítása"
 
-#: src/prefs/dockBehaviorGroup.js:76
+#: src/prefs/dockBehaviorGroup.js:66 src/prefs/taskbarBehaviorGroup.js:120
+msgid "Scroll Action"
+msgstr "Görgetési művelet"
+
+#: src/prefs/dockBehaviorGroup.js:67
+msgid "Action used when scrolling over empty Dock space"
+msgstr "A Dock üres területén történő görgetéskor használt művelet"
+
+#: src/prefs/dockBehaviorGroup.js:71 src/prefs/taskbarBehaviorGroup.js:125
+msgid "Switch Workspace"
+msgstr "Munkaterület váltása"
+
+#: src/prefs/dockBehaviorGroup.js:75 src/prefs/taskbarBehaviorGroup.js:129
+msgid "Cycle Windows"
+msgstr "Ablakok váltogatása"
+
+#: src/prefs/dockBehaviorGroup.js:79 src/prefs/taskbarBehaviorGroup.js:133
+msgid "Change Volume"
+msgstr "Hangerő módosítása"
+
+#: src/prefs/dockBehaviorGroup.js:83 src/prefs/taskbarBehaviorGroup.js:137
+msgid "Do Nothing"
+msgstr "Ne tegyen semmit"
+
+#: src/prefs/dockBehaviorGroup.js:96 src/prefs/taskbarBehaviorGroup.js:150
+msgid "Scroll Delay"
+msgstr "Görgetési késleltetés"
+
+#: src/prefs/dockBehaviorGroup.js:97
+msgid "Minimum delay between Dock scroll actions in milliseconds"
+msgstr "A Dock görgetési műveletei közötti minimális késleltetés ezredmásodpercben"
+
+#: src/prefs/dockBehaviorGroup.js:109
 msgid "Show Dock on All Monitors"
 msgstr "Dock megjelenítése minden monitoron"
 
-#: src/prefs/dockBehaviorGroup.js:77
+#: src/prefs/dockBehaviorGroup.js:110
 msgid "Show the Dock on every connected monitor"
 msgstr "A Dock megjelenítése minden csatlakoztatott monitoron"
 
 #: src/prefs/locationsGroup.js:12
-msgid "Drive Options"
-msgstr "Meghajtóbeállítások"
+msgid "Drive and Volume Options"
+msgstr "Meghajtó- és kötetbeállítások"
 
 #: src/prefs/locationsGroup.js:13
-msgid "Choose which connected drives appear"
-msgstr "Válassza ki, mely csatlakoztatott meghajtók jelenjenek meg"
+msgid "Choose which drives and network volumes appear"
+msgstr "Válassza ki, mely meghajtók és hálózati kötetek jelenjenek meg"
 
 #: src/prefs/locationsGroup.js:17
 msgid "Only Show Mounted Drives"
@@ -704,72 +798,72 @@ msgstr "Gyakori mappák"
 msgid "Choose which common folders appear"
 msgstr "Válassza ki, mely gyakori mappák jelenjenek meg"
 
-#: src/prefs/locationsGroup.js:36 src/prefs/startMenuPage.js:468
+#: src/prefs/locationsGroup.js:36 src/prefs/startMenuPage.js:509
 #: src/integration/fileManagerPlacesSection.js:25
 msgid "Home"
 msgstr "Saját mappa"
 
-#: src/prefs/locationsGroup.js:37 src/prefs/startMenuPage.js:469
+#: src/prefs/locationsGroup.js:37 src/prefs/startMenuPage.js:510
 msgid "Add the Home folder"
 msgstr "A Saját mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:41 src/prefs/startMenuPage.js:473
-#: src/prefs/startMenuPage.js:590
+#: src/prefs/locationsGroup.js:41 src/prefs/startMenuPage.js:514
+#: src/prefs/startMenuPage.js:631
 #: src/startMenu/startButtonContextMenuController.js:142
 #: src/integration/fileManagerPlacesSection.js:30
 msgid "Desktop"
 msgstr "Asztal"
 
-#: src/prefs/locationsGroup.js:42 src/prefs/startMenuPage.js:474
+#: src/prefs/locationsGroup.js:42 src/prefs/startMenuPage.js:515
 msgid "Add the Desktop folder"
 msgstr "Az Asztal mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:46 src/prefs/startMenuPage.js:478
+#: src/prefs/locationsGroup.js:46 src/prefs/startMenuPage.js:519
 #: src/integration/fileManagerPlacesSection.js:35
 msgid "Documents"
 msgstr "Dokumentumok"
 
-#: src/prefs/locationsGroup.js:47 src/prefs/startMenuPage.js:479
+#: src/prefs/locationsGroup.js:47 src/prefs/startMenuPage.js:520
 msgid "Add the Documents folder"
 msgstr "A Dokumentumok mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:51 src/prefs/startMenuPage.js:483
+#: src/prefs/locationsGroup.js:51 src/prefs/startMenuPage.js:524
 #: src/integration/fileManagerPlacesSection.js:40
 msgid "Downloads"
 msgstr "Letöltések"
 
-#: src/prefs/locationsGroup.js:52 src/prefs/startMenuPage.js:484
+#: src/prefs/locationsGroup.js:52 src/prefs/startMenuPage.js:525
 msgid "Add the Downloads folder"
 msgstr "A Letöltések mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:56 src/prefs/startMenuPage.js:488
+#: src/prefs/locationsGroup.js:56 src/prefs/startMenuPage.js:529
 #: src/integration/fileManagerPlacesSection.js:45
 msgid "Music"
 msgstr "Zenék"
 
-#: src/prefs/locationsGroup.js:57 src/prefs/startMenuPage.js:489
+#: src/prefs/locationsGroup.js:57 src/prefs/startMenuPage.js:530
 msgid "Add the Music folder"
 msgstr "A Zene mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:61 src/prefs/startMenuPage.js:493
+#: src/prefs/locationsGroup.js:61 src/prefs/startMenuPage.js:534
 #: src/integration/fileManagerPlacesSection.js:50
 msgid "Pictures"
 msgstr "Képek"
 
-#: src/prefs/locationsGroup.js:62 src/prefs/startMenuPage.js:494
+#: src/prefs/locationsGroup.js:62 src/prefs/startMenuPage.js:535
 msgid "Add the Pictures folder"
 msgstr "A Képek mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:66 src/prefs/startMenuPage.js:498
+#: src/prefs/locationsGroup.js:66 src/prefs/startMenuPage.js:539
 #: src/integration/fileManagerPlacesSection.js:55
 msgid "Videos"
 msgstr "Videók"
 
-#: src/prefs/locationsGroup.js:67 src/prefs/startMenuPage.js:499
+#: src/prefs/locationsGroup.js:67 src/prefs/startMenuPage.js:540
 msgid "Add the Videos folder"
 msgstr "A Videók mappa hozzáadása"
 
-#: src/prefs/locationsGroup.js:82 src/prefs/locationsGroup.js:134
+#: src/prefs/locationsGroup.js:82 src/prefs/locationsGroup.js:138
 msgid "Locations"
 msgstr "Helyek"
 
@@ -777,99 +871,98 @@ msgstr "Helyek"
 msgid "Configure taskbar locations and Files menu shortcuts."
 msgstr "A tálca helyeinek és a Fájlok menü parancsikonjainak beállítása."
 
-#: src/prefs/locationsGroup.js:89
-msgid "Locations shown with taskbar applications"
-msgstr "A tálcán lévő alkalmazásokkal megjelenő helyek"
+#: src/prefs/locationsGroup.js:88
+msgid "Taskbar Locations"
+msgstr "Tálcahelyek"
 
-#: src/prefs/locationsGroup.js:93 src/prefs/locationsGroup.js:117
+#: src/prefs/locationsGroup.js:90
+msgid ""
+"Choose which folders, drives, and Trash appear with taskbar applications"
+msgstr "Válassza ki, mely mappák, meghajtók és a Kuka jelenjenek meg a tálca alkalmazásaival"
+
+#: src/prefs/locationsGroup.js:95 src/prefs/locationsGroup.js:121
 msgid "Show Locations"
 msgstr "Helyek megjelenítése"
 
-#: src/prefs/locationsGroup.js:94
+#: src/prefs/locationsGroup.js:96
 msgid "Display selected locations after taskbar applications"
 msgstr "A kiválasztott helyek megjelenítése a tálca alkalmazásai után"
 
-#: src/prefs/locationsGroup.js:98 src/prefs/locationsGroup.js:122
+#: src/prefs/locationsGroup.js:100 src/prefs/locationsGroup.js:126
 msgid "Show Trash"
 msgstr "Kuka megjelenítése"
 
-#: src/prefs/locationsGroup.js:99
+#: src/prefs/locationsGroup.js:101
 msgid "Add the Trash to the taskbar"
 msgstr "A Kuka hozzáadása a tálcához"
 
-#: src/prefs/locationsGroup.js:103 src/prefs/locationsGroup.js:127
+#: src/prefs/locationsGroup.js:105 src/prefs/locationsGroup.js:131
 msgid "Show Drives and Volumes"
 msgstr "Meghajtók és kötetek megjelenítése"
 
-#: src/prefs/locationsGroup.js:104
+#: src/prefs/locationsGroup.js:106
 msgid "Add mounted or connected drives to the taskbar"
 msgstr "Csatlakoztatott vagy csatolt meghajtók hozzáadása a tálcához"
 
-#: src/prefs/locationsGroup.js:113
-msgid "Locations shown with Dock applications"
-msgstr "A Dock alkalmazásaival megjelenő helyek"
+#: src/prefs/locationsGroup.js:114
+msgid "Dock Locations"
+msgstr "Dock-helyek"
 
-#: src/prefs/locationsGroup.js:118
+#: src/prefs/locationsGroup.js:116
+msgid "Choose which folders, drives, and Trash appear with Dock applications"
+msgstr "Válassza ki, mely mappák, meghajtók és a Kuka jelenjenek meg a Dock alkalmazásaival"
+
+#: src/prefs/locationsGroup.js:122
 msgid "Display selected locations after Dock applications"
 msgstr "A kiválasztott helyek megjelenítése a Dock alkalmazásai után"
 
-#: src/prefs/locationsGroup.js:123
+#: src/prefs/locationsGroup.js:127
 msgid "Add the Trash to the Dock"
 msgstr "A Kuka hozzáadása a Dockhoz"
 
-#: src/prefs/locationsGroup.js:128
+#: src/prefs/locationsGroup.js:132
 msgid "Add mounted or connected drives to the Dock"
 msgstr "Csatlakoztatott vagy csatolt meghajtók hozzáadása a Dockhoz"
 
-#: src/prefs/locationsGroup.js:135
+#: src/prefs/locationsGroup.js:139
 msgid "Show Trash and connected drives in the Dock."
 msgstr "A Kuka és a csatlakoztatott meghajtók megjelenítése a Dockban."
 
-#: src/prefs/locationsGroup.js:149
+#: src/prefs/locationsGroup.js:153
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus mappa gyorslinkek"
 
-#: src/prefs/locationsGroup.js:150
+#: src/prefs/locationsGroup.js:154
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Gyakori mappák megjelenítése a Fájlok tálcamenüben"
 
-#: src/prefs/panelAppearancePage.js:51
-msgid "Panel Appearance"
-msgstr "Panel megjelenése"
+#: src/prefs/panelAppearancePage.js:50
+msgid "Taskbar Appearance"
+msgstr "Tálca megjelenése"
 
-#: src/prefs/panelAppearancePage.js:52
+#: src/prefs/panelAppearancePage.js:51
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr "A tálca magasságának, színskálájának és átlátszóságának módosítása."
 
-#: src/prefs/panelAppearancePage.js:61
-msgid "Panel Thickness"
-msgstr "Panelvastagság"
+#: src/prefs/panelAppearancePage.js:60
+msgid "Taskbar Thickness"
+msgstr "Tálca vastagsága"
 
-#: src/prefs/panelAppearancePage.js:63
-msgid "Oversized icons shrink automatically when the panel is reduced"
-msgstr "A túl nagy ikonok automatikusan csökkennek, ha a panel mérete csökken"
+#: src/prefs/panelAppearancePage.js:62
+msgid "Oversized icons shrink automatically when the taskbar is reduced"
+msgstr "A túl nagy ikonok automatikusan kisebbé válnak, amikor a tálca mérete csökken"
 
-#: src/prefs/panelAppearancePage.js:75 src/prefs/preferencesWidgets.js:71
-msgid "Panel Position"
-msgstr "Panel pozíciója"
+#: src/prefs/panelAppearancePage.js:74
+msgid "Taskbar Position"
+msgstr "Tálca pozíciója"
 
-#: src/prefs/panelAppearancePage.js:77
+#: src/prefs/panelAppearancePage.js:76
 msgid "Place the taskbar at a screen edge"
 msgstr "A tálca elhelyezése a képernyő szélén"
 
-#: src/prefs/panelAppearancePage.js:80 src/prefs/panelAxis.js:13
-#: src/prefs/panelModeGroup.js:68
-msgid "Top"
-msgstr "Fent"
-
-#: src/prefs/panelAppearancePage.js:81 src/prefs/panelAxis.js:15
-#: src/prefs/panelModeGroup.js:69
-msgid "Bottom"
-msgstr "Lent"
-
-#: src/prefs/panelAppearancePage.js:260
-msgid "Choose the taskbar colour scheme"
-msgstr "Válassza ki a tálca színsémáját"
+#: src/prefs/panelAppearancePage.js:259
+msgid "Choose the taskbar theme, colours, gradient, and text appearance"
+msgstr "Válassza ki a tálca témáját, színeit, színátmenetét és a szöveg megjelenését"
 
 #: src/prefs/panelAppearancePage.js:266
 msgid ""
@@ -915,236 +1008,191 @@ msgstr "A tálca színátmenetének iránya"
 
 #: src/prefs/panelAppearancePage.js:434
 msgid ""
-"White text uses the dark panel theme; black text uses the light panel theme"
-msgstr ""
-"A fehér szöveg a sötét paneltémát használja; a fekete szöveg a világos "
-"paneltémát"
+"White text uses the dark taskbar theme; black text uses the light taskbar "
+"theme"
+msgstr "A fehér szöveg a sötét tálcatémát, a fekete szöveg a világos tálcatémát használja"
 
 #: src/prefs/panelAppearancePage.js:441
 msgid "Taskbar Text Color"
 msgstr "Tálca szövegszíne"
 
-#: src/prefs/panelAppearancePage.js:547
-msgid "Choose which borders appear around the taskbar"
-msgstr "Válassza ki a tálca körül megjelenő szegélyeket"
-
 #: src/prefs/panelAppearancePage.js:553 src/prefs/panelAppearancePage.js:566
-msgid "Display a thin border along the panel’s workspace-facing edge"
-msgstr "Vékony keret megjelenítése a panel munkaterület felőli szélén"
+msgid "Display a thin border along the taskbar’s workspace-facing edge"
+msgstr "Vékony szegély megjelenítése a munkaterület felőli tálcaszélen"
 
 #: src/prefs/panelAxis.js:14
 msgid "Middle"
 msgstr "Közép"
 
-#: src/prefs/panelItemsPage.js:33
-msgid "Panel Items"
-msgstr "Panelelemek"
+#: src/prefs/panelItemsPage.js:36
+msgid "Taskbar Items"
+msgstr "Tálcaelemek"
 
-#: src/prefs/panelItemsPage.js:34
-msgid "Configure optional panel items and the folder menu."
-msgstr "Az opcionális panel-elemek és a mappamenü beállítása."
+#: src/prefs/panelItemsPage.js:37
+msgid "Configure optional taskbar items and the folder menu."
+msgstr "Az opcionális tálcaelemek és a mappamenü beállítása."
 
-#: src/prefs/panelItemsPage.js:43
-msgid "Panel Button Padding"
-msgstr "Panelgombok térköze"
+#: src/prefs/panelItemsPage.js:46
+msgid "Taskbar Button Padding"
+msgstr "Tálcagombok belső margója"
 
-#: src/prefs/panelItemsPage.js:45
+#: src/prefs/panelItemsPage.js:48
 msgid ""
-"Space between panel buttons. Use -1 for automatic: Just Perfection’s value "
+"Space between taskbar buttons. Use -1 for automatic: Just Perfection’s value "
 "when it is configured, otherwise 3 px"
-msgstr ""
-"A panelgombok közötti térköz. Automatikus értékhez használja a -1-et: a Just "
-"Perfection értéke, ha be van állítva, egyébként 3 px"
+msgstr "A tálcagombok közötti térköz. Automatikus értékhez használja a -1-et: a Just Perfection értéke, ha be van állítva, egyébként 3 px"
 
-#: src/prefs/panelItemsPage.js:64
-msgid "Panel Item Visibility"
-msgstr "Panel-elemek láthatósága"
-
-#: src/prefs/panelItemsPage.js:65
-msgid "Choose which optional panel items appear."
-msgstr "Válassza ki, mely opcionális panelelemek jelenjenek meg."
-
-#: src/prefs/panelItemsPage.js:71
-msgid "Show Activities Button"
-msgstr "Tevékenységek gomb megjelenítése"
-
-#: src/prefs/panelItemsPage.js:72
-msgid "Display GNOME’s workspace overview button on the taskbar"
-msgstr "A GNOME munkaterület-áttekintő gombjának megjelenítése a tálcán"
-
-#: src/prefs/panelItemsPage.js:78 src/prefs/panelItemsPage.js:223
-msgid "Show Desktop Button"
-msgstr "Asztal megjelenítése gomb"
-
-#: src/prefs/panelItemsPage.js:79
-msgid "Display a button that minimizes or restores all windows"
-msgstr ""
-"Minden ablakot kis méretűre kicsinyítő vagy visszaállító gomb megjelenítése"
-
-#: src/prefs/panelItemsPage.js:85
+#: src/prefs/panelItemsPage.js:68
 msgid "Application Volume Mixer"
 msgstr "Alkalmazások hangerőkeverője"
 
-#: src/prefs/panelItemsPage.js:86
+#: src/prefs/panelItemsPage.js:69
 msgid "Add per-application volume controls to Quick Settings"
 msgstr "Alkalmazásonkénti hangerőszabályzók hozzáadása a Gyorsbeállításokhoz"
 
-#: src/prefs/panelItemsPage.js:92
-msgid "Collect Tray Icons"
-msgstr "Tálcaikonok összegyűjtése"
-
-#: src/prefs/panelItemsPage.js:93 src/prefs/panelItemsPage.js:207
-msgid "Gather application tray icons behind a panel arrow"
-msgstr "Alkalmazás-tálcaikonok összegyűjtése egy panelnyíl mögé"
-
-#: src/prefs/panelItemsPage.js:98 src/prefs/panelItemsPage.js:200
-msgid "Folder Menu"
-msgstr "Mappamenü"
-
-#: src/prefs/panelItemsPage.js:99
-msgid "Show and configure a selected folder on the taskbar"
-msgstr "Kijelölt mappa megjelenítése és beállítása a tálcán"
-
-#: src/prefs/panelItemsPage.js:104
-msgid "Show Folder Menu"
-msgstr "Mappamenü megjelenítése"
-
-#: src/prefs/panelItemsPage.js:105
-msgid "Show a selected folder on the taskbar"
-msgstr "Kiválasztott mappa megjelenítése a tálcán"
-
-#: src/prefs/panelItemsPage.js:110
+#: src/prefs/panelItemsPage.js:74
 msgid "Folder Menu Location"
 msgstr "Mappamenü helye"
 
-#: src/prefs/panelItemsPage.js:113 src/prefs/startMenuPage.js:173
+#: src/prefs/panelItemsPage.js:77 src/prefs/startMenuPage.js:214
 msgid "Choose…"
 msgstr "Kiválasztás…"
 
-#: src/prefs/panelItemsPage.js:128
+#: src/prefs/panelItemsPage.js:92
 msgid "No folder selected"
 msgstr "Nincs mappa kiválasztva"
 
-#: src/prefs/panelItemsPage.js:146 src/prefs/panelItemsPage.js:244
+#: src/prefs/panelItemsPage.js:153 src/prefs/panelItemsPage.js:262
+#: src/prefs/dockItemsPage.js:24 src/prefs/dockItemsPage.js:113
 msgid "Left Items"
 msgstr "Bal oldali elemek"
 
-#: src/prefs/panelItemsPage.js:148
-msgid "Move items only within their current panel position."
-msgstr "Elemek mozgatása csak a jelenlegi panelpozíciójukon belül."
+#: src/prefs/panelItemsPage.js:155
+msgid "Move items only within their current taskbar position."
+msgstr "Az elemek csak a jelenlegi tálcapozíciójukon belül mozgathatók."
 
-#: src/prefs/panelItemsPage.js:152 src/prefs/panelItemsPage.js:244
+#: src/prefs/panelItemsPage.js:159 src/prefs/panelItemsPage.js:262
+#: src/prefs/dockItemsPage.js:30 src/prefs/dockItemsPage.js:113
 msgid "Center Items"
 msgstr "Középső elemek"
 
-#: src/prefs/panelItemsPage.js:155 src/prefs/panelItemsPage.js:244
+#: src/prefs/panelItemsPage.js:162 src/prefs/panelItemsPage.js:262
+#: src/prefs/dockItemsPage.js:33 src/prefs/dockItemsPage.js:113
 msgid "Right Items"
 msgstr "Jobb oldali elemek"
 
-#: src/prefs/panelItemsPage.js:163 src/prefs/panelItemsPage.js:247
+#: src/prefs/panelItemsPage.js:172 src/prefs/panelItemsPage.js:265
 msgid "Left Box"
 msgstr "Bal doboz"
 
-#: src/prefs/panelItemsPage.js:164 src/prefs/panelItemsPage.js:170
-#: src/prefs/panelItemsPage.js:176
+#: src/prefs/panelItemsPage.js:173 src/prefs/panelItemsPage.js:179
+#: src/prefs/panelItemsPage.js:185
 msgid "Other GNOME Shell and extension items"
 msgstr "Egyéb GNOME Shell- és kiterjesztéselemek"
 
-#: src/prefs/panelItemsPage.js:169 src/prefs/panelItemsPage.js:247
+#: src/prefs/panelItemsPage.js:178 src/prefs/panelItemsPage.js:265
 msgid "Center Box"
 msgstr "Középső doboz"
 
-#: src/prefs/panelItemsPage.js:175 src/prefs/panelItemsPage.js:247
+#: src/prefs/panelItemsPage.js:184 src/prefs/panelItemsPage.js:265
 msgid "Right Box"
 msgstr "Jobb doboz"
 
-#: src/prefs/panelItemsPage.js:182 src/prefs/startMenuPage.js:36
-#: src/prefs/startMenuPage.js:83
+#: src/prefs/panelItemsPage.js:192 src/prefs/startMenuPage.js:37
+#: src/prefs/startMenuPage.js:86
 msgid "Start Button"
 msgstr "Start gomb"
 
-#: src/prefs/panelItemsPage.js:183
+#: src/prefs/panelItemsPage.js:193
 msgid "Eleven-style or original GNOME Start button"
 msgstr "Windows 11 stílusú vagy eredeti GNOME Start gomb"
 
-#: src/prefs/panelItemsPage.js:188
+#: src/prefs/panelItemsPage.js:199
 msgid "Activities"
 msgstr "Tevékenységek"
 
-#: src/prefs/panelItemsPage.js:189
+#: src/prefs/panelItemsPage.js:200
 msgid "GNOME workspace overview button"
 msgstr "GNOME munkaterület-áttekintő gomb"
 
-#: src/prefs/panelItemsPage.js:194 src/prefs/dockItemsPage.js:27
-#: src/startMenu/startButtonController.js:843
+#: src/prefs/panelItemsPage.js:206 src/prefs/dockItemsPage.js:74
+#: src/startMenu/startButtonController.js:976
 msgid "Applications"
 msgstr "Alkalmazások"
 
-#: src/prefs/panelItemsPage.js:195
+#: src/prefs/panelItemsPage.js:207
 msgid "Taskbar application buttons"
 msgstr "Tálca alkalmazásgombok"
 
-#: src/prefs/panelItemsPage.js:201
+#: src/prefs/panelItemsPage.js:213
+msgid "Folder Menu"
+msgstr "Mappamenü"
+
+#: src/prefs/panelItemsPage.js:214
 msgid "Selected folder shortcuts"
 msgstr "Kiválasztott mappa gyorslinkek"
 
-#: src/prefs/panelItemsPage.js:206 src/overflow/trayOverflowController.js:250
-msgid "Tray icons"
-msgstr "Tálcaikonok"
+#: src/prefs/panelItemsPage.js:220
+msgid "Tray Icon Arrow"
+msgstr "Tálcaikon-nyíl"
 
-#: src/prefs/panelItemsPage.js:212
+#: src/prefs/panelItemsPage.js:221
+msgid "Gather application tray icons behind a taskbar arrow"
+msgstr "Az alkalmazások értesítési ikonainak összegyűjtése egy tálcanyíl mögött"
+
+#: src/prefs/panelItemsPage.js:227
 msgid "System Menu"
 msgstr "Rendszermenü"
 
-#: src/prefs/panelItemsPage.js:213
+#: src/prefs/panelItemsPage.js:228
 msgid "Quick Settings, volume, network, and power"
 msgstr "Gyorsbeállítások, hangerő, hálózat és kikapcsolás"
 
-#: src/prefs/panelItemsPage.js:218
+#: src/prefs/panelItemsPage.js:234
 msgid "Clock"
 msgstr "Óra"
 
-#: src/prefs/panelItemsPage.js:224
+#: src/prefs/panelItemsPage.js:240
+msgid "Show Desktop Button"
+msgstr "Asztal megjelenítése gomb"
+
+#: src/prefs/panelItemsPage.js:241
 msgid "Minimize or restore all windows"
 msgstr "Minden ablak kis méretűre kicsinyítése vagy visszaállítása"
 
-#: src/prefs/panelItemsPage.js:243
+#: src/prefs/panelItemsPage.js:261 src/prefs/dockItemsPage.js:112
 msgid "Top Items"
 msgstr "Felső elemek"
 
-#: src/prefs/panelItemsPage.js:243
+#: src/prefs/panelItemsPage.js:261 src/prefs/dockItemsPage.js:112
 msgid "Middle Items"
 msgstr "Középső elemek"
 
-#: src/prefs/panelItemsPage.js:243
+#: src/prefs/panelItemsPage.js:261 src/prefs/dockItemsPage.js:112
 msgid "Bottom Items"
 msgstr "Alsó elemek"
 
-#: src/prefs/panelItemsPage.js:246
+#: src/prefs/panelItemsPage.js:264
 msgid "Top Box"
 msgstr "Felső doboz"
 
-#: src/prefs/panelItemsPage.js:246
+#: src/prefs/panelItemsPage.js:264
 msgid "Middle Box"
 msgstr "Középső doboz"
 
-#: src/prefs/panelItemsPage.js:246
+#: src/prefs/panelItemsPage.js:264
 msgid "Bottom Box"
 msgstr "Alsó terület"
 
-#: src/prefs/dockItemsPage.js:16
-msgid "Dock Items"
-msgstr "Dock-elemek"
+#: src/prefs/dockItemsPage.js:26
+msgid "Move items only within their current Dock position."
+msgstr "Az elemek csak a jelenlegi Dock-pozíciójukon belül mozgathatók."
 
-#: src/prefs/dockItemsPage.js:17
-msgid "Choose the order of items in the Dock."
-msgstr "A Dock elemei sorrendjének kiválasztása."
-
-#: src/prefs/dockItemsPage.js:24
+#: src/prefs/dockItemsPage.js:69
 msgid "Eleven-style or original GNOME Start menu"
 msgstr "Eleven-stílusú vagy eredeti GNOME Start menü"
 
-#: src/prefs/dockItemsPage.js:28
+#: src/prefs/dockItemsPage.js:75
 msgid "Dock application buttons"
 msgstr "Dock alkalmazásgombjai"
 
@@ -1153,16 +1201,16 @@ msgid "General"
 msgstr "Általános"
 
 #: src/prefs/panelModeGroup.js:34
-msgid "Taskbar mode"
+msgid "Taskbar Mode"
 msgstr "Tálcamód"
 
 #: src/prefs/panelModeGroup.js:35
-msgid "Show application buttons in the main panel"
-msgstr "Alkalmazásgombok megjelenítése a főpanelen"
+msgid "Show application buttons in the taskbar"
+msgstr "Alkalmazásgombok megjelenítése a tálcán"
 
 #: src/prefs/panelModeGroup.js:43
-msgid "Alternative Panel Modes"
-msgstr "Alternatív panelmódok"
+msgid "Alternative Modes"
+msgstr "Alternatív módok"
 
 #: src/prefs/panelModeGroup.js:44
 msgid "Choose the original GNOME panel or the Windows XP theme"
@@ -1178,20 +1226,20 @@ msgstr ""
 "Tálcaalkalmazások elrejtése és az eredeti Dash használata az Áttekintésben"
 
 #: src/prefs/panelModeGroup.js:61
-msgid "Dock mode"
+msgid "Dock Mode"
 msgstr "Dock mód"
 
 #: src/prefs/panelModeGroup.js:62
-msgid "Show application buttons in a separate Dock instead of the main panel"
-msgstr "Alkalmazásgombok megjelenítése külön Dockban a főpanel helyett"
+msgid "Show application buttons in a separate Dock instead of the taskbar"
+msgstr "Alkalmazásgombok megjelenítése külön Dockban a tálca helyett"
 
 #: src/prefs/panelModeGroup.js:108
 msgid "Dock Position"
 msgstr "Dock pozíciója"
 
 #: src/prefs/panelModeGroup.js:109
-msgid "Place the Dock at a different screen edge from the main panel"
-msgstr "A Dock elhelyezése a főpaneltől eltérő képernyőszélen"
+msgid "Place the Dock at a different screen edge from the taskbar"
+msgstr "A Dockot a tálcától eltérő képernyőszélen helyezze el"
 
 #: src/prefs/panelModeGroup.js:120
 msgid "Maximum Dock Length"
@@ -1202,8 +1250,8 @@ msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "A Dock hosszának korlátozása a monitorhossz megadott százalékára"
 
 #: src/prefs/panelModeGroup.js:128
-msgid "Panel mode"
-msgstr "Panelmód"
+msgid "Full-width Dock"
+msgstr "Teljes szélességű Dock"
 
 #: src/prefs/panelModeGroup.js:129
 msgid "Extend the Dock fully to the monitor edge"
@@ -1239,7 +1287,7 @@ msgstr ""
 "tálcaalkalmazások és Start menü-elemek, beleértve a mappákat és azok "
 "sorrendjét is, megmaradnak."
 
-#: src/prefs/preferencesDialogs.js:20 src/prefs/startIconChooser.js:139
+#: src/prefs/preferencesDialogs.js:20 src/prefs/startIconChooser.js:141
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1316,10 +1364,8 @@ msgid "Export and Import Profiles"
 msgstr "Profilok exportálása és importálása"
 
 #: src/prefs/profileTransfer.js:139
-msgid "Save panel settings, Dock settings, and Start Menu pins to a file"
-msgstr ""
-"Panel- és Dock-beállítások, valamint a Start menü rögzített elemeinek "
-"mentése fájlba"
+msgid "Save Taskbar settings, Dock settings, and Start Menu pins to a file"
+msgstr "A tálca- és Dock-beállítások, valamint a Start menü rögzített elemeinek mentése fájlba"
 
 #: src/prefs/profileTransfer.js:142
 msgid "Export…"
@@ -1350,372 +1396,386 @@ msgstr "Profilok importálása"
 msgid "Profile imported."
 msgstr "Profil importálva."
 
-#: src/prefs/preferencesWidgets.js:117 src/prefs/preferencesWidgets.js:154
+#: src/prefs/preferencesWidgets.js:25
+msgid "Reset to Defaults"
+msgstr "Visszaállítás az alapértékekre"
+
+#: src/prefs/preferencesWidgets.js:32
+msgid "Close"
+msgstr "Bezárás"
+
+#: src/prefs/preferencesWidgets.js:136
+msgid "Item Position"
+msgstr "Elem helyzete"
+
+#: src/prefs/preferencesWidgets.js:181 src/prefs/preferencesWidgets.js:257
 msgid "Move Up"
 msgstr "Mozgatás fel"
 
-#: src/prefs/preferencesWidgets.js:122 src/prefs/preferencesWidgets.js:159
+#: src/prefs/preferencesWidgets.js:185 src/prefs/preferencesWidgets.js:261
 msgid "Move Down"
 msgstr "Mozgatás le"
 
-#: src/prefs/startMenuPage.js:37
+#: src/prefs/preferencesWidgets.js:209
+msgid "Visible"
+msgstr "Látható"
+
+#: src/prefs/startMenuPage.js:38
 msgid "Configure the Start button position and appearance."
 msgstr "A Start gomb helyzetének és megjelenésének beállítása."
 
-#: src/prefs/startMenuPage.js:42 src/prefs/startMenuPage.js:227
+#: src/prefs/startMenuPage.js:43 src/prefs/startMenuPage.js:268
 msgid "Eleven-style Start Menu"
 msgstr "Windows 11 stílusú Start menü"
 
-#: src/prefs/startMenuPage.js:43
+#: src/prefs/startMenuPage.js:44
 msgid "Configure the optional Eleven-style application menu."
 msgstr "Az elhagyható Windows 11 stílusú alkalmazásmenü beállítása."
 
-#: src/prefs/startMenuPage.js:48
+#: src/prefs/startMenuPage.js:49
 msgid "Keyboard Shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: src/prefs/startMenuPage.js:49
+#: src/prefs/startMenuPage.js:50
 msgid "Configure Start menu shortcuts."
 msgstr "Start menü gyorsbillentyűk beállítása."
 
-#: src/prefs/startMenuPage.js:73
-msgid "Start Button Position"
-msgstr "Start gomb helyzete"
-
 #: src/prefs/startMenuPage.js:74
-msgid "Configure the Start button alignment"
-msgstr "A Start gomb igazításának beállítása"
+msgid "Start Button Position and Alignment"
+msgstr "Start gomb helyzete és igazítása"
 
-#: src/prefs/startMenuPage.js:84
+#: src/prefs/startMenuPage.js:76
+msgid "Choose the Start button position or follow application alignment"
+msgstr "Válassza ki a Start gomb helyzetét, vagy kövesse az alkalmazások igazítását"
+
+#: src/prefs/startMenuPage.js:87
 msgid "Choose the Start button alignment"
 msgstr "Válassza ki a Start gomb igazítását"
 
-#: src/prefs/startMenuPage.js:95
+#: src/prefs/startMenuPage.js:98
 msgid "Follow Application Alignment"
 msgstr "Alkalmazások igazításának követése"
 
-#: src/prefs/startMenuPage.js:96
+#: src/prefs/startMenuPage.js:99
 msgid "Move the Start button with the application buttons"
 msgstr "A Start gomb mozgatása az alkalmazásgombokkal együtt"
 
-#: src/prefs/startMenuPage.js:138
+#: src/prefs/startMenuPage.js:144
 msgid "Start Button Appearance"
 msgstr "Start gomb megjelenése"
 
-#: src/prefs/startMenuPage.js:139
-msgid "Configure padding, icons, and button visibility"
-msgstr "A térköz, az ikonok és a gombok láthatóságának beállítása"
+#: src/prefs/startMenuPage.js:145
+msgid "Configure padding, separators, icons, and button visibility"
+msgstr "A térközök, elválasztók, ikonok és gombláthatóság beállítása"
 
-#: src/prefs/startMenuPage.js:148
+#: src/prefs/startMenuPage.js:154
 msgid "Start Button Padding"
 msgstr "Start gomb térköze"
 
-#: src/prefs/startMenuPage.js:149
+#: src/prefs/startMenuPage.js:155
 msgid "Horizontal space around the Start icon in pixels"
 msgstr "Vízszintes hely a Start ikon körül képpontban"
 
-#: src/prefs/startMenuPage.js:159
+#: src/prefs/startMenuPage.js:200
 msgid "Show Start Button Separator"
 msgstr "Start gomb elválasztójának megjelenítése"
 
-#: src/prefs/startMenuPage.js:160
+#: src/prefs/startMenuPage.js:201
 msgid "Show a line between the Start button and applications"
 msgstr "Vonal megjelenítése a Start gomb és az alkalmazások között"
 
-#: src/prefs/startMenuPage.js:165
+#: src/prefs/startMenuPage.js:206
 msgid "Custom Start Button Icon"
 msgstr "Egyéni Start gomb ikon"
 
-#: src/prefs/startMenuPage.js:169
+#: src/prefs/startMenuPage.js:209
 msgid "Use the built-in icon"
 msgstr "Beépített ikon használata"
 
-#: src/prefs/startMenuPage.js:189
+#: src/prefs/startMenuPage.js:230
 msgid "Using the built-in icon"
 msgstr "Beépített ikon használatban"
 
-#: src/prefs/startMenuPage.js:228
+#: src/prefs/startMenuPage.js:269
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "A GNOME alkalmazásrács lecserélése Windows 11 stílusú menüre"
 
-#: src/prefs/startMenuPage.js:240
+#: src/prefs/startMenuPage.js:281
 msgid "Start Menu Options"
 msgstr "Start menü beállításai"
 
-#: src/prefs/startMenuPage.js:241
+#: src/prefs/startMenuPage.js:282
 msgid "Configure Start Menu content and behavior"
 msgstr "A Start menü tartalmának és viselkedésének beállítása"
 
-#: src/prefs/startMenuPage.js:246
+#: src/prefs/startMenuPage.js:287
 msgid "Show Profile Picture"
 msgstr "Profilkép megjelenítése"
 
-#: src/prefs/startMenuPage.js:247
+#: src/prefs/startMenuPage.js:288
 msgid "Use your account picture in the Start Menu"
 msgstr "A fiók képének használata a Start menüben"
 
-#: src/prefs/startMenuPage.js:268
+#: src/prefs/startMenuPage.js:309
 msgid "Power Options in Start Menu"
 msgstr "Tápellátási lehetőségek a Start menüben"
 
-#: src/prefs/startMenuPage.js:270
+#: src/prefs/startMenuPage.js:311
 msgid "Show power actions here instead of in Quick Settings"
 msgstr "Kikapcsolási műveletek megjelenítése itt a Gyorsbeállítások helyett"
 
-#: src/prefs/startMenuPage.js:292
+#: src/prefs/startMenuPage.js:333
 msgid "Open All Apps by Default"
 msgstr "Összes alkalmazás megnyitása alapértelmezés szerint"
 
-#: src/prefs/startMenuPage.js:293
+#: src/prefs/startMenuPage.js:334
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr ""
 "Rögzítettek kihagyása és megnyitás közvetlenül az alkalmazásokhoz és "
 "kategóriákhoz"
 
-#: src/prefs/startMenuPage.js:314
+#: src/prefs/startMenuPage.js:355
 msgid "Show Recommended Apps"
 msgstr "Ajánlott alkalmazások megjelenítése"
 
-#: src/prefs/startMenuPage.js:315
+#: src/prefs/startMenuPage.js:356
 msgid "Display frequently used applications below pinned apps"
 msgstr ""
 "Gyakran használt alkalmazások megjelenítése a rögzített alkalmazások alatt"
 
-#: src/prefs/startMenuPage.js:327
+#: src/prefs/startMenuPage.js:368
 msgid "Hide Pinned App Titles"
 msgstr "Rögzített alkalmazások címeinek elrejtése"
 
-#: src/prefs/startMenuPage.js:329
+#: src/prefs/startMenuPage.js:370
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
 "Név elrejtése a rögzített ikonok alatt, megjelenítés buboréksúgóban "
 "föléhúzáskor"
 
-#: src/prefs/startMenuPage.js:342
+#: src/prefs/startMenuPage.js:383
 msgid "Show Running App Indicators"
 msgstr "Futó alkalmazások jelzőinek megjelenítése"
 
-#: src/prefs/startMenuPage.js:343
+#: src/prefs/startMenuPage.js:384
 msgid "Show taskbar-style indicators below running application icons"
 msgstr "Tálcastílusú jelzők megjelenítése a futó alkalmazások ikonjai alatt"
 
-#: src/prefs/startMenuPage.js:391
+#: src/prefs/startMenuPage.js:432
 msgid "Organize All Apps into Categories"
 msgstr "Összes alkalmazás kategóriákba rendezése"
 
-#: src/prefs/startMenuPage.js:392
+#: src/prefs/startMenuPage.js:433
 msgid "Browse applications by category in the Start menu"
 msgstr "Alkalmazások böngészése kategóriák szerint a Start menüben"
 
-#: src/prefs/startMenuPage.js:414
+#: src/prefs/startMenuPage.js:455
 msgid "Show Original GNOME Button"
 msgstr "Eredeti GNOME gomb megjelenítése"
 
-#: src/prefs/startMenuPage.js:415
+#: src/prefs/startMenuPage.js:456
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr ""
 "Az Alkalmazások gomb megjelenítése, ha a Windows 11 stílusú Start menü le "
 "van tiltva"
 
-#: src/prefs/startMenuPage.js:475
-msgid "Follow Panel/Dock Theme"
-msgstr "Panel/dokk téma követése"
+#: src/prefs/startMenuPage.js:477
+msgid "Follow Taskbar/Dock Theme"
+msgstr "A tálca/Dock témájának követése"
 
-#: src/prefs/startMenuPage.js:476
-msgid "Use the panel or Dock’s effective light or dark appearance"
-msgstr "A panel vagy dokk aktív világos vagy sötét megjelenésének használata"
+#: src/prefs/startMenuPage.js:478
+msgid "Use the taskbar or Dock’s effective light or dark appearance"
+msgstr "A tálca vagy a Dock tényleges világos vagy sötét megjelenésének használata"
 
-#: src/prefs/startMenuPage.js:443
+#: src/prefs/startMenuPage.js:484
 msgid "Start Menu Appearance"
 msgstr "Start menü megjelenése"
 
-#: src/prefs/startMenuPage.js:444
+#: src/prefs/startMenuPage.js:485
 msgid "Configure the Start Menu theme and transparency"
 msgstr "A Start menü témájának és átlátszóságának beállítása"
 
-#: src/prefs/startMenuPage.js:449
+#: src/prefs/startMenuPage.js:490
 msgid "Folder Shortcuts"
 msgstr "Mappaparancsikonok"
 
-#: src/prefs/startMenuPage.js:450
+#: src/prefs/startMenuPage.js:491
 msgid "Choose which folders appear beside the Settings icon"
 msgstr "Válassza ki, mely mappák jelenjenek meg a Beállítások ikonja mellett"
 
-#: src/prefs/startMenuPage.js:453
+#: src/prefs/startMenuPage.js:494
 msgid "Show Folder Shortcuts"
 msgstr "Mappaparancsikonok megjelenítése"
 
-#: src/prefs/startMenuPage.js:454
+#: src/prefs/startMenuPage.js:495
 msgid "Show selected folders beside the Settings icon in the Start Menu"
 msgstr ""
 "A kiválasztott mappák megjelenítése a Beállítások ikonja mellett a Start "
 "menüben"
 
-#: src/prefs/startMenuPage.js:536
+#: src/prefs/startMenuPage.js:577
 #: src/startMenu/startButtonContextMenuController.js:76
 msgid "Installed Apps"
 msgstr "Telepített alkalmazások"
 
-#: src/prefs/startMenuPage.js:537
+#: src/prefs/startMenuPage.js:578
 msgid "Open installed applications in Settings"
 msgstr "A telepített alkalmazások megnyitása a Beállításokban"
 
-#: src/prefs/startMenuPage.js:542
+#: src/prefs/startMenuPage.js:583
 #: src/startMenu/startButtonContextMenuController.js:84
 msgid "Event Viewer"
 msgstr "Eseménynapló"
 
-#: src/prefs/startMenuPage.js:543
+#: src/prefs/startMenuPage.js:584
 msgid "Open system logs"
 msgstr "Rendszernaplók megnyitása"
 
-#: src/prefs/startMenuPage.js:548 src/startMenu/startMenuAppModel.js:51
+#: src/prefs/startMenuPage.js:589 src/startMenu/startMenuAppModel.js:51
 #: src/startMenu/startButtonContextMenuController.js:91
 msgid "System"
 msgstr "Rendszer"
 
-#: src/prefs/startMenuPage.js:549
+#: src/prefs/startMenuPage.js:590
 msgid "Open system information in Settings"
 msgstr "Rendszerinformációk megnyitása a Beállításokban"
 
-#: src/prefs/startMenuPage.js:554
+#: src/prefs/startMenuPage.js:595
 #: src/startMenu/startButtonContextMenuController.js:97
 msgid "Network Connections"
 msgstr "Hálózati kapcsolatok"
 
-#: src/prefs/startMenuPage.js:555
+#: src/prefs/startMenuPage.js:596
 msgid "Open network settings"
 msgstr "Hálózati beállítások megnyitása"
 
-#: src/prefs/startMenuPage.js:560
+#: src/prefs/startMenuPage.js:601
 #: src/startMenu/startButtonContextMenuController.js:105
 msgid "Disk Management"
 msgstr "Lemezkezelés"
 
-#: src/prefs/startMenuPage.js:561
+#: src/prefs/startMenuPage.js:602
 msgid "Open GNOME Disks"
 msgstr "A GNOME Lemezek megnyitása"
 
-#: src/prefs/startMenuPage.js:566
+#: src/prefs/startMenuPage.js:607
 #: src/startMenu/startButtonContextMenuController.js:110
 msgid "Terminal"
 msgstr "Terminál"
 
-#: src/prefs/startMenuPage.js:567
+#: src/prefs/startMenuPage.js:608
 msgid "Open the available terminal application"
 msgstr "Az elérhető terminálalkalmazás megnyitása"
 
-#: src/prefs/startMenuPage.js:572
+#: src/prefs/startMenuPage.js:613
 #: src/startMenu/startButtonContextMenuController.js:120
-#: src/panel/panelInteractionController.js:102
+#: src/panel/panelInteractionController.js:120
 msgid "Task Manager"
 msgstr "Feladatkezelő"
 
-#: src/prefs/startMenuPage.js:573
+#: src/prefs/startMenuPage.js:614
 msgid "Open the configured task manager"
 msgstr "A beállított feladatkezelő megnyitása"
 
-#: src/prefs/startMenuPage.js:578
+#: src/prefs/startMenuPage.js:619
 #: src/startMenu/startButtonContextMenuController.js:129
 msgid "File Explorer"
 msgstr "Fájlkezelő"
 
-#: src/prefs/startMenuPage.js:579
+#: src/prefs/startMenuPage.js:620
 msgid "Open the default file manager"
 msgstr "Az alapértelmezett fájlkezelő megnyitása"
 
-#: src/prefs/startMenuPage.js:584
+#: src/prefs/startMenuPage.js:625
 #: src/startMenu/startButtonContextMenuController.js:136
 msgid "Run"
 msgstr "Futtatás"
 
-#: src/prefs/startMenuPage.js:585
+#: src/prefs/startMenuPage.js:626
 msgid "Open the Run Command dialog"
 msgstr "A Parancs futtatása párbeszédablak megnyitása"
 
-#: src/prefs/startMenuPage.js:591
+#: src/prefs/startMenuPage.js:632
 msgid "Show the desktop"
 msgstr "Asztal megjelenítése"
 
-#: src/prefs/startMenuPage.js:596
-msgid "Right-click Menu Shortcuts"
-msgstr "Jobb gombos menü parancsikonjai"
+#: src/prefs/startMenuPage.js:637
+msgid "Start Button Context Menu"
+msgstr "Start gomb helyi menüje"
 
-#: src/prefs/startMenuPage.js:597
-msgid "Choose which shortcuts appear when right-clicking the Start button"
-msgstr ""
-"Válassza ki, mely parancsikonok jelenjenek meg a Start gomb jobb gombos "
-"menüjében"
+#: src/prefs/startMenuPage.js:639
+msgid "Choose which shortcuts appear in the Start button’s context menu"
+msgstr "Válassza ki, mely parancsikonok jelenjenek meg a Start gomb helyi menüjében"
 
-#: src/prefs/startMenuPage.js:601
+#: src/prefs/startMenuPage.js:644
 msgid "Show Context Menu Shortcuts"
 msgstr "Környezeti menü parancsikonjainak megjelenítése"
 
-#: src/prefs/startMenuPage.js:602
+#: src/prefs/startMenuPage.js:645
 msgid "Add selected system shortcuts to the Start button context menu"
 msgstr ""
 "A kiválasztott rendszerparancsikonok hozzáadása a Start gomb környezeti "
 "menüjéhez"
 
-#: src/prefs/startMenuPage.js:645
+#: src/prefs/startMenuPage.js:688
 msgid "Start Menu Theme"
 msgstr "Start menü témája"
 
-#: src/prefs/startMenuPage.js:646
+#: src/prefs/startMenuPage.js:689
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "Egyéni megjelenés használata vagy a GNOME Shell téma követése"
 
-#: src/prefs/startMenuPage.js:650
+#: src/prefs/startMenuPage.js:693
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: src/prefs/startMenuPage.js:672
-msgid "Use the panel’s configured transparency level"
-msgstr "A panel beállított átlátszósági szintjének használata"
+#: src/prefs/startMenuPage.js:715
+msgid "Use the taskbar’s configured transparency level"
+msgstr "A tálca beállított átlátszósági szintjének használata"
 
-#: src/prefs/startMenuPage.js:678
+#: src/prefs/startMenuPage.js:721
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr ""
 "A Blur My Shell felbukkanó elmosásának kikapcsolása a lehetőség használatához"
 
-#: src/prefs/startMenuPage.js:681
+#: src/prefs/startMenuPage.js:724
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr ""
 "A Blur My Shell panel- és felbukkanó-elmosásának kikapcsolása a lehetőség "
 "használatához"
 
-#: src/prefs/startMenuPage.js:684
-msgid "Follow Panel Transparency"
-msgstr "Panel átlátszóságának követése"
+#: src/prefs/startMenuPage.js:727
+msgid "Follow Taskbar Transparency"
+msgstr "A tálca átlátszóságának követése"
 
-#: src/prefs/startMenuPage.js:733
+#: src/prefs/startMenuPage.js:776
 msgid "Center Start Menu on Monitor"
 msgstr "Start menü középre igazítása a monitoron"
 
-#: src/prefs/startMenuPage.js:735
+#: src/prefs/startMenuPage.js:778
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 "A menü elhelyezése a tényleges vízszintes középpontban a Start gomb feletti "
 "helyett"
 
-#: src/prefs/startMenuPage.js:776
+#: src/prefs/startMenuPage.js:833
 msgid "Super Opens Start Menu"
 msgstr "Super billentyű megnyitja a Start menüt"
 
-#: src/prefs/startMenuPage.js:777
+#: src/prefs/startMenuPage.js:834
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr ""
 "Super billentyű használata a Start menühöz, és az Áttekintés áthelyezése a "
 "Super+Tab-ra"
 
-#: src/prefs/startMenuPage.js:789
+#: src/prefs/startMenuPage.js:846
 msgid "Super+Tab Opens Start Menu"
 msgstr "Super+Tab megnyitja a Start menüt"
 
-#: src/prefs/startMenuPage.js:791
+#: src/prefs/startMenuPage.js:848
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
@@ -1723,191 +1783,207 @@ msgstr ""
 "A GNOME alkalmazásváltó gyorsbillentyűjének használata a Windows 11 stílusú "
 "Start menühöz, amíg az engedélyezve van"
 
-#: src/prefs/startMenuPage.js:828
+#: src/prefs/startMenuPage.js:885
 msgid "Super+E Opens File Manager"
 msgstr "Super+E megnyitja a Fájlkezelőt"
 
-#: src/prefs/startMenuPage.js:830
+#: src/prefs/startMenuPage.js:887
 msgid "Open your home folder with the system’s default file manager"
 msgstr "A saját mappa megnyitása a rendszer alapértelmezett fájlkezelőjével"
 
-#: src/prefs/startMenuPage.js:845
+#: src/prefs/startMenuPage.js:902
 msgid "Not set"
 msgstr "Nincs beállítva"
 
-#: src/prefs/startMenuPage.js:850
+#: src/prefs/startMenuPage.js:906
 msgid "Set custom shortcut"
 msgstr "Egyéni gyorsbillentyű beállítása"
 
-#: src/prefs/startMenuPage.js:855
+#: src/prefs/startMenuPage.js:911
 msgid "Clear custom shortcut"
 msgstr "Egyéni gyorsbillentyű törlése"
 
-#: src/prefs/startMenuPage.js:859
+#: src/prefs/startMenuPage.js:916
 msgid "Custom Start Menu Shortcut"
 msgstr "Egyéni Start menü gyorsbillentyű"
 
-#: src/prefs/startMenuPage.js:878
+#: src/prefs/startMenuPage.js:935
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 "Kapcsolja ki a Super gyorsbillentyűt egyéni billentyűkombináció használatához"
 
-#: src/prefs/startMenuPage.js:881
+#: src/prefs/startMenuPage.js:938
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 "Kapcsolja ki a Super+Tab gyorsbillentyűt egyéni billentyűkombináció "
 "használatához"
 
-#: src/prefs/startMenuPage.js:884
+#: src/prefs/startMenuPage.js:941
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 "Válasszon egy szabad gyorsbillentyűt; alapértelmezés szerint nincs "
 "hozzárendelve semmi"
 
-#: src/prefs/taskbarBehaviorGroup.js:25
+#: src/prefs/taskbarBehaviorGroup.js:26
 msgid "Taskbar Behavior"
 msgstr "Tálca viselkedése"
 
-#: src/prefs/taskbarBehaviorGroup.js:31
-msgid "Auto-hide Panel"
-msgstr "Panel automatikus elrejtése"
-
 #: src/prefs/taskbarBehaviorGroup.js:32
+msgid "Auto-hide Taskbar"
+msgstr "A tálca automatikus elrejtése"
+
+#: src/prefs/taskbarBehaviorGroup.js:33
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr "Tálca megjelenítése, ha az egérmutató eléri a képernyő szélét"
 
 #: src/prefs/taskbarBehaviorGroup.js:44
+msgid "Taskbar Auto-hide and Window Dodge"
+msgstr "A tálca automatikus elrejtése és ablakkerülése"
+
+#: src/prefs/taskbarBehaviorGroup.js:46
 msgid "Choose when the taskbar hides and how it is revealed"
 msgstr "Válassza ki, mikor rejtse el a tálcát, és hogyan jelenjen meg"
 
+#: src/prefs/taskbarBehaviorGroup.js:49
+msgid "Hide the taskbar when a qualifying window overlaps it"
+msgstr "A tálca elrejtése, ha egy megfelelő ablak átfedi"
+
 #: src/prefs/taskbarBehaviorGroup.js:52
+msgid "Choose which windows make the taskbar hide"
+msgstr "Válassza ki, mely ablakok rejtsék el a tálcát"
+
+#: src/prefs/taskbarBehaviorGroup.js:55
+msgid ""
+"Reveal the taskbar when the pointer reaches its screen edge while dodging a "
+"window"
+msgstr "A tálca megjelenítése, amikor a mutató egy ablak elkerülése közben eléri a képernyő szélét"
+
+#: src/prefs/taskbarBehaviorGroup.js:63
 msgid "Bottom Hot Edge"
 msgstr "Alsó forró él"
 
-#: src/prefs/taskbarBehaviorGroup.js:54 src/prefs/taskbarBehaviorGroup.js:61
-msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr "Az egérmutató alsó képernyőszélhez nyomása az Áttekintés váltásához"
+#: src/prefs/taskbarBehaviorGroup.js:65
+msgid ""
+"Configure the bottom-edge gesture, pressure, and animation for toggling "
+"Overview"
+msgstr "Az áttekintés váltásához használt alsó széli gesztus, nyomás és animáció beállítása"
 
-#: src/prefs/taskbarBehaviorGroup.js:59
+#: src/prefs/taskbarBehaviorGroup.js:70
 msgid "Enable Bottom Hot Edge"
 msgstr "Alsó forró szél engedélyezése"
 
-#: src/prefs/taskbarBehaviorGroup.js:71
+#: src/prefs/taskbarBehaviorGroup.js:72
+msgid "Push the pointer against the bottom screen edge to toggle Overview"
+msgstr "Az egérmutató alsó képernyőszélhez nyomása az Áttekintés váltásához"
+
+#: src/prefs/taskbarBehaviorGroup.js:82
 msgid "Activation Pressure"
 msgstr "Aktiválási nyomás"
 
-#: src/prefs/taskbarBehaviorGroup.js:73
+#: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr ""
 "A képpontok száma, amennyit a mutatónak el kell mozdulnia az alsó szélén túl "
 "az Áttekintés aktiválásához"
 
-#: src/prefs/taskbarBehaviorGroup.js:85
+#: src/prefs/taskbarBehaviorGroup.js:96
 msgid "Hot Edge Animation"
 msgstr "Forró él animáció"
 
-#: src/prefs/taskbarBehaviorGroup.js:86
+#: src/prefs/taskbarBehaviorGroup.js:97
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "Hullámeffektus megjelenítése az alsó forró él aktiválásakor"
 
-#: src/prefs/taskbarBehaviorGroup.js:102 src/prefs/taskbarBehaviorGroup.js:107
-msgid "Scroll over empty taskbar space to switch workspaces"
-msgstr "Görgetés a tálca üres részén a munkaterületek közötti váltáshoz"
+#: src/prefs/taskbarBehaviorGroup.js:112
+msgid "Taskbar Scroll"
+msgstr "Görgetés a tálcán"
 
-#: src/prefs/taskbarBehaviorGroup.js:132
-msgid "Panel and Notification Behavior"
-msgstr "Panel- és értesítési viselkedés"
+#: src/prefs/taskbarBehaviorGroup.js:113
+msgid "Configure scrolling over empty taskbar space"
+msgstr "A tálca üres területén történő görgetés beállítása"
 
-#: src/prefs/taskbarBehaviorGroup.js:133
-msgid "Configure panel menus and notification banners"
-msgstr "A panelmenük és értesítési szalagok beállítása"
+#: src/prefs/taskbarBehaviorGroup.js:121
+msgid "Action used when scrolling over empty taskbar space"
+msgstr "A tálca üres területén történő görgetéskor használt művelet"
 
-#: src/prefs/taskbarBehaviorGroup.js:137
-msgid "Panel Menus Require Click"
-msgstr "A panelmenükhöz kattintás szükséges"
+#: src/prefs/taskbarBehaviorGroup.js:151
+msgid "Minimum delay between taskbar scroll actions in milliseconds"
+msgstr "A tálca görgetési műveletei közötti minimális késleltetés ezredmásodpercben"
 
-#: src/prefs/taskbarBehaviorGroup.js:138
+#: src/prefs/taskbarBehaviorGroup.js:173
+msgid "Taskbar Menus and Notifications"
+msgstr "Tálcamenük és értesítések"
+
+#: src/prefs/taskbarBehaviorGroup.js:175
+msgid "Configure taskbar menu activation and notification banner placement"
+msgstr "A tálcamenük aktiválásának és az értesítési sávok elhelyezésének beállítása"
+
+#: src/prefs/taskbarBehaviorGroup.js:180
+msgid "Taskbar Menus Require Click"
+msgstr "A tálcamenükhöz kattintás szükséges"
+
+#: src/prefs/taskbarBehaviorGroup.js:181
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "Váltás az óra-, rendszer- és tálcamenük között csak kattintásra"
 
-#: src/prefs/taskbarBehaviorGroup.js:144
+#: src/prefs/taskbarBehaviorGroup.js:187
 msgid "Taskbar-aligned Notification Banners"
 msgstr "Tálcához igazított értesítési sávok"
 
-#: src/prefs/taskbarBehaviorGroup.js:145
+#: src/prefs/taskbarBehaviorGroup.js:188
 msgid "Follow the taskbar edge and the clock position"
 msgstr "A tálca szélének és az óra helyzetének követése"
 
-#: src/prefs/taskbarBehaviorGroup.js:174
+#: src/prefs/taskbarBehaviorGroup.js:217
 msgid "Automatic Fallback"
 msgstr "Automatikus tartalék"
 
-#: src/prefs/taskbarBehaviorGroup.js:182
+#: src/prefs/taskbarBehaviorGroup.js:225
 msgid "Task Manager Application"
 msgstr "Feladatkezelő alkalmazás"
 
-#: src/prefs/taskbarBehaviorGroup.js:183
+#: src/prefs/taskbarBehaviorGroup.js:226
 msgid "Application opened from the taskbar context menu"
 msgstr "A tálca helyi menüjéből megnyitott alkalmazás"
 
-#: src/prefs/taskbarBehaviorGroup.js:200
+#: src/prefs/taskbarBehaviorGroup.js:245
 msgid "Show Taskbar on All Monitors"
 msgstr "Tálca megjelenítése az összes monitoron"
 
-#: src/prefs/taskbarBehaviorGroup.js:201
+#: src/prefs/taskbarBehaviorGroup.js:246
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 "Tevékenységek, alkalmazások, óra és rendszermenü megjelenítése minden "
 "monitoron"
 
-#: src/prefs/windowDodgeGroup.js:26
-msgid "Visibility"
-msgstr "Láthatóság"
-
-#: src/prefs/windowDodgeGroup.js:32
+#: src/prefs/windowDodgeGroup.js:36
 msgid "Enable Dodge Windows"
 msgstr "Ablakok kikerülésének engedélyezése"
 
-#: src/prefs/windowDodgeGroup.js:34
-msgid "Hide the panel or Dock when a qualifying window overlaps it"
-msgstr "A panel vagy a Dock elrejtése, ha egy megfelelő ablak átfedi"
-
-#: src/prefs/windowDodgeGroup.js:44
+#: src/prefs/windowDodgeGroup.js:46
 msgid "Dodge Windows Mode"
 msgstr "Ablakkerülési mód"
 
-#: src/prefs/windowDodgeGroup.js:45
-msgid "Choose which windows make the panel or Dock hide"
-msgstr "Válassza ki, mely ablakok rejtsék el a panelt vagy a Dockot"
-
-#: src/prefs/windowDodgeGroup.js:49
+#: src/prefs/windowDodgeGroup.js:51
 msgid "All windows"
 msgstr "Minden ablak"
 
-#: src/prefs/windowDodgeGroup.js:53
+#: src/prefs/windowDodgeGroup.js:55
 msgid "Only focused application’s windows"
 msgstr "Csak a fókuszban lévő alkalmazás ablakai"
 
-#: src/prefs/windowDodgeGroup.js:57
+#: src/prefs/windowDodgeGroup.js:59
 msgid "Only focused window"
 msgstr "Csak a fókuszban lévő ablak"
 
-#: src/prefs/windowDodgeGroup.js:61
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Only maximized windows"
 msgstr "Csak maximalizált ablakok"
 
-#: src/prefs/windowDodgeGroup.js:71
+#: src/prefs/windowDodgeGroup.js:73
 msgid "Reveal on Pointer"
 msgstr "Megjelenítés mutatóra"
-
-#: src/prefs/windowDodgeGroup.js:72
-msgid ""
-"Reveal the panel or Dock when the pointer reaches its screen edge while "
-"dodging a window"
-msgstr ""
-"A panel vagy a Dock megjelenítése, amikor a mutató eléri a képernyő szélét "
-"egy ablak elkerülése közben"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"
@@ -1956,51 +2032,51 @@ msgstr "Megjelenítés az elsődleges monitoron"
 msgid "Always display the switcher on the primary monitor"
 msgstr "A váltó mindig az elsődleges monitoron jelenjen meg"
 
-#: src/startMenu/startMenuController.js:101
+#: src/startMenu/startMenuController.js:104
 msgid "Folder"
 msgstr "Mappa"
 
-#: src/startMenu/startMenuController.js:114
+#: src/startMenu/startMenuController.js:118
 msgid "Remove folder"
 msgstr "Mappa eltávolítása"
 
-#: src/startMenu/startMenuController.js:722
+#: src/startMenu/startMenuController.js:726
 msgid "Type here to search"
 msgstr "Gépeljen ide a kereséshez"
 
-#: src/startMenu/startMenuController.js:802
-#: src/startMenu/startMenuController.js:910
+#: src/startMenu/startMenuController.js:806
+#: src/startMenu/startMenuController.js:914
 msgid "Pinned"
 msgstr "Rögzítve"
 
-#: src/startMenu/startMenuController.js:807
-#: src/startMenu/startMenuController.js:1089
+#: src/startMenu/startMenuController.js:811
+#: src/startMenu/startMenuController.js:1093
 msgid "All apps"
 msgstr "Minden alkalmazás"
 
-#: src/startMenu/startMenuController.js:821
+#: src/startMenu/startMenuController.js:825
 msgid "Back"
 msgstr "Vissza"
 
-#: src/startMenu/startMenuController.js:982
+#: src/startMenu/startMenuController.js:986
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Válassza az Összes elemet, majd kattintson jobb gombbal egy alkalmazásra a "
 "rögzítéshez"
 
-#: src/startMenu/startMenuController.js:990
+#: src/startMenu/startMenuController.js:994
 msgid "Recommended"
 msgstr "Ajánlott"
 
-#: src/startMenu/startMenuController.js:1034 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1038 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Ez a mappa üres"
 
-#: src/startMenu/startMenuController.js:1121
+#: src/startMenu/startMenuController.js:1125
 msgid "Search results"
 msgstr "Keresési eredmények"
 
-#: src/startMenu/startMenuController.js:1146
+#: src/startMenu/startMenuController.js:1150
 msgid "No results found"
 msgstr "Nincs találat"
 
@@ -2012,23 +2088,23 @@ msgstr "Összes"
 msgid "Other"
 msgstr "Egyéb"
 
-#: src/startMenu/startMenuAppMenu.js:117
+#: src/startMenu/startMenuAppMenu.js:116
 msgid "Move out of folder"
 msgstr "Áthelyezés a mappából"
 
-#: src/startMenu/startMenuAppMenu.js:125 src/startMenu/startMenuAppMenu.js:306
+#: src/startMenu/startMenuAppMenu.js:124 src/startMenu/startMenuAppMenu.js:305
 msgid "Create Desktop Shortcut"
 msgstr "Asztali parancsikon létrehozása"
 
-#: src/startMenu/startMenuAppMenu.js:222
+#: src/startMenu/startMenuAppMenu.js:221
 msgid "Unpin from Start"
 msgstr "Rögzítés törlése a Start menüből"
 
-#: src/startMenu/startMenuAppMenu.js:223
+#: src/startMenu/startMenuAppMenu.js:222
 msgid "Pin to Start"
 msgstr "Rögzítés a Start menübe"
 
-#: src/startMenu/startMenuAppMenu.js:305
+#: src/startMenu/startMenuAppMenu.js:304
 msgid "Delete Desktop Shortcut"
 msgstr "Asztali parancsikon törlése"
 
@@ -2189,26 +2265,26 @@ msgstr "Megnyitás"
 msgid "Trash"
 msgstr "Kuka"
 
-#: src/taskbar/taskbarAppearanceController.js:417
-#: src/taskbar/taskbarController.js:1140 src/taskbar/taskbarController.js:1142
+#: src/taskbar/taskbarAppearanceController.js:587
+#: src/taskbar/taskbarController.js:1337 src/taskbar/taskbarController.js:1339
 msgid "running"
 msgstr "fut"
 
-#: src/startMenu/startButtonController.js:387
+#: src/startMenu/startButtonController.js:494
 msgid "Start Menu Settings"
 msgstr "Start menü beállításai"
 
-#: src/startMenu/startButtonController.js:392
-#: src/panel/panelInteractionController.js:137
+#: src/startMenu/startButtonController.js:499
+#: src/panel/panelInteractionController.js:155
 msgid "Dock Settings"
 msgstr "Dock-beállítások"
 
-#: src/startMenu/startButtonController.js:397
-#: src/panel/panelInteractionController.js:137
+#: src/startMenu/startButtonController.js:504
+#: src/panel/panelInteractionController.js:155
 msgid "Taskbar Settings"
 msgstr "Tálca beállításai"
 
-#: src/startMenu/startButtonController.js:843
+#: src/startMenu/startButtonController.js:976
 msgid "Start"
 msgstr "Start"
 
@@ -2222,45 +2298,53 @@ msgstr "%s alternatív"
 msgid "%s (Symbolic)"
 msgstr "%s (szimbolikus)"
 
-#: src/prefs/startIconChooser.js:99 src/prefs/startIconChooser.js:214
+#: src/prefs/startIconChooser.js:99 src/prefs/startIconChooser.js:216
+msgid "Default Icon"
+msgstr "Alapértelmezett ikon"
+
+#: src/prefs/startIconChooser.js:101 src/prefs/startIconChooser.js:222
 msgid "GNOME"
 msgstr "GNOME"
 
-#: src/prefs/startIconChooser.js:101 src/prefs/startIconChooser.js:219
+#: src/prefs/startIconChooser.js:103 src/prefs/startIconChooser.js:227
 msgid "Eleven-style"
 msgstr "Windows 11 stílusú"
 
-#: src/prefs/startIconChooser.js:118 src/prefs/startIconChooser.js:337
+#: src/prefs/startIconChooser.js:120 src/prefs/startIconChooser.js:352
 msgid "Choose a Start Button Icon"
 msgstr "Válasszon Start gomb ikont"
 
-#: src/prefs/startIconChooser.js:145
+#: src/prefs/startIconChooser.js:147
 msgid "Select"
 msgstr "Kiválasztás"
 
-#: src/prefs/startIconChooser.js:165
+#: src/prefs/startIconChooser.js:167
 msgid "Search icons…"
 msgstr "Ikonok keresése…"
 
-#: src/prefs/startIconChooser.js:199
+#: src/prefs/startIconChooser.js:201
 msgid "Browse Files…"
 msgstr "Fájlok tallózása…"
 
-#: src/prefs/startIconChooser.js:321
+#: src/prefs/startIconChooser.js:336
 msgid "Image Files"
 msgstr "Képfájlok"
 
-#: src/panel/panelInteractionController.js:105
+#: src/panel/panelInteractionController.js:123
 msgid "Lock the Taskbar"
 msgstr "Tálca zárolása"
 
-#: src/taskbar/windowPreviewController.js:774
+#: src/overflow/trayOverflowController.js:250
+msgid "Tray icons"
+msgstr "Tálcaikonok"
+
+#: src/taskbar/windowPreviewController.js:924
 #: src/windowSwitching/gridAltTabPopup.js:222
 #: src/windowSwitching/gridAltTabPopup.js:307
 msgid "Untitled Window"
 msgstr "Névtelen ablak"
 
-#: src/taskbar/windowPreviewController.js:822
+#: src/taskbar/windowPreviewController.js:986
 msgid "Close Window"
 msgstr "Ablak bezárása"
 
@@ -2308,3 +2392,153 @@ msgstr "Alkalmazás hangereje"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Egyetlen alkalmazás sem játszik le hangot"
+
+#~ msgid "Icon Sizing and Spacing"
+#~ msgstr "Ikonméret és térköz"
+
+#~ msgid "Adjust application icon sizes and the space between them"
+#~ msgstr "Alkalmazásikonok méretének és térközének beállítása"
+
+#~ msgid "Application Interaction"
+#~ msgstr "Alkalmazás-interakció"
+
+#~ msgid "Configure previews, multi-window actions, and clicks"
+#~ msgstr "Az előnézetek, a többablakos műveletek és a kattintások beállítása"
+
+#~ msgid "Window Previews"
+#~ msgstr "Ablakelőnézetek"
+
+#~ msgid "Show live window previews when hovering application icons"
+#~ msgstr ""
+#~ "Élő ablak-előnézetek megjelenítése, amikor az egérmutatót az "
+#~ "alkalmazásikonok fölé viszi"
+
+#~ msgid "Spread Multiple Windows"
+#~ msgstr "Több ablak szétterítése"
+
+#~ msgid ""
+#~ "Click an app with multiple windows to show only its windows in Overview, "
+#~ "across all workspaces"
+#~ msgstr ""
+#~ "Kattintson egy több ablakkal rendelkező alkalmazásra, hogy csak annak "
+#~ "ablakai jelenjenek meg az Áttekintésben, az összes munkaterületen"
+
+#~ msgid "Middle Click Closes Applications"
+#~ msgstr "Középső kattintás bezárja az alkalmazásokat"
+
+#~ msgid "Close all application windows instead of opening a new window"
+#~ msgstr "Az összes alkalmazásablak bezárása új ablak nyitása helyett"
+
+#~ msgid "Hide App Labels"
+#~ msgstr "Alkalmazáscímkék elrejtése"
+
+#~ msgid "Show only icons on separate window buttons"
+#~ msgstr "Csak ikonok megjelenítése a különálló ablakgombokon"
+
+#~ msgid "Configure indicators beneath running application icons"
+#~ msgstr "A futó alkalmazások ikonjai alatti jelzők beállítása"
+
+#~ msgid "Straight"
+#~ msgstr "Egyenes"
+
+#~ msgid "Choose which applications appear on the Dock"
+#~ msgstr "Válassza ki, mely alkalmazások jelenjenek meg a Dockban"
+
+#~ msgid "Theme"
+#~ msgstr "Téma"
+
+#~ msgid "Choose the Dock colour scheme"
+#~ msgstr "Válassza ki a Dock színsémáját"
+
+#~ msgid "Control the Dock background transparency"
+#~ msgstr "A Dock hátterének átlátszóságának beállítása"
+
+#~ msgid "Choose which borders appear around the Dock"
+#~ msgstr "Válassza ki a Dock körül megjelenő szegélyeket"
+
+#~ msgid "Enable Workspace Scroll"
+#~ msgstr "Munkaterület-görgetés engedélyezése"
+
+#~ msgid "Drive Options"
+#~ msgstr "Meghajtóbeállítások"
+
+#~ msgid "Locations shown with taskbar applications"
+#~ msgstr "A tálcán lévő alkalmazásokkal megjelenő helyek"
+
+#~ msgid "Locations shown with Dock applications"
+#~ msgstr "A Dock alkalmazásaival megjelenő helyek"
+
+#~ msgid "Panel Appearance"
+#~ msgstr "Panel megjelenése"
+
+#~ msgid "Panel Thickness"
+#~ msgstr "Panelvastagság"
+
+#~ msgid "Choose the taskbar colour scheme"
+#~ msgstr "Válassza ki a tálca színsémáját"
+
+#~ msgid ""
+#~ "White text uses the dark panel theme; black text uses the light panel "
+#~ "theme"
+#~ msgstr ""
+#~ "A fehér szöveg a sötét paneltémát használja; a fekete szöveg a világos "
+#~ "paneltémát"
+
+#~ msgid "Choose which borders appear around the taskbar"
+#~ msgstr "Válassza ki a tálca körül megjelenő szegélyeket"
+
+#~ msgid "Display a thin border along the panel’s workspace-facing edge"
+#~ msgstr "Vékony keret megjelenítése a panel munkaterület felőli szélén"
+
+#~ msgid "Panel Items"
+#~ msgstr "Panelelemek"
+
+#~ msgid "Panel Button Padding"
+#~ msgstr "Panelgombok térköze"
+
+#~ msgid "Panel Item Visibility"
+#~ msgstr "Panel-elemek láthatósága"
+
+#~ msgid "Choose which optional panel items appear."
+#~ msgstr "Válassza ki, mely opcionális panelelemek jelenjenek meg."
+
+#~ msgid "Show Activities Button"
+#~ msgstr "Tevékenységek gomb megjelenítése"
+
+#~ msgid "Display GNOME’s workspace overview button on the taskbar"
+#~ msgstr "A GNOME munkaterület-áttekintő gombjának megjelenítése a tálcán"
+
+#~ msgid "Display a button that minimizes or restores all windows"
+#~ msgstr ""
+#~ "Minden ablakot kis méretűre kicsinyítő vagy visszaállító gomb "
+#~ "megjelenítése"
+
+#~ msgid "Collect Tray Icons"
+#~ msgstr "Tálcaikonok összegyűjtése"
+
+#~ msgid "Show and configure a selected folder on the taskbar"
+#~ msgstr "Kijelölt mappa megjelenítése és beállítása a tálcán"
+
+#~ msgid "Show Folder Menu"
+#~ msgstr "Mappamenü megjelenítése"
+
+#~ msgid "Show a selected folder on the taskbar"
+#~ msgstr "Kiválasztott mappa megjelenítése a tálcán"
+
+#~ msgid "Dock Items"
+#~ msgstr "Dock-elemek"
+
+#~ msgid "Choose the order of items in the Dock."
+#~ msgstr "A Dock elemei sorrendjének kiválasztása."
+
+#~ msgid "Panel mode"
+#~ msgstr "Panelmód"
+
+#~ msgid "Configure the Start button alignment"
+#~ msgstr "A Start gomb igazításának beállítása"
+
+#~ msgid "Right-click Menu Shortcuts"
+#~ msgstr "Jobb gombos menü parancsikonjai"
+
+#~ msgid "Auto-hide Panel"
+#~ msgstr "Panel automatikus elrejtése"
