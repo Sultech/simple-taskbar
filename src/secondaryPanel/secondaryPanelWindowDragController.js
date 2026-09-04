@@ -41,15 +41,13 @@ export class SecondaryPanelWindowDragController {
             return;
         }
 
-        if (SHELL_VERSION === 48 || SHELL_VERSION === 49) {
-            this._panelActor.connectObject(
-                'button-press-event',
-                (_actor, event) => this._onButtonPress(event),
-                'touch-event',
-                (_actor, event) => this._onTouchEvent(event),
-                this._signalHolder
-            );
-        }
+        this._panelActor.connectObject(
+            'button-press-event',
+            (_actor, event) => this._onButtonPress(event),
+            'touch-event',
+            (_actor, event) => this._onTouchEvent(event),
+            this._signalHolder
+        );
     }
 
     destroy() {
@@ -124,18 +122,14 @@ export class SecondaryPanelWindowDragController {
             ) ? Clutter.EVENT_STOP : Clutter.EVENT_PROPAGATE;
         }
 
-        if (SHELL_VERSION === 49 ||
-            SHELL_VERSION === 50 ||
-            SHELL_VERSION === 51) {
-            const backend = global.stage.get_context().get_backend();
-            const sprite = backend.get_sprite(global.stage, event);
-            return dragWindow.begin_grab_op(
-                Meta.GrabOp.MOVING,
-                sprite,
-                event.get_time(),
-                positionHint
-            ) ? Clutter.EVENT_STOP : Clutter.EVENT_PROPAGATE;
-        }
+        const backend = global.stage.get_context().get_backend();
+        const sprite = backend.get_sprite(global.stage, event);
+        return dragWindow.begin_grab_op(
+            Meta.GrabOp.MOVING,
+            sprite,
+            event.get_time(),
+            positionHint
+        ) ? Clutter.EVENT_STOP : Clutter.EVENT_PROPAGATE;
     }
 
     _getDraggableWindowForPosition(stageX) {

@@ -64,6 +64,24 @@ export function createPreferencesDialogContent(dialog, cleanup = null) {
     };
 }
 
+export function createPreferencesDialogButton(settings, tooltip, DialogClass) {
+    const button = new Gtk.Button({
+        tooltip_text: tooltip,
+        valign: Gtk.Align.CENTER,
+    });
+    setButtonIcon(button, 'emblem-system-symbolic');
+    button.add_css_class('flat');
+    button.add_css_class('circular');
+    button.connect('clicked', () => {
+        const dialog = new DialogClass({
+            settings,
+            parent: button.get_root(),
+        });
+        dialog.present();
+    });
+    return button;
+}
+
 export function setButtonIcon(button, iconName) {
     button.set_child(new Gtk.Image({
         icon_name: iconName,

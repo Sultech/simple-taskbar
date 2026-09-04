@@ -4,7 +4,12 @@ src/overflow/applicationOverflowController.js
 src/overflow/applicationOverflowItemController.js
 prefs.js
 src/prefs/aboutPage.js
+src/prefs/applicationClickActionDialog.js
+src/prefs/applicationGroupingDialog.js
+src/prefs/applicationHoverAnimationDialog.js
 src/prefs/applicationIconsGroup.js
+src/prefs/applicationInteractionGroup.js
+src/prefs/classicHighlightDialog.js
 src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dockBehaviorGroup.js
@@ -17,8 +22,10 @@ src/prefs/panelModeGroup.js
 src/prefs/preferencesDialogs.js
 src/prefs/profileTransfer.js
 src/prefs/preferencesWidgets.js
+src/prefs/showDesktopButtonDialog.js
 src/prefs/startMenuPage.js
 src/prefs/taskbarBehaviorGroup.js
+src/prefs/windowPreviewDialog.js
 src/prefs/windowDodgeGroup.js
 src/prefs/windowSwitchingPage.js
 src/startMenu/startMenuController.js

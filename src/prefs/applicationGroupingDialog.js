@@ -3,16 +3,15 @@
 
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
-import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
     addComboRow,
     addSpinRow,
+    createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
-    setButtonIcon,
 } from './preferencesWidgets.js';
 
 const APPLICATION_GROUPING_SETTINGS = [
@@ -24,21 +23,11 @@ const APPLICATION_GROUPING_SETTINGS = [
 ];
 
 export function createApplicationGroupingOptionsButton(settings) {
-    const button = new Gtk.Button({
-        tooltip_text: _('Application Button Options'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(button, 'emblem-system-symbolic');
-    button.add_css_class('flat');
-    button.add_css_class('circular');
-    button.connect('clicked', () => {
-        const dialog = new ApplicationGroupingOptionsDialog({
-            settings,
-            parent: button.get_root(),
-        });
-        dialog.present();
-    });
-    return button;
+    return createPreferencesDialogButton(
+        settings,
+        _('Application Button Options'),
+        ApplicationGroupingOptionsDialog
+    );
 }
 
 export const ApplicationGroupingOptionsDialog = GObject.registerClass(

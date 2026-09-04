@@ -11,8 +11,8 @@ import {
     APP_ICON_HOVER_ANIMATION_SETTINGS,
 } from '../shared/applicationHoverAnimation.js';
 import {
+    createPreferencesDialogButton,
     createPreferencesDialogContent,
-    setButtonIcon,
 } from './preferencesWidgets.js';
 
 function controlDefinitions() {
@@ -116,21 +116,11 @@ function controlDefinitions() {
 }
 
 export function createApplicationHoverAnimationOptionsButton(settings) {
-    const button = new Gtk.Button({
-        tooltip_text: _('Animation Options'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(button, 'emblem-system-symbolic');
-    button.add_css_class('flat');
-    button.add_css_class('circular');
-    button.connect('clicked', () => {
-        const dialog = new ApplicationHoverAnimationDialog({
-            settings,
-            parent: button.get_root(),
-        });
-        dialog.present();
-    });
-    return button;
+    return createPreferencesDialogButton(
+        settings,
+        _('Animation Options'),
+        ApplicationHoverAnimationDialog
+    );
 }
 
 export const ApplicationHoverAnimationDialog = GObject.registerClass(

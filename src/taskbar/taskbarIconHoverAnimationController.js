@@ -160,14 +160,7 @@ export class TaskbarIconHoverAnimationController {
     }
 
     disable() {
-        if (this._magnifyUpdateId) {
-            global.compositor.get_laters().remove(this._magnifyUpdateId);
-            this._magnifyUpdateId = 0;
-        }
-        if (this._magnifyFrameId) {
-            global.compositor.get_laters().remove(this._magnifyFrameId);
-            this._magnifyFrameId = 0;
-        }
+        this._removeLaterSources();
         this._signalHolder.destroy();
         this._signalHolder = null;
         this._animator.resetAnimations();
@@ -175,14 +168,7 @@ export class TaskbarIconHoverAnimationController {
     }
 
     destroy() {
-        if (this._magnifyUpdateId) {
-            global.compositor.get_laters().remove(this._magnifyUpdateId);
-            this._magnifyUpdateId = 0;
-        }
-        if (this._magnifyFrameId) {
-            global.compositor.get_laters().remove(this._magnifyFrameId);
-            this._magnifyFrameId = 0;
-        }
+        this._removeLaterSources();
         this._animator.destroy();
         this._animator = null;
         this._cloneController.destroy();
@@ -198,6 +184,17 @@ export class TaskbarIconHoverAnimationController {
         this._getPositionActor = null;
         this._taskbarActor = null;
         this._settings = null;
+    }
+
+    _removeLaterSources() {
+        if (this._magnifyUpdateId) {
+            global.compositor.get_laters().remove(this._magnifyUpdateId);
+            this._magnifyUpdateId = 0;
+        }
+        if (this._magnifyFrameId) {
+            global.compositor.get_laters().remove(this._magnifyFrameId);
+            this._magnifyFrameId = 0;
+        }
     }
 
     getReserve() {

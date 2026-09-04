@@ -1,14 +1,13 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
-import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
     addSpinRow,
+    createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
-    setButtonIcon,
 } from './preferencesWidgets.js';
 
 const WINDOW_PREVIEW_SETTINGS = [
@@ -21,21 +20,11 @@ const WINDOW_PREVIEW_SETTINGS = [
 ];
 
 export function createWindowPreviewOptionsButton(settings) {
-    const button = new Gtk.Button({
-        tooltip_text: _('Window Preview Options'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(button, 'emblem-system-symbolic');
-    button.add_css_class('flat');
-    button.add_css_class('circular');
-    button.connect('clicked', () => {
-        const dialog = new WindowPreviewOptionsDialog({
-            settings,
-            parent: button.get_root(),
-        });
-        dialog.present();
-    });
-    return button;
+    return createPreferencesDialogButton(
+        settings,
+        _('Window Preview Options'),
+        WindowPreviewOptionsDialog
+    );
 }
 
 export const WindowPreviewOptionsDialog = GObject.registerClass(
