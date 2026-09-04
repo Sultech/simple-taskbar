@@ -773,6 +773,10 @@
       <default>false</default>
       <summary>Show running applications only on the taskbar for their monitor</summary>
     </key>
+    <key name="super-number-keybindings-enabled" type="b">
+      <default>true</default>
+      <summary>Use Simple Taskbar behavior for Super+1 through Super+9</summary>
+    </key>
     <key name="application-click-action" type="s">
       <choices>
         <choice value="cycle-windows-minimize"/>

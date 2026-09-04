@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 12:33+0100\n"
+"POT-Creation-Date: 2026-09-04 14:26+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -131,13 +131,11 @@ msgstr "„%s” címe kimásolva"
 
 #: src/prefs/applicationClickActionDialog.js:23
 #: src/prefs/applicationClickActionDialog.js:76
-
 msgid "Cycle Windows + Minimize"
 msgstr "Ablakok léptetése és kis méretre állítás"
 
 #: src/prefs/applicationClickActionDialog.js:27
 #: src/prefs/applicationClickActionDialog.js:72
-
 msgid "Cycle Through Windows"
 msgstr "Ablakok léptetése"
 
@@ -156,13 +154,11 @@ msgid "Spread Multiple Windows"
 msgstr "Több ablak szétterítése"
 
 #: src/prefs/applicationClickActionDialog.js:43
-
 msgid "Toggle Windows"
 msgstr "Ablakok váltása"
 
 #: src/prefs/applicationClickActionDialog.js:47
 #: src/prefs/applicationClickActionDialog.js:60
-
 msgid "Raise Windows"
 msgstr "Ablakok előtérbe hozása"
 
@@ -172,7 +168,6 @@ msgid "Launch New Instance"
 msgstr "Új példány indítása"
 
 #: src/prefs/applicationClickActionDialog.js:64
-
 msgid "Minimize Window"
 msgstr "Ablak kis méretre állítása"
 
@@ -191,7 +186,6 @@ msgid "Click Action Options"
 msgstr "Kattintási műveletek beállításai"
 
 #: src/prefs/applicationClickActionDialog.js:131
-
 msgid "Application Click Actions"
 msgstr "Alkalmazások kattintási műveletei"
 
@@ -208,17 +202,14 @@ msgid "Choose what happens when Shift+Clicking an application"
 msgstr "Válassza ki, mi történjen egy alkalmazásra Shift+kattintáskor"
 
 #: src/prefs/applicationClickActionDialog.js:152
-
 msgid "Middle-Click Action"
 msgstr "Középső kattintás művelete"
 
 #: src/prefs/applicationClickActionDialog.js:153
-
 msgid "Choose what happens when middle-clicking an application"
 msgstr "Válassza ki, mi történjen egy alkalmazásra középső kattintáskor"
 
 #: src/prefs/applicationClickActionDialog.js:163
-
 msgid "Shift+Middle-Click Action"
 msgstr "Shift+középső kattintás művelete"
 
@@ -228,17 +219,14 @@ msgstr "Válassza ki, mi történjen egy alkalmazásra Shift+középső kattint�
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
-
 msgid "Application Button Options"
 msgstr "Alkalmazásgomb beállításai"
 
 #: src/prefs/applicationGroupingDialog.js:49
-
 msgid "Application Labels"
 msgstr "Alkalmazásfeliratok"
 
 #: src/prefs/applicationGroupingDialog.js:50
-
 msgid "Customize uncombined application buttons"
 msgstr "A nem csoportosított alkalmazásgombok személyre szabása"
 
@@ -247,7 +235,6 @@ msgid "Hide App Labels"
 msgstr "Alkalmazásfeliratok elrejtése"
 
 #: src/prefs/applicationGroupingDialog.js:57
-
 msgid "Hide window titles on application buttons"
 msgstr "Ablakcímek elrejtése az alkalmazásgombokon"
 
@@ -264,7 +251,6 @@ msgid "Label Font Weight"
 msgstr "Felirat betűvastagsága"
 
 #: src/prefs/applicationGroupingDialog.js:78
-
 msgid "Choose the application title font weight"
 msgstr "Válassza ki az alkalmazáscím betűvastagságát"
 
@@ -277,7 +263,6 @@ msgid "Normal"
 msgstr "Normál"
 
 #: src/prefs/applicationGroupingDialog.js:82
-
 msgid "Lighter"
 msgstr "Vékonyabb"
 
@@ -286,22 +271,18 @@ msgid "Bold"
 msgstr "Félkövér"
 
 #: src/prefs/applicationGroupingDialog.js:84
-
 msgid "Bolder"
 msgstr "Vastagabb"
 
 #: src/prefs/applicationGroupingDialog.js:91
-
 msgid "Application Label Width"
 msgstr "Alkalmazásfelirat szélessége"
 
 #: src/prefs/applicationGroupingDialog.js:92
-
 msgid "Control the width of application title labels"
 msgstr "Az alkalmazáscím-feliratok szélességének szabályozása"
 
 #: src/prefs/applicationGroupingDialog.js:101
-
 msgid "Maximum Label Width"
 msgstr "Felirat legnagyobb szélessége"
 
@@ -314,12 +295,10 @@ msgid "Use Fixed Label Width"
 msgstr "Rögzített feliratszélesség használata"
 
 #: src/prefs/applicationGroupingDialog.js:113
-
 msgid "Use the maximum label width for every application button"
 msgstr "A legnagyobb feliratszélesség használata minden alkalmazásgombnál"
 
 #: src/prefs/applicationHoverAnimationDialog.js:30
-
 msgid "Duration"
 msgstr "Időtartam"
 
@@ -328,7 +307,6 @@ msgid "Animation time in milliseconds"
 msgstr "Animáció időtartama ezredmásodpercben"
 
 #: src/prefs/applicationHoverAnimationDialog.js:43
-
 msgid "Dock Expansion"
 msgstr "Dokk kibontása"
 
@@ -337,7 +315,6 @@ msgid "Dock resize time in milliseconds"
 msgstr "A dokk átméretezési ideje ezredmásodpercben"
 
 #: src/prefs/applicationHoverAnimationDialog.js:58
-
 msgid "Rotation"
 msgstr "Forgatás"
 
@@ -378,22 +355,18 @@ msgid "Number of icons affected by the pointer"
 msgstr "A mutató által érintett ikonok száma"
 
 #: src/prefs/applicationHoverAnimationDialog.js:121
-
 msgid "Animation Options"
 msgstr "Animáció beállításai"
 
 #: src/prefs/applicationHoverAnimationDialog.js:130
-
 msgid "Application Icon Hover Animation"
 msgstr "Alkalmazásikon rámutatási animációja"
 
 #: src/prefs/applicationHoverAnimationDialog.js:150
-
 msgid "Animation Profile"
 msgstr "Animációs profil"
 
 #: src/prefs/applicationHoverAnimationDialog.js:152
-
 msgid "Adjust the profile selected in the application icon settings"
 msgstr "Az alkalmazásikon beállításaiban kiválasztott profil módosítása"
 
@@ -462,8 +435,8 @@ msgid "Choose which applications appear and how their buttons are grouped and in
 msgstr "Válassza ki, mely alkalmazások jelenjenek meg, és hogyan legyenek csoportosítva és jelölve a gombjaik"
 
 #: src/prefs/applicationIconsGroup.js:194
-#: src/prefs/pinnedApplicationBehaviorDialog.js:25
-#: src/prefs/pinnedApplicationBehaviorDialog.js:34
+#: src/prefs/pinnedApplicationBehaviorDialog.js:26
+#: src/prefs/pinnedApplicationBehaviorDialog.js:35
 msgid "Pinned Application Behavior"
 msgstr "A rögzített alkalmazások viselkedése"
 
@@ -735,7 +708,6 @@ msgid "3D Spin"
 msgstr "3D pörgetés"
 
 #: src/prefs/applicationInteractionGroup.js:74
-
 msgid "Horizontal Flip"
 msgstr "Vízszintes tükrözés"
 
@@ -776,7 +748,6 @@ msgid "Nudge Up"
 msgstr "Finom eltolás felfelé"
 
 #: src/prefs/applicationInteractionGroup.js:114
-
 msgid "Nudge Down"
 msgstr "Finom eltolás lefelé"
 
@@ -785,7 +756,6 @@ msgid "Nudge Left"
 msgstr "Finom eltolás balra"
 
 #: src/prefs/applicationInteractionGroup.js:122
-
 msgid "Nudge Right"
 msgstr "Finom eltolás jobbra"
 
@@ -806,22 +776,18 @@ msgid "Configure clicks, scrolling, hovering, previews, and window effects"
 msgstr "Kattintások, görgetés, rámutatás, előnézetek és ablakeffektusok beállítása"
 
 #: src/prefs/applicationInteractionGroup.js:155
-
 msgid "Click Action"
 msgstr "Kattintási művelet"
 
 #: src/prefs/applicationInteractionGroup.js:156
-
 msgid "Choose what happens when a running application is clicked"
 msgstr "Válassza ki, mi történjen egy futó alkalmazásra kattintáskor"
 
 #: src/prefs/applicationInteractionGroup.js:168
-
 msgid "Click Animation"
 msgstr "Kattintási animáció"
 
 #: src/prefs/applicationInteractionGroup.js:169
-
 msgid "Choose the animation shown when an application is clicked"
 msgstr "Válassza ki az alkalmazásra kattintáskor megjelenő animációt"
 
@@ -842,12 +808,10 @@ msgid "Do Nothing"
 msgstr "Ne történjen semmi"
 
 #: src/prefs/applicationInteractionGroup.js:197
-
 msgid "Scroll App/Icon Action"
 msgstr "Alkalmazás-/ikongörgetési művelet"
 
 #: src/prefs/applicationInteractionGroup.js:198
-
 msgid "Choose what happens when scrolling over an application icon"
 msgstr "Válassza ki, mi történjen egy alkalmazásikon feletti görgetéskor"
 
@@ -857,58 +821,47 @@ msgid "Scroll Delay"
 msgstr "Görgetési késleltetés"
 
 #: src/prefs/applicationInteractionGroup.js:217
-
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr "Az alkalmazásikon-görgetések közötti legkisebb késleltetés ezredmásodpercben"
 
 #: src/prefs/applicationInteractionGroup.js:237
 #: src/prefs/applicationInteractionGroup.js:283
-
 msgid "Follow Taskbar Scroll Delay"
 msgstr "A tálca görgetési késleltetésének követése"
 
 #: src/prefs/applicationInteractionGroup.js:254
-
 msgid "Configure Scroll Delay"
 msgstr "Görgetési késleltetés beállítása"
 
 #: src/prefs/applicationInteractionGroup.js:282
-
 msgid "Follow Dock Scroll Delay"
 msgstr "A dokk görgetési késleltetésének követése"
 
 #: src/prefs/applicationInteractionGroup.js:297
-
 msgid "Application Hover Action"
 msgstr "Alkalmazás rámutatási művelete"
 
 #: src/prefs/applicationInteractionGroup.js:299
-
 msgid "Choose what happens when hovering over an application icon"
 msgstr "Válassza ki, mi történjen egy alkalmazásikonra mutatáskor"
 
 #: src/prefs/applicationInteractionGroup.js:304
-
 msgid "Show Previews"
 msgstr "Előnézetek megjelenítése"
 
 #: src/prefs/applicationInteractionGroup.js:308
-
 msgid "Show Tooltip"
 msgstr "Buboréksúgó megjelenítése"
 
 #: src/prefs/applicationInteractionGroup.js:338
-
 msgid "Hover Animation Type"
 msgstr "Rámutatási animáció típusa"
 
 #: src/prefs/applicationInteractionGroup.js:340
-
 msgid "Choose the animation style for application icon hover"
 msgstr "Válassza ki az alkalmazásikon rámutatási animációjának stílusát"
 
 #: src/prefs/applicationInteractionGroup.js:349
-
 msgid "Simple"
 msgstr "Egyszerű"
 
@@ -929,7 +882,6 @@ msgid "Choose the effect shown when a window is minimized or restored"
 msgstr "Válassza ki az ablak kis méretre állításakor vagy visszaállításakor megjelenő effektust"
 
 #: src/prefs/applicationInteractionGroup.js:377
-
 msgid "GNOME Default"
 msgstr "GNOME alapértelmezett"
 
@@ -951,7 +903,6 @@ msgid "Customize the Classic hover and pressed effect"
 msgstr "A klasszikus rámutatási és lenyomási effektus személyre szabása"
 
 #: src/prefs/classicHighlightDialog.js:52
-
 msgid "Highlight Hovering Application Icons"
 msgstr "Alkalmazásikonok kiemelése rámutatáskor"
 
@@ -972,27 +923,22 @@ msgid "Border radius in pixels"
 msgstr "Sarokkerekítés képpontban"
 
 #: src/prefs/classicHighlightDialog.js:87
-
 msgid "Focused Application Highlight"
 msgstr "Fókuszban lévő alkalmazás kiemelése"
 
 #: src/prefs/classicHighlightDialog.js:88
-
 msgid "Customize the effect for the focused application"
 msgstr "A fókuszban lévő alkalmazás effektusának személyre szabása"
 
 #: src/prefs/classicHighlightDialog.js:94
-
 msgid "Highlight the Focused Application"
 msgstr "Fókuszban lévő alkalmazás kiemelése"
 
 #: src/prefs/classicHighlightDialog.js:99
-
 msgid "Use Icon Dominant Color"
 msgstr "Az ikon uralkodó színének használata"
 
 #: src/prefs/classicHighlightDialog.js:107
-
 msgid "Custom Focus Highlight Color"
 msgstr "Fókuszkiemelés egyéni színe"
 
@@ -1004,45 +950,53 @@ msgstr "Fókuszkiemelés átlátszatlansága"
 msgid "Opacity percentage"
 msgstr "Átlátszatlanság százalékban"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:45
+#: src/prefs/pinnedApplicationBehaviorDialog.js:46
 msgid "Pinned and Running Applications"
 msgstr "Rögzített és futó alkalmazások"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Control which applications appear on the taskbar"
 msgstr "A tálcán megjelenő alkalmazások kiválasztása"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:52
+#: src/prefs/pinnedApplicationBehaviorDialog.js:53
 msgid "Hide Pinned Applications"
 msgstr "Rögzített alkalmazások elrejtése"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:54
+#: src/prefs/pinnedApplicationBehaviorDialog.js:55
 msgid "Show pinned taskbar applications only while they are running"
 msgstr "A rögzített tálcaalkalmazások megjelenítése csak futás közben"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:61
+#: src/prefs/pinnedApplicationBehaviorDialog.js:62
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "Rögzített alkalmazások elrejtése a másodlagos monitorokon"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:63
+#: src/prefs/pinnedApplicationBehaviorDialog.js:64
 msgid "Show pinned applications only on the primary monitor"
 msgstr "A rögzített alkalmazások csak az elsődleges monitoron jelenjenek meg"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:70
+#: src/prefs/pinnedApplicationBehaviorDialog.js:71
 msgid "Hide Unpinned Applications"
 msgstr "Rögzítetlen alkalmazások elrejtése"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:72
+#: src/prefs/pinnedApplicationBehaviorDialog.js:73
 msgid "Show only pinned applications and their running windows"
 msgstr "Csak a rögzített alkalmazások és azok futó ablakainak megjelenítése"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:79
+#: src/prefs/pinnedApplicationBehaviorDialog.js:80
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "Rögzített alkalmazások használata indítóként"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:81
+#: src/prefs/pinnedApplicationBehaviorDialog.js:82
 msgid "Keep pinned applications as launchers and show running applications separately"
 msgstr "A rögzített alkalmazások megtartása indítóként, és a futó alkalmazások külön megjelenítése"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+msgid "Super+Number Shortcuts"
+msgstr "Super+szám gyorsbillentyűk"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+msgid "Open pinned applications with Super+1 through Super+9"
+msgstr "Rögzített alkalmazások megnyitása a Super+1 és Super+9 közötti billentyűkkel"
 
 #: src/prefs/dockAppearanceGroup.js:26
 msgid "Dock Appearance"
@@ -1917,17 +1871,14 @@ msgid "Visible"
 msgstr "Látható"
 
 #: src/prefs/showDesktopButtonDialog.js:26
-
 msgid "Show Desktop Button Options"
 msgstr "Asztal megjelenítése gomb beállításai"
 
 #: src/prefs/showDesktopButtonDialog.js:46
-
 msgid "Appearance"
 msgstr "Megjelenés"
 
 #: src/prefs/showDesktopButtonDialog.js:47
-
 msgid "Customize the Show Desktop button"
 msgstr "Az Asztal megjelenítése gomb személyre szabása"
 
@@ -1940,17 +1891,14 @@ msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr "Szélesség képpontban; függőleges tálca vagy dokk esetén a magasság van használatban"
 
 #: src/prefs/showDesktopButtonDialog.js:68
-
 msgid "Custom Separator Color"
 msgstr "Elválasztó egyéni színe"
 
 #: src/prefs/showDesktopButtonDialog.js:69
-
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Egyéni szín használata az Asztal megjelenítése elválasztójához"
 
 #: src/prefs/showDesktopButtonDialog.js:78
-
 msgid "Separator Color"
 msgstr "Elválasztó színe"
 
@@ -2453,7 +2401,6 @@ msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "Tevékenységek, alkalmazások, óra és rendszermenü megjelenítése minden monitoron"
 
 #: src/prefs/windowPreviewDialog.js:25 src/prefs/windowPreviewDialog.js:34
-
 msgid "Window Preview Options"
 msgstr "Ablakelőnézet beállításai"
 
@@ -2482,12 +2429,10 @@ msgid "Delay in milliseconds before closing a preview"
 msgstr "Késleltetés ezredmásodpercben az előnézet bezárása előtt"
 
 #: src/prefs/windowPreviewDialog.js:78
-
 msgid "Preview Interaction"
 msgstr "Előnézet kezelése"
 
 #: src/prefs/windowPreviewDialog.js:83
-
 msgid "Middle-Click Closes the Window"
 msgstr "A középső kattintás bezárja az ablakot"
 
@@ -2496,7 +2441,6 @@ msgid "Close a window by middle-clicking its preview"
 msgstr "Ablak bezárása az előnézetére történő középső kattintással"
 
 #: src/prefs/windowPreviewDialog.js:88
-
 msgid "Window Peeking"
 msgstr "Ablak ideiglenes előtérbe hozása"
 
@@ -2505,7 +2449,6 @@ msgid "Show a window above other windows while hovering its preview"
 msgstr "Ablak megjelenítése a többi felett az előnézetére mutatáskor"
 
 #: src/prefs/windowPreviewDialog.js:94
-
 msgid "Enable Window Peeking"
 msgstr "Ablak ideiglenes előtérbe hozásának engedélyezése"
 

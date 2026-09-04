@@ -13,6 +13,7 @@ import {
 } from './preferencesWidgets.js';
 
 const PINNED_APPLICATION_BEHAVIOR_SETTINGS = [
+    'super-number-keybindings-enabled',
     'hide-pinned-taskbar-apps',
     'hide-pinned-secondary-monitors',
     'use-pinned-apps-as-launchers',
@@ -35,7 +36,7 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: 420,
+            default_height: 500,
         });
 
         this._settings = settings;
@@ -82,6 +83,11 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             ),
         });
         applicationsGroup.add(pinnedAppsAsLaunchersSwitch);
+        applicationsGroup.add(createSwitchRow(settings, {
+            key: 'super-number-keybindings-enabled',
+            title: _('Super+Number Shortcuts'),
+            subtitle: _('Open pinned applications with Super+1 through Super+9'),
+        }));
 
         const syncApplicationBehaviorSensitivity = () => {
             const enabled = !settings.get_boolean('windows-xp-theme-enabled');

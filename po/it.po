@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 12:33+0100\n"
+"POT-Creation-Date: 2026-09-04 14:26+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -132,13 +132,11 @@ msgstr "Indirizzo di %s copiato"
 
 #: src/prefs/applicationClickActionDialog.js:23
 #: src/prefs/applicationClickActionDialog.js:76
-
 msgid "Cycle Windows + Minimize"
 msgstr "Scorri finestre e minimizza"
 
 #: src/prefs/applicationClickActionDialog.js:27
 #: src/prefs/applicationClickActionDialog.js:72
-
 msgid "Cycle Through Windows"
 msgstr "Scorri le finestre"
 
@@ -157,13 +155,11 @@ msgid "Spread Multiple Windows"
 msgstr "Disponi più finestre"
 
 #: src/prefs/applicationClickActionDialog.js:43
-
 msgid "Toggle Windows"
 msgstr "Attiva/disattiva finestre"
 
 #: src/prefs/applicationClickActionDialog.js:47
 #: src/prefs/applicationClickActionDialog.js:60
-
 msgid "Raise Windows"
 msgstr "Porta le finestre in primo piano"
 
@@ -173,7 +169,6 @@ msgid "Launch New Instance"
 msgstr "Avvia nuova istanza"
 
 #: src/prefs/applicationClickActionDialog.js:64
-
 msgid "Minimize Window"
 msgstr "Minimizza finestra"
 
@@ -192,7 +187,6 @@ msgid "Click Action Options"
 msgstr "Opzioni azioni di clic"
 
 #: src/prefs/applicationClickActionDialog.js:131
-
 msgid "Application Click Actions"
 msgstr "Azioni di clic sulle applicazioni"
 
@@ -209,17 +203,14 @@ msgid "Choose what happens when Shift+Clicking an application"
 msgstr "Scegli cosa accade facendo Maiusc+Clic su un’applicazione"
 
 #: src/prefs/applicationClickActionDialog.js:152
-
 msgid "Middle-Click Action"
 msgstr "Azione clic centrale"
 
 #: src/prefs/applicationClickActionDialog.js:153
-
 msgid "Choose what happens when middle-clicking an application"
 msgstr "Scegli cosa accade facendo clic centrale su un’applicazione"
 
 #: src/prefs/applicationClickActionDialog.js:163
-
 msgid "Shift+Middle-Click Action"
 msgstr "Azione Maiusc+Clic centrale"
 
@@ -229,17 +220,14 @@ msgstr "Scegli cosa accade facendo Maiusc+Clic centrale su un’applicazione"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
-
 msgid "Application Button Options"
 msgstr "Opzioni pulsanti applicazione"
 
 #: src/prefs/applicationGroupingDialog.js:49
-
 msgid "Application Labels"
 msgstr "Etichette applicazioni"
 
 #: src/prefs/applicationGroupingDialog.js:50
-
 msgid "Customize uncombined application buttons"
 msgstr "Personalizza i pulsanti delle applicazioni non raggruppate"
 
@@ -248,7 +236,6 @@ msgid "Hide App Labels"
 msgstr "Nascondi etichette applicazioni"
 
 #: src/prefs/applicationGroupingDialog.js:57
-
 msgid "Hide window titles on application buttons"
 msgstr "Nascondi i titoli delle finestre sui pulsanti delle applicazioni"
 
@@ -265,7 +252,6 @@ msgid "Label Font Weight"
 msgstr "Spessore carattere etichetta"
 
 #: src/prefs/applicationGroupingDialog.js:78
-
 msgid "Choose the application title font weight"
 msgstr "Scegli lo spessore del carattere del titolo dell’applicazione"
 
@@ -278,7 +264,6 @@ msgid "Normal"
 msgstr "Normale"
 
 #: src/prefs/applicationGroupingDialog.js:82
-
 msgid "Lighter"
 msgstr "Più leggero"
 
@@ -287,22 +272,18 @@ msgid "Bold"
 msgstr "Grassetto"
 
 #: src/prefs/applicationGroupingDialog.js:84
-
 msgid "Bolder"
 msgstr "Più marcato"
 
 #: src/prefs/applicationGroupingDialog.js:91
-
 msgid "Application Label Width"
 msgstr "Larghezza etichetta applicazione"
 
 #: src/prefs/applicationGroupingDialog.js:92
-
 msgid "Control the width of application title labels"
 msgstr "Controlla la larghezza delle etichette dei titoli delle applicazioni"
 
 #: src/prefs/applicationGroupingDialog.js:101
-
 msgid "Maximum Label Width"
 msgstr "Larghezza massima etichetta"
 
@@ -315,12 +296,10 @@ msgid "Use Fixed Label Width"
 msgstr "Usa larghezza etichetta fissa"
 
 #: src/prefs/applicationGroupingDialog.js:113
-
 msgid "Use the maximum label width for every application button"
 msgstr "Usa la larghezza massima dell’etichetta per ogni pulsante applicazione"
 
 #: src/prefs/applicationHoverAnimationDialog.js:30
-
 msgid "Duration"
 msgstr "Durata"
 
@@ -329,7 +308,6 @@ msgid "Animation time in milliseconds"
 msgstr "Durata dell’animazione in millisecondi"
 
 #: src/prefs/applicationHoverAnimationDialog.js:43
-
 msgid "Dock Expansion"
 msgstr "Espansione del dock"
 
@@ -338,7 +316,6 @@ msgid "Dock resize time in milliseconds"
 msgstr "Durata del ridimensionamento del dock in millisecondi"
 
 #: src/prefs/applicationHoverAnimationDialog.js:58
-
 msgid "Rotation"
 msgstr "Rotazione"
 
@@ -379,22 +356,18 @@ msgid "Number of icons affected by the pointer"
 msgstr "Numero di icone interessate dal puntatore"
 
 #: src/prefs/applicationHoverAnimationDialog.js:121
-
 msgid "Animation Options"
 msgstr "Opzioni animazione"
 
 #: src/prefs/applicationHoverAnimationDialog.js:130
-
 msgid "Application Icon Hover Animation"
 msgstr "Animazione al passaggio sulle icone delle applicazioni"
 
 #: src/prefs/applicationHoverAnimationDialog.js:150
-
 msgid "Animation Profile"
 msgstr "Profilo animazione"
 
 #: src/prefs/applicationHoverAnimationDialog.js:152
-
 msgid "Adjust the profile selected in the application icon settings"
 msgstr "Regola il profilo selezionato nelle impostazioni delle icone delle applicazioni"
 
@@ -463,8 +436,8 @@ msgid "Choose which applications appear and how their buttons are grouped and in
 msgstr "Scegli quali applicazioni visualizzare e come raggruppare e indicare i relativi pulsanti"
 
 #: src/prefs/applicationIconsGroup.js:194
-#: src/prefs/pinnedApplicationBehaviorDialog.js:25
-#: src/prefs/pinnedApplicationBehaviorDialog.js:34
+#: src/prefs/pinnedApplicationBehaviorDialog.js:26
+#: src/prefs/pinnedApplicationBehaviorDialog.js:35
 msgid "Pinned Application Behavior"
 msgstr "Comportamento delle applicazioni bloccate"
 
@@ -736,7 +709,6 @@ msgid "3D Spin"
 msgstr "Rotazione 3D"
 
 #: src/prefs/applicationInteractionGroup.js:74
-
 msgid "Horizontal Flip"
 msgstr "Ribaltamento orizzontale"
 
@@ -777,7 +749,6 @@ msgid "Nudge Up"
 msgstr "Sposta leggermente in alto"
 
 #: src/prefs/applicationInteractionGroup.js:114
-
 msgid "Nudge Down"
 msgstr "Sposta leggermente in basso"
 
@@ -786,7 +757,6 @@ msgid "Nudge Left"
 msgstr "Sposta leggermente a sinistra"
 
 #: src/prefs/applicationInteractionGroup.js:122
-
 msgid "Nudge Right"
 msgstr "Sposta leggermente a destra"
 
@@ -807,22 +777,18 @@ msgid "Configure clicks, scrolling, hovering, previews, and window effects"
 msgstr "Configura clic, scorrimento, passaggio del puntatore, anteprime ed effetti delle finestre"
 
 #: src/prefs/applicationInteractionGroup.js:155
-
 msgid "Click Action"
 msgstr "Azione clic"
 
 #: src/prefs/applicationInteractionGroup.js:156
-
 msgid "Choose what happens when a running application is clicked"
 msgstr "Scegli cosa accade quando si fa clic su un’applicazione in esecuzione"
 
 #: src/prefs/applicationInteractionGroup.js:168
-
 msgid "Click Animation"
 msgstr "Animazione clic"
 
 #: src/prefs/applicationInteractionGroup.js:169
-
 msgid "Choose the animation shown when an application is clicked"
 msgstr "Scegli l’animazione mostrata quando si fa clic su un’applicazione"
 
@@ -843,12 +809,10 @@ msgid "Do Nothing"
 msgstr "Non fare nulla"
 
 #: src/prefs/applicationInteractionGroup.js:197
-
 msgid "Scroll App/Icon Action"
 msgstr "Azione scorrimento applicazione/icona"
 
 #: src/prefs/applicationInteractionGroup.js:198
-
 msgid "Choose what happens when scrolling over an application icon"
 msgstr "Scegli cosa accade scorrendo su un’icona dell’applicazione"
 
@@ -858,58 +822,47 @@ msgid "Scroll Delay"
 msgstr "Ritardo scorrimento"
 
 #: src/prefs/applicationInteractionGroup.js:217
-
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr "Ritardo minimo in millisecondi tra gli scorrimenti sulle icone delle applicazioni"
 
 #: src/prefs/applicationInteractionGroup.js:237
 #: src/prefs/applicationInteractionGroup.js:283
-
 msgid "Follow Taskbar Scroll Delay"
 msgstr "Segui ritardo scorrimento barra delle applicazioni"
 
 #: src/prefs/applicationInteractionGroup.js:254
-
 msgid "Configure Scroll Delay"
 msgstr "Configura ritardo scorrimento"
 
 #: src/prefs/applicationInteractionGroup.js:282
-
 msgid "Follow Dock Scroll Delay"
 msgstr "Segui ritardo scorrimento dock"
 
 #: src/prefs/applicationInteractionGroup.js:297
-
 msgid "Application Hover Action"
 msgstr "Azione al passaggio sull’applicazione"
 
 #: src/prefs/applicationInteractionGroup.js:299
-
 msgid "Choose what happens when hovering over an application icon"
 msgstr "Scegli cosa accade passando il puntatore su un’icona dell’applicazione"
 
 #: src/prefs/applicationInteractionGroup.js:304
-
 msgid "Show Previews"
 msgstr "Mostra anteprime"
 
 #: src/prefs/applicationInteractionGroup.js:308
-
 msgid "Show Tooltip"
 msgstr "Mostra suggerimento"
 
 #: src/prefs/applicationInteractionGroup.js:338
-
 msgid "Hover Animation Type"
 msgstr "Tipo animazione al passaggio"
 
 #: src/prefs/applicationInteractionGroup.js:340
-
 msgid "Choose the animation style for application icon hover"
 msgstr "Scegli lo stile di animazione al passaggio sulle icone delle applicazioni"
 
 #: src/prefs/applicationInteractionGroup.js:349
-
 msgid "Simple"
 msgstr "Semplice"
 
@@ -930,7 +883,6 @@ msgid "Choose the effect shown when a window is minimized or restored"
 msgstr "Scegli l’effetto mostrato quando una finestra viene minimizzata o ripristinata"
 
 #: src/prefs/applicationInteractionGroup.js:377
-
 msgid "GNOME Default"
 msgstr "Predefinito GNOME"
 
@@ -952,7 +904,6 @@ msgid "Customize the Classic hover and pressed effect"
 msgstr "Personalizza l’effetto classico al passaggio e alla pressione"
 
 #: src/prefs/classicHighlightDialog.js:52
-
 msgid "Highlight Hovering Application Icons"
 msgstr "Evidenzia le icone delle applicazioni al passaggio del puntatore"
 
@@ -973,27 +924,22 @@ msgid "Border radius in pixels"
 msgstr "Raggio degli angoli in pixel"
 
 #: src/prefs/classicHighlightDialog.js:87
-
 msgid "Focused Application Highlight"
 msgstr "Evidenziazione applicazione attiva"
 
 #: src/prefs/classicHighlightDialog.js:88
-
 msgid "Customize the effect for the focused application"
 msgstr "Personalizza l’effetto per l’applicazione attiva"
 
 #: src/prefs/classicHighlightDialog.js:94
-
 msgid "Highlight the Focused Application"
 msgstr "Evidenzia l’applicazione attiva"
 
 #: src/prefs/classicHighlightDialog.js:99
-
 msgid "Use Icon Dominant Color"
 msgstr "Usa colore dominante dell’icona"
 
 #: src/prefs/classicHighlightDialog.js:107
-
 msgid "Custom Focus Highlight Color"
 msgstr "Colore personalizzato evidenziazione attiva"
 
@@ -1005,45 +951,53 @@ msgstr "Opacità evidenziazione attiva"
 msgid "Opacity percentage"
 msgstr "Percentuale di opacità"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:45
+#: src/prefs/pinnedApplicationBehaviorDialog.js:46
 msgid "Pinned and Running Applications"
 msgstr "Applicazioni bloccate e in esecuzione"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Control which applications appear on the taskbar"
 msgstr "Controlla quali applicazioni visualizzare nella barra delle applicazioni"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:52
+#: src/prefs/pinnedApplicationBehaviorDialog.js:53
 msgid "Hide Pinned Applications"
 msgstr "Nascondi applicazioni bloccate"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:54
+#: src/prefs/pinnedApplicationBehaviorDialog.js:55
 msgid "Show pinned taskbar applications only while they are running"
 msgstr "Mostra le applicazioni bloccate nella barra delle applicazioni solo mentre sono in esecuzione"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:61
+#: src/prefs/pinnedApplicationBehaviorDialog.js:62
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "Nascondi le applicazioni bloccate sui monitor secondari"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:63
+#: src/prefs/pinnedApplicationBehaviorDialog.js:64
 msgid "Show pinned applications only on the primary monitor"
 msgstr "Mostra le applicazioni bloccate solo sul monitor principale"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:70
+#: src/prefs/pinnedApplicationBehaviorDialog.js:71
 msgid "Hide Unpinned Applications"
 msgstr "Nascondi le applicazioni non bloccate"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:72
+#: src/prefs/pinnedApplicationBehaviorDialog.js:73
 msgid "Show only pinned applications and their running windows"
 msgstr "Mostra solo le applicazioni bloccate e le relative finestre aperte"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:79
+#: src/prefs/pinnedApplicationBehaviorDialog.js:80
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "Usa le applicazioni bloccate come lanciatori"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:81
+#: src/prefs/pinnedApplicationBehaviorDialog.js:82
 msgid "Keep pinned applications as launchers and show running applications separately"
 msgstr "Mantieni le applicazioni bloccate come lanciatori e mostra separatamente quelle in esecuzione"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+msgid "Super+Number Shortcuts"
+msgstr "Scorciatoie Super+numero"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+msgid "Open pinned applications with Super+1 through Super+9"
+msgstr "Apri le applicazioni bloccate con i tasti da Super+1 a Super+9"
 
 #: src/prefs/dockAppearanceGroup.js:26
 msgid "Dock Appearance"
@@ -1918,17 +1872,14 @@ msgid "Visible"
 msgstr "Visibile"
 
 #: src/prefs/showDesktopButtonDialog.js:26
-
 msgid "Show Desktop Button Options"
 msgstr "Opzioni pulsante Mostra scrivania"
 
 #: src/prefs/showDesktopButtonDialog.js:46
-
 msgid "Appearance"
 msgstr "Aspetto"
 
 #: src/prefs/showDesktopButtonDialog.js:47
-
 msgid "Customize the Show Desktop button"
 msgstr "Personalizza il pulsante Mostra scrivania"
 
@@ -1941,17 +1892,14 @@ msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr "Larghezza in pixel; viene usata l’altezza quando la barra delle applicazioni o il dock è verticale"
 
 #: src/prefs/showDesktopButtonDialog.js:68
-
 msgid "Custom Separator Color"
 msgstr "Colore separatore personalizzato"
 
 #: src/prefs/showDesktopButtonDialog.js:69
-
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Usa un colore scelto per il separatore Mostra scrivania"
 
 #: src/prefs/showDesktopButtonDialog.js:78
-
 msgid "Separator Color"
 msgstr "Colore separatore"
 
@@ -2454,7 +2402,6 @@ msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "Mostra Attività, applicazioni, orologio e menu di sistema su ogni monitor"
 
 #: src/prefs/windowPreviewDialog.js:25 src/prefs/windowPreviewDialog.js:34
-
 msgid "Window Preview Options"
 msgstr "Opzioni anteprima finestre"
 
@@ -2483,12 +2430,10 @@ msgid "Delay in milliseconds before closing a preview"
 msgstr "Ritardo in millisecondi prima della chiusura di un’anteprima"
 
 #: src/prefs/windowPreviewDialog.js:78
-
 msgid "Preview Interaction"
 msgstr "Interazione con l’anteprima"
 
 #: src/prefs/windowPreviewDialog.js:83
-
 msgid "Middle-Click Closes the Window"
 msgstr "Il clic centrale chiude la finestra"
 
@@ -2497,7 +2442,6 @@ msgid "Close a window by middle-clicking its preview"
 msgstr "Chiudi una finestra facendo clic centrale sulla sua anteprima"
 
 #: src/prefs/windowPreviewDialog.js:88
-
 msgid "Window Peeking"
 msgstr "Visualizzazione temporanea finestra"
 
@@ -2506,7 +2450,6 @@ msgid "Show a window above other windows while hovering its preview"
 msgstr "Mostra una finestra sopra le altre passando il puntatore sulla sua anteprima"
 
 #: src/prefs/windowPreviewDialog.js:94
-
 msgid "Enable Window Peeking"
 msgstr "Abilita visualizzazione temporanea finestra"
 

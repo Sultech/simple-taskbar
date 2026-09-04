@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 12:33+0100\n"
+"POT-Creation-Date: 2026-09-04 14:26+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -132,13 +132,11 @@ msgstr "已复制 %s 地址"
 
 #: src/prefs/applicationClickActionDialog.js:23
 #: src/prefs/applicationClickActionDialog.js:76
-
 msgid "Cycle Windows + Minimize"
 msgstr "循环窗口并最小化"
 
 #: src/prefs/applicationClickActionDialog.js:27
 #: src/prefs/applicationClickActionDialog.js:72
-
 msgid "Cycle Through Windows"
 msgstr "循环切换窗口"
 
@@ -157,13 +155,11 @@ msgid "Spread Multiple Windows"
 msgstr "展开多个窗口"
 
 #: src/prefs/applicationClickActionDialog.js:43
-
 msgid "Toggle Windows"
 msgstr "切换窗口"
 
 #: src/prefs/applicationClickActionDialog.js:47
 #: src/prefs/applicationClickActionDialog.js:60
-
 msgid "Raise Windows"
 msgstr "置顶窗口"
 
@@ -173,7 +169,6 @@ msgid "Launch New Instance"
 msgstr "启动新实例"
 
 #: src/prefs/applicationClickActionDialog.js:64
-
 msgid "Minimize Window"
 msgstr "最小化窗口"
 
@@ -192,7 +187,6 @@ msgid "Click Action Options"
 msgstr "点击操作选项"
 
 #: src/prefs/applicationClickActionDialog.js:131
-
 msgid "Application Click Actions"
 msgstr "应用点击操作"
 
@@ -209,17 +203,14 @@ msgid "Choose what happens when Shift+Clicking an application"
 msgstr "选择按住 Shift 点击应用时执行的操作"
 
 #: src/prefs/applicationClickActionDialog.js:152
-
 msgid "Middle-Click Action"
 msgstr "中键点击操作"
 
 #: src/prefs/applicationClickActionDialog.js:153
-
 msgid "Choose what happens when middle-clicking an application"
 msgstr "选择中键点击应用时执行的操作"
 
 #: src/prefs/applicationClickActionDialog.js:163
-
 msgid "Shift+Middle-Click Action"
 msgstr "Shift+中键点击操作"
 
@@ -229,17 +220,14 @@ msgstr "选择按住 Shift 中键点击应用时执行的操作"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
-
 msgid "Application Button Options"
 msgstr "应用按钮选项"
 
 #: src/prefs/applicationGroupingDialog.js:49
-
 msgid "Application Labels"
 msgstr "应用标签"
 
 #: src/prefs/applicationGroupingDialog.js:50
-
 msgid "Customize uncombined application buttons"
 msgstr "自定义未合并的应用按钮"
 
@@ -248,7 +236,6 @@ msgid "Hide App Labels"
 msgstr "隐藏应用标签"
 
 #: src/prefs/applicationGroupingDialog.js:57
-
 msgid "Hide window titles on application buttons"
 msgstr "隐藏应用按钮上的窗口标题"
 
@@ -265,7 +252,6 @@ msgid "Label Font Weight"
 msgstr "标签字体粗细"
 
 #: src/prefs/applicationGroupingDialog.js:78
-
 msgid "Choose the application title font weight"
 msgstr "选择应用标题的字体粗细"
 
@@ -278,7 +264,6 @@ msgid "Normal"
 msgstr "常规"
 
 #: src/prefs/applicationGroupingDialog.js:82
-
 msgid "Lighter"
 msgstr "较细"
 
@@ -287,22 +272,18 @@ msgid "Bold"
 msgstr "粗体"
 
 #: src/prefs/applicationGroupingDialog.js:84
-
 msgid "Bolder"
 msgstr "更粗"
 
 #: src/prefs/applicationGroupingDialog.js:91
-
 msgid "Application Label Width"
 msgstr "应用标签宽度"
 
 #: src/prefs/applicationGroupingDialog.js:92
-
 msgid "Control the width of application title labels"
 msgstr "控制应用标题标签的宽度"
 
 #: src/prefs/applicationGroupingDialog.js:101
-
 msgid "Maximum Label Width"
 msgstr "最大标签宽度"
 
@@ -315,12 +296,10 @@ msgid "Use Fixed Label Width"
 msgstr "使用固定标签宽度"
 
 #: src/prefs/applicationGroupingDialog.js:113
-
 msgid "Use the maximum label width for every application button"
 msgstr "为每个应用按钮使用最大标签宽度"
 
 #: src/prefs/applicationHoverAnimationDialog.js:30
-
 msgid "Duration"
 msgstr "持续时间"
 
@@ -329,7 +308,6 @@ msgid "Animation time in milliseconds"
 msgstr "动画时间（毫秒）"
 
 #: src/prefs/applicationHoverAnimationDialog.js:43
-
 msgid "Dock Expansion"
 msgstr "Dock 扩展"
 
@@ -338,7 +316,6 @@ msgid "Dock resize time in milliseconds"
 msgstr "Dock 调整大小时间（毫秒）"
 
 #: src/prefs/applicationHoverAnimationDialog.js:58
-
 msgid "Rotation"
 msgstr "旋转"
 
@@ -379,22 +356,18 @@ msgid "Number of icons affected by the pointer"
 msgstr "受指针影响的图标数量"
 
 #: src/prefs/applicationHoverAnimationDialog.js:121
-
 msgid "Animation Options"
 msgstr "动画选项"
 
 #: src/prefs/applicationHoverAnimationDialog.js:130
-
 msgid "Application Icon Hover Animation"
 msgstr "应用图标悬停动画"
 
 #: src/prefs/applicationHoverAnimationDialog.js:150
-
 msgid "Animation Profile"
 msgstr "动画配置"
 
 #: src/prefs/applicationHoverAnimationDialog.js:152
-
 msgid "Adjust the profile selected in the application icon settings"
 msgstr "调整应用图标设置中选定的配置"
 
@@ -463,8 +436,8 @@ msgid "Choose which applications appear and how their buttons are grouped and in
 msgstr "选择要显示的应用，以及其按钮的分组和指示方式"
 
 #: src/prefs/applicationIconsGroup.js:194
-#: src/prefs/pinnedApplicationBehaviorDialog.js:25
-#: src/prefs/pinnedApplicationBehaviorDialog.js:34
+#: src/prefs/pinnedApplicationBehaviorDialog.js:26
+#: src/prefs/pinnedApplicationBehaviorDialog.js:35
 msgid "Pinned Application Behavior"
 msgstr "已固定应用的行为"
 
@@ -736,7 +709,6 @@ msgid "3D Spin"
 msgstr "3D 旋转"
 
 #: src/prefs/applicationInteractionGroup.js:74
-
 msgid "Horizontal Flip"
 msgstr "水平翻转"
 
@@ -777,7 +749,6 @@ msgid "Nudge Up"
 msgstr "向上微移"
 
 #: src/prefs/applicationInteractionGroup.js:114
-
 msgid "Nudge Down"
 msgstr "向下微移"
 
@@ -786,7 +757,6 @@ msgid "Nudge Left"
 msgstr "向左微移"
 
 #: src/prefs/applicationInteractionGroup.js:122
-
 msgid "Nudge Right"
 msgstr "向右微移"
 
@@ -807,22 +777,18 @@ msgid "Configure clicks, scrolling, hovering, previews, and window effects"
 msgstr "配置点击、滚动、悬停、预览和窗口效果"
 
 #: src/prefs/applicationInteractionGroup.js:155
-
 msgid "Click Action"
 msgstr "点击操作"
 
 #: src/prefs/applicationInteractionGroup.js:156
-
 msgid "Choose what happens when a running application is clicked"
 msgstr "选择点击正在运行的应用时执行的操作"
 
 #: src/prefs/applicationInteractionGroup.js:168
-
 msgid "Click Animation"
 msgstr "点击动画"
 
 #: src/prefs/applicationInteractionGroup.js:169
-
 msgid "Choose the animation shown when an application is clicked"
 msgstr "选择点击应用时显示的动画"
 
@@ -843,12 +809,10 @@ msgid "Do Nothing"
 msgstr "不执行操作"
 
 #: src/prefs/applicationInteractionGroup.js:197
-
 msgid "Scroll App/Icon Action"
 msgstr "应用/图标滚动操作"
 
 #: src/prefs/applicationInteractionGroup.js:198
-
 msgid "Choose what happens when scrolling over an application icon"
 msgstr "选择在应用图标上滚动时执行的操作"
 
@@ -858,58 +822,47 @@ msgid "Scroll Delay"
 msgstr "滚动延迟"
 
 #: src/prefs/applicationInteractionGroup.js:217
-
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr "应用图标滚动之间的最短延迟（毫秒）"
 
 #: src/prefs/applicationInteractionGroup.js:237
 #: src/prefs/applicationInteractionGroup.js:283
-
 msgid "Follow Taskbar Scroll Delay"
 msgstr "跟随任务栏滚动延迟"
 
 #: src/prefs/applicationInteractionGroup.js:254
-
 msgid "Configure Scroll Delay"
 msgstr "配置滚动延迟"
 
 #: src/prefs/applicationInteractionGroup.js:282
-
 msgid "Follow Dock Scroll Delay"
 msgstr "跟随 Dock 滚动延迟"
 
 #: src/prefs/applicationInteractionGroup.js:297
-
 msgid "Application Hover Action"
 msgstr "应用悬停操作"
 
 #: src/prefs/applicationInteractionGroup.js:299
-
 msgid "Choose what happens when hovering over an application icon"
 msgstr "选择悬停在应用图标上时执行的操作"
 
 #: src/prefs/applicationInteractionGroup.js:304
-
 msgid "Show Previews"
 msgstr "显示预览"
 
 #: src/prefs/applicationInteractionGroup.js:308
-
 msgid "Show Tooltip"
 msgstr "显示工具提示"
 
 #: src/prefs/applicationInteractionGroup.js:338
-
 msgid "Hover Animation Type"
 msgstr "悬停动画类型"
 
 #: src/prefs/applicationInteractionGroup.js:340
-
 msgid "Choose the animation style for application icon hover"
 msgstr "选择应用图标悬停动画样式"
 
 #: src/prefs/applicationInteractionGroup.js:349
-
 msgid "Simple"
 msgstr "简单"
 
@@ -930,7 +883,6 @@ msgid "Choose the effect shown when a window is minimized or restored"
 msgstr "选择窗口最小化或还原时显示的效果"
 
 #: src/prefs/applicationInteractionGroup.js:377
-
 msgid "GNOME Default"
 msgstr "GNOME 默认"
 
@@ -952,7 +904,6 @@ msgid "Customize the Classic hover and pressed effect"
 msgstr "自定义经典悬停和按下效果"
 
 #: src/prefs/classicHighlightDialog.js:52
-
 msgid "Highlight Hovering Application Icons"
 msgstr "悬停时高亮应用图标"
 
@@ -973,27 +924,22 @@ msgid "Border radius in pixels"
 msgstr "圆角半径（像素）"
 
 #: src/prefs/classicHighlightDialog.js:87
-
 msgid "Focused Application Highlight"
 msgstr "焦点应用高亮"
 
 #: src/prefs/classicHighlightDialog.js:88
-
 msgid "Customize the effect for the focused application"
 msgstr "自定义焦点应用的效果"
 
 #: src/prefs/classicHighlightDialog.js:94
-
 msgid "Highlight the Focused Application"
 msgstr "高亮焦点应用"
 
 #: src/prefs/classicHighlightDialog.js:99
-
 msgid "Use Icon Dominant Color"
 msgstr "使用图标主色"
 
 #: src/prefs/classicHighlightDialog.js:107
-
 msgid "Custom Focus Highlight Color"
 msgstr "自定义焦点高亮颜色"
 
@@ -1005,45 +951,53 @@ msgstr "焦点高亮不透明度"
 msgid "Opacity percentage"
 msgstr "不透明度百分比"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:45
+#: src/prefs/pinnedApplicationBehaviorDialog.js:46
 msgid "Pinned and Running Applications"
 msgstr "已固定和正在运行的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Control which applications appear on the taskbar"
 msgstr "控制任务栏中显示的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:52
+#: src/prefs/pinnedApplicationBehaviorDialog.js:53
 msgid "Hide Pinned Applications"
 msgstr "隐藏已固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:54
+#: src/prefs/pinnedApplicationBehaviorDialog.js:55
 msgid "Show pinned taskbar applications only while they are running"
 msgstr "仅展示正在运行的已固定于任务栏的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:61
+#: src/prefs/pinnedApplicationBehaviorDialog.js:62
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "在次要显示器上隐藏已固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:63
+#: src/prefs/pinnedApplicationBehaviorDialog.js:64
 msgid "Show pinned applications only on the primary monitor"
 msgstr "仅在主显示器上显示已固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:70
+#: src/prefs/pinnedApplicationBehaviorDialog.js:71
 msgid "Hide Unpinned Applications"
 msgstr "隐藏未固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:72
+#: src/prefs/pinnedApplicationBehaviorDialog.js:73
 msgid "Show only pinned applications and their running windows"
 msgstr "仅显示已固定的应用及其运行中的窗口"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:79
+#: src/prefs/pinnedApplicationBehaviorDialog.js:80
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "将已固定的应用用作应用程序启动器"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:81
+#: src/prefs/pinnedApplicationBehaviorDialog.js:82
 msgid "Keep pinned applications as launchers and show running applications separately"
 msgstr "将已固定的应用保留为启动器，并单独展示正在运行的应用"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+msgid "Super+Number Shortcuts"
+msgstr "Super+数字快捷键"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+msgid "Open pinned applications with Super+1 through Super+9"
+msgstr "使用 Super+1 到 Super+9 打开已固定的应用"
 
 #: src/prefs/dockAppearanceGroup.js:26
 msgid "Dock Appearance"
@@ -1918,17 +1872,14 @@ msgid "Visible"
 msgstr "可见"
 
 #: src/prefs/showDesktopButtonDialog.js:26
-
 msgid "Show Desktop Button Options"
 msgstr "显示桌面按钮选项"
 
 #: src/prefs/showDesktopButtonDialog.js:46
-
 msgid "Appearance"
 msgstr "外观"
 
 #: src/prefs/showDesktopButtonDialog.js:47
-
 msgid "Customize the Show Desktop button"
 msgstr "自定义显示桌面按钮"
 
@@ -1941,17 +1892,14 @@ msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr "宽度（像素）；任务栏或 Dock 垂直时使用高度"
 
 #: src/prefs/showDesktopButtonDialog.js:68
-
 msgid "Custom Separator Color"
 msgstr "自定义分隔线颜色"
 
 #: src/prefs/showDesktopButtonDialog.js:69
-
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "为显示桌面分隔线使用所选颜色"
 
 #: src/prefs/showDesktopButtonDialog.js:78
-
 msgid "Separator Color"
 msgstr "分隔线颜色"
 
@@ -2454,7 +2402,6 @@ msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "在每台显示器上展示活动、应用、时钟与系统菜单"
 
 #: src/prefs/windowPreviewDialog.js:25 src/prefs/windowPreviewDialog.js:34
-
 msgid "Window Preview Options"
 msgstr "窗口预览选项"
 
@@ -2483,12 +2430,10 @@ msgid "Delay in milliseconds before closing a preview"
 msgstr "关闭预览前的延迟（毫秒）"
 
 #: src/prefs/windowPreviewDialog.js:78
-
 msgid "Preview Interaction"
 msgstr "预览交互"
 
 #: src/prefs/windowPreviewDialog.js:83
-
 msgid "Middle-Click Closes the Window"
 msgstr "中键点击关闭窗口"
 
@@ -2497,7 +2442,6 @@ msgid "Close a window by middle-clicking its preview"
 msgstr "中键点击窗口预览以关闭窗口"
 
 #: src/prefs/windowPreviewDialog.js:88
-
 msgid "Window Peeking"
 msgstr "窗口窥视"
 
@@ -2506,7 +2450,6 @@ msgid "Show a window above other windows while hovering its preview"
 msgstr "悬停在窗口预览上时将该窗口显示在其他窗口上方"
 
 #: src/prefs/windowPreviewDialog.js:94
-
 msgid "Enable Window Peeking"
 msgstr "启用窗口窥视"
 

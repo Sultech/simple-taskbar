@@ -129,6 +129,7 @@ export default class SimpleTaskbarExtension extends Extension {
             getPreviewController: () => this._windowPreviews,
         });
         this._applicationKeybindings = new ApplicationKeybindingRouter(
+            this._settings,
             app => this._windowController.activateApp(app)
         );
         this._applicationKeybindings.enable();

@@ -19,25 +19,28 @@ const APPLICATION_BINDINGS = [
 ];
 const ACTION_MODES = Shell.ActionMode.NORMAL |
     Shell.ActionMode.OVERVIEW;
+const ENABLED_SETTING = 'super-number-keybindings-enabled';
+const DISABLED_HANDLER = () => {};
 
 export class ApplicationKeybindingRouter {
-    constructor(activateApp) {
+    constructor(settings, activateApp) {
+        this._settings = settings;
         this._activateApp = activateApp;
         this._handler = this._handleBinding.bind(this);
         this._defaultHandler = Main.wm._switchToApplication.bind(Main.wm);
     }
 
     enable() {
-        for (const binding of APPLICATION_BINDINGS) {
-            Main.wm.setCustomKeybindingHandler(
-                binding,
-                ACTION_MODES,
-                this._handler
-            );
-        }
+        this._settings.connectObject(
+            `changed::${ENABLED_SETTING}`,
+            () => this._sync(),
+            this
+        );
+        this._sync();
     }
 
     destroy() {
+        this._settings.disconnectObject(this);
         for (const binding of APPLICATION_BINDINGS) {
             Main.wm.setCustomKeybindingHandler(
                 binding,
@@ -48,6 +51,20 @@ export class ApplicationKeybindingRouter {
         this._defaultHandler = null;
         this._handler = null;
         this._activateApp = null;
+        this._settings = null;
+    }
+
+    _sync() {
+        const handler = this._settings.get_boolean(ENABLED_SETTING)
+            ? this._handler
+            : DISABLED_HANDLER;
+        for (const binding of APPLICATION_BINDINGS) {
+            Main.wm.setCustomKeybindingHandler(
+                binding,
+                ACTION_MODES,
+                handler
+            );
+        }
     }
 
     _handleBinding(_display, _window, _event, binding) {

@@ -77,6 +77,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'hide-pinned-taskbar-apps', false);
     setBoolean(settings, 'hide-pinned-secondary-monitors', false);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
+    setBoolean(settings, 'super-number-keybindings-enabled', true);
     setString(
         settings,
         'application-click-action',
