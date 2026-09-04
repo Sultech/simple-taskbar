@@ -1472,13 +1472,13 @@ msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr "当 11 风格开始菜单被禁用时，展示“应用程序”按钮"
 
-#: src/prefs/startMenuPage.js:436
-msgid "Follow Panel Theme"
-msgstr "跟随面板的主题"
+#: src/prefs/startMenuPage.js:475
+msgid "Follow Panel/Dock Theme"
+msgstr "跟随面板/停靠栏主题"
 
-#: src/prefs/startMenuPage.js:437
-msgid "Use the panel’s effective light or dark appearance"
-msgstr "使用面板实际的浅色或深色外观"
+#: src/prefs/startMenuPage.js:476
+msgid "Use the panel or Dock’s effective light or dark appearance"
+msgstr "使用面板或停靠栏实际的浅色或深色外观"
 
 #: src/prefs/startMenuPage.js:443
 msgid "Start Menu Appearance"

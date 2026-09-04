@@ -48,7 +48,10 @@ import {StartMenuPowerController} from './startMenuPowerController.js';
 import {StartMenuSearchController} from './startMenuSearchController.js';
 import {StartMenuTooltipController} from './startMenuTooltipController.js';
 import {SourcePressGuard} from './sourcePressGuard.js';
-import {shellMenusUseLightTheme} from '../themeUtils.js';
+import {
+    panelUsesLightTheme,
+    shellMenusUseLightTheme,
+} from '../themeUtils.js';
 import {panelTransparencyOpacity} from '../transparencyUtils.js';
 import {
     blurMyShellHasKey,
@@ -633,7 +636,7 @@ export class StartMenuController {
         if (!this._settings.get_boolean('start-menu-follow-panel-theme'))
             return this._settings.get_string('start-menu-theme');
 
-        return Main.panel.has_style_class_name('simple-taskbar-theme-light')
+        return panelUsesLightTheme(this._settings)
             ? 'light'
             : 'dark';
     }

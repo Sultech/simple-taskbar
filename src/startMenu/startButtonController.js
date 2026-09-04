@@ -663,12 +663,15 @@ export class StartButtonController {
             () => this._keybindings?.sync(),
             this._signalHolder
         );
-        this._settings.connectObject('changed::start-menu-theme', () => {
+        const syncStartMenuTheme = () => {
             this._startMenuController?.syncTheme();
-        }, this._signalHolder);
+        };
         this._settings.connectObject(
+            'changed::start-menu-theme', syncStartMenuTheme,
             'changed::start-menu-follow-panel-theme',
-            () => this._startMenuController?.syncTheme(),
+            syncStartMenuTheme,
+            'changed::panel-theme-follow-system', syncStartMenuTheme,
+            'changed::panel-theme', syncStartMenuTheme,
             this._signalHolder
         );
         this._settings.connectObject(
@@ -690,9 +693,17 @@ export class StartButtonController {
             if (this._settings.get_boolean(
                 'start-menu-follow-panel-theme'
             )) {
-                this._startMenuController?.syncTheme();
+                syncStartMenuTheme();
             }
         }, this._signalHolder);
+        St.ThemeContext.get_for_stage(global.stage).connectObject(
+            'changed', syncStartMenuTheme,
+            this._signalHolder
+        );
+        St.Settings.get().connectObject(
+            'notify::color-scheme', syncStartMenuTheme,
+            this._signalHolder
+        );
     }
 
     _openContextMenu() {

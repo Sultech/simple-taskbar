@@ -1573,13 +1573,13 @@ msgstr ""
 "Afficher le bouton d’applications lorsque le menu de style Eleven est "
 "désactivé"
 
-#: src/prefs/startMenuPage.js:436
-msgid "Follow Panel Theme"
-msgstr "Suivre le thème du panneau"
+#: src/prefs/startMenuPage.js:475
+msgid "Follow Panel/Dock Theme"
+msgstr "Suivre le thème du panneau/dock"
 
-#: src/prefs/startMenuPage.js:437
-msgid "Use the panel’s effective light or dark appearance"
-msgstr "Utiliser l’apparence claire ou sombre du panneau"
+#: src/prefs/startMenuPage.js:476
+msgid "Use the panel or Dock’s effective light or dark appearance"
+msgstr "Utiliser l’apparence claire ou sombre du panneau ou du dock"
 
 #: src/prefs/startMenuPage.js:443
 msgid "Start Menu Appearance"

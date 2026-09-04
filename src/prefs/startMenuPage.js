@@ -472,8 +472,8 @@ export function addStartMenuPage({
     updateGnomeStartButtonVisibleSwitch();
 
     const followPanelThemeSwitch = new Adw.SwitchRow({
-        title: _('Follow Panel Theme'),
-        subtitle: _('Use the panel’s effective light or dark appearance'),
+        title: _('Follow Panel/Dock Theme'),
+        subtitle: _('Use the panel or Dock’s effective light or dark appearance'),
         active: settings.get_boolean(
             'start-menu-follow-panel-theme'
         ),

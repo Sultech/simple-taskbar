@@ -1512,13 +1512,13 @@ msgid ""
 msgstr ""
 "Показывать кнопку «Приложения», когда Eleven-style Start Menu отключено"
 
-#: src/prefs/startMenuPage.js:436
-msgid "Follow Panel Theme"
-msgstr "Следовать теме панели"
+#: src/prefs/startMenuPage.js:475
+msgid "Follow Panel/Dock Theme"
+msgstr "Следовать теме панели/дока"
 
-#: src/prefs/startMenuPage.js:437
-msgid "Use the panel’s effective light or dark appearance"
-msgstr "Использовать текущую светлую или тёмную тему панели"
+#: src/prefs/startMenuPage.js:476
+msgid "Use the panel or Dock’s effective light or dark appearance"
+msgstr "Использовать текущую светлую или тёмную тему панели или дока"
 
 #: src/prefs/startMenuPage.js:443
 msgid "Start Menu Appearance"

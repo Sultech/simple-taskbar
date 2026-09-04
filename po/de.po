@@ -1535,14 +1535,13 @@ msgstr ""
 "Zeigt die Anwendungen-Schaltfläche, wenn das Startmenü im Eleven-Stil "
 "deaktiviert ist"
 
-#: src/prefs/startMenuPage.js:436
-msgid "Follow Panel Theme"
-msgstr "Panel-Thema folgen"
+#: src/prefs/startMenuPage.js:475
+msgid "Follow Panel/Dock Theme"
+msgstr "Panel-/Dock-Thema folgen"
 
-#: src/prefs/startMenuPage.js:437
-msgid "Use the panel’s effective light or dark appearance"
-msgstr ""
-"Verwendet das tatsächliche helle oder dunkle Erscheinungsbild des Panels"
+#: src/prefs/startMenuPage.js:476
+msgid "Use the panel or Dock’s effective light or dark appearance"
+msgstr "Das tatsächliche helle oder dunkle Erscheinungsbild des Panels oder Docks verwenden"
 
 #: src/prefs/startMenuPage.js:443
 msgid "Start Menu Appearance"

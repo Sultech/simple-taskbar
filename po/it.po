@@ -1563,13 +1563,13 @@ msgstr ""
 "Mostra il pulsante Applicazioni quando il menu Start in stile Eleven è "
 "disabilitato"
 
-#: src/prefs/startMenuPage.js:436
-msgid "Follow Panel Theme"
-msgstr "Segui il tema del pannello"
+#: src/prefs/startMenuPage.js:475
+msgid "Follow Panel/Dock Theme"
+msgstr "Segui il tema del pannello/dock"
 
-#: src/prefs/startMenuPage.js:437
-msgid "Use the panel’s effective light or dark appearance"
-msgstr "Usa l’aspetto chiaro o scuro effettivo del pannello"
+#: src/prefs/startMenuPage.js:476
+msgid "Use the panel or Dock’s effective light or dark appearance"
+msgstr "Usa l’aspetto chiaro o scuro effettivo del pannello o del dock"
 
 #: src/prefs/startMenuPage.js:443
 msgid "Start Menu Appearance"

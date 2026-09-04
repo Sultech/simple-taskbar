@@ -1519,13 +1519,13 @@ msgstr ""
 "Az Alkalmazások gomb megjelenítése, ha a Windows 11 stílusú Start menü le "
 "van tiltva"
 
-#: src/prefs/startMenuPage.js:436
-msgid "Follow Panel Theme"
-msgstr "Panel téma követése"
+#: src/prefs/startMenuPage.js:475
+msgid "Follow Panel/Dock Theme"
+msgstr "Panel/dokk téma követése"
 
-#: src/prefs/startMenuPage.js:437
-msgid "Use the panel’s effective light or dark appearance"
-msgstr "A panel aktív világos vagy sötét megjelenésének használata"
+#: src/prefs/startMenuPage.js:476
+msgid "Use the panel or Dock’s effective light or dark appearance"
+msgstr "A panel vagy dokk aktív világos vagy sötét megjelenésének használata"
 
 #: src/prefs/startMenuPage.js:443
 msgid "Start Menu Appearance"
