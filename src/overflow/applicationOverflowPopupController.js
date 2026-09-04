@@ -51,7 +51,7 @@ export class ApplicationOverflowPopupController {
         this._style = null;
     }
 
-    setOverflowItems(items) {
+    setOverflowItems(items, animate = true) {
         const style = this._settings.get_string(
             'application-overflow-style'
         );
@@ -99,7 +99,7 @@ export class ApplicationOverflowPopupController {
             return;
         }
 
-        if (this._menu.isOpen && content &&
+        if (animate && this._menu.isOpen && content &&
             St.Settings.get().enable_animations) {
             this._animateOverflowContentChange(
                 items,

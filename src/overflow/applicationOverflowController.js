@@ -120,6 +120,7 @@ export class ApplicationOverflowController {
         this._dragEndListener = () => this._onTaskbarDragEnd();
         this._dragEndListenerRegistered = false;
         this._dragSyncPending = false;
+        this._dragEndSyncPending = false;
         this._itemController = null;
         this._dragController = null;
         this._popupController = null;
@@ -536,6 +537,8 @@ export class ApplicationOverflowController {
             return;
 
         this._dragSyncPending = false;
+        const dragEndSyncPending = this._dragEndSyncPending;
+        this._dragEndSyncPending = false;
         const iconSizeSyncPending = this._iconSizeSyncPending;
         this._iconSizeSyncPending = false;
         this._buttonController.sync();
@@ -632,7 +635,10 @@ export class ApplicationOverflowController {
             vertical,
             collapse ? 0 : null
         );
-        this._popupController.setOverflowItems(items.slice(visibleCount));
+        this._popupController.setOverflowItems(
+            items.slice(visibleCount),
+            !dragEndSyncPending
+        );
         this._themeController.sync();
     }
 
@@ -768,6 +774,7 @@ export class ApplicationOverflowController {
     _onTaskbarDragEnd() {
         if (this._dragSyncPending)
             this._dragSyncPending = false;
+        this._dragEndSyncPending = true;
         this._queueSync();
     }
 
