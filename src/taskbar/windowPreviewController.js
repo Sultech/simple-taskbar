@@ -63,6 +63,7 @@ export class WindowPreviewController {
         this._closingPreviewMenus = new Set();
         this._appTooltip = null;
         this._tooltipItem = null;
+        this._tooltipItemDestroyId = 0;
         this._tooltipTimeoutId = 0;
         this._tooltipCloseId = 0;
         this._peekModeChangedId = settings.connect(
@@ -127,6 +128,7 @@ export class WindowPreviewController {
         this._clearTimeouts();
         this._clearTimeout('_tooltipTimeoutId');
         this._clearTimeout('_tooltipCloseId');
+        this._setTooltipItem(null);
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
         this._settings.disconnect(this._hoverActionChangedId);
@@ -266,7 +268,7 @@ export class WindowPreviewController {
         if (this._tooltipTimeoutId)
             GLib.Source.remove(this._tooltipTimeoutId);
         const delay = this._appTooltip?.visible ? 0 : APP_TOOLTIP_DELAY;
-        this._tooltipItem = item;
+        this._setTooltipItem(item);
         this._tooltipTimeoutId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
             delay,
@@ -315,8 +317,25 @@ export class WindowPreviewController {
         return this._isPointerInMagnifyBounds();
     }
 
+    _setTooltipItem(item) {
+        if (this._tooltipItem === item)
+            return;
+
+        if (this._tooltipItemDestroyId) {
+            this._tooltipItem.disconnect(this._tooltipItemDestroyId);
+            this._tooltipItemDestroyId = 0;
+        }
+        this._tooltipItem = item;
+        if (item) {
+            this._tooltipItemDestroyId = item.connect('destroy', () => {
+                this._tooltipItemDestroyId = 0;
+                this.hideTooltip(false);
+            });
+        }
+    }
+
     _hideTooltip(animate) {
-        this._tooltipItem = null;
+        this._setTooltipItem(null);
 
         const label = this._appTooltip;
         if (!label?.visible)
