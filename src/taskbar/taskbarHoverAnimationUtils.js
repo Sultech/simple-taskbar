@@ -1,12 +1,23 @@
 export function getTaskbarHoverAnimationNeighbours(
     taskbarBin,
     startButtonActor,
-    taskbarViewport
+    taskbarViewport,
+    panelBoxes
 ) {
-    return [
+    const neighbours = [
         ...taskbarBin.get_children(),
         startButtonActor,
     ].filter(actor => actor !== taskbarViewport && actor.visible);
+    for (const box of panelBoxes) {
+        for (const child of box.get_children()) {
+            if (child.visible && !child.contains(taskbarBin) &&
+                !child.contains(startButtonActor)) {
+                neighbours.push(child);
+            }
+        }
+    }
+
+    return neighbours;
 }
 
 export function applySmoothedProperties(actor, targets, smoothing, epsilon) {

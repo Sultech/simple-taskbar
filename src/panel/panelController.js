@@ -154,6 +154,7 @@ export class PanelController {
     }
 
     enable() {
+        Main.layoutManager.panelBox.clip_to_allocation = true;
         this._verticalPanelCompatibilityController.enable();
         this._stateController = new PanelStateController({
             settings: this._settings,
@@ -575,6 +576,7 @@ export class PanelController {
     }
 
     _restoreNativeLayouts() {
+        Main.layoutManager.panelBox.clip_to_allocation = false;
         Main.panel.remove_style_class_name('simple-taskbar-panel-vertical');
         if (!this._quickSettingsIndicatorsController)
             return;

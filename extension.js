@@ -157,7 +157,12 @@ export default class SimpleTaskbarExtension extends Extension {
                 getTaskbarHoverAnimationNeighbours(
                     this._taskbarBin,
                     this._startButtonController.panelActor,
-                    this._taskbarViewport
+                    this._taskbarViewport,
+                    [
+                        Main.panel._leftBox,
+                        Main.panel._centerBox,
+                        Main.panel._rightBox,
+                    ]
                 ),
             onHoverAnimationReserveChanged: () =>
                 this._panelController.updateTaskbarWidth(),

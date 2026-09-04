@@ -342,18 +342,40 @@ export class TaskbarHoverAnimationAnimator {
         duration,
         vertical,
     }) {
+        const leading = [];
+        const trailing = [];
         for (const actor of this._getNeighbourActors()) {
             const geometry = this._geometry.getActorGeometry(actor);
             if (!geometry)
                 continue;
 
-            const center = vertical
-                ? geometry.y + geometry.height / 2
-                : geometry.x + geometry.width / 2;
+            const entry = this._clones.getStretchEntry(actor);
+            const applied = entry
+                ? entry.actor[entry.property] - entry.base
+                : 0;
+            const start = (vertical ? geometry.y : geometry.x) - applied;
+            const end = start + (vertical ? geometry.height : geometry.width);
+            const center = (start + end) / 2;
             if (center < rowStart)
-                this._stretch(actor, before, duration);
+                leading.push({actor, start, end});
             else if (center > rowEnd)
-                this._stretch(actor, after, duration);
+                trailing.push({actor, start, end});
+        }
+
+        leading.sort((left, right) => right.end - left.end);
+        let edge = rowStart + before;
+        for (const item of leading) {
+            const push = Math.min(0, edge - item.end);
+            this._stretch(item.actor, push, duration);
+            edge = item.start + push;
+        }
+
+        trailing.sort((left, right) => left.start - right.start);
+        edge = rowEnd + after;
+        for (const item of trailing) {
+            const push = Math.max(0, edge - item.start);
+            this._stretch(item.actor, push, duration);
+            edge = item.end + push;
         }
     }
 

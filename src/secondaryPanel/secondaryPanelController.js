@@ -155,7 +155,12 @@ export class SecondaryPanelController {
                 getTaskbarHoverAnimationNeighbours(
                     this._taskbarBin,
                     this._startButtonController.panelActor,
-                    this._taskbarViewport
+                    this._taskbarViewport,
+                    [
+                        this._leftBox,
+                        this._centerBox,
+                        this._rightBox,
+                    ]
                 ),
             onHoverAnimationReserveChanged: () => this._updateTaskbarWidth(),
             isHoverAnimationBlocked: () => this._interactionIsBlocked(false),
