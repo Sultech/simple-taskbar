@@ -245,7 +245,8 @@ export class PanelInteractionController {
         if (eventType !== Clutter.EventType.SCROLL)
             return Clutter.EVENT_PROPAGATE;
 
-        const configuredPanelAction = this._getWorkspaceScrollAction();
+        const configuredPanelAction =
+            this._settings.get_string('workspace-scroll-action');
         if (!configuredPanelAction)
             return Clutter.EVENT_PROPAGATE;
 
@@ -300,16 +301,6 @@ export class PanelInteractionController {
         this._startWorkspaceScrollTimeout(Boolean(item));
         Main.wm.actionMoveWorkspace(targetWorkspace);
         return Clutter.EVENT_STOP;
-    }
-
-    _getWorkspaceScrollAction() {
-        if (this._settings.isDock) {
-            if (!this._settings.get_boolean('dock-panel-mode'))
-                return PANEL_SCROLL_ACTION.SWITCH_WORKSPACE;
-            return this._settings.get_string('workspace-scroll-action');
-        }
-
-        return this._settings.get_string('workspace-scroll-action');
     }
 
     _getScrollDelay(forApp = false) {

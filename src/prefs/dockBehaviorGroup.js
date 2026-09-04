@@ -112,13 +112,10 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
     group.add(multiMonitorSwitch);
 
     const syncWorkspaceScrollControls = () => {
-        const dockPanelModeEnabled = settings.get_boolean('dock-panel-mode');
-        workspaceScrollActionRow.sensitive = group.sensitive &&
-            dockPanelModeEnabled;
+        workspaceScrollActionRow.sensitive = group.sensitive;
         workspaceScrollDelayRow.sensitive = group.sensitive &&
-            (!dockPanelModeEnabled ||
-                settings.get_string('dock-workspace-scroll-action') !==
-                PANEL_SCROLL_ACTION.DO_NOTHING);
+            settings.get_string('dock-workspace-scroll-action') !==
+                PANEL_SCROLL_ACTION.DO_NOTHING;
     };
     const syncAvailability = () => {
         const available = settings.get_boolean('dock-mode') &&
