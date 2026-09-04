@@ -71,8 +71,10 @@ export function addStartMenuPage({
     showRequestedPage();
 
     const startButtonPositionRow = new Adw.ExpanderRow({
-        title: _('Start Button Position'),
-        subtitle: _('Configure the Start button alignment'),
+        title: _('Start Button Position and Alignment'),
+        subtitle: _(
+            'Choose the Start button position or follow application alignment'
+        ),
     });
     startButtonGroup.add(startButtonPositionRow);
 
@@ -140,7 +142,7 @@ export function addStartMenuPage({
 
     const startButtonAppearanceRow = new Adw.ExpanderRow({
         title: _('Start Button Appearance'),
-        subtitle: _('Configure padding, icons, and button visibility'),
+        subtitle: _('Configure padding, separators, icons, and button visibility'),
     });
     startButtonGroup.add(startButtonAppearanceRow);
 
@@ -472,8 +474,8 @@ export function addStartMenuPage({
     updateGnomeStartButtonVisibleSwitch();
 
     const followPanelThemeSwitch = new Adw.SwitchRow({
-        title: _('Follow Panel/Dock Theme'),
-        subtitle: _('Use the panel or Dock’s effective light or dark appearance'),
+        title: _('Follow Taskbar/Dock Theme'),
+        subtitle: _('Use the taskbar or Dock’s effective light or dark appearance'),
         active: settings.get_boolean(
             'start-menu-follow-panel-theme'
         ),
@@ -632,8 +634,10 @@ export function addStartMenuPage({
         },
     ];
     const startMenuContextMenuRow = new Adw.ExpanderRow({
-        title: _('Right-click Menu Shortcuts'),
-        subtitle: _('Choose which shortcuts appear when right-clicking the Start button'),
+        title: _('Start Button Context Menu'),
+        subtitle: _(
+            'Choose which shortcuts appear in the Start button’s context menu'
+        ),
     });
     const startMenuContextMenuSwitch = createSwitchRow(settings, {
         key: 'start-menu-context-menu-enabled',
@@ -708,7 +712,7 @@ export function addStartMenuPage({
     updateStartMenuThemeRows();
 
     const followPanelTransparencySubtitle = _(
-        'Use the panel’s configured transparency level'
+        'Use the taskbar’s configured transparency level'
     );
     const panelBlurStartMenuTransparencySubtitle = _(
         'Disable Blur My Shell panel blur to use this option'
@@ -720,7 +724,7 @@ export function addStartMenuPage({
         'Disable Blur My Shell panel and popup blur to use this option'
     );
     const followPanelTransparencySwitch = new Adw.SwitchRow({
-        title: _('Follow Panel Transparency'),
+        title: _('Follow Taskbar Transparency'),
         subtitle: followPanelTransparencySubtitle,
         active: settings.get_boolean(
             'start-menu-follow-panel-transparency'

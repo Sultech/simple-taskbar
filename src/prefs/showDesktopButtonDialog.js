@@ -66,7 +66,7 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
                 key: 'show-desktop-button-width',
                 title: _('Button Width'),
                 subtitle: _(
-                    'Width in pixels; height is used when the panel is vertical'
+                    'Width in pixels; height is used when the taskbar or Dock is vertical'
                 ),
                 lower: 1,
                 upper: 40,

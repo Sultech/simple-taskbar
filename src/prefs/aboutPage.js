@@ -72,7 +72,7 @@ function addHero(page, extensionPath) {
         margin_top: 8,
     }));
     heroBox.append(new Gtk.Label({
-        label: _('A configurable taskbar, panel and dock for GNOME Shell'),
+        label: _('A configurable taskbar, GNOME panel, and Dock for GNOME Shell'),
         css_classes: ['dim-label'],
         margin_bottom: 4,
     }));

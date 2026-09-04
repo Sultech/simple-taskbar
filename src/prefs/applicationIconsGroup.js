@@ -40,7 +40,7 @@ function addApplicationIconControls({
 }) {
     const iconSizingRow = new Adw.ExpanderRow({
         title: _('Application Icon Appearance'),
-        subtitle: _('Adjust application icon sizes and the space between them'),
+        subtitle: _('Adjust icon size, spacing, and hover/focus effects'),
     });
     group.add(iconSizingRow);
 
@@ -181,9 +181,9 @@ function addApplicationLayoutControls({
     connectSettings,
 }) {
     const layoutGroup = new Adw.ExpanderRow({
-        title: _('Application Layout'),
+        title: _('Application Layout and Behavior'),
         subtitle: _(
-            'Choose which applications appear and how their buttons are shown'
+            'Choose which applications appear and how their buttons are grouped and indicated'
         ),
     });
     group.add(layoutGroup);
@@ -298,7 +298,9 @@ function addIndicatorControls({
 }) {
     const indicatorGroup = new Adw.ExpanderRow({
         title: _('Running Indicators'),
-        subtitle: _('Configure indicators around running application icons'),
+        subtitle: _(
+            'Configure the position, style, size, and colours of running indicators'
+        ),
     });
     group.add(indicatorGroup);
     const positionLabels = {
@@ -532,7 +534,7 @@ function addApplicationIsolationControls({
         subtitle: monitorSubtitle,
     });
     const applicationIsolationRow = new Adw.ExpanderRow({
-        title: _('Application Isolation'),
+        title: _('Running Application Isolation'),
         subtitle: groupSubtitle,
     });
     applicationIsolationRow.add_row(isolateWorkspacesSwitch);
@@ -572,7 +574,9 @@ function addDockApplicationIconsGroup({
     addApplicationIsolationControls({
         group: appearanceGroup,
         settings,
-        groupSubtitle: _('Choose which applications appear on the Dock'),
+        groupSubtitle: _(
+            'Limit running applications to the current workspace or monitor'
+        ),
         monitorSubtitle: _(
             'Show running applications only in the Dock for their monitor'
         ),
@@ -644,7 +648,9 @@ export function addApplicationIconsGroup({
     const isolationControls = addApplicationIsolationControls({
         group: appearanceGroup,
         settings,
-        groupSubtitle: _('Choose which applications appear on the taskbar'),
+        groupSubtitle: _(
+            'Limit running applications to the current workspace or monitor'
+        ),
         monitorSubtitle: _(
             'Show running applications only on the taskbar for their monitor'
         ),

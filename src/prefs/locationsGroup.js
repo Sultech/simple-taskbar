@@ -9,8 +9,8 @@ import {createSwitchRow} from './preferencesWidgets.js';
 
 function createDriveOptionsRow(settings) {
     const row = new Adw.ExpanderRow({
-        title: _('Drive Options'),
-        subtitle: _('Choose which connected drives appear'),
+        title: _('Drive and Volume Options'),
+        subtitle: _('Choose which drives and network volumes appear'),
     });
     row.add_row(createSwitchRow(settings, {
         key: 'locations-show-mounted-only',
@@ -85,8 +85,10 @@ export function addLocationsGroup({
     page.add(group);
 
     const taskbarRow = new Adw.ExpanderRow({
-        title: _('Taskbar'),
-        subtitle: _('Locations shown with taskbar applications'),
+        title: _('Taskbar Locations'),
+        subtitle: _(
+            'Choose which folders, drives, and Trash appear with taskbar applications'
+        ),
     });
     const taskbarLocationsRow = createSwitchRow(settings, {
         key: 'taskbar-show-locations',
@@ -109,8 +111,10 @@ export function addLocationsGroup({
     group.add(taskbarRow);
 
     const dockRow = new Adw.ExpanderRow({
-        title: _('Dock'),
-        subtitle: _('Locations shown with Dock applications'),
+        title: _('Dock Locations'),
+        subtitle: _(
+            'Choose which folders, drives, and Trash appear with Dock applications'
+        ),
     });
     const dockLocationsRow = createSwitchRow(settings, {
         key: 'dock-show-locations',

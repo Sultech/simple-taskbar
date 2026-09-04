@@ -33,8 +33,8 @@ export function addPanelItemsPage({
     followAppAlignmentSwitch,
 }) {
     const panelGroup = new Adw.PreferencesGroup({
-        title: _('Panel Items'),
-        description: _('Configure optional panel items and the folder menu.'),
+        title: _('Taskbar Items'),
+        description: _('Configure optional taskbar items and the folder menu.'),
     });
     page.add(panelGroup);
 
@@ -43,9 +43,9 @@ export function addPanelItemsPage({
         settings,
         {
             key: 'panel-button-padding',
-            title: _('Panel Button Padding'),
+            title: _('Taskbar Button Padding'),
             subtitle: _(
-                'Space between panel buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
+                'Space between taskbar buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'
             ),
             lower: -1,
             upper: 20,
@@ -152,7 +152,7 @@ export function addPanelItemsPage({
         ['left', new Adw.PreferencesGroup({
             title: _('Left Items'),
             description: _(
-                'Move items only within their current panel position.'
+                'Move items only within their current taskbar position.'
             ),
         })],
         ['center', new Adw.PreferencesGroup({
@@ -218,7 +218,7 @@ export function addPanelItemsPage({
             key: 'tray-overflow-position',
             visibleKey: 'tray-overflow-enabled',
             title: _('Tray Icon Arrow'),
-            subtitle: _('Gather application tray icons behind a panel arrow'),
+            subtitle: _('Gather application tray icons behind a taskbar arrow'),
             choices: initialPositions,
         }],
         ['system-menu', {

@@ -133,7 +133,7 @@ export function createPanelOrderRow(settings, {
     };
     const positionDropDown = new Gtk.DropDown({
         model: createModel(currentChoices),
-        tooltip_text: _('Panel Position'),
+        tooltip_text: _('Item Position'),
         valign: Gtk.Align.CENTER,
     });
     let syncingPosition = false;

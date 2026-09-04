@@ -47,7 +47,7 @@ export function addPanelAppearancePage({
     syncLabelSensitivity,
 }) {
     const panelAppearanceGroup = new Adw.PreferencesGroup({
-        title: _('Panel Appearance'),
+        title: _('Taskbar Appearance'),
         description: _('Change the taskbar height, colour scheme, and transparency.'),
     });
     page.add(panelAppearanceGroup);
@@ -57,9 +57,9 @@ export function addPanelAppearancePage({
         settings,
         {
             key: 'panel-height',
-            title: _('Panel Thickness'),
+            title: _('Taskbar Thickness'),
             subtitle: _(
-                'Oversized icons shrink automatically when the panel is reduced'
+                'Oversized icons shrink automatically when the taskbar is reduced'
             ),
             lower: MIN_PANEL_HEIGHT,
             upper: 80,
@@ -71,7 +71,7 @@ export function addPanelAppearancePage({
         settings,
         {
             key: 'panel-position',
-            title: _('Panel Position'),
+            title: _('Taskbar Position'),
             subtitle: _(
                 'Place the taskbar at a screen edge'
             ),
@@ -254,8 +254,10 @@ export function addPanelAppearancePage({
     fitPanelToIcons();
 
     const themeRow = new Adw.ExpanderRow({
-        title: _('Theme'),
-        subtitle: _('Choose the taskbar colour scheme'),
+        title: _('Theme and Styling'),
+        subtitle: _(
+            'Choose the taskbar theme, colours, gradient, and text appearance'
+        ),
     });
     panelAppearanceGroup.add(themeRow);
 
@@ -429,7 +431,7 @@ export function addPanelAppearancePage({
         connectSettings
     );
     const customPanelTextColorSubtitle = _(
-        'White text uses the dark panel theme; black text uses the light panel theme'
+        'White text uses the dark taskbar theme; black text uses the light taskbar theme'
     );
     const customPanelTextColorRow = addComboRow(
         themeRow,
@@ -542,13 +544,13 @@ export function addPanelAppearancePage({
 
     const bordersExpander = new Adw.ExpanderRow({
         title: _('Borders'),
-        subtitle: _('Choose which borders appear around the taskbar'),
+        subtitle: _('Choose whether to show a border in light and dark themes'),
     });
     panelAppearanceGroup.add(bordersExpander);
 
     const darkPanelBorderSwitch = new Adw.SwitchRow({
         title: _('Show Border in Dark Mode'),
-        subtitle: _('Display a thin border along the panel’s workspace-facing edge'),
+        subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
         active: settings.get_boolean('panel-border-enabled'),
     });
     bordersExpander.add_row(darkPanelBorderSwitch);
@@ -561,7 +563,7 @@ export function addPanelAppearancePage({
 
     const lightPanelBorderSwitch = new Adw.SwitchRow({
         title: _('Show Border in Light Mode'),
-        subtitle: _('Display a thin border along the panel’s workspace-facing edge'),
+        subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
         active: settings.get_boolean(
             'panel-border-light-enabled'
         ),

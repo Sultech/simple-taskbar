@@ -29,7 +29,7 @@ export function addTaskbarBehaviorGroup({
 
     const panelAutoHideSwitch = createSwitchRow(settings, {
         key: 'panel-autohide-enabled',
-        title: _('Auto-hide Panel'),
+        title: _('Auto-hide Taskbar'),
         subtitle: _('Reveal the taskbar when the pointer reaches its screen edge'),
     });
     addWindowDodgeRows(
@@ -41,8 +41,18 @@ export function addTaskbarBehaviorGroup({
             pointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
             autohideKey: 'panel-autohide-enabled',
             autohideSwitch: panelAutoHideSwitch,
+            visibilityTitle: _('Taskbar Auto-hide and Window Dodge'),
             visibilitySubtitle: _(
                 'Choose when the taskbar hides and how it is revealed'
+            ),
+            dodgeSubtitle: _(
+                'Hide the taskbar when a qualifying window overlaps it'
+            ),
+            modeSubtitle: _(
+                'Choose which windows make the taskbar hide'
+            ),
+            pointerRevealSubtitle: _(
+                'Reveal the taskbar when the pointer reaches its screen edge while dodging a window'
             ),
             visibilityRows: [],
             connectSettings,
@@ -52,7 +62,7 @@ export function addTaskbarBehaviorGroup({
     const hotEdgeRow = new Adw.ExpanderRow({
         title: _('Bottom Hot Edge'),
         subtitle: _(
-            'Push the pointer against the bottom screen edge to toggle Overview'
+            'Configure the bottom-edge gesture, pressure, and animation for toggling Overview'
         ),
     });
     const hotEdgeOverviewSwitch = createSwitchRow(settings, {
@@ -100,7 +110,7 @@ export function addTaskbarBehaviorGroup({
 
     const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Taskbar Scroll'),
-        subtitle: _('Choose what happens when scrolling over the taskbar'),
+        subtitle: _('Configure scrolling over empty taskbar space'),
     });
     const workspaceScrollActionRow = addComboRow(
         workspaceScrollRow,
@@ -160,12 +170,14 @@ export function addTaskbarBehaviorGroup({
     syncWorkspaceScrollDelaySensitivity();
 
     const panelNotificationRow = new Adw.ExpanderRow({
-        title: _('Panel and Notification Behavior'),
-        subtitle: _('Configure panel menus and notification banners'),
+        title: _('Taskbar Menus and Notifications'),
+        subtitle: _(
+            'Configure taskbar menu activation and notification banner placement'
+        ),
     });
     const panelMenuClickOnlySwitch = createSwitchRow(settings, {
         key: 'panel-menu-click-only',
-        title: _('Panel Menus Require Click'),
+        title: _('Taskbar Menus Require Click'),
         subtitle: _('Switch between clock, system, and tray menus only when clicked'),
     });
     panelNotificationRow.add_row(panelMenuClickOnlySwitch);

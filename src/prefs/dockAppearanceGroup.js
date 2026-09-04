@@ -24,7 +24,7 @@ export function addDockAppearanceGroup({
 }) {
     const group = new Adw.PreferencesGroup({
         title: _('Dock Appearance'),
-        description: _('Configure the Dock independently of the main panel.'),
+        description: _('Configure the Dock independently of the taskbar.'),
     });
     page.add(group);
     dockModeGroup.remove(dockMaxLengthRow);
@@ -36,8 +36,10 @@ export function addDockAppearanceGroup({
         !settings.get_boolean('windows-xp-theme-enabled');
 
     const themeExpander = new Adw.ExpanderRow({
-        title: _('Theme'),
-        subtitle: _('Choose the Dock colour scheme'),
+        title: _('Theme and Styling'),
+        subtitle: _(
+            'Choose the Dock theme, colours, gradient, corner radius, and text appearance'
+        ),
     });
     group.add(themeExpander);
 
@@ -93,8 +95,8 @@ export function addDockAppearanceGroup({
         'Disable Blur My Shell panel blur to use this option'
     );
     const transparencyExpander = new Adw.ExpanderRow({
-        title: _('Transparency'),
-        subtitle: _('Control the Dock background transparency'),
+        title: _('Transparency and Blur'),
+        subtitle: _('Configure Dock transparency and Blur My Shell integration'),
     });
     group.add(transparencyExpander);
 
@@ -220,7 +222,7 @@ export function addDockAppearanceGroup({
 
     const bordersExpander = new Adw.ExpanderRow({
         title: _('Borders'),
-        subtitle: _('Choose which borders appear around the Dock'),
+        subtitle: _('Choose whether to show a border in light and dark themes'),
     });
     group.add(bordersExpander);
 

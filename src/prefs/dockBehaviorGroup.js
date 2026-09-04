@@ -15,7 +15,7 @@ import {addWindowDodgeRows} from './windowDodgeGroup.js';
 export function addDockBehaviorGroup({page, settings, connectSettings}) {
     const group = new Adw.PreferencesGroup({
         title: _('Dock Behavior'),
-        description: _('Configure Dock interaction independently of the main panel.'),
+        description: _('Configure Dock interaction independently of the taskbar.'),
     });
     page.add(group);
 
@@ -38,8 +38,16 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             pointerRevealKey: 'dock-dodge-pointer-reveal-enabled',
             autohideKey: 'dock-autohide-enabled',
             autohideSwitch: autoHideSwitch,
+            visibilityTitle: _('Dock Auto-hide and Window Dodge'),
             visibilitySubtitle: _(
                 'Choose when the Dock hides and how it is revealed'
+            ),
+            dodgeSubtitle: _(
+                'Hide the Dock when a qualifying window overlaps it'
+            ),
+            modeSubtitle: _('Choose which windows make the Dock hide'),
+            pointerRevealSubtitle: _(
+                'Reveal the Dock when the pointer reaches its screen edge while dodging a window'
             ),
             visibilityRows: [edgeRevealSwitch],
             connectSettings,
@@ -48,7 +56,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
 
     const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Dock Scroll'),
-        subtitle: _('Choose what happens when scrolling over the Dock'),
+        subtitle: _('Configure scrolling over empty Dock space'),
     });
     const workspaceScrollActionRow = addComboRow(
         workspaceScrollRow,

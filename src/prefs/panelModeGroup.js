@@ -31,8 +31,8 @@ export function addPanelModeGroup({
     page.add(panelModeGroup);
 
     const taskbarModeSwitch = new Adw.SwitchRow({
-        title: _('Taskbar mode'),
-        subtitle: _('Show application buttons in the main panel'),
+        title: _('Taskbar Mode'),
+        subtitle: _('Show application buttons in the taskbar'),
         active: !settings.get_boolean('default-gnome-panel') &&
             !settings.get_boolean('dock-mode') &&
             !settings.get_boolean('windows-xp-theme-enabled'),
@@ -40,7 +40,7 @@ export function addPanelModeGroup({
     panelModeGroup.add(taskbarModeSwitch);
 
     const alternativeModesRow = new Adw.ExpanderRow({
-        title: _('Alternative Panel Modes'),
+        title: _('Alternative Modes'),
         subtitle: _('Choose the original GNOME panel or the Windows XP theme'),
     });
     panelModeGroup.add(alternativeModesRow);
@@ -58,8 +58,8 @@ export function addPanelModeGroup({
     alternativeModesRow.add_row(defaultGnomePanelSwitch);
 
     const dockModeSwitch = new Adw.SwitchRow({
-        title: _('Dock mode'),
-        subtitle: _('Show application buttons in a separate Dock instead of the main panel'),
+        title: _('Dock Mode'),
+        subtitle: _('Show application buttons in a separate Dock instead of the taskbar'),
         active: settings.get_boolean('dock-mode'),
     });
     dockModeGroup.add(dockModeSwitch);
@@ -106,7 +106,7 @@ export function addPanelModeGroup({
         {
             key: 'dock-position',
             title: _('Dock Position'),
-            subtitle: _('Place the Dock at a different screen edge from the main panel'),
+            subtitle: _('Place the Dock at a different screen edge from the taskbar'),
             choices: dockPositionChoices,
             setValue: position => settings.set_string('dock-position', position),
         },
@@ -125,7 +125,7 @@ export function addPanelModeGroup({
         connectSettings
     );
     const dockPanelModeSwitch = new Adw.SwitchRow({
-        title: _('Panel mode'),
+        title: _('Full-width Dock'),
         subtitle: _('Extend the Dock fully to the monitor edge'),
         active: settings.get_boolean('dock-panel-mode'),
     });

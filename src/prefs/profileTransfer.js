@@ -136,7 +136,7 @@ export function addProfileTransferGroup(
 
     const row = new Adw.ActionRow({
         title: _('Export and Import Profiles'),
-        subtitle: _('Save panel settings, Dock settings, and Start Menu pins to a file'),
+        subtitle: _('Save Taskbar settings, Dock settings, and Start Menu pins to a file'),
     });
     const exportButton = new Gtk.Button({
         label: _('Export…'),

@@ -69,7 +69,9 @@ function controlDefinitions() {
             digits: 0,
             integer: false,
             title: _('Travel'),
-            subtitle: _('Movement beyond the panel edge as a percentage of icon size'),
+            subtitle: _(
+                'Movement beyond the taskbar or Dock edge as a percentage of icon size'
+            ),
         },
         {
             property: 'zoom',

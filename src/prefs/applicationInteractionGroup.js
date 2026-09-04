@@ -139,7 +139,9 @@ export function addApplicationInteractionGroup({
 }) {
     const windowInteractionRow = new Adw.ExpanderRow({
         title: _('Application Interaction'),
-        subtitle: _('Configure previews, multi-window actions, and clicks'),
+        subtitle: _(
+            'Configure clicks, scrolling, hovering, previews, and window effects'
+        ),
     });
     group.add(windowInteractionRow);
     const clickActionOptionsButton =
