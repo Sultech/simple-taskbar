@@ -50,11 +50,13 @@ export class WindowPreviewController {
             getHoverAnimationOutwardReserve;
         this._isPointerInMagnifyBounds = isPointerInMagnifyBounds;
         this._previewItem = null;
+        this._previewItemDestroyId = 0;
         this._previewPendingItem = null;
         this._previewOpenId = 0;
         this._previewCloseId = 0;
         this._previewSwitchId = 0;
         this._previewSwitchItem = null;
+        this._previewSwitchItemDestroyId = 0;
         this._previewRefreshId = 0;
         this._previewHoverItem = null;
         this._peekTimeoutId = 0;
@@ -129,6 +131,8 @@ export class WindowPreviewController {
         this._clearTimeout('_tooltipTimeoutId');
         this._clearTimeout('_tooltipCloseId');
         this._setTooltipItem(null);
+        this._setPreviewItem(null);
+        this._setPreviewSwitchItem(null);
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
         this._settings.disconnect(this._hoverActionChangedId);
@@ -248,11 +252,11 @@ export class WindowPreviewController {
             return;
 
         this._clearSwitch();
-        this._previewSwitchItem = item;
+        this._setPreviewSwitchItem(item);
         this._previewSwitchId = GLib.idle_add(GLib.PRIORITY_HIGH_IDLE, () => {
             this._previewSwitchId = 0;
             const target = this._previewSwitchItem;
-            this._previewSwitchItem = null;
+            this._setPreviewSwitchItem(null);
             if (target && target.mapped)
                 this.show(target);
             return GLib.SOURCE_REMOVE;
@@ -315,6 +319,42 @@ export class WindowPreviewController {
 
     isPointerInMagnifyBounds() {
         return this._isPointerInMagnifyBounds();
+    }
+
+    _setPreviewItem(item) {
+        if (this._previewItem === item)
+            return;
+
+        if (this._previewItemDestroyId) {
+            this._previewItem.disconnect(this._previewItemDestroyId);
+            this._previewItemDestroyId = 0;
+        }
+        this._previewItem = item;
+        if (item) {
+            this._previewItemDestroyId = item.connect('destroy', () => {
+                this._previewItemDestroyId = 0;
+                this.hide();
+            });
+        }
+    }
+
+    _setPreviewSwitchItem(item) {
+        if (this._previewSwitchItem === item)
+            return;
+
+        if (this._previewSwitchItemDestroyId) {
+            this._previewSwitchItem.disconnect(
+                this._previewSwitchItemDestroyId
+            );
+            this._previewSwitchItemDestroyId = 0;
+        }
+        this._previewSwitchItem = item;
+        if (item) {
+            this._previewSwitchItemDestroyId = item.connect('destroy', () => {
+                this._previewSwitchItemDestroyId = 0;
+                this._clearSwitch();
+            });
+        }
     }
 
     _setTooltipItem(item) {
@@ -439,7 +479,7 @@ export class WindowPreviewController {
         Main.uiGroup.add_child(menu.actor);
         button._taskbarPreviewMenu = menu;
         button._taskbarPreviewBox = previewBox;
-        this._previewItem = item;
+        this._setPreviewItem(item);
         this._setHoverItem(item);
 
         menu.actor.connect('notify::hover', actor => {
@@ -505,7 +545,7 @@ export class WindowPreviewController {
         this._restorePeek();
         this._releaseHoverItem();
         const item = this._previewItem;
-        this._previewItem = null;
+        this._setPreviewItem(null);
         if (!item)
             return;
 
@@ -713,7 +753,7 @@ export class WindowPreviewController {
         if (this._previewSwitchId)
             GLib.Source.remove(this._previewSwitchId);
         this._previewSwitchId = 0;
-        this._previewSwitchItem = null;
+        this._setPreviewSwitchItem(null);
     }
 
     _pointerIsOverPreview(item) {
