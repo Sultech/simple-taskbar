@@ -26,8 +26,7 @@ import {
     taskbarVerticalItemExtent,
 } from '../shared/panelSizing.js';
 import {
-    APP_ICON_HOVER_ANIMATION,
-    APP_ICON_HOVER_RENDER_SCALE,
+    hoverRenderScale,
 } from '../shared/applicationHoverAnimation.js';
 
 const CONTENT_LEADING_SPACE = 7;
@@ -139,11 +138,7 @@ export class TaskbarAppearanceController {
         const windowsXpTheme = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        const renderScale = this._settings.get_string(
-            'animate-appicon-hover-animation-type'
-        ) === APP_ICON_HOVER_ANIMATION.NONE
-            ? 1
-            : APP_ICON_HOVER_RENDER_SCALE;
+        const renderScale = hoverRenderScale(this._settings);
         const inverseRenderScale = 1 / renderScale;
         item._taskbarGlass.set_position(
             glassX + glassInset,

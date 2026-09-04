@@ -5,6 +5,8 @@ import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
     APP_ICON_HOVER_RENDER_SCALE,
+    hoverRenderScale,
+    iconRenderScale,
 } from '../shared/applicationHoverAnimation.js';
 
 export class TaskbarHoverAnimationSettings {
@@ -14,6 +16,8 @@ export class TaskbarHoverAnimationSettings {
         this._profileCache = new Map();
         this._animationTypeCache = null;
         this._panelPositionCache = null;
+        this._renderScaleCache = null;
+        this._hoverRenderScaleCache = null;
     }
 
     getAnimationType() {
@@ -58,9 +62,13 @@ export class TaskbarHoverAnimationSettings {
     }
 
     getRenderScale() {
-        return this.getAnimationType()
-            ? APP_ICON_HOVER_RENDER_SCALE
-            : 1;
+        this._renderScaleCache ??= iconRenderScale(this._settings);
+        return this._renderScaleCache;
+    }
+
+    getHoverRenderScale() {
+        this._hoverRenderScaleCache ??= hoverRenderScale(this._settings);
+        return this._hoverRenderScaleCache;
     }
 
     syncIconResolution(item) {
@@ -74,19 +82,23 @@ export class TaskbarHoverAnimationSettings {
             icon.icon_size = iconSize;
             icon.set_size(-1, -1);
         }
-        item._taskbarIndicator.setRenderScale(renderScale);
+        item._taskbarIndicator.setRenderScale(this.getHoverRenderScale());
     }
 
     invalidate() {
         this._profileCache.clear();
         this._animationTypeCache = null;
         this._panelPositionCache = null;
+        this._renderScaleCache = null;
+        this._hoverRenderScaleCache = null;
     }
 
     destroy() {
         this._profileCache = null;
         this._animationTypeCache = null;
         this._panelPositionCache = null;
+        this._renderScaleCache = null;
+        this._hoverRenderScaleCache = null;
         this._getIconSize = null;
         this._settings = null;
     }

@@ -143,6 +143,8 @@ export class TaskbarIconHoverAnimationController {
             () => this._onAnimationTypeChanged(),
             'changed::panel-position',
             () => this._settingsController.invalidate(),
+            'changed::application-click-animation',
+            () => this._onClickAnimationChanged(),
             this._signalHolder
         );
         for (const key of Object.values(APP_ICON_HOVER_ANIMATION_SETTINGS)) {
@@ -310,6 +312,15 @@ export class TaskbarIconHoverAnimationController {
 
     _onAnimationTypeChanged() {
         this._onAnimationSettingsChanged();
+        this._syncIconResolutions();
+    }
+
+    _onClickAnimationChanged() {
+        this._settingsController.invalidate();
+        this._syncIconResolutions();
+    }
+
+    _syncIconResolutions() {
         for (const item of this._trackedItems)
             this.syncIconResolution(item);
     }
