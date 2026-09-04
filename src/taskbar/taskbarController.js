@@ -106,6 +106,7 @@ export class TaskbarController {
         isHoverAnimationBlocked,
         ignoreTaskbarLock = false,
         locationScope = 'taskbar',
+        isSecondary = false,
     }) {
         this._settings = settings;
         this._appSystem = appSystem;
@@ -129,6 +130,7 @@ export class TaskbarController {
         this._isHoverAnimationBlocked = isHoverAnimationBlocked;
         this._getPreviews = getPreviewController;
         this._ignoreTaskbarLock = ignoreTaskbarLock;
+        this._isSecondary = isSecondary;
         this._alignmentActor = null;
         this._signalHolder = new TransientSignalHolder();
         this._appSignals = new Map();
@@ -193,6 +195,7 @@ export class TaskbarController {
             favorites: this._favorites,
             getInterestingWindows: app => this._interestingWindows(app),
             getLocationEntries: () => this._locationController.getEntries(),
+            isSecondary: this._isSecondary,
         });
         this._appearanceController = new TaskbarAppearanceController({
             settings: this._settings,
@@ -220,6 +223,7 @@ export class TaskbarController {
             setSessionOrder: order => this._entryModel.setSessionOrder(order),
             ignoreTaskbarLock: this._ignoreTaskbarLock,
             usePinnedAppLaunchers: () => this._usePinnedAppLaunchers(),
+            hidePinned: () => this._entryModel.hidePinned(),
         });
         this._showDesktopController = new TaskbarShowDesktopController({
             settings: this._settings,
@@ -515,15 +519,20 @@ export class TaskbarController {
                 this._refreshWorkspaceIsolation();
             }, this._signalHolder);
         }
-        this._settings.connectObject(
-            'changed::hide-pinned-taskbar-apps',
-            () => {
-                this._entryModel.resetSessionOrder();
-                this._queueRedisplay();
-                this._syncDragEnabled(true);
-            },
-            this._signalHolder
-        );
+        for (const pinnedKey of [
+            'hide-pinned-taskbar-apps',
+            'hide-pinned-secondary-monitors',
+        ]) {
+            this._settings.connectObject(
+                `changed::${pinnedKey}`,
+                () => {
+                    this._entryModel.resetSessionOrder();
+                    this._queueRedisplay();
+                    this._syncDragEnabled(true);
+                },
+                this._signalHolder
+            );
+        }
         this._settings.connectObject(
             'changed::hide-unpinned-taskbar-apps',
             () => {
@@ -1814,7 +1823,7 @@ export class TaskbarController {
                 : this._settings.get_boolean('taskbar-locked'),
             this._combineMode(),
             this._usePinnedAppLaunchers(),
-            this._settings.get_boolean('hide-pinned-taskbar-apps'),
+            this._entryModel.hidePinned(),
         ].join(':');
         if (!force && configuration === this._dragEnabled)
             return false;

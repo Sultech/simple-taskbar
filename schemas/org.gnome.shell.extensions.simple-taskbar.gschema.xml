@@ -681,6 +681,11 @@
       <default>false</default>
       <summary>Hide pinned taskbar applications while they are not running</summary>
     </key>
+    <key name="hide-pinned-secondary-monitors" type="b">
+      <default>false</default>
+      <summary>Hide pinned applications on secondary monitor taskbars</summary>
+      <description>Show pinned applications only on the primary monitor taskbar, while secondary monitors show running windows alone</description>
+    </key>
     <key name="use-pinned-apps-as-launchers" type="b">
       <default>false</default>
       <summary>Use pinned applications as separate launchers</summary>

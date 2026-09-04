@@ -8,12 +8,14 @@ export class TaskbarEntryModel {
         favorites,
         getInterestingWindows,
         getLocationEntries,
+        isSecondary = false,
     }) {
         this._settings = settings;
         this._tracker = tracker;
         this._favorites = favorites;
         this._getInterestingWindows = getInterestingWindows;
         this._getLocationEntries = getLocationEntries;
+        this._isSecondary = isSecondary;
         this._sessionOrder = [];
     }
 
@@ -29,10 +31,18 @@ export class TaskbarEntryModel {
         this._sessionOrder = [];
     }
 
+    hidePinned() {
+        if (this._isSecondary &&
+            this._settings.get_boolean('hide-pinned-secondary-monitors'))
+            return true;
+
+        return this._settings.get_boolean('hide-pinned-taskbar-apps');
+    }
+
     isPersistentPinned(app) {
         const appId = app ? app.get_id() : null;
         return Boolean(appId) && this._favorites.isFavorite(appId) &&
-            !this._settings.get_boolean('hide-pinned-taskbar-apps');
+            !this.hidePinned();
     }
 
     usePinnedAppLaunchers() {
@@ -40,7 +50,7 @@ export class TaskbarEntryModel {
     }
 
     pinnedApps() {
-        if (this._settings.get_boolean('hide-pinned-taskbar-apps'))
+        if (this.hidePinned())
             return [];
 
         const apps = [];
