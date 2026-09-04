@@ -3,6 +3,8 @@
 
 import Graphene from 'gi://Graphene';
 
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 
 export class TaskbarHoverAnimationGeometry {
@@ -11,16 +13,35 @@ export class TaskbarHoverAnimationGeometry {
         getVertical,
         getAnimationType,
         getPanelPosition,
+        getMonitor,
     }) {
         this._taskbarActor = taskbarActor;
         this._getVertical = getVertical;
         this._getAnimationType = getAnimationType;
         this._getPanelPosition = getPanelPosition;
+        this._getMonitor = getMonitor;
         this._viewport = null;
+        this._positionActor = null;
     }
 
     setViewport(viewport) {
         this._viewport = viewport;
+    }
+
+    setPositionActor(positionActor) {
+        this._positionActor = positionActor;
+    }
+
+    getMagnifyBounds() {
+        const geometry = this.getActorGeometry(this._positionActor);
+        if (!geometry)
+            return null;
+
+        const vertical = this._getVertical();
+        const bounds = vertical
+            ? {start: geometry.y, end: geometry.y + geometry.height}
+            : {start: geometry.x, end: geometry.x + geometry.width};
+        return this._excludeReservedSpace(bounds, vertical);
     }
 
     getTaskbarItems() {
@@ -159,11 +180,32 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     destroy() {
+        this._positionActor = null;
+        this._getMonitor = null;
         this._viewport = null;
         this._getPanelPosition = null;
         this._getAnimationType = null;
         this._getVertical = null;
         this._taskbarActor = null;
+    }
+
+    _excludeReservedSpace(bounds, vertical) {
+        const monitor = this._getMonitor();
+        if (bounds.end - bounds.start >=
+            (vertical ? monitor.height : monitor.width)) {
+            return bounds;
+        }
+
+        const workArea = Main.layoutManager.getWorkAreaForMonitor(
+            monitor.index
+        );
+        const workStart = vertical ? workArea.y : workArea.x;
+        const workEnd = workStart +
+            (vertical ? workArea.height : workArea.width);
+        return {
+            start: Math.max(bounds.start, workStart),
+            end: Math.min(bounds.end, workEnd),
+        };
     }
 
     _visibleSpan() {

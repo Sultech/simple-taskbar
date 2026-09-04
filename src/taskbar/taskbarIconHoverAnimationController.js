@@ -73,6 +73,7 @@ export class TaskbarIconHoverAnimationController {
                 this._settingsController.getAnimationType(),
             getPanelPosition: () =>
                 this._settingsController.getPanelPosition(),
+            getMonitor,
         });
         this._cloneController = new TaskbarHoverAnimationCloneController({
             geometry: this._geometry,
@@ -125,6 +126,7 @@ export class TaskbarIconHoverAnimationController {
             this._signalHolder
         );
         this._positionActor = this._getPositionActor();
+        this._geometry.setPositionActor(this._positionActor);
         this._positionActor.connectObject(
             'notify::x', () => this._updateCloneGeometry(),
             'notify::y', () => this._updateCloneGeometry(),

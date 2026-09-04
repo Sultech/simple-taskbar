@@ -204,6 +204,7 @@ export class SecondaryPanelController {
             name: 'panelBox',
             clip_to_allocation: true,
         });
+        this._panelBox._simpleTaskbarPanelBox = isDock ? 'dock' : 'panel';
         this.actor = new SecondaryPanelActor();
         this._panelBox.add_child(this.actor);
         if (!isDock) {
@@ -325,8 +326,14 @@ export class SecondaryPanelController {
                 this._settings.get_boolean('dock-panel-mode'),
             trackFullscreen: true,
         });
-        if (this._dockController)
+        Main.uiGroup.set_child_below_sibling(
+            this._panelBox,
+            Main.layoutManager.panelBox
+        );
+        if (this._dockController) {
+            this._lowerBelowPanels();
             this._dockController.enable();
+        }
         this._position();
         this._applyLayout();
         this.syncTheme();
@@ -401,6 +408,13 @@ export class SecondaryPanelController {
         if (this._windowDragController)
             this._windowDragController.enable();
         this._connectSignals();
+    }
+
+    _lowerBelowPanels() {
+        for (const child of Main.uiGroup.get_children()) {
+            if (child._simpleTaskbarPanelBox === 'panel')
+                Main.uiGroup.set_child_below_sibling(this._panelBox, child);
+        }
     }
 
     containsPoint(x, y) {

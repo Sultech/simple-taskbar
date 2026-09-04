@@ -295,7 +295,10 @@ export class TaskbarHoverAnimationAnimator {
                 (previous.growth + current.growth) / 2;
         }
 
-        const offset = cursor - this._mapCursorToMagnifiedRow(entries, cursor);
+        const offset = this._clampRowOffset(
+            entries,
+            cursor - this._mapCursorToMagnifiedRow(entries, cursor)
+        );
         for (const entry of entries) {
             entry.translation = entry.shifted + offset - entry.center;
             this._raise(entry.item, entry.level, items, entry.translation);
@@ -312,6 +315,23 @@ export class TaskbarHoverAnimationAnimator {
             duration: 0,
             vertical,
         });
+    }
+
+    _clampRowOffset(entries, offset) {
+        const bounds = this._geometry.getMagnifyBounds();
+        if (!bounds)
+            return offset;
+
+        const first = entries[0];
+        const last = entries[entries.length - 1];
+        const rowStart = first.shifted - (first.length + first.growth) / 2;
+        const rowEnd = last.shifted + (last.length + last.growth) / 2;
+        const minimum = bounds.start - rowStart;
+        const maximum = bounds.end - rowEnd;
+        if (minimum > maximum)
+            return offset;
+
+        return Math.min(Math.max(offset, minimum), maximum);
     }
 
     _displaceNeighbours({
