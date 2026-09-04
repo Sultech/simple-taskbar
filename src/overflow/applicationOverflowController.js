@@ -242,6 +242,14 @@ export class ApplicationOverflowController {
             () => this._themeController.sync(),
             this._signalHolder
         );
+        St.ThemeContext.get_for_stage(global.stage).connectObject(
+            'changed', () => this._themeController.sync(),
+            this._signalHolder
+        );
+        St.Settings.get().connectObject(
+            'notify::color-scheme', () => this._themeController.sync(),
+            this._signalHolder
+        );
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._sync();
         }, this._signalHolder);
