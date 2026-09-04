@@ -130,9 +130,6 @@ export class WindowPreviewController {
         this._clearTimeouts();
         this._clearTimeout('_tooltipTimeoutId');
         this._clearTimeout('_tooltipCloseId');
-        this._setTooltipItem(null);
-        this._setPreviewItem(null);
-        this._setPreviewSwitchItem(null);
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
         this._settings.disconnect(this._hoverActionChangedId);
@@ -156,7 +153,6 @@ export class WindowPreviewController {
         this._isPointerInMagnifyBounds = null;
         this._settings = null;
         this._previewHoverItem = null;
-        this._tooltipItem = null;
     }
 
     removeItem(item) {
@@ -321,57 +317,48 @@ export class WindowPreviewController {
         return this._isPointerInMagnifyBounds();
     }
 
-    _setPreviewItem(item) {
-        if (this._previewItem === item)
+    _setTrackedItem(name, destroyName, item, onDestroy) {
+        if (this[name] === item)
             return;
 
-        if (this._previewItemDestroyId) {
-            this._previewItem.disconnect(this._previewItemDestroyId);
-            this._previewItemDestroyId = 0;
+        if (this[destroyName]) {
+            this[name].disconnect(this[destroyName]);
+            this[destroyName] = 0;
         }
-        this._previewItem = item;
+        this[name] = item;
         if (item) {
-            this._previewItemDestroyId = item.connect('destroy', () => {
-                this._previewItemDestroyId = 0;
-                this.hide();
+            this[destroyName] = item.connect('destroy', () => {
+                this[destroyName] = 0;
+                onDestroy();
             });
         }
+    }
+
+    _setPreviewItem(item) {
+        this._setTrackedItem(
+            '_previewItem',
+            '_previewItemDestroyId',
+            item,
+            () => this.hide()
+        );
     }
 
     _setPreviewSwitchItem(item) {
-        if (this._previewSwitchItem === item)
-            return;
-
-        if (this._previewSwitchItemDestroyId) {
-            this._previewSwitchItem.disconnect(
-                this._previewSwitchItemDestroyId
-            );
-            this._previewSwitchItemDestroyId = 0;
-        }
-        this._previewSwitchItem = item;
-        if (item) {
-            this._previewSwitchItemDestroyId = item.connect('destroy', () => {
-                this._previewSwitchItemDestroyId = 0;
-                this._clearSwitch();
-            });
-        }
+        this._setTrackedItem(
+            '_previewSwitchItem',
+            '_previewSwitchItemDestroyId',
+            item,
+            () => this._clearSwitch()
+        );
     }
 
     _setTooltipItem(item) {
-        if (this._tooltipItem === item)
-            return;
-
-        if (this._tooltipItemDestroyId) {
-            this._tooltipItem.disconnect(this._tooltipItemDestroyId);
-            this._tooltipItemDestroyId = 0;
-        }
-        this._tooltipItem = item;
-        if (item) {
-            this._tooltipItemDestroyId = item.connect('destroy', () => {
-                this._tooltipItemDestroyId = 0;
-                this.hideTooltip(false);
-            });
-        }
+        this._setTrackedItem(
+            '_tooltipItem',
+            '_tooltipItemDestroyId',
+            item,
+            () => this.hideTooltip(false)
+        );
     }
 
     _hideTooltip(animate) {
