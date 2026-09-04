@@ -7,6 +7,7 @@ import {
 } from '../shared/panelSizing.js';
 
 const DOCK_SETTING_KEYS = new Map([
+    ['panel-position', 'dock-position'],
     ['transparency-enabled', 'dock-transparency-enabled'],
     ['transparency-level', 'dock-transparency-level'],
     ['custom-panel-color-enabled', 'dock-custom-panel-color-enabled'],
@@ -82,8 +83,6 @@ export class DockPanelSettings {
     }
 
     get_string(key) {
-        if (key === 'panel-position')
-            return this._settings.get_string('dock-position');
         if (key === 'app-alignment' &&
             !this._settings.get_boolean('dock-panel-mode')) {
             return 'center';
