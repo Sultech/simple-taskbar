@@ -171,6 +171,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._panelController.updateTaskbarWidth();
                 this._applicationOverflowController.sync();
             },
+            isSecondary: false,
         });
         this._windowMinimizeEffectController =
             new WindowMinimizeEffectController(this._settings);

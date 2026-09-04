@@ -331,6 +331,7 @@ export class PanelController {
             },
             includeTrayOverflow: !trayInNotificationArea,
             includeShowDesktop: true,
+            isSecondary: false,
         });
         placePanelItems(
             boxes,

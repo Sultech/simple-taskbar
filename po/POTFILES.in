@@ -5,6 +5,7 @@ src/overflow/applicationOverflowItemController.js
 prefs.js
 src/prefs/aboutPage.js
 src/prefs/applicationIconsGroup.js
+src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dockBehaviorGroup.js
 src/prefs/locationsGroup.js

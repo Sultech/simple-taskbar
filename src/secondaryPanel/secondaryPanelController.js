@@ -102,6 +102,7 @@ export class SecondaryPanelController {
         this._settings = settings;
         this._extensionDir = extensionDir;
         this._monitor = monitor;
+        this._isSecondaryMonitor = monitor.index !== Main.layoutManager.primaryIndex;
         this._openPreferencesCallback = openPreferences;
         this._visiblePanelItemIds = visiblePanelItemIds;
         this._windowDodgeController = null;
@@ -146,6 +147,7 @@ export class SecondaryPanelController {
                 this._applicationOverflowController.sync();
             },
             locationScope: isDock ? 'dock' : 'taskbar',
+            isSecondary: this._isSecondaryMonitor,
             getPositionActor: () => this._panelBox,
             getHoverAnimationMonitor: () => this._monitor,
             getPanelInteractionController: () => this._interactionController,
@@ -565,6 +567,7 @@ export class SecondaryPanelController {
             'system-menu-visible',
             'clock-visible',
             'hide-pinned-taskbar-apps',
+            'hide-pinned-secondary-monitors',
             'hide-unpinned-taskbar-apps',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
@@ -680,6 +683,7 @@ export class SecondaryPanelController {
             },
             includeTrayOverflow: false,
             includeShowDesktop: false,
+            isSecondary: this._isSecondaryMonitor,
         });
         const items = this._visiblePanelItemIds
             ? allItems.filter(item => this._visiblePanelItemIds.has(item.id))

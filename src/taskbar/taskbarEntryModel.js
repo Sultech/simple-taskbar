@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {
+    shouldHidePinnedApplications,
+} from '../shared/taskbarPinnedVisibility.js';
+
 export class TaskbarEntryModel {
     constructor({
         settings,
@@ -8,12 +12,14 @@ export class TaskbarEntryModel {
         favorites,
         getInterestingWindows,
         getLocationEntries,
+        isSecondary,
     }) {
         this._settings = settings;
         this._tracker = tracker;
         this._favorites = favorites;
         this._getInterestingWindows = getInterestingWindows;
         this._getLocationEntries = getLocationEntries;
+        this._isSecondary = isSecondary;
         this._sessionOrder = [];
     }
 
@@ -29,10 +35,17 @@ export class TaskbarEntryModel {
         this._sessionOrder = [];
     }
 
+    hidePinned() {
+        return shouldHidePinnedApplications(
+            this._settings,
+            this._isSecondary
+        );
+    }
+
     isPersistentPinned(app) {
         const appId = app ? app.get_id() : null;
         return Boolean(appId) && this._favorites.isFavorite(appId) &&
-            !this._settings.get_boolean('hide-pinned-taskbar-apps');
+            !this.hidePinned();
     }
 
     usePinnedAppLaunchers() {
@@ -40,7 +53,7 @@ export class TaskbarEntryModel {
     }
 
     pinnedApps() {
-        if (this._settings.get_boolean('hide-pinned-taskbar-apps'))
+        if (this.hidePinned())
             return [];
 
         const apps = [];

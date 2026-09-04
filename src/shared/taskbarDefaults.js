@@ -75,6 +75,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'group-apps-label-max-width', 160);
     setBoolean(settings, 'group-apps-use-fixed-width', true);
     setBoolean(settings, 'hide-pinned-taskbar-apps', false);
+    setBoolean(settings, 'hide-pinned-secondary-monitors', false);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
     setString(
         settings,

@@ -15,6 +15,7 @@ import {
 
 const PINNED_APPLICATION_BEHAVIOR_SETTINGS = [
     'hide-pinned-taskbar-apps',
+    'hide-pinned-secondary-monitors',
     'use-pinned-apps-as-launchers',
     'hide-unpinned-taskbar-apps',
 ];
@@ -45,7 +46,7 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: 360,
+            default_height: 420,
         });
 
         this._settings = settings;
@@ -65,6 +66,15 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             ),
         });
         applicationsGroup.add(hidePinnedAppsSwitch);
+
+        const hidePinnedSecondarySwitch = createSwitchRow(settings, {
+            key: 'hide-pinned-secondary-monitors',
+            title: _('Hide Pinned Applications on Secondary Monitors'),
+            subtitle: _(
+                'Show pinned applications only on the primary monitor'
+            ),
+        });
+        applicationsGroup.add(hidePinnedSecondarySwitch);
 
         const hideUnpinnedAppsSwitch = createSwitchRow(settings, {
             key: 'hide-unpinned-taskbar-apps',
