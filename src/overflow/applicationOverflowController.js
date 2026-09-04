@@ -4,6 +4,7 @@
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -374,7 +375,7 @@ export class ApplicationOverflowController {
 
     destroy() {
         if (this._syncId) {
-            GLib.Source.remove(this._syncId);
+            global.compositor.get_laters().remove(this._syncId);
             this._syncId = 0;
         }
         if (this._dragEndListenerRegistered) {
@@ -515,11 +516,14 @@ export class ApplicationOverflowController {
         if (this._syncId)
             return;
 
-        this._syncId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-            this._syncId = 0;
-            this._sync();
-            return GLib.SOURCE_REMOVE;
-        });
+        this._syncId = global.compositor.get_laters().add(
+            Meta.LaterType.BEFORE_REDRAW,
+            () => {
+                this._syncId = 0;
+                this._sync();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     _sync() {
