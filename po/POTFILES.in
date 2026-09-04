@@ -23,6 +23,7 @@ src/prefs/preferencesDialogs.js
 src/prefs/profileTransfer.js
 src/prefs/preferencesWidgets.js
 src/prefs/showDesktopButtonDialog.js
+src/prefs/startButtonDialog.js
 src/prefs/startMenuPage.js
 src/prefs/taskbarBehaviorGroup.js
 src/prefs/windowPreviewDialog.js

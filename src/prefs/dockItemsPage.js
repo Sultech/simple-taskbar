@@ -12,6 +12,9 @@ import {
 import {axisPanelPositions} from './panelAxis.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
+import {
+    createStartButtonOptionsButton,
+} from './startButtonDialog.js';
 
 export function addDockItemsPage({
     page,
@@ -62,12 +65,15 @@ export function addDockItemsPage({
         ],
     };
 
+    const startButtonOptionsButton =
+        createStartButtonOptionsButton(settings);
     const definitions = new Map([
         ['start-button', {
             key: 'start-button-position',
             title: _('Start Menu'),
             subtitle: _('Eleven-style or original GNOME Start menu'),
             visibleState: startButtonVisibility,
+            optionsButton: startButtonOptionsButton,
         }],
         ['applications', {
             key: 'app-alignment',

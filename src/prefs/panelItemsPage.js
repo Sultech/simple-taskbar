@@ -18,6 +18,9 @@ import {
     createShowDesktopButtonOptionsButton,
 } from './showDesktopButtonDialog.js';
 import {
+    createStartButtonOptionsButton,
+} from './startButtonDialog.js';
+import {
     addSpinRow,
     createPanelOrderRow,
     createSwitchRow,
@@ -167,6 +170,8 @@ export function addPanelItemsPage({
 
     const showDesktopOptionsButton =
         createShowDesktopButtonOptionsButton(settings);
+    const startButtonOptionsButton =
+        createStartButtonOptionsButton(settings);
     const panelOrderDefinitions = new Map([
         ['left-box', {
             title: _('Left Box'),
@@ -192,6 +197,7 @@ export function addPanelItemsPage({
             title: _('Start Button'),
             subtitle: _('Eleven-style or original GNOME Start button'),
             choices: initialPositions,
+            optionsButton: startButtonOptionsButton,
         }],
         ['activities', {
             key: 'activities-button-position',
@@ -496,6 +502,7 @@ export function addPanelItemsPage({
         panelOrderRows.get('start-button').visibleButton.sensitive =
             !dockMode && !defaultPanel &&
             !settings.get_boolean('windows-start-menu-enabled');
+        startButtonOptionsButton.sensitive = !windowsXpTheme;
         panelOrderRows.get('applications').visibleButton.sensitive =
             !dockMode && !defaultPanel && !windowsXpTheme;
         panelOrderRows.get('system-menu').visibleButton.sensitive =

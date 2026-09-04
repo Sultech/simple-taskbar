@@ -71,28 +71,12 @@ export function addStartMenuPage({
     showRequestedPage();
 
     const startButtonPositionRow = new Adw.ExpanderRow({
-        title: _('Start Button Position and Alignment'),
+        title: _('Start Button Alignment'),
         subtitle: _(
             'Choose the Start button position or follow application alignment'
         ),
     });
     startButtonGroup.add(startButtonPositionRow);
-
-    const startPositionRow = addComboRow(
-        startButtonPositionRow,
-        settings,
-        {
-            key: 'start-button-position',
-            title: _('Start Button'),
-            subtitle: _('Choose the Start button alignment'),
-            choices: panelPositions,
-            choicesProvider: () =>
-                axisPanelPositions(settings, panelPositions),
-            choicesChangedKey: 'panel-position',
-            addRow: row => startButtonPositionRow.add_row(row),
-        },
-        connectSettings
-    );
 
     const followAppAlignmentSwitch = new Adw.SwitchRow({
         title: _('Follow Application Alignment'),
@@ -107,6 +91,24 @@ export function addStartMenuPage({
         followAppAlignmentSwitch,
         'active',
         Gio.SettingsBindFlags.DEFAULT
+    );
+
+    const startPositionRow = addComboRow(
+        startButtonPositionRow,
+        settings,
+        {
+            key: 'start-button-position',
+            title: _('Manual Alignment'),
+            subtitle: _(
+                'Used when the Start button does not follow applications'
+            ),
+            choices: panelPositions,
+            choicesProvider: () =>
+                axisPanelPositions(settings, panelPositions),
+            choicesChangedKey: 'panel-position',
+            addRow: row => startButtonPositionRow.add_row(row),
+        },
+        connectSettings
     );
     const updateStartPositionRow = () => {
         const defaultPanel = settings.get_boolean('default-gnome-panel') &&
