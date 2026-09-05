@@ -22,21 +22,45 @@ optional Eleven-style Start Menu.
 
 > Simple Taskbar supports GNOME Shell 48, 49, 50 and 51 only.
 
-## Preview
+## Gallery
 
-<p align="center">
+<div align="center">
   <img src="docs/images/taskbar-dock2.png" alt="Simple Taskbar showing dark and light panel, Windows XP taskbar and dock styles" width="100%">
-</p>
+  <p><sub>Taskbar, Windows XP Theme and Dock modes.</sub></p>
+</div>
 
-<p align="center"><sub>Taskbar, Windows XP Theme and Dock modes.</sub></p>
-
-<br>
-
-<p align="center">
-  <img src="docs/images/start-menus1.png" alt="Eleven-style Start Menu in dark and light themes" width="100%">
-</p>
-
-<p align="center"><sub>Hide pinned titles enabled; show recommendations off.</sub></p>
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/demo-taskbar.webp" alt="Taskbar mode on the GNOME panel" width="100%">
+      <br><br><sub><b>Taskbar Mode</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/demo-dock.webp" alt="Dock with icon magnification and its context menu" width="100%">
+      <br><br><sub><b>Dock with Icon Magnification</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/demo-windows-xp.webp" alt="Windows XP Theme with grouped windows and Show Desktop" width="100%">
+      <br><br><sub><b>Windows XP Theme</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/demo-dock-dark.webp" alt="Dark Dock with tooltips, hover animation and settings" width="100%">
+      <br><br><sub><b>Hover Animations and Settings</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/start-menu-light.webp" alt="Start Menu in the light theme" width="100%">
+      <br><br><sub><b>Start Menu with Pinned Folders</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/demo-start-menu-dark.webp" alt="Eleven-style Start Menu in the dark theme" width="100%">
+      <br><br><sub><b>Start Menu in the Dark Theme</b></sub>
+    </td>
+  </tr>
+</table>
 
 ## Choose a panel style
 
