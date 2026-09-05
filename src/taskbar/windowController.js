@@ -340,13 +340,6 @@ export class WindowController {
 
         switch (action) {
         case CLICK_ACTION.CYCLE_MINIMIZE:
-            if (Main.overview._shown) {
-                this._resetCycleState();
-                this.activateApp(app);
-            } else {
-                this._cycleAppWindows(app, action);
-            }
-            break;
         case CLICK_ACTION.CYCLE:
             if (Main.overview._shown) {
                 this._resetCycleState();
