@@ -91,15 +91,9 @@ function parseProfile(contents, settings) {
 function applyProfile(settings, values) {
     settings.set_boolean('panel-profile-transition', true);
     settings.delay();
-    try {
-        for (const [key, value] of values)
-            settings.set_value(key, value);
-        settings.apply();
-    } catch (error) {
-        settings.revert();
-        settings.set_boolean('panel-profile-transition', false);
-        throw error;
-    }
+    for (const [key, value] of values)
+        settings.set_value(key, value);
+    settings.apply();
     settings.set_boolean('panel-profile-transition', false);
 }
 
