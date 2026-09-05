@@ -5,6 +5,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -31,6 +32,7 @@ const LIGHT_MENU_CLASS = 'simple-taskbar-tray-overflow-light';
 const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
 const TRAY_INDICATOR_STYLE =
     '-natural-hpadding: 0px; -minimum-hpadding: 0px;';
+const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
 export class TrayOverflowController {
     constructor(settings) {
@@ -268,6 +270,16 @@ export class TrayOverflowController {
 
     _overrideOutsideClicks() {
         const manager = this._menuManager;
+        if (SHELL_VERSION >= 51) {
+            const gesture = manager._clickGesture;
+            gesture.connectObject(
+                'may-recognize',
+                () => !this._eventInStashedMenu(gesture.get_point_event(0)),
+                this._signalHolder
+            );
+            return;
+        }
+
         const inherited = manager._onCapturedEvent.bind(manager);
         manager._onCapturedEvent = (actor, event) => {
             const type = event.type();
