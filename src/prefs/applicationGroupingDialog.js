@@ -25,7 +25,7 @@ const APPLICATION_GROUPING_SETTINGS = [
 export function createApplicationGroupingOptionsButton(settings) {
     return createPreferencesDialogButton(
         settings,
-        _('Application Button Options'),
+        _('Application Label Options'),
         ApplicationGroupingOptionsDialog
     );
 }
@@ -34,7 +34,7 @@ export const ApplicationGroupingOptionsDialog = GObject.registerClass(
 class ApplicationGroupingOptionsDialog extends Adw.Window {
     _init({settings, parent}) {
         super._init({
-            title: _('Application Button Options'),
+            title: _('Application Label Options'),
             transient_for: parent,
             modal: true,
             default_width: 560,
@@ -47,14 +47,14 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
 
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Application Labels'),
-            description: _('Customize uncombined application buttons'),
+            description: _('Customize labels on uncombined applications'),
         });
         content.append(behaviorGroup);
 
         const hideAppLabelsSwitch = createSwitchRow(settings, {
             key: 'hide-app-labels',
             title: _('Hide App Labels'),
-            subtitle: _('Hide window titles on application buttons'),
+            subtitle: _('Hide window titles beside application icons'),
         });
         behaviorGroup.add(hideAppLabelsSwitch);
         const labelFontSizeRow = addSpinRow(
@@ -110,7 +110,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
             key: 'group-apps-use-fixed-width',
             title: _('Use Fixed Label Width'),
             subtitle: _(
-                'Use the maximum label width for every application button'
+                'Use the maximum label width for every application'
             ),
         });
         widthGroup.add(fixedLabelWidthSwitch);

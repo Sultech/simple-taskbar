@@ -47,7 +47,7 @@ class StartButtonOptionsDialog extends Adw.Window {
         const followAppAlignmentSwitch = createSwitchRow(settings, {
             key: 'start-button-follow-app-alignment',
             title: _('Follow Application Alignment'),
-            subtitle: _('Move the Start button with the application buttons'),
+            subtitle: _('Move the Start button with the application icons'),
         });
         alignmentGroup.add(followAppAlignmentSwitch);
 

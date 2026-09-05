@@ -210,7 +210,7 @@ export function addPanelItemsPage({
             key: 'app-alignment',
             visibleState: applicationsVisibility,
             title: _('Applications'),
-            subtitle: _('Taskbar application buttons'),
+            subtitle: _('Taskbar applications'),
             choices: initialPositions.slice(0, 2),
         }],
         ['folder-menu', {

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 18:22+0100\n"
+"POT-Creation-Date: 2026-09-05 18:47+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -26,7 +26,7 @@ msgstr "Показать рабочий стол"
 msgid "Application overflow"
 msgstr "Переполнение приложений"
 
-#: prefs.js:46 src/prefs/applicationIconsGroup.js:309
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:317
 #: src/prefs/panelAppearancePage.js:81 src/prefs/panelModeGroup.js:70
 msgid "Left"
 msgstr "Слева"
@@ -35,7 +35,7 @@ msgstr "Слева"
 msgid "Center"
 msgstr "По центру"
 
-#: prefs.js:48 src/prefs/applicationIconsGroup.js:310
+#: prefs.js:48 src/prefs/applicationIconsGroup.js:318
 #: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:71
 msgid "Right"
 msgstr "Справа"
@@ -226,24 +226,24 @@ msgstr "Выберите действие при Shift+щелчке средне
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
-msgid "Application Button Options"
-msgstr "Параметры кнопок приложений"
+msgid "Application Label Options"
+msgstr "Подписи приложений"
 
 #: src/prefs/applicationGroupingDialog.js:49
 msgid "Application Labels"
 msgstr "Подписи приложений"
 
 #: src/prefs/applicationGroupingDialog.js:50
-msgid "Customize uncombined application buttons"
-msgstr "Настройте кнопки несгруппированных приложений"
+msgid "Customize labels on uncombined applications"
+msgstr "Настройте подписи несгруппированных приложений"
 
 #: src/prefs/applicationGroupingDialog.js:56
 msgid "Hide App Labels"
 msgstr "Скрывать подписи приложений"
 
 #: src/prefs/applicationGroupingDialog.js:57
-msgid "Hide window titles on application buttons"
-msgstr "Скрывать заголовки окон на кнопках приложений"
+msgid "Hide window titles beside application icons"
+msgstr "Скрывать заголовки окон рядом со значками приложений"
 
 #: src/prefs/applicationGroupingDialog.js:65
 msgid "Label Font Size"
@@ -302,8 +302,8 @@ msgid "Use Fixed Label Width"
 msgstr "Использовать фиксированную ширину подписи"
 
 #: src/prefs/applicationGroupingDialog.js:113
-msgid "Use the maximum label width for every application button"
-msgstr "Использовать максимальную ширину подписи для каждой кнопки приложения"
+msgid "Use the maximum label width for every application"
+msgstr "Использовать максимальную ширину подписи для каждого приложения"
 
 #: src/prefs/applicationHoverAnimationDialog.js:30
 msgid "Duration"
@@ -408,278 +408,275 @@ msgid "Icon Spacing"
 msgstr "Расстояние между значками"
 
 #: src/prefs/applicationIconsGroup.js:83
-msgid "Space between application buttons"
-msgstr "Расстояние между кнопками приложений"
+msgid "Space between application icons"
+msgstr "Расстояние между значками приложений"
 
-#: src/prefs/applicationIconsGroup.js:107
+#: src/prefs/applicationIconsGroup.js:96
 msgid "Hover and Focus Effect"
 msgstr "Эффект наведения и фокуса"
 
-#: src/prefs/applicationIconsGroup.js:108
-msgid "Choose the effect used by application buttons"
-msgstr "Выберите эффект для кнопок приложений"
+#: src/prefs/applicationIconsGroup.js:97
+msgid "Choose the effect used by application icons"
+msgstr "Выберите эффект для значков приложений"
 
-#: src/prefs/applicationIconsGroup.js:112
+#: src/prefs/applicationIconsGroup.js:101
 msgid "Glass"
 msgstr "Стекло"
 
-#: src/prefs/applicationIconsGroup.js:116
+#: src/prefs/applicationIconsGroup.js:105
 msgid "Classic"
 msgstr "Классический"
 
-#: src/prefs/applicationIconsGroup.js:129
+#: src/prefs/applicationIconsGroup.js:137
 msgid "Icon Alignment"
 msgstr "Выравнивание значков"
 
-#: src/prefs/applicationIconsGroup.js:130
+#: src/prefs/applicationIconsGroup.js:138
 msgid "Choose the application icon alignment"
 msgstr "Выберите выравнивание значков приложений"
 
-#: src/prefs/applicationIconsGroup.js:184
+#: src/prefs/applicationIconsGroup.js:192
 msgid "Application Layout and Behavior"
 msgstr "Расположение и поведение приложений"
 
-#: src/prefs/applicationIconsGroup.js:186
-msgid ""
-"Choose which applications appear and how their buttons are grouped and "
-"indicated"
-msgstr ""
-"Выберите, какие приложения отображать и как группировать их кнопки и "
-"обозначать их состояние"
-
 #: src/prefs/applicationIconsGroup.js:194
+msgid "Choose which applications appear and how they are grouped and indicated"
+msgstr ""
+"Выберите, какие приложения отображать, как их группировать и обозначать"
+
+#: src/prefs/applicationIconsGroup.js:202
 #: src/prefs/pinnedApplicationBehaviorDialog.js:26
 #: src/prefs/pinnedApplicationBehaviorDialog.js:35
 msgid "Pinned Application Behavior"
 msgstr "Поведение закреплённых приложений"
 
-#: src/prefs/applicationIconsGroup.js:195
+#: src/prefs/applicationIconsGroup.js:203
 msgid "Choose how pinned and running applications appear"
 msgstr "Выберите, как отображать закреплённые и запущенные приложения"
 
-#: src/prefs/applicationIconsGroup.js:202
+#: src/prefs/applicationIconsGroup.js:210
 msgid "Always"
 msgstr "Всегда"
 
-#: src/prefs/applicationIconsGroup.js:203
-#: src/prefs/applicationIconsGroup.js:207
+#: src/prefs/applicationIconsGroup.js:211
+#: src/prefs/applicationIconsGroup.js:215
 msgid "Only When Full"
 msgstr "Только при заполнении"
 
-#: src/prefs/applicationIconsGroup.js:204
-#: src/prefs/applicationIconsGroup.js:208
+#: src/prefs/applicationIconsGroup.js:212
+#: src/prefs/applicationIconsGroup.js:216
 msgid "Never"
 msgstr "Никогда"
 
-#: src/prefs/applicationIconsGroup.js:217
-msgid "Combine Application Buttons"
-msgstr "Объединить кнопки приложений"
+#: src/prefs/applicationIconsGroup.js:225
+msgid "Combine Application Windows"
+msgstr "Объединять окна приложений"
 
-#: src/prefs/applicationIconsGroup.js:218
-msgid "Choose when windows share one taskbar button"
-msgstr "Выберите, когда окна объединяются в одну кнопку на панели задач"
+#: src/prefs/applicationIconsGroup.js:226
+msgid "Choose when windows share one application icon"
+msgstr "Выберите, когда окна объединяются в один значок приложения"
 
-#: src/prefs/applicationIconsGroup.js:235
+#: src/prefs/applicationIconsGroup.js:243
 msgid "Show Notification Badges"
 msgstr "Показывать значки уведомлений"
 
-#: src/prefs/applicationIconsGroup.js:236
+#: src/prefs/applicationIconsGroup.js:244
 msgid "Display unread counts on application icons"
 msgstr "Показывать количество непрочитанных уведомлений на значках приложений"
 
-#: src/prefs/applicationIconsGroup.js:242
+#: src/prefs/applicationIconsGroup.js:250
 msgid "Show Pinned App Separator"
 msgstr "Показывать разделитель закреплённых приложений"
 
-#: src/prefs/applicationIconsGroup.js:243
+#: src/prefs/applicationIconsGroup.js:251
 msgid "Show a line between pinned and running applications"
 msgstr "Показывать линию между закреплёнными и запущенными приложениями"
 
-#: src/prefs/applicationIconsGroup.js:249
+#: src/prefs/applicationIconsGroup.js:257
 msgid "Show Location Separator"
 msgstr "Показывать разделитель расположений"
 
-#: src/prefs/applicationIconsGroup.js:250
+#: src/prefs/applicationIconsGroup.js:258
 msgid "Show a line between applications and locations"
 msgstr "Показывать линию между приложениями и расположениями"
 
-#: src/prefs/applicationIconsGroup.js:300
+#: src/prefs/applicationIconsGroup.js:308
 msgid "Running Indicators"
 msgstr "Индикаторы запущенных приложений"
 
-#: src/prefs/applicationIconsGroup.js:302
+#: src/prefs/applicationIconsGroup.js:310
 msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "Настройте положение, стиль, размер и цвета индикаторов запуска"
 
-#: src/prefs/applicationIconsGroup.js:307 src/prefs/panelAppearancePage.js:79
+#: src/prefs/applicationIconsGroup.js:315 src/prefs/panelAppearancePage.js:79
 #: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
 msgid "Top"
 msgstr "Вверху"
 
-#: src/prefs/applicationIconsGroup.js:308 src/prefs/panelAppearancePage.js:80
+#: src/prefs/applicationIconsGroup.js:316 src/prefs/panelAppearancePage.js:80
 #: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
 msgid "Bottom"
 msgstr "Внизу"
 
-#: src/prefs/applicationIconsGroup.js:313
+#: src/prefs/applicationIconsGroup.js:321
 msgid "Rounded"
 msgstr "Закруглённые"
 
-#: src/prefs/applicationIconsGroup.js:314
+#: src/prefs/applicationIconsGroup.js:322
 msgid "Dots"
 msgstr "Точки"
 
-#: src/prefs/applicationIconsGroup.js:315
+#: src/prefs/applicationIconsGroup.js:323
 msgid "Squares"
 msgstr "Квадраты"
 
-#: src/prefs/applicationIconsGroup.js:316
+#: src/prefs/applicationIconsGroup.js:324
 msgid "Dashes"
 msgstr "Штрихи"
 
-#: src/prefs/applicationIconsGroup.js:317
+#: src/prefs/applicationIconsGroup.js:325
 msgid "Segmented"
 msgstr "Сегментированный"
 
-#: src/prefs/applicationIconsGroup.js:318
+#: src/prefs/applicationIconsGroup.js:326
 msgid "Solid"
 msgstr "Сплошной"
 
-#: src/prefs/applicationIconsGroup.js:319
+#: src/prefs/applicationIconsGroup.js:327
 msgid "Ciliora"
 msgstr "Ciliora"
 
-#: src/prefs/applicationIconsGroup.js:320
+#: src/prefs/applicationIconsGroup.js:328
 msgid "Metro"
 msgstr "Metro"
 
-#: src/prefs/applicationIconsGroup.js:328
+#: src/prefs/applicationIconsGroup.js:336
 msgid "Running Indicator Position"
 msgstr "Положение индикатора запуска"
 
-#: src/prefs/applicationIconsGroup.js:329
-msgid "Choose which edge of the application button to use"
-msgstr "Выберите край кнопки приложения, который будет использоваться"
+#: src/prefs/applicationIconsGroup.js:337
+msgid "Choose which edge of the application icon to use"
+msgstr "Выберите край значка приложения, который будет использоваться"
 
-#: src/prefs/applicationIconsGroup.js:343
+#: src/prefs/applicationIconsGroup.js:351
 msgid "Running Indicator Style"
 msgstr "Стиль индикаторов запущенных приложений"
 
-#: src/prefs/applicationIconsGroup.js:345
+#: src/prefs/applicationIconsGroup.js:353
 msgid "Choose the shape of indicators around running applications"
 msgstr "Выберите форму индикаторов вокруг запущенных приложений"
 
-#: src/prefs/applicationIconsGroup.js:360
+#: src/prefs/applicationIconsGroup.js:368
 msgid "Running Indicator Size"
 msgstr "Размер индикатора запуска"
 
-#: src/prefs/applicationIconsGroup.js:361
+#: src/prefs/applicationIconsGroup.js:369
 msgid "Choose the indicator thickness in pixels"
 msgstr "Выберите толщину индикатора в пикселях"
 
-#: src/prefs/applicationIconsGroup.js:370
+#: src/prefs/applicationIconsGroup.js:378
 msgid "Stretch Indicators"
 msgstr "Растягивать индикаторы"
 
-#: src/prefs/applicationIconsGroup.js:372
-msgid "Run indicators the full length of the application button"
-msgstr "Растягивать индикаторы на всю длину кнопки приложения"
+#: src/prefs/applicationIconsGroup.js:380
+msgid "Run indicators the full length of the application icon"
+msgstr "Растягивать индикаторы на всю длину значка приложения"
 
-#: src/prefs/applicationIconsGroup.js:377
+#: src/prefs/applicationIconsGroup.js:385
 msgid "Custom Indicator Colors"
 msgstr "Свои цвета индикаторов"
 
-#: src/prefs/applicationIconsGroup.js:378
+#: src/prefs/applicationIconsGroup.js:386
 msgid "Choose colors for running application indicators"
 msgstr "Выберите цвета индикаторов запущенных приложений"
 
-#: src/prefs/applicationIconsGroup.js:391
+#: src/prefs/applicationIconsGroup.js:399
 msgid "Match Icon Color"
 msgstr "Подбирать цвет по значку"
 
-#: src/prefs/applicationIconsGroup.js:393
+#: src/prefs/applicationIconsGroup.js:401
 msgid "Color the focused indicator from the application icon"
 msgstr "Окрашивать индикатор активного приложения в цвет его значка"
 
-#: src/prefs/applicationIconsGroup.js:409
+#: src/prefs/applicationIconsGroup.js:417
 msgid "Focused Indicator Color"
 msgstr "Цвет индикатора активного приложения"
 
-#: src/prefs/applicationIconsGroup.js:419
+#: src/prefs/applicationIconsGroup.js:427
 msgid "Unfocused Indicator Color"
 msgstr "Цвет индикатора неактивного приложения"
 
-#: src/prefs/applicationIconsGroup.js:475
+#: src/prefs/applicationIconsGroup.js:483
 msgid "Application Overflow"
 msgstr "Переполнение приложений"
 
-#: src/prefs/applicationIconsGroup.js:476
+#: src/prefs/applicationIconsGroup.js:484
 msgid "Choose how overflowing applications are handled"
 msgstr "Выберите способ обработки приложений, не помещающихся в панели"
 
-#: src/prefs/applicationIconsGroup.js:482
+#: src/prefs/applicationIconsGroup.js:490
 msgid "Enable Application Overflow"
 msgstr "Включить переполнение приложений"
 
-#: src/prefs/applicationIconsGroup.js:492
+#: src/prefs/applicationIconsGroup.js:500
 msgid "Overflow Style"
 msgstr "Стиль переполнения"
 
-#: src/prefs/applicationIconsGroup.js:494
+#: src/prefs/applicationIconsGroup.js:502
 msgid "Taskbar Flyout"
 msgstr "Всплывающее меню панели задач"
 
-#: src/prefs/applicationIconsGroup.js:495
+#: src/prefs/applicationIconsGroup.js:503
 msgid "Application List"
 msgstr "Список приложений"
 
-#: src/prefs/applicationIconsGroup.js:528 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:536 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Изолировать рабочие столы"
 
-#: src/prefs/applicationIconsGroup.js:529
+#: src/prefs/applicationIconsGroup.js:537
 msgid "Show running applications from the current workspace only"
 msgstr "Показывать запущенные приложения только с текущего рабочего стола"
 
-#: src/prefs/applicationIconsGroup.js:533 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:541 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Изолировать мониторы"
 
-#: src/prefs/applicationIconsGroup.js:537
+#: src/prefs/applicationIconsGroup.js:545
 msgid "Running Application Isolation"
 msgstr "Изоляция запущенных приложений"
 
-#: src/prefs/applicationIconsGroup.js:554
-#: src/prefs/applicationIconsGroup.js:622
+#: src/prefs/applicationIconsGroup.js:562
+#: src/prefs/applicationIconsGroup.js:630
 msgid "Application Icons"
 msgstr "Значки приложений"
 
-#: src/prefs/applicationIconsGroup.js:556
+#: src/prefs/applicationIconsGroup.js:564
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr ""
 "Измените размер, интервалы, расположение и индикаторы запущенных приложений "
 "на значках Dock."
 
-#: src/prefs/applicationIconsGroup.js:571
+#: src/prefs/applicationIconsGroup.js:579
 msgid ""
-"Show application buttons that do not fit in an overflow popup instead of "
-"scrolling the Dock"
+"Show applications that do not fit in an overflow popup instead of scrolling "
+"the Dock"
 msgstr ""
-"Показывать кнопки приложений, которые не помещаются, во всплывающем окне "
-"вместо прокрутки Dock"
+"Показывать приложения, которые не помещаются, во всплывающем окне вместо "
+"прокрутки Dock"
 
-#: src/prefs/applicationIconsGroup.js:578
-#: src/prefs/applicationIconsGroup.js:652
+#: src/prefs/applicationIconsGroup.js:586
+#: src/prefs/applicationIconsGroup.js:660
 msgid "Limit running applications to the current workspace or monitor"
 msgstr "Ограничить запущенные приложения текущим рабочим столом или монитором"
 
-#: src/prefs/applicationIconsGroup.js:581
+#: src/prefs/applicationIconsGroup.js:589
 msgid "Show running applications only in the Dock for their monitor"
 msgstr ""
 "Показывать запущенные приложения в Dock только на соответствующем мониторе"
 
-#: src/prefs/applicationIconsGroup.js:624
+#: src/prefs/applicationIconsGroup.js:632
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
@@ -687,15 +684,15 @@ msgstr ""
 "Измените размер, интервалы, расположение и индикаторы запущенных приложений "
 "на значках панели задач."
 
-#: src/prefs/applicationIconsGroup.js:645
+#: src/prefs/applicationIconsGroup.js:653
 msgid ""
-"Show application buttons that do not fit in an overflow popup instead of "
-"scrolling the taskbar"
+"Show applications that do not fit in an overflow popup instead of scrolling "
+"the taskbar"
 msgstr ""
-"Показывать кнопки приложений, для которых не хватает места, во всплывающем "
-"окне переполнения вместо прокрутки панели задач"
+"Показывать приложения, для которых не хватает места, во всплывающем окне "
+"переполнения вместо прокрутки панели задач"
 
-#: src/prefs/applicationIconsGroup.js:655
+#: src/prefs/applicationIconsGroup.js:663
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Показывать запущенные приложения только на панели задач соответствующего "
@@ -1649,8 +1646,8 @@ msgid "Applications"
 msgstr "Приложения"
 
 #: src/prefs/panelItemsPage.js:213
-msgid "Taskbar application buttons"
-msgstr "Кнопки приложений на панели задач"
+msgid "Taskbar applications"
+msgstr "Приложения на панели задач"
 
 #: src/prefs/panelItemsPage.js:219
 msgid "Folder Menu"
@@ -1722,8 +1719,8 @@ msgid "Eleven-style or original GNOME Start menu"
 msgstr "Меню «Пуск» в стиле Eleven или исходное меню GNOME"
 
 #: src/prefs/dockItemsPage.js:81
-msgid "Dock application buttons"
-msgstr "Кнопки приложений Dock"
+msgid "Dock applications"
+msgstr "Приложения Dock"
 
 #: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:49
 msgid "General"
@@ -1734,8 +1731,8 @@ msgid "Taskbar Mode"
 msgstr "Режим панели задач"
 
 #: src/prefs/panelModeGroup.js:35
-msgid "Show application buttons in the taskbar"
-msgstr "Показывать кнопки приложений на панели задач"
+msgid "Show applications in the taskbar"
+msgstr "Показывать приложения на панели задач"
 
 #: src/prefs/panelModeGroup.js:43
 msgid "Alternative Modes"
@@ -1759,8 +1756,8 @@ msgid "Dock Mode"
 msgstr "Режим Dock"
 
 #: src/prefs/panelModeGroup.js:62
-msgid "Show application buttons in a separate Dock instead of the taskbar"
-msgstr "Показывать кнопки приложений в отдельном Dock вместо панели задач"
+msgid "Show applications in a separate Dock instead of the taskbar"
+msgstr "Показывать приложения в отдельном Dock вместо панели задач"
 
 #: src/prefs/panelModeGroup.js:108
 msgid "Dock Position"
@@ -1819,48 +1816,48 @@ msgstr ""
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/prefs/preferencesDialogs.js:21 src/prefs/preferencesDialogs.js:54
+#: src/prefs/preferencesDialogs.js:21 src/prefs/preferencesDialogs.js:47
 msgid "Reset"
 msgstr "Сбросить"
 
-#: src/prefs/preferencesDialogs.js:59
+#: src/prefs/preferencesDialogs.js:52
 msgid "Reset All Settings"
 msgstr "Сбросить все настройки"
 
-#: src/prefs/preferencesDialogs.js:60
+#: src/prefs/preferencesDialogs.js:53
 msgid ""
 "Restore defaults without changing pinned taskbar apps or Start Menu items"
 msgstr ""
 "Восстановить настройки по умолчанию, не изменяя закреплённые приложения "
 "панели задач и элементы меню «Пуск»"
 
-#: src/prefs/preferencesDialogs.js:63
+#: src/prefs/preferencesDialogs.js:56
 msgid "Reset…"
 msgstr "Сбросить…"
 
-#: src/prefs/preferencesDialogs.js:77
+#: src/prefs/preferencesDialogs.js:70
 msgid "Set Custom Shortcut"
 msgstr "Задать пользовательское сочетание клавиш"
 
-#: src/prefs/preferencesDialogs.js:90
+#: src/prefs/preferencesDialogs.js:83
 msgid "Press a keyboard shortcut"
 msgstr "Нажмите сочетание клавиш"
 
-#: src/prefs/preferencesDialogs.js:91
+#: src/prefs/preferencesDialogs.js:84
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "Нажмите Backspace для очистки или Escape для отмены."
 
-#: src/prefs/preferencesDialogs.js:131
+#: src/prefs/preferencesDialogs.js:124
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 "Это сочетание клавиш требует клавишу-модификатор. Попробуйте другое "
 "сочетание."
 
-#: src/prefs/preferencesDialogs.js:145
+#: src/prefs/preferencesDialogs.js:138
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "Это сочетание клавиш уже используется. Нажмите другое сочетание."
 
-#: src/prefs/preferencesDialogs.js:163
+#: src/prefs/preferencesDialogs.js:156
 msgid "Choose a Folder"
 msgstr "Выберите папку"
 
@@ -1876,50 +1873,50 @@ msgstr "Выбранный профиль недействителен."
 msgid "The selected profile is incompatible with this version."
 msgstr "Выбранный профиль несовместим с этой версией."
 
-#: src/prefs/profileTransfer.js:117
+#: src/prefs/profileTransfer.js:111
 msgid "The profile could not be exported."
 msgstr "Не удалось экспортировать профиль."
 
-#: src/prefs/profileTransfer.js:133
+#: src/prefs/profileTransfer.js:127
 msgid "Profiles"
 msgstr "Профили"
 
-#: src/prefs/profileTransfer.js:138
+#: src/prefs/profileTransfer.js:132
 msgid "Export and Import Profiles"
 msgstr "Экспорт и импорт профилей"
 
-#: src/prefs/profileTransfer.js:139
+#: src/prefs/profileTransfer.js:133
 msgid "Save Taskbar settings, Dock settings, and Start Menu pins to a file"
 msgstr ""
 "Сохранить в файл настройки панели задач и Dock, а также закреплённые "
 "элементы меню «Пуск»"
 
-#: src/prefs/profileTransfer.js:142
+#: src/prefs/profileTransfer.js:136
 msgid "Export…"
 msgstr "Экспортировать…"
 
-#: src/prefs/profileTransfer.js:146
+#: src/prefs/profileTransfer.js:140
 msgid "Import…"
 msgstr "Импортировать…"
 
-#: src/prefs/profileTransfer.js:158
+#: src/prefs/profileTransfer.js:152
 #, javascript-format
 msgid "The profile operation failed: %s"
 msgstr "Не удалось выполнить операцию с профилем: %s"
 
-#: src/prefs/profileTransfer.js:166
+#: src/prefs/profileTransfer.js:160
 msgid "Export Profiles"
 msgstr "Экспорт профилей"
 
-#: src/prefs/profileTransfer.js:183
+#: src/prefs/profileTransfer.js:175
 msgid "Profile exported."
 msgstr "Профиль экспортирован."
 
-#: src/prefs/profileTransfer.js:194
+#: src/prefs/profileTransfer.js:186
 msgid "Import Profiles"
 msgstr "Импорт профилей"
 
-#: src/prefs/profileTransfer.js:211
+#: src/prefs/profileTransfer.js:201
 msgid "Profile imported."
 msgstr "Профиль импортирован."
 
@@ -1935,11 +1932,11 @@ msgstr "Закрыть"
 msgid "Item Position"
 msgstr "Положение элемента"
 
-#: src/prefs/preferencesWidgets.js:199 src/prefs/preferencesWidgets.js:275
+#: src/prefs/preferencesWidgets.js:199
 msgid "Move Up"
 msgstr "Переместить вверх"
 
-#: src/prefs/preferencesWidgets.js:203 src/prefs/preferencesWidgets.js:279
+#: src/prefs/preferencesWidgets.js:203
 msgid "Move Down"
 msgstr "Переместить вниз"
 
@@ -1994,8 +1991,8 @@ msgid "Follow Application Alignment"
 msgstr "Следовать выравниванию приложений"
 
 #: src/prefs/startButtonDialog.js:50 src/prefs/startMenuPage.js:83
-msgid "Move the Start button with the application buttons"
-msgstr "Перемещать кнопку «Пуск» вместе с кнопками приложений"
+msgid "Move the Start button with the application icons"
+msgstr "Перемещать кнопку «Пуск» вместе со значками приложений"
 
 #: src/prefs/startButtonDialog.js:56 src/prefs/startMenuPage.js:43
 #: src/prefs/startMenuPage.js:270
@@ -2971,7 +2968,7 @@ msgstr "Файлы изображений"
 msgid "Lock the Taskbar"
 msgstr "Заблокировать панель задач"
 
-#: src/overflow/trayOverflowController.js:250
+#: src/overflow/trayOverflowController.js:252
 msgid "Tray icons"
 msgstr "Значки области уведомлений"
 
@@ -3029,6 +3026,9 @@ msgstr "Громкость приложений"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Нет приложений, воспроизводящих звук"
+
+#~ msgid "Application Button Options"
+#~ msgstr "Параметры кнопок приложений"
 
 #~ msgid "Choose the Start button alignment"
 #~ msgstr "Выберите выравнивание кнопки «Пуск»"

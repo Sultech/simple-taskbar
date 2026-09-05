@@ -80,7 +80,7 @@ export function addStartMenuPage({
 
     const followAppAlignmentSwitch = new Adw.SwitchRow({
         title: _('Follow Application Alignment'),
-        subtitle: _('Move the Start button with the application buttons'),
+        subtitle: _('Move the Start button with the application icons'),
         active: settings.get_boolean(
             'start-button-follow-app-alignment'
         ),

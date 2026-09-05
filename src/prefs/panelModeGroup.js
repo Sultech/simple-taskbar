@@ -32,7 +32,7 @@ export function addPanelModeGroup({
 
     const taskbarModeSwitch = new Adw.SwitchRow({
         title: _('Taskbar Mode'),
-        subtitle: _('Show application buttons in the taskbar'),
+        subtitle: _('Show applications in the taskbar'),
         active: !settings.get_boolean('default-gnome-panel') &&
             !settings.get_boolean('dock-mode') &&
             !settings.get_boolean('windows-xp-theme-enabled'),
@@ -59,7 +59,7 @@ export function addPanelModeGroup({
 
     const dockModeSwitch = new Adw.SwitchRow({
         title: _('Dock Mode'),
-        subtitle: _('Show application buttons in a separate Dock instead of the taskbar'),
+        subtitle: _('Show applications in a separate Dock instead of the taskbar'),
         active: settings.get_boolean('dock-mode'),
     });
     dockModeGroup.add(dockModeSwitch);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 18:22+0100\n"
+"POT-Creation-Date: 2026-09-05 18:47+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -26,7 +26,7 @@ msgstr "展示桌面"
 msgid "Application overflow"
 msgstr "应用溢出"
 
-#: prefs.js:46 src/prefs/applicationIconsGroup.js:309
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:317
 #: src/prefs/panelAppearancePage.js:81 src/prefs/panelModeGroup.js:70
 msgid "Left"
 msgstr "左侧"
@@ -35,7 +35,7 @@ msgstr "左侧"
 msgid "Center"
 msgstr "居中"
 
-#: prefs.js:48 src/prefs/applicationIconsGroup.js:310
+#: prefs.js:48 src/prefs/applicationIconsGroup.js:318
 #: src/prefs/panelAppearancePage.js:82 src/prefs/panelModeGroup.js:71
 msgid "Right"
 msgstr "右侧"
@@ -225,24 +225,24 @@ msgstr "选择按住 Shift 中键点击应用时执行的操作"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
-msgid "Application Button Options"
-msgstr "应用按钮选项"
+msgid "Application Label Options"
+msgstr "应用标签"
 
 #: src/prefs/applicationGroupingDialog.js:49
 msgid "Application Labels"
 msgstr "应用标签"
 
 #: src/prefs/applicationGroupingDialog.js:50
-msgid "Customize uncombined application buttons"
-msgstr "自定义未合并的应用按钮"
+msgid "Customize labels on uncombined applications"
+msgstr "自定义未合并应用的标签"
 
 #: src/prefs/applicationGroupingDialog.js:56
 msgid "Hide App Labels"
 msgstr "隐藏应用标签"
 
 #: src/prefs/applicationGroupingDialog.js:57
-msgid "Hide window titles on application buttons"
-msgstr "隐藏应用按钮上的窗口标题"
+msgid "Hide window titles beside application icons"
+msgstr "隐藏应用图标旁的窗口标题"
 
 #: src/prefs/applicationGroupingDialog.js:65
 msgid "Label Font Size"
@@ -301,8 +301,8 @@ msgid "Use Fixed Label Width"
 msgstr "使用固定标签宽度"
 
 #: src/prefs/applicationGroupingDialog.js:113
-msgid "Use the maximum label width for every application button"
-msgstr "为每个应用按钮使用最大标签宽度"
+msgid "Use the maximum label width for every application"
+msgstr "为每个应用使用最大标签宽度"
 
 #: src/prefs/applicationHoverAnimationDialog.js:30
 msgid "Duration"
@@ -405,283 +405,281 @@ msgid "Icon Spacing"
 msgstr "图标间距"
 
 #: src/prefs/applicationIconsGroup.js:83
-msgid "Space between application buttons"
-msgstr "应用程序按钮之间的间距"
+msgid "Space between application icons"
+msgstr "应用图标之间的间距"
 
-#: src/prefs/applicationIconsGroup.js:107
+#: src/prefs/applicationIconsGroup.js:96
 msgid "Hover and Focus Effect"
 msgstr "悬停和聚焦效果"
 
-#: src/prefs/applicationIconsGroup.js:108
-msgid "Choose the effect used by application buttons"
-msgstr "选择应用按钮使用的效果"
+#: src/prefs/applicationIconsGroup.js:97
+msgid "Choose the effect used by application icons"
+msgstr "选择应用图标使用的效果"
 
-#: src/prefs/applicationIconsGroup.js:112
+#: src/prefs/applicationIconsGroup.js:101
 msgid "Glass"
 msgstr "玻璃"
 
-#: src/prefs/applicationIconsGroup.js:116
+#: src/prefs/applicationIconsGroup.js:105
 msgid "Classic"
 msgstr "经典"
 
-#: src/prefs/applicationIconsGroup.js:129
+#: src/prefs/applicationIconsGroup.js:137
 msgid "Icon Alignment"
 msgstr "图标对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:130
+#: src/prefs/applicationIconsGroup.js:138
 msgid "Choose the application icon alignment"
 msgstr "选择应用图标对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:184
+#: src/prefs/applicationIconsGroup.js:192
 msgid "Application Layout and Behavior"
 msgstr "应用布局和行为"
 
-#: src/prefs/applicationIconsGroup.js:186
-msgid ""
-"Choose which applications appear and how their buttons are grouped and "
-"indicated"
-msgstr "选择要显示的应用，以及其按钮的分组和指示方式"
-
 #: src/prefs/applicationIconsGroup.js:194
+msgid "Choose which applications appear and how they are grouped and indicated"
+msgstr "选择要显示的应用，以及它们的分组和指示方式"
+
+#: src/prefs/applicationIconsGroup.js:202
 #: src/prefs/pinnedApplicationBehaviorDialog.js:26
 #: src/prefs/pinnedApplicationBehaviorDialog.js:35
 msgid "Pinned Application Behavior"
 msgstr "已固定应用的行为"
 
-#: src/prefs/applicationIconsGroup.js:195
+#: src/prefs/applicationIconsGroup.js:203
 msgid "Choose how pinned and running applications appear"
 msgstr "选择已固定和正在运行的应用的显示方式"
 
-#: src/prefs/applicationIconsGroup.js:202
+#: src/prefs/applicationIconsGroup.js:210
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/applicationIconsGroup.js:203
-#: src/prefs/applicationIconsGroup.js:207
+#: src/prefs/applicationIconsGroup.js:211
+#: src/prefs/applicationIconsGroup.js:215
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/applicationIconsGroup.js:204
-#: src/prefs/applicationIconsGroup.js:208
+#: src/prefs/applicationIconsGroup.js:212
+#: src/prefs/applicationIconsGroup.js:216
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/applicationIconsGroup.js:217
-msgid "Combine Application Buttons"
-msgstr "合并应用按钮"
+#: src/prefs/applicationIconsGroup.js:225
+msgid "Combine Application Windows"
+msgstr "合并应用窗口"
 
-#: src/prefs/applicationIconsGroup.js:218
-msgid "Choose when windows share one taskbar button"
-msgstr "选择窗口在何时共用一个任务栏按钮"
+#: src/prefs/applicationIconsGroup.js:226
+msgid "Choose when windows share one application icon"
+msgstr "选择窗口在何时共用一个应用图标"
 
-#: src/prefs/applicationIconsGroup.js:235
+#: src/prefs/applicationIconsGroup.js:243
 msgid "Show Notification Badges"
 msgstr "显示通知徽章"
 
-#: src/prefs/applicationIconsGroup.js:236
+#: src/prefs/applicationIconsGroup.js:244
 msgid "Display unread counts on application icons"
 msgstr "在应用图标上显示未读通知数量"
 
-#: src/prefs/applicationIconsGroup.js:242
+#: src/prefs/applicationIconsGroup.js:250
 msgid "Show Pinned App Separator"
 msgstr "显示已固定应用分隔线"
 
-#: src/prefs/applicationIconsGroup.js:243
+#: src/prefs/applicationIconsGroup.js:251
 msgid "Show a line between pinned and running applications"
 msgstr "在已固定和正在运行的应用之间显示分隔线"
 
-#: src/prefs/applicationIconsGroup.js:249
+#: src/prefs/applicationIconsGroup.js:257
 msgid "Show Location Separator"
 msgstr "显示位置分隔线"
 
-#: src/prefs/applicationIconsGroup.js:250
+#: src/prefs/applicationIconsGroup.js:258
 msgid "Show a line between applications and locations"
 msgstr "在应用和位置之间显示分隔线"
 
-#: src/prefs/applicationIconsGroup.js:300
+#: src/prefs/applicationIconsGroup.js:308
 msgid "Running Indicators"
 msgstr "运行指示器"
 
-#: src/prefs/applicationIconsGroup.js:302
+#: src/prefs/applicationIconsGroup.js:310
 msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "配置运行指示器的位置、样式、大小和颜色"
 
-#: src/prefs/applicationIconsGroup.js:307 src/prefs/panelAppearancePage.js:79
+#: src/prefs/applicationIconsGroup.js:315 src/prefs/panelAppearancePage.js:79
 #: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
 msgid "Top"
 msgstr "顶部"
 
-#: src/prefs/applicationIconsGroup.js:308 src/prefs/panelAppearancePage.js:80
+#: src/prefs/applicationIconsGroup.js:316 src/prefs/panelAppearancePage.js:80
 #: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
 msgid "Bottom"
 msgstr "底部"
 
-#: src/prefs/applicationIconsGroup.js:313
+#: src/prefs/applicationIconsGroup.js:321
 msgid "Rounded"
 msgstr "圆角"
 
-#: src/prefs/applicationIconsGroup.js:314
+#: src/prefs/applicationIconsGroup.js:322
 msgid "Dots"
 msgstr "圆点"
 
-#: src/prefs/applicationIconsGroup.js:315
+#: src/prefs/applicationIconsGroup.js:323
 msgid "Squares"
 msgstr "方块"
 
-#: src/prefs/applicationIconsGroup.js:316
+#: src/prefs/applicationIconsGroup.js:324
 msgid "Dashes"
 msgstr "短线"
 
-#: src/prefs/applicationIconsGroup.js:317
+#: src/prefs/applicationIconsGroup.js:325
 msgid "Segmented"
 msgstr "分段"
 
-#: src/prefs/applicationIconsGroup.js:318
+#: src/prefs/applicationIconsGroup.js:326
 msgid "Solid"
 msgstr "实线"
 
-#: src/prefs/applicationIconsGroup.js:319
+#: src/prefs/applicationIconsGroup.js:327
 msgid "Ciliora"
 msgstr "Ciliora"
 
-#: src/prefs/applicationIconsGroup.js:320
+#: src/prefs/applicationIconsGroup.js:328
 msgid "Metro"
 msgstr "Metro"
 
-#: src/prefs/applicationIconsGroup.js:328
+#: src/prefs/applicationIconsGroup.js:336
 msgid "Running Indicator Position"
 msgstr "运行指示器位置"
 
-#: src/prefs/applicationIconsGroup.js:329
-msgid "Choose which edge of the application button to use"
-msgstr "选择使用应用按钮的哪一边"
+#: src/prefs/applicationIconsGroup.js:337
+msgid "Choose which edge of the application icon to use"
+msgstr "选择使用应用图标的哪一边"
 
-#: src/prefs/applicationIconsGroup.js:343
+#: src/prefs/applicationIconsGroup.js:351
 msgid "Running Indicator Style"
 msgstr "运行指示器样式"
 
-#: src/prefs/applicationIconsGroup.js:345
+#: src/prefs/applicationIconsGroup.js:353
 msgid "Choose the shape of indicators around running applications"
 msgstr "选择正在运行的应用周围指示器的形状"
 
-#: src/prefs/applicationIconsGroup.js:360
+#: src/prefs/applicationIconsGroup.js:368
 msgid "Running Indicator Size"
 msgstr "运行指示器大小"
 
-#: src/prefs/applicationIconsGroup.js:361
+#: src/prefs/applicationIconsGroup.js:369
 msgid "Choose the indicator thickness in pixels"
 msgstr "选择指示器的像素厚度"
 
-#: src/prefs/applicationIconsGroup.js:370
+#: src/prefs/applicationIconsGroup.js:378
 msgid "Stretch Indicators"
 msgstr "拉伸指示器"
 
-#: src/prefs/applicationIconsGroup.js:372
-msgid "Run indicators the full length of the application button"
-msgstr "使指示器覆盖整个应用按钮"
+#: src/prefs/applicationIconsGroup.js:380
+msgid "Run indicators the full length of the application icon"
+msgstr "使指示器覆盖整个应用图标"
 
-#: src/prefs/applicationIconsGroup.js:377
+#: src/prefs/applicationIconsGroup.js:385
 msgid "Custom Indicator Colors"
 msgstr "自定义指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:378
+#: src/prefs/applicationIconsGroup.js:386
 msgid "Choose colors for running application indicators"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/applicationIconsGroup.js:391
+#: src/prefs/applicationIconsGroup.js:399
 msgid "Match Icon Color"
 msgstr "匹配图标颜色"
 
-#: src/prefs/applicationIconsGroup.js:393
+#: src/prefs/applicationIconsGroup.js:401
 msgid "Color the focused indicator from the application icon"
 msgstr "根据应用图标的颜色显示聚焦指示器"
 
-#: src/prefs/applicationIconsGroup.js:409
+#: src/prefs/applicationIconsGroup.js:417
 msgid "Focused Indicator Color"
 msgstr "聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:419
+#: src/prefs/applicationIconsGroup.js:427
 msgid "Unfocused Indicator Color"
 msgstr "未聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:475
+#: src/prefs/applicationIconsGroup.js:483
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/applicationIconsGroup.js:476
+#: src/prefs/applicationIconsGroup.js:484
 msgid "Choose how overflowing applications are handled"
 msgstr "选择如何处理超出空间的应用"
 
-#: src/prefs/applicationIconsGroup.js:482
+#: src/prefs/applicationIconsGroup.js:490
 msgid "Enable Application Overflow"
 msgstr "启用应用溢出"
 
-#: src/prefs/applicationIconsGroup.js:492
+#: src/prefs/applicationIconsGroup.js:500
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/applicationIconsGroup.js:494
+#: src/prefs/applicationIconsGroup.js:502
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/applicationIconsGroup.js:495
+#: src/prefs/applicationIconsGroup.js:503
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/applicationIconsGroup.js:528 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:536 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/applicationIconsGroup.js:529
+#: src/prefs/applicationIconsGroup.js:537
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/applicationIconsGroup.js:533 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:541 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/applicationIconsGroup.js:537
+#: src/prefs/applicationIconsGroup.js:545
 msgid "Running Application Isolation"
 msgstr "正在运行的应用隔离"
 
-#: src/prefs/applicationIconsGroup.js:554
-#: src/prefs/applicationIconsGroup.js:622
+#: src/prefs/applicationIconsGroup.js:562
+#: src/prefs/applicationIconsGroup.js:630
 msgid "Application Icons"
 msgstr "应用程序图标"
 
-#: src/prefs/applicationIconsGroup.js:556
+#: src/prefs/applicationIconsGroup.js:564
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr "更改 Dock 图标的大小、间距、位置和运行指示器。"
 
-#: src/prefs/applicationIconsGroup.js:571
+#: src/prefs/applicationIconsGroup.js:579
 msgid ""
-"Show application buttons that do not fit in an overflow popup instead of "
-"scrolling the Dock"
-msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动 Dock"
+"Show applications that do not fit in an overflow popup instead of scrolling "
+"the Dock"
+msgstr "将无法容纳的应用显示在溢出弹窗中，而不是滚动 Dock"
 
-#: src/prefs/applicationIconsGroup.js:578
-#: src/prefs/applicationIconsGroup.js:652
+#: src/prefs/applicationIconsGroup.js:586
+#: src/prefs/applicationIconsGroup.js:660
 msgid "Limit running applications to the current workspace or monitor"
 msgstr "将正在运行的应用限制为当前工作区或显示器"
 
-#: src/prefs/applicationIconsGroup.js:581
+#: src/prefs/applicationIconsGroup.js:589
 msgid "Show running applications only in the Dock for their monitor"
 msgstr "仅在应用所在的显示器 Dock 中显示正在运行的应用"
 
-#: src/prefs/applicationIconsGroup.js:624
+#: src/prefs/applicationIconsGroup.js:632
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
 msgstr "更改任务栏图标的大小、间距、位置和运行指示器。"
 
-#: src/prefs/applicationIconsGroup.js:645
+#: src/prefs/applicationIconsGroup.js:653
 msgid ""
-"Show application buttons that do not fit in an overflow popup instead of "
-"scrolling the taskbar"
-msgstr "将无法容纳的应用按钮显示在溢出弹窗中，而不是滚动任务栏"
+"Show applications that do not fit in an overflow popup instead of scrolling "
+"the taskbar"
+msgstr "将无法容纳的应用显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/applicationIconsGroup.js:655
+#: src/prefs/applicationIconsGroup.js:663
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
@@ -1617,8 +1615,8 @@ msgid "Applications"
 msgstr "应用程序"
 
 #: src/prefs/panelItemsPage.js:213
-msgid "Taskbar application buttons"
-msgstr "任务栏应用按钮"
+msgid "Taskbar applications"
+msgstr "任务栏应用"
 
 #: src/prefs/panelItemsPage.js:219
 msgid "Folder Menu"
@@ -1689,8 +1687,8 @@ msgid "Eleven-style or original GNOME Start menu"
 msgstr "Eleven 风格或原始 GNOME 开始菜单"
 
 #: src/prefs/dockItemsPage.js:81
-msgid "Dock application buttons"
-msgstr "Dock 应用按钮"
+msgid "Dock applications"
+msgstr "Dock 应用"
 
 #: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:49
 msgid "General"
@@ -1701,8 +1699,8 @@ msgid "Taskbar Mode"
 msgstr "任务栏模式"
 
 #: src/prefs/panelModeGroup.js:35
-msgid "Show application buttons in the taskbar"
-msgstr "在任务栏中显示应用按钮"
+msgid "Show applications in the taskbar"
+msgstr "在任务栏中显示应用"
 
 #: src/prefs/panelModeGroup.js:43
 msgid "Alternative Modes"
@@ -1725,8 +1723,8 @@ msgid "Dock Mode"
 msgstr "Dock 模式"
 
 #: src/prefs/panelModeGroup.js:62
-msgid "Show application buttons in a separate Dock instead of the taskbar"
-msgstr "在独立 Dock 中显示应用按钮，而不是任务栏"
+msgid "Show applications in a separate Dock instead of the taskbar"
+msgstr "在独立 Dock 中显示应用，而不是任务栏"
 
 #: src/prefs/panelModeGroup.js:108
 msgid "Dock Position"
@@ -1784,44 +1782,44 @@ msgstr ""
 msgid "Cancel"
 msgstr "取消"
 
-#: src/prefs/preferencesDialogs.js:21 src/prefs/preferencesDialogs.js:54
+#: src/prefs/preferencesDialogs.js:21 src/prefs/preferencesDialogs.js:47
 msgid "Reset"
 msgstr "重置"
 
-#: src/prefs/preferencesDialogs.js:59
+#: src/prefs/preferencesDialogs.js:52
 msgid "Reset All Settings"
 msgstr "重置所有设置"
 
-#: src/prefs/preferencesDialogs.js:60
+#: src/prefs/preferencesDialogs.js:53
 msgid ""
 "Restore defaults without changing pinned taskbar apps or Start Menu items"
 msgstr "恢复默认设置，且不更改已固定的任务栏应用或开始菜单项目"
 
-#: src/prefs/preferencesDialogs.js:63
+#: src/prefs/preferencesDialogs.js:56
 msgid "Reset…"
 msgstr "重置…"
 
-#: src/prefs/preferencesDialogs.js:77
+#: src/prefs/preferencesDialogs.js:70
 msgid "Set Custom Shortcut"
 msgstr "设置自定义快捷键"
 
-#: src/prefs/preferencesDialogs.js:90
+#: src/prefs/preferencesDialogs.js:83
 msgid "Press a keyboard shortcut"
 msgstr "按下键盘快捷键"
 
-#: src/prefs/preferencesDialogs.js:91
+#: src/prefs/preferencesDialogs.js:84
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "按退格键清除，或按 Esc 键取消。"
 
-#: src/prefs/preferencesDialogs.js:131
+#: src/prefs/preferencesDialogs.js:124
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr "该快捷键需要包含修饰键。请尝试其他快捷键。"
 
-#: src/prefs/preferencesDialogs.js:145
+#: src/prefs/preferencesDialogs.js:138
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "该快捷键已被使用。请尝试其他快捷键。"
 
-#: src/prefs/preferencesDialogs.js:163
+#: src/prefs/preferencesDialogs.js:156
 msgid "Choose a Folder"
 msgstr "选择一个文件夹"
 
@@ -1837,48 +1835,48 @@ msgstr "所选配置文件无效。"
 msgid "The selected profile is incompatible with this version."
 msgstr "所选配置文件与此版本不兼容。"
 
-#: src/prefs/profileTransfer.js:117
+#: src/prefs/profileTransfer.js:111
 msgid "The profile could not be exported."
 msgstr "无法导出配置文件。"
 
-#: src/prefs/profileTransfer.js:133
+#: src/prefs/profileTransfer.js:127
 msgid "Profiles"
 msgstr "配置文件"
 
-#: src/prefs/profileTransfer.js:138
+#: src/prefs/profileTransfer.js:132
 msgid "Export and Import Profiles"
 msgstr "导出和导入配置文件"
 
-#: src/prefs/profileTransfer.js:139
+#: src/prefs/profileTransfer.js:133
 msgid "Save Taskbar settings, Dock settings, and Start Menu pins to a file"
 msgstr "将任务栏设置、Dock 设置和开始菜单固定项目保存到文件"
 
-#: src/prefs/profileTransfer.js:142
+#: src/prefs/profileTransfer.js:136
 msgid "Export…"
 msgstr "导出…"
 
-#: src/prefs/profileTransfer.js:146
+#: src/prefs/profileTransfer.js:140
 msgid "Import…"
 msgstr "导入…"
 
-#: src/prefs/profileTransfer.js:158
+#: src/prefs/profileTransfer.js:152
 #, javascript-format
 msgid "The profile operation failed: %s"
 msgstr "配置文件操作失败：%s"
 
-#: src/prefs/profileTransfer.js:166
+#: src/prefs/profileTransfer.js:160
 msgid "Export Profiles"
 msgstr "导出配置文件"
 
-#: src/prefs/profileTransfer.js:183
+#: src/prefs/profileTransfer.js:175
 msgid "Profile exported."
 msgstr "配置文件已导出。"
 
-#: src/prefs/profileTransfer.js:194
+#: src/prefs/profileTransfer.js:186
 msgid "Import Profiles"
 msgstr "导入配置文件"
 
-#: src/prefs/profileTransfer.js:211
+#: src/prefs/profileTransfer.js:201
 msgid "Profile imported."
 msgstr "配置文件已导入。"
 
@@ -1894,11 +1892,11 @@ msgstr "关闭"
 msgid "Item Position"
 msgstr "项目位置"
 
-#: src/prefs/preferencesWidgets.js:199 src/prefs/preferencesWidgets.js:275
+#: src/prefs/preferencesWidgets.js:199
 msgid "Move Up"
 msgstr "上移"
 
-#: src/prefs/preferencesWidgets.js:203 src/prefs/preferencesWidgets.js:279
+#: src/prefs/preferencesWidgets.js:203
 msgid "Move Down"
 msgstr "下移"
 
@@ -1951,8 +1949,8 @@ msgid "Follow Application Alignment"
 msgstr "跟随应用对齐方式"
 
 #: src/prefs/startButtonDialog.js:50 src/prefs/startMenuPage.js:83
-msgid "Move the Start button with the application buttons"
-msgstr "使开始按钮与应用按钮一同移动"
+msgid "Move the Start button with the application icons"
+msgstr "使开始按钮与应用图标一同移动"
 
 #: src/prefs/startButtonDialog.js:56 src/prefs/startMenuPage.js:43
 #: src/prefs/startMenuPage.js:270
@@ -2899,7 +2897,7 @@ msgstr "图像文件"
 msgid "Lock the Taskbar"
 msgstr "锁定任务栏"
 
-#: src/overflow/trayOverflowController.js:250
+#: src/overflow/trayOverflowController.js:252
 msgid "Tray icons"
 msgstr "托盘图标"
 
@@ -2957,6 +2955,9 @@ msgstr "应用音量"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "没有应用正在播放音频"
+
+#~ msgid "Application Button Options"
+#~ msgstr "应用按钮选项"
 
 #~ msgid "Choose the Start button alignment"
 #~ msgstr "选择开始按钮对齐方式"

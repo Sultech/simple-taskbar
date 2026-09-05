@@ -80,7 +80,7 @@ function addApplicationIconControls({
         {
             key: 'icon-spacing',
             title: _('Icon Spacing'),
-            subtitle: _('Space between application buttons'),
+            subtitle: _('Space between application icons'),
             lower: 0,
             upper: 16,
             addRow: row => iconSizingRow.add_row(row),
@@ -94,7 +94,7 @@ function addApplicationIconControls({
         {
             key: 'taskbar-highlight-style',
             title: _('Hover and Focus Effect'),
-            subtitle: _('Choose the effect used by application buttons'),
+            subtitle: _('Choose the effect used by application icons'),
             choices: [
                 {
                     value: TASKBAR_HIGHLIGHT_STYLE.GLASS,
@@ -191,7 +191,7 @@ function addApplicationLayoutControls({
     const layoutGroup = new Adw.ExpanderRow({
         title: _('Application Layout and Behavior'),
         subtitle: _(
-            'Choose which applications appear and how their buttons are grouped and indicated'
+            'Choose which applications appear and how they are grouped and indicated'
         ),
     });
     group.add(layoutGroup);
@@ -222,8 +222,8 @@ function addApplicationLayoutControls({
         settings,
         {
             key: 'combine-app-buttons-mode',
-            title: _('Combine Application Buttons'),
-            subtitle: _('Choose when windows share one taskbar button'),
+            title: _('Combine Application Windows'),
+            subtitle: _('Choose when windows share one application icon'),
             choices: combineAppButtonsChoices,
             choicesProvider: () =>
                 settings.get_boolean(
@@ -334,7 +334,7 @@ function addIndicatorControls({
         {
             key: 'running-indicator-position',
             title: _('Running Indicator Position'),
-            subtitle: _('Choose which edge of the application button to use'),
+            subtitle: _('Choose which edge of the application icon to use'),
             choices: RUNNING_INDICATOR_POSITIONS.map(value => ({
                 value,
                 label: positionLabels[value],
@@ -377,7 +377,7 @@ function addIndicatorControls({
         key: 'running-indicator-full-length',
         title: _('Stretch Indicators'),
         subtitle: _(
-            'Run indicators the full length of the application button'
+            'Run indicators the full length of the application icon'
         ),
     });
     indicatorGroup.add_row(indicatorFullLengthSwitch);
@@ -576,7 +576,7 @@ function addDockApplicationIconsGroup({
         settings,
         connectSettings,
         switchSubtitle: _(
-            'Show application buttons that do not fit in an overflow popup instead of scrolling the Dock'
+            'Show applications that do not fit in an overflow popup instead of scrolling the Dock'
         ),
     });
     addApplicationIsolationControls({
@@ -650,7 +650,7 @@ export function addApplicationIconsGroup({
         settings,
         connectSettings,
         switchSubtitle: _(
-            'Show application buttons that do not fit in an overflow popup instead of scrolling the taskbar'
+            'Show applications that do not fit in an overflow popup instead of scrolling the taskbar'
         ),
     });
     const isolationControls = addApplicationIsolationControls({

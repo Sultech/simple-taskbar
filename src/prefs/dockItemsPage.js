@@ -78,7 +78,7 @@ export function addDockItemsPage({
         ['applications', {
             key: 'app-alignment',
             title: _('Applications'),
-            subtitle: _('Dock application buttons'),
+            subtitle: _('Dock applications'),
             visibleState: applicationsVisibility,
         }],
     ]);

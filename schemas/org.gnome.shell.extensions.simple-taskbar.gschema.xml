@@ -67,7 +67,7 @@
     <key name="icon-spacing" type="i">
       <range min="-5" max="16"/>
       <default>3</default>
-      <summary>Space between application buttons</summary>
+      <summary>Space between application icons</summary>
     </key>
     <key name="taskbar-highlight-style" type="s">
       <choices>
@@ -185,7 +185,7 @@
     </key>
     <key name="running-indicator-full-length" type="b">
       <default>true</default>
-      <summary>Stretch running indicators across the application button</summary>
+      <summary>Stretch running indicators across the application icon</summary>
     </key>
     <key name="custom-indicator-colors-enabled" type="b">
       <default>false</default>
@@ -722,7 +722,7 @@
     </key>
     <key name="application-overflow-enabled" type="b">
       <default>true</default>
-      <summary>Show application buttons that do not fit in an overflow popup</summary>
+      <summary>Show applications that do not fit in an overflow popup</summary>
     </key>
     <key name="application-overflow-style" type="s">
       <choices>
@@ -734,13 +734,13 @@
     </key>
     <key name="hide-app-labels" type="b">
       <default>false</default>
-      <summary>Hide window title labels when application buttons are not combined</summary>
+      <summary>Hide window title labels when applications are not combined</summary>
     </key>
     <key name="group-apps-label-font-size" type="i">
       <range min="6" max="24"/>
       <default>14</default>
       <summary>Application title font size</summary>
-      <description>Font size for window title labels on uncombined application buttons</description>
+      <description>Font size for window title labels on uncombined applications</description>
     </key>
     <key name="group-apps-label-font-weight" type="s">
       <choices>
@@ -752,18 +752,18 @@
       </choices>
       <default>'inherit'</default>
       <summary>Application title font weight</summary>
-      <description>Font weight for window title labels on uncombined application buttons</description>
+      <description>Font weight for window title labels on uncombined applications</description>
     </key>
     <key name="group-apps-label-max-width" type="i">
       <range min="0" max="1000"/>
       <default>160</default>
       <summary>Application title maximum width</summary>
-      <description>Maximum width in pixels for window title labels on uncombined application buttons</description>
+      <description>Maximum width in pixels for window title labels on uncombined applications</description>
     </key>
     <key name="group-apps-use-fixed-width" type="b">
       <default>true</default>
       <summary>Use a fixed application title width</summary>
-      <description>Use the maximum label width for every uncombined application button</description>
+      <description>Use the maximum label width for every uncombined application</description>
     </key>
     <key name="isolate-workspaces" type="b">
       <default>false</default>
@@ -953,7 +953,7 @@
         <choice value="center"/>
       </choices>
       <default>'center'</default>
-      <summary>Application button alignment</summary>
+      <summary>Application icon alignment</summary>
     </key>
     <key name="start-button-position" type="s">
       <choices>
@@ -966,7 +966,7 @@
     </key>
     <key name="start-button-follow-app-alignment" type="b">
       <default>true</default>
-      <summary>Move the Start button with the application button alignment</summary>
+      <summary>Move the Start button with the application icon alignment</summary>
     </key>
     <key name="start-button-padding" type="i">
       <range min="0" max="20"/>
