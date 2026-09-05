@@ -168,8 +168,6 @@ export function addProfileTransferGroup(
                     showOperationError(error);
                 return;
             }
-            if (!file)
-                return;
 
             setButtonsSensitive(false);
             try {
@@ -196,8 +194,6 @@ export function addProfileTransferGroup(
                     showOperationError(error);
                 return;
             }
-            if (!file)
-                return;
 
             setButtonsSensitive(false);
             try {
