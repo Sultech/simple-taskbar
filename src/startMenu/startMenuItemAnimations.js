@@ -89,7 +89,7 @@ export function animateStartMenuItemIn(actor) {
         scale_y: 1,
         opacity: 255,
         duration: ITEM_ENTER_DURATION,
-        mode: Clutter.AnimationMode.EASE_OUT_BACK,
+        mode: Clutter.AnimationMode.EASE_OUT_QUAD,
     });
 }
 
@@ -98,23 +98,26 @@ export function animateStartMenuFolderAbsorb(
     targetActor,
     onStopped
 ) {
-    if (!canAnimate(sourceActor) || !canAnimate(targetActor)) {
+    if (!canAnimate(sourceActor)) {
         onStopped();
         return;
     }
 
+    if (targetActor && canAnimate(targetActor)) {
+        targetActor.remove_all_transitions();
+        targetActor.set_pivot_point(0.5, 0.5);
+        targetActor.scale_x = 0.84;
+        targetActor.scale_y = 0.84;
+        targetActor.ease({
+            scale_x: 1,
+            scale_y: 1,
+            duration: FOLDER_ABSORB_DURATION,
+            mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
+        });
+    }
+
     sourceActor.remove_all_transitions();
-    targetActor.remove_all_transitions();
     sourceActor.set_pivot_point(0.5, 0.5);
-    targetActor.set_pivot_point(0.5, 0.5);
-    targetActor.scale_x = 0.84;
-    targetActor.scale_y = 0.84;
-    targetActor.ease({
-        scale_x: 1,
-        scale_y: 1,
-        duration: FOLDER_ABSORB_DURATION,
-        mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
-    });
     sourceActor.ease({
         scale_x: 0.35,
         scale_y: 0.35,
@@ -150,7 +153,7 @@ export function animateStartMenuItemsIn(actors) {
             opacity: 255,
             delay: index * FOLDER_EXPAND_STAGGER,
             duration: ITEM_ENTER_DURATION,
-            mode: Clutter.AnimationMode.EASE_OUT_BACK,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         });
     }
 }

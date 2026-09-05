@@ -202,7 +202,6 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
                 appId,
                 folderId: this._folderId,
                 folderCollapsed: Boolean(remainingAppId),
-                remainingAppId,
             });
         }
     }
@@ -237,7 +236,6 @@ export class StartMenuAppMenu extends TaskbarAppMenu {
                 appId,
                 folderId: this._folderId,
                 folderCollapsed: Boolean(remainingAppId),
-                remainingAppId,
             });
         }
     }

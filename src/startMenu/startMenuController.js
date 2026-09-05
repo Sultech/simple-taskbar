@@ -1288,12 +1288,7 @@ export class StartMenuController {
 
         if (change.folderCollapsed && this._view === 'folder' &&
             this._activeFolderId === change.folderId) {
-            this._showPinnedApps(true, () => {
-                const appId = change.type === 'move-out'
-                    ? change.appId
-                    : change.remainingAppId;
-                this._animateVisibleAppResult(appId);
-            });
+            this._showPinnedApps(true);
             return;
         }
 

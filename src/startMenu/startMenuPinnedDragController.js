@@ -70,7 +70,6 @@ export class StartMenuPinnedDragController {
                     appId: source._pinnedAppId,
                     folderId,
                     folderCollapsed: Boolean(remainingAppId),
-                    remainingAppId,
                     sourceButton: null,
                 });
                 return true;
@@ -302,7 +301,9 @@ export class StartMenuPinnedDragController {
                 appId: source._pinnedAppId,
                 folderId,
                 sourceActor: source._pinnedTile._startMenuFolderDropActor,
-                targetActor: folderTarget._startMenuFolderDropActor,
+                targetActor: targetIsFolder
+                    ? null
+                    : folderTarget._startMenuFolderDropActor,
             };
             return true;
         }
