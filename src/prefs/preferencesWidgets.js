@@ -270,33 +270,6 @@ export function createPanelOrderRow(settings, {
     };
 }
 
-export function createItemOrderRow({title, subtitle = ''}) {
-    const upButton = new Gtk.Button({
-        tooltip_text: _('Move Up'),
-        valign: Gtk.Align.CENTER,
-    });
-    const downButton = new Gtk.Button({
-        tooltip_text: _('Move Down'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(upButton, 'go-up-symbolic');
-    setButtonIcon(downButton, 'go-down-symbolic');
-    upButton.add_css_class('flat');
-    downButton.add_css_class('flat');
-    const moveBox = new Gtk.Box({
-        orientation: Gtk.Orientation.HORIZONTAL,
-        spacing: 2,
-        valign: Gtk.Align.CENTER,
-    });
-    moveBox.append(upButton);
-    moveBox.append(downButton);
-
-    const row = new Adw.ActionRow({title, subtitle});
-    row.add_prefix(moveBox);
-
-    return {row, upButton, downButton, group: null};
-}
-
 export function addComboRow(group, settings, {
     key,
     title,
