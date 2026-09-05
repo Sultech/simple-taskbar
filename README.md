@@ -62,289 +62,203 @@ optional Eleven-style Start Menu.
   </tr>
 </table>
 
-## Choose a panel style
+## Panel Styles
 
 | Style | What it does |
 | --- | --- |
-| **Taskbar** | Shows GNOME favourites and running applications on the panel, starts on the desktop, and hides GNOME's original Overview Dash. |
-| **Dock** | Shows application buttons in a separate Dock while leaving the main panel available for GNOME and extension items. |
-| **Default GNOME Panel** | Hides taskbar applications and Start buttons, restores GNOME's original Dash in Overview, and keeps the panel customisation options. |
-| **Windows XP Theme** | Applies a Windows XP-inspired appearance with a 30px panel, 16px application icons, fixed spacing, XP artwork and a classic taskbar layout. |
+| **Taskbar** | GNOME favourites and running applications on the panel. Starts on the desktop and hides GNOME's Overview Dash. |
+| **Dock** | Applications in a separate Dock, leaving the main panel free for GNOME and extension items. |
+| **Windows XP Theme** | A Windows XP-inspired look: 30px panel, 16px icons, fixed spacing, XP artwork and a classic taskbar layout. |
+| **Default GNOME Panel** | Hides taskbar applications and Start buttons, restores GNOME's Dash in Overview, keeps the panel options. |
 
-Default GNOME Panel mode normally keeps GNOME's usual startup Overview. Dash to
-Dock and Ubuntu Dock can change that startup behaviour when they are active.
+Windows XP Theme applies its own dimensions and layout. Conflicting controls are
+disabled while it is active, and your previous mode and settings are restored
+when you turn it off. Default GNOME Panel mode keeps panel position, height,
+themes, item order and multi-monitor settings available, and normally keeps
+GNOME's startup Overview — Dash to Dock and Ubuntu Dock can change that.
 
-Windows XP Theme applies its own dimensions and layout. Controls that conflict
-with the XP appearance are disabled while it is active, and the previously
-active panel mode and its settings are restored when it is turned off.
-Default GNOME Panel mode keeps panel position, height, themes, item order and
-multi-monitor settings available, while taskbar application and Start button
-controls remain disabled until Taskbar mode is restored.
+## Features
 
-## Taskbar
+Simple Taskbar follows GNOME's application favourites and their order, so
+pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 
-The Taskbar page groups its settings into General, Application Icons, Panel
-Appearance, Taskbar Behaviour, Panel Items and Locations sections. Most
-detailed controls are arranged in expandable rows.
+### Applications
 
-### General
+- **Click actions** — choose from *Cycle Windows + Minimize*, *Cycle Through Windows*,
+  *Toggle Single / Preview Multiple*, *Toggle Single / Cycle Multiple*, *Spread Multiple
+  Windows*, *Toggle Windows*, *Raise Windows* and *Launch New Instance*
+- **Modifier clicks** — Shift+click, middle-click and Shift+middle-click each take their own action, including *Quit* and *Minimize Window*
+- **Hover action** — show window previews, show a tooltip, or do nothing
+- **Window previews** with separate show and hide delays, and optional middle-click to close the window
+- **Window peeking** brings the hovered window to the front temporarily, with its own delay and an adjustable opacity for the other windows
+- **Spread windows** — one click spreads just that application's windows in Overview, including windows on other workspaces
+- **Scroll over an icon** to switch workspace or cycle that application's windows, with an adjustable delay
+- **Drag to reorder** pinned applications and move running groups
+- **Grouping** — *Always* (one icon per application), *Only When Full* (split until space runs out) or *Never* (one per window)
+- **Window titles** beside split icons, with adjustable font size, weight, maximum width and an optional fixed width, or hidden entirely
+- **Notification badges** showing unread counts on application icons
+- **Overflow** — a *Taskbar Flyout* or *Application List* popup for what does not fit. Dragging works across visible and overflow entries, and the popup stays open while dragging
+- **Scrolling taskbar** when overflow is off, moving through applications instead of switching workspaces
+- **Pinned launchers** — keep favourites as launchers and show their windows separately
+- **Visibility** — hide pinned applications, hide unpinned ones, or hide pinned applications on secondary monitors only
+- **Isolation** by current workspace or by the monitor the taskbar is on
+- **Separators** between pinned and running applications, and between applications and locations
 
-Simple Taskbar uses GNOME's application favourites and their order. Changes to
-favourites are reflected in the taskbar and GNOME's original Dash.
+### Icons and Effects
 
-### Application Icons
-
-The Application Icons section contains expandable rows for icon sizing and
-spacing, application interaction, application layout, running indicators,
-application overflow and application isolation.
-
-Application icons range from 15–63px with 0–16px spacing. A configurable
-minimum icon size can be used when space is limited. On horizontal panels,
-application icons can be aligned left or centre; on vertical panels they can be
-aligned top or middle.
-
-Application buttons support:
-
-- Left click to launch, focus or minimise an application.
-- Middle click to open a new window, or close all its windows when **Middle
-  Click Closes Applications** is enabled.
-- Right click to open GNOME's application menu.
-- Dragging to reorder pinned applications and move running application groups.
-- Hovering to preview open windows. A preview can focus or close its exact
-  window.
-
-Click an application with multiple windows to spread only those windows in
-Overview, including windows on other workspaces.
-
-Applications can be displayed in three grouping modes:
-
-| Mode | Behaviour |
-| --- | --- |
-| **Always** | One button per application. This is the default. |
-| **Only When Full** | Separate buttons while they fit, then combine them. |
-| **Never** | One button for every window. |
-
-When buttons are not combined, window labels can be hidden so that the buttons
-show icons only. If the taskbar is full, application overflow can show extra
-buttons in a popup. When overflow is disabled, a taskbar wider than the
-available panel area can be scrolled along its length. The overflow popup has a
-taskbar-style flyout and an application-list style. Dragging works across the
-visible and overflow buttons, and the overflow popup remains open while
-dragging. With overflow disabled, scrolling over an overfull taskbar moves
-through its buttons instead of switching workspaces.
-
-Other application options include:
-
-- Show or hide favourite applications that are not running.
-- Use pinned applications as launchers while showing their running windows in
-  separate buttons.
-- Show a separator between pinned and running applications.
-- Show applications from only the current workspace.
-- Show applications only on the monitor where their taskbar is displayed.
-
-Running applications can use rounded or straight indicators with custom
-focused and unfocused colours. **Match Icon Color** instead takes the focused
-indicator colour from the application's own icon and is mutually exclusive
-with custom indicator colours.
+- **Icon size** 15–63px, **spacing** 0–16px, and a **minimum size** for when space runs short
+- **Alignment** — left or centre on horizontal panels, top or middle on vertical panels
+- **Hover animation** — *Simple*, *Ripple* or *Magnify*, each with a tunable profile: duration, dock expansion, rotation, travel, zoom, curve convexity and how many neighbouring icons react
+- **23 click animations** — Bounce, Jump, Heartbeat, Squish, Jelly, Spin, 3D Spin,
+  Horizontal Flip, Roll, Zoom Out & Fade, Squeeze, Glow, Dim, Tada, Swing, Shake, Nudge
+  Up/Down/Left/Right, Pulse Larger, Pulse Smaller and GNOME Launch Zoom
+- **Hover and focus effect** — *Glass*, or *Classic* with its own hover and pressed
+  colours, highlight border radius, focused-application highlight, opacity, and an
+  option to take the colour from the icon itself
+- **Window minimize effect** — GNOME's default or **Magic Lamp**
+- **Running indicators** — rounded or straight, placed on any edge of the icon, with
+  adjustable size, optional full length, custom focused and unfocused colours, or
+  **Match Icon Color** taken from the application's own icon
 
 ### Panel Appearance
 
-- Panel thickness: 32–80px.
-- Panel position: top, bottom, left or right edge of the screen.
-- Light, dark or GNOME Shell-following panel themes.
-- Custom panel colours, gradients, gradient direction and light or dark panel
-  text.
-- Adjustable transparency.
-- Separate borders for light and dark themes.
-- Optional translucent and blurred styling through Blur My Shell on the
-  primary and secondary panels. Secondary panels use Simple Taskbar's own
-  background when Blur My Shell is not styling them.
+- **Thickness** 32–80px and **position** on the top, bottom, left or right edge
+- **Themes** — light, dark, or follow GNOME Shell
+- **Custom colours**, gradients, gradient direction, and light or dark panel text
+- **Transparency** and separate borders per light and dark theme
+- **Blur My Shell** translucency and blur on primary and secondary panels, with Simple Taskbar's own background as the fallback on secondary panels
 
-<p align="center">
-  <img src="docs/images/settings-taskbar-wide.png" alt="Taskbar settings main page showing taskbar mode and application icon options">
-</p>
+### Behaviour
 
-<p align="center"><sub>Taskbar settings main page.</sub></p>
-
-### Taskbar Behaviour
-
-The Taskbar Behaviour section contains expandable rows for visibility,
-workspace scrolling and panel and notification behaviour.
-
-- Animated auto-hide on every panel.
-- A bottom hot edge that toggles Overview, enabled by default, with adjustable
-  activation pressure and an optional ripple animation.
-- Workspace switching by scrolling over empty panel space, with an adjustable
-  delay between workspace changes.
-- An application volume mixer inside Quick Settings, enabled by default, for
-  adjusting individual streams or opening GNOME's Volume Levels settings.
-- Tray icons collected behind a panel arrow, enabled by default.
-- A Task Manager action in the empty-panel context menu. It opens the selected
-  installed application; the default is Resources, followed by GNOME System
-  Monitor and Mission Center when the selected application is unavailable.
-- The taskbar can be shown on every connected monitor.
-- Panel menus switch only after a click, instead of on hover.
-- Notification banners align with the panel edge and clock position.
-- The empty-panel context menu can lock the taskbar against accidental
-  rearrangement.
+- **Auto-hide** with animation on every panel, revealed at the screen edge
+- **Dodge windows** — hide for all windows, the focused application's windows, only the focused window, or only maximized windows, with an optional pointer reveal
+- **Hot edge** at the bottom that toggles Overview, with adjustable activation pressure and an optional ripple
+- **Scroll over empty space** to switch workspace, cycle windows or change volume, with an adjustable delay
+- **Application volume mixer** in Quick Settings for individual streams
+- **Tray icons** gathered behind a panel arrow, positioned where you want it
+- **Task Manager** entry in the panel menu — Resources by default, with automatic fallback to GNOME System Monitor or Mission Center
+- **Multi-monitor** — show the taskbar on every connected monitor
+- **Click-to-open menus** instead of switching panel menus on hover
+- **Notification banners** aligned to the panel edge and clock position
+- **Lock the taskbar** against accidental rearrangement
 
 ### Panel Items
 
-The Panel Items section includes panel button padding, optional item visibility
-and item ordering. Automatic padding uses Just Perfection's padding when
-available, otherwise 3px; an explicit 0–20px value takes precedence. Default
-GNOME Panel mode uses 12px padding and restores Automatic when Taskbar mode
-returns.
+Three item groups — **Left**, **Center** and **Right** on horizontal panels, or
+**Top**, **Middle** and **Bottom** on vertical ones — hold the Start and
+Activities buttons, Applications, Folder Menu, the tray icon arrow, Quick
+Settings, Clock and Show Desktop.
 
-The panel has three item groups: **Left**, **Center** and **Right** on horizontal
-panels, or **Top**, **Middle** and **Bottom** on vertical panels. These can
-contain:
-
-- Start and Activities buttons.
-- Applications.
-- Folder Menu.
-- Tray icons.
-- Quick Settings.
-- Clock.
-- Show Desktop.
-
-Activities and Show Desktop can be shown or hidden, and Folder Menu is
-optional. The Folder Menu opens files from a selected directory with their
-default applications. Show Desktop is a narrow button that minimizes or
-restores all windows and is limited to the outer item groups.
-
-Each group also has a fixed box row for other GNOME Shell and extension items.
-Managed items can be placed before or after that row. Move Up and Move Down
-keep each item within its current group.
-
-**Reset All Settings** restores the extension defaults without changing the
-taskbar favourites or Start Menu pins, including their order.
+- **Item ordering** with Move Up and Move Down inside each group, around a fixed box row for other GNOME Shell and extension items
+- **Button padding** — Automatic follows Just Perfection when present and 3px otherwise,
+  while an explicit 0–20px value takes precedence. Default GNOME Panel mode uses 12px
+  and restores Automatic on return
+- **Folder Menu** opens files from a chosen directory with their default applications
+- **Show Desktop** minimises or restores every window, with adjustable width and an optional custom separator colour
+- **Reset All Settings** restores defaults without touching taskbar favourites or Start Menu pins
 
 ### Locations
 
-The taskbar and Dock can show selected common folders, Trash, and connected
-drives and volumes. Drive options can limit entries to mounted drives or
-include network volumes. Nautilus can also show Home, Desktop, Documents,
-Downloads, Music, Pictures and Videos shortcuts in its application menu; these
-shortcuts are enabled by default.
+- Common folders, Trash, and connected drives and volumes, in the taskbar and the Dock independently
+- Drive entries can be limited to mounted drives, or include network volumes
+- Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts in the Nautilus application menu
 
-## Dock
+### Dock
 
-The Dock page groups its settings into General, Application Icons, Dock
-Appearance, Dock Behavior, Dock Items and Locations sections. Most detailed
-controls are arranged in expandable rows.
+Dock mode moves applications out of the panel into a separate Dock, with its own
+copy of the icon, effect, indicator, overflow and isolation settings.
 
-Dock mode moves application buttons out of the main panel into a separate
-Dock. It can be placed at the top, bottom, left or right edge, limited to a
-percentage of the monitor length or extended fully to the monitor edge, and
-shown on every connected monitor.
+- Placement on any edge, independent of the taskbar's own position
+- **Maximum length** as a percentage of the monitor, or a full-width Dock reaching the edges
+- **Corner radius**, independent themes, transparency, gradients, text colour, borders and Blur My Shell
+- **Auto-hide** with the same window-dodge modes, plus edge reveal and an option to limit reveal to the Dock's own edge
+- **Scroll** over empty Dock space to switch workspace, cycle windows or change volume
+- Shown on every connected monitor, with its own item order and locations
 
-The Dock's Application Icons section provides the same sizing, interaction,
-layout, indicator, overflow and isolation controls for Dock applications. Its
-appearance and behaviour sections provide independent themes, transparency,
-borders, Blur My Shell, auto-hide, window dodge, edge reveal and workspace
-scrolling. The Dock Items section controls the order of the Start Menu and
-Applications, and its Locations section can show folders, Trash, drives and
-volumes.
+### Start Menu
 
-<p align="center">
-  <img src="docs/images/settings-dock-wide.png" alt="Dock settings main page showing Dock mode, application icon and Dock options">
-</p>
+The Eleven-style Start Menu is enabled by default.
 
-<p align="center"><sub>Dock settings main page.</sub></p>
+- **Pinned grid** with drag-and-drop ordering, folders, and optional titles under icons
+- **Global search** through GNOME, including compatible system and extension providers
+- **All Apps** view with selectable categories or one alphabetical list, and the option to open there by default
+- **Application menus** — open windows, launcher actions, App Details, Quit, Pin to Start, Pin to Taskbar or Dock, and desktop shortcuts when a supported desktop-icons extension is active
+- **Drag from All Apps** onto the taskbar or Dock to pin
+- **Recommended applications**, which can exclude what is already pinned
+- **Running indicators** under applications that are open
+- **Folder shortcuts** beside the Settings icon, plus the account profile picture and a footer power menu
+- **Keyboard navigation** with Tab and the arrow keys, and delayed tooltips carrying names and descriptions
+- **Themes** — dark, light or follow GNOME Shell, with panel-matched transparency and optional monitor-centred positioning
 
-## Window Switching
+The Start button can be the Eleven-style button or GNOME's original
+Applications button. It follows application alignment or takes a manual
+position, with custom padding, an optional separator and a bundled or personal
+icon; either button can be hidden, and right-clicking the Eleven-style button
+opens its settings. Its context menu can offer Installed Apps, Event Viewer,
+System, Network Connections, Disk Management, Terminal, Task Manager, File
+Explorer, Run and Desktop.
 
-Grid Alt-Tab is enabled by default. It replaces the normal application switcher
-with a responsive grid of live window previews while preserving normal
-Alt+Tab and Shift+Alt+Tab selection.
+### Window Switching
 
-It supports pointer and arrow-key navigation and activates the selected window
-when Alt is released. Configure:
+Grid Alt-Tab replaces the application switcher with a responsive grid of live
+window previews, keeping normal Alt+Tab and Shift+Alt+Tab selection. It is
+enabled by default, supports pointer and arrow-key navigation, and activates
+the selected window when Alt is released.
 
-- Maximum preview card height.
-- All workspaces or only the current workspace.
-- All monitors or only the monitor showing the switcher.
-- The current monitor or always the primary monitor for the popup.
+- Maximum preview card size
+- All workspaces or only the current one
+- All monitors or only the monitor showing the switcher
+- Popup on the current monitor or always the primary
 
-<p align="center">
-  <img src="docs/images/settings-grid-alt-tab-wide.png" alt="Grid Alt-Tab settings main page">
-</p>
+### Keyboard Shortcuts
 
-<p align="center"><sub>Window Switching settings main page.</sub></p>
+| Shortcut | Action |
+| --- | --- |
+| **Super** | Opens the Start Menu, moving Overview to **Super+Tab** |
+| **Super+Tab** | Opens the Start Menu instead, when the Super shortcut is off |
+| **Super+E** | Opens the home folder in the default file manager |
+| **Super+1** … **Super+9** | Activates that pinned application; pressing it again on the focused one minimises it |
 
-## Start Menu
+A custom shortcut can open the Start Menu when both built-in shortcuts are off.
+Each shortcut can be disabled, conflicts between the extension's own shortcuts
+are checked, and GNOME's saved shortcuts are never changed. The previous Mutter
+overlay-key setting is restored when the extension is disabled.
 
-The Start Menu page groups its settings into Start Button, Eleven-style Start
-Menu and Keyboard Shortcuts sections. Most detailed controls are arranged in
-expandable rows.
+### Profiles
 
-### Start Button
+Export and import profiles containing panel settings, Dock settings and Start
+Menu pins from the About page.
 
-The Start button can use the Eleven-style button or the original GNOME
-Applications button. It can follow application alignment, use a custom
-padding value and use a bundled or personal icon. Both Start buttons can be
-hidden. Right-click the Eleven-style button to open its settings.
+## Settings
 
-Its context menu can also provide Installed Apps, Event Viewer, System,
-Network Connections, Disk Management, Terminal, Task Manager, File Explorer,
-Run and Desktop shortcuts.
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/settings-taskbar.png" alt="Taskbar settings page" width="100%">
+      <br><br><sub><b>Taskbar</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/settings-dock.png" alt="Dock settings page" width="100%">
+      <br><br><sub><b>Dock</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/settings-start-menu.png" alt="Start Menu settings page" width="100%">
+      <br><br><sub><b>Start Menu</b></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/settings-window-switching.png" alt="Window Switching settings page" width="100%">
+      <br><br><sub><b>Window Switching</b></sub>
+    </td>
+  </tr>
+</table>
 
-### Eleven-style Start Menu
+Most detailed controls sit in expandable rows on each page. Open the settings
+with Extension Manager, by right-clicking empty taskbar, panel or Dock space
+and choosing the settings item, or by running:
 
-The Eleven-style Start Menu is enabled by default. It provides:
-
-- A separate pinned-app grid with drag-and-drop ordering.
-- GNOME global search, including compatible system and extension providers.
-- An All Apps view with selectable categories, or one alphabetical list.
-- Scrollbars for long pinned and All Apps views.
-- Delayed tooltips with application names and descriptions.
-- Keyboard navigation with Tab and the arrow keys.
-- Application menus with open-window, launcher-action, App Details, Quit,
-  Pin to Start, Pin to Taskbar or Dock, and desktop shortcut actions when a
-  supported desktop-icons extension is active.
-- Dragging an application from All Apps onto the taskbar or Dock to pin it.
-- Dark, light or GNOME Shell-following themes.
-- Optional monitor-centred positioning.
-
-The Start Menu Options row controls recommended applications, opening directly
-in All Apps, the account profile picture and the footer power menu. Recommended
-applications can exclude apps already pinned to the Start Menu or taskbar or
-Dock. The Start Menu Appearance row controls the theme and panel transparency,
-and whether titles are shown below pinned icons.
-
-The Folder Shortcuts row can place Home, Desktop, Documents, Downloads, Music,
-Pictures and Videos beside the Settings icon. The Right-click Menu Shortcuts
-row controls which system shortcuts appear on the Start button context menu.
-
-### Keyboard shortcuts
-
-- **Super** opens the Start Menu by default and moves Overview to **Super+Tab**.
-- Turn off the Super shortcut to use **Super+Tab** for the Start Menu instead.
-- When both built-in shortcuts are off, a custom shortcut can open the Start
-  Menu.
-- **Super+E** opens the home folder with the default file manager.
-- **Super+1** through **Super+9** activate the corresponding GNOME favourite;
-  activating the focused application again minimises its windows.
-
-Shortcuts can be disabled, and the extension checks for conflicts between its
-own shortcuts. It does not change GNOME's saved shortcuts. When the Start Menu
-uses the Super key, the previous Mutter overlay-key setting is restored when
-the extension is disabled.
-
-Global search results can request that provider-supplied text be copied to the
-clipboard when a result is activated.
-
-<p align="center">
-  <img src="docs/images/settings-start-menu-wide.png" alt="Start Menu settings main page showing Start button and menu options">
-</p>
-
-<p align="center"><sub>Start Menu settings main page.</sub></p>
-
-## Profiles
-
-The About page can export and import profiles containing panel settings, Dock
-settings and Start Menu pins.
+    gnome-extensions prefs simple-taskbar@sultech
 
 ## Installation
 
@@ -363,17 +277,10 @@ To install the current source version:
 Log out and back in if GNOME Shell does not discover a newly installed
 extension immediately.
 
-## Open the settings
+## Compatibility
 
-Use Extension Manager, right-click empty taskbar, panel or Dock space and
-choose the corresponding settings item, or run:
-
-    gnome-extensions prefs simple-taskbar@sultech
-
-## Compatibility and integrations
-
-Simple Taskbar supports GNOME Shell 48, 49 and 50. Other GNOME versions are
-not declared until they have been tested.
+Simple Taskbar supports GNOME Shell 48, 49, 50 and 51. Other GNOME versions
+are not declared until they have been tested.
 
 Dash to Panel is disabled while Simple Taskbar is active because both
 extensions restructure GNOME's main panel. Dash to Dock and Ubuntu Dock are
