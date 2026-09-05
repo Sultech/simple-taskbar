@@ -93,8 +93,8 @@ function applyProfile(settings, values) {
     settings.delay();
     for (const [key, value] of values)
         settings.set_value(key, value);
-    settings.apply();
     settings.set_boolean('panel-profile-transition', false);
+    settings.apply();
 }
 
 async function exportProfile(file, settings) {
