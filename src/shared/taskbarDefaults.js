@@ -2,17 +2,14 @@
 // Copyright (C) 2026 sultech
 
 import {DEFAULT_PANEL_ITEM_ORDER} from './panelItemOrder.js';
-import {CLICK_ACTION} from './applicationClickActions.js';
 import {
     APPLICATION_CLICK_ANIMATION,
 } from './applicationClickAnimation.js';
 import {
     WINDOW_MINIMIZE_EFFECT,
 } from './windowMinimizeEffect.js';
-import {HOVER_ACTION} from './applicationHoverActions.js';
-import {SCROLL_ACTION} from './applicationScrollActions.js';
-import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
 import {TASKBAR_HIGHLIGHT_STYLE} from './classicHighlightSettings.js';
+import {applySharedInteractionDefaults} from './interactionDefaults.js';
 import {
     setBoolean,
     setInteger,
@@ -63,7 +60,6 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'gnome-start-button-visible', true);
     setBoolean(settings, 'system-menu-visible', true);
     setBoolean(settings, 'clock-visible', true);
-    setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'panel-theme-follow-system', true);
     setBoolean(settings, 'transparency-enabled', true);
     setBoolean(settings, 'panel-border-enabled', false);
@@ -78,11 +74,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'hide-pinned-secondary-monitors', false);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
     setBoolean(settings, 'super-number-keybindings-enabled', true);
-    setString(
-        settings,
-        'application-click-action',
-        CLICK_ACTION.TOGGLE_SPREAD
-    );
+    applySharedInteractionDefaults(settings);
     setString(
         settings,
         'application-click-animation',
@@ -93,35 +85,8 @@ export function applyDefaultTaskbarSettings(settings) {
         'window-minimize-effect',
         WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT
     );
-    setString(settings, 'shift-click-action', CLICK_ACTION.MINIMIZE);
-    setString(settings, 'middle-click-action', CLICK_ACTION.LAUNCH);
-    setString(
-        settings,
-        'shift-middle-click-action',
-        CLICK_ACTION.LAUNCH
-    );
-    setString(
-        settings,
-        'scroll-icon-action',
-        SCROLL_ACTION.SWITCH_WORKSPACE
-    );
-    setString(
-        settings,
-        'workspace-scroll-action',
-        PANEL_SCROLL_ACTION.SWITCH_WORKSPACE
-    );
-    setInteger(settings, 'scroll-icon-delay', 5);
-    setBoolean(settings, 'scroll-icon-follow-panel-delay', true);
-    setString(
-        settings,
-        'application-hover-action',
-        HOVER_ACTION.SHOW_PREVIEWS
-    );
-    setBoolean(settings, 'panel-autohide-enabled', false);
-    setBoolean(settings, 'nautilus-places-enabled', true);
     setBoolean(settings, 'start-menu-follow-panel-theme', true);
     setBoolean(settings, 'start-menu-follow-panel-transparency', false);
-    setBoolean(settings, 'super-e-file-manager-enabled', true);
     setString(
         settings,
         'combine-app-buttons-mode',

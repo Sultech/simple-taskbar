@@ -4,11 +4,8 @@
 import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
-import {CLICK_ACTION} from './applicationClickActions.js';
 import {APP_ICON_HOVER_ANIMATION} from './applicationHoverAnimation.js';
-import {HOVER_ACTION} from './applicationHoverActions.js';
-import {SCROLL_ACTION} from './applicationScrollActions.js';
-import {PANEL_SCROLL_ACTION} from './panelScrollActions.js';
+import {applySharedInteractionDefaults} from './interactionDefaults.js';
 import {
     setBoolean,
     setInteger,
@@ -31,45 +28,13 @@ export function applyWindowsXpThemeAppearance(settings) {
 }
 
 export function applyWindowsXpThemeBehaviorDefaults(settings) {
-    setString(
-        settings,
-        'application-click-action',
-        CLICK_ACTION.TOGGLE_SPREAD
-    );
-    setString(settings, 'shift-click-action', CLICK_ACTION.MINIMIZE);
-    setString(settings, 'middle-click-action', CLICK_ACTION.LAUNCH);
-    setString(
-        settings,
-        'shift-middle-click-action',
-        CLICK_ACTION.LAUNCH
-    );
-    setString(
-        settings,
-        'scroll-icon-action',
-        SCROLL_ACTION.SWITCH_WORKSPACE
-    );
-    setString(
-        settings,
-        'workspace-scroll-action',
-        PANEL_SCROLL_ACTION.SWITCH_WORKSPACE
-    );
-    setInteger(settings, 'scroll-icon-delay', 5);
-    setBoolean(settings, 'scroll-icon-follow-panel-delay', true);
-    setString(
-        settings,
-        'application-hover-action',
-        HOVER_ACTION.SHOW_PREVIEWS
-    );
-    setBoolean(settings, 'panel-autohide-enabled', false);
+    applySharedInteractionDefaults(settings);
     setBoolean(settings, 'hot-edge-overview-enabled', true);
     setBoolean(settings, 'multi-monitor-panels', true);
-    setBoolean(settings, 'show-desktop-button-visible', true);
     setBoolean(settings, 'tray-overflow-enabled', true);
     setBoolean(settings, 'folder-menu-enabled', false);
     setBoolean(settings, 'panel-menu-click-only', true);
     setBoolean(settings, 'notification-banner-bottom-end', true);
-    setBoolean(settings, 'nautilus-places-enabled', true);
-    setBoolean(settings, 'super-e-file-manager-enabled', true);
 }
 
 export function applyWindowsXpThemeSettings(settings) {
