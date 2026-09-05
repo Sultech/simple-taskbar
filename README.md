@@ -53,7 +53,7 @@ optional Eleven-style Start Menu.
   <tr>
     <td align="center" width="50%">
       <img src="docs/images/start-menu-light.webp" alt="Start Menu in the light theme" width="100%">
-      <br><br><sub><b>Start Menu with Pinned Folders</b></sub>
+      <br><br><sub><b>Start Menu in the Light Theme</b></sub>
     </td>
     <td align="center" width="50%">
       <img src="docs/images/demo-start-menu-dark.webp" alt="Eleven-style Start Menu in the dark theme" width="100%">
