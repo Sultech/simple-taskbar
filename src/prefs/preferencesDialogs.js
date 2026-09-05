@@ -26,14 +26,7 @@ export function confirmReset(window, createSettings) {
     dialog.set_default_response('cancel');
     dialog.set_close_response('cancel');
     dialog.choose(window, null, (source, result) => {
-        let response;
-        try {
-            response = source.choose_finish(result);
-        } catch (error) {
-            console.error(error);
-            return;
-        }
-        if (response !== 'reset')
+        if (source.choose_finish(result) !== 'reset')
             return;
 
         const resetSettings = createSettings();
