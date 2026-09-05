@@ -11,7 +11,8 @@ function _luminance(color) {
         0.114 * color.blue) / 255;
 }
 
-function _probeShellMenusUseLightTheme() {
+// Popup menus reflect the Shell palette more reliably than the panel.
+export function shellMenusUseLightTheme() {
     const probeMenu = new St.BoxLayout({style_class: 'popup-menu'});
     const probeContent = new St.BoxLayout({style_class: 'popup-menu-content'});
     probeMenu.add_child(probeContent);
@@ -31,11 +32,6 @@ function _probeShellMenusUseLightTheme() {
     } finally {
         probeMenu.destroy();
     }
-}
-
-// Popup menus reflect the Shell palette more reliably than the panel.
-export function shellMenusUseLightTheme() {
-    return _probeShellMenusUseLightTheme();
 }
 
 export function panelUsesLightTheme(settings) {
