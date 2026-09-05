@@ -88,18 +88,7 @@ function addApplicationIconControls({
         connectSettings
     );
     const classicOptionsButton = createClassicHighlightOptionsButton(settings);
-    const syncClassicOptionsSensitivity = () => {
-        classicOptionsButton.sensitive = settings.get_string(
-            'taskbar-highlight-style'
-        ) === TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
-    };
-    connectSettings(
-        settings,
-        'changed::taskbar-highlight-style',
-        syncClassicOptionsSensitivity
-    );
-    syncClassicOptionsSensitivity();
-    addComboRow(
+    const highlightStyleRow = addComboRow(
         iconSizingRow,
         settings,
         {
@@ -121,6 +110,25 @@ function addApplicationIconControls({
         },
         connectSettings
     );
+    const syncClassicOptionsSensitivity = () => {
+        const enabled = !settings.get_boolean('windows-xp-theme-enabled');
+        highlightStyleRow.sensitive = enabled;
+        classicOptionsButton.sensitive = enabled &&
+            settings.get_string(
+                'taskbar-highlight-style'
+            ) === TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+    };
+    connectSettings(
+        settings,
+        'changed::taskbar-highlight-style',
+        syncClassicOptionsSensitivity
+    );
+    connectSettings(
+        settings,
+        'changed::windows-xp-theme-enabled',
+        syncClassicOptionsSensitivity
+    );
+    syncClassicOptionsSensitivity();
     const appAlignmentRow = addComboRow(
         group,
         settings,
