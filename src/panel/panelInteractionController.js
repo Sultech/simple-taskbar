@@ -247,8 +247,6 @@ export class PanelInteractionController {
 
         const configuredPanelAction =
             this._settings.get_string('workspace-scroll-action');
-        if (!configuredPanelAction)
-            return Clutter.EVENT_PROPAGATE;
 
         const scrollOverApp = target &&
             this._taskbarController.hasTarget(target) &&
