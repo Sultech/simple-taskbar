@@ -68,7 +68,7 @@ optional Eleven-style Start Menu.
 | --- | --- |
 | **Taskbar** | GNOME favourites and running applications on the panel. Starts on the desktop and hides GNOME's Overview Dash. |
 | **Dock** | Applications in a separate Dock, leaving the main panel free for GNOME and extension items. |
-| **Windows XP Theme** | A Windows XP-inspired look: 30px panel, 16px icons, fixed spacing, XP artwork and a classic taskbar layout. |
+| **Windows XP Theme** | A Windows XP-inspired look: 30px panel, 16px icons, tightened -5px spacing, XP artwork and a classic taskbar layout. |
 | **Default GNOME Panel** | Hides taskbar applications and Start buttons, restores GNOME's Dash in Overview, keeps the panel options. |
 
 Windows XP Theme applies its own dimensions and layout. Conflicting controls are
@@ -116,9 +116,10 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
   colours, highlight border radius, focused-application highlight, opacity, and an
   option to take the colour from the icon itself
 - **Window minimize effect** — GNOME's default or **Magic Lamp**
-- **Running indicators** — rounded or straight, placed on any edge of the icon, with
-  adjustable size, optional full length, custom focused and unfocused colours, or
-  **Match Icon Color** taken from the application's own icon
+- **Running indicators** — eight styles (Rounded, Dots, Squares, Dashes, Segmented,
+  Solid, Ciliora, Metro) on any edge of the icon, 1–5px thick, optionally stretched to
+  the icon's full length, with custom focused and unfocused colours or **Match Icon
+  Color** taken from the application's own icon
 
 ### Panel Appearance
 
@@ -136,7 +137,8 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 - **Scroll over empty space** to switch workspace, cycle windows or change volume, with an adjustable delay
 - **Application volume mixer** in Quick Settings for individual streams
 - **Tray icons** gathered behind a panel arrow, positioned where you want it
-- **Task Manager** entry in the panel menu — Resources by default, with automatic fallback to GNOME System Monitor or Mission Center
+- **Task Manager** entry in the panel menu — any installed application, defaulting to
+  Resources and falling back to GNOME System Monitor or Mission Center when it is missing
 - **Multi-monitor** — show the taskbar on every connected monitor
 - **Click-to-open menus** instead of switching panel menus on hover
 - **Notification banners** aligned to the panel edge and clock position
@@ -146,8 +148,8 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 
 Three item groups — **Left**, **Center** and **Right** on horizontal panels, or
 **Top**, **Middle** and **Bottom** on vertical ones — hold the Start and
-Activities buttons, Applications, Folder Menu, the tray icon arrow, Quick
-Settings, Clock and Show Desktop.
+Activities buttons, Applications, Folder Menu, the tray icon arrow, the System
+Menu (Quick Settings, volume, network and power), Clock and Show Desktop.
 
 - **Item ordering** with Move Up and Move Down inside each group, around a fixed box row for other GNOME Shell and extension items
 - **Button padding** — Automatic follows Just Perfection when present and 3px otherwise,
@@ -169,8 +171,9 @@ Dock mode moves applications out of the panel into a separate Dock, with its own
 copy of the icon, effect, indicator, overflow and isolation settings.
 
 - Placement on any edge, independent of the taskbar's own position
-- **Maximum length** as a percentage of the monitor, or a full-width Dock reaching the edges
-- **Corner radius**, independent themes, transparency, gradients, text colour, borders and Blur My Shell
+- **Maximum length** from 1–90% of the monitor, or a full-width Dock reaching the edges
+- **Corner radius** up to 64px, plus independent themes, transparency, gradients, text
+  colour, borders and Blur My Shell
 - **Auto-hide** with the same window-dodge modes, plus edge reveal and an option to limit reveal to the Dock's own edge
 - **Scroll** over empty Dock space to switch workspace, cycle windows or change volume
 - Shown on every connected monitor, with its own item order and locations
@@ -179,7 +182,9 @@ copy of the icon, effect, indicator, overflow and isolation settings.
 
 The Eleven-style Start Menu is enabled by default.
 
-- **Pinned grid** with drag-and-drop ordering, folders, and optional titles under icons
+- **Pinned grid** with drag-and-drop ordering and optional titles under icons
+- **Folders** created by dragging one pinned application onto another, with renaming and a
+  *Move out of folder* action
 - **Global search** through GNOME, including compatible system and extension providers
 - **All Apps** view with selectable categories or one alphabetical list, and the option to open there by default
 - **Application menus** — open windows, launcher actions, App Details, Quit, Pin to Start, Pin to Taskbar or Dock, and desktop shortcuts when a supported desktop-icons extension is active
@@ -205,7 +210,7 @@ window previews, keeping normal Alt+Tab and Shift+Alt+Tab selection. It is
 enabled by default, supports pointer and arrow-key navigation, and activates
 the selected window when Alt is released.
 
-- Maximum preview card size
+- Maximum preview card size, 120–500px
 - All workspaces or only the current one
 - All monitors or only the monitor showing the switcher
 - Popup on the current monitor or always the primary
@@ -306,8 +311,8 @@ Then run:
     ./dev.sh
 
 The helper compiles the schema, creates a development symlink under
-<code>~/.local/share/gnome-shell/extensions/</code> and starts a fresh GNOME
-Shell 50 development session in a window. Close that window and run
+<code>~/.local/share/gnome-shell/extensions/</code> and starts a fresh nested
+GNOME Shell development session in a window. Close that window and run
 <code>./dev.sh</code> again after changing JavaScript. The real desktop session
 remains running.
 
