@@ -25,7 +25,7 @@ export class SecondaryPanelWindowDragController {
     }
 
     enable() {
-        if (SHELL_VERSION === 50 || SHELL_VERSION === 51) {
+        if (SHELL_VERSION >= 50) {
             this._clickGesture = new Clutter.ClickGesture({
                 recognize_on_press: true,
             });

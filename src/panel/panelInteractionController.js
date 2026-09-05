@@ -335,7 +335,7 @@ export class PanelInteractionController {
         if (!volumeIndicator)
             return false;
 
-        if (SHELL_VERSION === 51) {
+        if (SHELL_VERSION >= 51) {
             const direction = event.get_scroll_direction();
             let delta = 0;
             if (direction === Clutter.ScrollDirection.UP)

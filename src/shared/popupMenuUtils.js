@@ -7,7 +7,7 @@ import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
 function popupAnimation(animate) {
-    if (SHELL_VERSION === 51)
+    if (SHELL_VERSION >= 51)
         return {animate};
 
     return animate
