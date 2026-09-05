@@ -443,10 +443,6 @@ export class SecondaryPanelController {
     }
 
     destroy() {
-        if (this._panelBlurSyncId) {
-            global.compositor.get_laters().remove(this._panelBlurSyncId);
-            this._panelBlurSyncId = 0;
-        }
         this._taskbarController.disableHoverAnimations();
         if (this._windowDragController) {
             this._windowDragController.destroy();
@@ -462,6 +458,12 @@ export class SecondaryPanelController {
         if (this._dockController) {
             this._dockController.destroy();
             this._dockController = null;
+        }
+        this._panelBox.remove_all_transitions();
+        this.actor.remove_all_transitions();
+        if (this._panelBlurSyncId) {
+            global.compositor.get_laters().remove(this._panelBlurSyncId);
+            this._panelBlurSyncId = 0;
         }
         this._interactionController.destroy();
         this._interactionController = null;
