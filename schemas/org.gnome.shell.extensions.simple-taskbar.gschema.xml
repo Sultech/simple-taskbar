@@ -126,7 +126,7 @@
       <summary>Application icon hover animation curve convexity</summary>
     </key>
     <key name="animate-appicon-hover-animation-duration" type="a{su}">
-      <default>{'simple':160,'ripple':130}</default>
+      <default>{'simple':160,'ripple':130,'magnify':60}</default>
       <summary>Application icon hover animation duration</summary>
     </key>
     <key name="animate-appicon-hover-animation-expansion" type="a{su}">

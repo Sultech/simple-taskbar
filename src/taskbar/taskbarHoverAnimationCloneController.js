@@ -8,10 +8,7 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
-import {
-    MAGNIFY_EPSILON,
-    MAGNIFY_SMOOTHING,
-} from './taskbarHoverAnimationConstants.js';
+import {MAGNIFY_EPSILON} from './taskbarHoverAnimationConstants.js';
 import {applySmoothedProperties} from './taskbarHoverAnimationUtils.js';
 
 const HoverAnimationCloneHost = GObject.registerClass(
@@ -35,8 +32,10 @@ export class TaskbarHoverAnimationCloneController {
         onCloneScroll,
         onCloneCreated,
         onCloneDestroyed,
+        smoothing,
     }) {
         this._geometry = geometry;
+        this._smoothing = smoothing;
         this._getAnimationType = getAnimationType;
         this._getMonitor = getMonitor;
         this._getVertical = getVertical;
@@ -193,7 +192,7 @@ export class TaskbarHoverAnimationCloneController {
             applySmoothedProperties(
                 entry.actor,
                 {[property]: target},
-                MAGNIFY_SMOOTHING,
+                this._smoothing.getFactor(),
                 MAGNIFY_EPSILON
             );
             return;
@@ -282,6 +281,7 @@ export class TaskbarHoverAnimationCloneController {
         this._isDragging = null;
         this._getVertical = null;
         this._getAnimationType = null;
+        this._smoothing = null;
         this._geometry = null;
     }
 

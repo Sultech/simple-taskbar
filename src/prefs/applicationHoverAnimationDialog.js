@@ -225,8 +225,8 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
             const defaults = this._settings.get_default_value(
                 definition.key
             ).deepUnpack();
-            const value = values[type] ?? 0;
             const defaultValue = defaults[type];
+            const value = values[type] ?? defaultValue ?? 0;
             const available = definition.available
                 ? definition.available(this._settings)
                 : true;

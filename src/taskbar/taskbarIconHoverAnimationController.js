@@ -28,6 +28,9 @@ import {
 import {
     TaskbarHoverAnimationSettings,
 } from './taskbarHoverAnimationSettings.js';
+import {
+    TaskbarHoverAnimationSmoothing,
+} from './taskbarHoverAnimationSmoothing.js';
 
 export class TaskbarIconHoverAnimationController {
     constructor({
@@ -62,6 +65,7 @@ export class TaskbarIconHoverAnimationController {
         this._lastPointerY = null;
         this._magnifyUpdateId = 0;
         this._magnifyFrameId = 0;
+        this._smoothing = new TaskbarHoverAnimationSmoothing();
         this._settingsController = new TaskbarHoverAnimationSettings({
             settings,
             getIconSize,
@@ -88,6 +92,7 @@ export class TaskbarIconHoverAnimationController {
             onCloneScroll,
             onCloneCreated,
             onCloneDestroyed,
+            smoothing: this._smoothing,
         });
         this._animator = new TaskbarHoverAnimationAnimator({
             settings: this._settingsController,
@@ -101,6 +106,7 @@ export class TaskbarIconHoverAnimationController {
             getNeighbourActors,
             onReserveChanged,
             queueMagnifyFrames: () => this._startMagnifyFrames(),
+            smoothing: this._smoothing,
         });
     }
 
@@ -182,6 +188,7 @@ export class TaskbarIconHoverAnimationController {
         this._settingsController = null;
         this._geometry.destroy();
         this._geometry = null;
+        this._smoothing = null;
         this._trackedItems = null;
         this._cursorTracker = null;
         this._viewport = null;

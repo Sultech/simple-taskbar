@@ -5,10 +5,7 @@ import Clutter from 'gi://Clutter';
 
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 import {applySmoothedProperties} from './taskbarHoverAnimationUtils.js';
-import {
-    MAGNIFY_EPSILON,
-    MAGNIFY_SMOOTHING,
-} from './taskbarHoverAnimationConstants.js';
+import {MAGNIFY_EPSILON} from './taskbarHoverAnimationConstants.js';
 
 export class TaskbarHoverAnimationAnimator {
     constructor({
@@ -23,6 +20,7 @@ export class TaskbarHoverAnimationAnimator {
         getNeighbourActors,
         onReserveChanged,
         queueMagnifyFrames,
+        smoothing,
     }) {
         this._settings = settings;
         this._geometry = geometry;
@@ -35,6 +33,7 @@ export class TaskbarHoverAnimationAnimator {
         this._getNeighbourActors = getNeighbourActors;
         this._onReserveChanged = onReserveChanged;
         this._queueMagnifyFrames = queueMagnifyFrames;
+        this._smoothing = smoothing;
         this._magnifyActive = false;
         this._blocked = false;
         this._reserve = 0;
@@ -183,6 +182,7 @@ export class TaskbarHoverAnimationAnimator {
     }
 
     settleMagnify() {
+        this._beginSmoothingPass();
         const items = this._geometry.getTaskbarItems();
         for (const item of [...this._clones.getItems()])
             this._raise(item, 0, items, 0);
@@ -193,6 +193,7 @@ export class TaskbarHoverAnimationAnimator {
     destroy() {
         this.resetAnimations();
         this._queueMagnifyFrames = null;
+        this._smoothing = null;
         this._onReserveChanged = null;
         this._getNeighbourActors = null;
         this._isBlocked = null;
@@ -205,6 +206,12 @@ export class TaskbarHoverAnimationAnimator {
         this._settings = null;
     }
 
+    _beginSmoothingPass() {
+        this._smoothing.beginPass(
+            this.getAnimationProfile(APP_ICON_HOVER_ANIMATION.MAGNIFY).duration
+        );
+    }
+
     _setMagnifyActive(active) {
         if (active === this._magnifyActive)
             return;
@@ -212,6 +219,9 @@ export class TaskbarHoverAnimationAnimator {
         const profile = this.getAnimationProfile(
             APP_ICON_HOVER_ANIMATION.MAGNIFY
         );
+        if (active)
+            this._smoothing.reset();
+
         this._magnifyActive = active;
         this._reserve = active
             ? Math.ceil(this._maximumRowGrowth(profile))
@@ -260,6 +270,7 @@ export class TaskbarHoverAnimationAnimator {
         if (!entries.length)
             return;
 
+        this._beginSmoothingPass();
         const rowItems = new Set(entries.map(entry => entry.item));
         for (const item of [...this._clones.getItems()]) {
             if (!rowItems.has(item))
@@ -448,7 +459,7 @@ export class TaskbarHoverAnimationAnimator {
             const settled = applySmoothedProperties(
                 entry.clone,
                 targets,
-                MAGNIFY_SMOOTHING,
+                this._smoothing.getFactor(),
                 MAGNIFY_EPSILON
             );
             if (settled && level === 0 && !rowTranslation)

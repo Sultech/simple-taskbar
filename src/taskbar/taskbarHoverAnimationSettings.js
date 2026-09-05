@@ -43,7 +43,8 @@ export class TaskbarHoverAnimationSettings {
             APP_ICON_HOVER_ANIMATION_SETTINGS
         )) {
             const values = this._settings.get_value(key).deepUnpack();
-            profile[property] = values[type];
+            profile[property] = values[type] ??
+                this._settings.get_default_value(key).deepUnpack()[type];
         }
         this._profileCache.set(type, profile);
         return profile;
