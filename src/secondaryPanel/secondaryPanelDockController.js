@@ -104,6 +104,7 @@ export class SecondaryPanelDockController {
         this._workspaceWindows = new Set();
         this._lastPanelEdgeGap = null;
         this._lastHoverReserve = null;
+        this._mainPanelBox = null;
     }
 
     get strutActor() {
@@ -134,6 +135,7 @@ export class SecondaryPanelDockController {
         this._settings = null;
         this._monitor = null;
         this._mainPanelSettings = null;
+        this._mainPanelBox = null;
         this._actor = null;
         this._panelBox = null;
         this._boxes = null;
@@ -415,17 +417,6 @@ export class SecondaryPanelDockController {
             () => this.resetIconSize(),
             this._signalHolder
         );
-        if (this._settings.get_boolean('dock-panel-mode')) {
-            Main.layoutManager.panelBox.connectObject(
-                'notify::allocation', () => this._onPosition(),
-                this._signalHolder
-            );
-            this._mainPanelSettings.connectObject(
-                'changed::panel-height', () => this._onPosition(),
-                'changed::multi-monitor-panels', () => this._onPosition(),
-                this._signalHolder
-            );
-        }
         for (const key of [
             'transparency-enabled',
             'transparency-level',
@@ -634,45 +625,59 @@ export class SecondaryPanelDockController {
             hoverReserve;
     }
 
-    _mainPanelRect() {
-        if (this._monitor === Main.layoutManager.primaryMonitor) {
-            const panelBox = Main.layoutManager.panelBox;
-            const [x, y] = panelBox.get_position();
-            return {
-                x,
-                y,
-                width: panelBox.width,
-                height: panelBox.height,
-            };
-        }
+    _findMainPanelBox() {
+        if (this._monitor === Main.layoutManager.primaryMonitor)
+            return Main.layoutManager.panelBox;
 
         if (!this._mainPanelSettings.get_boolean('multi-monitor-panels'))
             return null;
 
-        return panelGeometry(
-            this._mainPanelSettings,
-            this._monitor,
-            this._mainPanelSettings.get_int('panel-height')
-        );
+        for (const child of Main.uiGroup.get_children()) {
+            if (child._simpleTaskbarPanelBox === 'panel' &&
+                child._simpleTaskbarMonitorIndex === this._monitor.index)
+                return child;
+        }
+
+        return null;
+    }
+
+    _syncMainPanelBox() {
+        const panelBox = this._findMainPanelBox();
+        if (panelBox === this._mainPanelBox)
+            return panelBox;
+
+        if (this._mainPanelBox)
+            this._mainPanelBox.disconnectObject(this._signalHolder);
+        this._mainPanelBox = panelBox;
+        if (panelBox) {
+            panelBox.connectObject(
+                'notify::allocation', () => this._onPosition(),
+                this._signalHolder
+            );
+        }
+
+        return panelBox;
     }
 
     _connectToMainPanel(geometry) {
         if (!this._settings.get_boolean('dock-panel-mode'))
             return;
 
+        const mainPanelBox = this._syncMainPanelBox();
+        if (!mainPanelBox)
+            return;
+
         const mainPanelPosition = this._mainPanelSettings.get_string(
             'panel-position'
         );
-        const mainPanelRect = this._mainPanelRect();
-        if (!mainPanelRect)
-            return;
+        const [mainPanelX, mainPanelY] = mainPanelBox.get_position();
 
         if (geometry.vertical &&
             (mainPanelPosition === 'top' ||
                 mainPanelPosition === 'bottom')) {
             const panelEdge = mainPanelPosition === 'top'
-                ? mainPanelRect.y + mainPanelRect.height
-                : mainPanelRect.y;
+                ? mainPanelY + mainPanelBox.height
+                : mainPanelY;
             const maximumLength = mainPanelPosition === 'top'
                 ? this._monitor.y + this._monitor.height - panelEdge
                 : panelEdge - this._monitor.y;
@@ -684,8 +689,8 @@ export class SecondaryPanelDockController {
             (mainPanelPosition === 'left' ||
                 mainPanelPosition === 'right')) {
             const panelEdge = mainPanelPosition === 'left'
-                ? mainPanelRect.x + mainPanelRect.width
-                : mainPanelRect.x;
+                ? mainPanelX + mainPanelBox.width
+                : mainPanelX;
             const maximumLength = mainPanelPosition === 'left'
                 ? this._monitor.x + this._monitor.width - panelEdge
                 : panelEdge - this._monitor.x;

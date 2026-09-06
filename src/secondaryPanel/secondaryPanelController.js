@@ -210,6 +210,7 @@ export class SecondaryPanelController {
             clip_to_allocation: true,
         });
         this._panelBox._simpleTaskbarPanelBox = isDock ? 'dock' : 'panel';
+        this._panelBox._simpleTaskbarMonitorIndex = monitor.index;
         this.actor = new SecondaryPanelActor();
         this._panelBox.add_child(this.actor);
         if (!isDock) {

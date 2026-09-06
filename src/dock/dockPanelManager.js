@@ -41,6 +41,8 @@ export class DockPanelManager extends PanelManagerBase {
             'changed::dock-panel-mode', () => this._queueRebuild(),
             'changed::dock-multi-monitor-panels',
             () => this._queueRebuild(),
+            'changed::multi-monitor-panels',
+            () => this._queueRebuild(),
             'changed::dock-panel-blur-enabled',
             () => this._queueBlurMyShellSync(),
             this._signalHolder
