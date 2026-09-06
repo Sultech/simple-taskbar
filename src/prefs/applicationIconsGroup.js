@@ -274,17 +274,21 @@ function addApplicationLayoutControls({
     syncSeparatorSensitivity();
 
     const syncLabelSensitivity = () => {
+        const position = settings.get_boolean('dock-mode')
+            ? settings.get_string('dock-position')
+            : settings.get_string('panel-position');
         const enabled = !settings.get_boolean(
             'windows-xp-theme-enabled'
-        ) && !['left', 'right'].includes(settings.get_string(
-            'panel-position'
-        )) && settings.get_string(
-            'combine-app-buttons-mode'
-        ) !== 'always';
+        ) && !['left', 'right'].includes(position) &&
+            settings.get_string(
+                'combine-app-buttons-mode'
+            ) !== 'always';
         combineOptionsButton.sensitive = enabled;
     };
     for (const key of [
         'combine-app-buttons-mode',
+        'dock-mode',
+        'dock-position',
         'panel-position',
         'windows-xp-theme-enabled',
     ])
