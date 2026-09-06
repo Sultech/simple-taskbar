@@ -5,7 +5,6 @@ import St from 'gi://St';
 
 import {
     panelIsTop,
-    panelIsVertical,
     panelPosition,
 } from '../shared/panelPositionUtils.js';
 
@@ -40,7 +39,7 @@ export function syncMenuArrowSide(menu, settings) {
 
 export function syncPanelMenuPosition(menu, settings) {
     syncMenuArrowSide(menu, settings);
-    if (panelIsTop(settings) || panelIsVertical(settings))
+    if (panelIsTop(settings))
         menu.actor.remove_style_class_name(BOTTOM_PANEL_MENU_CLASS);
     else
         menu.actor.add_style_class_name(BOTTOM_PANEL_MENU_CLASS);
