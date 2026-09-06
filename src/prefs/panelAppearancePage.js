@@ -7,6 +7,7 @@ import Gio from 'gi://Gio';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
+    fitIconSizeToPanelHeight,
     ICON_VERTICAL_RESERVE,
     MIN_PANEL_HEIGHT,
     STANDARD_MIN_PANEL_HEIGHT,
@@ -109,18 +110,7 @@ export function addPanelAppearancePage({
             return;
         }
 
-        const iconSize = settings.get_int('icon-size');
-        const panelHeight = settings.get_int('panel-height');
-        if (panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
-            settings.set_int(
-                'panel-height',
-                STANDARD_MIN_PANEL_HEIGHT
-            );
-            return;
-        }
-        const maximumIconSize = panelHeight - ICON_VERTICAL_RESERVE;
-        if (iconSize > maximumIconSize)
-            settings.set_int('icon-size', maximumIconSize);
+        fitIconSizeToPanelHeight(settings);
     };
     connectSettings(settings, 'changed::icon-size', fitPanelToIcons);
     connectSettings(settings, 'changed::panel-height', fitIconsToPanel);

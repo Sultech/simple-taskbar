@@ -17,6 +17,7 @@ import {
     createClassicHighlightOptionsButton,
 } from './classicHighlightDialog.js';
 import {addApplicationInteractionGroup} from './applicationInteractionGroup.js';
+import {MIN_ICON_SIZE} from '../shared/panelSizing.js';
 import {TASKBAR_HIGHLIGHT_STYLE} from '../shared/classicHighlightSettings.js';
 import {
     RUNNING_INDICATOR_POSITIONS,
@@ -53,7 +54,7 @@ function addApplicationIconControls({
             subtitle: _(
                 'The panel grows automatically when larger icons need more room'
             ),
-            lower: 15,
+            lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
             addRow: row => iconSizingRow.add_row(row),
         },
@@ -68,7 +69,7 @@ function addApplicationIconControls({
             subtitle: _(
                 'Smallest application icon size used when space is limited'
             ),
-            lower: 15,
+            lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
             addRow: row => iconSizingRow.add_row(row),
         },

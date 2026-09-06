@@ -2,8 +2,8 @@
 // Copyright (C) 2026 sultech
 
 import {
+    fitIconSizeToPanelHeight,
     ICON_VERTICAL_RESERVE,
-    STANDARD_MIN_PANEL_HEIGHT,
 } from './shared/panelSizing.js';
 import {
     initializePanelModeProfiles,
@@ -173,16 +173,10 @@ export class WindowsXpModeController {
             return;
         }
         if (!this._windowsXpModeEnabled() &&
-            !this._settings.get_boolean('default-gnome-panel') &&
-            panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
-            this._settings.set_int('panel-height', STANDARD_MIN_PANEL_HEIGHT);
-            return;
-        }
-        const maximumIconSize = panelHeight - ICON_VERTICAL_RESERVE;
-        if (!this._windowsXpModeEnabled() &&
-            !this._settings.get_boolean('default-gnome-panel') &&
-            this._settings.get_int('icon-size') > maximumIconSize) {
-            this._settings.set_int('icon-size', maximumIconSize);
+            !this._settings.get_boolean('default-gnome-panel')) {
+            fitIconSizeToPanelHeight(this._settings);
+            if (this._settings.get_int('panel-height') !== panelHeight)
+                return;
         }
         this._onPanelHeightChanged(panelHeight);
     }
