@@ -122,9 +122,7 @@ export class DockPanelManager extends PanelManagerBase {
                 monitor,
                 openPreferences: this._openPreferences,
                 visiblePanelItemIds: DOCK_PANEL_ITEM_IDS,
-                mainPanelPosition: this._settings.get_string(
-                    'panel-position'
-                ),
+                mainPanelSettings: this._settings,
             });
             this._panels.push(panel);
             panel.enable();

@@ -97,7 +97,7 @@ export class SecondaryPanelController {
         monitor,
         openPreferences,
         visiblePanelItemIds = null,
-        mainPanelPosition = null,
+        mainPanelSettings = null,
     }) {
         this._settings = settings;
         this._extensionDir = extensionDir;
@@ -253,7 +253,7 @@ export class SecondaryPanelController {
             this._dockController = new SecondaryPanelDockController({
                 settings,
                 monitor,
-                mainPanelPosition,
+                mainPanelSettings,
                 actor: this.actor,
                 panelBox: this._panelBox,
                 leftBox: this._leftBox,

@@ -58,7 +58,7 @@ export class SecondaryPanelDockController {
     constructor({
         settings,
         monitor,
-        mainPanelPosition,
+        mainPanelSettings,
         actor,
         panelBox,
         leftBox,
@@ -78,7 +78,7 @@ export class SecondaryPanelDockController {
     }) {
         this._settings = settings;
         this._monitor = monitor;
-        this._mainPanelPosition = mainPanelPosition;
+        this._mainPanelSettings = mainPanelSettings;
         this._actor = actor;
         this._panelBox = panelBox;
         this._boxes = [leftBox, centerBox, rightBox];
@@ -133,7 +133,7 @@ export class SecondaryPanelDockController {
 
         this._settings = null;
         this._monitor = null;
-        this._mainPanelPosition = null;
+        this._mainPanelSettings = null;
         this._actor = null;
         this._panelBox = null;
         this._boxes = null;
@@ -420,6 +420,11 @@ export class SecondaryPanelDockController {
                 'notify::allocation', () => this._onPosition(),
                 this._signalHolder
             );
+            this._mainPanelSettings.connectObject(
+                'changed::panel-height', () => this._onPosition(),
+                'changed::multi-monitor-panels', () => this._onPosition(),
+                this._signalHolder
+            );
         }
         for (const key of [
             'transparency-enabled',
@@ -629,41 +634,63 @@ export class SecondaryPanelDockController {
             hoverReserve;
     }
 
-    _connectToMainPanel(geometry) {
-        if (!this._settings.get_boolean('dock-panel-mode') ||
-            !this._mainPanelPosition ||
-            this._monitor !== Main.layoutManager.primaryMonitor) {
-            return;
+    _mainPanelRect() {
+        if (this._monitor === Main.layoutManager.primaryMonitor) {
+            const panelBox = Main.layoutManager.panelBox;
+            const [x, y] = panelBox.get_position();
+            return {
+                x,
+                y,
+                width: panelBox.width,
+                height: panelBox.height,
+            };
         }
 
-        const panelBox = Main.layoutManager.panelBox;
-        const [panelX, panelY] = panelBox.get_position();
-        const panelWidth = panelBox.width;
-        const panelHeight = panelBox.height;
+        if (!this._mainPanelSettings.get_boolean('multi-monitor-panels'))
+            return null;
+
+        return panelGeometry(
+            this._mainPanelSettings,
+            this._monitor,
+            this._mainPanelSettings.get_int('panel-height')
+        );
+    }
+
+    _connectToMainPanel(geometry) {
+        if (!this._settings.get_boolean('dock-panel-mode'))
+            return;
+
+        const mainPanelPosition = this._mainPanelSettings.get_string(
+            'panel-position'
+        );
+        const mainPanelRect = this._mainPanelRect();
+        if (!mainPanelRect)
+            return;
+
         if (geometry.vertical &&
-            (this._mainPanelPosition === 'top' ||
-                this._mainPanelPosition === 'bottom')) {
-            const panelEdge = this._mainPanelPosition === 'top'
-                ? panelY + panelHeight
-                : panelY;
-            const maximumLength = this._mainPanelPosition === 'top'
+            (mainPanelPosition === 'top' ||
+                mainPanelPosition === 'bottom')) {
+            const panelEdge = mainPanelPosition === 'top'
+                ? mainPanelRect.y + mainPanelRect.height
+                : mainPanelRect.y;
+            const maximumLength = mainPanelPosition === 'top'
                 ? this._monitor.y + this._monitor.height - panelEdge
                 : panelEdge - this._monitor.y;
             geometry.height = Math.min(geometry.height, maximumLength);
-            geometry.y = this._mainPanelPosition === 'top'
+            geometry.y = mainPanelPosition === 'top'
                 ? panelEdge
                 : panelEdge - geometry.height;
         } else if (!geometry.vertical &&
-            (this._mainPanelPosition === 'left' ||
-                this._mainPanelPosition === 'right')) {
-            const panelEdge = this._mainPanelPosition === 'left'
-                ? panelX + panelWidth
-                : panelX;
-            const maximumLength = this._mainPanelPosition === 'left'
+            (mainPanelPosition === 'left' ||
+                mainPanelPosition === 'right')) {
+            const panelEdge = mainPanelPosition === 'left'
+                ? mainPanelRect.x + mainPanelRect.width
+                : mainPanelRect.x;
+            const maximumLength = mainPanelPosition === 'left'
                 ? this._monitor.x + this._monitor.width - panelEdge
                 : panelEdge - this._monitor.x;
             geometry.width = Math.min(geometry.width, maximumLength);
-            geometry.x = this._mainPanelPosition === 'left'
+            geometry.x = mainPanelPosition === 'left'
                 ? panelEdge
                 : panelEdge - geometry.width;
         }
