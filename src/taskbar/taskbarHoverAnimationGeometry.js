@@ -131,7 +131,7 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     getActorGeometry(actor) {
-        if (!actor.get_stage() || !actor.has_allocation())
+        if (!actor.get_stage())
             return null;
 
         const [x, y] = actor.get_transformed_position();
