@@ -52,6 +52,11 @@ export class DockPanelManager extends PanelManagerBase {
             'startup-complete', () => this._queueBlurMyShellSync(),
             this._signalHolder
         );
+        global.display.connectObject(
+            'workareas-changed',
+            () => this._queueBlurMyShellSync(),
+            this._signalHolder
+        );
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
