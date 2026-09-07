@@ -51,7 +51,6 @@ import {
 } from './src/taskbar/windowMinimizeEffectController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
-import {ICON_VERTICAL_RESERVE} from './src/shared/panelSizing.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
 import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
@@ -110,12 +109,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._maximumIconSize = this._settings.get_int('icon-size');
         this._iconSize = this._maximumIconSize;
         this._panelHeight = this._settings.get_int('panel-height');
-        if (!this._settings.get_boolean('default-gnome-panel') &&
-            !this._settings.get_boolean('windows-xp-theme-enabled') &&
-            this._panelHeight < this._iconSize + ICON_VERTICAL_RESERVE) {
-            this._panelHeight = this._iconSize + ICON_VERTICAL_RESERVE;
-            this._settings.set_int('panel-height', this._panelHeight);
-        }
         this._overviewIntegration = new OverviewIntegration(
             this._panelHeight,
             this._settings

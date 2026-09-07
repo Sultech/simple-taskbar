@@ -3,7 +3,7 @@
 
 import {
     fitIconSizeToPanelHeight,
-    ICON_VERTICAL_RESERVE,
+    fitPanelHeightToIconSize,
 } from './shared/panelSizing.js';
 import {
     initializePanelModeProfiles,
@@ -116,18 +116,8 @@ export class WindowsXpModeController {
 
     _syncMode() {
         if (!this._windowsXpModeEnabled()) {
-            if (!this._settings.get_boolean('default-gnome-panel')) {
-                const minimumPanelHeight =
-                    this._settings.get_int('icon-size') +
-                    ICON_VERTICAL_RESERVE;
-                if (this._settings.get_int('panel-height') <
-                    minimumPanelHeight) {
-                    this._settings.set_int(
-                        'panel-height',
-                        minimumPanelHeight
-                    );
-                }
-            }
+            if (!this._settings.get_boolean('default-gnome-panel'))
+                fitPanelHeightToIconSize(this._settings);
             return;
         }
 
@@ -136,17 +126,16 @@ export class WindowsXpModeController {
     }
 
     _syncIconSize() {
-        const iconSize = this._settings.get_int('icon-size');
+        let iconSize = this._settings.get_int('icon-size');
         if (this._windowsXpModeEnabled() &&
             iconSize !== WINDOWS_XP_ICON_SIZE) {
             this._settings.set_int('icon-size', WINDOWS_XP_ICON_SIZE);
             return;
         }
-        const minimumPanelHeight = iconSize + ICON_VERTICAL_RESERVE;
         if (!this._settings.get_boolean('default-gnome-panel') &&
-            !this._windowsXpModeEnabled() &&
-            this._settings.get_int('panel-height') < minimumPanelHeight) {
-            this._settings.set_int('panel-height', minimumPanelHeight);
+            !this._windowsXpModeEnabled()) {
+            fitPanelHeightToIconSize(this._settings);
+            iconSize = this._settings.get_int('icon-size');
         }
         this._onIconSizeChanged(iconSize);
     }

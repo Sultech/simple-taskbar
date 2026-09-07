@@ -8,7 +8,8 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     fitIconSizeToPanelHeight,
-    ICON_VERTICAL_RESERVE,
+    fitPanelHeightToIconSize,
+    MAX_PANEL_HEIGHT,
     MIN_PANEL_HEIGHT,
     STANDARD_MIN_PANEL_HEIGHT,
 } from '../shared/panelSizing.js';
@@ -67,7 +68,7 @@ export function addPanelAppearancePage({
                 'Oversized icons shrink automatically when the taskbar is reduced'
             ),
             lower: MIN_PANEL_HEIGHT,
-            upper: 80,
+            upper: MAX_PANEL_HEIGHT,
         },
         connectSettings
     );
@@ -102,11 +103,7 @@ export function addPanelAppearancePage({
             return;
         }
 
-        const iconSize = settings.get_int('icon-size');
-        const panelHeight = settings.get_int('panel-height');
-        const minimumPanelHeight = iconSize + ICON_VERTICAL_RESERVE;
-        if (panelHeight < minimumPanelHeight)
-            settings.set_int('panel-height', minimumPanelHeight);
+        fitPanelHeightToIconSize(settings);
     };
     const fitIconsToPanel = () => {
         if (settings.get_boolean('default-gnome-panel') ||

@@ -2,8 +2,10 @@
 // Copyright (C) 2026 sultech
 
 import {RUNNING_INDICATOR_RESERVE} from './runningIndicatorSettings.js';
+import {setInteger} from './settingsUtils.js';
 
 export const MIN_PANEL_HEIGHT = 30;
+export const MAX_PANEL_HEIGHT = 80;
 export const MIN_ICON_SIZE = 13;
 export const ICON_VERTICAL_RESERVE = 19;
 export const STANDARD_MIN_PANEL_HEIGHT =
@@ -37,13 +39,27 @@ export function taskbarVerticalItemExtent(iconSize) {
 }
 
 export function fitIconSizeToPanelHeight(settings) {
-    const panelHeight = settings.get_int('panel-height');
+    let panelHeight = settings.get_int('panel-height');
     if (panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
-        settings.set_int('panel-height', STANDARD_MIN_PANEL_HEIGHT);
+        panelHeight = STANDARD_MIN_PANEL_HEIGHT;
+        setInteger(settings, 'panel-height', panelHeight);
         return;
     }
 
     const maximumIconSize = panelHeight - ICON_VERTICAL_RESERVE;
     if (settings.get_int('icon-size') > maximumIconSize)
-        settings.set_int('icon-size', maximumIconSize);
+        setInteger(settings, 'icon-size', maximumIconSize);
+}
+
+export function fitPanelHeightToIconSize(settings) {
+    let iconSize = settings.get_int('icon-size');
+    const maximumIconSize = MAX_PANEL_HEIGHT - ICON_VERTICAL_RESERVE;
+    if (iconSize > maximumIconSize) {
+        iconSize = maximumIconSize;
+        setInteger(settings, 'icon-size', iconSize);
+    }
+
+    const minimumPanelHeight = iconSize + ICON_VERTICAL_RESERVE;
+    if (settings.get_int('panel-height') < minimumPanelHeight)
+        setInteger(settings, 'panel-height', minimumPanelHeight);
 }
