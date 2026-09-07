@@ -3,20 +3,12 @@
 
 export function panelTransparencyOpacity(settings) {
     const transparency = settings.get_boolean('transparency-enabled')
-        ? Math.clamp(
-            settings.get_int('transparency-level'),
-            0,
-            100
-        )
+        ? settings.get_int('transparency-level')
         : 0;
     return 1 - transparency / 100;
 }
 
 export function panelDynamicTransparencyOpacity(settings) {
-    const transparency = Math.clamp(
-        settings.get_int('transparency-dynamic-level'),
-        0,
-        100
-    );
+    const transparency = settings.get_int('transparency-dynamic-level');
     return 1 - transparency / 100;
 }
