@@ -26,7 +26,7 @@ import {
     addColorRow,
     addComboRow,
     addSpinRow,
-    createSwitchRow,
+    addSwitchRow,
 } from './preferencesWidgets.js';
 import {
     createDynamicTransparencyOptionsButton,
@@ -344,13 +344,16 @@ export function addPanelAppearancePage({
             levelKey: 'transparency-dynamic-level',
             animationTimeKey: 'transparency-dynamic-animation-time',
         });
-    const dynamicTransparencyRow = createSwitchRow(settings, {
+    const {
+        row: dynamicTransparencyRow,
+        toggle: dynamicTransparencyToggle,
+    } = addSwitchRow(transparencyExpander, settings, {
         key: 'transparency-on-unmaximized',
         title: _('Dynamic Transparency'),
         subtitle: dynamicTransparencySubtitle,
+        addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
+        addRow: row => transparencyExpander.add_row(row),
     });
-    dynamicTransparencyRow.add_suffix(dynamicTransparencyOptionsButton);
-    transparencyExpander.add_row(dynamicTransparencyRow);
     const updatePanelTransparencyControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
         const windowsXpThemeEnabled = settings.get_boolean(
@@ -373,13 +376,13 @@ export function addPanelAppearancePage({
             : dynamicTransparencySubtitle;
         dynamicTransparencyOptionsButton.sensitive =
             !blocked && !windowsXpThemeEnabled &&
-            dynamicTransparencyRow.active;
+            dynamicTransparencyToggle.active;
     };
     transparencySwitch.connect(
         'notify::active',
         updatePanelTransparencyControls
     );
-    dynamicTransparencyRow.connect(
+    dynamicTransparencyToggle.connect(
         'notify::active',
         updatePanelTransparencyControls
     );

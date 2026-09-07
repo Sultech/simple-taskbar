@@ -113,6 +113,26 @@ export function createSwitchRow(settings, {
     return row;
 }
 
+export function addSwitchRow(group, settings, {
+    key,
+    title,
+    subtitle = '',
+    addSuffix = () => {},
+    addRow = row => group.add(row),
+}) {
+    const toggle = new Gtk.Switch({
+        valign: Gtk.Align.CENTER,
+        active: settings.get_boolean(key),
+    });
+    const row = new Adw.ActionRow({title, subtitle});
+    addSuffix(row);
+    row.add_suffix(toggle);
+    row.activatable_widget = toggle;
+    addRow(row);
+    settings.bind(key, toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
+    return {row, toggle};
+}
+
 export function addSpinRow(group, settings, {
     key,
     title,

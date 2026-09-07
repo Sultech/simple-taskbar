@@ -10,6 +10,7 @@ import {
     addColorRow,
     addComboRow,
     addSpinRow,
+    addSwitchRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {
@@ -149,13 +150,16 @@ export function addDockAppearanceGroup({
             levelKey: 'dock-transparency-dynamic-level',
             animationTimeKey: 'dock-transparency-dynamic-animation-time',
         });
-    const dynamicTransparencyRow = createSwitchRow(settings, {
+    const {
+        row: dynamicTransparencyRow,
+        toggle: dynamicTransparencyToggle,
+    } = addSwitchRow(transparencyExpander, settings, {
         key: 'dock-transparency-on-unmaximized',
         title: _('Dynamic Transparency'),
         subtitle: dynamicTransparencySubtitle,
+        addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
+        addRow: row => transparencyExpander.add_row(row),
     });
-    dynamicTransparencyRow.add_suffix(dynamicTransparencyOptionsButton);
-    transparencyExpander.add_row(dynamicTransparencyRow);
 
     const customPanelColorSubtitle = _(
         'Use a chosen color instead of the light or dark theme color'
@@ -299,7 +303,7 @@ export function addDockAppearanceGroup({
             ? panelBlurTransparencySubtitle
             : dynamicTransparencySubtitle;
         dynamicTransparencyOptionsButton.sensitive = available &&
-            !blocked && dynamicTransparencyRow.active;
+            !blocked && dynamicTransparencyToggle.active;
     };
     const syncCustomColorControls = () => {
         const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
@@ -358,7 +362,7 @@ export function addDockAppearanceGroup({
         'notify::active',
         syncTransparencyControls
     );
-    dynamicTransparencyRow.connect(
+    dynamicTransparencyToggle.connect(
         'notify::active',
         syncTransparencyControls
     );
