@@ -45,7 +45,6 @@ export class GridAltTabController {
         this._forwardAction = Meta.KeyBindingAction.NONE;
         this._backwardAction = Meta.KeyBindingAction.NONE;
         this._popup = null;
-        this._windowOrder = [];
         this._systemHandler = this._startSystemSwitcher.bind(this);
     }
 
@@ -65,7 +64,6 @@ export class GridAltTabController {
         this._closePopup();
         this._disableBindings();
         this._systemHandler = null;
-        this._windowOrder = null;
         this._switcherKeybindings = null;
         this._settings = null;
     }
@@ -196,7 +194,7 @@ export class GridAltTabController {
         const isolateMonitors = this._settings.get_boolean(
             'grid-alt-tab-isolate-monitors'
         );
-        const windows = tabList
+        return tabList
             .map(window =>
                 window.is_attached_dialog()
                     ? window.get_transient_for()
@@ -206,25 +204,6 @@ export class GridAltTabController {
                 (!isolateMonitors ||
                     window.get_monitor() === monitor.index) &&
                 allWindows.indexOf(window) === index);
-        const currentWindows = new Set(windows);
-        const orderIsCurrent =
-            windows.length === this._windowOrder.length &&
-            this._windowOrder.every(window =>
-                currentWindows.has(window));
-
-        if (orderIsCurrent) {
-            const focusedWindow = windows[0];
-            const focusedIndex =
-                this._windowOrder.indexOf(focusedWindow);
-            if (focusedIndex > 0) {
-                this._windowOrder.splice(focusedIndex, 1);
-                this._windowOrder.unshift(focusedWindow);
-            }
-            return [...this._windowOrder];
-        }
-
-        this._windowOrder = windows;
-        return [...this._windowOrder];
     }
 
     _getFocusedWindow() {
