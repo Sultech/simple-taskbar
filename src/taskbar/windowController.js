@@ -239,7 +239,7 @@ export class WindowController {
 
     handleAppScrolled(item, direction) {
         const windows = this.getInterestingWindows(item._taskbarApp);
-        if (windows.length < 2)
+        if (windows.length === 0)
             return;
 
         windows.sort((a, b) =>
@@ -256,6 +256,8 @@ export class WindowController {
             ? -1
             : 1;
         const nextIndex = (index + step + windows.length) % windows.length;
+        if (windows[nextIndex] === global.display.focus_window)
+            return;
         Main.activateWindow(windows[nextIndex]);
         Main.overview.hide();
     }
