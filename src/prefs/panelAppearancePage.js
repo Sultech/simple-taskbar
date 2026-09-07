@@ -26,7 +26,11 @@ import {
     addColorRow,
     addComboRow,
     addSpinRow,
+    createSwitchRow,
 } from './preferencesWidgets.js';
+import {
+    createDynamicTransparencyOptionsButton,
+} from './dynamicTransparencyDialog.js';
 
 export function addPanelAppearancePage({
     page,
@@ -291,6 +295,9 @@ export function addPanelAppearancePage({
     const transparencySwitchSubtitle = _(
         'Make the taskbar background transparent'
     );
+    const dynamicTransparencySubtitle = _(
+        'Adjust transparency according to the selected window state'
+    );
     const panelBlurTransparencySubtitle = _(
         'Disable Blur My Shell panel blur to use this option'
     );
@@ -329,6 +336,21 @@ export function addPanelAppearancePage({
         },
         connectSettings
     );
+    const dynamicTransparencyOptionsButton =
+        createDynamicTransparencyOptionsButton(settings, {
+            title: _('Dynamic Transparency Options'),
+            behaviorKey: 'transparency-dynamic-behavior',
+            distanceKey: 'transparency-dynamic-distance',
+            levelKey: 'transparency-dynamic-level',
+            animationTimeKey: 'transparency-dynamic-animation-time',
+        });
+    const dynamicTransparencyRow = createSwitchRow(settings, {
+        key: 'transparency-on-unmaximized',
+        title: _('Dynamic Transparency'),
+        subtitle: dynamicTransparencySubtitle,
+    });
+    dynamicTransparencyRow.add_suffix(dynamicTransparencyOptionsButton);
+    transparencyExpander.add_row(dynamicTransparencyRow);
     const updatePanelTransparencyControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
         const windowsXpThemeEnabled = settings.get_boolean(
@@ -344,8 +366,20 @@ export function addPanelAppearancePage({
         transparencyRow.subtitle = blocked
             ? panelBlurTransparencySubtitle
             : transparencyRowSubtitle;
+        dynamicTransparencyRow.sensitive = !blocked &&
+            !windowsXpThemeEnabled;
+        dynamicTransparencyRow.subtitle = blocked
+            ? panelBlurTransparencySubtitle
+            : dynamicTransparencySubtitle;
+        dynamicTransparencyOptionsButton.sensitive =
+            !blocked && !windowsXpThemeEnabled &&
+            dynamicTransparencyRow.active;
     };
     transparencySwitch.connect(
+        'notify::active',
+        updatePanelTransparencyControls
+    );
+    dynamicTransparencyRow.connect(
         'notify::active',
         updatePanelTransparencyControls
     );

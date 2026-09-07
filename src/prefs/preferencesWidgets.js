@@ -64,7 +64,12 @@ export function createPreferencesDialogContent(dialog, cleanup = null) {
     };
 }
 
-export function createPreferencesDialogButton(settings, tooltip, DialogClass) {
+export function createPreferencesDialogButton(
+    settings,
+    tooltip,
+    DialogClass,
+    dialogOptions = {}
+) {
     const button = new Gtk.Button({
         tooltip_text: tooltip,
         valign: Gtk.Align.CENTER,
@@ -76,6 +81,7 @@ export function createPreferencesDialogButton(settings, tooltip, DialogClass) {
         const dialog = new DialogClass({
             settings,
             parent: button.get_root(),
+            ...dialogOptions,
         });
         dialog.present();
     });

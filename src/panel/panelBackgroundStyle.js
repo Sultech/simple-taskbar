@@ -53,13 +53,14 @@ export function panelBorderStyle(settings, light, borderEnabled,
 }
 
 export function panelBackgroundStyle(settings, light, borderEnabled,
-    originalStyle = '', fullBorder = false) {
-    const opacity = panelTransparencyOpacity(settings);
+    originalStyle = '', fullBorder = false, dynamicOpacity = null,
+    transitionDuration = 0) {
+    const opacity = dynamicOpacity ?? panelTransparencyOpacity(settings);
     const background = panelBackgroundColor(settings, light);
     const borderStyle = panelBorderStyle(
         settings,
         light,
-        borderEnabled,
+        borderEnabled && dynamicOpacity !== 0,
         fullBorder
     );
     const gradientEnabled =
@@ -77,8 +78,12 @@ export function panelBackgroundStyle(settings, light, borderEnabled,
             )}, ${opacity.toFixed(2)}) !important; `
         : `background-color: rgba(${background}, ` +
             `${opacity.toFixed(2)}) !important; `;
+    const transitionStyle = transitionDuration > 0
+        ? `transition-duration: ${transitionDuration}ms; `
+        : '';
     const transparencyStyle = backgroundStyle +
         borderStyle +
+        transitionStyle +
         'box-shadow: none;';
     const separator = originalStyle.endsWith(';') ? ' ' : '; ';
     return originalStyle

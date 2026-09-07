@@ -136,6 +136,8 @@ export class PanelController {
                     active,
                     pointerReveal
                 ),
+            onTransparencyStateChanged: () =>
+                this._themeController.applyTransparency(),
             autohideKey: 'panel-autohide-enabled',
             dodgeEnabledKey: 'panel-dodge-windows-enabled',
             dodgeModeKey: 'panel-dodge-windows-mode',
@@ -181,7 +183,12 @@ export class PanelController {
         this._clockController.enable();
         this._themeController = new PanelThemeController(
             this._settings,
-            this._stateController.oldPanelStyle
+            this._stateController.oldPanelStyle,
+            monitor => panelGeometry(
+                this._settings,
+                monitor,
+                this._panelHeight
+            )
         );
         this._configureAdaptivePanelAllocation();
         this._configureHotCornerSizing();

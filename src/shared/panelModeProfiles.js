@@ -80,6 +80,11 @@ const MODE_SETTING_KEYS = new Set([
     'dock-min-icon-size',
     'dock-transparency-enabled',
     'dock-transparency-level',
+    'dock-transparency-on-unmaximized',
+    'dock-transparency-dynamic-behavior',
+    'dock-transparency-dynamic-distance',
+    'dock-transparency-dynamic-level',
+    'dock-transparency-dynamic-animation-time',
     'dock-custom-panel-color-enabled',
     'dock-custom-panel-color',
     'dock-custom-panel-gradient-enabled',
@@ -252,6 +257,14 @@ function applyDefaultPanelSettings(settings) {
     settings.set_boolean('gnome-start-button-visible', false);
     settings.set_boolean('system-menu-visible', true);
     settings.set_boolean('clock-visible', true);
+    settings.set_boolean('transparency-on-unmaximized', false);
+    settings.set_string(
+        'transparency-dynamic-behavior',
+        'maximized-windows'
+    );
+    settings.set_int('transparency-dynamic-distance', 20);
+    settings.set_int('transparency-dynamic-level', 100);
+    settings.set_int('transparency-dynamic-animation-time', 300);
     settings.set_boolean('show-desktop-button-visible', false);
     settings.set_boolean('panel-border-enabled', false);
     settings.set_boolean('panel-border-light-enabled', false);

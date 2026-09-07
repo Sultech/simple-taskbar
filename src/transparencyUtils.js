@@ -11,3 +11,12 @@ export function panelTransparencyOpacity(settings) {
         : 0;
     return 1 - transparency / 100;
 }
+
+export function panelDynamicTransparencyOpacity(settings) {
+    const transparency = Math.clamp(
+        settings.get_int('transparency-dynamic-level'),
+        0,
+        100
+    );
+    return 1 - transparency / 100;
+}

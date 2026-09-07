@@ -43,6 +43,9 @@ import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from '../panel/panelItems.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
 import {
+    dynamicTransparencyStyle,
+} from '../panel/dynamicTransparency.js';
+import {
     panelIsVertical,
     panelPosition,
 } from '../panel/panelPosition.js';
@@ -405,6 +408,7 @@ export class SecondaryPanelController {
                     active,
                     pointerReveal
                 ),
+            onTransparencyStateChanged: () => this.syncTheme(),
             autohideKey: 'panel-autohide-enabled',
             dodgeEnabledKey: 'panel-dodge-windows-enabled',
             dodgeModeKey: 'panel-dodge-windows-mode',
@@ -550,6 +554,19 @@ export class SecondaryPanelController {
                 this._verticalItemsController.sync();
                 this._updateTaskbarWidth();
             }, this._signalHolder);
+            for (const key of [
+                'transparency-on-unmaximized',
+                'transparency-dynamic-behavior',
+                'transparency-dynamic-distance',
+                'transparency-dynamic-level',
+                'transparency-dynamic-animation-time',
+            ]) {
+                this._settings.connectObject(
+                    `changed::${key}`,
+                    () => this.syncTheme(),
+                    this._signalHolder
+                );
+            }
         }
         this._settings.connectObject('changed::panel-height', () => {
             this._panelHeight = this._settings.get_int('panel-height');
@@ -959,10 +976,20 @@ export class SecondaryPanelController {
             this.actor.set_style('');
             return;
         }
+        const {dynamicOpacity, transitionDuration} = dynamicTransparencyStyle(
+            this._settings,
+            this._settings.get_boolean('transparency-on-unmaximized'),
+            this._monitor,
+            () => this._panelGeometry()
+        );
         this.actor.set_style(panelBackgroundStyle(
             this._settings,
             light,
-            borderEnabled
+            borderEnabled,
+            '',
+            false,
+            dynamicOpacity,
+            transitionDuration
         ));
     }
 

@@ -5,7 +5,7 @@ import Adw from 'gi://Adw';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
+import {windowDodgeModeChoices} from './windowDodgeModeChoices.js';
 import {addComboRow, createSwitchRow} from './preferencesWidgets.js';
 
 export function addWindowDodgeRows(
@@ -45,24 +45,7 @@ export function addWindowDodgeRows(
             key: modeKey,
             title: _('Dodge Windows Mode'),
             subtitle: modeSubtitle,
-            choices: [
-                {
-                    value: DODGE_WINDOW_MODE.ALL_WINDOWS,
-                    label: _('All windows'),
-                },
-                {
-                    value: DODGE_WINDOW_MODE.FOCUSED_APPLICATION,
-                    label: _('Only focused application’s windows'),
-                },
-                {
-                    value: DODGE_WINDOW_MODE.FOCUSED_WINDOW,
-                    label: _('Only focused window'),
-                },
-                {
-                    value: DODGE_WINDOW_MODE.MAXIMIZED_WINDOWS,
-                    label: _('Only maximized windows'),
-                },
-            ],
+            choices: windowDodgeModeChoices(),
             addRow: row => dodgeRow.add_row(row),
         },
         connectSettings

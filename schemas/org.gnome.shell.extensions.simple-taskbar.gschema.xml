@@ -212,6 +212,35 @@
       <default>20</default>
       <summary>Taskbar background transparency percentage</summary>
     </key>
+    <key name="transparency-on-unmaximized" type="b">
+      <default>false</default>
+      <summary>Enable dynamic taskbar transparency</summary>
+    </key>
+    <key name="transparency-dynamic-behavior" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="focused-window"/>
+        <choice value="maximized-windows"/>
+      </choices>
+      <default>'maximized-windows'</default>
+      <summary>Windows that restore taskbar transparency</summary>
+    </key>
+    <key name="transparency-dynamic-distance" type="i">
+      <range min="0" max="200"/>
+      <default>20</default>
+      <summary>Dynamic taskbar transparency trigger distance</summary>
+    </key>
+    <key name="transparency-dynamic-level" type="i">
+      <range min="0" max="100"/>
+      <default>100</default>
+      <summary>Taskbar transparency without a matching window</summary>
+    </key>
+    <key name="transparency-dynamic-animation-time" type="i">
+      <range min="0" max="2000"/>
+      <default>300</default>
+      <summary>Taskbar transparency animation duration</summary>
+    </key>
     <key name="panel-border-enabled" type="b">
       <default>false</default>
       <summary>Show the panel border in dark mode</summary>
@@ -519,6 +548,35 @@
       <range min="0" max="100"/>
       <default>20</default>
       <summary>Dock background transparency percentage</summary>
+    </key>
+    <key name="dock-transparency-on-unmaximized" type="b">
+      <default>false</default>
+      <summary>Enable dynamic Dock transparency</summary>
+    </key>
+    <key name="dock-transparency-dynamic-behavior" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="focused-window"/>
+        <choice value="maximized-windows"/>
+      </choices>
+      <default>'maximized-windows'</default>
+      <summary>Windows that restore Dock transparency</summary>
+    </key>
+    <key name="dock-transparency-dynamic-distance" type="i">
+      <range min="0" max="200"/>
+      <default>20</default>
+      <summary>Dynamic Dock transparency trigger distance</summary>
+    </key>
+    <key name="dock-transparency-dynamic-level" type="i">
+      <range min="0" max="100"/>
+      <default>100</default>
+      <summary>Dock transparency without a matching window</summary>
+    </key>
+    <key name="dock-transparency-dynamic-animation-time" type="i">
+      <range min="0" max="2000"/>
+      <default>300</default>
+      <summary>Dock transparency animation duration</summary>
     </key>
     <key name="dock-custom-panel-color-enabled" type="b">
       <default>false</default>

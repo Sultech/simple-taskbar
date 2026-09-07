@@ -62,6 +62,15 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'clock-visible', true);
     setBoolean(settings, 'panel-theme-follow-system', true);
     setBoolean(settings, 'transparency-enabled', true);
+    setBoolean(settings, 'transparency-on-unmaximized', false);
+    setString(
+        settings,
+        'transparency-dynamic-behavior',
+        'maximized-windows'
+    );
+    setInteger(settings, 'transparency-dynamic-distance', 20);
+    setInteger(settings, 'transparency-dynamic-level', 100);
+    setInteger(settings, 'transparency-dynamic-animation-time', 300);
     setBoolean(settings, 'panel-border-enabled', false);
     setBoolean(settings, 'panel-border-light-enabled', false);
     setBoolean(settings, 'application-overflow-enabled', true);

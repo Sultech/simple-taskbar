@@ -32,6 +32,7 @@ import {
 import {panelPosition} from './panelPosition.js';
 import {panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
+import {dynamicTransparencyStyle} from './dynamicTransparency.js';
 
 const BLUR_MY_SHELL_PANEL_KEYS = [
     'blur',
@@ -46,9 +47,10 @@ const XP_PANEL_CLASS =
     'simple-taskbar-windows-xp-theme';
 
 export class PanelThemeController {
-    constructor(settings, oldPanelStyle) {
+    constructor(settings, oldPanelStyle, getPanelGeometry) {
         this._settings = settings;
         this._oldPanelStyle = oldPanelStyle;
+        this._getPanelGeometry = getPanelGeometry;
         this._signalHolder = new TransientSignalHolder();
         this._transparencyRepairId = 0;
         this._blurMyShellSyncId = 0;
@@ -93,6 +95,16 @@ export class PanelThemeController {
         this._settings.connectObject(
             'changed::transparency-enabled', () => this.applyTransparency(),
             'changed::transparency-level', () => this.applyTransparency(),
+            'changed::transparency-on-unmaximized',
+            () => this.applyTransparency(),
+            'changed::transparency-dynamic-behavior',
+            () => this.applyTransparency(),
+            'changed::transparency-dynamic-distance',
+            () => this.applyTransparency(),
+            'changed::transparency-dynamic-level',
+            () => this.applyTransparency(),
+            'changed::transparency-dynamic-animation-time',
+            () => this.applyTransparency(),
             'changed::custom-panel-color-enabled',
             () => this.applyTransparency(),
             'changed::custom-panel-color', () => this.applyTransparency(),
@@ -180,12 +192,23 @@ export class PanelThemeController {
             this._setPanelStyle(originalStyle);
             return;
         }
+        const monitor = Main.layoutManager.primaryMonitor;
+        const {dynamicOpacity, transitionDuration} = dynamicTransparencyStyle(
+            this._settings,
+            !windowsXpThemeEnabled &&
+                this._settings.get_boolean('transparency-on-unmaximized'),
+            monitor,
+            () => this._getPanelGeometry(monitor)
+        );
 
         this._setPanelStyle(panelBackgroundStyle(
             this._settings,
             light,
             this._panelBorderEnabled(),
-            originalStyle
+            originalStyle,
+            false,
+            dynamicOpacity,
+            transitionDuration
         ));
     }
 
@@ -235,6 +258,7 @@ export class PanelThemeController {
         this._themeContext = null;
         this._stSettings = null;
         this._oldPanelStyle = null;
+        this._getPanelGeometry = null;
         this._settings = null;
     }
 

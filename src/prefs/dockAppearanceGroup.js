@@ -12,6 +12,9 @@ import {
     addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {
+    createDynamicTransparencyOptionsButton,
+} from './dynamicTransparencyDialog.js';
 
 export function addDockAppearanceGroup({
     page,
@@ -91,6 +94,9 @@ export function addDockAppearanceGroup({
     const transparencySwitchSubtitle = _(
         'Make the Dock background transparent'
     );
+    const dynamicTransparencySubtitle = _(
+        'Adjust transparency according to the selected window state'
+    );
     const panelBlurTransparencySubtitle = _(
         'Disable Blur My Shell panel blur to use this option'
     );
@@ -135,6 +141,21 @@ export function addDockAppearanceGroup({
         },
         connectSettings
     );
+    const dynamicTransparencyOptionsButton =
+        createDynamicTransparencyOptionsButton(settings, {
+            title: _('Dock Dynamic Transparency Options'),
+            behaviorKey: 'dock-transparency-dynamic-behavior',
+            distanceKey: 'dock-transparency-dynamic-distance',
+            levelKey: 'dock-transparency-dynamic-level',
+            animationTimeKey: 'dock-transparency-dynamic-animation-time',
+        });
+    const dynamicTransparencyRow = createSwitchRow(settings, {
+        key: 'dock-transparency-on-unmaximized',
+        title: _('Dynamic Transparency'),
+        subtitle: dynamicTransparencySubtitle,
+    });
+    dynamicTransparencyRow.add_suffix(dynamicTransparencyOptionsButton);
+    transparencyExpander.add_row(dynamicTransparencyRow);
 
     const customPanelColorSubtitle = _(
         'Use a chosen color instead of the light or dark theme color'
@@ -273,6 +294,12 @@ export function addDockAppearanceGroup({
         transparencyRow.subtitle = blocked
             ? panelBlurTransparencySubtitle
             : transparencyRowSubtitle;
+        dynamicTransparencyRow.sensitive = available && !blocked;
+        dynamicTransparencyRow.subtitle = blocked
+            ? panelBlurTransparencySubtitle
+            : dynamicTransparencySubtitle;
+        dynamicTransparencyOptionsButton.sensitive = available &&
+            !blocked && dynamicTransparencyRow.active;
     };
     const syncCustomColorControls = () => {
         const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
@@ -328,6 +355,10 @@ export function addDockAppearanceGroup({
         syncCustomColorControls();
     });
     transparencySwitch.connect(
+        'notify::active',
+        syncTransparencyControls
+    );
+    dynamicTransparencyRow.connect(
         'notify::active',
         syncTransparencyControls
     );

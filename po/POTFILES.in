@@ -12,6 +12,7 @@ src/prefs/applicationInteractionGroup.js
 src/prefs/classicHighlightDialog.js
 src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
+src/prefs/dynamicTransparencyDialog.js
 src/prefs/dockBehaviorGroup.js
 src/prefs/locationsGroup.js
 src/prefs/panelAppearancePage.js
@@ -28,6 +29,7 @@ src/prefs/startMenuPage.js
 src/prefs/taskbarBehaviorGroup.js
 src/prefs/windowPreviewDialog.js
 src/prefs/windowDodgeGroup.js
+src/prefs/windowDodgeModeChoices.js
 src/prefs/windowSwitchingPage.js
 src/startMenu/startMenuController.js
 src/startMenu/startMenuCategorySidebar.js

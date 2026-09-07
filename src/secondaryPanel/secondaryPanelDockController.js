@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
@@ -25,6 +24,12 @@ import {
 } from '../panel/panelBlurClasses.js';
 import {DOCK_EDGE_GAP} from '../shared/panelSizing.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
+import {
+    hasMaximizedWindowOnMonitor,
+} from '../windowVisibility.js';
+import {
+    dynamicTransparencyStyle,
+} from '../panel/dynamicTransparency.js';
 import {
     panelIsVertical,
     panelPosition,
@@ -178,7 +183,7 @@ export class SecondaryPanelDockController {
 
         if (!this._settings.get_boolean('panel-autohide-enabled') &&
             !this._settings.get_boolean('panel-dodge-windows-enabled') &&
-            this._hasVisibleMaximizedWindowOnMonitor()) {
+            hasMaximizedWindowOnMonitor(this._monitor)) {
             return 0;
         }
 
@@ -344,12 +349,20 @@ export class SecondaryPanelDockController {
             );
             return;
         }
+        const {dynamicOpacity, transitionDuration} = dynamicTransparencyStyle(
+            this._settings,
+            this._settings.get_boolean('transparency-on-unmaximized'),
+            this._monitor,
+            () => this.getGeometry()
+        );
         this._actor.set_style(panelBackgroundStyle(
             this._settings,
             light,
             borderEnabled,
             cornerRadiusStyle,
-            dockFloating
+            dockFloating,
+            dynamicOpacity,
+            transitionDuration
         ));
     }
 
@@ -420,6 +433,11 @@ export class SecondaryPanelDockController {
         for (const key of [
             'transparency-enabled',
             'transparency-level',
+            'transparency-on-unmaximized',
+            'transparency-dynamic-behavior',
+            'transparency-dynamic-distance',
+            'transparency-dynamic-level',
+            'transparency-dynamic-animation-time',
             'custom-panel-color-enabled',
             'custom-panel-color',
             'custom-panel-gradient-enabled',
@@ -594,20 +612,6 @@ export class SecondaryPanelDockController {
             return;
 
         window.disconnectObject(this._signalHolder);
-    }
-
-    _hasVisibleMaximizedWindowOnMonitor() {
-        for (const window of this._workspaceWindows) {
-            if (window.get_window_type() !== Meta.WindowType.DESKTOP &&
-                window.get_monitor() === this._monitor.index &&
-                !window.minimized &&
-                window.maximized_horizontally &&
-                window.maximized_vertically) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     _panelContentLength(

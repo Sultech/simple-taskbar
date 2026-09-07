@@ -2,7 +2,6 @@
 // Copyright (C) 2026 sultech
 
 import GLib from 'gi://GLib';
-import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -10,23 +9,15 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
+import {
+    windowMatchesMode,
+    windowIsVisibleOnWorkspace,
+    windowReachesPanel,
+} from '../windowVisibility.js';
+import {
+    hasDynamicTransparencyWindow,
+} from './dynamicTransparency.js';
 
-const HANDLED_WINDOW_TYPES = new Set([
-    Meta.WindowType.NORMAL,
-    Meta.WindowType.DOCK,
-    Meta.WindowType.DIALOG,
-    Meta.WindowType.MODAL_DIALOG,
-    Meta.WindowType.TOOLBAR,
-    Meta.WindowType.MENU,
-    Meta.WindowType.UTILITY,
-    Meta.WindowType.SPLASHSCREEN,
-    Meta.WindowType.DROPDOWN_MENU,
-]);
-const IGNORED_APPLICATIONS = new Set([
-    'com.rastersoft.ding',
-    'com.desktop.ding',
-]);
 const DODGE_CHECK_INTERVAL = 100;
 
 export class PanelWindowDodgeController {
@@ -35,6 +26,7 @@ export class PanelWindowDodgeController {
         getMonitor,
         getGeometry,
         onDodgeStateChanged,
+        onTransparencyStateChanged,
         autohideKey,
         dodgeEnabledKey,
         dodgeModeKey,
@@ -44,6 +36,7 @@ export class PanelWindowDodgeController {
         this._getMonitor = getMonitor;
         this._getGeometry = getGeometry;
         this._onDodgeStateChanged = onDodgeStateChanged;
+        this._onTransparencyStateChanged = onTransparencyStateChanged;
         this._autohideKey = autohideKey;
         this._dodgeEnabledKey = dodgeEnabledKey;
         this._dodgeModeKey = dodgeModeKey;
@@ -51,6 +44,7 @@ export class PanelWindowDodgeController {
         this._tracker = Shell.WindowTracker.get_default();
         this._signalHolder = new TransientSignalHolder();
         this._trackedWindowActors = new Set();
+        this._hasTransparencyWindow = false;
         this._syncId = 0;
         this._syncPending = false;
     }
@@ -111,6 +105,12 @@ export class PanelWindowDodgeController {
             },
             `changed::${this._dodgeModeKey}`, () => this._queueSync(),
             `changed::${this._dodgePointerRevealKey}`, () => this._queueSync(),
+            'changed::transparency-on-unmaximized',
+            () => this._queueSync(),
+            'changed::transparency-dynamic-behavior',
+            () => this._queueSync(),
+            'changed::transparency-dynamic-distance',
+            () => this._queueSync(),
             this._signalHolder
         );
         if (this._settings.get_boolean(this._autohideKey) &&
@@ -136,6 +136,7 @@ export class PanelWindowDodgeController {
         this._getMonitor = null;
         this._getGeometry = null;
         this._onDodgeStateChanged = null;
+        this._onTransparencyStateChanged = null;
         this._autohideKey = null;
         this._dodgeEnabledKey = null;
         this._dodgeModeKey = null;
@@ -148,10 +149,19 @@ export class PanelWindowDodgeController {
             return;
 
         this._trackedWindowActors.add(actor);
+        const window = actor.get_meta_window();
+        window.connectObject(
+            'notify::maximized-horizontally', () => this._queueSync(),
+            'notify::maximized-vertically', () => this._queueSync(),
+            'notify::minimized', () => this._queueSync(),
+            'workspace-changed', () => this._queueSync(),
+            this._signalHolder
+        );
         actor.connectObject(
             'notify::allocation', () => this._queueSync(),
             'notify::visible', () => this._queueSync(),
             'destroy', () => {
+                window.disconnectObject(this._signalHolder);
                 this._trackedWindowActors.delete(actor);
                 this._queueSync();
             },
@@ -183,6 +193,20 @@ export class PanelWindowDodgeController {
     }
 
     _sync() {
+        const monitor = this._getMonitor();
+        const hasTransparencyWindow = monitor
+            ? this._settings.get_boolean('transparency-on-unmaximized') &&
+                hasDynamicTransparencyWindow(
+                    this._settings,
+                    monitor,
+                    this._getGeometry(monitor)
+                )
+            : false;
+        if (hasTransparencyWindow !== this._hasTransparencyWindow) {
+            this._hasTransparencyWindow = hasTransparencyWindow;
+            this._onTransparencyStateChanged();
+        }
+
         const enabled = this._settings.get_boolean(this._dodgeEnabledKey);
         const pointerReveal = this._settings.get_boolean(
             this._dodgePointerRevealKey
@@ -201,7 +225,10 @@ export class PanelWindowDodgeController {
         const activeWorkspace = global.workspace_manager.get_active_workspace();
         const windows = global.get_window_actors().filter(actor =>
             this._trackedWindowActors.has(actor) &&
-            this._isEligibleWindow(actor, activeWorkspace)
+            windowIsVisibleOnWorkspace(
+                actor.get_meta_window(),
+                activeWorkspace
+            )
         );
         if (windows.length === 0)
             return false;
@@ -224,12 +251,14 @@ export class PanelWindowDodgeController {
 
         for (const actor of windows) {
             const window = actor.get_meta_window();
-            if (!this._matchesMode(
+            if (!windowMatchesMode(
                 window,
                 mode,
                 focusApp,
                 topApp,
-                focusWindow
+                focusWindow,
+                this._tracker,
+                windowReachesPanel
             )) {
                 continue;
             }
@@ -237,55 +266,6 @@ export class PanelWindowDodgeController {
             if (this._overlaps(window.get_frame_rect(), geometry))
                 return true;
         }
-
-        return false;
-    }
-
-    _isEligibleWindow(actor, activeWorkspace) {
-        const window = actor.get_meta_window();
-        if (window.get_workspace() !== activeWorkspace)
-            return false;
-        if (window.minimized)
-            return false;
-        const applicationId = window.get_gtk_application_id();
-        if (IGNORED_APPLICATIONS.has(applicationId) &&
-            window.is_skip_taskbar()) {
-            return false;
-        }
-        if (window.get_wm_class() === 'DropDownTerminalWindow')
-            return window.showing_on_its_workspace();
-
-        return HANDLED_WINDOW_TYPES.has(window.get_window_type()) &&
-            window.showing_on_its_workspace();
-    }
-
-    _matchesMode(window, mode, focusApp, topApp, focusWindow) {
-        if (mode === DODGE_WINDOW_MODE.ALL_WINDOWS)
-            return true;
-
-        if (mode === DODGE_WINDOW_MODE.FOCUSED_WINDOW)
-            return window === focusWindow;
-
-        if (mode === DODGE_WINDOW_MODE.FOCUSED_APPLICATION) {
-            if (!focusApp)
-                return true;
-            if (window.get_wm_class() === 'DropDownTerminalWindow')
-                return true;
-
-            const application = this._tracker.get_window_app(window);
-            const halfMaximized = focusWindow &&
-                focusWindow.maximized_vertically &&
-                !focusWindow.maximized_horizontally &&
-                window.maximized_vertically &&
-                !window.maximized_horizontally &&
-                window.get_monitor() === focusWindow.get_monitor();
-            return application === focusApp || application === topApp ||
-                halfMaximized || window.is_above();
-        }
-
-        if (mode === DODGE_WINDOW_MODE.MAXIMIZED_WINDOWS)
-            return window.maximized_vertically ||
-                window.maximized_horizontally || window.fullscreen;
 
         return false;
     }
