@@ -138,6 +138,10 @@ export class PanelAutoHideController {
         this._syncEnabled();
     }
 
+    get hidden() {
+        return this._hidden;
+    }
+
     destroy() {
         this._clearHideTimeout();
         this._stopFullscreenWatch();

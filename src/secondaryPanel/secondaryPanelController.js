@@ -166,7 +166,9 @@ export class SecondaryPanelController {
                     ]
                 ),
             onHoverAnimationReserveChanged: () => this._updateTaskbarWidth(),
-            isHoverAnimationBlocked: () => this._interactionIsBlocked(false),
+            isHoverAnimationBlocked: () =>
+                this._interactionIsBlocked(false) ||
+                this._autoHideController.hidden,
         });
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),

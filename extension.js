@@ -160,7 +160,8 @@ export default class SimpleTaskbarExtension extends Extension {
             onHoverAnimationReserveChanged: () =>
                 this._panelController.updateTaskbarWidth(),
             isHoverAnimationBlocked: () =>
-                this._panelInteractionIsBlocked(false),
+                this._panelInteractionIsBlocked(false) ||
+                this._panelController.autoHideHidden,
             onShowDesktopClicked: () =>
                 this._windowController.toggleDesktop(),
             onShowDesktopModeChanged: () =>

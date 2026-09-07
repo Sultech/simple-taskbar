@@ -217,6 +217,10 @@ export class PanelController {
         this._autoHideController.setMenuOpen(open);
     }
 
+    get autoHideHidden() {
+        return this._autoHideController.hidden;
+    }
+
     setShowDesktopButton(button) {
         this._showDesktopButton = button;
         this._stateController.setShowDesktopButton(button);
