@@ -52,10 +52,11 @@ export class TaskbarHoverAnimationGeometry {
         );
     }
 
-    getRowItems() {
+    getRowItems(getStretchEntry) {
         const span = this._visibleSpan();
         return this._taskbarActor.get_children().filter(item =>
-            !item.animatingOut && this._isItemInViewport(item, span)
+            !item.animatingOut &&
+            this._isRowItemInViewport(item, span, getStretchEntry)
         );
     }
 
@@ -219,11 +220,29 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     _isItemInViewport(item, span) {
-        if (!span)
-            return false;
+        const geometry = this.getActorGeometry(item);
+        return this._isGeometryInViewport(geometry, span);
+    }
 
+    _isRowItemInViewport(item, span, getStretchEntry) {
         const geometry = this.getActorGeometry(item);
         if (!geometry)
+            return false;
+
+        const entry = getStretchEntry(item);
+        if (entry && entry.actor === item) {
+            const offset = entry.actor[entry.property] - entry.base;
+            if (entry.property === 'translation_x')
+                geometry.x -= offset;
+            else
+                geometry.y -= offset;
+        }
+
+        return this._isGeometryInViewport(geometry, span);
+    }
+
+    _isGeometryInViewport(geometry, span) {
+        if (!geometry || !span)
             return false;
 
         const start = this._getVertical() ? geometry.y : geometry.x;

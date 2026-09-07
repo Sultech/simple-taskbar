@@ -249,10 +249,12 @@ export class TaskbarHoverAnimationAnimator {
 
     _updateMagnification(items, pointerX, pointerY, profile, vertical) {
         const entries = [];
-        for (const item of this._geometry.getRowItems()) {
+        const getStretchEntry = item =>
+            this._clones.getStretchEntry(item);
+        for (const item of this._geometry.getRowItems(getStretchEntry)) {
             const geometry = this._geometry.getRowItemBaseGeometry(
                 item,
-                trackedItem => this._clones.getStretchEntry(trackedItem)
+                getStretchEntry
             );
             if (!geometry)
                 continue;
@@ -418,7 +420,7 @@ export class TaskbarHoverAnimationAnimator {
         const profile = this.getAnimationProfile(type);
         if (type === APP_ICON_HOVER_ANIMATION.MAGNIFY) {
             this._stretch(item, rowTranslation ?? 0, 0);
-            if (!item._taskbarApp)
+            if (!item._taskbarApp && !item._taskbarIsPinnedSeparator)
                 return;
         }
 
