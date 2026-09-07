@@ -154,7 +154,9 @@ export function addStartMenuPage({
         {
             key: 'start-button-padding',
             title: _('Start Button Padding'),
-            subtitle: _('Horizontal space around the Start icon in pixels'),
+            subtitle: _(
+                'Space between the Start icon and the panel edge in pixels when positioned at either end'
+            ),
             lower: 0,
             upper: 20,
             addRow: row => startButtonAppearanceRow.add_row(row),

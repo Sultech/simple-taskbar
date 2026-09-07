@@ -1028,8 +1028,8 @@
     </key>
     <key name="start-button-padding" type="i">
       <range min="0" max="20"/>
-      <default>0</default>
-      <summary>Horizontal padding around the Start button icon</summary>
+      <default>2</default>
+      <summary>Padding between the Start button and the panel edge when positioned at either end</summary>
     </key>
     <key name="start-button-custom-icon" type="s">
       <default>''</default>

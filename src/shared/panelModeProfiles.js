@@ -221,7 +221,7 @@ function applyInitialPanelAxisSettings(settings, mode, axis) {
     const vertical = axis === PANEL_AXIS_VERTICAL;
     setString(settings, 'app-alignment', vertical ? 'left' : 'center');
     setInteger(settings, 'icon-spacing', vertical ? 6 : 3);
-    setInteger(settings, 'start-button-padding', 0);
+    setInteger(settings, 'start-button-padding', 2);
     setString(
         settings,
         'activities-button-position',

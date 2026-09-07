@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 02:33+0100\n"
+"POT-Creation-Date: 2026-09-07 22:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr ""
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:86 src/prefs/panelModeGroup.js:70
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:70
 msgid "Left"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr ""
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:71
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:71
 msgid "Right"
 msgstr ""
 
@@ -502,12 +502,12 @@ msgstr ""
 msgid "Configure the position, style, size, and colours of running indicators"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:84
+#: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
 #: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
 msgid "Top"
 msgstr ""
 
-#: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:85
+#: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
 #: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
 msgid "Bottom"
 msgstr ""
@@ -1019,7 +1019,7 @@ msgstr ""
 msgid "Configure the Dock independently of the taskbar."
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:43 src/prefs/panelAppearancePage.js:251
+#: src/prefs/dockAppearanceGroup.js:43 src/prefs/panelAppearancePage.js:248
 msgid "Theme and Styling"
 msgstr ""
 
@@ -1028,7 +1028,7 @@ msgid ""
 "Choose the Dock theme, colours, gradient, corner radius, and text appearance"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:259
+#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:256
 msgid "Follow System Theme"
 msgstr ""
 
@@ -1040,17 +1040,17 @@ msgstr ""
 msgid "Dock Theme"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:69 src/prefs/panelAppearancePage.js:277
+#: src/prefs/dockAppearanceGroup.js:69 src/prefs/panelAppearancePage.js:274
 msgid "Choose the colour scheme when system matching is off"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:71 src/prefs/panelAppearancePage.js:279
-#: src/prefs/startMenuPage.js:694
+#: src/prefs/dockAppearanceGroup.js:71 src/prefs/panelAppearancePage.js:276
+#: src/prefs/startMenuPage.js:696
 msgid "Light"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:72 src/prefs/panelAppearancePage.js:280
-#: src/prefs/startMenuPage.js:693
+#: src/prefs/dockAppearanceGroup.js:72 src/prefs/panelAppearancePage.js:277
+#: src/prefs/startMenuPage.js:695
 msgid "Dark"
 msgstr ""
 
@@ -1068,12 +1068,12 @@ msgstr ""
 msgid "Make the Dock background transparent"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:99 src/prefs/panelAppearancePage.js:299
+#: src/prefs/dockAppearanceGroup.js:99 src/prefs/panelAppearancePage.js:296
 msgid "Adjust transparency according to the selected window state"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:102 src/prefs/panelAppearancePage.js:302
-#: src/prefs/startMenuPage.js:720
+#: src/prefs/dockAppearanceGroup.js:102 src/prefs/panelAppearancePage.js:299
+#: src/prefs/startMenuPage.js:722
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 
@@ -1085,7 +1085,7 @@ msgstr ""
 msgid "Configure Dock transparency and Blur My Shell integration"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:111 src/prefs/panelAppearancePage.js:311
+#: src/prefs/dockAppearanceGroup.js:111 src/prefs/panelAppearancePage.js:308
 msgid "Enable Transparency"
 msgstr ""
 
@@ -1099,12 +1099,12 @@ msgstr ""
 
 #: src/prefs/dockAppearanceGroup.js:130
 #: src/prefs/dynamicTransparencyDialog.js:99
-#: src/prefs/panelAppearancePage.js:324
+#: src/prefs/panelAppearancePage.js:321
 msgid "0% is opaque and 100% is fully transparent"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:305
-#: src/prefs/panelAppearancePage.js:331
+#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:302
+#: src/prefs/panelAppearancePage.js:328
 msgid "Transparency"
 msgstr ""
 
@@ -1114,11 +1114,11 @@ msgstr ""
 
 #: src/prefs/dockAppearanceGroup.js:158
 #: src/prefs/dynamicTransparencyDialog.js:58
-#: src/prefs/panelAppearancePage.js:352
+#: src/prefs/panelAppearancePage.js:349
 msgid "Dynamic Transparency"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:397
+#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:394
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr ""
 
@@ -1146,15 +1146,15 @@ msgstr ""
 msgid "Dock Gradient Direction"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:220 src/prefs/panelAppearancePage.js:451
+#: src/prefs/dockAppearanceGroup.js:220 src/prefs/panelAppearancePage.js:448
 msgid "Choose how the gradient flows"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:222 src/prefs/panelAppearancePage.js:453
+#: src/prefs/dockAppearanceGroup.js:222 src/prefs/panelAppearancePage.js:450
 msgid "Vertical"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:223 src/prefs/panelAppearancePage.js:454
+#: src/prefs/dockAppearanceGroup.js:223 src/prefs/panelAppearancePage.js:451
 msgid "Horizontal"
 msgstr ""
 
@@ -1167,23 +1167,23 @@ msgstr ""
 msgid "Dock Text Color"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:240 src/prefs/panelAppearancePage.js:471
+#: src/prefs/dockAppearanceGroup.js:240 src/prefs/panelAppearancePage.js:468
 msgid "White"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:241 src/prefs/panelAppearancePage.js:472
+#: src/prefs/dockAppearanceGroup.js:241 src/prefs/panelAppearancePage.js:469
 msgid "Black"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:249 src/prefs/panelAppearancePage.js:573
+#: src/prefs/dockAppearanceGroup.js:249 src/prefs/panelAppearancePage.js:570
 msgid "Borders"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:250 src/prefs/panelAppearancePage.js:574
+#: src/prefs/dockAppearanceGroup.js:250 src/prefs/panelAppearancePage.js:571
 msgid "Choose whether to show a border in light and dark themes"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:255 src/prefs/panelAppearancePage.js:579
+#: src/prefs/dockAppearanceGroup.js:255 src/prefs/panelAppearancePage.js:576
 msgid "Show Border in Dark Mode"
 msgstr ""
 
@@ -1191,7 +1191,7 @@ msgstr ""
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 
-#: src/prefs/dockAppearanceGroup.js:268 src/prefs/panelAppearancePage.js:592
+#: src/prefs/dockAppearanceGroup.js:268 src/prefs/panelAppearancePage.js:589
 msgid "Show Border in Light Mode"
 msgstr ""
 
@@ -1337,68 +1337,68 @@ msgstr ""
 msgid "Choose which common folders appear"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:36 src/prefs/startMenuPage.js:511
+#: src/prefs/locationsGroup.js:36 src/prefs/startMenuPage.js:513
 #: src/integration/fileManagerPlacesSection.js:25
 msgid "Home"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:37 src/prefs/startMenuPage.js:512
+#: src/prefs/locationsGroup.js:37 src/prefs/startMenuPage.js:514
 msgid "Add the Home folder"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:41 src/prefs/startMenuPage.js:516
-#: src/prefs/startMenuPage.js:633
+#: src/prefs/locationsGroup.js:41 src/prefs/startMenuPage.js:518
+#: src/prefs/startMenuPage.js:635
 #: src/startMenu/startButtonContextMenuController.js:142
 #: src/integration/fileManagerPlacesSection.js:30
 msgid "Desktop"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:42 src/prefs/startMenuPage.js:517
+#: src/prefs/locationsGroup.js:42 src/prefs/startMenuPage.js:519
 msgid "Add the Desktop folder"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:46 src/prefs/startMenuPage.js:521
+#: src/prefs/locationsGroup.js:46 src/prefs/startMenuPage.js:523
 #: src/integration/fileManagerPlacesSection.js:35
 msgid "Documents"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:47 src/prefs/startMenuPage.js:522
+#: src/prefs/locationsGroup.js:47 src/prefs/startMenuPage.js:524
 msgid "Add the Documents folder"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:51 src/prefs/startMenuPage.js:526
+#: src/prefs/locationsGroup.js:51 src/prefs/startMenuPage.js:528
 #: src/integration/fileManagerPlacesSection.js:40
 msgid "Downloads"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:52 src/prefs/startMenuPage.js:527
+#: src/prefs/locationsGroup.js:52 src/prefs/startMenuPage.js:529
 msgid "Add the Downloads folder"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:56 src/prefs/startMenuPage.js:531
+#: src/prefs/locationsGroup.js:56 src/prefs/startMenuPage.js:533
 #: src/integration/fileManagerPlacesSection.js:45
 msgid "Music"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:57 src/prefs/startMenuPage.js:532
+#: src/prefs/locationsGroup.js:57 src/prefs/startMenuPage.js:534
 msgid "Add the Music folder"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:61 src/prefs/startMenuPage.js:536
+#: src/prefs/locationsGroup.js:61 src/prefs/startMenuPage.js:538
 #: src/integration/fileManagerPlacesSection.js:50
 msgid "Pictures"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:62 src/prefs/startMenuPage.js:537
+#: src/prefs/locationsGroup.js:62 src/prefs/startMenuPage.js:539
 msgid "Add the Pictures folder"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:66 src/prefs/startMenuPage.js:541
+#: src/prefs/locationsGroup.js:66 src/prefs/startMenuPage.js:543
 #: src/integration/fileManagerPlacesSection.js:55
 msgid "Videos"
 msgstr ""
 
-#: src/prefs/locationsGroup.js:67 src/prefs/startMenuPage.js:542
+#: src/prefs/locationsGroup.js:67 src/prefs/startMenuPage.js:544
 msgid "Add the Videos folder"
 msgstr ""
 
@@ -1475,90 +1475,90 @@ msgstr ""
 msgid "Show common folders in the Files taskbar menu"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:55
+#: src/prefs/panelAppearancePage.js:56
 msgid "Taskbar Appearance"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:56
+#: src/prefs/panelAppearancePage.js:57
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:65
+#: src/prefs/panelAppearancePage.js:66
 msgid "Taskbar Thickness"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:67
+#: src/prefs/panelAppearancePage.js:68
 msgid "Oversized icons shrink automatically when the taskbar is reduced"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:79
+#: src/prefs/panelAppearancePage.js:80
 msgid "Taskbar Position"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:81
+#: src/prefs/panelAppearancePage.js:82
 msgid "Place the taskbar at a screen edge"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:253
+#: src/prefs/panelAppearancePage.js:250
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:260
+#: src/prefs/panelAppearancePage.js:257
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:276
+#: src/prefs/panelAppearancePage.js:273
 msgid "Taskbar Theme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:296
+#: src/prefs/panelAppearancePage.js:293
 msgid "Make the taskbar background transparent"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:306
+#: src/prefs/panelAppearancePage.js:303
 msgid "Control the taskbar background transparency"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:341
+#: src/prefs/panelAppearancePage.js:338
 msgid "Dynamic Transparency Options"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:400
+#: src/prefs/panelAppearancePage.js:397
 msgid "Custom Taskbar Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:418
+#: src/prefs/panelAppearancePage.js:415
 msgid "Taskbar Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:424
+#: src/prefs/panelAppearancePage.js:421
 msgid "Use Taskbar Gradient"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:425
+#: src/prefs/panelAppearancePage.js:422
 msgid "Blend the taskbar color with a second color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:440
+#: src/prefs/panelAppearancePage.js:437
 msgid "Taskbar Gradient Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:450
+#: src/prefs/panelAppearancePage.js:447
 msgid "Taskbar Gradient Direction"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:461
+#: src/prefs/panelAppearancePage.js:458
 msgid ""
 "White text uses the dark taskbar theme; black text uses the light taskbar "
 "theme"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:468
+#: src/prefs/panelAppearancePage.js:465
 msgid "Taskbar Text Color"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:580 src/prefs/panelAppearancePage.js:593
+#: src/prefs/panelAppearancePage.js:577 src/prefs/panelAppearancePage.js:590
 msgid "Display a thin border along the taskbar’s workspace-facing edge"
 msgstr ""
 
@@ -1596,7 +1596,7 @@ msgstr ""
 msgid "Folder Menu Location"
 msgstr ""
 
-#: src/prefs/panelItemsPage.js:80 src/prefs/startMenuPage.js:216
+#: src/prefs/panelItemsPage.js:80 src/prefs/startMenuPage.js:218
 msgid "Choose…"
 msgstr ""
 
@@ -1999,11 +1999,11 @@ msgid "Move the Start button with the application icons"
 msgstr ""
 
 #: src/prefs/startButtonDialog.js:56 src/prefs/startMenuPage.js:43
-#: src/prefs/startMenuPage.js:270
+#: src/prefs/startMenuPage.js:272
 msgid "Eleven-style Start Menu"
 msgstr ""
 
-#: src/prefs/startButtonDialog.js:57 src/prefs/startMenuPage.js:271
+#: src/prefs/startButtonDialog.js:57 src/prefs/startMenuPage.js:273
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr ""
 
@@ -2051,326 +2051,328 @@ msgstr ""
 msgid "Start Button Padding"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:157
-msgid "Horizontal space around the Start icon in pixels"
+#: src/prefs/startMenuPage.js:158
+msgid ""
+"Space between the Start icon and the panel edge in pixels when positioned at "
+"either end"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:202
+#: src/prefs/startMenuPage.js:204
 msgid "Show Start Button Separator"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:203
+#: src/prefs/startMenuPage.js:205
 msgid "Show a line between the Start button and applications"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:208
+#: src/prefs/startMenuPage.js:210
 msgid "Custom Start Button Icon"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:211
+#: src/prefs/startMenuPage.js:213
 msgid "Use the built-in icon"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:232
+#: src/prefs/startMenuPage.js:234
 msgid "Using the built-in icon"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:283
+#: src/prefs/startMenuPage.js:285
 msgid "Start Menu Options"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:284
+#: src/prefs/startMenuPage.js:286
 msgid "Configure Start Menu content and behavior"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:289
+#: src/prefs/startMenuPage.js:291
 msgid "Show Profile Picture"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:290
+#: src/prefs/startMenuPage.js:292
 msgid "Use your account picture in the Start Menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:311
+#: src/prefs/startMenuPage.js:313
 msgid "Power Options in Start Menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:313
+#: src/prefs/startMenuPage.js:315
 msgid "Show power actions here instead of in Quick Settings"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:335
+#: src/prefs/startMenuPage.js:337
 msgid "Open All Apps by Default"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:336
+#: src/prefs/startMenuPage.js:338
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:357
+#: src/prefs/startMenuPage.js:359
 msgid "Show Recommended Apps"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:358
+#: src/prefs/startMenuPage.js:360
 msgid "Display frequently used applications below pinned apps"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:370
+#: src/prefs/startMenuPage.js:372
 msgid "Hide Pinned App Titles"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:372
+#: src/prefs/startMenuPage.js:374
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:385
+#: src/prefs/startMenuPage.js:387
 msgid "Show Running App Indicators"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:386
+#: src/prefs/startMenuPage.js:388
 msgid "Show taskbar-style indicators below running application icons"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:434
+#: src/prefs/startMenuPage.js:436
 msgid "Organize All Apps into Categories"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:435
+#: src/prefs/startMenuPage.js:437
 msgid "Browse applications by category in the Start menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:457
+#: src/prefs/startMenuPage.js:459
 msgid "Show Original GNOME Button"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:458
+#: src/prefs/startMenuPage.js:460
 msgid ""
 "Show the Applications button when the Eleven-style Start Menu is disabled"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:479
+#: src/prefs/startMenuPage.js:481
 msgid "Follow Taskbar/Dock Theme"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:480
+#: src/prefs/startMenuPage.js:482
 msgid "Use the taskbar or Dock’s effective light or dark appearance"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:486
+#: src/prefs/startMenuPage.js:488
 msgid "Start Menu Appearance"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:487
+#: src/prefs/startMenuPage.js:489
 msgid "Configure the Start Menu theme and transparency"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:492
+#: src/prefs/startMenuPage.js:494
 msgid "Folder Shortcuts"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:493
+#: src/prefs/startMenuPage.js:495
 msgid "Choose which folders appear beside the Settings icon"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:496
+#: src/prefs/startMenuPage.js:498
 msgid "Show Folder Shortcuts"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:497
+#: src/prefs/startMenuPage.js:499
 msgid "Show selected folders beside the Settings icon in the Start Menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:579
+#: src/prefs/startMenuPage.js:581
 #: src/startMenu/startButtonContextMenuController.js:76
 msgid "Installed Apps"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:580
+#: src/prefs/startMenuPage.js:582
 msgid "Open installed applications in Settings"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:585
+#: src/prefs/startMenuPage.js:587
 #: src/startMenu/startButtonContextMenuController.js:84
 msgid "Event Viewer"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:586
+#: src/prefs/startMenuPage.js:588
 msgid "Open system logs"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:591 src/startMenu/startMenuAppModel.js:51
+#: src/prefs/startMenuPage.js:593 src/startMenu/startMenuAppModel.js:51
 #: src/startMenu/startButtonContextMenuController.js:91
 msgid "System"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:592
+#: src/prefs/startMenuPage.js:594
 msgid "Open system information in Settings"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:597
+#: src/prefs/startMenuPage.js:599
 #: src/startMenu/startButtonContextMenuController.js:97
 msgid "Network Connections"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:598
+#: src/prefs/startMenuPage.js:600
 msgid "Open network settings"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:603
+#: src/prefs/startMenuPage.js:605
 #: src/startMenu/startButtonContextMenuController.js:105
 msgid "Disk Management"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:604
+#: src/prefs/startMenuPage.js:606
 msgid "Open GNOME Disks"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:609
+#: src/prefs/startMenuPage.js:611
 #: src/startMenu/startButtonContextMenuController.js:110
 msgid "Terminal"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:610
+#: src/prefs/startMenuPage.js:612
 msgid "Open the available terminal application"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:615
+#: src/prefs/startMenuPage.js:617
 #: src/startMenu/startButtonContextMenuController.js:120
 #: src/panel/panelInteractionController.js:120
 msgid "Task Manager"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:616
+#: src/prefs/startMenuPage.js:618
 msgid "Open the configured task manager"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:621
+#: src/prefs/startMenuPage.js:623
 #: src/startMenu/startButtonContextMenuController.js:129
 msgid "File Explorer"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:622
+#: src/prefs/startMenuPage.js:624
 msgid "Open the default file manager"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:627
+#: src/prefs/startMenuPage.js:629
 #: src/startMenu/startButtonContextMenuController.js:136
 msgid "Run"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:628
+#: src/prefs/startMenuPage.js:630
 msgid "Open the Run Command dialog"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:634
+#: src/prefs/startMenuPage.js:636
 msgid "Show the desktop"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:639
+#: src/prefs/startMenuPage.js:641
 msgid "Start Button Context Menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:641
+#: src/prefs/startMenuPage.js:643
 msgid "Choose which shortcuts appear in the Start button’s context menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:646
+#: src/prefs/startMenuPage.js:648
 msgid "Show Context Menu Shortcuts"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:647
+#: src/prefs/startMenuPage.js:649
 msgid "Add selected system shortcuts to the Start button context menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:690
+#: src/prefs/startMenuPage.js:692
 msgid "Start Menu Theme"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:691
+#: src/prefs/startMenuPage.js:693
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:695
+#: src/prefs/startMenuPage.js:697
 msgid "GNOME Shell"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:717
+#: src/prefs/startMenuPage.js:719
 msgid "Use the taskbar’s configured transparency level"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:723
+#: src/prefs/startMenuPage.js:725
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:726
+#: src/prefs/startMenuPage.js:728
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:729
+#: src/prefs/startMenuPage.js:731
 msgid "Follow Taskbar Transparency"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:778
+#: src/prefs/startMenuPage.js:780
 msgid "Center Start Menu on Monitor"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:780
+#: src/prefs/startMenuPage.js:782
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:835
+#: src/prefs/startMenuPage.js:837
 msgid "Super Opens Start Menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:836
+#: src/prefs/startMenuPage.js:838
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:848
+#: src/prefs/startMenuPage.js:850
 msgid "Super+Tab Opens Start Menu"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:850
+#: src/prefs/startMenuPage.js:852
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:887
+#: src/prefs/startMenuPage.js:889
 msgid "Super+E Opens File Manager"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:889
+#: src/prefs/startMenuPage.js:891
 msgid "Open your home folder with the system’s default file manager"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:904
+#: src/prefs/startMenuPage.js:906
 msgid "Not set"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:908
+#: src/prefs/startMenuPage.js:910
 msgid "Set custom shortcut"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:913
+#: src/prefs/startMenuPage.js:915
 msgid "Clear custom shortcut"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:918
+#: src/prefs/startMenuPage.js:920
 msgid "Custom Start Menu Shortcut"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:937
+#: src/prefs/startMenuPage.js:939
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:940
+#: src/prefs/startMenuPage.js:942
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr ""
 
-#: src/prefs/startMenuPage.js:943
+#: src/prefs/startMenuPage.js:945
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 
