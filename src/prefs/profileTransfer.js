@@ -8,6 +8,8 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {pinnedItemIsValid} from '../shared/pinnedItemFormat.js';
+
 Gio._promisify(Gio.File.prototype, 'load_contents_async');
 Gio._promisify(
     Gio.File.prototype,
@@ -16,6 +18,7 @@ Gio._promisify(
 );
 
 const PROFILE_FORMAT_VERSION = 1;
+const PINNED_APPS_KEY = 'start-menu-pinned-apps';
 const EXCLUDED_KEYS = new Set([
     'panel-profile-transition',
     'target-prefs-page',
@@ -75,15 +78,20 @@ function parseProfile(contents, settings) {
         if (serialized.type !== expectedType)
             throw new Error(_('The selected profile is incompatible with this version.'));
 
-        values.push([
-            key,
-            GLib.Variant.parse(
-                new GLib.VariantType(expectedType),
-                serialized.value,
-                null,
-                null
-            ),
-        ]);
+        const value = GLib.Variant.parse(
+            new GLib.VariantType(expectedType),
+            serialized.value,
+            null,
+            null
+        );
+        if (!settings.settings_schema.get_key(key).range_check(value))
+            throw new Error(_('The selected profile is invalid.'));
+        if (key === PINNED_APPS_KEY &&
+            !value.deepUnpack().every(pinnedItemIsValid)) {
+            throw new Error(_('The selected profile is invalid.'));
+        }
+
+        values.push([key, value]);
     }
     return values;
 }

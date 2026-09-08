@@ -3,7 +3,7 @@
 
 import GLib from 'gi://GLib';
 
-const FOLDER_PREFIX = 'simple-taskbar-folder:';
+import {PINNED_FOLDER_PREFIX} from '../shared/pinnedItemFormat.js';
 
 export function pinnedAppItemKey(appId) {
     return `app:${appId}`;
@@ -14,7 +14,7 @@ export function pinnedFolderItemKey(folderId) {
 }
 
 function parsePinnedItem(value) {
-    if (!value.startsWith(FOLDER_PREFIX)) {
+    if (!value.startsWith(PINNED_FOLDER_PREFIX)) {
         return {
             type: 'app',
             key: pinnedAppItemKey(value),
@@ -22,7 +22,7 @@ function parsePinnedItem(value) {
         };
     }
 
-    const folder = JSON.parse(value.slice(FOLDER_PREFIX.length));
+    const folder = JSON.parse(value.slice(PINNED_FOLDER_PREFIX.length));
     return {
         type: 'folder',
         key: pinnedFolderItemKey(folder.id),
@@ -36,7 +36,7 @@ function serializePinnedItem(item) {
     if (item.type === 'app')
         return item.appId;
 
-    return FOLDER_PREFIX + JSON.stringify({
+    return PINNED_FOLDER_PREFIX + JSON.stringify({
         id: item.id,
         name: item.name,
         apps: item.appIds,
