@@ -299,7 +299,7 @@ export const TaskbarLocation = GObject.registerClass({
         const cancellable = new Gio.Cancellable();
         this._actionCancellable = cancellable;
         const removable = this._mount || this._volume;
-        const operation = new ShellMountOperation.ShellMountOperation(removable);
+        const operation = new ShellMountOperation(removable);
         let success = false;
         try {
             switch (action) {
