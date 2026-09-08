@@ -100,9 +100,8 @@ export class StartMenuSearchController {
             if (!this._isCurrent(cancellable, generation))
                 return;
 
-            const allResultIds = Array.isArray(resultIds) ? resultIds : [];
-            this._providerResults.set(provider, allResultIds);
-            const displayedIds = this._filterResults(provider, allResultIds);
+            this._providerResults.set(provider, resultIds);
+            const displayedIds = this._filterResults(provider, resultIds);
             const metas = displayedIds.length > 0
                 ? await provider.getResultMetas(displayedIds, cancellable)
                 : [];
@@ -110,11 +109,7 @@ export class StartMenuSearchController {
             if (!this._isCurrent(cancellable, generation))
                 return;
 
-            group.results = this._normalizeResults(
-                provider,
-                Array.isArray(metas) ? metas : [],
-                terms
-            );
+            group.results = this._normalizeResults(provider, metas, terms);
         } catch (error) {
             if (this._isCurrent(cancellable, generation)) {
                 const providerId = group.provider.id ?? 'unknown';
@@ -147,8 +142,7 @@ export class StartMenuSearchController {
         const maxResults = provider.appInfo
             ? MAX_PROVIDER_RESULTS
             : MAX_APPLICATION_RESULTS;
-        const filtered = provider.filterResults(resultIds, maxResults);
-        return Array.isArray(filtered) ? filtered : [];
+        return provider.filterResults(resultIds, maxResults);
     }
 
     _getProviderName(provider) {
