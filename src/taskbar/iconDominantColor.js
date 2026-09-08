@@ -17,11 +17,7 @@ const NORMALISED_SATURATION = 0.65;
 const NORMALISED_VALUE = 0.9;
 
 function iconPixbuf(app, iconTheme) {
-    const iconTexture = app.create_icon_texture(ICON_SIZE);
-    if (!(iconTexture instanceof St.Icon))
-        return null;
-
-    let gicon = iconTexture.get_gicon();
+    let gicon = app.icon;
     if (gicon instanceof Gio.EmblemedIcon)
         gicon = gicon.get_icon();
 
