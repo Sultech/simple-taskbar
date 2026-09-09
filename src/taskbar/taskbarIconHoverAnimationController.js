@@ -138,6 +138,7 @@ export class TaskbarIconHoverAnimationController {
             'notify::y', () => this._updateCloneGeometry(),
             'notify::translation-x', () => this._updateCloneGeometry(),
             'notify::translation-y', () => this._updateCloneGeometry(),
+            'notify::allocation', () => this._updateCloneGeometry(),
             this._signalHolder
         );
         this._taskbarActor.connectObject(
