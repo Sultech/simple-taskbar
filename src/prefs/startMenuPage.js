@@ -143,8 +143,8 @@ export function addStartMenuPage({
     updateStartPositionRow();
 
     const startButtonAppearanceRow = new Adw.ExpanderRow({
-        title: _('Start Button Appearance'),
-        subtitle: _('Configure padding, separators, icons, and button visibility'),
+        title: _('Start Button Appearance and App Grid'),
+        subtitle: _('Configure padding, separators, icons, button visibility, and app grid size'),
     });
     startButtonGroup.add(startButtonAppearanceRow);
 
@@ -204,7 +204,6 @@ export function addStartMenuPage({
         title: _('Show Start Button Separator'),
         subtitle: _('Show a line between the Start button and applications'),
     });
-    startButtonAppearanceRow.add_row(startButtonSeparatorSwitch);
 
     const customIconRow = new Adw.ActionRow({
         title: _('Custom Start Button Icon'),
@@ -222,6 +221,7 @@ export function addStartMenuPage({
     customIconRow.add_suffix(chooseCustomIconButton);
     customIconRow.activatable_widget = chooseCustomIconButton;
     startButtonAppearanceRow.add_row(customIconRow);
+    startButtonAppearanceRow.add_row(startButtonSeparatorSwitch);
 
     const updateCustomIconRow = () => {
         const location = settings.get_string(
@@ -456,8 +456,8 @@ export function addStartMenuPage({
     updateAppCategoriesSwitch();
 
     const gnomeStartButtonVisibleSwitch = new Adw.SwitchRow({
-        title: _('Show Original GNOME Button'),
-        subtitle: _('Show the Applications button when the Eleven-style Start Menu is disabled'),
+        title: _('Show App Grid Button'),
+        subtitle: _('Show a Start button that opens the GNOME app grid when the Eleven-style Start Menu is disabled'),
         active: settings.get_boolean('gnome-start-button-visible'),
     });
     startButtonAppearanceRow.add_row(gnomeStartButtonVisibleSwitch);
@@ -476,6 +476,65 @@ export function addStartMenuPage({
         updateGnomeStartButtonVisibleSwitch
     );
     updateGnomeStartButtonVisibleSwitch();
+
+    const appGridLayoutRow = addComboRow(
+        startButtonAppearanceRow,
+        settings,
+        {
+            key: 'app-grid-layout',
+            title: _('App Grid Layout'),
+            subtitle: _('Columns and rows of the GNOME app grid'),
+            choices: [
+                {value: 'auto', label: _('Automatic')},
+                {value: 'custom', label: _('Custom')},
+            ],
+            addRow: row => startButtonAppearanceRow.add_row(row),
+        },
+        connectSettings
+    );
+    const appGridColumnsRow = addSpinRow(
+        startButtonAppearanceRow,
+        settings,
+        {
+            key: 'app-grid-columns',
+            title: _('App Grid Columns'),
+            subtitle: _('Applications across each page'),
+            lower: 2,
+            upper: 12,
+            addRow: row => startButtonAppearanceRow.add_row(row),
+        },
+        connectSettings
+    );
+    const appGridRowsRow = addSpinRow(
+        startButtonAppearanceRow,
+        settings,
+        {
+            key: 'app-grid-rows',
+            title: _('App Grid Rows'),
+            subtitle: _('Applications down each page'),
+            lower: 2,
+            upper: 10,
+            addRow: row => startButtonAppearanceRow.add_row(row),
+        },
+        connectSettings
+    );
+    const updateAppGridLayoutRows = () => {
+        const available = !windowsStartMenuSwitch.active;
+        const custom = settings.get_string('app-grid-layout') === 'custom';
+        appGridLayoutRow.sensitive = available;
+        appGridColumnsRow.sensitive = available && custom;
+        appGridRowsRow.sensitive = available && custom;
+    };
+    connectSettings(
+        settings,
+        'changed::app-grid-layout',
+        updateAppGridLayoutRows
+    );
+    windowsStartMenuSwitch.connect(
+        'notify::active',
+        updateAppGridLayoutRows
+    );
+    updateAppGridLayoutRows();
 
     const followPanelThemeSwitch = new Adw.SwitchRow({
         title: _('Follow Taskbar/Dock Theme'),

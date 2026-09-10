@@ -1051,6 +1051,24 @@
       <default>true</default>
       <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>
     </key>
+    <key name="app-grid-layout" type="s">
+      <choices>
+        <choice value="auto"/>
+        <choice value="custom"/>
+      </choices>
+      <default>'auto'</default>
+      <summary>Whether the GNOME app grid uses a custom size</summary>
+    </key>
+    <key name="app-grid-columns" type="i">
+      <range min="2" max="12"/>
+      <default>6</default>
+      <summary>Columns in the GNOME app grid</summary>
+    </key>
+    <key name="app-grid-rows" type="i">
+      <range min="2" max="10"/>
+      <default>4</default>
+      <summary>Rows in the GNOME app grid</summary>
+    </key>
     <key name="start-menu-show-locations" type="b">
       <default>false</default>
       <summary>Show folder shortcuts in the Start Menu</summary>

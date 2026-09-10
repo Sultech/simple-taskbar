@@ -51,6 +51,7 @@ import {
 } from './src/taskbar/windowMinimizeEffectController.js';
 import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
+import {AppGridLayout} from './src/integration/appGridLayout.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
 import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
@@ -113,6 +114,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelHeight,
             this._settings
         );
+        this._appGridLayout = new AppGridLayout(this._settings);
         this._windowController = new WindowController(this._tracker, {
             settings: this._settings,
             spreadAppWindows: app =>
@@ -321,6 +323,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController.position();
         this._taskbarController.enable();
         this._windowMinimizeEffectController.enable();
+        this._appGridLayout.enable();
     }
 
     disable() {
@@ -329,6 +332,8 @@ export default class SimpleTaskbarExtension extends Extension {
             this._rebuildId = 0;
         }
         this._settings.disconnectObject(this);
+        this._appGridLayout.destroy();
+        this._appGridLayout = null;
         this._taskbarController.disableHoverAnimations();
         this._windowsXpModeController.destroy();
         this._windowsXpModeController = null;
