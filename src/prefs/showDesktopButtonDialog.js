@@ -16,6 +16,7 @@ import {
 
 const SHOW_DESKTOP_BUTTON_SETTINGS = [
     'show-desktop-button-width',
+    'show-desktop-button-invisible',
     'show-desktop-button-custom-line-color-enabled',
     'show-desktop-button-custom-line-color',
 ];
@@ -36,7 +37,7 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: 360,
+            default_height: 420,
         });
 
         this._settings = settings;
@@ -63,6 +64,15 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
             connectSettings
         );
 
+        const invisibleSwitch = createSwitchRow(settings, {
+            key: 'show-desktop-button-invisible',
+            title: _('Invisible Button'),
+            subtitle: _(
+                'Leave the button undrawn while it stays clickable and still highlights on hover'
+            ),
+        });
+        appearanceGroup.add(invisibleSwitch);
+
         const customLineColorSwitch = createSwitchRow(settings, {
             key: 'show-desktop-button-custom-line-color-enabled',
             title: _('Custom Separator Color'),
@@ -80,7 +90,11 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
             connectSettings
         );
         const syncCustomLineColor = () => {
-            customLineColorRow.sensitive = settings.get_boolean(
+            const drawn = !settings.get_boolean(
+                'show-desktop-button-invisible'
+            );
+            customLineColorSwitch.sensitive = drawn;
+            customLineColorRow.sensitive = drawn && settings.get_boolean(
                 'show-desktop-button-custom-line-color-enabled'
             );
         };
@@ -88,11 +102,11 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
             'notify::active',
             syncCustomLineColor
         );
-        connectSettings(
-            settings,
-            'changed::show-desktop-button-custom-line-color-enabled',
-            syncCustomLineColor
-        );
+        for (const key of [
+            'show-desktop-button-invisible',
+            'show-desktop-button-custom-line-color-enabled',
+        ])
+            connectSettings(settings, `changed::${key}`, syncCustomLineColor);
         syncCustomLineColor();
 
     }

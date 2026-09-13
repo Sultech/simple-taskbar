@@ -34,6 +34,8 @@ export class ShowDesktopButtonController {
             },
             'changed::show-desktop-button-width',
             () => this._syncStyle(),
+            'changed::show-desktop-button-invisible',
+            () => this._syncStyle(),
             'changed::show-desktop-button-custom-line-color-enabled',
             () => this._syncStyle(),
             'changed::show-desktop-button-custom-line-color',
@@ -157,11 +159,15 @@ export class ShowDesktopButtonController {
         const customLineColor = this._settings.get_boolean(
             'show-desktop-button-custom-line-color-enabled'
         );
-        const lineColor = customLineColor
-            ? ` border-color: ${this._settings.get_string(
-                'show-desktop-button-custom-line-color'
-            )};`
-            : '';
+        const lineColor = this._settings.get_boolean(
+            'show-desktop-button-invisible'
+        )
+            ? ' border-color: transparent;'
+            : customLineColor
+                ? ` border-color: ${this._settings.get_string(
+                    'show-desktop-button-custom-line-color'
+                )};`
+                : '';
         this._button.set_style(`${dimension}${lineColor}`);
         this._button.x_expand = vertical;
         this._button.y_expand = !vertical;

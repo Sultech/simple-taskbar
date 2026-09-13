@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:14+0100\n"
+"POT-Creation-Date: 2026-09-14 00:36+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/taskbar/showDesktopButtonController.js:126
+#: src/taskbar/showDesktopButtonController.js:128
 #: src/overflow/applicationOverflowItemController.js:137
 msgid "Show desktop"
 msgstr "Desktop anzeigen"
@@ -1818,7 +1818,7 @@ msgstr "Schnelleinstellungen, Lautstärke, Netzwerk und Energie"
 msgid "Clock"
 msgstr "Uhr"
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:35
+#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "Schaltfläche »Desktop anzeigen«"
 
@@ -2105,38 +2105,50 @@ msgstr "Nach unten verschieben"
 msgid "Visible"
 msgstr "Sichtbar"
 
-#: src/prefs/showDesktopButtonDialog.js:26
+#: src/prefs/showDesktopButtonDialog.js:27
 msgid "Show Desktop Button Options"
 msgstr "Optionen für die Schaltfläche »Desktop anzeigen«"
 
-#: src/prefs/showDesktopButtonDialog.js:46
+#: src/prefs/showDesktopButtonDialog.js:47
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
-#: src/prefs/showDesktopButtonDialog.js:47
+#: src/prefs/showDesktopButtonDialog.js:48
 msgid "Customize the Show Desktop button"
 msgstr "Schaltfläche »Desktop anzeigen« anpassen"
 
-#: src/prefs/showDesktopButtonDialog.js:56
+#: src/prefs/showDesktopButtonDialog.js:57
 msgid "Button Width"
 msgstr "Schaltflächenbreite"
 
-#: src/prefs/showDesktopButtonDialog.js:58
+#: src/prefs/showDesktopButtonDialog.js:59
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Breite in Pixeln; bei vertikaler Taskleiste oder vertikalem Dock wird die "
 "Höhe verwendet"
 
-#: src/prefs/showDesktopButtonDialog.js:68
+#: src/prefs/showDesktopButtonDialog.js:69
+msgid "Invisible Button"
+msgstr "Unsichtbare Schaltfläche"
+
+#: src/prefs/showDesktopButtonDialog.js:71
+msgid ""
+"Leave the button undrawn while it stays clickable and still highlights on "
+"hover"
+msgstr ""
+"Die Schaltfläche nicht zeichnen, während sie anklickbar bleibt und beim "
+"Zeigen weiterhin hervorgehoben wird"
+
+#: src/prefs/showDesktopButtonDialog.js:78
 msgid "Custom Separator Color"
 msgstr "Benutzerdefinierte Trennlinienfarbe"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:79
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr ""
 "Eine ausgewählte Farbe für die Trennlinie von »Desktop anzeigen« verwenden"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:88
 msgid "Separator Color"
 msgstr "Trennlinienfarbe"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:14+0100\n"
+"POT-Creation-Date: 2026-09-14 00:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/taskbar/showDesktopButtonController.js:126
+#: src/taskbar/showDesktopButtonController.js:128
 #: src/overflow/applicationOverflowItemController.js:137
 msgid "Show desktop"
 msgstr ""
@@ -1736,7 +1736,7 @@ msgstr ""
 msgid "Clock"
 msgstr ""
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:35
+#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr ""
 
@@ -2009,35 +2009,45 @@ msgstr ""
 msgid "Visible"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:26
+#: src/prefs/showDesktopButtonDialog.js:27
 msgid "Show Desktop Button Options"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:46
+#: src/prefs/showDesktopButtonDialog.js:47
 msgid "Appearance"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:47
+#: src/prefs/showDesktopButtonDialog.js:48
 msgid "Customize the Show Desktop button"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:56
+#: src/prefs/showDesktopButtonDialog.js:57
 msgid "Button Width"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:58
+#: src/prefs/showDesktopButtonDialog.js:59
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:68
-msgid "Custom Separator Color"
+#: src/prefs/showDesktopButtonDialog.js:69
+msgid "Invisible Button"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:69
-msgid "Use a chosen color for the Show Desktop separator"
+#: src/prefs/showDesktopButtonDialog.js:71
+msgid ""
+"Leave the button undrawn while it stays clickable and still highlights on "
+"hover"
 msgstr ""
 
 #: src/prefs/showDesktopButtonDialog.js:78
+msgid "Custom Separator Color"
+msgstr ""
+
+#: src/prefs/showDesktopButtonDialog.js:79
+msgid "Use a chosen color for the Show Desktop separator"
+msgstr ""
+
+#: src/prefs/showDesktopButtonDialog.js:88
 msgid "Separator Color"
 msgstr ""
 

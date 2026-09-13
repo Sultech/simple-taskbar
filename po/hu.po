@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:14+0100\n"
+"POT-Creation-Date: 2026-09-14 00:36+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/taskbar/showDesktopButtonController.js:126
+#: src/taskbar/showDesktopButtonController.js:128
 #: src/overflow/applicationOverflowItemController.js:137
 msgid "Show desktop"
 msgstr "Asztal megjelenítése"
@@ -1793,7 +1793,7 @@ msgstr "Gyorsbeállítások, hangerő, hálózat és kikapcsolás"
 msgid "Clock"
 msgstr "Óra"
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:35
+#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "Asztal megjelenítése gomb"
 
@@ -2080,37 +2080,49 @@ msgstr "Mozgatás le"
 msgid "Visible"
 msgstr "Látható"
 
-#: src/prefs/showDesktopButtonDialog.js:26
+#: src/prefs/showDesktopButtonDialog.js:27
 msgid "Show Desktop Button Options"
 msgstr "Asztal megjelenítése gomb beállításai"
 
-#: src/prefs/showDesktopButtonDialog.js:46
+#: src/prefs/showDesktopButtonDialog.js:47
 msgid "Appearance"
 msgstr "Megjelenés"
 
-#: src/prefs/showDesktopButtonDialog.js:47
+#: src/prefs/showDesktopButtonDialog.js:48
 msgid "Customize the Show Desktop button"
 msgstr "Az Asztal megjelenítése gomb személyre szabása"
 
-#: src/prefs/showDesktopButtonDialog.js:56
+#: src/prefs/showDesktopButtonDialog.js:57
 msgid "Button Width"
 msgstr "Gomb szélessége"
 
-#: src/prefs/showDesktopButtonDialog.js:58
+#: src/prefs/showDesktopButtonDialog.js:59
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Szélesség képpontban; függőleges tálca vagy dokk esetén a magasság van "
 "használatban"
 
-#: src/prefs/showDesktopButtonDialog.js:68
+#: src/prefs/showDesktopButtonDialog.js:69
+msgid "Invisible Button"
+msgstr "Láthatatlan gomb"
+
+#: src/prefs/showDesktopButtonDialog.js:71
+msgid ""
+"Leave the button undrawn while it stays clickable and still highlights on "
+"hover"
+msgstr ""
+"A gomb kirajzolásának mellőzése, miközben kattintható marad, és rámutatáskor "
+"továbbra is kiemelődik"
+
+#: src/prefs/showDesktopButtonDialog.js:78
 msgid "Custom Separator Color"
 msgstr "Elválasztó egyéni színe"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:79
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Egyéni szín használata az Asztal megjelenítése elválasztójához"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:88
 msgid "Separator Color"
 msgstr "Elválasztó színe"
 

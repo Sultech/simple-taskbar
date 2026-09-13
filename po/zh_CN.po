@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:14+0100\n"
+"POT-Creation-Date: 2026-09-14 00:36+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/taskbar/showDesktopButtonController.js:126
+#: src/taskbar/showDesktopButtonController.js:128
 #: src/overflow/applicationOverflowItemController.js:137
 msgid "Show desktop"
 msgstr "展示桌面"
@@ -1742,7 +1742,7 @@ msgstr "快速设置、音量、网络与电源"
 msgid "Clock"
 msgstr "时钟"
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:35
+#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "显示桌面按钮"
 
@@ -2017,35 +2017,45 @@ msgstr "下移"
 msgid "Visible"
 msgstr "可见"
 
-#: src/prefs/showDesktopButtonDialog.js:26
+#: src/prefs/showDesktopButtonDialog.js:27
 msgid "Show Desktop Button Options"
 msgstr "显示桌面按钮选项"
 
-#: src/prefs/showDesktopButtonDialog.js:46
+#: src/prefs/showDesktopButtonDialog.js:47
 msgid "Appearance"
 msgstr "外观"
 
-#: src/prefs/showDesktopButtonDialog.js:47
+#: src/prefs/showDesktopButtonDialog.js:48
 msgid "Customize the Show Desktop button"
 msgstr "自定义显示桌面按钮"
 
-#: src/prefs/showDesktopButtonDialog.js:56
+#: src/prefs/showDesktopButtonDialog.js:57
 msgid "Button Width"
 msgstr "按钮宽度"
 
-#: src/prefs/showDesktopButtonDialog.js:58
+#: src/prefs/showDesktopButtonDialog.js:59
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr "宽度（像素）；任务栏或 Dock 垂直时使用高度"
 
-#: src/prefs/showDesktopButtonDialog.js:68
+#: src/prefs/showDesktopButtonDialog.js:69
+msgid "Invisible Button"
+msgstr "隐形按钮"
+
+#: src/prefs/showDesktopButtonDialog.js:71
+msgid ""
+"Leave the button undrawn while it stays clickable and still highlights on "
+"hover"
+msgstr "不绘制按钮，但仍可点击，并且在悬停时依然高亮"
+
+#: src/prefs/showDesktopButtonDialog.js:78
 msgid "Custom Separator Color"
 msgstr "自定义分隔线颜色"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:79
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "为显示桌面分隔线使用所选颜色"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:88
 msgid "Separator Color"
 msgstr "分隔线颜色"
 

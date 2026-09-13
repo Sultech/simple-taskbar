@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:14+0100\n"
+"POT-Creation-Date: 2026-09-14 00:36+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Gtranslator 50.0\n"
 
-#: src/taskbar/showDesktopButtonController.js:126
+#: src/taskbar/showDesktopButtonController.js:128
 #: src/overflow/applicationOverflowItemController.js:137
 msgid "Show desktop"
 msgstr "Afficher le bureau"
@@ -1851,7 +1851,7 @@ msgstr "Paramètres rapides, volume, réseau et d’alimentation"
 msgid "Clock"
 msgstr "Horloge"
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:35
+#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "Bouton Afficher le bureau"
 
@@ -2144,37 +2144,49 @@ msgstr "Déplacer vers le bas"
 msgid "Visible"
 msgstr "Visible"
 
-#: src/prefs/showDesktopButtonDialog.js:26
+#: src/prefs/showDesktopButtonDialog.js:27
 msgid "Show Desktop Button Options"
 msgstr "Options du bouton Afficher le bureau"
 
-#: src/prefs/showDesktopButtonDialog.js:46
+#: src/prefs/showDesktopButtonDialog.js:47
 msgid "Appearance"
 msgstr "Apparence"
 
-#: src/prefs/showDesktopButtonDialog.js:47
+#: src/prefs/showDesktopButtonDialog.js:48
 msgid "Customize the Show Desktop button"
 msgstr "Personnaliser le bouton Afficher le bureau"
 
-#: src/prefs/showDesktopButtonDialog.js:56
+#: src/prefs/showDesktopButtonDialog.js:57
 msgid "Button Width"
 msgstr "Largeur du bouton"
 
-#: src/prefs/showDesktopButtonDialog.js:58
+#: src/prefs/showDesktopButtonDialog.js:59
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Largeur en pixels ; la hauteur est utilisée lorsque la barre des tâches ou "
 "le dock est vertical"
 
-#: src/prefs/showDesktopButtonDialog.js:68
+#: src/prefs/showDesktopButtonDialog.js:69
+msgid "Invisible Button"
+msgstr "Bouton invisible"
+
+#: src/prefs/showDesktopButtonDialog.js:71
+msgid ""
+"Leave the button undrawn while it stays clickable and still highlights on "
+"hover"
+msgstr ""
+"Ne pas dessiner le bouton, tout en le gardant cliquable et toujours mis en "
+"évidence au survol"
+
+#: src/prefs/showDesktopButtonDialog.js:78
 msgid "Custom Separator Color"
 msgstr "Couleur personnalisée du séparateur"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:79
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Utiliser une couleur choisie pour le séparateur Afficher le bureau"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:88
 msgid "Separator Color"
 msgstr "Couleur du séparateur"
 
