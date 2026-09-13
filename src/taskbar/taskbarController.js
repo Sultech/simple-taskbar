@@ -1811,9 +1811,9 @@ export class TaskbarController {
             this._ignoreTaskbarLock
                 ? false
                 : this._settings.get_boolean('taskbar-locked'),
+            this._settings.get_boolean('windows-xp-theme-enabled'),
             this._combineMode(),
             this._usePinnedAppLaunchers(),
-            this._entryModel.keepPinnedWindowsTogether(),
             this._entryModel.hidePinned(),
         ].join(':');
         if (!force && configuration === this._dragEnabled)
