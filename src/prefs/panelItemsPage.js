@@ -55,9 +55,24 @@ export function addPanelItemsPage({
         },
         connectSettings
     );
+    const quickSettingsIconSpacingRow = addSpinRow(
+        panelGroup,
+        settings,
+        {
+            key: 'quick-settings-icon-spacing',
+            title: _('Quick Settings Icon Spacing'),
+            subtitle: _(
+                'Space between the Quick Settings status icons. Use -1 for the GNOME default'
+            ),
+            lower: -1,
+            upper: 20,
+        },
+        connectSettings
+    );
     const syncPanelButtonPaddingSensitivity = () => {
-        panelButtonPaddingRow.sensitive =
-            !settings.get_boolean('windows-xp-theme-enabled');
+        const enabled = !settings.get_boolean('windows-xp-theme-enabled');
+        panelButtonPaddingRow.sensitive = enabled;
+        quickSettingsIconSpacingRow.sensitive = enabled;
     };
     connectSettings(
         settings,

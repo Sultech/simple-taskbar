@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:36+0100\n"
+"POT-Creation-Date: 2026-09-14 00:53+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -1704,147 +1704,158 @@ msgstr ""
 "Espaço entre os botões da barra de tarefas. Use -1 para automático: o valor "
 "do Just Perfection quando configurado; caso contrário, 3 px"
 
-#: src/prefs/panelItemsPage.js:71
+#: src/prefs/panelItemsPage.js:63
+msgid "Quick Settings Icon Spacing"
+msgstr "Espaçamento dos ícones das configurações rápidas"
+
+#: src/prefs/panelItemsPage.js:65
+msgid ""
+"Space between the Quick Settings status icons. Use -1 for the GNOME default"
+msgstr ""
+"Espaço entre os ícones de status das configurações rápidas. Use -1 para o "
+"padrão do GNOME"
+
+#: src/prefs/panelItemsPage.js:86
 msgid "Application Volume Mixer"
 msgstr "Mixer de volume por aplicativo"
 
-#: src/prefs/panelItemsPage.js:72
+#: src/prefs/panelItemsPage.js:87
 msgid "Add per-application volume controls to Quick Settings"
 msgstr "Adiciona controles de volume por aplicativo às Configurações rápidas"
 
-#: src/prefs/panelItemsPage.js:77
+#: src/prefs/panelItemsPage.js:92
 msgid "Folder Menu Location"
 msgstr "Localização do menu de pastas"
 
-#: src/prefs/panelItemsPage.js:80 src/prefs/startMenuPage.js:217
+#: src/prefs/panelItemsPage.js:95 src/prefs/startMenuPage.js:217
 msgid "Choose…"
 msgstr "Escolher…"
 
-#: src/prefs/panelItemsPage.js:95
+#: src/prefs/panelItemsPage.js:110
 msgid "No folder selected"
 msgstr "Nenhuma pasta selecionada"
 
-#: src/prefs/panelItemsPage.js:156 src/prefs/panelItemsPage.js:268
+#: src/prefs/panelItemsPage.js:171 src/prefs/panelItemsPage.js:283
 #: src/prefs/dockItemsPage.js:27 src/prefs/dockItemsPage.js:119
 msgid "Left Items"
 msgstr "Itens à esquerda"
 
-#: src/prefs/panelItemsPage.js:158
+#: src/prefs/panelItemsPage.js:173
 msgid "Move items only within their current taskbar position."
 msgstr "Mover itens apenas dentro da posição atual na barra de tarefas."
 
-#: src/prefs/panelItemsPage.js:162 src/prefs/panelItemsPage.js:268
+#: src/prefs/panelItemsPage.js:177 src/prefs/panelItemsPage.js:283
 #: src/prefs/dockItemsPage.js:33 src/prefs/dockItemsPage.js:119
 msgid "Center Items"
 msgstr "Itens ao centro"
 
-#: src/prefs/panelItemsPage.js:165 src/prefs/panelItemsPage.js:268
+#: src/prefs/panelItemsPage.js:180 src/prefs/panelItemsPage.js:283
 #: src/prefs/dockItemsPage.js:36 src/prefs/dockItemsPage.js:119
 msgid "Right Items"
 msgstr "Itens à direita"
 
-#: src/prefs/panelItemsPage.js:177 src/prefs/panelItemsPage.js:271
+#: src/prefs/panelItemsPage.js:192 src/prefs/panelItemsPage.js:286
 msgid "Left Box"
 msgstr "Caixa esquerda"
 
-#: src/prefs/panelItemsPage.js:178 src/prefs/panelItemsPage.js:184
-#: src/prefs/panelItemsPage.js:190
+#: src/prefs/panelItemsPage.js:193 src/prefs/panelItemsPage.js:199
+#: src/prefs/panelItemsPage.js:205
 msgid "Other GNOME Shell and extension items"
 msgstr "Outros itens do GNOME Shell e de extensões"
 
-#: src/prefs/panelItemsPage.js:183 src/prefs/panelItemsPage.js:271
+#: src/prefs/panelItemsPage.js:198 src/prefs/panelItemsPage.js:286
 msgid "Center Box"
 msgstr "Caixa central"
 
-#: src/prefs/panelItemsPage.js:189 src/prefs/panelItemsPage.js:271
+#: src/prefs/panelItemsPage.js:204 src/prefs/panelItemsPage.js:286
 msgid "Right Box"
 msgstr "Caixa direita"
 
-#: src/prefs/panelItemsPage.js:197 src/prefs/startButtonDialog.js:32
+#: src/prefs/panelItemsPage.js:212 src/prefs/startButtonDialog.js:32
 #: src/prefs/startMenuPage.js:37
 msgid "Start Button"
 msgstr "Botão Iniciar"
 
-#: src/prefs/panelItemsPage.js:198
+#: src/prefs/panelItemsPage.js:213
 msgid "Eleven-style or original GNOME Start button"
 msgstr "Botão Iniciar estilo Eleven ou original do GNOME"
 
-#: src/prefs/panelItemsPage.js:205
+#: src/prefs/panelItemsPage.js:220
 msgid "Activities"
 msgstr "Atividades"
 
-#: src/prefs/panelItemsPage.js:206
+#: src/prefs/panelItemsPage.js:221
 msgid "GNOME workspace overview button"
 msgstr "Botão de panorâmica de espaços de trabalho do GNOME"
 
-#: src/prefs/panelItemsPage.js:212 src/prefs/dockItemsPage.js:80
+#: src/prefs/panelItemsPage.js:227 src/prefs/dockItemsPage.js:80
 #: src/startMenu/startButtonController.js:976
 msgid "Applications"
 msgstr "Aplicativos"
 
-#: src/prefs/panelItemsPage.js:213
+#: src/prefs/panelItemsPage.js:228
 msgid "Taskbar applications"
 msgstr "Aplicativos da barra de tarefas"
 
-#: src/prefs/panelItemsPage.js:219
+#: src/prefs/panelItemsPage.js:234
 msgid "Folder Menu"
 msgstr "Menu de pastas"
 
-#: src/prefs/panelItemsPage.js:220
+#: src/prefs/panelItemsPage.js:235
 msgid "Selected folder shortcuts"
 msgstr "Atalhos da pasta selecionada"
 
-#: src/prefs/panelItemsPage.js:226
+#: src/prefs/panelItemsPage.js:241
 msgid "Tray Icon Arrow"
 msgstr "Seta dos ícones da área de notificação"
 
-#: src/prefs/panelItemsPage.js:227
+#: src/prefs/panelItemsPage.js:242
 msgid "Gather application tray icons behind a taskbar arrow"
 msgstr ""
 "Reunir os ícones de notificação dos aplicativos atrás de uma seta da barra "
 "de tarefas"
 
-#: src/prefs/panelItemsPage.js:233
+#: src/prefs/panelItemsPage.js:248
 msgid "System Menu"
 msgstr "Menu do sistema"
 
-#: src/prefs/panelItemsPage.js:234
+#: src/prefs/panelItemsPage.js:249
 msgid "Quick Settings, volume, network, and power"
 msgstr "Configurações rápidas, volume, rede e energia"
 
-#: src/prefs/panelItemsPage.js:240
+#: src/prefs/panelItemsPage.js:255
 msgid "Clock"
 msgstr "Relógio"
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:261 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "Botão Mostrar área de trabalho"
 
-#: src/prefs/panelItemsPage.js:247
+#: src/prefs/panelItemsPage.js:262
 msgid "Minimize or restore all windows"
 msgstr "Minimiza ou restaura todas as janelas"
 
-#: src/prefs/panelItemsPage.js:267 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
 msgid "Top Items"
 msgstr "Itens superiores"
 
-#: src/prefs/panelItemsPage.js:267 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
 msgid "Middle Items"
 msgstr "Itens do meio"
 
-#: src/prefs/panelItemsPage.js:267 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
 msgid "Bottom Items"
 msgstr "Itens inferiores"
 
-#: src/prefs/panelItemsPage.js:270
+#: src/prefs/panelItemsPage.js:285
 msgid "Top Box"
 msgstr "Caixa superior"
 
-#: src/prefs/panelItemsPage.js:270
+#: src/prefs/panelItemsPage.js:285
 msgid "Middle Box"
 msgstr "Caixa do meio"
 
-#: src/prefs/panelItemsPage.js:270
+#: src/prefs/panelItemsPage.js:285
 msgid "Bottom Box"
 msgstr "Caixa inferior"
 
@@ -3260,9 +3271,6 @@ msgstr "Nenhum aplicativo está reproduzindo áudio"
 
 #~ msgid "Choose the Start button alignment"
 #~ msgstr "Escolha o alinhamento do botão Iniciar"
-
-#~ msgid "Icon Sizing and Spacing"
-#~ msgstr "Tamanho e espaçamento dos ícones"
 
 #~ msgid "Adjust application icon sizes and the space between them"
 #~ msgstr "Ajuste o tamanho dos ícones de aplicativos e o espaço entre eles"

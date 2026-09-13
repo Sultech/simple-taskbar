@@ -31,6 +31,7 @@ import {panelGeometry} from './panelGeometry.js';
 import {panelIsVertical} from './panelPosition.js';
 import {
     QuickSettingsIndicatorsController,
+    quickSettingsIconSpacing,
 } from './quickSettingsIndicatorsController.js';
 import {PanelStateController} from './panelStateController.js';
 import {PanelThemeController} from './panelThemeController.js';
@@ -578,7 +579,8 @@ export class PanelController {
             );
         this._quickSettingsIndicatorsController.sync(
             vertical,
-            this._buttonPaddingController.effectivePadding()
+            this._buttonPaddingController.effectivePadding(),
+            quickSettingsIconSpacing(this._settings)
         );
         if (vertical)
             Main.panel.add_style_class_name('simple-taskbar-panel-vertical');
@@ -642,6 +644,13 @@ export class PanelController {
             this._verticalItemsController.sync();
             this.updateTaskbarWidth();
         }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::quick-settings-icon-spacing',
+            () => this._syncPanelOrientation(),
+            'changed::windows-xp-theme-enabled',
+            () => this._syncPanelOrientation(),
+            this._signalHolder
+        );
         this._startButton.connectObject('notify::visible', () => {
             this.updateTaskbarWidth();
         }, this._signalHolder);

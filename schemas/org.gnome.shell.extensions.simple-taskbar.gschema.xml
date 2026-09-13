@@ -1052,6 +1052,12 @@
       <default>true</default>
       <summary>Move the Start button with the application icon alignment</summary>
     </key>
+    <key name="quick-settings-icon-spacing" type="i">
+      <range min="-1" max="20"/>
+      <default>-1</default>
+      <summary>Spacing between Quick Settings status icons</summary>
+      <description>Use -1 for the GNOME default or 0 through 20 for an explicit pixel value; ignored while the Windows XP Theme is enabled</description>
+    </key>
     <key name="start-button-padding" type="i">
       <range min="0" max="20"/>
       <default>2</default>

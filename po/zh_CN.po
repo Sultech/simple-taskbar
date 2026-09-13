@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:36+0100\n"
+"POT-Creation-Date: 2026-09-14 00:53+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -1632,145 +1632,154 @@ msgstr ""
 "任务栏按钮之间的间距。使用 -1 表示自动：如果已配置则使用 Just Perfection 的"
 "值，否则为 3 像素"
 
-#: src/prefs/panelItemsPage.js:71
+#: src/prefs/panelItemsPage.js:63
+msgid "Quick Settings Icon Spacing"
+msgstr "快捷设置图标间距"
+
+#: src/prefs/panelItemsPage.js:65
+msgid ""
+"Space between the Quick Settings status icons. Use -1 for the GNOME default"
+msgstr "快捷设置状态图标之间的间距。使用 -1 表示 GNOME 默认值"
+
+#: src/prefs/panelItemsPage.js:86
 msgid "Application Volume Mixer"
 msgstr "应用音量混成器"
 
-#: src/prefs/panelItemsPage.js:72
+#: src/prefs/panelItemsPage.js:87
 msgid "Add per-application volume controls to Quick Settings"
 msgstr "在快速设置中添加一个按应用区分的音量控制器"
 
-#: src/prefs/panelItemsPage.js:77
+#: src/prefs/panelItemsPage.js:92
 msgid "Folder Menu Location"
 msgstr "文件夹菜单位置"
 
-#: src/prefs/panelItemsPage.js:80 src/prefs/startMenuPage.js:217
+#: src/prefs/panelItemsPage.js:95 src/prefs/startMenuPage.js:217
 msgid "Choose…"
 msgstr "选择…"
 
-#: src/prefs/panelItemsPage.js:95
+#: src/prefs/panelItemsPage.js:110
 msgid "No folder selected"
 msgstr "未选择文件夹"
 
-#: src/prefs/panelItemsPage.js:156 src/prefs/panelItemsPage.js:268
+#: src/prefs/panelItemsPage.js:171 src/prefs/panelItemsPage.js:283
 #: src/prefs/dockItemsPage.js:27 src/prefs/dockItemsPage.js:119
 msgid "Left Items"
 msgstr "左侧项目"
 
-#: src/prefs/panelItemsPage.js:158
+#: src/prefs/panelItemsPage.js:173
 msgid "Move items only within their current taskbar position."
 msgstr "项目只能在当前任务栏位置内移动。"
 
-#: src/prefs/panelItemsPage.js:162 src/prefs/panelItemsPage.js:268
+#: src/prefs/panelItemsPage.js:177 src/prefs/panelItemsPage.js:283
 #: src/prefs/dockItemsPage.js:33 src/prefs/dockItemsPage.js:119
 msgid "Center Items"
 msgstr "居中项目"
 
-#: src/prefs/panelItemsPage.js:165 src/prefs/panelItemsPage.js:268
+#: src/prefs/panelItemsPage.js:180 src/prefs/panelItemsPage.js:283
 #: src/prefs/dockItemsPage.js:36 src/prefs/dockItemsPage.js:119
 msgid "Right Items"
 msgstr "右侧项目"
 
-#: src/prefs/panelItemsPage.js:177 src/prefs/panelItemsPage.js:271
+#: src/prefs/panelItemsPage.js:192 src/prefs/panelItemsPage.js:286
 msgid "Left Box"
 msgstr "左侧框"
 
-#: src/prefs/panelItemsPage.js:178 src/prefs/panelItemsPage.js:184
-#: src/prefs/panelItemsPage.js:190
+#: src/prefs/panelItemsPage.js:193 src/prefs/panelItemsPage.js:199
+#: src/prefs/panelItemsPage.js:205
 msgid "Other GNOME Shell and extension items"
 msgstr "其他 GNOME Shell 与扩展项目"
 
-#: src/prefs/panelItemsPage.js:183 src/prefs/panelItemsPage.js:271
+#: src/prefs/panelItemsPage.js:198 src/prefs/panelItemsPage.js:286
 msgid "Center Box"
 msgstr "中间框"
 
-#: src/prefs/panelItemsPage.js:189 src/prefs/panelItemsPage.js:271
+#: src/prefs/panelItemsPage.js:204 src/prefs/panelItemsPage.js:286
 msgid "Right Box"
 msgstr "右侧框"
 
-#: src/prefs/panelItemsPage.js:197 src/prefs/startButtonDialog.js:32
+#: src/prefs/panelItemsPage.js:212 src/prefs/startButtonDialog.js:32
 #: src/prefs/startMenuPage.js:37
 msgid "Start Button"
 msgstr "开始按钮"
 
-#: src/prefs/panelItemsPage.js:198
+#: src/prefs/panelItemsPage.js:213
 msgid "Eleven-style or original GNOME Start button"
 msgstr "11 风格或原始 GNOME 开始按钮"
 
-#: src/prefs/panelItemsPage.js:205
+#: src/prefs/panelItemsPage.js:220
 msgid "Activities"
 msgstr "活动"
 
-#: src/prefs/panelItemsPage.js:206
+#: src/prefs/panelItemsPage.js:221
 msgid "GNOME workspace overview button"
 msgstr "GNOME 工作区概览按钮"
 
-#: src/prefs/panelItemsPage.js:212 src/prefs/dockItemsPage.js:80
+#: src/prefs/panelItemsPage.js:227 src/prefs/dockItemsPage.js:80
 #: src/startMenu/startButtonController.js:976
 msgid "Applications"
 msgstr "应用程序"
 
-#: src/prefs/panelItemsPage.js:213
+#: src/prefs/panelItemsPage.js:228
 msgid "Taskbar applications"
 msgstr "任务栏应用"
 
-#: src/prefs/panelItemsPage.js:219
+#: src/prefs/panelItemsPage.js:234
 msgid "Folder Menu"
 msgstr "文件夹菜单"
 
-#: src/prefs/panelItemsPage.js:220
+#: src/prefs/panelItemsPage.js:235
 msgid "Selected folder shortcuts"
 msgstr "所选文件夹快捷方式"
 
-#: src/prefs/panelItemsPage.js:226
+#: src/prefs/panelItemsPage.js:241
 msgid "Tray Icon Arrow"
 msgstr "托盘图标箭头"
 
-#: src/prefs/panelItemsPage.js:227
+#: src/prefs/panelItemsPage.js:242
 msgid "Gather application tray icons behind a taskbar arrow"
 msgstr "将应用托盘图标收纳到任务栏箭头后"
 
-#: src/prefs/panelItemsPage.js:233
+#: src/prefs/panelItemsPage.js:248
 msgid "System Menu"
 msgstr "系统菜单"
 
-#: src/prefs/panelItemsPage.js:234
+#: src/prefs/panelItemsPage.js:249
 msgid "Quick Settings, volume, network, and power"
 msgstr "快速设置、音量、网络与电源"
 
-#: src/prefs/panelItemsPage.js:240
+#: src/prefs/panelItemsPage.js:255
 msgid "Clock"
 msgstr "时钟"
 
-#: src/prefs/panelItemsPage.js:246 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:261 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "显示桌面按钮"
 
-#: src/prefs/panelItemsPage.js:247
+#: src/prefs/panelItemsPage.js:262
 msgid "Minimize or restore all windows"
 msgstr "最小化或恢复所有窗口"
 
-#: src/prefs/panelItemsPage.js:267 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
 msgid "Top Items"
 msgstr "顶部项目"
 
-#: src/prefs/panelItemsPage.js:267 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
 msgid "Middle Items"
 msgstr "中间项目"
 
-#: src/prefs/panelItemsPage.js:267 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
 msgid "Bottom Items"
 msgstr "底部项目"
 
-#: src/prefs/panelItemsPage.js:270
+#: src/prefs/panelItemsPage.js:285
 msgid "Top Box"
 msgstr "顶部框"
 
-#: src/prefs/panelItemsPage.js:270
+#: src/prefs/panelItemsPage.js:285
 msgid "Middle Box"
 msgstr "中间框"
 
-#: src/prefs/panelItemsPage.js:270
+#: src/prefs/panelItemsPage.js:285
 msgid "Bottom Box"
 msgstr "底部框"
 
@@ -3127,9 +3136,6 @@ msgstr "没有应用正在播放音频"
 
 #~ msgid "Choose the Start button alignment"
 #~ msgstr "选择开始按钮对齐方式"
-
-#~ msgid "Icon Sizing and Spacing"
-#~ msgstr "图标大小和间距"
 
 #~ msgid "Adjust application icon sizes and the space between them"
 #~ msgstr "调整应用图标大小及其间距"

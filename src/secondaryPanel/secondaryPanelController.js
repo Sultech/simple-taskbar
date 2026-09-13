@@ -51,6 +51,7 @@ import {
 } from '../panel/panelPosition.js';
 import {
     QuickSettingsIndicatorsController,
+    quickSettingsIconSpacing,
 } from '../panel/quickSettingsIndicatorsController.js';
 import {
     QuickSettingsPowerController,
@@ -663,6 +664,13 @@ export class SecondaryPanelController {
                 this._signalHolder
             );
         }
+        this._settings.connectObject(
+            'changed::quick-settings-icon-spacing',
+            () => this._syncQuickSettingsIndicators(),
+            'changed::windows-xp-theme-enabled',
+            () => this._syncQuickSettingsIndicators(),
+            this._signalHolder
+        );
     }
 
     _applyAppearance() {
@@ -875,7 +883,8 @@ export class SecondaryPanelController {
     _syncQuickSettingsIndicators() {
         this._quickSettingsIndicatorsController.sync(
             panelIsVertical(this._settings),
-            this._effectiveButtonPadding()
+            this._effectiveButtonPadding(),
+            quickSettingsIconSpacing(this._settings)
         );
     }
 

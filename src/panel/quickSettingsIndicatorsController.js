@@ -5,6 +5,15 @@ import Clutter from 'gi://Clutter';
 
 import {appendStyle} from '../shared/styleUtils.js';
 
+const AUTOMATIC_ICON_SPACING = -1;
+
+export function quickSettingsIconSpacing(settings) {
+    if (settings.get_boolean('windows-xp-theme-enabled'))
+        return AUTOMATIC_ICON_SPACING;
+
+    return settings.get_int('quick-settings-icon-spacing');
+}
+
 export class QuickSettingsIndicatorsController {
     constructor(indicators) {
         this._indicators = indicators;
@@ -14,7 +23,7 @@ export class QuickSettingsIndicatorsController {
         this._style = indicators.get_style();
     }
 
-    sync(vertical, padding) {
+    sync(vertical, padding, spacing) {
         this._indicators.orientation = vertical
             ? Clutter.Orientation.VERTICAL
             : this._orientation;
@@ -22,13 +31,17 @@ export class QuickSettingsIndicatorsController {
             ? Clutter.ActorAlign.CENTER
             : this._xAlign;
         this._indicators.x_expand = vertical ? false : this._xExpand;
-        this._indicators.set_style(vertical && padding !== null
-            ? appendStyle(
-                this._style,
+        let style = this._style;
+        if (vertical && padding !== null) {
+            style = appendStyle(
+                style,
                 `padding-top: ${padding}px; ` +
                     `padding-bottom: ${padding}px;`
-            )
-            : this._style);
+            );
+        }
+        if (spacing !== AUTOMATIC_ICON_SPACING)
+            style = appendStyle(style, `spacing: ${spacing}px;`);
+        this._indicators.set_style(style);
     }
 
     destroy() {
