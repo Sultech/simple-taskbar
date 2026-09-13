@@ -59,6 +59,9 @@ export class OverviewIntegration {
                 this._syncDashVisibility();
             },
             'changed::dock-mode', () => this._syncDashVisibility(),
+            'changed::hide-dash-enabled', () => this._syncDashVisibility(),
+            'changed::dock-hide-dash-enabled', () =>
+                this._syncDashVisibility(),
             'changed::dock-position', () => {
                 if (this._dashState)
                     this._syncHiddenDashSize(this._dashState.dash);
@@ -160,9 +163,7 @@ export class OverviewIntegration {
     }
 
     destroy() {
-        const restoreVisible = !this._settings.get_boolean(
-            'default-gnome-panel'
-        );
+        const restoreVisible = this._shouldHideDash();
         this._cancelStartupOverview();
         this._cancelDashVisibilityRepair();
         this._disconnectAppSpreadSignal();
@@ -254,11 +255,16 @@ export class OverviewIntegration {
     }
 
     _shouldStartInOverview() {
-        return Boolean(
-            this._settings.get_boolean('default-gnome-panel') &&
-            !this._settings.get_boolean('dock-mode') &&
-            !this._desktopDockIsEnabled()
-        );
+        if (this._desktopDockIsEnabled())
+            return false;
+
+        if (this._settings.get_boolean('dock-mode')) {
+            return !this._settings.get_boolean(
+                'dock-launch-to-desktop-enabled'
+            );
+        }
+
+        return !this._settings.get_boolean('launch-to-desktop-enabled');
     }
 
     _desktopDockIsEnabled() {
@@ -293,8 +299,10 @@ export class OverviewIntegration {
     }
 
     _shouldHideDash() {
-        return !this._settings.get_boolean('default-gnome-panel') ||
-            this._settings.get_boolean('dock-mode');
+        if (this._settings.get_boolean('dock-mode'))
+            return this._settings.get_boolean('dock-hide-dash-enabled');
+
+        return this._settings.get_boolean('hide-dash-enabled');
     }
 
     _watchDashVisibility() {

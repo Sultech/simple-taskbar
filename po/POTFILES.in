@@ -16,6 +16,7 @@ src/prefs/dynamicTransparencyDialog.js
 src/prefs/dockBehaviorGroup.js
 src/prefs/locationsGroup.js
 src/prefs/panelAppearancePage.js
+src/prefs/overviewBehaviorDialog.js
 src/prefs/panelAxis.js
 src/prefs/panelItemsPage.js
 src/prefs/dockItemsPage.js

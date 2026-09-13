@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Adw from 'gi://Adw';
+import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
@@ -12,11 +13,40 @@ import {
     setPanelPosition,
 } from '../shared/panelModeProfiles.js';
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
+import {
+    createOverviewBehaviorButton,
+    DOCK_OVERVIEW_BEHAVIOR_KEYS,
+} from './overviewBehaviorDialog.js';
 import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 
 const DOCK_DEFAULT_ICON_SIZE = 48;
 const DOCK_DEFAULT_ICON_SPACING = 5;
 const DOCK_DEFAULT_START_BUTTON_PADDING = 2;
+
+function addModeRow(settings, {
+    title,
+    subtitle,
+    tooltip,
+    active,
+    keys,
+    addRow,
+}) {
+    const row = new Adw.ActionRow({title, subtitle});
+    const optionsButton = createOverviewBehaviorButton(
+        settings,
+        tooltip,
+        keys
+    );
+    row.add_suffix(optionsButton);
+    const toggle = new Gtk.Switch({
+        valign: Gtk.Align.CENTER,
+        active,
+    });
+    row.add_suffix(toggle);
+    row.activatable_widget = toggle;
+    addRow(row);
+    return {row, toggle, optionsButton};
+}
 
 export function addPanelModeGroup({
     page,
@@ -30,14 +60,19 @@ export function addPanelModeGroup({
     });
     page.add(panelModeGroup);
 
-    const taskbarModeSwitch = new Adw.SwitchRow({
+    const {
+        row: taskbarModeRow,
+        toggle: taskbarModeSwitch,
+        optionsButton: taskbarOverviewButton,
+    } = addModeRow(settings, {
         title: _('Taskbar Mode'),
         subtitle: _('Show applications in the taskbar'),
+        tooltip: _('Taskbar Mode Overview Behavior'),
         active: !settings.get_boolean('default-gnome-panel') &&
             !settings.get_boolean('dock-mode') &&
             !settings.get_boolean('windows-xp-theme-enabled'),
+        addRow: row => panelModeGroup.add(row),
     });
-    panelModeGroup.add(taskbarModeSwitch);
 
     const alternativeModesRow = new Adw.ExpanderRow({
         title: _('Alternative Modes'),
@@ -50,19 +85,30 @@ export function addPanelModeGroup({
     });
     dockPage.add(dockModeGroup);
 
-    const defaultGnomePanelSwitch = new Adw.SwitchRow({
+    const {
+        row: defaultGnomePanelRow,
+        toggle: defaultGnomePanelSwitch,
+        optionsButton: defaultGnomePanelOverviewButton,
+    } = addModeRow(settings, {
         title: _('Default GNOME Panel'),
         subtitle: _('Hide taskbar applications and use the original Dash in Overview'),
+        tooltip: _('Default GNOME Panel Overview Behavior'),
         active: settings.get_boolean('default-gnome-panel'),
+        addRow: row => alternativeModesRow.add_row(row),
     });
-    alternativeModesRow.add_row(defaultGnomePanelSwitch);
 
-    const dockModeSwitch = new Adw.SwitchRow({
+    const {
+        row: dockModeRow,
+        toggle: dockModeSwitch,
+        optionsButton: dockOverviewButton,
+    } = addModeRow(settings, {
         title: _('Dock Mode'),
         subtitle: _('Show applications in a separate Dock instead of the taskbar'),
+        tooltip: _('Dock Mode Overview Behavior'),
         active: settings.get_boolean('dock-mode'),
+        keys: DOCK_OVERVIEW_BEHAVIOR_KEYS,
+        addRow: row => dockModeGroup.add(row),
     });
-    dockModeGroup.add(dockModeSwitch);
 
     const dockPositionChoices = [
         {value: 'top', label: _('Top')},
@@ -146,19 +192,30 @@ export function addPanelModeGroup({
         syncDockPositionConflict
     );
 
-    const windowsXpThemeSwitch = new Adw.SwitchRow({
+    const {
+        row: windowsXpThemeRow,
+        toggle: windowsXpThemeSwitch,
+        optionsButton: windowsXpOverviewButton,
+    } = addModeRow(settings, {
         title: _('Windows XP Theme'),
         subtitle: _('Apply a Windows XP-inspired taskbar style'),
-        active: settings.get_boolean(
-            'windows-xp-theme-enabled'
-        ),
+        tooltip: _('Windows XP Theme Overview Behavior'),
+        active: settings.get_boolean('windows-xp-theme-enabled'),
+        addRow: row => alternativeModesRow.add_row(row),
     });
-    alternativeModesRow.add_row(windowsXpThemeSwitch);
 
     return {
+        taskbarModeRow,
         taskbarModeSwitch,
+        taskbarOverviewButton,
+        defaultGnomePanelRow,
         defaultGnomePanelSwitch,
+        defaultGnomePanelOverviewButton,
+        windowsXpThemeRow,
+        windowsXpOverviewButton,
+        dockModeRow,
         dockModeSwitch,
+        dockOverviewButton,
         dockModeGroup,
         dockPositionRow,
         dockMaxLengthRow,
@@ -171,9 +228,15 @@ export function connectDefaultGnomePanelSync({
     settings,
     createSettings,
     connectSettings,
+    taskbarModeRow,
     taskbarModeSwitch,
+    taskbarOverviewButton,
+    defaultGnomePanelRow,
     defaultGnomePanelSwitch,
+    defaultGnomePanelOverviewButton,
+    windowsXpOverviewButton,
     dockModeSwitch,
+    dockOverviewButton,
     dockPositionRow,
     dockMaxLengthRow,
     dockPanelModeSwitch,
@@ -191,12 +254,16 @@ export function connectDefaultGnomePanelSync({
         );
         const defaultPanelRestrictions = enabled && !dockModeEnabled;
         syncingPanelModes = true;
-        taskbarModeSwitch.active = !enabled && !dockModeEnabled &&
+        const taskbarModeEnabled = !enabled && !dockModeEnabled &&
             !windowsXpModeEnabled;
+        taskbarModeSwitch.active = taskbarModeEnabled;
         defaultGnomePanelSwitch.active = enabled;
-        taskbarModeSwitch.sensitive = !windowsXpModeEnabled;
-        defaultGnomePanelSwitch.sensitive = !dockModeEnabled &&
-            !windowsXpModeEnabled;
+        taskbarModeRow.sensitive = true;
+        taskbarOverviewButton.sensitive = taskbarModeEnabled;
+        defaultGnomePanelRow.sensitive = !dockModeEnabled;
+        defaultGnomePanelOverviewButton.sensitive = enabled &&
+            !dockModeEnabled;
+        windowsXpOverviewButton.sensitive = windowsXpModeEnabled;
         appearanceGroup.visible = !dockModeEnabled &&
             !defaultPanelRestrictions;
         appearanceGroup.sensitive = !dockModeEnabled &&
@@ -270,6 +337,8 @@ export function connectDefaultGnomePanelSync({
         const dockPanelModeEnabled = settings.get_boolean('dock-panel-mode');
         dockModeSwitch.active = settings.get_boolean('dock-mode');
         dockPanelModeSwitch.active = dockPanelModeEnabled;
+        dockOverviewButton.sensitive = dockModeEnabled &&
+            !settings.get_boolean('windows-xp-theme-enabled');
         dockPositionRow.sensitive = dockModeEnabled &&
             !settings.get_boolean('windows-xp-theme-enabled');
         dockPanelModeSwitch.sensitive = dockModeEnabled &&

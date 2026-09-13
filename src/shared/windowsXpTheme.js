@@ -35,6 +35,8 @@ export function applyWindowsXpThemeBehaviorDefaults(settings) {
     setBoolean(settings, 'folder-menu-enabled', false);
     setBoolean(settings, 'panel-menu-click-only', true);
     setBoolean(settings, 'notification-banner-bottom-end', true);
+    setBoolean(settings, 'hide-dash-enabled', true);
+    setBoolean(settings, 'launch-to-desktop-enabled', true);
 }
 
 export function applyWindowsXpThemeSettings(settings) {

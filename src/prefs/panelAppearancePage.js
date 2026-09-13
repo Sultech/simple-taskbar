@@ -40,11 +40,11 @@ export function addPanelAppearancePage({
     createSettings,
     blurMyShellPanelBlurEnabled,
     windowsXpThemeSwitch,
-    taskbarModeSwitch,
+    taskbarModeRow,
     iconSizeRow,
     iconSpacingRow,
-    defaultGnomePanelSwitch,
-    dockModeSwitch,
+    defaultGnomePanelRow,
+    dockModeRow,
     dockPositionRow,
     dockMaxLengthRow,
     dockPanelModeSwitch,
@@ -145,10 +145,10 @@ export function addPanelAppearancePage({
         iconSpacingRow.sensitive = !enabled;
         panelHeightRow.sensitive = !enabled;
         panelPositionRow.sensitive = !enabled;
-        taskbarModeSwitch.sensitive = !enabled;
-        defaultGnomePanelSwitch.sensitive =
-            !enabled && !settings.get_boolean('dock-mode');
-        dockModeSwitch.sensitive = !enabled;
+        taskbarModeRow.sensitive = true;
+        defaultGnomePanelRow.sensitive =
+            !settings.get_boolean('dock-mode');
+        dockModeRow.sensitive = true;
         dockPositionRow.sensitive = !enabled &&
             settings.get_boolean('dock-mode');
         dockPanelModeSwitch.sensitive = !enabled &&

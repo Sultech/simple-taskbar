@@ -75,6 +75,8 @@ const MODE_SETTING_KEYS = new Set([
     'dock-dodge-windows-mode',
     'dock-dodge-pointer-reveal-enabled',
     'dock-edge-reveal-enabled',
+    'dock-hide-dash-enabled',
+    'dock-launch-to-desktop-enabled',
     'dock-multi-monitor-panels',
     'dock-max-length',
     'dock-min-icon-size',
@@ -268,6 +270,8 @@ function applyDefaultPanelSettings(settings) {
     settings.set_boolean('show-desktop-button-visible', false);
     settings.set_boolean('panel-border-enabled', false);
     settings.set_boolean('panel-border-light-enabled', false);
+    settings.set_boolean('hide-dash-enabled', false);
+    settings.set_boolean('launch-to-desktop-enabled', false);
 }
 
 function applyInitialPanelModeSettings(settings, mode) {

@@ -97,9 +97,17 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             createSettings: () => this.getSettings(),
             connectSettings,
         });
+        const taskbarModeRow = panelMode.taskbarModeRow;
         const taskbarModeSwitch = panelMode.taskbarModeSwitch;
+        const taskbarOverviewButton = panelMode.taskbarOverviewButton;
+        const defaultGnomePanelRow = panelMode.defaultGnomePanelRow;
         const defaultGnomePanelSwitch = panelMode.defaultGnomePanelSwitch;
+        const defaultGnomePanelOverviewButton =
+            panelMode.defaultGnomePanelOverviewButton;
+        const windowsXpOverviewButton = panelMode.windowsXpOverviewButton;
+        const dockModeRow = panelMode.dockModeRow;
         const dockModeSwitch = panelMode.dockModeSwitch;
+        const dockOverviewButton = panelMode.dockOverviewButton;
         const dockModeGroup = panelMode.dockModeGroup;
         const dockPositionRow = panelMode.dockPositionRow;
         const dockMaxLengthRow = panelMode.dockMaxLengthRow;
@@ -146,9 +154,15 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             createSettings: () => this.getSettings(),
             connectSettings,
+            taskbarModeRow,
             taskbarModeSwitch,
+            taskbarOverviewButton,
+            defaultGnomePanelRow,
             defaultGnomePanelSwitch,
+            defaultGnomePanelOverviewButton,
+            windowsXpOverviewButton,
             dockModeSwitch,
+            dockOverviewButton,
             dockPositionRow,
             dockMaxLengthRow,
             dockPanelModeSwitch,
@@ -163,11 +177,11 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             createSettings: () => this.getSettings(),
             blurMyShellPanelBlurEnabled,
             windowsXpThemeSwitch,
-            taskbarModeSwitch,
+            taskbarModeRow,
             iconSizeRow,
             iconSpacingRow,
-            defaultGnomePanelSwitch,
-            dockModeSwitch,
+            defaultGnomePanelRow,
+            dockModeRow,
             dockPositionRow,
             dockMaxLengthRow,
             dockPanelModeSwitch,

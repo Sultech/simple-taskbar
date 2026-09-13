@@ -409,6 +409,22 @@
       <default>false</default>
       <summary>Enable Dock mode</summary>
     </key>
+    <key name="hide-dash-enabled" type="b">
+      <default>true</default>
+      <summary>Hide the Overview Dash</summary>
+    </key>
+    <key name="launch-to-desktop-enabled" type="b">
+      <default>true</default>
+      <summary>Start the session on the desktop instead of the Overview</summary>
+    </key>
+    <key name="dock-hide-dash-enabled" type="b">
+      <default>true</default>
+      <summary>Hide the Overview Dash in Dock mode</summary>
+    </key>
+    <key name="dock-launch-to-desktop-enabled" type="b">
+      <default>true</default>
+      <summary>Start the session on the desktop instead of the Overview in Dock mode</summary>
+    </key>
     <key name="dock-item-order" type="as">
       <default>['start-button', 'applications']</default>
       <summary>Dock item order</summary>
