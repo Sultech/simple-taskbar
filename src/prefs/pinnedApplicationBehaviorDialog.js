@@ -17,6 +17,7 @@ const PINNED_APPLICATION_BEHAVIOR_SETTINGS = [
     'hide-pinned-taskbar-apps',
     'hide-pinned-secondary-monitors',
     'use-pinned-apps-as-launchers',
+    'keep-pinned-app-windows-together',
     'hide-unpinned-taskbar-apps',
 ];
 
@@ -36,7 +37,7 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: 500,
+            default_height: 580,
         });
 
         this._settings = settings;
@@ -83,6 +84,15 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             ),
         });
         applicationsGroup.add(pinnedAppsAsLaunchersSwitch);
+
+        const keepPinnedWindowsTogetherSwitch = createSwitchRow(settings, {
+            key: 'keep-pinned-app-windows-together',
+            title: _('Keep Pinned Application Windows Together'),
+            subtitle: _(
+                'Show every window of a pinned application beside it instead of with the running applications, when Combine Application Windows is Only When Full or Never'
+            ),
+        });
+        applicationsGroup.add(keepPinnedWindowsTogetherSwitch);
         applicationsGroup.add(createSwitchRow(settings, {
             key: 'super-number-keybindings-enabled',
             title: _('Super+Number Shortcuts'),
@@ -93,12 +103,16 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
             const enabled = !settings.get_boolean('windows-xp-theme-enabled');
             pinnedAppsAsLaunchersSwitch.sensitive = enabled;
             hideUnpinnedAppsSwitch.sensitive = enabled;
+            keepPinnedWindowsTogetherSwitch.sensitive = enabled &&
+                !settings.get_boolean('use-pinned-apps-as-launchers') &&
+                settings.get_string('combine-app-buttons-mode') !== 'always';
         };
-        connectSettings(
-            settings,
-            'changed::windows-xp-theme-enabled',
-            syncApplicationBehaviorSensitivity
-        );
+        for (const key of [
+            'windows-xp-theme-enabled',
+            'use-pinned-apps-as-launchers',
+            'combine-app-buttons-mode',
+        ])
+            connectSettings(settings, `changed::${key}`, syncApplicationBehaviorSensitivity);
         syncApplicationBehaviorSensitivity();
     }
 

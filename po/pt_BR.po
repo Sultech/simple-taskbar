@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 07:22+0100\n"
+"POT-Creation-Date: 2026-09-14 00:14+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "Excedente de aplicativos"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:116
 msgid "Left"
 msgstr "Esquerda"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "Centro"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:117
 msgid "Right"
 msgstr "Direita"
 
@@ -453,8 +453,8 @@ msgid "Choose which applications appear and how they are grouped and indicated"
 msgstr "Escolha quais aplicativos aparecem e como são agrupados e indicados"
 
 #: src/prefs/applicationIconsGroup.js:203
-#: src/prefs/pinnedApplicationBehaviorDialog.js:26
-#: src/prefs/pinnedApplicationBehaviorDialog.js:35
+#: src/prefs/pinnedApplicationBehaviorDialog.js:27
+#: src/prefs/pinnedApplicationBehaviorDialog.js:36
 msgid "Pinned Application Behavior"
 msgstr "Comportamento dos aplicativos fixados"
 
@@ -520,12 +520,12 @@ msgstr ""
 "execução"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:114
 msgid "Top"
 msgstr "Topo"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:115
 msgid "Bottom"
 msgstr "Base"
 
@@ -994,45 +994,45 @@ msgstr "Opacidade do destaque em foco"
 msgid "Opacity percentage"
 msgstr "Porcentagem de opacidade"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Pinned and Running Applications"
 msgstr "Aplicativos fixados e em execução"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:47
+#: src/prefs/pinnedApplicationBehaviorDialog.js:48
 msgid "Control which applications appear on the taskbar"
 msgstr "Controle quais aplicativos aparecem na barra de tarefas"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:53
+#: src/prefs/pinnedApplicationBehaviorDialog.js:54
 msgid "Hide Pinned Applications"
 msgstr "Ocultar aplicativos fixados"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:55
+#: src/prefs/pinnedApplicationBehaviorDialog.js:56
 msgid "Show pinned taskbar applications only while they are running"
 msgstr ""
 "Mostra os aplicativos fixados na barra de tarefas apenas enquanto estiverem "
 "em execução"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:62
+#: src/prefs/pinnedApplicationBehaviorDialog.js:63
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "Ocultar aplicativos fixados em monitores secundários"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:64
+#: src/prefs/pinnedApplicationBehaviorDialog.js:65
 msgid "Show pinned applications only on the primary monitor"
 msgstr "Mostrar aplicativos fixados apenas no monitor principal"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:71
+#: src/prefs/pinnedApplicationBehaviorDialog.js:72
 msgid "Hide Unpinned Applications"
 msgstr "Ocultar aplicativos desafixados"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:73
+#: src/prefs/pinnedApplicationBehaviorDialog.js:74
 msgid "Show only pinned applications and their running windows"
 msgstr "Mostrar apenas aplicativos fixados e suas janelas em execução"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:80
+#: src/prefs/pinnedApplicationBehaviorDialog.js:81
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "Usar aplicativos fixados como inicializadores"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:82
+#: src/prefs/pinnedApplicationBehaviorDialog.js:83
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
@@ -1040,11 +1040,25 @@ msgstr ""
 "Mantém os aplicativos fixados como inicializadores e mostra os aplicativos "
 "em execução separadamente"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+#: src/prefs/pinnedApplicationBehaviorDialog.js:90
+msgid "Keep Pinned Application Windows Together"
+msgstr "Manter juntas as janelas de aplicativos fixados"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:92
+msgid ""
+"Show every window of a pinned application beside it instead of with the "
+"running applications, when Combine Application Windows is Only When Full or "
+"Never"
+msgstr ""
+"Mostrar cada janela de um aplicativo fixado ao lado dele em vez de junto aos "
+"aplicativos em execução, quando “Combinar janelas de aplicativos” estiver em "
+"“Somente quando cheia” ou “Nunca”"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:98
 msgid "Super+Number Shortcuts"
 msgstr "Atalhos Super+número"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+#: src/prefs/pinnedApplicationBehaviorDialog.js:99
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "Abrir aplicativos fixados com Super+1 até Super+9"
 
@@ -1846,97 +1860,97 @@ msgstr "Menu Iniciar no estilo Eleven ou original do GNOME"
 msgid "Dock applications"
 msgstr "Aplicativos do Dock"
 
-#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
+#: src/prefs/panelModeGroup.js:59 src/prefs/panelModeGroup.js:84
 msgid "General"
 msgstr "Geral"
 
-#: src/prefs/panelModeGroup.js:39
+#: src/prefs/panelModeGroup.js:68
 msgid "Taskbar Mode"
 msgstr "Modo barra de tarefas"
 
-#: src/prefs/panelModeGroup.js:40
+#: src/prefs/panelModeGroup.js:69
 msgid "Show applications in the taskbar"
 msgstr "Mostrar aplicativos na barra de tarefas"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:70
 msgid "Taskbar Mode Overview Behavior"
 msgstr "Comportamento da Panorâmica no modo barra de tarefas"
 
-#: src/prefs/panelModeGroup.js:58
+#: src/prefs/panelModeGroup.js:78
 msgid "Alternative Modes"
 msgstr "Modos alternativos"
 
-#: src/prefs/panelModeGroup.js:59
+#: src/prefs/panelModeGroup.js:79
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "Escolha o painel original do GNOME ou o tema do Windows XP"
 
-#: src/prefs/panelModeGroup.js:69
+#: src/prefs/panelModeGroup.js:93
 msgid "Default GNOME Panel"
 msgstr "Painel padrão do GNOME"
 
-#: src/prefs/panelModeGroup.js:70
+#: src/prefs/panelModeGroup.js:94
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Oculta os aplicativos da barra de tarefas e usa o Dash original na Panorâmica"
 
-#: src/prefs/panelModeGroup.js:74
+#: src/prefs/panelModeGroup.js:95
 msgid "Default GNOME Panel Overview Behavior"
 msgstr "Comportamento da Panorâmica do painel padrão do GNOME"
 
-#: src/prefs/panelModeGroup.js:86
+#: src/prefs/panelModeGroup.js:105
 msgid "Dock Mode"
 msgstr "Modo Dock"
 
-#: src/prefs/panelModeGroup.js:87
+#: src/prefs/panelModeGroup.js:106
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr "Mostrar aplicativos em um Dock separado em vez da barra de tarefas"
 
-#: src/prefs/panelModeGroup.js:91
+#: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Overview Behavior"
 msgstr "Comportamento da Panorâmica no modo Dock"
 
-#: src/prefs/panelModeGroup.js:144
+#: src/prefs/panelModeGroup.js:154
 msgid "Dock Position"
 msgstr "Posição do Dock"
 
-#: src/prefs/panelModeGroup.js:145
+#: src/prefs/panelModeGroup.js:155
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr "Posicionar o Dock em uma borda da tela diferente da barra de tarefas"
 
-#: src/prefs/panelModeGroup.js:156
+#: src/prefs/panelModeGroup.js:166
 msgid "Maximum Dock Length"
 msgstr "Comprimento máximo do Dock"
 
-#: src/prefs/panelModeGroup.js:157
+#: src/prefs/panelModeGroup.js:167
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Limitar o Dock a esta porcentagem do comprimento do monitor"
 
-#: src/prefs/panelModeGroup.js:164
+#: src/prefs/panelModeGroup.js:174
 msgid "Full-width Dock"
 msgstr "Dock em largura total"
 
-#: src/prefs/panelModeGroup.js:165
+#: src/prefs/panelModeGroup.js:175
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "Estender o Dock até a borda do monitor"
 
-#: src/prefs/panelModeGroup.js:186
+#: src/prefs/panelModeGroup.js:200
 msgid "Windows XP Theme"
 msgstr "Tema do Windows XP"
 
-#: src/prefs/panelModeGroup.js:187
+#: src/prefs/panelModeGroup.js:201
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Aplica um estilo de barra de tarefas inspirado no Windows XP"
 
-#: src/prefs/panelModeGroup.js:191
+#: src/prefs/panelModeGroup.js:202
 msgid "Windows XP Theme Overview Behavior"
 msgstr "Comportamento da Panorâmica do tema do Windows XP"
 
-#: src/prefs/panelModeGroup.js:270
+#: src/prefs/panelModeGroup.js:273
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Ícones de aplicativos não estão disponíveis no modo Painel padrão do GNOME."
 
-#: src/prefs/panelModeGroup.js:271
+#: src/prefs/panelModeGroup.js:274
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 "Altere o tamanho, o espaçamento e o posicionamento dos ícones da barra de "
@@ -3097,7 +3111,7 @@ msgid "Trash"
 msgstr "Lixeira"
 
 #: src/taskbar/taskbarAppearanceController.js:587
-#: src/taskbar/taskbarController.js:1337 src/taskbar/taskbarController.js:1339
+#: src/taskbar/taskbarController.js:1336 src/taskbar/taskbarController.js:1338
 msgid "running"
 msgstr "em execução"
 

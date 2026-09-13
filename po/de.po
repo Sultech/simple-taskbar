@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 07:22+0100\n"
+"POT-Creation-Date: 2026-09-14 00:14+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "Anwendungsüberlauf"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:116
 msgid "Left"
 msgstr "Links"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "Mitte"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:117
 msgid "Right"
 msgstr "Rechts"
 
@@ -454,8 +454,8 @@ msgstr ""
 "gekennzeichnet werden"
 
 #: src/prefs/applicationIconsGroup.js:203
-#: src/prefs/pinnedApplicationBehaviorDialog.js:26
-#: src/prefs/pinnedApplicationBehaviorDialog.js:35
+#: src/prefs/pinnedApplicationBehaviorDialog.js:27
+#: src/prefs/pinnedApplicationBehaviorDialog.js:36
 msgid "Pinned Application Behavior"
 msgstr "Verhalten angehefteter Anwendungen"
 
@@ -518,12 +518,12 @@ msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "Position, Stil, Größe und Farben der Laufindikatoren konfigurieren"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:114
 msgid "Top"
 msgstr "Oben"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:115
 msgid "Bottom"
 msgstr "Unten"
 
@@ -991,45 +991,45 @@ msgstr "Deckkraft der Fokus-Hervorhebung"
 msgid "Opacity percentage"
 msgstr "Deckkraft in Prozent"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Pinned and Running Applications"
 msgstr "Angeheftete und laufende Anwendungen"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:47
+#: src/prefs/pinnedApplicationBehaviorDialog.js:48
 msgid "Control which applications appear on the taskbar"
 msgstr "Steuern Sie, welche Anwendungen in der Taskleiste angezeigt werden"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:53
+#: src/prefs/pinnedApplicationBehaviorDialog.js:54
 msgid "Hide Pinned Applications"
 msgstr "Angeheftete Anwendungen ausblenden"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:55
+#: src/prefs/pinnedApplicationBehaviorDialog.js:56
 msgid "Show pinned taskbar applications only while they are running"
 msgstr ""
 "Zeigt angeheftete Taskleisten-Anwendungen nur an, während sie ausgeführt "
 "werden"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:62
+#: src/prefs/pinnedApplicationBehaviorDialog.js:63
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "Angeheftete Anwendungen auf sekundären Monitoren ausblenden"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:64
+#: src/prefs/pinnedApplicationBehaviorDialog.js:65
 msgid "Show pinned applications only on the primary monitor"
 msgstr "Angeheftete Anwendungen nur auf dem primären Monitor anzeigen"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:71
+#: src/prefs/pinnedApplicationBehaviorDialog.js:72
 msgid "Hide Unpinned Applications"
 msgstr "Nicht angeheftete Anwendungen ausblenden"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:73
+#: src/prefs/pinnedApplicationBehaviorDialog.js:74
 msgid "Show only pinned applications and their running windows"
 msgstr "Nur angeheftete Anwendungen und deren laufende Fenster anzeigen"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:80
+#: src/prefs/pinnedApplicationBehaviorDialog.js:81
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "Angeheftete Anwendungen als Starter verwenden"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:82
+#: src/prefs/pinnedApplicationBehaviorDialog.js:83
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
@@ -1037,11 +1037,25 @@ msgstr ""
 "Angeheftete Anwendungen als Starter beibehalten und laufende Anwendungen "
 "separat anzeigen"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+#: src/prefs/pinnedApplicationBehaviorDialog.js:90
+msgid "Keep Pinned Application Windows Together"
+msgstr "Fenster angehefteter Anwendungen zusammenhalten"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:92
+msgid ""
+"Show every window of a pinned application beside it instead of with the "
+"running applications, when Combine Application Windows is Only When Full or "
+"Never"
+msgstr ""
+"Jedes Fenster einer angehefteten Anwendung neben dieser anzeigen statt bei "
+"den laufenden Anwendungen, wenn „Anwendungsfenster zusammenfassen“ auf „Nur "
+"wenn voll“ oder „Nie“ steht"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:98
 msgid "Super+Number Shortcuts"
 msgstr "Super+Zahl-Tastenkombinationen"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+#: src/prefs/pinnedApplicationBehaviorDialog.js:99
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "Angeheftete Anwendungen mit Super+1 bis Super+9 öffnen"
 
@@ -1848,98 +1862,98 @@ msgstr "Startmenü im Eleven-Stil oder originales GNOME-Startmenü"
 msgid "Dock applications"
 msgstr "Anwendungen des Docks"
 
-#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
+#: src/prefs/panelModeGroup.js:59 src/prefs/panelModeGroup.js:84
 msgid "General"
 msgstr "Allgemein"
 
-#: src/prefs/panelModeGroup.js:39
+#: src/prefs/panelModeGroup.js:68
 msgid "Taskbar Mode"
 msgstr "Taskleistenmodus"
 
-#: src/prefs/panelModeGroup.js:40
+#: src/prefs/panelModeGroup.js:69
 msgid "Show applications in the taskbar"
 msgstr "Anwendungen in der Taskleiste anzeigen"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:70
 msgid "Taskbar Mode Overview Behavior"
 msgstr "Übersichtsverhalten im Taskleistenmodus"
 
-#: src/prefs/panelModeGroup.js:58
+#: src/prefs/panelModeGroup.js:78
 msgid "Alternative Modes"
 msgstr "Alternative Modi"
 
-#: src/prefs/panelModeGroup.js:59
+#: src/prefs/panelModeGroup.js:79
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "Wählen Sie das ursprüngliche GNOME-Panel oder das Windows-XP-Theme"
 
-#: src/prefs/panelModeGroup.js:69
+#: src/prefs/panelModeGroup.js:93
 msgid "Default GNOME Panel"
 msgstr "Standard-GNOME-Panel"
 
-#: src/prefs/panelModeGroup.js:70
+#: src/prefs/panelModeGroup.js:94
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Blendet Taskleisten-Anwendungen aus und verwendet das ursprüngliche Dash in "
 "der Übersicht"
 
-#: src/prefs/panelModeGroup.js:74
+#: src/prefs/panelModeGroup.js:95
 msgid "Default GNOME Panel Overview Behavior"
 msgstr "Übersichtsverhalten im Standard-GNOME-Panel"
 
-#: src/prefs/panelModeGroup.js:86
+#: src/prefs/panelModeGroup.js:105
 msgid "Dock Mode"
 msgstr "Dock-Modus"
 
-#: src/prefs/panelModeGroup.js:87
+#: src/prefs/panelModeGroup.js:106
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr "Anwendungen in einem separaten Dock statt in der Taskleiste anzeigen"
 
-#: src/prefs/panelModeGroup.js:91
+#: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Overview Behavior"
 msgstr "Übersichtsverhalten im Dock-Modus"
 
-#: src/prefs/panelModeGroup.js:144
+#: src/prefs/panelModeGroup.js:154
 msgid "Dock Position"
 msgstr "Dock-Position"
 
-#: src/prefs/panelModeGroup.js:145
+#: src/prefs/panelModeGroup.js:155
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr ""
 "Das Dock an einer anderen Bildschirmkante als die Taskleiste platzieren"
 
-#: src/prefs/panelModeGroup.js:156
+#: src/prefs/panelModeGroup.js:166
 msgid "Maximum Dock Length"
 msgstr "Maximale Dock-Länge"
 
-#: src/prefs/panelModeGroup.js:157
+#: src/prefs/panelModeGroup.js:167
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Dock auf diesen Prozentsatz der Monitorlänge begrenzen"
 
-#: src/prefs/panelModeGroup.js:164
+#: src/prefs/panelModeGroup.js:174
 msgid "Full-width Dock"
 msgstr "Dock in voller Breite"
 
-#: src/prefs/panelModeGroup.js:165
+#: src/prefs/panelModeGroup.js:175
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "Dock vollständig bis zur Bildschirmkante erweitern"
 
-#: src/prefs/panelModeGroup.js:186
+#: src/prefs/panelModeGroup.js:200
 msgid "Windows XP Theme"
 msgstr "Windows-XP-Thema"
 
-#: src/prefs/panelModeGroup.js:187
+#: src/prefs/panelModeGroup.js:201
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Einen von Windows XP inspirierten Taskleistenstil anwenden"
 
-#: src/prefs/panelModeGroup.js:191
+#: src/prefs/panelModeGroup.js:202
 msgid "Windows XP Theme Overview Behavior"
 msgstr "Übersichtsverhalten im Windows-XP-Thema"
 
-#: src/prefs/panelModeGroup.js:270
+#: src/prefs/panelModeGroup.js:273
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "Anwendungssymbole sind im Standard-GNOME-Panel-Modus nicht verfügbar."
 
-#: src/prefs/panelModeGroup.js:271
+#: src/prefs/panelModeGroup.js:274
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "Ändern Sie Größe, Abstand und Platzierung der Taskleistensymbole."
 
@@ -3113,7 +3127,7 @@ msgid "Trash"
 msgstr "Papierkorb"
 
 #: src/taskbar/taskbarAppearanceController.js:587
-#: src/taskbar/taskbarController.js:1337 src/taskbar/taskbarController.js:1339
+#: src/taskbar/taskbarController.js:1336 src/taskbar/taskbarController.js:1338
 msgid "running"
 msgstr "läuft"
 

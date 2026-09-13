@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 07:22+0100\n"
+"POT-Creation-Date: 2026-09-14 00:14+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "Переполнение приложений"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:116
 msgid "Left"
 msgstr "Слева"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "По центру"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:117
 msgid "Right"
 msgstr "Справа"
 
@@ -445,8 +445,8 @@ msgstr ""
 "Выберите, какие приложения отображать, как их группировать и обозначать"
 
 #: src/prefs/applicationIconsGroup.js:203
-#: src/prefs/pinnedApplicationBehaviorDialog.js:26
-#: src/prefs/pinnedApplicationBehaviorDialog.js:35
+#: src/prefs/pinnedApplicationBehaviorDialog.js:27
+#: src/prefs/pinnedApplicationBehaviorDialog.js:36
 msgid "Pinned Application Behavior"
 msgstr "Поведение закреплённых приложений"
 
@@ -509,12 +509,12 @@ msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "Настройте положение, стиль, размер и цвета индикаторов запуска"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:114
 msgid "Top"
 msgstr "Вверху"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:115
 msgid "Bottom"
 msgstr "Внизу"
 
@@ -979,44 +979,44 @@ msgstr "Непрозрачность подсветки фокуса"
 msgid "Opacity percentage"
 msgstr "Непрозрачность в процентах"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Pinned and Running Applications"
 msgstr "Закреплённые и запущенные приложения"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:47
+#: src/prefs/pinnedApplicationBehaviorDialog.js:48
 msgid "Control which applications appear on the taskbar"
 msgstr "Управление приложениями, отображаемыми на панели задач"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:53
+#: src/prefs/pinnedApplicationBehaviorDialog.js:54
 msgid "Hide Pinned Applications"
 msgstr "Скрыть закреплённые приложения"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:55
+#: src/prefs/pinnedApplicationBehaviorDialog.js:56
 msgid "Show pinned taskbar applications only while they are running"
 msgstr ""
 "Показывать закреплённые приложения панели задач только во время их работы"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:62
+#: src/prefs/pinnedApplicationBehaviorDialog.js:63
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "Скрывать закреплённые приложения на дополнительных мониторах"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:64
+#: src/prefs/pinnedApplicationBehaviorDialog.js:65
 msgid "Show pinned applications only on the primary monitor"
 msgstr "Показывать закреплённые приложения только на основном мониторе"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:71
+#: src/prefs/pinnedApplicationBehaviorDialog.js:72
 msgid "Hide Unpinned Applications"
 msgstr "Скрывать незакреплённые приложения"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:73
+#: src/prefs/pinnedApplicationBehaviorDialog.js:74
 msgid "Show only pinned applications and their running windows"
 msgstr "Показывать только закреплённые приложения и их открытые окна"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:80
+#: src/prefs/pinnedApplicationBehaviorDialog.js:81
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "Использовать закреплённые приложения как средства запуска"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:82
+#: src/prefs/pinnedApplicationBehaviorDialog.js:83
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
@@ -1024,11 +1024,25 @@ msgstr ""
 "Сохранять закреплённые приложения в качестве средств запуска и отдельно "
 "показывать запущенные приложения"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+#: src/prefs/pinnedApplicationBehaviorDialog.js:90
+msgid "Keep Pinned Application Windows Together"
+msgstr "Держать окна закреплённых приложений вместе"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:92
+msgid ""
+"Show every window of a pinned application beside it instead of with the "
+"running applications, when Combine Application Windows is Only When Full or "
+"Never"
+msgstr ""
+"Показывать каждое окно закреплённого приложения рядом с ним, а не среди "
+"запущенных приложений, когда «Объединять окна приложений» установлено в "
+"«Только при заполнении» или «Никогда»"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:98
 msgid "Super+Number Shortcuts"
 msgstr "Сочетания Super+цифра"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+#: src/prefs/pinnedApplicationBehaviorDialog.js:99
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "Открывать закреплённые приложения с помощью Super+1–Super+9"
 
@@ -1812,96 +1826,96 @@ msgstr "Меню «Пуск» в стиле Eleven или исходное ме�
 msgid "Dock applications"
 msgstr "Приложения Dock"
 
-#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
+#: src/prefs/panelModeGroup.js:59 src/prefs/panelModeGroup.js:84
 msgid "General"
 msgstr "Общие"
 
-#: src/prefs/panelModeGroup.js:39
+#: src/prefs/panelModeGroup.js:68
 msgid "Taskbar Mode"
 msgstr "Режим панели задач"
 
-#: src/prefs/panelModeGroup.js:40
+#: src/prefs/panelModeGroup.js:69
 msgid "Show applications in the taskbar"
 msgstr "Показывать приложения на панели задач"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:70
 msgid "Taskbar Mode Overview Behavior"
 msgstr "Поведение обзора в режиме панели задач"
 
-#: src/prefs/panelModeGroup.js:58
+#: src/prefs/panelModeGroup.js:78
 msgid "Alternative Modes"
 msgstr "Альтернативные режимы"
 
-#: src/prefs/panelModeGroup.js:59
+#: src/prefs/panelModeGroup.js:79
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "Выберите исходную панель GNOME или тему Windows XP"
 
-#: src/prefs/panelModeGroup.js:69
+#: src/prefs/panelModeGroup.js:93
 msgid "Default GNOME Panel"
 msgstr "Стандартная панель GNOME"
 
-#: src/prefs/panelModeGroup.js:70
+#: src/prefs/panelModeGroup.js:94
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Скрыть приложения панели задач и использовать оригинальный Dash в обзоре"
 
-#: src/prefs/panelModeGroup.js:74
+#: src/prefs/panelModeGroup.js:95
 msgid "Default GNOME Panel Overview Behavior"
 msgstr "Поведение обзора стандартной панели GNOME"
 
-#: src/prefs/panelModeGroup.js:86
+#: src/prefs/panelModeGroup.js:105
 msgid "Dock Mode"
 msgstr "Режим Dock"
 
-#: src/prefs/panelModeGroup.js:87
+#: src/prefs/panelModeGroup.js:106
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr "Показывать приложения в отдельном Dock вместо панели задач"
 
-#: src/prefs/panelModeGroup.js:91
+#: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Overview Behavior"
 msgstr "Поведение обзора в режиме Dock"
 
-#: src/prefs/panelModeGroup.js:144
+#: src/prefs/panelModeGroup.js:154
 msgid "Dock Position"
 msgstr "Расположение Dock"
 
-#: src/prefs/panelModeGroup.js:145
+#: src/prefs/panelModeGroup.js:155
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr "Разместить Dock у края экрана, отличного от края панели задач"
 
-#: src/prefs/panelModeGroup.js:156
+#: src/prefs/panelModeGroup.js:166
 msgid "Maximum Dock Length"
 msgstr "Максимальная длина Dock"
 
-#: src/prefs/panelModeGroup.js:157
+#: src/prefs/panelModeGroup.js:167
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Ограничить длину Dock этим процентом длины монитора"
 
-#: src/prefs/panelModeGroup.js:164
+#: src/prefs/panelModeGroup.js:174
 msgid "Full-width Dock"
 msgstr "Dock на всю ширину"
 
-#: src/prefs/panelModeGroup.js:165
+#: src/prefs/panelModeGroup.js:175
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "Растянуть Dock до края экрана"
 
-#: src/prefs/panelModeGroup.js:186
+#: src/prefs/panelModeGroup.js:200
 msgid "Windows XP Theme"
 msgstr "Тема Windows XP"
 
-#: src/prefs/panelModeGroup.js:187
+#: src/prefs/panelModeGroup.js:201
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Применить стиль панели задач в духе Windows XP"
 
-#: src/prefs/panelModeGroup.js:191
+#: src/prefs/panelModeGroup.js:202
 msgid "Windows XP Theme Overview Behavior"
 msgstr "Поведение обзора темы Windows XP"
 
-#: src/prefs/panelModeGroup.js:270
+#: src/prefs/panelModeGroup.js:273
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "Значки приложений недоступны в режиме стандартной панели GNOME."
 
-#: src/prefs/panelModeGroup.js:271
+#: src/prefs/panelModeGroup.js:274
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "Измените размер, расстояние и расположение значков панели задач."
 
@@ -3047,7 +3061,7 @@ msgid "Trash"
 msgstr "Корзина"
 
 #: src/taskbar/taskbarAppearanceController.js:587
-#: src/taskbar/taskbarController.js:1337 src/taskbar/taskbarController.js:1339
+#: src/taskbar/taskbarController.js:1336 src/taskbar/taskbarController.js:1338
 msgid "running"
 msgstr "запущено"
 

@@ -554,6 +554,17 @@ export class TaskbarController {
             this._signalHolder
         );
         this._settings.connectObject(
+            'changed::keep-pinned-app-windows-together',
+            () => {
+                this._getPreviews().hideTooltip(false);
+                this._getPreviews().hide();
+                this._shownInitially = false;
+                this._queueRedisplay();
+                this._syncDragEnabled();
+            },
+            this._signalHolder
+        );
+        this._settings.connectObject(
             'changed::show-pinned-app-separator',
             () => this._queueRedisplay(),
             this._signalHolder
@@ -1150,17 +1161,6 @@ export class TaskbarController {
                 ? locationEntries.indexOf(entries[index])
                 : applicationEntries.indexOf(entries[index]);
             let item = this._appButtons.get(key);
-            const replaceForDragState = Boolean(item) &&
-                this._dragIsEnabled(item) !==
-                    this._dragIsEnabled(item, isPinnedPrimary);
-            if (replaceForDragState) {
-                this._getPreviews().removeItem(item);
-                this._dragController.releaseDraggable(item);
-                this._destroyAppMenu(item._taskbarButton);
-                this._appButtons.delete(key);
-                item.destroy();
-                item = null;
-            }
             if (item && item._taskbarApp !== app) {
                 this._getPreviews().removeItem(item);
                 this._dragController.releaseDraggable(item);
@@ -1202,7 +1202,6 @@ export class TaskbarController {
                 animateTaskbarItemIn(
                     item,
                     animateMembershipChanges &&
-                        !replaceForDragState &&
                         (!pinnedPlaceholder ||
                             newlyPinnedAppIds.has(app.get_id())) &&
                         app.get_id() !== externalDropAppId
@@ -1793,10 +1792,7 @@ export class TaskbarController {
         this._updateGlassGeometry(item);
     }
 
-    _dragIsEnabled(
-        item = null,
-        isPinnedPrimary = item ? item._taskbarIsPinnedPrimary : false
-    ) {
+    _dragIsEnabled(item = null) {
         if (!this._ignoreTaskbarLock &&
             this._settings.get_boolean('taskbar-locked'))
             return false;
@@ -1807,13 +1803,7 @@ export class TaskbarController {
         if (!item)
             return true;
 
-        if (item._taskbarApp._simpleTaskbarLocation)
-            return false;
-
-        if (item._taskbarIsLauncher)
-            return true;
-
-        return !isPinnedPrimary || this._combineMode() !== 'never';
+        return !item._taskbarApp._simpleTaskbarLocation;
     }
 
     _syncDragEnabled(force = false) {
@@ -1823,6 +1813,7 @@ export class TaskbarController {
                 : this._settings.get_boolean('taskbar-locked'),
             this._combineMode(),
             this._usePinnedAppLaunchers(),
+            this._entryModel.keepPinnedWindowsTogether(),
             this._entryModel.hidePinned(),
         ].join(':');
         if (!force && configuration === this._dragEnabled)

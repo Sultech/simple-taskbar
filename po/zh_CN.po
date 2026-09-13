@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-13 07:22+0100\n"
+"POT-Creation-Date: 2026-09-14 00:14+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "应用溢出"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:116
 msgid "Left"
 msgstr "左侧"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "居中"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:117
 msgid "Right"
 msgstr "右侧"
 
@@ -441,8 +441,8 @@ msgid "Choose which applications appear and how they are grouped and indicated"
 msgstr "选择要显示的应用，以及它们的分组和指示方式"
 
 #: src/prefs/applicationIconsGroup.js:203
-#: src/prefs/pinnedApplicationBehaviorDialog.js:26
-#: src/prefs/pinnedApplicationBehaviorDialog.js:35
+#: src/prefs/pinnedApplicationBehaviorDialog.js:27
+#: src/prefs/pinnedApplicationBehaviorDialog.js:36
 msgid "Pinned Application Behavior"
 msgstr "已固定应用的行为"
 
@@ -505,12 +505,12 @@ msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "配置运行指示器的位置、样式、大小和颜色"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:114
 msgid "Top"
 msgstr "顶部"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:115
 msgid "Bottom"
 msgstr "底部"
 
@@ -963,53 +963,66 @@ msgstr "焦点高亮不透明度"
 msgid "Opacity percentage"
 msgstr "不透明度百分比"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:46
+#: src/prefs/pinnedApplicationBehaviorDialog.js:47
 msgid "Pinned and Running Applications"
 msgstr "已固定和正在运行的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:47
+#: src/prefs/pinnedApplicationBehaviorDialog.js:48
 msgid "Control which applications appear on the taskbar"
 msgstr "控制任务栏中显示的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:53
+#: src/prefs/pinnedApplicationBehaviorDialog.js:54
 msgid "Hide Pinned Applications"
 msgstr "隐藏已固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:55
+#: src/prefs/pinnedApplicationBehaviorDialog.js:56
 msgid "Show pinned taskbar applications only while they are running"
 msgstr "仅展示正在运行的已固定于任务栏的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:62
+#: src/prefs/pinnedApplicationBehaviorDialog.js:63
 msgid "Hide Pinned Applications on Secondary Monitors"
 msgstr "在次要显示器上隐藏已固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:64
+#: src/prefs/pinnedApplicationBehaviorDialog.js:65
 msgid "Show pinned applications only on the primary monitor"
 msgstr "仅在主显示器上显示已固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:71
+#: src/prefs/pinnedApplicationBehaviorDialog.js:72
 msgid "Hide Unpinned Applications"
 msgstr "隐藏未固定的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:73
+#: src/prefs/pinnedApplicationBehaviorDialog.js:74
 msgid "Show only pinned applications and their running windows"
 msgstr "仅显示已固定的应用及其运行中的窗口"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:80
+#: src/prefs/pinnedApplicationBehaviorDialog.js:81
 msgid "Use Pinned Apps as Application Launchers"
 msgstr "将已固定的应用用作应用程序启动器"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:82
+#: src/prefs/pinnedApplicationBehaviorDialog.js:83
 msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr "将已固定的应用保留为启动器，并单独展示正在运行的应用"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:88
+#: src/prefs/pinnedApplicationBehaviorDialog.js:90
+msgid "Keep Pinned Application Windows Together"
+msgstr "将已固定应用的窗口保持在一起"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:92
+msgid ""
+"Show every window of a pinned application beside it instead of with the "
+"running applications, when Combine Application Windows is Only When Full or "
+"Never"
+msgstr ""
+"当“合并应用窗口”设置为“仅当占满时”或“从不”时，将已固定应用的每个窗口显示在其"
+"旁边，而不是与正在运行的应用放在一起"
+
+#: src/prefs/pinnedApplicationBehaviorDialog.js:98
 msgid "Super+Number Shortcuts"
 msgstr "Super+数字快捷键"
 
-#: src/prefs/pinnedApplicationBehaviorDialog.js:89
+#: src/prefs/pinnedApplicationBehaviorDialog.js:99
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "使用 Super+1 到 Super+9 打开已固定的应用"
 
@@ -1773,95 +1786,95 @@ msgstr "Eleven 风格或原始 GNOME 开始菜单"
 msgid "Dock applications"
 msgstr "Dock 应用"
 
-#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
+#: src/prefs/panelModeGroup.js:59 src/prefs/panelModeGroup.js:84
 msgid "General"
 msgstr "常规"
 
-#: src/prefs/panelModeGroup.js:39
+#: src/prefs/panelModeGroup.js:68
 msgid "Taskbar Mode"
 msgstr "任务栏模式"
 
-#: src/prefs/panelModeGroup.js:40
+#: src/prefs/panelModeGroup.js:69
 msgid "Show applications in the taskbar"
 msgstr "在任务栏中显示应用"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:70
 msgid "Taskbar Mode Overview Behavior"
 msgstr "任务栏模式的概览行为"
 
-#: src/prefs/panelModeGroup.js:58
+#: src/prefs/panelModeGroup.js:78
 msgid "Alternative Modes"
 msgstr "其他模式"
 
-#: src/prefs/panelModeGroup.js:59
+#: src/prefs/panelModeGroup.js:79
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "选择原始 GNOME 面板或 Windows XP 主题"
 
-#: src/prefs/panelModeGroup.js:69
+#: src/prefs/panelModeGroup.js:93
 msgid "Default GNOME Panel"
 msgstr "默认 GNOME 面板"
 
-#: src/prefs/panelModeGroup.js:70
+#: src/prefs/panelModeGroup.js:94
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr "隐藏任务栏应用，并在概览中使用原版的停靠栏"
 
-#: src/prefs/panelModeGroup.js:74
+#: src/prefs/panelModeGroup.js:95
 msgid "Default GNOME Panel Overview Behavior"
 msgstr "默认 GNOME 面板的概览行为"
 
-#: src/prefs/panelModeGroup.js:86
+#: src/prefs/panelModeGroup.js:105
 msgid "Dock Mode"
 msgstr "Dock 模式"
 
-#: src/prefs/panelModeGroup.js:87
+#: src/prefs/panelModeGroup.js:106
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr "在独立 Dock 中显示应用，而不是任务栏"
 
-#: src/prefs/panelModeGroup.js:91
+#: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Overview Behavior"
 msgstr "Dock 模式的概览行为"
 
-#: src/prefs/panelModeGroup.js:144
+#: src/prefs/panelModeGroup.js:154
 msgid "Dock Position"
 msgstr "Dock 位置"
 
-#: src/prefs/panelModeGroup.js:145
+#: src/prefs/panelModeGroup.js:155
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr "将 Dock 放置在与任务栏不同的屏幕边缘"
 
-#: src/prefs/panelModeGroup.js:156
+#: src/prefs/panelModeGroup.js:166
 msgid "Maximum Dock Length"
 msgstr "Dock 最大长度"
 
-#: src/prefs/panelModeGroup.js:157
+#: src/prefs/panelModeGroup.js:167
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "将 Dock 限制为显示器长度的此百分比"
 
-#: src/prefs/panelModeGroup.js:164
+#: src/prefs/panelModeGroup.js:174
 msgid "Full-width Dock"
 msgstr "全宽 Dock"
 
-#: src/prefs/panelModeGroup.js:165
+#: src/prefs/panelModeGroup.js:175
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "将 Dock 延伸至显示器边缘"
 
-#: src/prefs/panelModeGroup.js:186
+#: src/prefs/panelModeGroup.js:200
 msgid "Windows XP Theme"
 msgstr "Windows XP 主题"
 
-#: src/prefs/panelModeGroup.js:187
+#: src/prefs/panelModeGroup.js:201
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "使用 Windows XP 风格的任务栏样式"
 
-#: src/prefs/panelModeGroup.js:191
+#: src/prefs/panelModeGroup.js:202
 msgid "Windows XP Theme Overview Behavior"
 msgstr "Windows XP 主题的概览行为"
 
-#: src/prefs/panelModeGroup.js:270
+#: src/prefs/panelModeGroup.js:273
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "在默认 GNOME 面板模式下，应用程序图标不可用。"
 
-#: src/prefs/panelModeGroup.js:271
+#: src/prefs/panelModeGroup.js:274
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "更改任务栏图标的尺寸、间距与位置。"
 
@@ -2966,7 +2979,7 @@ msgid "Trash"
 msgstr "回收站"
 
 #: src/taskbar/taskbarAppearanceController.js:587
-#: src/taskbar/taskbarController.js:1337 src/taskbar/taskbarController.js:1339
+#: src/taskbar/taskbarController.js:1336 src/taskbar/taskbarController.js:1338
 msgid "running"
 msgstr "正在运行"
 

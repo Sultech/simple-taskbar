@@ -765,6 +765,11 @@
       <summary>Use pinned applications as separate launchers</summary>
       <description>Keep pinned applications as launchers and show their running windows separately</description>
     </key>
+    <key name="keep-pinned-app-windows-together" type="b">
+      <default>false</default>
+      <summary>Keep windows of pinned applications in the pinned section</summary>
+      <description>When application windows are not combined, show every window of a pinned application beside it instead of moving the extra windows to the running applications section</description>
+    </key>
     <key name="hide-unpinned-taskbar-apps" type="b">
       <default>false</default>
       <summary>Hide unpinned taskbar applications</summary>

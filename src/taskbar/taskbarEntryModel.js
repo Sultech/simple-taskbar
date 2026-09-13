@@ -5,6 +5,16 @@ import {
     shouldHidePinnedApplications,
 } from '../shared/taskbarPinnedVisibility.js';
 
+function windowEntry(app, window, isPinnedPrimary) {
+    return {
+        key: `window:${window.get_stable_sequence()}`,
+        app,
+        window,
+        isLauncher: false,
+        isPinnedPrimary,
+    };
+}
+
 export class TaskbarEntryModel {
     constructor({
         settings,
@@ -50,6 +60,10 @@ export class TaskbarEntryModel {
 
     usePinnedAppLaunchers() {
         return this._settings.get_boolean('use-pinned-apps-as-launchers');
+    }
+
+    keepPinnedWindowsTogether() {
+        return this._settings.get_boolean('keep-pinned-app-windows-together');
     }
 
     pinnedApps() {
@@ -216,15 +230,8 @@ export class TaskbarEntryModel {
                 continue;
             }
 
-            for (const window of windows) {
-                entries.push({
-                    key: `window:${window.get_stable_sequence()}`,
-                    app,
-                    window,
-                    isLauncher: false,
-                    isPinnedPrimary: false,
-                });
-            }
+            for (const window of windows)
+                entries.push(windowEntry(app, window, false));
         }
         return entries;
     }
@@ -239,6 +246,7 @@ export class TaskbarEntryModel {
     }
 
     _uncombinedWindowEntries(apps, combinedAppIds) {
+        const keepPinnedWindowsTogether = this.keepPinnedWindowsTogether();
         const pinnedEntries = [];
         const runningGroups = new Map();
         for (const app of apps) {
@@ -262,13 +270,9 @@ export class TaskbarEntryModel {
             }
 
             if (!isPinned) {
-                runningGroups.set(app.get_id(), windows.map(window => ({
-                    key: `window:${window.get_stable_sequence()}`,
-                    app,
-                    window,
-                    isLauncher: false,
-                    isPinnedPrimary: false,
-                })));
+                runningGroups.set(app.get_id(), windows.map(window =>
+                    windowEntry(app, window, false)
+                ));
                 continue;
             }
 
@@ -283,23 +287,17 @@ export class TaskbarEntryModel {
                 continue;
             }
 
+            if (keepPinnedWindowsTogether) {
+                for (const window of windows)
+                    pinnedEntries.push(windowEntry(app, window, true));
+                continue;
+            }
+
             const [firstWindow, ...remainingWindows] = windows;
-            pinnedEntries.push({
-                key: `window:${firstWindow.get_stable_sequence()}`,
-                app,
-                window: firstWindow,
-                isLauncher: false,
-                isPinnedPrimary: true,
-            });
+            pinnedEntries.push(windowEntry(app, firstWindow, true));
             if (remainingWindows.length > 0) {
-                runningGroups.set(app.get_id(), remainingWindows.map(
-                    window => ({
-                        key: `window:${window.get_stable_sequence()}`,
-                        app,
-                        window,
-                        isLauncher: false,
-                        isPinnedPrimary: false,
-                    })
+                runningGroups.set(app.get_id(), remainingWindows.map(window =>
+                    windowEntry(app, window, false)
                 ));
             }
         }
