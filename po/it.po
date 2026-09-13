@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-10 22:23+0100\n"
+"POT-Creation-Date: 2026-09-13 07:22+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "Overflow delle applicazioni"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:70
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
 msgid "Left"
 msgstr "Sinistra"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "Centro"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:71
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
 msgid "Right"
 msgstr "Destra"
 
@@ -521,12 +521,12 @@ msgstr ""
 "di esecuzione"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
 msgid "Top"
 msgstr "In alto"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
 msgid "Bottom"
 msgstr "In basso"
 
@@ -1648,6 +1648,41 @@ msgstr ""
 "Mostra un bordo sottile lungo il bordo della barra delle applicazioni "
 "rivolto verso lo spazio di lavoro"
 
+#: src/prefs/overviewBehaviorDialog.js:42
+msgid "Overview Behavior"
+msgstr "Comportamento della Panoramica"
+
+#: src/prefs/overviewBehaviorDialog.js:53
+msgid "Overview"
+msgstr "Panoramica"
+
+#: src/prefs/overviewBehaviorDialog.js:54
+msgid "These options apply to the mode that is currently active"
+msgstr "Queste opzioni si applicano alla modalità attualmente attiva"
+
+#: src/prefs/overviewBehaviorDialog.js:60
+msgid "Hide the Dash"
+msgstr "Nascondi la Dash"
+
+#: src/prefs/overviewBehaviorDialog.js:61
+msgid ""
+"Hide the Overview Dash while applications are shown on the taskbar or Dock"
+msgstr ""
+"Nasconde la Dash nella Panoramica mentre le applicazioni sono mostrate nella "
+"barra delle applicazioni o nel Dock"
+
+#: src/prefs/overviewBehaviorDialog.js:65
+msgid "Launch to Desktop"
+msgstr "Avvia sulla scrivania"
+
+#: src/prefs/overviewBehaviorDialog.js:66
+msgid ""
+"Start the session on the desktop instead of the Overview; applies at the "
+"next login"
+msgstr ""
+"Avvia la sessione sulla scrivania anziché nella Panoramica; ha effetto al "
+"prossimo accesso"
+
 #: src/prefs/panelAxis.js:14
 msgid "Middle"
 msgstr "Centro"
@@ -1835,87 +1870,103 @@ msgstr "Menu Start in stile Eleven o menu Start originale di GNOME"
 msgid "Dock applications"
 msgstr "Applicazioni del Dock"
 
-#: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:49
+#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
 msgid "General"
 msgstr "Generale"
 
-#: src/prefs/panelModeGroup.js:34
+#: src/prefs/panelModeGroup.js:39
 msgid "Taskbar Mode"
 msgstr "Modalità barra delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:35
+#: src/prefs/panelModeGroup.js:40
 msgid "Show applications in the taskbar"
 msgstr "Mostra le applicazioni nella barra delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:43
+#: src/prefs/panelModeGroup.js:44
+msgid "Taskbar Mode Overview Behavior"
+msgstr "Comportamento della Panoramica in modalità barra delle applicazioni"
+
+#: src/prefs/panelModeGroup.js:58
 msgid "Alternative Modes"
 msgstr "Modalità alternative"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:59
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "Scegli il pannello GNOME originale o il tema Windows XP"
 
-#: src/prefs/panelModeGroup.js:54
+#: src/prefs/panelModeGroup.js:69
 msgid "Default GNOME Panel"
 msgstr "Pannello GNOME predefinito"
 
-#: src/prefs/panelModeGroup.js:55
+#: src/prefs/panelModeGroup.js:70
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Nasconde le applicazioni della barra delle applicazioni e usa la Dash "
 "originale nella Panoramica"
 
-#: src/prefs/panelModeGroup.js:61
+#: src/prefs/panelModeGroup.js:74
+msgid "Default GNOME Panel Overview Behavior"
+msgstr "Comportamento della Panoramica del pannello GNOME predefinito"
+
+#: src/prefs/panelModeGroup.js:86
 msgid "Dock Mode"
 msgstr "Modalità Dock"
 
-#: src/prefs/panelModeGroup.js:62
+#: src/prefs/panelModeGroup.js:87
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr ""
 "Mostra le applicazioni in un Dock separato invece che nella barra delle "
 "applicazioni"
 
-#: src/prefs/panelModeGroup.js:108
+#: src/prefs/panelModeGroup.js:91
+msgid "Dock Mode Overview Behavior"
+msgstr "Comportamento della Panoramica in modalità Dock"
+
+#: src/prefs/panelModeGroup.js:144
 msgid "Dock Position"
 msgstr "Posizione del Dock"
 
-#: src/prefs/panelModeGroup.js:109
+#: src/prefs/panelModeGroup.js:145
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr ""
 "Posiziona il Dock su un bordo dello schermo diverso da quello della barra "
 "delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:120
+#: src/prefs/panelModeGroup.js:156
 msgid "Maximum Dock Length"
 msgstr "Lunghezza massima del Dock"
 
-#: src/prefs/panelModeGroup.js:121
+#: src/prefs/panelModeGroup.js:157
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Limita il Dock a questa percentuale della lunghezza del monitor"
 
-#: src/prefs/panelModeGroup.js:128
+#: src/prefs/panelModeGroup.js:164
 msgid "Full-width Dock"
 msgstr "Dock a larghezza completa"
 
-#: src/prefs/panelModeGroup.js:129
+#: src/prefs/panelModeGroup.js:165
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "Estendi il Dock fino al bordo del monitor"
 
-#: src/prefs/panelModeGroup.js:150
+#: src/prefs/panelModeGroup.js:186
 msgid "Windows XP Theme"
 msgstr "Tema Windows XP"
 
-#: src/prefs/panelModeGroup.js:151
+#: src/prefs/panelModeGroup.js:187
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Applica uno stile della barra delle applicazioni ispirato a Windows XP"
 
-#: src/prefs/panelModeGroup.js:206
+#: src/prefs/panelModeGroup.js:191
+msgid "Windows XP Theme Overview Behavior"
+msgstr "Comportamento della Panoramica del tema Windows XP"
+
+#: src/prefs/panelModeGroup.js:270
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Le icone delle applicazioni non sono disponibili in modalità Pannello GNOME "
 "predefinito."
 
-#: src/prefs/panelModeGroup.js:207
+#: src/prefs/panelModeGroup.js:271
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 "Cambia dimensione, spaziatura e posizione delle icone della barra delle "

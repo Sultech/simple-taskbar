@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-10 22:23+0100\n"
+"POT-Creation-Date: 2026-09-13 07:22+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -26,7 +26,7 @@ msgid "Application overflow"
 msgstr "Alkalmazások túlfolyása"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:70
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
 msgid "Left"
 msgstr "Bal"
 
@@ -35,7 +35,7 @@ msgid "Center"
 msgstr "Közép"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:71
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
 msgid "Right"
 msgstr "Jobb"
 
@@ -512,12 +512,12 @@ msgstr ""
 "A futásjelzők helyzetének, stílusának, méretének és színeinek beállítása"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
 msgid "Top"
 msgstr "Fent"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
 msgid "Bottom"
 msgstr "Lent"
 
@@ -1609,6 +1609,41 @@ msgstr "Tálca szövegszíne"
 msgid "Display a thin border along the taskbar’s workspace-facing edge"
 msgstr "Vékony szegély megjelenítése a munkaterület felőli tálcaszélen"
 
+#: src/prefs/overviewBehaviorDialog.js:42
+msgid "Overview Behavior"
+msgstr "Áttekintés viselkedése"
+
+#: src/prefs/overviewBehaviorDialog.js:53
+msgid "Overview"
+msgstr "Áttekintés"
+
+#: src/prefs/overviewBehaviorDialog.js:54
+msgid "These options apply to the mode that is currently active"
+msgstr "Ezek a beállítások a jelenleg aktív módra vonatkoznak"
+
+#: src/prefs/overviewBehaviorDialog.js:60
+msgid "Hide the Dash"
+msgstr "Dash elrejtése"
+
+#: src/prefs/overviewBehaviorDialog.js:61
+msgid ""
+"Hide the Overview Dash while applications are shown on the taskbar or Dock"
+msgstr ""
+"A Dash elrejtése az Áttekintésben, amíg az alkalmazások a tálcán vagy a "
+"Dockon láthatók"
+
+#: src/prefs/overviewBehaviorDialog.js:65
+msgid "Launch to Desktop"
+msgstr "Indítás az asztalra"
+
+#: src/prefs/overviewBehaviorDialog.js:66
+msgid ""
+"Start the session on the desktop instead of the Overview; applies at the "
+"next login"
+msgstr ""
+"A munkamenet az asztallal induljon az Áttekintés helyett; a következő "
+"bejelentkezéskor lép érvénybe"
+
 #: src/prefs/panelAxis.js:14
 msgid "Middle"
 msgstr "Közép"
@@ -1788,81 +1823,97 @@ msgstr "Eleven-stílusú vagy eredeti GNOME Start menü"
 msgid "Dock applications"
 msgstr "A Dock alkalmazásai"
 
-#: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:49
+#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
 msgid "General"
 msgstr "Általános"
 
-#: src/prefs/panelModeGroup.js:34
+#: src/prefs/panelModeGroup.js:39
 msgid "Taskbar Mode"
 msgstr "Tálcamód"
 
-#: src/prefs/panelModeGroup.js:35
+#: src/prefs/panelModeGroup.js:40
 msgid "Show applications in the taskbar"
 msgstr "Alkalmazások megjelenítése a tálcán"
 
-#: src/prefs/panelModeGroup.js:43
+#: src/prefs/panelModeGroup.js:44
+msgid "Taskbar Mode Overview Behavior"
+msgstr "Áttekintés viselkedése tálcamódban"
+
+#: src/prefs/panelModeGroup.js:58
 msgid "Alternative Modes"
 msgstr "Alternatív módok"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:59
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "Válassza ki az eredeti GNOME-panelt vagy a Windows XP-témát"
 
-#: src/prefs/panelModeGroup.js:54
+#: src/prefs/panelModeGroup.js:69
 msgid "Default GNOME Panel"
 msgstr "Alapértelmezett GNOME panel"
 
-#: src/prefs/panelModeGroup.js:55
+#: src/prefs/panelModeGroup.js:70
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Tálcaalkalmazások elrejtése és az eredeti Dash használata az Áttekintésben"
 
-#: src/prefs/panelModeGroup.js:61
+#: src/prefs/panelModeGroup.js:74
+msgid "Default GNOME Panel Overview Behavior"
+msgstr "Áttekintés viselkedése az alapértelmezett GNOME panelen"
+
+#: src/prefs/panelModeGroup.js:86
 msgid "Dock Mode"
 msgstr "Dock mód"
 
-#: src/prefs/panelModeGroup.js:62
+#: src/prefs/panelModeGroup.js:87
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr "Alkalmazások megjelenítése külön Dockban a tálca helyett"
 
-#: src/prefs/panelModeGroup.js:108
+#: src/prefs/panelModeGroup.js:91
+msgid "Dock Mode Overview Behavior"
+msgstr "Áttekintés viselkedése Dock módban"
+
+#: src/prefs/panelModeGroup.js:144
 msgid "Dock Position"
 msgstr "Dock pozíciója"
 
-#: src/prefs/panelModeGroup.js:109
+#: src/prefs/panelModeGroup.js:145
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr "A Dockot a tálcától eltérő képernyőszélen helyezze el"
 
-#: src/prefs/panelModeGroup.js:120
+#: src/prefs/panelModeGroup.js:156
 msgid "Maximum Dock Length"
 msgstr "Dock maximális hossza"
 
-#: src/prefs/panelModeGroup.js:121
+#: src/prefs/panelModeGroup.js:157
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "A Dock hosszának korlátozása a monitorhossz megadott százalékára"
 
-#: src/prefs/panelModeGroup.js:128
+#: src/prefs/panelModeGroup.js:164
 msgid "Full-width Dock"
 msgstr "Teljes szélességű Dock"
 
-#: src/prefs/panelModeGroup.js:129
+#: src/prefs/panelModeGroup.js:165
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "A Dock teljes kiterjesztése a monitor széléig"
 
-#: src/prefs/panelModeGroup.js:150
+#: src/prefs/panelModeGroup.js:186
 msgid "Windows XP Theme"
 msgstr "Windows XP téma"
 
-#: src/prefs/panelModeGroup.js:151
+#: src/prefs/panelModeGroup.js:187
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Windows XP által inspirált tálcastílus alkalmazása"
 
-#: src/prefs/panelModeGroup.js:206
+#: src/prefs/panelModeGroup.js:191
+msgid "Windows XP Theme Overview Behavior"
+msgstr "Áttekintés viselkedése a Windows XP témában"
+
+#: src/prefs/panelModeGroup.js:270
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Az alkalmazásikonok nem érhetők el az Alapértelmezett GNOME panel módban."
 
-#: src/prefs/panelModeGroup.js:207
+#: src/prefs/panelModeGroup.js:271
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "A tálcaikonok méretének, térközének és elhelyezkedésének módosítása."
 

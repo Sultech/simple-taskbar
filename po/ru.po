@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-10 22:23+0100\n"
+"POT-Creation-Date: 2026-09-13 07:22+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "Переполнение приложений"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:70
+#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:106
 msgid "Left"
 msgstr "Слева"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "По центру"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:71
+#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:107
 msgid "Right"
 msgstr "Справа"
 
@@ -509,12 +509,12 @@ msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "Настройте положение, стиль, размер и цвета индикаторов запуска"
 
 #: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:68
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:104
 msgid "Top"
 msgstr "Вверху"
 
 #: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:69
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:105
 msgid "Bottom"
 msgstr "Внизу"
 
@@ -1598,6 +1598,41 @@ msgstr ""
 "Показывать тонкую границу вдоль края панели задач, обращённого к рабочему "
 "пространству"
 
+#: src/prefs/overviewBehaviorDialog.js:42
+msgid "Overview Behavior"
+msgstr "Поведение обзора"
+
+#: src/prefs/overviewBehaviorDialog.js:53
+msgid "Overview"
+msgstr "Обзор"
+
+#: src/prefs/overviewBehaviorDialog.js:54
+msgid "These options apply to the mode that is currently active"
+msgstr "Эти параметры применяются к текущему активному режиму"
+
+#: src/prefs/overviewBehaviorDialog.js:60
+msgid "Hide the Dash"
+msgstr "Скрыть Dash"
+
+#: src/prefs/overviewBehaviorDialog.js:61
+msgid ""
+"Hide the Overview Dash while applications are shown on the taskbar or Dock"
+msgstr ""
+"Скрывать Dash в обзоре, когда приложения отображаются на панели задач или в "
+"Dock"
+
+#: src/prefs/overviewBehaviorDialog.js:65
+msgid "Launch to Desktop"
+msgstr "Запуск на рабочий стол"
+
+#: src/prefs/overviewBehaviorDialog.js:66
+msgid ""
+"Start the session on the desktop instead of the Overview; applies at the "
+"next login"
+msgstr ""
+"Начинать сеанс с рабочего стола вместо обзора; применяется при следующем "
+"входе"
+
 #: src/prefs/panelAxis.js:14
 msgid "Middle"
 msgstr "Центр"
@@ -1777,80 +1812,96 @@ msgstr "Меню «Пуск» в стиле Eleven или исходное ме�
 msgid "Dock applications"
 msgstr "Приложения Dock"
 
-#: src/prefs/panelModeGroup.js:29 src/prefs/panelModeGroup.js:49
+#: src/prefs/panelModeGroup.js:34 src/prefs/panelModeGroup.js:64
 msgid "General"
 msgstr "Общие"
 
-#: src/prefs/panelModeGroup.js:34
+#: src/prefs/panelModeGroup.js:39
 msgid "Taskbar Mode"
 msgstr "Режим панели задач"
 
-#: src/prefs/panelModeGroup.js:35
+#: src/prefs/panelModeGroup.js:40
 msgid "Show applications in the taskbar"
 msgstr "Показывать приложения на панели задач"
 
-#: src/prefs/panelModeGroup.js:43
+#: src/prefs/panelModeGroup.js:44
+msgid "Taskbar Mode Overview Behavior"
+msgstr "Поведение обзора в режиме панели задач"
+
+#: src/prefs/panelModeGroup.js:58
 msgid "Alternative Modes"
 msgstr "Альтернативные режимы"
 
-#: src/prefs/panelModeGroup.js:44
+#: src/prefs/panelModeGroup.js:59
 msgid "Choose the original GNOME panel or the Windows XP theme"
 msgstr "Выберите исходную панель GNOME или тему Windows XP"
 
-#: src/prefs/panelModeGroup.js:54
+#: src/prefs/panelModeGroup.js:69
 msgid "Default GNOME Panel"
 msgstr "Стандартная панель GNOME"
 
-#: src/prefs/panelModeGroup.js:55
+#: src/prefs/panelModeGroup.js:70
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Скрыть приложения панели задач и использовать оригинальный Dash в обзоре"
 
-#: src/prefs/panelModeGroup.js:61
+#: src/prefs/panelModeGroup.js:74
+msgid "Default GNOME Panel Overview Behavior"
+msgstr "Поведение обзора стандартной панели GNOME"
+
+#: src/prefs/panelModeGroup.js:86
 msgid "Dock Mode"
 msgstr "Режим Dock"
 
-#: src/prefs/panelModeGroup.js:62
+#: src/prefs/panelModeGroup.js:87
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr "Показывать приложения в отдельном Dock вместо панели задач"
 
-#: src/prefs/panelModeGroup.js:108
+#: src/prefs/panelModeGroup.js:91
+msgid "Dock Mode Overview Behavior"
+msgstr "Поведение обзора в режиме Dock"
+
+#: src/prefs/panelModeGroup.js:144
 msgid "Dock Position"
 msgstr "Расположение Dock"
 
-#: src/prefs/panelModeGroup.js:109
+#: src/prefs/panelModeGroup.js:145
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr "Разместить Dock у края экрана, отличного от края панели задач"
 
-#: src/prefs/panelModeGroup.js:120
+#: src/prefs/panelModeGroup.js:156
 msgid "Maximum Dock Length"
 msgstr "Максимальная длина Dock"
 
-#: src/prefs/panelModeGroup.js:121
+#: src/prefs/panelModeGroup.js:157
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Ограничить длину Dock этим процентом длины монитора"
 
-#: src/prefs/panelModeGroup.js:128
+#: src/prefs/panelModeGroup.js:164
 msgid "Full-width Dock"
 msgstr "Dock на всю ширину"
 
-#: src/prefs/panelModeGroup.js:129
+#: src/prefs/panelModeGroup.js:165
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "Растянуть Dock до края экрана"
 
-#: src/prefs/panelModeGroup.js:150
+#: src/prefs/panelModeGroup.js:186
 msgid "Windows XP Theme"
 msgstr "Тема Windows XP"
 
-#: src/prefs/panelModeGroup.js:151
+#: src/prefs/panelModeGroup.js:187
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Применить стиль панели задач в духе Windows XP"
 
-#: src/prefs/panelModeGroup.js:206
+#: src/prefs/panelModeGroup.js:191
+msgid "Windows XP Theme Overview Behavior"
+msgstr "Поведение обзора темы Windows XP"
+
+#: src/prefs/panelModeGroup.js:270
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr "Значки приложений недоступны в режиме стандартной панели GNOME."
 
-#: src/prefs/panelModeGroup.js:207
+#: src/prefs/panelModeGroup.js:271
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "Измените размер, расстояние и расположение значков панели задач."
 
