@@ -246,6 +246,7 @@ function activateRestoredPanelAxis(settings, mode) {
 }
 
 function applyDefaultPanelSettings(settings) {
+    settings.set_boolean('panel-height-follow-icon-size', false);
     settings.set_int('panel-height', 32);
     settings.set_int('panel-button-padding', 12);
     settings.set_string('panel-position', 'top');
