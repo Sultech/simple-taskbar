@@ -80,6 +80,9 @@ const BADGE_MAXIMUM_PADDING = 4;
 const BADGE_SINGLE_DIGIT_MARGIN = 2;
 const BADGE_MAXIMUM_OUTWARD_OFFSET = 4;
 const BADGE_OUTWARD_OFFSET_DIVISOR = 4;
+const BADGE_INWARD_OFFSET_ICON_SIZE = 63;
+const BADGE_INWARD_OFFSET_DIVISOR = 8;
+const BADGE_MAXIMUM_INWARD_OFFSET = 8;
 const PROGRESS_BAR_FILL_HEIGHT_RATIO = 0.05;
 const PROGRESS_BAR_MINIMUM_FILL_HEIGHT = 2;
 const PROGRESS_BAR_MAXIMUM_FILL_HEIGHT = 3;
@@ -2127,16 +2130,24 @@ export class TaskbarController {
             BADGE_MAXIMUM_OUTWARD_OFFSET,
             badgeTextLength + 1
         );
-        const outwardOffset = Math.max(
-            0,
-            Math.min(
+        const cornerOffset = this._iconSize < BADGE_REFERENCE_ICON_SIZE
+            ? Math.min(
                 maximumOutwardOffset,
                 Math.round(
                     (BADGE_REFERENCE_ICON_SIZE - this._iconSize) /
                     BADGE_OUTWARD_OFFSET_DIVISOR
                 )
             )
-        );
+            : -Math.max(
+                0,
+                Math.min(
+                    BADGE_MAXIMUM_INWARD_OFFSET,
+                    Math.round(
+                        (this._iconSize - BADGE_INWARD_OFFSET_ICON_SIZE) /
+                        BADGE_INWARD_OFFSET_DIVISOR
+                    )
+                )
+            );
         item._taskbarIconContainer.set_size(
             this._iconSize,
             this._iconSize
@@ -2147,9 +2158,9 @@ export class TaskbarController {
             `min-height: ${singleDigit ? singleDigitSize : 0}px;` +
             `padding: 0 ${singleDigit ? 0 : horizontalPadding}px;`
         );
-        item._taskbarNotificationBadgeBin.translation_x = outwardOffset +
+        item._taskbarNotificationBadgeBin.translation_x = cornerOffset +
             this._appearanceController.launcherIconOffset(item);
-        item._taskbarNotificationBadgeBin.translation_y = -outwardOffset;
+        item._taskbarNotificationBadgeBin.translation_y = -cornerOffset;
     }
 
     _buttonWidth(
