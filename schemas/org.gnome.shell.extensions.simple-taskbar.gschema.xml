@@ -164,7 +164,7 @@
       <description>Show unread notification counts on application icons</description>
     </key>
     <key name="show-progress-bars" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show progress bars</summary>
       <description>Show operation progress on application icons for applications that report it</description>
     </key>
