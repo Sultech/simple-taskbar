@@ -38,11 +38,25 @@ export function taskbarVerticalItemExtent(iconSize) {
     return iconSize + GLASS_VERTICAL_INSET * 2 + RUNNING_INDICATOR_RESERVE;
 }
 
-export function fitIconSizeToPanelHeight(settings) {
-    let panelHeight = settings.get_int('panel-height');
+export function panelHeightForIconSize(iconSize) {
+    return iconSize + ICON_VERTICAL_RESERVE;
+}
+
+function clampIconSizeToMaximumPanelHeight(settings) {
+    const iconSize = settings.get_int('icon-size');
+    const maximumIconSize = MAX_PANEL_HEIGHT - ICON_VERTICAL_RESERVE;
+    if (iconSize <= maximumIconSize)
+        return iconSize;
+
+    setInteger(settings, 'icon-size', maximumIconSize);
+    return maximumIconSize;
+}
+
+export function fitIconSizeToPanelHeight(settings, heightKey = 'panel-height') {
+    let panelHeight = settings.get_int(heightKey);
     if (panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
         panelHeight = STANDARD_MIN_PANEL_HEIGHT;
-        setInteger(settings, 'panel-height', panelHeight);
+        setInteger(settings, heightKey, panelHeight);
         return;
     }
 
@@ -51,15 +65,18 @@ export function fitIconSizeToPanelHeight(settings) {
         setInteger(settings, 'icon-size', maximumIconSize);
 }
 
-export function fitPanelHeightToIconSize(settings) {
-    let iconSize = settings.get_int('icon-size');
-    const maximumIconSize = MAX_PANEL_HEIGHT - ICON_VERTICAL_RESERVE;
-    if (iconSize > maximumIconSize) {
-        iconSize = maximumIconSize;
-        setInteger(settings, 'icon-size', iconSize);
-    }
+export function fitPanelHeightToIconSize(settings, heightKey = 'panel-height') {
+    const minimumPanelHeight = panelHeightForIconSize(
+        clampIconSizeToMaximumPanelHeight(settings)
+    );
+    if (settings.get_int(heightKey) < minimumPanelHeight)
+        setInteger(settings, heightKey, minimumPanelHeight);
+}
 
-    const minimumPanelHeight = iconSize + ICON_VERTICAL_RESERVE;
-    if (settings.get_int('panel-height') < minimumPanelHeight)
-        setInteger(settings, 'panel-height', minimumPanelHeight);
+export function derivePanelHeightFromIconSize(settings, heightKey = 'panel-height') {
+    setInteger(
+        settings,
+        heightKey,
+        panelHeightForIconSize(clampIconSizeToMaximumPanelHeight(settings))
+    );
 }

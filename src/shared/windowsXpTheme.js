@@ -40,6 +40,7 @@ export function applyWindowsXpThemeBehaviorDefaults(settings) {
 }
 
 export function applyWindowsXpThemeSettings(settings) {
+    setBoolean(settings, 'panel-height-follow-icon-size', false);
     setInteger(settings, 'panel-height', WINDOWS_XP_PANEL_HEIGHT);
     setInteger(settings, 'panel-button-padding', 0);
     setInteger(settings, 'icon-size', WINDOWS_XP_ICON_SIZE);

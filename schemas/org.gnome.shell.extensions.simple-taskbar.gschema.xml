@@ -7,6 +7,10 @@
       <default>51</default>
       <summary>Taskbar height</summary>
     </key>
+    <key name="panel-height-follow-icon-size" type="b">
+      <default>false</default>
+      <summary>Derive the taskbar thickness from the application icon size</summary>
+    </key>
     <key name="panel-position" type="s">
       <choices>
         <choice value="top"/>
@@ -551,6 +555,15 @@
     <key name="dock-panel-mode" type="b">
       <default>false</default>
       <summary>Extend the Dock to the full monitor edge</summary>
+    </key>
+    <key name="dock-panel-height" type="i">
+      <range min="32" max="80"/>
+      <default>67</default>
+      <summary>Full-width Dock thickness</summary>
+    </key>
+    <key name="dock-panel-height-follow-icon-size" type="b">
+      <default>false</default>
+      <summary>Derive the full-width Dock thickness from the application icon size</summary>
     </key>
     <key name="dock-corner-radius" type="i">
       <range min="0" max="64"/>

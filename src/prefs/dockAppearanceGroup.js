@@ -16,6 +16,14 @@ import {
 import {
     createDynamicTransparencyOptionsButton,
 } from './dynamicTransparencyDialog.js';
+import {
+    MAX_PANEL_HEIGHT,
+    STANDARD_MIN_PANEL_HEIGHT,
+} from '../shared/panelSizing.js';
+import {createPanelThicknessSizing} from './panelThicknessSizing.js';
+
+const DOCK_PANEL_HEIGHT_KEY = 'dock-panel-height';
+const DOCK_PANEL_HEIGHT_FOLLOW_KEY = 'dock-panel-height-follow-icon-size';
 
 export function addDockAppearanceGroup({
     page,
@@ -33,11 +41,39 @@ export function addDockAppearanceGroup({
     page.add(group);
     dockModeGroup.remove(dockMaxLengthRow);
     dockModeGroup.remove(dockPositionRow);
-    group.add(dockMaxLengthRow);
-    group.add(dockPositionRow);
 
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
         !settings.get_boolean('windows-xp-theme-enabled');
+
+    const {
+        followSwitch: dockPanelHeightFollowSwitch,
+        followsIcons: dockPanelHeightFollowsIcons,
+    } = createPanelThicknessSizing(settings, connectSettings, {
+        heightKey: DOCK_PANEL_HEIGHT_KEY,
+        followKey: DOCK_PANEL_HEIGHT_FOLLOW_KEY,
+        followSubtitle: _(
+            'Keep the full-width Dock only as thick as its icons need'
+        ),
+        isActive: () => settings.get_boolean('dock-mode'),
+    });
+    group.add(dockPanelHeightFollowSwitch);
+
+    const dockPanelHeightRow = addSpinRow(
+        group,
+        settings,
+        {
+            key: DOCK_PANEL_HEIGHT_KEY,
+            title: _('Dock Thickness'),
+            subtitle: _(
+                'Oversized icons shrink automatically when the full-width Dock is reduced'
+            ),
+            lower: STANDARD_MIN_PANEL_HEIGHT,
+            upper: MAX_PANEL_HEIGHT,
+        },
+        connectSettings
+    );
+    group.add(dockMaxLengthRow);
+    group.add(dockPositionRow);
 
     const themeExpander = new Adw.ExpanderRow({
         title: _('Theme and Styling'),
@@ -347,6 +383,10 @@ export function addDockAppearanceGroup({
     const syncAvailability = () => {
         const available = dockAvailable();
         group.sensitive = available;
+        const fullWidthDock = settings.get_boolean('dock-panel-mode');
+        dockPanelHeightFollowSwitch.sensitive = fullWidthDock;
+        dockPanelHeightRow.sensitive = fullWidthDock &&
+            !dockPanelHeightFollowsIcons();
         syncThemeControls();
         syncTransparencyControls();
         syncCustomColorControls();
@@ -381,6 +421,8 @@ export function addDockAppearanceGroup({
 
     for (const key of [
         'dock-mode',
+        'dock-panel-mode',
+        DOCK_PANEL_HEIGHT_FOLLOW_KEY,
         'windows-xp-theme-enabled',
     ]) {
         connectSettings(settings, `changed::${key}`, syncAvailability);

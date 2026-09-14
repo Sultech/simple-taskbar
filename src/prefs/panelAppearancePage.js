@@ -7,8 +7,6 @@ import Gio from 'gi://Gio';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
-    fitIconSizeToPanelHeight,
-    fitPanelHeightToIconSize,
     MAX_PANEL_HEIGHT,
     MIN_PANEL_HEIGHT,
     STANDARD_MIN_PANEL_HEIGHT,
@@ -32,6 +30,9 @@ import {
 import {
     createDynamicTransparencyOptionsButton,
 } from './dynamicTransparencyDialog.js';
+import {createPanelThicknessSizing} from './panelThicknessSizing.js';
+
+const PANEL_HEIGHT_FOLLOW_KEY = 'panel-height-follow-icon-size';
 
 export function addPanelAppearancePage({
     page,
@@ -57,6 +58,18 @@ export function addPanelAppearancePage({
         description: _('Change the taskbar height, colour scheme, and transparency.'),
     });
     page.add(panelAppearanceGroup);
+
+    const {
+        followSwitch: panelHeightFollowSwitch,
+        followsIcons: panelHeightFollowsIcons,
+    } = createPanelThicknessSizing(settings, connectSettings, {
+        heightKey: 'panel-height',
+        followKey: PANEL_HEIGHT_FOLLOW_KEY,
+        followSubtitle: _('Keep the taskbar only as thick as its icons need'),
+        isActive: () => !settings.get_boolean('default-gnome-panel') &&
+            !settings.get_boolean('windows-xp-theme-enabled'),
+    });
+    panelAppearanceGroup.add(panelHeightFollowSwitch);
 
     const panelHeightRow = addSpinRow(
         panelAppearanceGroup,
@@ -97,25 +110,6 @@ export function addPanelAppearancePage({
         connectSettings
     );
 
-    const fitPanelToIcons = () => {
-        if (settings.get_boolean('default-gnome-panel') ||
-            settings.get_boolean('windows-xp-theme-enabled')) {
-            return;
-        }
-
-        fitPanelHeightToIconSize(settings);
-    };
-    const fitIconsToPanel = () => {
-        if (settings.get_boolean('default-gnome-panel') ||
-            settings.get_boolean('windows-xp-theme-enabled')) {
-            return;
-        }
-
-        fitIconSizeToPanelHeight(settings);
-    };
-    connectSettings(settings, 'changed::icon-size', fitPanelToIcons);
-    connectSettings(settings, 'changed::panel-height', fitIconsToPanel);
-
     let syncingWindowsXpTheme = false;
     const syncWindowsXpTheme = () => {
         const enabled = settings.get_boolean(
@@ -143,7 +137,9 @@ export function addPanelAppearancePage({
             iconSpacingRow.set_value(iconSpacing);
         iconSizeRow.sensitive = !enabled;
         iconSpacingRow.sensitive = !enabled;
-        panelHeightRow.sensitive = !enabled;
+        panelHeightFollowSwitch.sensitive = !enabled &&
+            !settings.get_boolean('default-gnome-panel');
+        panelHeightRow.sensitive = !enabled && !panelHeightFollowsIcons();
         panelPositionRow.sensitive = !enabled;
         taskbarModeRow.sensitive = true;
         defaultGnomePanelRow.sensitive =
@@ -193,12 +189,22 @@ export function addPanelAppearancePage({
     connectSettings(settings, 'changed::dock-mode', syncWindowsXpTheme);
     connectSettings(
         settings,
+        'changed::default-gnome-panel',
+        syncWindowsXpTheme
+    );
+    connectSettings(
+        settings,
         'changed::dock-panel-mode',
         syncWindowsXpTheme
     );
     connectSettings(settings, 'changed::icon-size', syncWindowsXpTheme);
     connectSettings(settings, 'changed::icon-spacing', syncWindowsXpTheme);
     connectSettings(settings, 'changed::panel-height', syncWindowsXpTheme);
+    connectSettings(
+        settings,
+        `changed::${PANEL_HEIGHT_FOLLOW_KEY}`,
+        syncWindowsXpTheme
+    );
     connectSettings(settings, 'changed::panel-position', syncWindowsXpTheme);
     connectSettings(
         settings,

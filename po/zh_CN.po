@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 00:53+0100\n"
+"POT-Creation-Date: 2026-09-14 06:00+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -27,7 +27,7 @@ msgid "Application overflow"
 msgstr "应用溢出"
 
 #: prefs.js:46 src/prefs/applicationIconsGroup.js:322
-#: src/prefs/panelAppearancePage.js:87 src/prefs/panelModeGroup.js:116
+#: src/prefs/panelAppearancePage.js:100 src/prefs/panelModeGroup.js:116
 msgid "Left"
 msgstr "左侧"
 
@@ -36,7 +36,7 @@ msgid "Center"
 msgstr "居中"
 
 #: prefs.js:48 src/prefs/applicationIconsGroup.js:323
-#: src/prefs/panelAppearancePage.js:88 src/prefs/panelModeGroup.js:117
+#: src/prefs/panelAppearancePage.js:101 src/prefs/panelModeGroup.js:117
 msgid "Right"
 msgstr "右侧"
 
@@ -504,12 +504,12 @@ msgstr "运行指示器"
 msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "配置运行指示器的位置、样式、大小和颜色"
 
-#: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:85
+#: src/prefs/applicationIconsGroup.js:320 src/prefs/panelAppearancePage.js:98
 #: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:114
 msgid "Top"
 msgstr "顶部"
 
-#: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:86
+#: src/prefs/applicationIconsGroup.js:321 src/prefs/panelAppearancePage.js:99
 #: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:115
 msgid "Bottom"
 msgstr "底部"
@@ -1026,187 +1026,200 @@ msgstr "Super+数字快捷键"
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "使用 Super+1 到 Super+9 打开已固定的应用"
 
-#: src/prefs/dockAppearanceGroup.js:30
+#: src/prefs/dockAppearanceGroup.js:38
 msgid "Dock Appearance"
 msgstr "Dock 外观"
 
-#: src/prefs/dockAppearanceGroup.js:31
+#: src/prefs/dockAppearanceGroup.js:39
 msgid "Configure the Dock independently of the taskbar."
 msgstr "独立于任务栏配置 Dock。"
 
-#: src/prefs/dockAppearanceGroup.js:43 src/prefs/panelAppearancePage.js:248
+#: src/prefs/dockAppearanceGroup.js:55
+msgid "Keep the full-width Dock only as thick as its icons need"
+msgstr "让全宽 Dock 的厚度仅够容纳其图标"
+
+#: src/prefs/dockAppearanceGroup.js:66
+msgid "Dock Thickness"
+msgstr "Dock 厚度"
+
+#: src/prefs/dockAppearanceGroup.js:68
+msgid ""
+"Oversized icons shrink automatically when the full-width Dock is reduced"
+msgstr "全宽 Dock 缩小时，过大的图标会自动缩小"
+
+#: src/prefs/dockAppearanceGroup.js:79 src/prefs/panelAppearancePage.js:248
 msgid "Theme and Styling"
 msgstr "主题和样式"
 
-#: src/prefs/dockAppearanceGroup.js:45
+#: src/prefs/dockAppearanceGroup.js:81
 msgid ""
 "Choose the Dock theme, colours, gradient, corner radius, and text appearance"
 msgstr "选择 Dock 主题、颜色、渐变、圆角半径和文本外观"
 
-#: src/prefs/dockAppearanceGroup.js:51 src/prefs/panelAppearancePage.js:256
+#: src/prefs/dockAppearanceGroup.js:87 src/prefs/panelAppearancePage.js:256
 msgid "Follow System Theme"
 msgstr "跟随系统主题"
 
-#: src/prefs/dockAppearanceGroup.js:52
+#: src/prefs/dockAppearanceGroup.js:88
 msgid "Match the active GNOME Shell theme"
 msgstr "匹配当前 GNOME Shell 主题"
 
-#: src/prefs/dockAppearanceGroup.js:68
+#: src/prefs/dockAppearanceGroup.js:104
 msgid "Dock Theme"
 msgstr "Dock 主题"
 
-#: src/prefs/dockAppearanceGroup.js:69 src/prefs/panelAppearancePage.js:274
+#: src/prefs/dockAppearanceGroup.js:105 src/prefs/panelAppearancePage.js:274
 msgid "Choose the colour scheme when system matching is off"
 msgstr "当系统捕获关闭时选择配色方案"
 
-#: src/prefs/dockAppearanceGroup.js:71 src/prefs/panelAppearancePage.js:276
+#: src/prefs/dockAppearanceGroup.js:107 src/prefs/panelAppearancePage.js:276
 #: src/prefs/startMenuPage.js:755
 msgid "Light"
 msgstr "浅色"
 
-#: src/prefs/dockAppearanceGroup.js:72 src/prefs/panelAppearancePage.js:277
+#: src/prefs/dockAppearanceGroup.js:108 src/prefs/panelAppearancePage.js:277
 #: src/prefs/startMenuPage.js:754
 msgid "Dark"
 msgstr "深色"
 
-#: src/prefs/dockAppearanceGroup.js:84
+#: src/prefs/dockAppearanceGroup.js:120
 msgid "Dock Corner Radius"
 msgstr "Dock 圆角半径"
 
-#: src/prefs/dockAppearanceGroup.js:86
+#: src/prefs/dockAppearanceGroup.js:122
 msgid ""
 "Applies to the floating Dock without blur and with Dynamic Blur; Static Blur "
 "is not supported"
 msgstr "适用于无模糊和使用动态模糊的浮动 Dock；不支持静态模糊"
 
-#: src/prefs/dockAppearanceGroup.js:96
+#: src/prefs/dockAppearanceGroup.js:132
 msgid "Make the Dock background transparent"
 msgstr "使 Dock 背景透明"
 
-#: src/prefs/dockAppearanceGroup.js:99 src/prefs/panelAppearancePage.js:296
+#: src/prefs/dockAppearanceGroup.js:135 src/prefs/panelAppearancePage.js:296
 msgid "Adjust transparency according to the selected window state"
 msgstr "根据所选窗口状态调整透明度"
 
-#: src/prefs/dockAppearanceGroup.js:102 src/prefs/panelAppearancePage.js:299
+#: src/prefs/dockAppearanceGroup.js:138 src/prefs/panelAppearancePage.js:299
 #: src/prefs/startMenuPage.js:781
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的面板模糊"
 
-#: src/prefs/dockAppearanceGroup.js:105
+#: src/prefs/dockAppearanceGroup.js:141
 msgid "Transparency and Blur"
 msgstr "透明度和模糊"
 
-#: src/prefs/dockAppearanceGroup.js:106
+#: src/prefs/dockAppearanceGroup.js:142
 msgid "Configure Dock transparency and Blur My Shell integration"
 msgstr "配置 Dock 透明度和 Blur My Shell 集成"
 
-#: src/prefs/dockAppearanceGroup.js:111 src/prefs/panelAppearancePage.js:308
+#: src/prefs/dockAppearanceGroup.js:147 src/prefs/panelAppearancePage.js:308
 msgid "Enable Transparency"
 msgstr "启用透明度"
 
-#: src/prefs/dockAppearanceGroup.js:124
+#: src/prefs/dockAppearanceGroup.js:160
 msgid "Blur Dock with Blur My Shell"
 msgstr "使用 Blur My Shell 模糊 Dock"
 
-#: src/prefs/dockAppearanceGroup.js:125
+#: src/prefs/dockAppearanceGroup.js:161
 msgid "Apply Blur My Shell panel blur to the Dock"
 msgstr "将 Blur My Shell 的面板模糊应用到 Dock"
 
-#: src/prefs/dockAppearanceGroup.js:130
+#: src/prefs/dockAppearanceGroup.js:166
 #: src/prefs/dynamicTransparencyDialog.js:99
 #: src/prefs/panelAppearancePage.js:321
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0% 为不透明，100% 为完全透明"
 
-#: src/prefs/dockAppearanceGroup.js:137 src/prefs/panelAppearancePage.js:302
+#: src/prefs/dockAppearanceGroup.js:173 src/prefs/panelAppearancePage.js:302
 #: src/prefs/panelAppearancePage.js:328
 msgid "Transparency"
 msgstr "透明度"
 
-#: src/prefs/dockAppearanceGroup.js:147
+#: src/prefs/dockAppearanceGroup.js:183
 msgid "Dock Dynamic Transparency Options"
 msgstr "Dock 动态透明度选项"
 
-#: src/prefs/dockAppearanceGroup.js:158
+#: src/prefs/dockAppearanceGroup.js:194
 #: src/prefs/dynamicTransparencyDialog.js:58
 #: src/prefs/panelAppearancePage.js:349
 msgid "Dynamic Transparency"
 msgstr "动态透明度"
 
-#: src/prefs/dockAppearanceGroup.js:165 src/prefs/panelAppearancePage.js:394
+#: src/prefs/dockAppearanceGroup.js:201 src/prefs/panelAppearancePage.js:394
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr "使用选定的颜色，而不是浅色或深色的主题颜色"
 
-#: src/prefs/dockAppearanceGroup.js:168
+#: src/prefs/dockAppearanceGroup.js:204
 msgid "Custom Dock Color"
 msgstr "自定义 Dock 颜色"
 
-#: src/prefs/dockAppearanceGroup.js:185
+#: src/prefs/dockAppearanceGroup.js:221
 msgid "Dock Color"
 msgstr "Dock 颜色"
 
-#: src/prefs/dockAppearanceGroup.js:191
+#: src/prefs/dockAppearanceGroup.js:227
 msgid "Use Dock Gradient"
 msgstr "使用 Dock 渐变"
 
-#: src/prefs/dockAppearanceGroup.js:192
+#: src/prefs/dockAppearanceGroup.js:228
 msgid "Blend the Dock color with a second color"
 msgstr "将 Dock 颜色与第二种颜色混合"
 
-#: src/prefs/dockAppearanceGroup.js:209
+#: src/prefs/dockAppearanceGroup.js:245
 msgid "Dock Gradient Color"
 msgstr "Dock 渐变颜色"
 
-#: src/prefs/dockAppearanceGroup.js:219
+#: src/prefs/dockAppearanceGroup.js:255
 msgid "Dock Gradient Direction"
 msgstr "Dock 渐变方向"
 
-#: src/prefs/dockAppearanceGroup.js:220 src/prefs/panelAppearancePage.js:448
+#: src/prefs/dockAppearanceGroup.js:256 src/prefs/panelAppearancePage.js:448
 msgid "Choose how the gradient flows"
 msgstr "选择渐变方向"
 
-#: src/prefs/dockAppearanceGroup.js:222 src/prefs/panelAppearancePage.js:450
+#: src/prefs/dockAppearanceGroup.js:258 src/prefs/panelAppearancePage.js:450
 msgid "Vertical"
 msgstr "垂直"
 
-#: src/prefs/dockAppearanceGroup.js:223 src/prefs/panelAppearancePage.js:451
+#: src/prefs/dockAppearanceGroup.js:259 src/prefs/panelAppearancePage.js:451
 msgid "Horizontal"
 msgstr "水平"
 
-#: src/prefs/dockAppearanceGroup.js:230
+#: src/prefs/dockAppearanceGroup.js:266
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr "白色文字使用深色 Dock 主题；黑色文字使用浅色 Dock 主题"
 
-#: src/prefs/dockAppearanceGroup.js:237
+#: src/prefs/dockAppearanceGroup.js:273
 msgid "Dock Text Color"
 msgstr "Dock 文本颜色"
 
-#: src/prefs/dockAppearanceGroup.js:240 src/prefs/panelAppearancePage.js:468
+#: src/prefs/dockAppearanceGroup.js:276 src/prefs/panelAppearancePage.js:468
 msgid "White"
 msgstr "白色"
 
-#: src/prefs/dockAppearanceGroup.js:241 src/prefs/panelAppearancePage.js:469
+#: src/prefs/dockAppearanceGroup.js:277 src/prefs/panelAppearancePage.js:469
 msgid "Black"
 msgstr "黑色"
 
-#: src/prefs/dockAppearanceGroup.js:249 src/prefs/panelAppearancePage.js:570
+#: src/prefs/dockAppearanceGroup.js:285 src/prefs/panelAppearancePage.js:570
 msgid "Borders"
 msgstr "边框"
 
-#: src/prefs/dockAppearanceGroup.js:250 src/prefs/panelAppearancePage.js:571
+#: src/prefs/dockAppearanceGroup.js:286 src/prefs/panelAppearancePage.js:571
 msgid "Choose whether to show a border in light and dark themes"
 msgstr "选择是否在浅色和深色主题中显示边框"
 
-#: src/prefs/dockAppearanceGroup.js:255 src/prefs/panelAppearancePage.js:576
+#: src/prefs/dockAppearanceGroup.js:291 src/prefs/panelAppearancePage.js:576
 msgid "Show Border in Dark Mode"
 msgstr "在深色模式下展示边框"
 
-#: src/prefs/dockAppearanceGroup.js:256 src/prefs/dockAppearanceGroup.js:269
+#: src/prefs/dockAppearanceGroup.js:292 src/prefs/dockAppearanceGroup.js:305
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr "在 Dock 朝向工作区的一侧显示细边框"
 
-#: src/prefs/dockAppearanceGroup.js:268 src/prefs/panelAppearancePage.js:589
+#: src/prefs/dockAppearanceGroup.js:304 src/prefs/panelAppearancePage.js:589
 msgid "Show Border in Light Mode"
 msgstr "在浅色模式下展示边框"
 
@@ -1490,27 +1503,31 @@ msgstr "Nautilus（文件管理器）文件夹快捷方式"
 msgid "Show common folders in the Files taskbar menu"
 msgstr "在“文件”任务栏菜单中展示常用文件夹"
 
-#: src/prefs/panelAppearancePage.js:56
+#: src/prefs/panelAppearancePage.js:57
 msgid "Taskbar Appearance"
 msgstr "任务栏外观"
 
-#: src/prefs/panelAppearancePage.js:57
+#: src/prefs/panelAppearancePage.js:58
 msgid "Change the taskbar height, colour scheme, and transparency."
 msgstr "更改任务栏高度、配色方案与透明度。"
 
-#: src/prefs/panelAppearancePage.js:66
+#: src/prefs/panelAppearancePage.js:68
+msgid "Keep the taskbar only as thick as its icons need"
+msgstr "让任务栏的厚度仅够容纳其图标"
+
+#: src/prefs/panelAppearancePage.js:79
 msgid "Taskbar Thickness"
 msgstr "任务栏厚度"
 
-#: src/prefs/panelAppearancePage.js:68
+#: src/prefs/panelAppearancePage.js:81
 msgid "Oversized icons shrink automatically when the taskbar is reduced"
 msgstr "任务栏缩小时，过大的图标会自动缩小"
 
-#: src/prefs/panelAppearancePage.js:80
+#: src/prefs/panelAppearancePage.js:93
 msgid "Taskbar Position"
 msgstr "任务栏位置"
 
-#: src/prefs/panelAppearancePage.js:82
+#: src/prefs/panelAppearancePage.js:95
 msgid "Place the taskbar at a screen edge"
 msgstr "将任务栏放置在屏幕边缘"
 
@@ -1886,6 +1903,10 @@ msgstr "在默认 GNOME 面板模式下，应用程序图标不可用。"
 #: src/prefs/panelModeGroup.js:274
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr "更改任务栏图标的尺寸、间距与位置。"
+
+#: src/prefs/panelThicknessSizing.js:40
+msgid "Match Thickness to Icon Size"
+msgstr "厚度匹配图标尺寸"
 
 #: src/prefs/preferencesDialogs.js:15
 msgid "Reset all settings?"

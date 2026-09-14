@@ -24,6 +24,7 @@ export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
 export const DEFAULT_TASKBAR_COMBINE_MODE = 'always';
 
 export function applyDefaultTaskbarSettings(settings) {
+    setBoolean(settings, 'panel-height-follow-icon-size', false);
     setInteger(settings, 'panel-height', DEFAULT_TASKBAR_PANEL_HEIGHT);
     setInteger(settings, 'panel-button-padding', -1);
     setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);

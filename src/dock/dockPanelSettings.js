@@ -3,11 +3,16 @@
 
 import {
     DOCK_FLOATING_PANEL_RESERVE,
-    ICON_VERTICAL_RESERVE,
+    panelHeightForIconSize,
 } from '../shared/panelSizing.js';
 
 const DOCK_SETTING_KEYS = new Map([
     ['panel-position', 'dock-position'],
+    ['panel-height', 'dock-panel-height'],
+    [
+        'panel-height-follow-icon-size',
+        'dock-panel-height-follow-icon-size',
+    ],
     ['transparency-enabled', 'dock-transparency-enabled'],
     ['transparency-level', 'dock-transparency-level'],
     [
@@ -62,6 +67,13 @@ const DOCK_SETTING_KEYS = new Map([
     ],
 ]);
 
+const DOCK_COMPUTED_SETTING_KEYS = new Map([
+    [
+        'panel-height',
+        ['dock-panel-height', 'dock-panel-height-follow-icon-size'],
+    ],
+]);
+
 function dockSettingKey(key) {
     return DOCK_SETTING_KEYS.get(key) ?? key;
 }
@@ -74,10 +86,33 @@ function remapSettingSignal(signal) {
     return `changed::${dockSettingKey(key)}`;
 }
 
+function remapSettingSignals(signal) {
+    if (!signal.startsWith('changed::'))
+        return [signal];
+
+    const sourceKeys = DOCK_COMPUTED_SETTING_KEYS.get(
+        signal.slice('changed::'.length)
+    );
+    if (!sourceKeys)
+        return [remapSettingSignal(signal)];
+
+    return sourceKeys.map(sourceKey => `changed::${sourceKey}`);
+}
+
 function remapSettingArguments(args) {
-    return args.map(arg => typeof arg === 'string'
-        ? remapSettingSignal(arg)
-        : arg);
+    const remapped = [];
+    for (let index = 0; index < args.length; index++) {
+        const arg = args[index];
+        if (typeof arg !== 'string') {
+            remapped.push(arg);
+            continue;
+        }
+
+        const handler = args[++index];
+        for (const signal of remapSettingSignals(arg))
+            remapped.push(signal, handler);
+    }
+    return remapped;
 }
 
 export class DockPanelSettings {
@@ -120,11 +155,21 @@ export class DockPanelSettings {
             return this._runtimeIconSize;
 
         if (args[0] === 'panel-height') {
-            const reserve = this._settings.get_boolean('dock-panel-mode')
-                ? ICON_VERTICAL_RESERVE
-                : DOCK_FLOATING_PANEL_RESERVE;
-            return this.get_int('icon-size') +
-                reserve;
+            const iconSize = this.get_int('icon-size');
+            if (!this._settings.get_boolean('dock-panel-mode'))
+                return iconSize + DOCK_FLOATING_PANEL_RESERVE;
+
+            const derivedHeight = panelHeightForIconSize(iconSize);
+            if (this._settings.get_boolean(
+                'dock-panel-height-follow-icon-size'
+            )) {
+                return derivedHeight;
+            }
+
+            return Math.max(
+                this._settings.get_int('dock-panel-height'),
+                derivedHeight
+            );
         }
 
         return this._settings.get_int(
