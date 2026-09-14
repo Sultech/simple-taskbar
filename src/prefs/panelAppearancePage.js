@@ -248,7 +248,6 @@ export function addPanelAppearancePage({
         syncWindowsXpTheme
     );
     syncWindowsXpTheme();
-    fitPanelToIcons();
 
     const themeRow = new Adw.ExpanderRow({
         title: _('Theme and Styling'),
