@@ -49,6 +49,13 @@ import {
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
 } from '../shared/classicHighlightSettings.js';
 import {
+    hoverRenderScale,
+} from '../shared/applicationHoverAnimation.js';
+import {
+    PROGRESS_BAR_SETTINGS,
+    PROGRESS_BAR_SETTING_KEYS,
+} from '../shared/progressBarSettings.js';
+import {
     animateSeparatorIn,
     animateSeparatorOut,
     createTaskbarSeparator,
@@ -73,6 +80,13 @@ const BADGE_MAXIMUM_PADDING = 4;
 const BADGE_SINGLE_DIGIT_MARGIN = 2;
 const BADGE_MAXIMUM_OUTWARD_OFFSET = 4;
 const BADGE_OUTWARD_OFFSET_DIVISOR = 4;
+const PROGRESS_BAR_FILL_HEIGHT_RATIO = 0.05;
+const PROGRESS_BAR_MINIMUM_FILL_HEIGHT = 2;
+const PROGRESS_BAR_MAXIMUM_FILL_HEIGHT = 3;
+const PROGRESS_BAR_BORDER_WIDTH = 1;
+const PROGRESS_BAR_BOTTOM_GAP_RATIO = 0.08;
+const PROGRESS_BAR_MINIMUM_BOTTOM_GAP = 1;
+const PROGRESS_BAR_SIDE_GAP_RATIO = 0.2;
 
 function taskbarFocusWindow() {
     let window = global.display.focus_window;
@@ -501,7 +515,10 @@ export class TaskbarController {
             this._queueRedisplay();
         }, this._signalHolder);
         this._notificationBadgeModel.connectObject(
-            'changed', () => this._syncNotificationBadges(),
+            'changed', () => {
+                this._syncNotificationBadges();
+                this._syncProgressBars();
+            },
             this._signalHolder
         );
         global.display.connectObject('notify::focus-window', () => {
@@ -647,8 +664,10 @@ export class TaskbarController {
         this._settings.connectObject(
             'changed::animate-appicon-hover-animation-type',
             () => {
-                for (const item of this._appButtons.values())
+                for (const item of this._appButtons.values()) {
+                    this._syncProgressBarGeometry(item);
                     this._updateGlassGeometry(item);
+                }
             },
             this._signalHolder
         );
@@ -657,6 +676,17 @@ export class TaskbarController {
             () => this._syncNotificationBadges(),
             this._signalHolder
         );
+        this._settings.connectObject(
+            'changed::show-progress-bars',
+            () => this._syncProgressBars(),
+            this._signalHolder
+        );
+        for (const key of PROGRESS_BAR_SETTING_KEYS) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                for (const item of this._appButtons.values())
+                    this._syncProgressBarGeometry(item);
+            }, this._signalHolder);
+        }
         for (const key of TASKBAR_HIGHLIGHT_SETTING_KEYS) {
             this._settings.connectObject(`changed::${key}`, () => {
                 for (const item of this._appButtons.values())
@@ -675,8 +705,10 @@ export class TaskbarController {
             'unfocused-indicator-color',
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
-                for (const item of this._appButtons.values())
+                for (const item of this._appButtons.values()) {
                     this._syncIndicatorColor(item);
+                    this._syncProgressBarGeometry(item);
+                }
             }, this._signalHolder);
         }
         if (!this._ignoreTaskbarLock) {
@@ -797,9 +829,11 @@ export class TaskbarController {
         for (const item of this._appButtons.values()) {
             this._iconHoverAnimationController.syncIconResolution(item);
             this._syncNotificationBadgeGeometry(item);
+            this._syncProgressBarGeometry(item);
             this._updateGlassGeometry(item);
         }
         this._syncNotificationBadges();
+        this._syncProgressBars();
         this._syncPinnedSeparatorGeometry();
         this.queueIconGeometryUpdate();
     }
@@ -992,6 +1026,8 @@ export class TaskbarController {
         for (const item of this._appButtons.values()) {
             this._syncIndicatorVisibility(item);
             this._syncItemLabel(item);
+            this._syncNotificationBadgeGeometry(item);
+            this._syncProgressBarGeometry(item);
             this._updateGlassGeometry(item);
         }
         this._syncTaskbarEdgeSpacing();
@@ -1249,6 +1285,7 @@ export class TaskbarController {
         this._shownInitially = true;
         this.syncButtonStates(animateIndicators);
         this._syncNotificationBadges();
+        this._syncProgressBars();
         this.actor.queue_relayout();
         this.queueIconGeometryUpdate();
         this._rebuilding = rebuildQueued;
@@ -1332,6 +1369,8 @@ export class TaskbarController {
         );
         this._syncClassicHighlight(item);
         this._updateIndicatorGeometry(item, animate);
+        if (item._taskbarProgressBar.visible)
+            this._syncProgressBarGeometry(item);
         button.accessible_name = window
             ? `${window.get_title() || app.get_name()}, ${_('running')}`
             : running
@@ -1789,6 +1828,7 @@ export class TaskbarController {
         this._syncItemLabel(item);
         this._syncIndicatorVisibility(item);
         this._syncNotificationBadgeGeometry(item);
+        this._syncProgressBarGeometry(item);
         this._updateGlassGeometry(item);
     }
 
@@ -1927,13 +1967,7 @@ export class TaskbarController {
         this._appearanceController.syncIndicatorVisibility(item);
     }
 
-    _syncNotificationBadges() {
-        for (const item of this._appButtons.values())
-            item._taskbarNotificationBadge.hide();
-
-        if (!this._settings.get_boolean('show-notification-badges'))
-            return;
-
+    _launcherOverlayTargets() {
         const itemsByAppId = new Map();
         for (const item of this.getOrderedApplicationItems()) {
             if (!item._taskbarApp)
@@ -1948,20 +1982,114 @@ export class TaskbarController {
             items.push(item);
         }
 
+        const targets = new Map();
         for (const [appId, items] of itemsByAppId) {
+            targets.set(
+                appId,
+                items.find(item => item._taskbarIsLauncher) ??
+                items.find(item => item._taskbarIsPinnedPrimary) ??
+                items.find(item => item._taskbarIsCombinedApp) ??
+                items[0]
+            );
+        }
+
+        return targets;
+    }
+
+    _syncNotificationBadges() {
+        for (const item of this._appButtons.values())
+            item._taskbarNotificationBadge.hide();
+
+        if (!this._settings.get_boolean('show-notification-badges'))
+            return;
+
+        for (const [appId, target] of this._launcherOverlayTargets()) {
             const count = this._notificationBadgeModel.getCount(appId);
             if (count <= 0)
                 continue;
 
-            const target = items.find(item => item._taskbarIsLauncher) ??
-                items.find(item => item._taskbarIsPinnedPrimary) ??
-                items.find(item => item._taskbarIsCombinedApp) ??
-                items[0];
             target._taskbarNotificationBadgeLabel.text =
                 this._notificationBadgeText(count);
             this._syncNotificationBadgeGeometry(target);
             target._taskbarNotificationBadge.show();
         }
+    }
+
+    _syncProgressBars() {
+        for (const item of this._appButtons.values())
+            item._taskbarProgressBar.hide();
+
+        if (!this._settings.get_boolean('show-progress-bars'))
+            return;
+
+        for (const [appId, target] of this._launcherOverlayTargets()) {
+            const progress = this._notificationBadgeModel.getProgress(appId);
+            if (progress < 0)
+                continue;
+
+            target._taskbarProgress = progress;
+            this._syncProgressBarGeometry(target);
+            target._taskbarProgressBar.show();
+        }
+    }
+
+    _syncProgressBarGeometry(item) {
+        const fillHeight = this._settings.get_boolean(
+            PROGRESS_BAR_SETTINGS.automaticThickness
+        )
+            ? Math.max(
+                PROGRESS_BAR_MINIMUM_FILL_HEIGHT,
+                Math.min(
+                    PROGRESS_BAR_MAXIMUM_FILL_HEIGHT,
+                    Math.round(this._iconSize * PROGRESS_BAR_FILL_HEIGHT_RATIO)
+                )
+            )
+            : this._settings.get_int(PROGRESS_BAR_SETTINGS.thickness);
+        const height = fillHeight + PROGRESS_BAR_BORDER_WIDTH * 2;
+        const bottomGap = Math.max(
+            PROGRESS_BAR_MINIMUM_BOTTOM_GAP,
+            Math.round(this._iconSize * PROGRESS_BAR_BOTTOM_GAP_RATIO)
+        );
+        const sideGap = Math.round(
+            this._iconSize * PROGRESS_BAR_SIDE_GAP_RATIO
+        );
+        const width = Math.max(1, this._iconSize - sideGap * 2);
+        const radius = Math.floor(height / 2);
+        const fillRadius = Math.max(0, radius - PROGRESS_BAR_BORDER_WIDTH);
+        const renderScale = hoverRenderScale(this._settings);
+        const color = this._settings.get_boolean(
+            PROGRESS_BAR_SETTINGS.followIndicatorColors
+        )
+            ? this._appearanceController.indicatorColor(item)
+            : this._settings.get_string(PROGRESS_BAR_SETTINGS.color);
+        item._taskbarProgressBarTrack.set_position(
+            sideGap,
+            this._iconSize - height - bottomGap
+        );
+        item._taskbarProgressBarTrack.set_scale(
+            1 / renderScale,
+            1 / renderScale
+        );
+        item._taskbarProgressBarTrack.set_size(
+            width * renderScale,
+            height * renderScale
+        );
+        item._taskbarProgressBarTrack.set_style(
+            `border-radius: ${radius * renderScale}px;` +
+            `border-width: ${PROGRESS_BAR_BORDER_WIDTH * renderScale}px;`
+        );
+        const innerWidth = Math.max(
+            0,
+            width - PROGRESS_BAR_BORDER_WIDTH * 2
+        );
+        item._taskbarProgressBarFill.set_size(
+            Math.round(item._taskbarProgress * innerWidth) * renderScale,
+            fillHeight * renderScale
+        );
+        item._taskbarProgressBarFill.set_style(
+            `border-radius: ${fillRadius * renderScale}px;` +
+            (color ? `background-color: ${color};` : '')
+        );
     }
 
     _notificationBadgeText(count) {
@@ -2019,7 +2147,8 @@ export class TaskbarController {
             `min-height: ${singleDigit ? singleDigitSize : 0}px;` +
             `padding: 0 ${singleDigit ? 0 : horizontalPadding}px;`
         );
-        item._taskbarNotificationBadgeBin.translation_x = outwardOffset;
+        item._taskbarNotificationBadgeBin.translation_x = outwardOffset +
+            this._appearanceController.launcherIconOffset(item);
         item._taskbarNotificationBadgeBin.translation_y = -outwardOffset;
     }
 

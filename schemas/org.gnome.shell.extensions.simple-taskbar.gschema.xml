@@ -163,6 +163,32 @@
       <summary>Show notification badges</summary>
       <description>Show unread notification counts on application icons</description>
     </key>
+    <key name="show-progress-bars" type="b">
+      <default>true</default>
+      <summary>Show progress bars</summary>
+      <description>Show operation progress on application icons for applications that report it</description>
+    </key>
+    <key name="progress-bar-follow-indicator-colors" type="b">
+      <default>true</default>
+      <summary>Progress bars follow running indicator colors</summary>
+      <description>Use the running indicator color settings for the progress bar fill</description>
+    </key>
+    <key name="progress-bar-color" type="s">
+      <default>'#3584e4'</default>
+      <summary>Progress bar color</summary>
+      <description>Custom fill color used when progress bars do not follow the running indicator colors</description>
+    </key>
+    <key name="progress-bar-automatic-thickness" type="b">
+      <default>true</default>
+      <summary>Automatic progress bar thickness</summary>
+      <description>Derive the progress bar thickness from the application icon size</description>
+    </key>
+    <key name="progress-bar-thickness" type="i">
+      <range min="1" max="8"/>
+      <default>2</default>
+      <summary>Progress bar thickness</summary>
+      <description>Progress bar fill thickness in pixels</description>
+    </key>
     <key name="running-indicator-style" type="s">
       <choices>
         <choice value="rounded"/>

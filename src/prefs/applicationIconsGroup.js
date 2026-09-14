@@ -16,6 +16,9 @@ import {
 import {
     createClassicHighlightOptionsButton,
 } from './classicHighlightDialog.js';
+import {
+    createProgressBarOptionsButton,
+} from './progressBarDialog.js';
 import {addApplicationInteractionGroup} from './applicationInteractionGroup.js';
 import {
     MAX_ICON_EDGE_PADDING,
@@ -32,6 +35,7 @@ import {
     addColorRow,
     addComboRow,
     addSpinRow,
+    addSwitchRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 
@@ -257,6 +261,25 @@ function addApplicationLayoutControls({
         },
         connectSettings
     );
+
+    const progressBarOptionsButton = createProgressBarOptionsButton(settings);
+    addSwitchRow(layoutGroup, settings, {
+        key: 'show-progress-bars',
+        title: _('Show Progress Bars'),
+        subtitle: _('Display file transfer and install progress on application icons'),
+        addSuffix: row => row.add_suffix(progressBarOptionsButton),
+        addRow: row => layoutGroup.add_row(row),
+    });
+    const syncProgressBarOptionsSensitivity = () => {
+        progressBarOptionsButton.sensitive =
+            settings.get_boolean('show-progress-bars');
+    };
+    connectSettings(
+        settings,
+        'changed::show-progress-bars',
+        syncProgressBarOptionsSensitivity
+    );
+    syncProgressBarOptionsSensitivity();
 
     const notificationBadgeSwitch = createSwitchRow(settings, {
         key: 'show-notification-badges',

@@ -208,6 +208,25 @@ export class TaskbarAppItemFactory {
             y_expand: true,
         });
         iconClickTarget.add_child(notificationBadgeBin);
+        const progressBarFill = new St.Widget({
+            style_class: 'simple-taskbar-progress-bar-fill',
+            x_align: Clutter.ActorAlign.START,
+            y_align: Clutter.ActorAlign.FILL,
+        });
+        const progressBarTrack = new St.Widget({
+            style_class: 'simple-taskbar-progress-bar-track',
+            layout_manager: new Clutter.BinLayout(),
+        });
+        progressBarTrack.set_pivot_point(0, 0);
+        progressBarTrack.add_child(progressBarFill);
+        const progressBar = new St.Widget({
+            layout_manager: new Clutter.FixedLayout(),
+            x_expand: true,
+            y_expand: true,
+            visible: false,
+        });
+        progressBar.add_child(progressBarTrack);
+        iconClickTarget.add_child(progressBar);
         const buttonContent = new St.BoxLayout({
             style_class: 'simple-taskbar-app-button-content',
             x_align: Clutter.ActorAlign.CENTER,
@@ -279,6 +298,10 @@ export class TaskbarAppItemFactory {
             _taskbarNotificationBadge: notificationBadge,
             _taskbarNotificationBadgeLabel: notificationBadgeLabel,
             _taskbarNotificationBadgeBin: notificationBadgeBin,
+            _taskbarProgressBar: progressBar,
+            _taskbarProgressBarTrack: progressBarTrack,
+            _taskbarProgressBarFill: progressBarFill,
+            _taskbarProgress: 0,
             _taskbarLabel: label,
             _taskbarSlot: slot,
             _taskbarTopSpacer: topSpacer,

@@ -37,6 +37,7 @@ const WINDOWS_XP_TASKBUTTON_WIDTH = 160;
 const WINDOWS_XP_TASKBUTTON_HORIZONTAL_PADDING = 8;
 const WINDOWS_XP_TASKBUTTON_ICON_SPACING = 4;
 const WINDOWS_XP_PINNED_TO_RUNNING_GAP = 6;
+const WINDOWS_XP_LAUNCHER_ICON_OFFSET = -1;
 
 function settingsScale(value) {
     return value * St.ThemeContext.get_for_stage(global.stage).scale_factor;
@@ -321,7 +322,7 @@ export class TaskbarAppearanceController {
             style,
             count: item._taskbarWindowCount,
             focused: item._taskbarFocused,
-            color: item._taskbarRunning ? this._indicatorColor(item) : null,
+            color: item._taskbarRunning ? this.indicatorColor(item) : null,
         }, animate);
     }
 
@@ -395,7 +396,7 @@ export class TaskbarAppearanceController {
             : 0;
     }
 
-    _indicatorColor(item) {
+    indicatorColor(item) {
         if (!this._settings.get_boolean('custom-indicator-colors-enabled') &&
             this._settings.get_boolean('match-icon-color')) {
             const iconColor = this._iconColors.getColor(item._taskbarApp);
@@ -480,11 +481,19 @@ export class TaskbarAppearanceController {
         );
     }
 
+    launcherIconOffset(item) {
+        return item._taskbarIsLauncher &&
+            this._settings.get_boolean('windows-xp-theme-enabled')
+            ? WINDOWS_XP_LAUNCHER_ICON_OFFSET
+            : 0;
+    }
+
     syncLauncherIconPosition(item) {
         if (!item._taskbarIsLauncher)
             return;
-        item._taskbarIcon.translation_x =
-            this._settings.get_boolean('windows-xp-theme-enabled') ? -1 : 0;
+        const offset = this.launcherIconOffset(item);
+        item._taskbarIcon.translation_x = offset;
+        item._taskbarProgressBar.translation_x = offset;
     }
 
     iconSpacing(isLauncher) {

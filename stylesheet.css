@@ -546,6 +546,15 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
+.simple-taskbar-progress-bar-track {
+    background-color: rgba(0, 0, 0, 0.62);
+    border-color: rgba(0, 0, 0, 0.85);
+}
+
+.simple-taskbar-progress-bar-fill {
+    background-color: #3584e4;
+}
+
 .simple-taskbar-separator {
     margin-left: 6px;
     margin-right: 6px;

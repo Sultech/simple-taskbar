@@ -32,6 +32,7 @@ export class NotificationBadgeModel extends EventEmitter {
         this._messageCounts = new Map();
         this._launcherStates = new Map();
         this._effectiveCounts = new Map();
+        this._effectiveProgress = new Map();
         this._launcherSerial = 0;
         this._launcherEntrySignalId = Gio.DBus.session.signal_subscribe(
             null,
@@ -74,11 +75,15 @@ export class NotificationBadgeModel extends EventEmitter {
 
         for (const source of Main.messageTray.getSources())
             this._addSource(source, false);
-        this._publishCounts();
+        this._publish();
     }
 
     getCount(appId) {
         return this._effectiveCounts.get(normalizeAppId(appId)) ?? 0;
+    }
+
+    getProgress(appId) {
+        return this._effectiveProgress.get(normalizeAppId(appId)) ?? -1;
     }
 
     destroy() {
@@ -94,10 +99,12 @@ export class NotificationBadgeModel extends EventEmitter {
         this._launcherStates.clear();
         this._messageCounts.clear();
         this._effectiveCounts.clear();
+        this._effectiveProgress.clear();
         this._sourceSignals = null;
         this._launcherStates = null;
         this._messageCounts = null;
         this._effectiveCounts = null;
+        this._effectiveProgress = null;
     }
 
     _addSource(source, publish = true) {
@@ -134,7 +141,7 @@ export class NotificationBadgeModel extends EventEmitter {
         }
         this._messageCounts = counts;
         if (publish)
-            this._publishCounts();
+            this._publish();
     }
 
     _handleLauncherUpdate(senderName, parameters) {
@@ -147,26 +154,37 @@ export class NotificationBadgeModel extends EventEmitter {
         }
         let state = senderStates.get(appId);
         if (!state) {
-            state = {count: 0, visible: false, serial: 0};
+            state = {
+                count: 0,
+                visible: false,
+                progress: 0,
+                progressVisible: false,
+                serial: 0,
+            };
             senderStates.set(appId, state);
         }
         if ('count' in properties)
             state.count = Number(properties.count.unpack());
         if ('count-visible' in properties)
             state.visible = properties['count-visible'].unpack();
+        if ('progress' in properties)
+            state.progress = Number(properties.progress.unpack());
+        if ('progress-visible' in properties)
+            state.progressVisible = properties['progress-visible'].unpack();
         state.serial = ++this._launcherSerial;
-        this._publishCounts();
+        this._publish();
     }
 
     _removeLauncherSender(senderName) {
         if (!this._launcherStates.delete(senderName))
             return;
 
-        this._publishCounts();
+        this._publish();
     }
 
-    _publishCounts() {
+    _publish() {
         const launcherCounts = new Map();
+        const progress = new Map();
         const launcherSerials = new Map();
         for (const senderStates of this._launcherStates.values()) {
             for (const [appId, state] of senderStates) {
@@ -177,6 +195,14 @@ export class NotificationBadgeModel extends EventEmitter {
                     appId,
                     state.visible ? Math.max(0, state.count) : 0
                 );
+                if (state.progressVisible) {
+                    progress.set(
+                        appId,
+                        Math.min(1, Math.max(0, state.progress))
+                    );
+                } else {
+                    progress.delete(appId);
+                }
             }
         }
 
@@ -190,10 +216,12 @@ export class NotificationBadgeModel extends EventEmitter {
                 counts.delete(appId);
         }
 
-        if (mapsEqual(counts, this._effectiveCounts))
+        if (mapsEqual(counts, this._effectiveCounts) &&
+            mapsEqual(progress, this._effectiveProgress))
             return;
 
         this._effectiveCounts = counts;
+        this._effectiveProgress = progress;
         this.emit('changed');
     }
 }
