@@ -10,7 +10,11 @@ import {
     syncXpPopupOffset,
 } from '../panel/panelPosition.js';
 
-const INDICATOR_ROLES = ['activities', 'quickSettings', 'dateMenu'];
+export const SECONDARY_PANEL_INDICATOR_ROLES = [
+    'activities',
+    'quickSettings',
+    'dateMenu',
+];
 
 // Shell's QuickSettings builds its own system-status children (network,
 // bluetooth and power among them) and defines no teardown for any of them,
@@ -20,19 +24,20 @@ const INDICATOR_ROLES = ['activities', 'quickSettings', 'dateMenu'];
 // module once per session; that is the cost of reusing real Shell
 // indicators rather than destroying them.
 const INDICATOR_POOL = new Map(
-    INDICATOR_ROLES.map(role => [role, []])
+    SECONDARY_PANEL_INDICATOR_ROLES.map(role => [role, []])
 );
 
 export class SecondaryPanelIndicatorController {
-    constructor(settings, menuManager) {
+    constructor(settings, menuManager, roles) {
         this._settings = settings;
         this._menuManager = menuManager;
+        this._roles = roles;
         this._originalChangeMenu = null;
         this._indicators = new Map();
     }
 
     acquire() {
-        for (const role of INDICATOR_ROLES) {
+        for (const role of this._roles) {
             const IndicatorConstructor =
                 Main.panel.statusArea[role].constructor;
             const pool = INDICATOR_POOL.get(role);
@@ -67,6 +72,11 @@ export class SecondaryPanelIndicatorController {
         return this._indicators.get(role);
     }
 
+    containerFor(role) {
+        const indicator = this._indicators.get(role);
+        return indicator ? indicator.container : null;
+    }
+
     syncPopupOffsets() {
         for (const indicator of this._indicators.values()) {
             const menu = indicator.menu;
@@ -76,7 +86,11 @@ export class SecondaryPanelIndicatorController {
     }
 
     syncActivitiesVisibility() {
-        this._indicators.get('activities').container.visible =
+        const activities = this._indicators.get('activities');
+        if (!activities)
+            return;
+
+        activities.container.visible =
             this._settings.get_boolean('activities-button-visible');
     }
 
@@ -100,6 +114,7 @@ export class SecondaryPanelIndicatorController {
         this._indicators.clear();
         this._indicators = null;
         this._menuManager = null;
+        this._roles = null;
         this._settings = null;
     }
 }

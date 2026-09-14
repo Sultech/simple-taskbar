@@ -67,6 +67,7 @@ import {
     SecondaryPanelWindowDragController,
 } from './secondaryPanelWindowDragController.js';
 import {
+    SECONDARY_PANEL_INDICATOR_ROLES,
     SecondaryPanelIndicatorController,
 } from './secondaryPanelIndicatorController.js';
 import {StartButtonController} from '../startMenu/startButtonController.js';
@@ -296,43 +297,50 @@ export class SecondaryPanelController {
         this._indicatorController =
             new SecondaryPanelIndicatorController(
                 this._settings,
-                this._menuManager
+                this._menuManager,
+                this._dockController ? [] : SECONDARY_PANEL_INDICATOR_ROLES
             );
         this._indicatorController.acquire();
-        const quickSettings = this._indicatorController.get('quickSettings');
-        const activities = this._indicatorController.get('activities');
-        const dateMenu = this._indicatorController.get('dateMenu');
-        this._quickSettingsIndicatorsController =
-            new QuickSettingsIndicatorsController(quickSettings._indicators);
-        this._syncQuickSettingsIndicators();
-        this._activitiesController = new PanelActivitiesController(
-            this._settings,
-            activities
-        );
-        this._activitiesController.enable();
-        this._clockController = new PanelClockController(
-            this._settings,
-            dateMenu,
-            () => this._panelHeight
-        );
-        this._clockController.enable();
-        this._volumeMixerController = new VolumeMixerController(
-            this._settings,
-            quickSettings
-        );
-        this._volumeMixerController.enable();
-        this._quickSettingsPowerController = new QuickSettingsPowerController(
-            this._settings,
-            quickSettings
-        );
-        this._quickSettingsPowerController.enable();
-        this._quickSettingsXpIconController =
-            new QuickSettingsXpIconController(
+        if (!this._dockController) {
+            const quickSettings =
+                this._indicatorController.get('quickSettings');
+            const activities = this._indicatorController.get('activities');
+            const dateMenu = this._indicatorController.get('dateMenu');
+            this._quickSettingsIndicatorsController =
+                new QuickSettingsIndicatorsController(
+                    quickSettings._indicators
+                );
+            this._syncQuickSettingsIndicators();
+            this._activitiesController = new PanelActivitiesController(
                 this._settings,
-                this._extensionDir,
+                activities
+            );
+            this._activitiesController.enable();
+            this._clockController = new PanelClockController(
+                this._settings,
+                dateMenu,
+                () => this._panelHeight
+            );
+            this._clockController.enable();
+            this._volumeMixerController = new VolumeMixerController(
+                this._settings,
                 quickSettings
             );
-        this._quickSettingsXpIconController.enable();
+            this._volumeMixerController.enable();
+            this._quickSettingsPowerController =
+                new QuickSettingsPowerController(
+                    this._settings,
+                    quickSettings
+                );
+            this._quickSettingsPowerController.enable();
+            this._quickSettingsXpIconController =
+                new QuickSettingsXpIconController(
+                    this._settings,
+                    this._extensionDir,
+                    quickSettings
+                );
+            this._quickSettingsXpIconController.enable();
+        }
         Main.layoutManager.addChrome(this._panelBox, {
             affectsStruts: !this._dockController ||
                 this._settings.get_boolean('dock-panel-mode'),
@@ -481,10 +489,14 @@ export class SecondaryPanelController {
         }
         this._verticalItemsController.destroy();
         this._verticalItemsController = null;
-        this._activitiesController.destroy();
-        this._activitiesController = null;
-        this._clockController.destroy();
-        this._clockController = null;
+        if (this._activitiesController) {
+            this._activitiesController.destroy();
+            this._activitiesController = null;
+        }
+        if (this._clockController) {
+            this._clockController.destroy();
+            this._clockController = null;
+        }
         this._startButtonController.destroy();
         this._startButtonController = null;
         this._applicationOverflowController.destroy();
@@ -497,15 +509,23 @@ export class SecondaryPanelController {
         this._windowController = null;
         this._taskbarViewport.destroy();
         this._taskbarViewport = null;
-        this._volumeMixerController.destroy();
-        this._volumeMixerController = null;
-        this._quickSettingsXpIconController.destroy();
-        this._quickSettingsXpIconController = null;
-        this._quickSettingsPowerController.destroy();
-        this._quickSettingsPowerController = null;
+        if (this._volumeMixerController) {
+            this._volumeMixerController.destroy();
+            this._volumeMixerController = null;
+        }
+        if (this._quickSettingsXpIconController) {
+            this._quickSettingsXpIconController.destroy();
+            this._quickSettingsXpIconController = null;
+        }
+        if (this._quickSettingsPowerController) {
+            this._quickSettingsPowerController.destroy();
+            this._quickSettingsPowerController = null;
+        }
         this._notificationAreaController.destroy();
-        this._quickSettingsIndicatorsController.destroy();
-        this._quickSettingsIndicatorsController = null;
+        if (this._quickSettingsIndicatorsController) {
+            this._quickSettingsIndicatorsController.destroy();
+            this._quickSettingsIndicatorsController = null;
+        }
         this._indicatorController.destroy();
         this._indicatorController = null;
         this._folderMenuController.destroy();
@@ -703,18 +723,21 @@ export class SecondaryPanelController {
         this.actor.expandedSide =
             this._taskbarBin.visible && !this._appsAreCentered();
         const startButton = this._startButtonController.panelActor;
-        const activities = this._indicatorController.get('activities').container;
-        const quickSettings = this._indicatorController.get('quickSettings').container;
-        const dateMenu = this._indicatorController.get('dateMenu').container;
+        const activities =
+            this._indicatorController.containerFor('activities');
+        const quickSettings =
+            this._indicatorController.containerFor('quickSettings');
+        const dateMenu = this._indicatorController.containerFor('dateMenu');
         const folderMenuButton = this._folderMenuController.actor;
 
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const trayEnabled = windowsXpThemeEnabled && Boolean(dateMenu);
         this._notificationAreaController.sync(
-            windowsXpThemeEnabled ? [quickSettings, dateMenu] : [],
+            trayEnabled ? [quickSettings, dateMenu] : [],
             dateMenu,
-            windowsXpThemeEnabled
+            trayEnabled
         );
         this._indicatorController.syncPopupOffsets();
 
@@ -886,6 +909,9 @@ export class SecondaryPanelController {
     }
 
     _syncQuickSettingsIndicators() {
+        if (!this._quickSettingsIndicatorsController)
+            return;
+
         this._quickSettingsIndicatorsController.sync(
             panelIsVertical(this._settings),
             this._effectiveButtonPadding(),
