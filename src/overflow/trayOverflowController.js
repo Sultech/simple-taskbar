@@ -331,7 +331,16 @@ export class TrayOverflowController {
         for (const [role, indicator] of Object.entries(Main.panel.statusArea)) {
             if (this._isTrayIndicator(role, indicator) &&
                 indicator.container === container) {
-                container.hide();
+                // The container belongs to another extension, whose own
+                // handlers run from hide(). Ubuntu AppIndicator dereferences
+                // a null SettingsManager while it is mid-disable, which would
+                // otherwise escape into enable() and skip the controllers
+                // built after this one.
+                try {
+                    container.hide();
+                } catch (error) {
+                    logError(error, 'Unable to hide tray indicator');
+                }
                 break;
             }
         }
