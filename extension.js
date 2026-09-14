@@ -98,6 +98,7 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._resetTaskbarIconSize();
                     this._applicationOverflowController.clearOverflow();
                     this._panelController.syncVerticalItems();
+                    this._panelController.refreshPanelItemSizes();
                     this._panelController.updateTaskbarWidth();
                 },
                 onPanelHeightChanged: panelHeight => {

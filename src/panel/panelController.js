@@ -399,6 +399,18 @@ export class PanelController {
         this._verticalItemsController.sync();
     }
 
+    refreshPanelItemSizes() {
+        for (const box of [
+            Main.panel._leftBox,
+            Main.panel._centerBox,
+            Main.panel._rightBox,
+        ]) {
+            for (const child of box.get_children())
+                child.queue_relayout();
+            box.queue_relayout();
+        }
+    }
+
     appsAreCentered() {
         return this._settings.get_string('app-alignment') === 'center';
     }
