@@ -2402,9 +2402,6 @@
     margin: 0 0 0 4px;
     padding: 0;
     background-color: transparent;
-    background-image: url('icons/taskbar/xp/notification-area/taskband_tray_horz_body.png');
-    background-size: 1px 30px;
-    background-repeat: repeat-x;
     border-style: solid;
     border-width: 5px 0 3px 16px;
     border-color: transparent;
