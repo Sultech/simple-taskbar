@@ -576,10 +576,15 @@ export class SecondaryPanelController {
             this._taskbarController.setPanelHeight(this._panelHeight);
             this._position();
         }, this._signalHolder);
-        this._settings.connectObject('changed::icon-spacing', () => {
+        const syncIconMetrics = () => {
             this._applyAppearance();
             this._updateTaskbarWidth();
-        }, this._signalHolder);
+        };
+        this._settings.connectObject(
+            'changed::icon-spacing', syncIconMetrics,
+            'changed::icon-edge-padding', syncIconMetrics,
+            this._signalHolder
+        );
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._syncTaskbarVisibility();
         }, this._signalHolder);

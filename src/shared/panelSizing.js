@@ -7,19 +7,45 @@ import {setInteger} from './settingsUtils.js';
 export const MIN_PANEL_HEIGHT = 30;
 export const MAX_PANEL_HEIGHT = 80;
 export const MIN_ICON_SIZE = 13;
-export const ICON_VERTICAL_RESERVE = 19;
-export const STANDARD_MIN_PANEL_HEIGHT =
-    MIN_ICON_SIZE + ICON_VERTICAL_RESERVE;
-export const DOCK_FLOATING_PANEL_RESERVE = 24;
+export const MIN_ICON_EDGE_PADDING = 3;
+export const MAX_ICON_EDGE_PADDING = 20;
+export const DEFAULT_ICON_EDGE_PADDING = 7;
+export const RUNNING_INDICATOR_CLEARANCE = 5;
+export const DOCK_FLOATING_CHROME_RESERVE = 5;
 export const DOCK_EDGE_GAP = 4;
 export const GLASS_VERTICAL_INSET = 3;
 
+export function iconEdgePadding(settings) {
+    if (settings.get_boolean('windows-xp-theme-enabled'))
+        return DEFAULT_ICON_EDGE_PADDING;
+
+    return settings.get_int('icon-edge-padding');
+}
+
+export function iconEdgeReserve(settings) {
+    return iconEdgePadding(settings) * 2 + RUNNING_INDICATOR_CLEARANCE;
+}
+
+export function standardMinimumPanelHeight(settings) {
+    return Math.max(
+        MIN_PANEL_HEIGHT,
+        MIN_ICON_SIZE + iconEdgeReserve(settings)
+    );
+}
+
+export function dockFloatingPanelReserve(settings) {
+    return iconEdgeReserve(settings) + DOCK_FLOATING_CHROME_RESERVE;
+}
+
 export function taskbarVisualPanelHeight(
+    settings,
     panelHeight,
     iconSize,
     floatingDock
 ) {
-    return floatingDock ? iconSize + ICON_VERTICAL_RESERVE : panelHeight;
+    return floatingDock
+        ? iconSize + iconEdgeReserve(settings)
+        : panelHeight;
 }
 
 export function taskbarGlassHeight(panelHeight, windowsXpTheme) {
@@ -38,13 +64,13 @@ export function taskbarVerticalItemExtent(iconSize) {
     return iconSize + GLASS_VERTICAL_INSET * 2 + RUNNING_INDICATOR_RESERVE;
 }
 
-export function panelHeightForIconSize(iconSize) {
-    return iconSize + ICON_VERTICAL_RESERVE;
+export function panelHeightForIconSize(settings, iconSize) {
+    return iconSize + iconEdgeReserve(settings);
 }
 
 function clampIconSizeToMaximumPanelHeight(settings) {
     const iconSize = settings.get_int('icon-size');
-    const maximumIconSize = MAX_PANEL_HEIGHT - ICON_VERTICAL_RESERVE;
+    const maximumIconSize = MAX_PANEL_HEIGHT - iconEdgeReserve(settings);
     if (iconSize <= maximumIconSize)
         return iconSize;
 
@@ -54,19 +80,21 @@ function clampIconSizeToMaximumPanelHeight(settings) {
 
 export function fitIconSizeToPanelHeight(settings, heightKey = 'panel-height') {
     let panelHeight = settings.get_int(heightKey);
-    if (panelHeight < STANDARD_MIN_PANEL_HEIGHT) {
-        panelHeight = STANDARD_MIN_PANEL_HEIGHT;
+    const minimumPanelHeight = standardMinimumPanelHeight(settings);
+    if (panelHeight < minimumPanelHeight) {
+        panelHeight = minimumPanelHeight;
         setInteger(settings, heightKey, panelHeight);
         return;
     }
 
-    const maximumIconSize = panelHeight - ICON_VERTICAL_RESERVE;
+    const maximumIconSize = panelHeight - iconEdgeReserve(settings);
     if (settings.get_int('icon-size') > maximumIconSize)
         setInteger(settings, 'icon-size', maximumIconSize);
 }
 
 export function fitPanelHeightToIconSize(settings, heightKey = 'panel-height') {
     const minimumPanelHeight = panelHeightForIconSize(
+        settings,
         clampIconSizeToMaximumPanelHeight(settings)
     );
     if (settings.get_int(heightKey) < minimumPanelHeight)
@@ -77,6 +105,9 @@ export function derivePanelHeightFromIconSize(settings, heightKey = 'panel-heigh
     setInteger(
         settings,
         heightKey,
-        panelHeightForIconSize(clampIconSizeToMaximumPanelHeight(settings))
+        panelHeightForIconSize(
+            settings,
+            clampIconSizeToMaximumPanelHeight(settings)
+        )
     );
 }

@@ -9,6 +9,7 @@ import {
     WINDOW_MINIMIZE_EFFECT,
 } from './windowMinimizeEffect.js';
 import {TASKBAR_HIGHLIGHT_STYLE} from './classicHighlightSettings.js';
+import {DEFAULT_ICON_EDGE_PADDING} from './panelSizing.js';
 import {applySharedInteractionDefaults} from './interactionDefaults.js';
 import {
     setBoolean,
@@ -29,6 +30,11 @@ export function applyDefaultTaskbarSettings(settings) {
     setInteger(settings, 'panel-button-padding', -1);
     setInteger(settings, 'icon-size', DEFAULT_TASKBAR_ICON_SIZE);
     setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
+    setInteger(
+        settings,
+        'icon-edge-padding',
+        DEFAULT_ICON_EDGE_PADDING
+    );
     setString(
         settings,
         'taskbar-highlight-style',

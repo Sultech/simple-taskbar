@@ -92,6 +92,8 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._panelController.updateTaskbarWidth();
                 },
                 onIconSpacingChanged: () => this._applyTaskbarAppearance(),
+                onIconEdgePaddingChanged: () =>
+                    this._applyTaskbarAppearance(),
                 onModeChanged: () => {
                     this._resetTaskbarIconSize();
                     this._applicationOverflowController.clearOverflow();

@@ -124,6 +124,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const appearanceGroup = icons.appearanceGroup;
         const iconSizeRow = icons.iconSizeRow;
         const iconSpacingRow = icons.iconSpacingRow;
+        const iconEdgePaddingRow = icons.iconEdgePaddingRow;
         const appAlignmentRow = icons.appAlignmentRow;
         const combineAppButtonsRow = icons.combineAppButtonsRow;
         const syncLabelSensitivity = icons.syncLabelSensitivity;
@@ -180,6 +181,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             taskbarModeRow,
             iconSizeRow,
             iconSpacingRow,
+            iconEdgePaddingRow,
             defaultGnomePanelRow,
             dockModeRow,
             dockPositionRow,

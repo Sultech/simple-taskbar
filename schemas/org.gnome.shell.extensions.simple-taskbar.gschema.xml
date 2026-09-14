@@ -73,6 +73,11 @@
       <default>3</default>
       <summary>Space between application icons</summary>
     </key>
+    <key name="icon-edge-padding" type="i">
+      <range min="3" max="20"/>
+      <default>7</default>
+      <summary>Space between application icons and the taskbar edges</summary>
+    </key>
     <key name="taskbar-highlight-style" type="s">
       <choices>
         <choice value="glass"/>

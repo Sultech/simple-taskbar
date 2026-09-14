@@ -248,6 +248,7 @@ export class StartButtonController {
             ? taskbarVerticalItemExtent(iconSize)
             : taskbarGlassHeight(
                 taskbarVisualPanelHeight(
+                    this._settings,
                     this._settings.get_int('panel-height'),
                     iconSize,
                     floatingDock
@@ -302,6 +303,7 @@ export class StartButtonController {
 
         this._content.set_height(
             taskbarVisualPanelHeight(
+                this._settings,
                 this._settings.get_int('panel-height'),
                 iconSize,
                 floatingDock

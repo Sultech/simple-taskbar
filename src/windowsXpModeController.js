@@ -55,6 +55,7 @@ export class WindowsXpModeController {
         onDefaultPanelChanged,
         onIconSizeChanged,
         onIconSpacingChanged,
+        onIconEdgePaddingChanged,
         onModeChanged,
         onPanelHeightChanged,
     }) {
@@ -62,6 +63,7 @@ export class WindowsXpModeController {
         this._onDefaultPanelChanged = onDefaultPanelChanged;
         this._onIconSizeChanged = onIconSizeChanged;
         this._onIconSpacingChanged = onIconSpacingChanged;
+        this._onIconEdgePaddingChanged = onIconEdgePaddingChanged;
         this._onModeChanged = onModeChanged;
         this._onPanelHeightChanged = onPanelHeightChanged;
     }
@@ -88,6 +90,8 @@ export class WindowsXpModeController {
             () => this._syncIconSize(),
             'changed::icon-spacing',
             () => this._syncIconSpacing(),
+            'changed::icon-edge-padding',
+            () => this._syncIconEdgePadding(),
             'changed::panel-height',
             () => this._syncPanelHeight(),
             this
@@ -105,6 +109,7 @@ export class WindowsXpModeController {
         this._onPanelHeightChanged = null;
         this._onModeChanged = null;
         this._onIconSpacingChanged = null;
+        this._onIconEdgePaddingChanged = null;
         this._onIconSizeChanged = null;
         this._onDefaultPanelChanged = null;
         this._settings = null;
@@ -152,6 +157,16 @@ export class WindowsXpModeController {
             return;
         }
         this._onIconSpacingChanged();
+    }
+
+    _syncIconEdgePadding() {
+        if (this._windowsXpModeEnabled())
+            return;
+
+        if (!this._settings.get_boolean('default-gnome-panel'))
+            fitPanelHeightToIconSize(this._settings);
+
+        this._onIconEdgePaddingChanged();
     }
 
     _syncPanelHeight() {

@@ -9,7 +9,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     MAX_PANEL_HEIGHT,
     MIN_PANEL_HEIGHT,
-    STANDARD_MIN_PANEL_HEIGHT,
+    standardMinimumPanelHeight,
 } from '../shared/panelSizing.js';
 import {
     applyWindowsXpThemeSettings,
@@ -44,6 +44,7 @@ export function addPanelAppearancePage({
     taskbarModeRow,
     iconSizeRow,
     iconSpacingRow,
+    iconEdgePaddingRow,
     defaultGnomePanelRow,
     dockModeRow,
     dockPositionRow,
@@ -127,7 +128,9 @@ export function addPanelAppearancePage({
         syncingWindowsXpTheme = true;
         windowsXpThemeSwitch.active = enabled;
         panelHeightRow.get_adjustment().set_lower(
-            enabled ? MIN_PANEL_HEIGHT : STANDARD_MIN_PANEL_HEIGHT
+            enabled
+                ? MIN_PANEL_HEIGHT
+                : standardMinimumPanelHeight(settings)
         );
         iconSpacingRow.get_adjustment().set_lower(
             enabled ? WINDOWS_XP_ICON_SPACING : 0
@@ -137,6 +140,7 @@ export function addPanelAppearancePage({
             iconSpacingRow.set_value(iconSpacing);
         iconSizeRow.sensitive = !enabled;
         iconSpacingRow.sensitive = !enabled;
+        iconEdgePaddingRow.sensitive = !enabled;
         panelHeightFollowSwitch.sensitive = !enabled &&
             !settings.get_boolean('default-gnome-panel');
         panelHeightRow.sensitive = !enabled && !panelHeightFollowsIcons();
@@ -199,6 +203,11 @@ export function addPanelAppearancePage({
     );
     connectSettings(settings, 'changed::icon-size', syncWindowsXpTheme);
     connectSettings(settings, 'changed::icon-spacing', syncWindowsXpTheme);
+    connectSettings(
+        settings,
+        'changed::icon-edge-padding',
+        syncWindowsXpTheme
+    );
     connectSettings(settings, 'changed::panel-height', syncWindowsXpTheme);
     connectSettings(
         settings,

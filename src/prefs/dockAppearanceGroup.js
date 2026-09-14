@@ -18,9 +18,12 @@ import {
 } from './dynamicTransparencyDialog.js';
 import {
     MAX_PANEL_HEIGHT,
-    STANDARD_MIN_PANEL_HEIGHT,
+    MIN_PANEL_HEIGHT,
 } from '../shared/panelSizing.js';
-import {createPanelThicknessSizing} from './panelThicknessSizing.js';
+import {
+    bindThicknessLowerBound,
+    createPanelThicknessSizing,
+} from './panelThicknessSizing.js';
 
 const DOCK_PANEL_HEIGHT_KEY = 'dock-panel-height';
 const DOCK_PANEL_HEIGHT_FOLLOW_KEY = 'dock-panel-height-follow-icon-size';
@@ -67,11 +70,12 @@ export function addDockAppearanceGroup({
             subtitle: _(
                 'Oversized icons shrink automatically when the full-width Dock is reduced'
             ),
-            lower: STANDARD_MIN_PANEL_HEIGHT,
+            lower: MIN_PANEL_HEIGHT,
             upper: MAX_PANEL_HEIGHT,
         },
         connectSettings
     );
+    bindThicknessLowerBound(settings, connectSettings, dockPanelHeightRow);
     group.add(dockMaxLengthRow);
     group.add(dockPositionRow);
 

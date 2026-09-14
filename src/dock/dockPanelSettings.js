@@ -2,7 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {
-    DOCK_FLOATING_PANEL_RESERVE,
+    dockFloatingPanelReserve,
     panelHeightForIconSize,
 } from '../shared/panelSizing.js';
 
@@ -70,7 +70,11 @@ const DOCK_SETTING_KEYS = new Map([
 const DOCK_COMPUTED_SETTING_KEYS = new Map([
     [
         'panel-height',
-        ['dock-panel-height', 'dock-panel-height-follow-icon-size'],
+        [
+            'dock-panel-height',
+            'dock-panel-height-follow-icon-size',
+            'icon-edge-padding',
+        ],
     ],
 ]);
 
@@ -157,9 +161,12 @@ export class DockPanelSettings {
         if (args[0] === 'panel-height') {
             const iconSize = this.get_int('icon-size');
             if (!this._settings.get_boolean('dock-panel-mode'))
-                return iconSize + DOCK_FLOATING_PANEL_RESERVE;
+                return iconSize + dockFloatingPanelReserve(this._settings);
 
-            const derivedHeight = panelHeightForIconSize(iconSize);
+            const derivedHeight = panelHeightForIconSize(
+                this._settings,
+                iconSize
+            );
             if (this._settings.get_boolean(
                 'dock-panel-height-follow-icon-size'
             )) {

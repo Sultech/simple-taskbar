@@ -21,7 +21,7 @@ import {extensionWillBeActive} from '../extensionState.js';
 import {panelPosition} from '../panel/panelPosition.js';
 import {
     DOCK_EDGE_GAP,
-    ICON_VERTICAL_RESERVE,
+    iconEdgeReserve,
 } from '../shared/panelSizing.js';
 
 const OVERVIEW_LABEL_MARGIN = 60;
@@ -483,7 +483,7 @@ export class OverviewIntegration {
             'dock-dodge-windows-enabled'
         );
         const panelHeight = this._settings.get_int('icon-size') +
-            ICON_VERTICAL_RESERVE;
+            iconEdgeReserve(this._settings);
         const panelMode = this._settings.get_boolean('dock-panel-mode');
         const dockHeight = panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
         const position = this._settings.get_string('dock-position');

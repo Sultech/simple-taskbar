@@ -17,7 +17,11 @@ import {
     createClassicHighlightOptionsButton,
 } from './classicHighlightDialog.js';
 import {addApplicationInteractionGroup} from './applicationInteractionGroup.js';
-import {MIN_ICON_SIZE} from '../shared/panelSizing.js';
+import {
+    MAX_ICON_EDGE_PADDING,
+    MIN_ICON_SIZE,
+    MIN_ICON_EDGE_PADDING,
+} from '../shared/panelSizing.js';
 import {TASKBAR_HIGHLIGHT_STYLE} from '../shared/classicHighlightSettings.js';
 import {
     RUNNING_INDICATOR_POSITIONS,
@@ -38,6 +42,7 @@ function addApplicationIconControls({
     settings,
     connectSettings,
     panelPositions,
+    edgePaddingSubtitle,
 }) {
     const iconSizingRow = new Adw.ExpanderRow({
         title: _('Application Icon Appearance'),
@@ -84,6 +89,19 @@ function addApplicationIconControls({
             subtitle: _('Space between application icons'),
             lower: 0,
             upper: 16,
+            addRow: row => iconSizingRow.add_row(row),
+        },
+        connectSettings
+    );
+    const iconEdgePaddingRow = addSpinRow(
+        iconSizingRow,
+        settings,
+        {
+            key: 'icon-edge-padding',
+            title: _('Icon Edge Padding'),
+            subtitle: edgePaddingSubtitle,
+            lower: MIN_ICON_EDGE_PADDING,
+            upper: MAX_ICON_EDGE_PADDING,
             addRow: row => iconSizingRow.add_row(row),
         },
         connectSettings
@@ -180,6 +198,7 @@ function addApplicationIconControls({
     return {
         iconSizeRow,
         iconSpacingRow,
+        iconEdgePaddingRow,
         appAlignmentRow,
     };
 }
@@ -575,6 +594,9 @@ function addDockApplicationIconsGroup({
         settings,
         connectSettings,
         panelPositions,
+        edgePaddingSubtitle: _(
+            'Space between icons and the Dock edges; lower it to fit larger icons in a thinner Dock'
+        ),
     });
     addApplicationOverflowControls({
         group: appearanceGroup,
@@ -649,6 +671,9 @@ export function addApplicationIconsGroup({
         settings,
         connectSettings,
         panelPositions,
+        edgePaddingSubtitle: _(
+            'Space between icons and the taskbar edges; lower it to fit larger icons in a thinner taskbar'
+        ),
     });
     const overflowControls = addApplicationOverflowControls({
         group: appearanceGroup,
@@ -683,6 +708,7 @@ export function addApplicationIconsGroup({
         appearanceGroup,
         iconSizeRow: controls.iconSizeRow,
         iconSpacingRow: controls.iconSpacingRow,
+        iconEdgePaddingRow: controls.iconEdgePaddingRow,
         appAlignmentRow: controls.appAlignmentRow,
         combineAppButtonsRow: layoutControls.combineAppButtonsRow,
         syncLabelSensitivity: layoutControls.syncLabelSensitivity,

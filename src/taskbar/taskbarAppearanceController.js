@@ -20,6 +20,7 @@ import {
 } from '../shared/runningIndicatorSettings.js';
 import {
     GLASS_VERTICAL_INSET,
+    iconEdgePadding,
     taskbarGlassHeight,
     taskbarIconButtonWidth,
     taskbarVisualPanelHeight,
@@ -29,9 +30,7 @@ import {
     hoverRenderScale,
 } from '../shared/applicationHoverAnimation.js';
 
-const CONTENT_LEADING_SPACE = 7;
 const APP_LABEL_SPACING = 8;
-const APP_CONTENT_VERTICAL_RESERVE = 14;
 const WINDOWS_XP_BUTTON_Y = 3;
 const WINDOWS_XP_BUTTON_BORDER_WIDTH = 2;
 const WINDOWS_XP_TASKBUTTON_WIDTH = 160;
@@ -65,11 +64,16 @@ export class TaskbarAppearanceController {
 
     visualPanelHeight() {
         return taskbarVisualPanelHeight(
+            this._settings,
             this._getPanelHeight(),
             this._getIconSize(),
             this._settings.isDock &&
                 !this._settings.get_boolean('dock-panel-mode')
         );
+    }
+
+    iconEdgeSpace() {
+        return iconEdgePadding(this._settings);
     }
 
     updateGlassGeometry(item) {
@@ -102,11 +106,12 @@ export class TaskbarAppearanceController {
 
         this.syncLauncherIconPosition(item);
         item.setVertical(vertical);
+        const iconEdgeSpace = this.iconEdgeSpace();
         item._taskbarTopSpacer.set_height(
-            vertical ? 0 : CONTENT_LEADING_SPACE
+            vertical ? 0 : iconEdgeSpace
         );
         item._taskbarBottomSpacer.set_height(
-            vertical ? RUNNING_INDICATOR_RESERVE : CONTENT_LEADING_SPACE
+            vertical ? RUNNING_INDICATOR_RESERVE : iconEdgeSpace
         );
         item._taskbarButtonContent.set_height(
             vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
@@ -471,7 +476,7 @@ export class TaskbarAppearanceController {
     buttonContentHeight(panelHeight = this.visualPanelHeight()) {
         return Math.max(
             1,
-            panelHeight - APP_CONTENT_VERTICAL_RESERVE
+            panelHeight - this.iconEdgeSpace() * 2
         );
     }
 

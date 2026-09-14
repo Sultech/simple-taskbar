@@ -7,6 +7,7 @@ import {
     derivePanelHeightFromIconSize,
     fitIconSizeToPanelHeight,
     fitPanelHeightToIconSize,
+    standardMinimumPanelHeight,
 } from '../shared/panelSizing.js';
 import {createSwitchRow} from './preferencesWidgets.js';
 
@@ -43,6 +44,11 @@ export function createPanelThicknessSizing(settings, connectSettings, {
     connectSettings(settings, 'changed::icon-size', fitThicknessToIcons);
     connectSettings(
         settings,
+        'changed::icon-edge-padding',
+        fitThicknessToIcons
+    );
+    connectSettings(
+        settings,
         `changed::${heightKey}`,
         fitIconsToThickness
     );
@@ -54,4 +60,16 @@ export function createPanelThicknessSizing(settings, connectSettings, {
     fitThicknessToIcons();
 
     return {followSwitch, followsIcons};
+}
+
+export function bindThicknessLowerBound(settings, connectSettings, row) {
+    const syncLowerBound = () => {
+        row.get_adjustment().set_lower(standardMinimumPanelHeight(settings));
+    };
+    connectSettings(
+        settings,
+        'changed::icon-edge-padding',
+        syncLowerBound
+    );
+    syncLowerBound();
 }
