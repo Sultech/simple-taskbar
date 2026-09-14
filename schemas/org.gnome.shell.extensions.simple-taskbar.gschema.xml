@@ -3,7 +3,7 @@
   <schema id="org.gnome.shell.extensions.simple-taskbar"
           path="/org/gnome/shell/extensions/simple-taskbar/">
     <key name="panel-height" type="i">
-      <range min="30" max="80"/>
+      <range min="30" max="175"/>
       <default>51</default>
       <summary>Taskbar height</summary>
     </key>
@@ -64,7 +64,7 @@
       <summary>Show a ripple when the bottom hot edge activates</summary>
     </key>
     <key name="icon-size" type="i">
-      <range min="13" max="63"/>
+      <range min="13" max="128"/>
       <default>32</default>
       <summary>Application icon size</summary>
     </key>
@@ -579,7 +579,7 @@
       <summary>Maximum Dock length as a percentage of the monitor</summary>
     </key>
     <key name="dock-min-icon-size" type="i">
-      <range min="13" max="63"/>
+      <range min="13" max="128"/>
       <default>32</default>
       <summary>Minimum application icon size when space is limited</summary>
     </key>
@@ -588,7 +588,7 @@
       <summary>Extend the Dock to the full monitor edge</summary>
     </key>
     <key name="dock-panel-height" type="i">
-      <range min="32" max="80"/>
+      <range min="32" max="175"/>
       <default>67</default>
       <summary>Full-width Dock thickness</summary>
     </key>

@@ -5,7 +5,7 @@ import {RUNNING_INDICATOR_RESERVE} from './runningIndicatorSettings.js';
 import {setInteger} from './settingsUtils.js';
 
 export const MIN_PANEL_HEIGHT = 30;
-export const MAX_PANEL_HEIGHT = 80;
+export const MAX_PANEL_HEIGHT = 175;
 export const MIN_ICON_SIZE = 13;
 export const MIN_ICON_EDGE_PADDING = 3;
 export const MAX_ICON_EDGE_PADDING = 20;

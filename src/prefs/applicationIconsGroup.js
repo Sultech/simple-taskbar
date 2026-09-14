@@ -39,7 +39,7 @@ import {
     createSwitchRow,
 } from './preferencesWidgets.js';
 
-const MAX_ICON_SIZE = 63;
+const MAX_ICON_SIZE = 128;
 
 function addApplicationIconControls({
     group,
