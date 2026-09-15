@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 20:34+0100\n"
+"POT-Creation-Date: 2026-09-15 01:17+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -1379,12 +1379,8 @@ msgid "Choose which windows make the Dock hide"
 msgstr "Wählen Sie, welche Fenster das Dock ausblenden lassen"
 
 #: src/prefs/dockBehaviorGroup.js:50
-msgid ""
-"Reveal the Dock when the pointer reaches its screen edge while dodging a "
-"window"
-msgstr ""
-"Dock anzeigen, wenn der Zeiger beim Ausweichen vor einem Fenster den "
-"Bildschirmrand erreicht"
+msgid "Let the pointer reveal the hidden Dock at its screen edge"
+msgstr "Das ausgeblendete Dock mit dem Zeiger am Bildschirmrand einblenden"
 
 #: src/prefs/dockBehaviorGroup.js:58
 msgid "Dock Scroll"
@@ -2771,12 +2767,8 @@ msgid "Choose which windows make the taskbar hide"
 msgstr "Wählen Sie, welche Fenster die Taskleiste ausblenden lassen"
 
 #: src/prefs/taskbarBehaviorGroup.js:55
-msgid ""
-"Reveal the taskbar when the pointer reaches its screen edge while dodging a "
-"window"
-msgstr ""
-"Taskleiste anzeigen, wenn der Zeiger beim Ausweichen vor einem Fenster den "
-"Bildschirmrand erreicht"
+msgid "Let the pointer reveal the hidden taskbar at its screen edge"
+msgstr "Die ausgeblendete Taskleiste mit dem Zeiger am Bildschirmrand einblenden"
 
 #: src/prefs/taskbarBehaviorGroup.js:63
 msgid "Bottom Hot Edge"
@@ -3262,7 +3254,7 @@ msgid "Trash"
 msgstr "Papierkorb"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1375 src/taskbar/taskbarController.js:1377
+#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
 msgid "running"
 msgstr "läuft"
 
@@ -3388,6 +3380,20 @@ msgstr "Anwendungslautstärke"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
+
+#~ msgid ""
+#~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
+#~ "window"
+#~ msgstr ""
+#~ "Dock anzeigen, wenn der Zeiger beim Ausweichen vor einem Fenster den "
+#~ "Bildschirmrand erreicht"
+
+#~ msgid ""
+#~ "Reveal the taskbar when the pointer reaches its screen edge while dodging "
+#~ "a window"
+#~ msgstr ""
+#~ "Taskleiste anzeigen, wenn der Zeiger beim Ausweichen vor einem Fenster "
+#~ "den Bildschirmrand erreicht"
 
 #~ msgid "Show Original GNOME Button"
 #~ msgstr "Ursprüngliche GNOME-Schaltfläche anzeigen"

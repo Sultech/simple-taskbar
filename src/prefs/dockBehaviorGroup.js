@@ -47,7 +47,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             ),
             modeSubtitle: _('Choose which windows make the Dock hide'),
             pointerRevealSubtitle: _(
-                'Reveal the Dock when the pointer reaches its screen edge while dodging a window'
+                'Let the pointer reveal the hidden Dock at its screen edge'
             ),
             visibilityRows: [edgeRevealSwitch],
             connectSettings,

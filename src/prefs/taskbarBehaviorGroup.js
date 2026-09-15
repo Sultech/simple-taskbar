@@ -52,7 +52,7 @@ export function addTaskbarBehaviorGroup({
                 'Choose which windows make the taskbar hide'
             ),
             pointerRevealSubtitle: _(
-                'Reveal the taskbar when the pointer reaches its screen edge while dodging a window'
+                'Let the pointer reveal the hidden taskbar at its screen edge'
             ),
             visibilityRows: [],
             connectSettings,

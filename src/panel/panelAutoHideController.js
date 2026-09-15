@@ -70,7 +70,7 @@ export class PanelAutoHideController {
         this._fullscreenVisibilityHeld = false;
         this._dodgeEnabled = false;
         this._dodgeActive = false;
-        this._dodgePointerReveal = false;
+        this._pointerReveal = false;
         this._positionTarget = null;
         this._positionTargetProperty = null;
     }
@@ -157,7 +157,7 @@ export class PanelAutoHideController {
         this._overviewEdgeRevealBlocked = false;
         this._dodgeEnabled = false;
         this._dodgeActive = false;
-        this._dodgePointerReveal = false;
+        this._pointerReveal = false;
         this._positionActor.remove_transition('x');
         this._positionActor.remove_transition('y');
         this.syncPosition();
@@ -204,22 +204,24 @@ export class PanelAutoHideController {
         if (this._fullscreenVisibilityHeld)
             return;
         if (this._dodgeEnabled && this._dodgeActive) {
-            if (!this._dodgePointerReveal ||
+            if (!this._pointerReveal ||
                 !this._pointerIsInsidePanel()) {
                 if (!this._hidden)
                     this._hide();
             }
             return;
         }
-        if (this._enabled() && !this._pointerIsInsidePanel())
+        if (this._enabled() &&
+            (!this._pointerReveal || !this._pointerIsInsidePanel())) {
             this._scheduleHide();
+        }
     }
 
     setDodgeState(enabled, active, pointerReveal) {
         const wasActive = this._dodgeActive;
         this._dodgeEnabled = enabled;
         this._dodgeActive = active;
-        this._dodgePointerReveal = pointerReveal;
+        this._pointerReveal = pointerReveal;
         this._syncPointerWatch();
         if (this._enabled() || enabled)
             this._syncStrutTracking();
@@ -234,7 +236,7 @@ export class PanelAutoHideController {
         if (!active) {
             if (!this._enabled())
                 this.show();
-            else if (this._pointerIsInsidePanel())
+            else if (this._pointerReveal && this._pointerIsInsidePanel())
                 this.show();
             else
                 this._scheduleHide();
@@ -325,7 +327,7 @@ export class PanelAutoHideController {
         }
 
         if (this._dodgeActive) {
-            if (this._dodgePointerReveal && this._pointerIsInsidePanel())
+            if (this._pointerReveal && this._pointerIsInsidePanel())
                 this.show(false);
             else if (!this._hidden)
                 this._hide(false);
@@ -337,16 +339,24 @@ export class PanelAutoHideController {
             return;
         }
 
-        if (this._pointerIsInsidePanel())
+        if (this._pointerReveal && this._pointerIsInsidePanel())
             this.show(false);
         else
             this._scheduleHide();
     }
 
+    _pointerRevealEnabled() {
+        if (!this._pointerReveal)
+            return false;
+
+        return this._enabled() ||
+            this._dodgeEnabled && this._dodgeActive;
+    }
+
     _syncPointerWatch() {
         const shouldWatch = this._enabled() ||
             this._dodgeEnabled && this._dodgeActive &&
-            this._dodgePointerReveal;
+            this._pointerReveal;
         if (shouldWatch && !this._cursorPositionInvalidatedId) {
             this._cursorPositionInvalidatedId = this._cursorTracker.connect(
                 'position-invalidated',
@@ -519,7 +529,7 @@ export class PanelAutoHideController {
     _scheduleHide(delay = HIDE_DELAY) {
         const canHide = this._enabled() ||
             this._dodgeEnabled && this._dodgeActive &&
-            this._dodgePointerReveal;
+            this._pointerReveal;
         if (!canHide ||
             this._overviewSuspended ||
             this._fullscreenVisibilityHeld || this._hidden ||
@@ -541,7 +551,7 @@ export class PanelAutoHideController {
                 const [x, y] = global.get_pointer();
                 const canStillHide = this._enabled() ||
                     this._dodgeEnabled && this._dodgeActive &&
-                    this._dodgePointerReveal;
+                    this._pointerReveal;
                 if (!canStillHide ||
                     this._overviewSuspended ||
                     this._pointerIsInsidePanel() ||
@@ -616,7 +626,7 @@ export class PanelAutoHideController {
     _shouldScheduleHide() {
         const canHide = this._enabled() ||
             this._dodgeEnabled && this._dodgeActive &&
-            this._dodgePointerReveal;
+            this._pointerReveal;
         const [x, y] = global.get_pointer();
         return canHide &&
             !this._pointerIsInsidePanel() &&
@@ -684,12 +694,10 @@ export class PanelAutoHideController {
     }
 
     _handlePointerMotion(x, y) {
-        const dodgeActive = this._dodgeEnabled && this._dodgeActive;
-        const pointerReveal = dodgeActive
-            ? this._dodgePointerReveal
-            : this._enabled();
-        if (!pointerReveal || Main.overview.animationInProgress)
+        if (!this._pointerRevealEnabled() ||
+            Main.overview.animationInProgress) {
             return;
+        }
 
         if (!this._hidden) {
             if (!this._pointerIsInsidePanel())

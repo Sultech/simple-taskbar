@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 20:34+0100\n"
+"POT-Creation-Date: 2026-09-15 01:17+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -1321,10 +1321,8 @@ msgid "Choose which windows make the Dock hide"
 msgstr "选择哪些窗口会使 Dock 隐藏"
 
 #: src/prefs/dockBehaviorGroup.js:50
-msgid ""
-"Reveal the Dock when the pointer reaches its screen edge while dodging a "
-"window"
-msgstr "窗口避让期间，当指针到达屏幕边缘时显示 Dock"
+msgid "Let the pointer reveal the hidden Dock at its screen edge"
+msgstr "当指针到达屏幕边缘时显示隐藏的 Dock"
 
 #: src/prefs/dockBehaviorGroup.js:58
 msgid "Dock Scroll"
@@ -2631,10 +2629,8 @@ msgid "Choose which windows make the taskbar hide"
 msgstr "选择哪些窗口会使任务栏隐藏"
 
 #: src/prefs/taskbarBehaviorGroup.js:55
-msgid ""
-"Reveal the taskbar when the pointer reaches its screen edge while dodging a "
-"window"
-msgstr "窗口避让期间，当指针到达屏幕边缘时显示任务栏"
+msgid "Let the pointer reveal the hidden taskbar at its screen edge"
+msgstr "当指针到达屏幕边缘时显示隐藏的任务栏"
 
 #: src/prefs/taskbarBehaviorGroup.js:63
 msgid "Bottom Hot Edge"
@@ -3103,7 +3099,7 @@ msgid "Trash"
 msgstr "回收站"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1375 src/taskbar/taskbarController.js:1377
+#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
 msgid "running"
 msgstr "正在运行"
 
@@ -3229,6 +3225,16 @@ msgstr "应用音量"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "没有应用正在播放音频"
+
+#~ msgid ""
+#~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
+#~ "window"
+#~ msgstr "窗口避让期间，当指针到达屏幕边缘时显示 Dock"
+
+#~ msgid ""
+#~ "Reveal the taskbar when the pointer reaches its screen edge while dodging "
+#~ "a window"
+#~ msgstr "窗口避让期间，当指针到达屏幕边缘时显示任务栏"
 
 #~ msgid "Show Original GNOME Button"
 #~ msgstr "展示原始 GNOME 按钮"

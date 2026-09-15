@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-14 20:34+0100\n"
+"POT-Creation-Date: 2026-09-15 01:17+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -1363,12 +1363,8 @@ msgid "Choose which windows make the Dock hide"
 msgstr "Válassza ki, mely ablakok rejtsék el a Dockot"
 
 #: src/prefs/dockBehaviorGroup.js:50
-msgid ""
-"Reveal the Dock when the pointer reaches its screen edge while dodging a "
-"window"
-msgstr ""
-"A Dock megjelenítése, amikor a mutató egy ablak elkerülése közben eléri a "
-"képernyő szélét"
+msgid "Let the pointer reveal the hidden Dock at its screen edge"
+msgstr "Az elrejtett Dock megjelenítése az egérmutatóval a képernyő szélén"
 
 #: src/prefs/dockBehaviorGroup.js:58
 msgid "Dock Scroll"
@@ -2739,12 +2735,8 @@ msgid "Choose which windows make the taskbar hide"
 msgstr "Válassza ki, mely ablakok rejtsék el a tálcát"
 
 #: src/prefs/taskbarBehaviorGroup.js:55
-msgid ""
-"Reveal the taskbar when the pointer reaches its screen edge while dodging a "
-"window"
-msgstr ""
-"A tálca megjelenítése, amikor a mutató egy ablak elkerülése közben eléri a "
-"képernyő szélét"
+msgid "Let the pointer reveal the hidden taskbar at its screen edge"
+msgstr "Az elrejtett tálca megjelenítése az egérmutatóval a képernyő szélén"
 
 #: src/prefs/taskbarBehaviorGroup.js:63
 msgid "Bottom Hot Edge"
@@ -3226,7 +3218,7 @@ msgid "Trash"
 msgstr "Kuka"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1375 src/taskbar/taskbarController.js:1377
+#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
 msgid "running"
 msgstr "fut"
 
@@ -3352,6 +3344,20 @@ msgstr "Alkalmazás hangereje"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Egyetlen alkalmazás sem játszik le hangot"
+
+#~ msgid ""
+#~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
+#~ "window"
+#~ msgstr ""
+#~ "A Dock megjelenítése, amikor a mutató egy ablak elkerülése közben eléri a "
+#~ "képernyő szélét"
+
+#~ msgid ""
+#~ "Reveal the taskbar when the pointer reaches its screen edge while dodging "
+#~ "a window"
+#~ msgstr ""
+#~ "A tálca megjelenítése, amikor a mutató egy ablak elkerülése közben eléri "
+#~ "a képernyő szélét"
 
 #~ msgid "Show Original GNOME Button"
 #~ msgstr "Eredeti GNOME gomb megjelenítése"

@@ -90,9 +90,11 @@ export function addWindowDodgeRows(
         dodgeRow.sensitive = available;
         dodgeSwitch.sensitive = available;
         modeRow.sensitive = available && dodgeSwitch.active;
-        pointerRevealSwitch.sensitive = available && dodgeSwitch.active;
+        pointerRevealSwitch.sensitive = available &&
+            (dodgeSwitch.active || settings.get_boolean(autohideKey));
     };
     dodgeSwitch.connect('notify::active', syncAvailability);
+    connectSettings(settings, `changed::${autohideKey}`, syncAvailability);
     syncAvailability();
 
     return {syncAvailability};

@@ -47,7 +47,7 @@
     </key>
     <key name="panel-dodge-pointer-reveal-enabled" type="b">
       <default>true</default>
-      <summary>Reveal the panel when the pointer reaches its edge while dodging</summary>
+      <summary>Reveal the panel when the pointer reaches its edge</summary>
     </key>
     <key name="hot-edge-overview-enabled" type="b">
       <default>true</default>
@@ -563,7 +563,7 @@
     </key>
     <key name="dock-dodge-pointer-reveal-enabled" type="b">
       <default>true</default>
-      <summary>Reveal the Dock when the pointer reaches its edge while dodging</summary>
+      <summary>Reveal the Dock when the pointer reaches its edge</summary>
     </key>
     <key name="dock-edge-reveal-enabled" type="b">
       <default>true</default>
