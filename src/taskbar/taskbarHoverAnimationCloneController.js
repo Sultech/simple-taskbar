@@ -316,14 +316,20 @@ export class TaskbarHoverAnimationCloneController {
 
     _connectInput(item, clone) {
         const signalIds = [];
-        signalIds.push(clone.connect(
-            'button-press-event',
-            (_actor, event) => this._onCloneButtonPress(item, event)
-        ));
+        signalIds.push(clone.connect('button-press-event', (_actor, event) => {
+            const result = this._onCloneButtonPress(item, event);
+            if (event.get_button() === Clutter.BUTTON_PRIMARY)
+                clone._taskbarPrimaryPressConsumed = result === Clutter.EVENT_STOP;
+            return result;
+        }));
         signalIds.push(clone.connect('button-release-event', (_actor, event) => {
             if (event.get_button() !== 1 || this._isDragging())
                 return Clutter.EVENT_PROPAGATE;
 
+            if (clone._taskbarPrimaryPressConsumed) {
+                clone._taskbarPrimaryPressConsumed = false;
+                return Clutter.EVENT_STOP;
+            }
             this._onCloneActivate(item);
             return Clutter.EVENT_STOP;
         }));
