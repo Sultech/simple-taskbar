@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 16:57+0100\n"
+"POT-Creation-Date: 2026-09-15 19:27+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/taskbar/showDesktopButtonController.js:128
-#: src/overflow/applicationOverflowItemController.js:137
+#: src/overflow/applicationOverflowItemController.js:138
 msgid "Show desktop"
 msgstr "Mostra desktop"
 
@@ -189,40 +189,48 @@ msgstr "Attiva/disattiva singola / Disponi multiple"
 msgid "Quit"
 msgstr "Esci"
 
-#: src/prefs/applicationClickActionDialog.js:111
-#: src/prefs/applicationClickActionDialog.js:120
+#: src/prefs/applicationClickActionDialog.js:112
+#: src/prefs/applicationClickActionDialog.js:121
 msgid "Click Action Options"
 msgstr "Opzioni azioni di clic"
 
-#: src/prefs/applicationClickActionDialog.js:131
+#: src/prefs/applicationClickActionDialog.js:132
 msgid "Application Click Actions"
 msgstr "Azioni di clic sulle applicazioni"
 
-#: src/prefs/applicationClickActionDialog.js:132
+#: src/prefs/applicationClickActionDialog.js:133
 msgid "Customize actions for modifier and middle clicks"
 msgstr "Personalizza le azioni per i clic con modificatore e il clic centrale"
 
-#: src/prefs/applicationClickActionDialog.js:141
+#: src/prefs/applicationClickActionDialog.js:142
 msgid "Shift+Click Action"
 msgstr "Azione Maiusc+Clic"
 
-#: src/prefs/applicationClickActionDialog.js:142
+#: src/prefs/applicationClickActionDialog.js:143
 msgid "Choose what happens when Shift+Clicking an application"
 msgstr "Scegli cosa accade facendo Maiusc+Clic su un’applicazione"
 
-#: src/prefs/applicationClickActionDialog.js:152
+#: src/prefs/applicationClickActionDialog.js:153
+msgid "Ctrl+Click Action"
+msgstr "Azione Ctrl+Clic"
+
+#: src/prefs/applicationClickActionDialog.js:154
+msgid "Choose what happens when Ctrl+Clicking an application"
+msgstr "Scegli cosa accade facendo Ctrl+Clic su un’applicazione"
+
+#: src/prefs/applicationClickActionDialog.js:164
 msgid "Middle-Click Action"
 msgstr "Azione clic centrale"
 
-#: src/prefs/applicationClickActionDialog.js:153
+#: src/prefs/applicationClickActionDialog.js:165
 msgid "Choose what happens when middle-clicking an application"
 msgstr "Scegli cosa accade facendo clic centrale su un’applicazione"
 
-#: src/prefs/applicationClickActionDialog.js:163
+#: src/prefs/applicationClickActionDialog.js:175
 msgid "Shift+Middle-Click Action"
 msgstr "Azione Maiusc+Clic centrale"
 
-#: src/prefs/applicationClickActionDialog.js:164
+#: src/prefs/applicationClickActionDialog.js:176
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Scegli cosa accade facendo Maiusc+Clic centrale su un’applicazione"
 
@@ -266,8 +274,9 @@ msgstr "Pressione di attivazione"
 msgid ""
 "How far to push past the edge before revealing. Turns off the bottom hot "
 "edge."
-msgstr "Quanto spingere oltre il bordo prima della visualizzazione. Disattiva il bordo attivo inferiore."
-
+msgstr ""
+"Quanto spingere oltre il bordo prima della visualizzazione. Disattiva il "
+"bordo attivo inferiore."
 
 #: src/prefs/autoHideDialog.js:108
 msgid "Hide"
@@ -2896,8 +2905,9 @@ msgstr "Abilita il bordo attivo inferiore"
 msgid ""
 "Push the pointer against the bottom screen edge to toggle Overview. Turns "
 "off pressure reveal."
-msgstr "Spingi il puntatore contro il bordo inferiore dello schermo per aprire la panoramica. Disattiva la visualizzazione a pressione."
-
+msgstr ""
+"Spingi il puntatore contro il bordo inferiore dello schermo per aprire la "
+"panoramica. Disattiva la visualizzazione a pressione."
 
 #: src/prefs/taskbarBehaviorGroup.js:118
 msgid ""
@@ -3364,7 +3374,7 @@ msgid "Trash"
 msgstr "Cestino"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
+#: src/taskbar/taskbarController.js:1381 src/taskbar/taskbarController.js:1383
 msgid "running"
 msgstr "in esecuzione"
 

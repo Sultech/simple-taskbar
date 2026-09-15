@@ -100,6 +100,7 @@ function getMiddleClickActionChoices() {
 
 const CLICK_ACTION_SETTINGS = [
     'shift-click-action',
+    'ctrl-click-action',
     'middle-click-action',
     'shift-middle-click-action',
 ];
@@ -140,6 +141,17 @@ class ApplicationClickActionOptionsDialog extends Adw.Window {
                 key: 'shift-click-action',
                 title: _('Shift+Click Action'),
                 subtitle: _('Choose what happens when Shift+Clicking an application'),
+                choices: getClickActionOptionChoices(),
+            },
+            connectSettings
+        );
+        addComboRow(
+            optionsGroup,
+            settings,
+            {
+                key: 'ctrl-click-action',
+                title: _('Ctrl+Click Action'),
+                subtitle: _('Choose what happens when Ctrl+Clicking an application'),
                 choices: getClickActionOptionChoices(),
             },
             connectSettings

@@ -10,6 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {closePopupMenu} from '../shared/popupMenuUtils.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
+import {modifierClickActionKey} from '../pointerUtils.js';
 
 export class ApplicationOverflowItemController {
     constructor(settings, taskbarController, menu, section) {
@@ -213,10 +214,13 @@ export class ApplicationOverflowItemController {
             const shifted = Boolean(
                 event.get_state() & Clutter.ModifierType.SHIFT_MASK
             );
-            if (mouseButton === Clutter.BUTTON_PRIMARY && shifted) {
-                const keepOpen = this._taskbarController.handleItemShiftClick(
-                    sourceItem
-                );
+            const actionKey = modifierClickActionKey(event);
+            if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
+                const keepOpen =
+                    this._taskbarController.handleItemModifierClick(
+                        sourceItem,
+                        actionKey
+                    );
                 if (!keepOpen)
                     closePopupMenu(this._menu);
                 return Clutter.EVENT_STOP;

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 16:57+0100\n"
+"POT-Creation-Date: 2026-09-15 19:27+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/taskbar/showDesktopButtonController.js:128
-#: src/overflow/applicationOverflowItemController.js:137
+#: src/overflow/applicationOverflowItemController.js:138
 msgid "Show desktop"
 msgstr "Desktop anzeigen"
 
@@ -189,42 +189,52 @@ msgstr "Einzelfenster umschalten / mehrere Fenster verteilen"
 msgid "Quit"
 msgstr "Beenden"
 
-#: src/prefs/applicationClickActionDialog.js:111
-#: src/prefs/applicationClickActionDialog.js:120
+#: src/prefs/applicationClickActionDialog.js:112
+#: src/prefs/applicationClickActionDialog.js:121
 msgid "Click Action Options"
 msgstr "Optionen für Klickaktionen"
 
-#: src/prefs/applicationClickActionDialog.js:131
+#: src/prefs/applicationClickActionDialog.js:132
 msgid "Application Click Actions"
 msgstr "Klickaktionen für Anwendungen"
 
-#: src/prefs/applicationClickActionDialog.js:132
+#: src/prefs/applicationClickActionDialog.js:133
 msgid "Customize actions for modifier and middle clicks"
 msgstr "Aktionen für Zusatztasten- und Mittelklicks anpassen"
 
-#: src/prefs/applicationClickActionDialog.js:141
+#: src/prefs/applicationClickActionDialog.js:142
 msgid "Shift+Click Action"
 msgstr "Umschalttaste+Klick-Aktion"
 
-#: src/prefs/applicationClickActionDialog.js:142
+#: src/prefs/applicationClickActionDialog.js:143
 msgid "Choose what happens when Shift+Clicking an application"
 msgstr ""
 "Festlegen, was beim Klicken auf eine Anwendung mit gedrückter Umschalttaste "
 "geschieht"
 
-#: src/prefs/applicationClickActionDialog.js:152
+#: src/prefs/applicationClickActionDialog.js:153
+msgid "Ctrl+Click Action"
+msgstr "Strg+Klick-Aktion"
+
+#: src/prefs/applicationClickActionDialog.js:154
+msgid "Choose what happens when Ctrl+Clicking an application"
+msgstr ""
+"Festlegen, was beim Klicken auf eine Anwendung mit gedrückter Strg-Taste "
+"geschieht"
+
+#: src/prefs/applicationClickActionDialog.js:164
 msgid "Middle-Click Action"
 msgstr "Mittelklick-Aktion"
 
-#: src/prefs/applicationClickActionDialog.js:153
+#: src/prefs/applicationClickActionDialog.js:165
 msgid "Choose what happens when middle-clicking an application"
 msgstr "Festlegen, was beim Mittelklicken auf eine Anwendung geschieht"
 
-#: src/prefs/applicationClickActionDialog.js:163
+#: src/prefs/applicationClickActionDialog.js:175
 msgid "Shift+Middle-Click Action"
 msgstr "Umschalttaste+Mittelklick-Aktion"
 
-#: src/prefs/applicationClickActionDialog.js:164
+#: src/prefs/applicationClickActionDialog.js:176
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr ""
 "Festlegen, was beim Mittelklicken auf eine Anwendung mit gedrückter "
@@ -270,8 +280,9 @@ msgstr "Aktivierungsdruck"
 msgid ""
 "How far to push past the edge before revealing. Turns off the bottom hot "
 "edge."
-msgstr "Wie weit über den Rand gedrückt werden muss. Schaltet den unteren Hot-Edge-Bereich ab."
-
+msgstr ""
+"Wie weit über den Rand gedrückt werden muss. Schaltet den unteren Hot-Edge-"
+"Bereich ab."
 
 #: src/prefs/autoHideDialog.js:108
 msgid "Hide"
@@ -2867,8 +2878,9 @@ msgstr "Unteren Aktivrand aktivieren"
 msgid ""
 "Push the pointer against the bottom screen edge to toggle Overview. Turns "
 "off pressure reveal."
-msgstr "Den Zeiger gegen den unteren Bildschirmrand drücken, um die Übersicht umzuschalten. Schaltet das Einblenden per Druck ab."
-
+msgstr ""
+"Den Zeiger gegen den unteren Bildschirmrand drücken, um die Übersicht "
+"umzuschalten. Schaltet das Einblenden per Druck ab."
 
 #: src/prefs/taskbarBehaviorGroup.js:118
 msgid ""
@@ -3328,7 +3340,7 @@ msgid "Trash"
 msgstr "Papierkorb"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
+#: src/taskbar/taskbarController.js:1381 src/taskbar/taskbarController.js:1383
 msgid "running"
 msgstr "läuft"
 

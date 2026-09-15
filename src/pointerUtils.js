@@ -11,3 +11,12 @@ export function pointerButtonIsPressed() {
     const [, , modifiers] = global.get_pointer();
     return Boolean(modifiers & POINTER_BUTTON_MASK);
 }
+
+export function modifierClickActionKey(event) {
+    const state = event.get_state();
+    if (state & Clutter.ModifierType.SHIFT_MASK)
+        return 'shift-click-action';
+    if (state & Clutter.ModifierType.CONTROL_MASK)
+        return 'ctrl-click-action';
+    return null;
+}

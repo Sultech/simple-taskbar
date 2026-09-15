@@ -7,6 +7,7 @@ import St from 'gi://St';
 
 import {RunningIndicator} from './runningIndicator.js';
 import {TaskbarItemContainer} from './taskbarItemContainer.js';
+import {modifierClickActionKey} from '../pointerUtils.js';
 
 export class TaskbarAppItemFactory {
     constructor({
@@ -23,7 +24,7 @@ export class TaskbarAppItemFactory {
         getSlotWidth,
         handleHover,
         handleMiddleClick,
-        handleShiftClick,
+        handleModifierClick,
         makeDraggable,
         popupMenu,
         queueIconGeometryUpdate,
@@ -46,7 +47,7 @@ export class TaskbarAppItemFactory {
         this._getSlotWidth = getSlotWidth;
         this._handleHover = handleHover;
         this._handleMiddleClick = handleMiddleClick;
-        this._handleShiftClick = handleShiftClick;
+        this._handleModifierClick = handleModifierClick;
         this._makeDraggable = makeDraggable;
         this._popupMenu = popupMenu;
         this._queueIconGeometryUpdate = queueIconGeometryUpdate;
@@ -349,9 +350,9 @@ export class TaskbarAppItemFactory {
         });
         button.connect('button-press-event', (_actor, event) => {
             const mouseButton = event.get_button();
-            if (mouseButton === Clutter.BUTTON_PRIMARY &&
-                event.get_state() & Clutter.ModifierType.SHIFT_MASK) {
-                this._handleShiftClick(item);
+            const actionKey = modifierClickActionKey(event);
+            if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
+                this._handleModifierClick(item, actionKey);
                 return Clutter.EVENT_STOP;
             }
             if (mouseButton === Clutter.BUTTON_MIDDLE) {
@@ -391,7 +392,7 @@ export class TaskbarAppItemFactory {
         this._popupMenu = null;
         this._makeDraggable = null;
         this._syncClassicHighlight = null;
-        this._handleShiftClick = null;
+        this._handleModifierClick = null;
         this._handleMiddleClick = null;
         this._handleHover = null;
         this._getSlotWidth = null;

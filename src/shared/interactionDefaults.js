@@ -18,6 +18,7 @@ export function applySharedInteractionDefaults(settings) {
         CLICK_ACTION.TOGGLE_SPREAD
     );
     setString(settings, 'shift-click-action', CLICK_ACTION.MINIMIZE);
+    setString(settings, 'ctrl-click-action', CLICK_ACTION.LAUNCH);
     setString(settings, 'middle-click-action', CLICK_ACTION.LAUNCH);
     setString(
         settings,

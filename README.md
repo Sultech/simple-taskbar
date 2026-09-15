@@ -87,7 +87,7 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 - **Click actions** — choose from *Cycle Windows + Minimize*, *Cycle Through Windows*,
   *Toggle Single / Preview Multiple*, *Toggle Single / Cycle Multiple*, *Spread Multiple
   Windows*, *Toggle Windows*, *Raise Windows* and *Launch New Instance*
-- **Modifier clicks** — Shift+click, middle-click and Shift+middle-click each take their own action, including *Quit* and *Minimize Window*
+- **Modifier clicks** — Shift+click, Ctrl+click, middle-click and Shift+middle-click each take their own action, including *Quit* and *Minimize Window*
 - **Hover action** — show window previews, show a tooltip, or do nothing
 - **Window previews** with separate show and hide delays, and optional middle-click to close the window
 - **Window peeking** brings the hovered window to the front temporarily, with its own delay and an adjustable opacity for the other windows

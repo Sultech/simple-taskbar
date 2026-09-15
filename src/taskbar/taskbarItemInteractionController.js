@@ -76,11 +76,11 @@ export class TaskbarItemInteractionController {
         return keepOpen;
     }
 
-    shiftClick(item) {
+    modifierClick(item, actionKey) {
         const previews = this._getPreviewController();
         const app = item._taskbarApp;
         this._animateClick(item);
-        const action = this._settings.get_string('shift-click-action');
+        const action = this._settings.get_string(actionKey);
         previews.hideTooltip();
         if (item._taskbarIsLauncher) {
             previews.hide();

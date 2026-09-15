@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 16:57+0100\n"
+"POT-Creation-Date: 2026-09-15 19:27+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/taskbar/showDesktopButtonController.js:128
-#: src/overflow/applicationOverflowItemController.js:137
+#: src/overflow/applicationOverflowItemController.js:138
 msgid "Show desktop"
 msgstr "展示桌面"
 
@@ -186,40 +186,48 @@ msgstr "切换单个窗口 / 展开多个窗口"
 msgid "Quit"
 msgstr "退出"
 
-#: src/prefs/applicationClickActionDialog.js:111
-#: src/prefs/applicationClickActionDialog.js:120
+#: src/prefs/applicationClickActionDialog.js:112
+#: src/prefs/applicationClickActionDialog.js:121
 msgid "Click Action Options"
 msgstr "点击操作选项"
 
-#: src/prefs/applicationClickActionDialog.js:131
+#: src/prefs/applicationClickActionDialog.js:132
 msgid "Application Click Actions"
 msgstr "应用点击操作"
 
-#: src/prefs/applicationClickActionDialog.js:132
+#: src/prefs/applicationClickActionDialog.js:133
 msgid "Customize actions for modifier and middle clicks"
 msgstr "自定义组合键点击和中键点击操作"
 
-#: src/prefs/applicationClickActionDialog.js:141
+#: src/prefs/applicationClickActionDialog.js:142
 msgid "Shift+Click Action"
 msgstr "Shift+点击操作"
 
-#: src/prefs/applicationClickActionDialog.js:142
+#: src/prefs/applicationClickActionDialog.js:143
 msgid "Choose what happens when Shift+Clicking an application"
 msgstr "选择按住 Shift 点击应用时执行的操作"
 
-#: src/prefs/applicationClickActionDialog.js:152
+#: src/prefs/applicationClickActionDialog.js:153
+msgid "Ctrl+Click Action"
+msgstr "Ctrl+点击操作"
+
+#: src/prefs/applicationClickActionDialog.js:154
+msgid "Choose what happens when Ctrl+Clicking an application"
+msgstr "选择按住 Ctrl 点击应用时执行的操作"
+
+#: src/prefs/applicationClickActionDialog.js:164
 msgid "Middle-Click Action"
 msgstr "中键点击操作"
 
-#: src/prefs/applicationClickActionDialog.js:153
+#: src/prefs/applicationClickActionDialog.js:165
 msgid "Choose what happens when middle-clicking an application"
 msgstr "选择中键点击应用时执行的操作"
 
-#: src/prefs/applicationClickActionDialog.js:163
+#: src/prefs/applicationClickActionDialog.js:175
 msgid "Shift+Middle-Click Action"
 msgstr "Shift+中键点击操作"
 
-#: src/prefs/applicationClickActionDialog.js:164
+#: src/prefs/applicationClickActionDialog.js:176
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "选择按住 Shift 中键点击应用时执行的操作"
 
@@ -264,7 +272,6 @@ msgid ""
 "How far to push past the edge before revealing. Turns off the bottom hot "
 "edge."
 msgstr "显示前需要越过边缘推动的距离。会关闭底部热区。"
-
 
 #: src/prefs/autoHideDialog.js:108
 msgid "Hide"
@@ -2723,7 +2730,6 @@ msgid ""
 "off pressure reveal."
 msgstr "将指针推向屏幕底部边缘以切换概览。会关闭按压显示。"
 
-
 #: src/prefs/taskbarBehaviorGroup.js:118
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
@@ -3169,7 +3175,7 @@ msgid "Trash"
 msgstr "回收站"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
+#: src/taskbar/taskbarController.js:1381 src/taskbar/taskbarController.js:1383
 msgid "running"
 msgstr "正在运行"
 

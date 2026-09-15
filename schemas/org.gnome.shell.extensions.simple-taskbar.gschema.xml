@@ -996,6 +996,21 @@
       <default>'minimize-window'</default>
       <summary>Action when Shift-clicking a running application</summary>
     </key>
+    <key name="ctrl-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+      </choices>
+      <default>'launch-new-instance'</default>
+      <summary>Action when Ctrl-clicking a running application</summary>
+    </key>
     <key name="shift-middle-click-action" type="s">
       <choices>
         <choice value="raise-windows"/>

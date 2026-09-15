@@ -63,6 +63,7 @@ import {
     TASKBAR_SEPARATOR_EXTENT,
 } from './taskbarSeparator.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
+import {modifierClickActionKey} from '../pointerUtils.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 160;
@@ -306,7 +307,8 @@ export class TaskbarController {
                 this.handleItemHover(item, hovering),
             handleMiddleClick: (item, shifted) =>
                 this.handleItemMiddleClick(item, shifted),
-            handleShiftClick: item => this.handleItemShiftClick(item),
+            handleModifierClick: (item, actionKey) =>
+                this.handleItemModifierClick(item, actionKey),
             makeDraggable: (item, button, icon, app) =>
                 this._dragController.makeDraggable(item, button, icon, app),
             popupMenu: (item, button) => this.popupItemMenu(item, button),
@@ -342,8 +344,9 @@ export class TaskbarController {
                     const shifted = Boolean(
                         event.get_state() & Clutter.ModifierType.SHIFT_MASK
                     );
-                    if (mouseButton === Clutter.BUTTON_PRIMARY && shifted) {
-                        this.handleItemShiftClick(item);
+                    const actionKey = modifierClickActionKey(event);
+                    if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
+                        this.handleItemModifierClick(item, actionKey);
                         return Clutter.EVENT_STOP;
                     }
                     if (mouseButton === Clutter.BUTTON_MIDDLE) {
@@ -1090,8 +1093,8 @@ export class TaskbarController {
         );
     }
 
-    handleItemShiftClick(item) {
-        return this._itemInteractionController.shiftClick(item);
+    handleItemModifierClick(item, actionKey) {
+        return this._itemInteractionController.modifierClick(item, actionKey);
     }
 
     handleItemMiddleClick(item, shifted = false) {

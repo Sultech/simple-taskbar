@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 16:57+0100\n"
+"POT-Creation-Date: 2026-09-15 19:27+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/taskbar/showDesktopButtonController.js:128
-#: src/overflow/applicationOverflowItemController.js:137
+#: src/overflow/applicationOverflowItemController.js:138
 msgid "Show desktop"
 msgstr "Mostrar a área de trabalho"
 
@@ -191,40 +191,48 @@ msgstr "Alternar única / Espalhar várias"
 msgid "Quit"
 msgstr "Sair"
 
-#: src/prefs/applicationClickActionDialog.js:111
-#: src/prefs/applicationClickActionDialog.js:120
+#: src/prefs/applicationClickActionDialog.js:112
+#: src/prefs/applicationClickActionDialog.js:121
 msgid "Click Action Options"
 msgstr "Opções de ações de clique"
 
-#: src/prefs/applicationClickActionDialog.js:131
+#: src/prefs/applicationClickActionDialog.js:132
 msgid "Application Click Actions"
 msgstr "Ações de clique em aplicativos"
 
-#: src/prefs/applicationClickActionDialog.js:132
+#: src/prefs/applicationClickActionDialog.js:133
 msgid "Customize actions for modifier and middle clicks"
 msgstr "Personalize ações para cliques com modificadores e clique do meio"
 
-#: src/prefs/applicationClickActionDialog.js:141
+#: src/prefs/applicationClickActionDialog.js:142
 msgid "Shift+Click Action"
 msgstr "Ação de Shift+Clique"
 
-#: src/prefs/applicationClickActionDialog.js:142
+#: src/prefs/applicationClickActionDialog.js:143
 msgid "Choose what happens when Shift+Clicking an application"
 msgstr "Escolha o que acontece ao usar Shift+Clique em um aplicativo"
 
-#: src/prefs/applicationClickActionDialog.js:152
+#: src/prefs/applicationClickActionDialog.js:153
+msgid "Ctrl+Click Action"
+msgstr "Ação de Ctrl+Clique"
+
+#: src/prefs/applicationClickActionDialog.js:154
+msgid "Choose what happens when Ctrl+Clicking an application"
+msgstr "Escolha o que acontece ao usar Ctrl+Clique em um aplicativo"
+
+#: src/prefs/applicationClickActionDialog.js:164
 msgid "Middle-Click Action"
 msgstr "Ação do clique do meio"
 
-#: src/prefs/applicationClickActionDialog.js:153
+#: src/prefs/applicationClickActionDialog.js:165
 msgid "Choose what happens when middle-clicking an application"
 msgstr "Escolha o que acontece ao clicar com o botão do meio em um aplicativo"
 
-#: src/prefs/applicationClickActionDialog.js:163
+#: src/prefs/applicationClickActionDialog.js:175
 msgid "Shift+Middle-Click Action"
 msgstr "Ação de Shift+Clique do meio"
 
-#: src/prefs/applicationClickActionDialog.js:164
+#: src/prefs/applicationClickActionDialog.js:176
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Escolha o que acontece ao usar Shift+Clique do meio em um aplicativo"
 
@@ -268,8 +276,9 @@ msgstr "Pressão de ativação"
 msgid ""
 "How far to push past the edge before revealing. Turns off the bottom hot "
 "edge."
-msgstr "O quanto empurrar além da borda antes de exibir. Desativa a borda ativa inferior."
-
+msgstr ""
+"O quanto empurrar além da borda antes de exibir. Desativa a borda ativa "
+"inferior."
 
 #: src/prefs/autoHideDialog.js:108
 msgid "Hide"
@@ -2845,8 +2854,9 @@ msgstr "Ativar borda inferior sensível"
 msgid ""
 "Push the pointer against the bottom screen edge to toggle Overview. Turns "
 "off pressure reveal."
-msgstr "Empurre o cursor contra a borda inferior da tela para alternar o panorama. Desativa a exibição por pressão."
-
+msgstr ""
+"Empurre o cursor contra a borda inferior da tela para alternar o panorama. "
+"Desativa a exibição por pressão."
 
 #: src/prefs/taskbarBehaviorGroup.js:118
 msgid ""
@@ -3312,7 +3322,7 @@ msgid "Trash"
 msgstr "Lixeira"
 
 #: src/taskbar/taskbarAppearanceController.js:601
-#: src/taskbar/taskbarController.js:1378 src/taskbar/taskbarController.js:1380
+#: src/taskbar/taskbarController.js:1381 src/taskbar/taskbarController.js:1383
 msgid "running"
 msgstr "em execução"
 
