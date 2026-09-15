@@ -240,6 +240,7 @@ export class PanelAutoHideController {
         }
         if (this._enabled() &&
             (!this._pointerReveal || !this._pointerIsInsidePanel())) {
+            this._clearHideTimeout();
             this._scheduleHide();
         }
     }
