@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -258,29 +258,43 @@ msgstr "Sofort"
 msgid "After a Delay"
 msgstr "Nach einer Verzögerung"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr "Nach Drücken gegen den Rand"
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr "Verzögerung beim Einblenden"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Wie lange der Zeiger am Rand verweilt, in Millisekunden"
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr "Aktivierungsdruck"
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr "Wie weit über den Rand gedrückt werden muss"
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr "Legt fest, wie schnell die Leiste wieder ausgeblendet wird"
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr "Verzögerung beim Ausblenden"
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
-msgstr "Wie lange die Leiste wartet, nachdem der Zeiger sie verlässt, in Millisekunden"
+msgstr ""
+"Wie lange die Leiste wartet, nachdem der Zeiger sie verlässt, in "
+"Millisekunden"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -2834,10 +2848,6 @@ msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Drücken Sie den Zeiger gegen den unteren Bildschirmrand, um die Übersicht "
 "umzuschalten"
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
-msgstr "Aktivierungsdruck"
 
 #: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""

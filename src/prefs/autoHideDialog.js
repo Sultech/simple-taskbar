@@ -35,7 +35,7 @@ class RevealOptionsDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 640,
-            default_height: 480,
+            default_height: 560,
         });
 
         this._settings = settings;
@@ -64,6 +64,10 @@ class RevealOptionsDialog extends Adw.Window {
                         value: AUTO_HIDE_REVEAL_MODE.DELAY,
                         label: _('After a Delay'),
                     },
+                    {
+                        value: AUTO_HIDE_REVEAL_MODE.PRESSURE,
+                        label: _('After Pushing Against the Edge'),
+                    },
                 ],
             },
             connectSettings
@@ -78,6 +82,20 @@ class RevealOptionsDialog extends Adw.Window {
                 lower: 50,
                 upper: 2000,
                 step: 50,
+            },
+            connectSettings
+        );
+
+        const pressureRow = addSpinRow(
+            revealGroup,
+            settings,
+            {
+                key: AUTO_HIDE_SETTINGS.pressureThreshold,
+                title: _('Activation Pressure'),
+                subtitle: _('How far to push past the edge before revealing'),
+                lower: 0,
+                upper: 500,
+                step: 10,
             },
             connectSettings
         );
@@ -105,9 +123,11 @@ class RevealOptionsDialog extends Adw.Window {
         const syncSensitivity = () => {
             const revealable = settings.get_boolean(pointerRevealKey);
             modeRow.sensitive = revealable;
-            delayRow.sensitive = revealable && settings.get_string(
-                AUTO_HIDE_SETTINGS.revealMode
-            ) === AUTO_HIDE_REVEAL_MODE.DELAY;
+            const mode = settings.get_string(AUTO_HIDE_SETTINGS.revealMode);
+            delayRow.sensitive = revealable &&
+                mode === AUTO_HIDE_REVEAL_MODE.DELAY;
+            pressureRow.sensitive = revealable &&
+                mode === AUTO_HIDE_REVEAL_MODE.PRESSURE;
         };
         connectSettings(
             settings,

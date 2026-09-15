@@ -49,6 +49,7 @@
       <choices>
         <choice value="instant"/>
         <choice value="delay"/>
+        <choice value="pressure"/>
       </choices>
       <default>'instant'</default>
       <summary>Whether the pointer reveals the panel at once or after a delay</summary>
@@ -57,6 +58,11 @@
       <range min="50" max="2000"/>
       <default>250</default>
       <summary>How long the pointer must rest on the screen edge before revealing</summary>
+    </key>
+    <key name="panel-autohide-pressure-threshold" type="i">
+      <range min="0" max="500"/>
+      <default>100</default>
+      <summary>How hard the pointer must push against the edge before revealing</summary>
     </key>
     <key name="panel-autohide-hide-delay" type="i">
       <range min="0" max="2000"/>

@@ -3,7 +3,10 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
 
+import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {
     TransientSignalHolder,
@@ -13,17 +16,27 @@ import {panelGeometry} from './panelGeometry.js';
 import {
     panelIsMinimumEdge,
     panelIsVertical,
+    panelPosition,
 } from './panelPosition.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
 import {
     autoHideHideDelay,
     autoHideRevealDelay,
+    autoHideUsesPressure,
 } from '../shared/autoHideSettings.js';
 
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
 const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
+const PRESSURE_TIMEOUT = 1000;
+const BARRIER_CORNER_INSET = 1;
+const BARRIER_DIRECTIONS = {
+    top: Meta.BarrierDirection.POSITIVE_Y,
+    bottom: Meta.BarrierDirection.NEGATIVE_Y,
+    left: Meta.BarrierDirection.POSITIVE_X,
+    right: Meta.BarrierDirection.NEGATIVE_X,
+};
 export class PanelAutoHideController {
     constructor({
         settings,
@@ -77,6 +90,9 @@ export class PanelAutoHideController {
         this._positionTarget = null;
         this._positionTargetProperty = null;
         this._revealDwellTimeoutId = 0;
+        this._barrier = null;
+        this._pressureBarrier = null;
+        this._pressureTriggerId = 0;
     }
 
     enable() {
@@ -120,6 +136,11 @@ export class PanelAutoHideController {
         );
         this._settings.connectObject(
             'changed::panel-autohide-enabled', () => this._syncEnabled(),
+            'changed::panel-autohide-reveal-mode',
+            () => this._syncPressureBarrier(),
+            'changed::panel-autohide-pressure-threshold',
+            () => this._syncPressureBarrier(),
+            'changed::panel-position', () => this._syncPressureBarrier(),
             this._signalHolder
         );
         Main.overview.connectObject(
@@ -149,6 +170,7 @@ export class PanelAutoHideController {
     destroy() {
         this._clearHideTimeout();
         this._cancelRevealDwell();
+        this._destroyPressureBarrier();
         this._stopFullscreenWatch();
         if (this._cursorPositionInvalidatedId)
             this._cursorTracker.disconnect(this._cursorPositionInvalidatedId);
@@ -227,6 +249,7 @@ export class PanelAutoHideController {
         this._dodgeEnabled = enabled;
         this._dodgeActive = active;
         this._pointerReveal = pointerReveal;
+        this._syncPressureBarrier();
         this._syncPointerWatch();
         if (this._enabled() || enabled)
             this._syncStrutTracking();
@@ -311,6 +334,7 @@ export class PanelAutoHideController {
         }
 
         this._hidden = false;
+        this._syncPressureBarrier();
         this._moveTo(this._geometry(this._getMonitor()).visibleOffset, animate);
         if (this._shouldScheduleHide())
             this._scheduleHide();
@@ -321,6 +345,7 @@ export class PanelAutoHideController {
     }
 
     _syncEnabled() {
+        this._syncPressureBarrier();
         this._syncPointerWatch();
         this._syncUnredirect();
         if (this._enabled() || this._dodgeEnabled)
@@ -352,7 +377,7 @@ export class PanelAutoHideController {
     }
 
     _pointerRevealEnabled() {
-        if (!this._pointerReveal)
+        if (!this._pointerReveal || autoHideUsesPressure(this._settings))
             return false;
 
         return this._enabled() ||
@@ -590,6 +615,7 @@ export class PanelAutoHideController {
             return;
 
         this._hidden = false;
+        this._syncPressureBarrier();
         this._moveTo(
             this._geometry(this._getMonitor()).visibleOffset,
             false
@@ -617,6 +643,7 @@ export class PanelAutoHideController {
     _hide(animate = true) {
         this._hideAfterReveal = false;
         this._hidden = true;
+        this._syncPressureBarrier();
         this._moveTo(
             this._geometry(this._getMonitor()).hiddenOffset,
             animate
@@ -700,16 +727,17 @@ export class PanelAutoHideController {
     }
 
     _handlePointerMotion(x, y) {
-        if (!this._pointerRevealEnabled() ||
-            Main.overview.animationInProgress) {
+        if (Main.overview.animationInProgress)
             return;
-        }
 
         if (!this._hidden) {
             if (!this._pointerIsInsidePanel())
                 this._scheduleHide();
             return;
         }
+
+        if (!this._pointerRevealEnabled())
+            return;
 
         if (!this._pointerIsAtRevealEdge(x, y)) {
             this._overviewEdgeRevealBlocked = false;
@@ -727,6 +755,103 @@ export class PanelAutoHideController {
         }
 
         this._startRevealDwell(delay);
+    }
+
+    _usesPressureReveal() {
+        return this._pointerReveal &&
+            autoHideUsesPressure(this._settings) &&
+            (this._enabled() || this._dodgeEnabled);
+    }
+
+    _barriersAreSupported() {
+        return Boolean(
+            global.backend.capabilities &
+            Meta.BackendCapabilities.BARRIERS
+        );
+    }
+
+    _destroyPressureBarrier() {
+        if (this._pressureBarrier && this._pressureTriggerId)
+            this._pressureBarrier.disconnect(this._pressureTriggerId);
+        this._pressureTriggerId = 0;
+        if (this._pressureBarrier && this._barrier)
+            this._pressureBarrier.removeBarrier(this._barrier);
+        this._barrier?.destroy();
+        this._barrier = null;
+        this._pressureBarrier?.destroy();
+        this._pressureBarrier = null;
+    }
+
+    _pressureBarrierEdge(monitor) {
+        const workArea = Main.layoutManager.getWorkAreaForMonitor(
+            monitor.index
+        );
+        const geometry = this._geometry(monitor);
+        const limit = this._getLimitRevealToPanel();
+        const position = panelPosition(this._settings);
+        if (geometry.vertical) {
+            const y1 = limit
+                ? geometry.y
+                : workArea.y + BARRIER_CORNER_INSET;
+            const y2 = limit
+                ? geometry.y + geometry.height
+                : workArea.y + workArea.height - BARRIER_CORNER_INSET;
+            const x = position === 'left'
+                ? monitor.x
+                : monitor.x + monitor.width;
+            return {x1: x, x2: x, y1, y2};
+        }
+
+        const x1 = limit
+            ? geometry.x
+            : workArea.x + BARRIER_CORNER_INSET;
+        const x2 = limit
+            ? geometry.x + geometry.width
+            : workArea.x + workArea.width - BARRIER_CORNER_INSET;
+        const y = position === 'top'
+            ? monitor.y
+            : monitor.y + monitor.height;
+        return {x1, x2, y1: y, y2: y};
+    }
+
+    _syncPressureBarrier() {
+        this._destroyPressureBarrier();
+        const monitor = this._getMonitor();
+        if (!monitor || !this._hidden || !this._usesPressureReveal() ||
+            !this._barriersAreSupported()) {
+            return;
+        }
+
+        const edge = this._pressureBarrierEdge(monitor);
+        if (edge.x1 >= edge.x2 && edge.y1 >= edge.y2)
+            return;
+
+        this._barrier = new Meta.Barrier({
+            backend: global.backend,
+            ...edge,
+            directions: BARRIER_DIRECTIONS[panelPosition(this._settings)],
+        });
+        this._pressureBarrier = new Layout.PressureBarrier(
+            this._settings.get_int('panel-autohide-pressure-threshold'),
+            PRESSURE_TIMEOUT,
+            Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW
+        );
+        this._pressureBarrier.addBarrier(this._barrier);
+        this._pressureTriggerId = this._pressureBarrier.connect(
+            'trigger',
+            () => this._revealFromPressure()
+        );
+    }
+
+    _revealFromPressure() {
+        if (!this._hidden || this._isBlocked())
+            return;
+        if (Main.overview.visibleTarget ||
+            Main.overview.animationInProgress) {
+            return;
+        }
+
+        this.show();
     }
 
     _cancelRevealDwell() {

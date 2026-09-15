@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -252,27 +252,39 @@ msgstr "Сразу"
 msgid "After a Delay"
 msgstr "С задержкой"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr "После нажатия на край"
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr "Задержка показа"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Сколько указатель удерживается у края, в миллисекундах"
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr "Давление активации"
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr "Насколько сильно нажать за край до показа"
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr "Скрытие"
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr "Выберите, как быстро панель снова скрывается"
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr "Задержка скрытия"
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
 msgstr "Сколько панель ждёт после ухода указателя, в миллисекундах"
 
@@ -2767,10 +2779,6 @@ msgstr "Включить нижнюю активную область"
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Подведите указатель к нижнему краю экрана, чтобы открыть или закрыть обзор"
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
-msgstr "Давление активации"
 
 #: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""

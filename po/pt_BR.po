@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -256,27 +256,39 @@ msgstr "Imediato"
 msgid "After a Delay"
 msgstr "Após um atraso"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr "Depois de empurrar contra a borda"
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr "Atraso de exibição"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Por quanto tempo o cursor permanece na borda, em milissegundos"
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr "Pressão de ativação"
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr "O quanto empurrar além da borda antes de exibir"
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr "Ocultação"
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr "Escolha com que rapidez o painel se oculta novamente"
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr "Atraso de ocultação"
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
 msgstr "Quanto tempo o painel espera depois que o cursor sai, em milissegundos"
 
@@ -2812,10 +2824,6 @@ msgstr "Ativar borda inferior sensível"
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Empurre o cursor contra a borda inferior da tela para alternar a Panorâmica"
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
-msgstr "Pressão de ativação"
 
 #: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""

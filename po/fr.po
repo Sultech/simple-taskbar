@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -259,29 +259,42 @@ msgstr "Immédiat"
 msgid "After a Delay"
 msgstr "Après un délai"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr "Après avoir poussé contre le bord"
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr "Délai d’affichage"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Durée pendant laquelle le curseur reste au bord, en millisecondes"
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr "Pression d’activation"
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr "Distance à pousser au-delà du bord avant l’affichage"
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr "Masquage"
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr "Choisir la rapidité avec laquelle la barre se masque à nouveau"
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr "Délai de masquage"
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
-msgstr "Durée d’attente de la barre après le départ du curseur, en millisecondes"
+msgstr ""
+"Durée d’attente de la barre après le départ du curseur, en millisecondes"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -2875,10 +2888,6 @@ msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Appuyer le curseur contre le bord inférieur de l’écran pour déclencher "
 "l’aperçu"
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
-msgstr "Pression d’activation"
 
 #: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""

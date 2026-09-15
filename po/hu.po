@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -253,29 +253,42 @@ msgstr "Azonnal"
 msgid "After a Delay"
 msgstr "Késleltetés után"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr "A szélnek nyomás után"
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr "Megjelenítési késleltetés"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Meddig időzzön az egérmutató a szélen, ezredmásodpercben"
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr "Aktiválási nyomás"
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr "Mennyire kell a szélen túlnyomni a megjelenítéshez"
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr "Elrejtés"
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr "Válassza ki, milyen hamar rejtőzzön el újra a panel"
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr "Elrejtési késleltetés"
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
-msgstr "Meddig várjon a panel, miután az egérmutató elhagyja, ezredmásodpercben"
+msgstr ""
+"Meddig várjon a panel, miután az egérmutató elhagyja, ezredmásodpercben"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -2798,10 +2811,6 @@ msgstr "Alsó forró szél engedélyezése"
 #: src/prefs/taskbarBehaviorGroup.js:72
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr "Az egérmutató alsó képernyőszélhez nyomása az Áttekintés váltásához"
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
-msgstr "Aktiválási nyomás"
 
 #: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""

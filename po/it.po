@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -254,29 +254,42 @@ msgstr "Immediata"
 msgid "After a Delay"
 msgstr "Dopo un ritardo"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr "Dopo aver spinto contro il bordo"
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr "Ritardo di visualizzazione"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Per quanto tempo il puntatore resta sul bordo, in millisecondi"
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr "Pressione di attivazione"
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr "Quanto spingere oltre il bordo prima della visualizzazione"
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr "Nascondimento"
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr "Scegli quanto presto il pannello si nasconde di nuovo"
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr "Ritardo di nascondimento"
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
-msgstr "Quanto attende il pannello dopo che il puntatore se ne va, in millisecondi"
+msgstr ""
+"Quanto attende il pannello dopo che il puntatore se ne va, in millisecondi"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -2861,10 +2874,6 @@ msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Spingi il puntatore contro il bordo inferiore dello schermo per attivare la "
 "Panoramica"
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
-msgstr "Pressione di attivazione"
 
 #: src/prefs/taskbarBehaviorGroup.js:84
 msgid ""

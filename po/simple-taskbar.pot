@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:40+0100\n"
+"POT-Creation-Date: 2026-09-15 15:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -249,27 +249,39 @@ msgstr ""
 msgid "After a Delay"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:69
+msgid "After Pushing Against the Edge"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:80
 msgid "Reveal Delay"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:81
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:86
+#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+msgid "Activation Pressure"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:95
+msgid "How far to push past the edge before revealing"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:104
 msgid "Hide"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:87
+#: src/prefs/autoHideDialog.js:105
 msgid "Choose how soon the panel hides again"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:96
+#: src/prefs/autoHideDialog.js:114
 msgid "Hide Delay"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:97
+#: src/prefs/autoHideDialog.js:115
 msgid "How long the panel waits after the pointer leaves, in milliseconds"
 msgstr ""
 
@@ -2679,10 +2691,6 @@ msgstr ""
 
 #: src/prefs/taskbarBehaviorGroup.js:72
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr ""
-
-#: src/prefs/taskbarBehaviorGroup.js:82
-msgid "Activation Pressure"
 msgstr ""
 
 #: src/prefs/taskbarBehaviorGroup.js:84
