@@ -15,6 +15,7 @@ import {
     panelIsVertical,
 } from './panelPosition.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
+import {autoHideRevealDelay} from '../shared/autoHideSettings.js';
 
 const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
@@ -73,6 +74,7 @@ export class PanelAutoHideController {
         this._pointerReveal = false;
         this._positionTarget = null;
         this._positionTargetProperty = null;
+        this._revealDwellTimeoutId = 0;
     }
 
     enable() {
@@ -144,6 +146,7 @@ export class PanelAutoHideController {
 
     destroy() {
         this._clearHideTimeout();
+        this._cancelRevealDwell();
         this._stopFullscreenWatch();
         if (this._cursorPositionInvalidatedId)
             this._cursorTracker.disconnect(this._cursorPositionInvalidatedId);
@@ -298,6 +301,7 @@ export class PanelAutoHideController {
 
     show(animate = true) {
         this._clearHideTimeout();
+        this._cancelRevealDwell();
         if (!this._hidden) {
             if (this._shouldScheduleHide())
                 this._scheduleHide();
@@ -707,11 +711,42 @@ export class PanelAutoHideController {
 
         if (!this._pointerIsAtRevealEdge(x, y)) {
             this._overviewEdgeRevealBlocked = false;
+            this._cancelRevealDwell();
             return;
         }
 
-        if (!this._overviewEdgeRevealBlocked)
+        if (this._overviewEdgeRevealBlocked)
+            return;
+
+        const delay = autoHideRevealDelay(this._settings);
+        if (!delay) {
             this.show();
+            return;
+        }
+
+        this._startRevealDwell(delay);
+    }
+
+    _cancelRevealDwell() {
+        if (this._revealDwellTimeoutId) {
+            GLib.Source.remove(this._revealDwellTimeoutId);
+            this._revealDwellTimeoutId = 0;
+        }
+    }
+
+    _startRevealDwell(delay) {
+        if (this._revealDwellTimeoutId)
+            return;
+
+        this._revealDwellTimeoutId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            delay,
+            () => {
+                this._revealDwellTimeoutId = 0;
+                this.show();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     _geometry(monitor) {

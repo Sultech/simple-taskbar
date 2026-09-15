@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 01:17+0100\n"
+"POT-Creation-Date: 2026-09-15 06:26+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -224,6 +224,42 @@ msgstr "Shift+középső kattintás művelete"
 #: src/prefs/applicationClickActionDialog.js:164
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Válassza ki, mi történjen egy alkalmazásra Shift+középső kattintáskor"
+
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
+msgid "Reveal Options"
+msgstr "Megjelenítési beállítások"
+
+#: src/prefs/autoHideDialog.js:45
+msgid "Reveal"
+msgstr "Megjelenítés"
+
+#: src/prefs/autoHideDialog.js:46
+msgid "Choose how quickly the pointer brings the panel back"
+msgstr "Válassza ki, milyen gyorsan hozza vissza az egérmutató a panelt"
+
+#: src/prefs/autoHideDialog.js:55
+msgid "Reveal Mode"
+msgstr "Megjelenítési mód"
+
+#: src/prefs/autoHideDialog.js:56
+msgid "Choose when the panel appears at the screen edge"
+msgstr "Válassza ki, mikor jelenjen meg a panel a képernyő szélén"
+
+#: src/prefs/autoHideDialog.js:60
+msgid "Instant"
+msgstr "Azonnal"
+
+#: src/prefs/autoHideDialog.js:64
+msgid "After a Delay"
+msgstr "Késleltetés után"
+
+#: src/prefs/autoHideDialog.js:75
+msgid "Reveal Delay"
+msgstr "Megjelenítési késleltetés"
+
+#: src/prefs/autoHideDialog.js:76
+msgid "How long the pointer rests on the edge, in milliseconds"
+msgstr "Meddig időzzön az egérmutató a szélen, ezredmásodpercben"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -484,12 +520,11 @@ msgstr "Válassza ki, mikor osztozzanak az ablakok egyetlen alkalmazásikonon"
 
 #: src/prefs/applicationIconsGroup.js:268
 msgid "Show Progress Bars"
-msgstr ""
+msgstr "Folyamatjelzők megjelenítése"
 
 #: src/prefs/applicationIconsGroup.js:269
-#, fuzzy
 msgid "Display file transfer and install progress on application icons"
-msgstr "Olvasatlan értesítések számának megjelenítése az alkalmazásikonokon"
+msgstr "Fájlátvitel és telepítés folyamatának megjelenítése az alkalmazásikonokon"
 
 #: src/prefs/applicationIconsGroup.js:286
 msgid "Show Notification Badges"
@@ -2058,63 +2093,52 @@ msgid "Choose a Folder"
 msgstr "Mappa kiválasztása"
 
 #: src/prefs/progressBarDialog.js:24 src/prefs/progressBarDialog.js:33
-#, fuzzy
 msgid "Progress Bar Options"
-msgstr "Tápellátási lehetőségek"
+msgstr "Folyamatjelzők beállításai"
 
 #: src/prefs/progressBarDialog.js:45
-#, fuzzy
 msgid "Color"
-msgstr "Dock színe"
+msgstr "Szín"
 
 #: src/prefs/progressBarDialog.js:46
 msgid "Choose the color of the progress bar fill"
-msgstr ""
+msgstr "Válassza ki a folyamatjelző kitöltésének színét"
 
 #: src/prefs/progressBarDialog.js:52
-#, fuzzy
 msgid "Follow Running Indicator Colors"
-msgstr "Futásjelzők"
+msgstr "A futó alkalmazás jelzőfény színeinek követése"
 
 #: src/prefs/progressBarDialog.js:53
-#, fuzzy
 msgid "Use the running indicator color settings"
-msgstr "Futásjelzők pozíciója"
+msgstr "A futó alkalmazás jelzőfény színbeállításainak használata"
 
 #: src/prefs/progressBarDialog.js:61
-#, fuzzy
 msgid "Custom Progress Bar Color"
-msgstr "Egyéni tálcaszín"
+msgstr "Egyéni folyamatjelző szín"
 
 #: src/prefs/progressBarDialog.js:67
-#, fuzzy
 msgid "Thickness"
-msgstr "Dock vastagsága"
+msgstr "Vastagság"
 
 #: src/prefs/progressBarDialog.js:68
-#, fuzzy
 msgid "Choose how thick the progress bar fill is"
-msgstr "Válassza ki a színátmenet irányát"
+msgstr "Válassza ki a folyamatjelző kitöltésének vastagságát"
 
 #: src/prefs/progressBarDialog.js:74
-#, fuzzy
 msgid "Automatic Thickness"
-msgstr "Dock vastagsága"
+msgstr "Automatikus vastagság"
 
 #: src/prefs/progressBarDialog.js:75
-#, fuzzy
 msgid "Scale the thickness with the application icon size"
-msgstr "A Start gomb mozgatása az alkalmazásikonokkal együtt"
+msgstr "A vastagság igazítása az alkalmazásikonok méretéhez"
 
 #: src/prefs/progressBarDialog.js:83
-#, fuzzy
 msgid "Custom Thickness"
-msgstr "Dock vastagsága"
+msgstr "Egyéni vastagság"
 
 #: src/prefs/progressBarDialog.js:84
-#, fuzzy
 msgid "Fill thickness in pixels"
-msgstr "Válassza ki a jelző vastagságát képpontban"
+msgstr "Kitöltés vastagsága képpontban"
 
 #: src/prefs/profileTransfer.js:62
 msgid "The selected file is not a valid Simple Taskbar profile."
@@ -2913,15 +2937,15 @@ msgstr "Többi ablak átlátszatlansága"
 msgid "Opacity of other windows while peeking"
 msgstr "A többi ablak átlátszatlansága az ideiglenes előtérbe hozás alatt"
 
-#: src/prefs/windowDodgeGroup.js:36
+#: src/prefs/windowDodgeGroup.js:41
 msgid "Enable Dodge Windows"
 msgstr "Ablakok kikerülésének engedélyezése"
 
-#: src/prefs/windowDodgeGroup.js:46
+#: src/prefs/windowDodgeGroup.js:51
 msgid "Dodge Windows Mode"
 msgstr "Ablakkerülési mód"
 
-#: src/prefs/windowDodgeGroup.js:56
+#: src/prefs/windowDodgeGroup.js:62
 msgid "Reveal on Pointer"
 msgstr "Megjelenítés mutatóra"
 
@@ -3413,9 +3437,6 @@ msgstr "Egyetlen alkalmazás sem játszik le hangot"
 
 #~ msgid "Enable Workspace Scroll"
 #~ msgstr "Munkaterület-görgetés engedélyezése"
-
-#~ msgid "Drive Options"
-#~ msgstr "Meghajtóbeállítások"
 
 #~ msgid "Locations shown with taskbar applications"
 #~ msgstr "A tálcán lévő alkalmazásokkal megjelenő helyek"

@@ -6,7 +6,12 @@ import Adw from 'gi://Adw';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {windowDodgeModeChoices} from './windowDodgeModeChoices.js';
-import {addComboRow, createSwitchRow} from './preferencesWidgets.js';
+import {
+    addComboRow,
+    addSwitchRow,
+    createSwitchRow,
+} from './preferencesWidgets.js';
+import {createRevealOptionsButton} from './autoHideDialog.js';
 
 export function addWindowDodgeRows(
     group,
@@ -51,12 +56,14 @@ export function addWindowDodgeRows(
         connectSettings
     );
 
-    const pointerRevealSwitch = createSwitchRow(settings, {
+    const revealOptionsButton = createRevealOptionsButton(settings);
+    const {row: pointerRevealSwitch} = addSwitchRow(null, settings, {
         key: pointerRevealKey,
         title: _('Reveal on Pointer'),
         subtitle: pointerRevealSubtitle,
+        addSuffix: row => row.add_suffix(revealOptionsButton),
+        addRow: row => dodgeRow.add_row(row),
     });
-    dodgeRow.add_row(pointerRevealSwitch);
     for (const row of visibilityRows)
         dodgeRow.add_row(row);
     group.add(dodgeRow);
@@ -90,11 +97,15 @@ export function addWindowDodgeRows(
         dodgeRow.sensitive = available;
         dodgeSwitch.sensitive = available;
         modeRow.sensitive = available && dodgeSwitch.active;
-        pointerRevealSwitch.sensitive = available &&
+        const revealable = available &&
             (dodgeSwitch.active || settings.get_boolean(autohideKey));
+        pointerRevealSwitch.sensitive = revealable;
+        revealOptionsButton.sensitive = revealable &&
+            settings.get_boolean(pointerRevealKey);
     };
     dodgeSwitch.connect('notify::active', syncAvailability);
     connectSettings(settings, `changed::${autohideKey}`, syncAvailability);
+    connectSettings(settings, `changed::${pointerRevealKey}`, syncAvailability);
     syncAvailability();
 
     return {syncAvailability};

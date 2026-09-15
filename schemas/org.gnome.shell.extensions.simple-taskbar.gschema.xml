@@ -45,6 +45,19 @@
       <default>'focused-window'</default>
       <summary>Windows that make the panel hide</summary>
     </key>
+    <key name="panel-autohide-reveal-mode" type="s">
+      <choices>
+        <choice value="instant"/>
+        <choice value="delay"/>
+      </choices>
+      <default>'instant'</default>
+      <summary>Whether the pointer reveals the panel at once or after a delay</summary>
+    </key>
+    <key name="panel-autohide-reveal-delay" type="i">
+      <range min="50" max="2000"/>
+      <default>250</default>
+      <summary>How long the pointer must rest on the screen edge before revealing</summary>
+    </key>
     <key name="panel-dodge-pointer-reveal-enabled" type="b">
       <default>true</default>
       <summary>Reveal the panel when the pointer reaches its edge</summary>
