@@ -96,7 +96,7 @@ class RevealOptionsDialog extends Adw.Window {
             {
                 key: AUTO_HIDE_SETTINGS.pressureThreshold,
                 title: _('Activation Pressure'),
-                subtitle: _('How far to push past the edge before revealing'),
+                subtitle: _('How far to push past the edge before revealing. Turns off the bottom hot edge.'),
                 lower: 0,
                 upper: 500,
                 step: 10,
@@ -123,6 +123,19 @@ class RevealOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
+
+        const disableHotEdgeWithPressure = () => {
+            if (settings.get_string(AUTO_HIDE_SETTINGS.revealMode) ===
+                AUTO_HIDE_REVEAL_MODE.PRESSURE) {
+                settings.set_boolean('hot-edge-overview-enabled', false);
+            }
+        };
+        connectSettings(
+            settings,
+            `changed::${AUTO_HIDE_SETTINGS.revealMode}`,
+            disableHotEdgeWithPressure
+        );
+        disableHotEdgeWithPressure();
 
         const syncSensitivity = () => {
             const revealable = settings.get_boolean(pointerRevealKey);

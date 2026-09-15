@@ -15,6 +15,10 @@ import {
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addWindowDodgeRows} from './windowDodgeGroup.js';
+import {
+    AUTO_HIDE_REVEAL_MODE,
+    AUTO_HIDE_SETTINGS,
+} from '../shared/autoHideSettings.js';
 
 export function addTaskbarBehaviorGroup({
     page,
@@ -81,10 +85,28 @@ export function addTaskbarBehaviorGroup({
         key: 'hot-edge-overview-enabled',
         title: _('Enable Bottom Hot Edge'),
         subtitle: _(
-            'Push the pointer against the bottom screen edge to toggle Overview'
+            'Push the pointer against the bottom screen edge to toggle Overview. Turns off pressure reveal.'
         ),
     });
     hotEdgeRow.add_row(hotEdgeOverviewSwitch);
+    const disablePressureWithHotEdge = () => {
+        if (!settings.get_boolean('hot-edge-overview-enabled'))
+            return;
+
+        if (settings.get_string(AUTO_HIDE_SETTINGS.revealMode) ===
+            AUTO_HIDE_REVEAL_MODE.PRESSURE) {
+            settings.set_string(
+                AUTO_HIDE_SETTINGS.revealMode,
+                AUTO_HIDE_REVEAL_MODE.INSTANT
+            );
+        }
+    };
+    connectSettings(
+        settings,
+        'changed::hot-edge-overview-enabled',
+        disablePressureWithHotEdge
+    );
+    disablePressureWithHotEdge();
 
     const hotEdgePressureRow = addSpinRow(
         hotEdgeRow,
