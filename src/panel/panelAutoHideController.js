@@ -262,17 +262,20 @@ export class PanelAutoHideController {
             return;
         }
 
+        const fullscreenBlocked = this._fullscreenBlocksReveal();
         if (!active) {
-            if (!this._enabled())
+            if (!fullscreenBlocked && !this._enabled())
                 this.show();
-            else if (this._pointerReveal && this._pointerIsInsidePanel())
+            else if (!fullscreenBlocked && this._pointerReveal &&
+                this._pointerIsInsidePanel())
                 this.show();
             else
                 this._scheduleHide();
             return;
         }
 
-        if (pointerReveal && this._pointerIsInsidePanel()) {
+        if (!fullscreenBlocked && pointerReveal &&
+            this._pointerIsInsidePanel()) {
             this.show();
             return;
         }
@@ -749,6 +752,11 @@ export class PanelAutoHideController {
         if (this._overviewEdgeRevealBlocked)
             return;
 
+        if (this._fullscreenBlocksReveal()) {
+            this._cancelRevealDwell();
+            return;
+        }
+
         const delay = autoHideRevealDelay(this._settings);
         if (!delay) {
             this.show();
@@ -844,8 +852,15 @@ export class PanelAutoHideController {
         );
     }
 
+    _fullscreenBlocksReveal() {
+        return global.window_group.visible &&
+            Boolean(this._getMonitor()?.inFullscreen);
+    }
+
     _revealFromPressure() {
         if (!this._hidden || this._isBlocked())
+            return;
+        if (this._fullscreenBlocksReveal())
             return;
         if (Main.overview.visibleTarget ||
             Main.overview.animationInProgress) {
