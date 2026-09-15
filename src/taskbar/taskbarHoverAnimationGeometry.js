@@ -104,6 +104,24 @@ export class TaskbarHoverAnimationGeometry {
             width += along * 2;
         }
 
+        const monitor = this._getMonitor();
+        switch (panelPosition) {
+        case 'top':
+            height += y - monitor.y;
+            y = monitor.y;
+            break;
+        case 'bottom':
+            height = monitor.y + monitor.height - y;
+            break;
+        case 'left':
+            width += x - monitor.x;
+            x = monitor.x;
+            break;
+        default:
+            width = monitor.x + monitor.width - x;
+            break;
+        }
+
         return pointerX >= x && pointerX < x + width &&
             pointerY >= y && pointerY < y + height;
     }
