@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:26+0100\n"
+"POT-Creation-Date: 2026-09-15 06:40+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -230,41 +230,57 @@ msgstr ""
 "Festlegen, was beim Mittelklicken auf eine Anwendung mit gedrückter "
 "Umschalttaste geschieht"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
-msgid "Reveal Options"
-msgstr "Optionen zum Einblenden"
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+msgid "Timing Options"
+msgstr "Zeitoptionen"
 
-#: src/prefs/autoHideDialog.js:45
+#: src/prefs/autoHideDialog.js:46
 msgid "Reveal"
 msgstr "Einblenden"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:47
 msgid "Choose how quickly the pointer brings the panel back"
 msgstr "Legt fest, wie schnell der Zeiger die Leiste zurückholt"
 
-#: src/prefs/autoHideDialog.js:55
+#: src/prefs/autoHideDialog.js:56
 msgid "Reveal Mode"
 msgstr "Einblendemodus"
 
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:57
 msgid "Choose when the panel appears at the screen edge"
 msgstr "Legt fest, wann die Leiste am Bildschirmrand erscheint"
 
-#: src/prefs/autoHideDialog.js:60
+#: src/prefs/autoHideDialog.js:61
 msgid "Instant"
 msgstr "Sofort"
 
-#: src/prefs/autoHideDialog.js:64
+#: src/prefs/autoHideDialog.js:65
 msgid "After a Delay"
 msgstr "Nach einer Verzögerung"
 
-#: src/prefs/autoHideDialog.js:75
+#: src/prefs/autoHideDialog.js:76
 msgid "Reveal Delay"
 msgstr "Verzögerung beim Einblenden"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:77
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Wie lange der Zeiger am Rand verweilt, in Millisekunden"
+
+#: src/prefs/autoHideDialog.js:86
+msgid "Hide"
+msgstr "Ausblenden"
+
+#: src/prefs/autoHideDialog.js:87
+msgid "Choose how soon the panel hides again"
+msgstr "Legt fest, wie schnell die Leiste wieder ausgeblendet wird"
+
+#: src/prefs/autoHideDialog.js:96
+msgid "Hide Delay"
+msgstr "Verzögerung beim Ausblenden"
+
+#: src/prefs/autoHideDialog.js:97
+msgid "How long the panel waits after the pointer leaves, in milliseconds"
+msgstr "Wie lange die Leiste wartet, nachdem der Zeiger sie verlässt, in Millisekunden"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -531,7 +547,9 @@ msgstr "Fortschrittsbalken anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:269
 msgid "Display file transfer and install progress on application icons"
-msgstr "Fortschritt von Dateiübertragungen und Installationen auf Anwendungssymbolen anzeigen"
+msgstr ""
+"Fortschritt von Dateiübertragungen und Installationen auf Anwendungssymbolen "
+"anzeigen"
 
 #: src/prefs/applicationIconsGroup.js:286
 msgid "Show Notification Badges"
@@ -2981,7 +2999,7 @@ msgstr "Fenstern ausweichen aktivieren"
 msgid "Dodge Windows Mode"
 msgstr "Fenster-Ausweichmodus"
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Reveal on Pointer"
 msgstr "Bei Zeiger anzeigen"
 
@@ -3406,6 +3424,9 @@ msgstr "Anwendungslautstärke"
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
 
+#~ msgid "Reveal Options"
+#~ msgstr "Optionen zum Einblenden"
+
 #~ msgid ""
 #~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
 #~ "window"
@@ -3514,9 +3535,6 @@ msgstr "Keine Anwendung spielt Audio ab"
 
 #~ msgid "Panel Item Visibility"
 #~ msgstr "Sichtbarkeit der Panel-Elemente"
-
-#~ msgid "Choose which optional panel items appear."
-#~ msgstr "Wählen Sie, welche optionalen Panel-Elemente angezeigt werden."
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr ""

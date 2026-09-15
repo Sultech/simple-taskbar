@@ -58,6 +58,11 @@
       <default>250</default>
       <summary>How long the pointer must rest on the screen edge before revealing</summary>
     </key>
+    <key name="panel-autohide-hide-delay" type="i">
+      <range min="0" max="2000"/>
+      <default>450</default>
+      <summary>How long the panel waits after the pointer leaves before hiding</summary>
+    </key>
     <key name="panel-dodge-pointer-reveal-enabled" type="b">
       <default>true</default>
       <summary>Reveal the panel when the pointer reaches its edge</summary>

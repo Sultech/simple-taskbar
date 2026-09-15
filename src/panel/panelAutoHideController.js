@@ -15,9 +15,11 @@ import {
     panelIsVertical,
 } from './panelPosition.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
-import {autoHideRevealDelay} from '../shared/autoHideSettings.js';
+import {
+    autoHideHideDelay,
+    autoHideRevealDelay,
+} from '../shared/autoHideSettings.js';
 
-const HIDE_DELAY = 450;
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
@@ -530,7 +532,7 @@ export class PanelAutoHideController {
         this._pointerButtonPressed = false;
     }
 
-    _scheduleHide(delay = HIDE_DELAY) {
+    _scheduleHide(delay = autoHideHideDelay(this._settings)) {
         const canHide = this._enabled() ||
             this._dodgeEnabled && this._dodgeActive &&
             this._pointerReveal;

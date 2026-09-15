@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:26+0100\n"
+"POT-Creation-Date: 2026-09-15 06:40+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -223,41 +223,57 @@ msgstr "Shift+中键点击操作"
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "选择按住 Shift 中键点击应用时执行的操作"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
-msgid "Reveal Options"
-msgstr "显示选项"
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+msgid "Timing Options"
+msgstr "时间选项"
 
-#: src/prefs/autoHideDialog.js:45
+#: src/prefs/autoHideDialog.js:46
 msgid "Reveal"
 msgstr "显示"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:47
 msgid "Choose how quickly the pointer brings the panel back"
 msgstr "选择指针让面板重新出现的速度"
 
-#: src/prefs/autoHideDialog.js:55
+#: src/prefs/autoHideDialog.js:56
 msgid "Reveal Mode"
 msgstr "显示方式"
 
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:57
 msgid "Choose when the panel appears at the screen edge"
 msgstr "选择面板何时在屏幕边缘出现"
 
-#: src/prefs/autoHideDialog.js:60
+#: src/prefs/autoHideDialog.js:61
 msgid "Instant"
 msgstr "立即"
 
-#: src/prefs/autoHideDialog.js:64
+#: src/prefs/autoHideDialog.js:65
 msgid "After a Delay"
 msgstr "延迟后"
 
-#: src/prefs/autoHideDialog.js:75
+#: src/prefs/autoHideDialog.js:76
 msgid "Reveal Delay"
 msgstr "显示延迟"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:77
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "指针在边缘停留的时长（毫秒）"
+
+#: src/prefs/autoHideDialog.js:86
+msgid "Hide"
+msgstr "隐藏"
+
+#: src/prefs/autoHideDialog.js:87
+msgid "Choose how soon the panel hides again"
+msgstr "选择面板多快重新隐藏"
+
+#: src/prefs/autoHideDialog.js:96
+msgid "Hide Delay"
+msgstr "隐藏延迟"
+
+#: src/prefs/autoHideDialog.js:97
+msgid "How long the panel waits after the pointer leaves, in milliseconds"
+msgstr "指针离开后面板等待的时长（毫秒）"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -2831,7 +2847,7 @@ msgstr "启用躲避窗口"
 msgid "Dodge Windows Mode"
 msgstr "窗口避让模式"
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Reveal on Pointer"
 msgstr "指针触发显示"
 
@@ -3250,6 +3266,9 @@ msgstr "应用音量"
 msgid "No applications are playing audio"
 msgstr "没有应用正在播放音频"
 
+#~ msgid "Reveal Options"
+#~ msgstr "显示选项"
+
 #~ msgid ""
 #~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
 #~ "window"
@@ -3347,9 +3366,6 @@ msgstr "没有应用正在播放音频"
 
 #~ msgid "Panel Item Visibility"
 #~ msgstr "面板项目可见性"
-
-#~ msgid "Choose which optional panel items appear."
-#~ msgstr "选择展示哪些可选的面板项目。"
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr "在任务栏上展示 GNOME 的工作区概览按钮"

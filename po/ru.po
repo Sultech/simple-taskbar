@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:26+0100\n"
+"POT-Creation-Date: 2026-09-15 06:40+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -224,41 +224,57 @@ msgstr "Действие Shift+средняя кнопка"
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Выберите действие при Shift+щелчке средней кнопкой по приложению"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
-msgid "Reveal Options"
-msgstr "Параметры показа"
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+msgid "Timing Options"
+msgstr "Параметры задержек"
 
-#: src/prefs/autoHideDialog.js:45
+#: src/prefs/autoHideDialog.js:46
 msgid "Reveal"
 msgstr "Показ"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:47
 msgid "Choose how quickly the pointer brings the panel back"
 msgstr "Выберите, как быстро указатель возвращает панель"
 
-#: src/prefs/autoHideDialog.js:55
+#: src/prefs/autoHideDialog.js:56
 msgid "Reveal Mode"
 msgstr "Режим показа"
 
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:57
 msgid "Choose when the panel appears at the screen edge"
 msgstr "Выберите, когда панель появляется у края экрана"
 
-#: src/prefs/autoHideDialog.js:60
+#: src/prefs/autoHideDialog.js:61
 msgid "Instant"
 msgstr "Сразу"
 
-#: src/prefs/autoHideDialog.js:64
+#: src/prefs/autoHideDialog.js:65
 msgid "After a Delay"
 msgstr "С задержкой"
 
-#: src/prefs/autoHideDialog.js:75
+#: src/prefs/autoHideDialog.js:76
 msgid "Reveal Delay"
 msgstr "Задержка показа"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:77
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Сколько указатель удерживается у края, в миллисекундах"
+
+#: src/prefs/autoHideDialog.js:86
+msgid "Hide"
+msgstr "Скрытие"
+
+#: src/prefs/autoHideDialog.js:87
+msgid "Choose how soon the panel hides again"
+msgstr "Выберите, как быстро панель снова скрывается"
+
+#: src/prefs/autoHideDialog.js:96
+msgid "Hide Delay"
+msgstr "Задержка скрытия"
+
+#: src/prefs/autoHideDialog.js:97
+msgid "How long the panel waits after the pointer leaves, in milliseconds"
+msgstr "Сколько панель ждёт после ухода указателя, в миллисекундах"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -2915,7 +2931,7 @@ msgstr "Включить обход окон"
 msgid "Dodge Windows Mode"
 msgstr "Режим избегания окон"
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Reveal on Pointer"
 msgstr "Показывать при наведении указателя"
 
@@ -3338,6 +3354,9 @@ msgstr "Громкость приложений"
 msgid "No applications are playing audio"
 msgstr "Нет приложений, воспроизводящих звук"
 
+#~ msgid "Reveal Options"
+#~ msgstr "Параметры показа"
+
 #~ msgid ""
 #~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
 #~ "window"
@@ -3443,9 +3462,6 @@ msgstr "Нет приложений, воспроизводящих звук"
 
 #~ msgid "Panel Item Visibility"
 #~ msgstr "Видимость элементов панели"
-
-#~ msgid "Choose which optional panel items appear."
-#~ msgstr "Выберите, какие необязательные элементы отображать на панели."
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr "Показывать кнопку обзора рабочих столов GNOME на панели задач"

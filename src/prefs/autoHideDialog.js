@@ -18,23 +18,24 @@ import {
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
 
-export function createRevealOptionsButton(settings) {
+export function createRevealOptionsButton(settings, pointerRevealKey) {
     return createPreferencesDialogButton(
         settings,
-        _('Reveal Options'),
-        RevealOptionsDialog
+        _('Timing Options'),
+        RevealOptionsDialog,
+        {pointerRevealKey}
     );
 }
 
 export const RevealOptionsDialog = GObject.registerClass(
 class RevealOptionsDialog extends Adw.Window {
-    _init({settings, parent}) {
+    _init({settings, parent, pointerRevealKey}) {
         super._init({
-            title: _('Reveal Options'),
+            title: _('Timing Options'),
             transient_for: parent,
             modal: true,
             default_width: 640,
-            default_height: 400,
+            default_height: 480,
         });
 
         this._settings = settings;
@@ -47,7 +48,7 @@ class RevealOptionsDialog extends Adw.Window {
         });
         content.append(revealGroup);
 
-        addComboRow(
+        const modeRow = addComboRow(
             revealGroup,
             settings,
             {
@@ -81,14 +82,41 @@ class RevealOptionsDialog extends Adw.Window {
             connectSettings
         );
 
+        const hideGroup = new Adw.PreferencesGroup({
+            title: _('Hide'),
+            description: _('Choose how soon the panel hides again'),
+        });
+        content.append(hideGroup);
+
+        addSpinRow(
+            hideGroup,
+            settings,
+            {
+                key: AUTO_HIDE_SETTINGS.hideDelay,
+                title: _('Hide Delay'),
+                subtitle: _('How long the panel waits after the pointer leaves, in milliseconds'),
+                lower: 0,
+                upper: 2000,
+                step: 50,
+            },
+            connectSettings
+        );
+
         const syncSensitivity = () => {
-            delayRow.sensitive = settings.get_string(
+            const revealable = settings.get_boolean(pointerRevealKey);
+            modeRow.sensitive = revealable;
+            delayRow.sensitive = revealable && settings.get_string(
                 AUTO_HIDE_SETTINGS.revealMode
             ) === AUTO_HIDE_REVEAL_MODE.DELAY;
         };
         connectSettings(
             settings,
             `changed::${AUTO_HIDE_SETTINGS.revealMode}`,
+            syncSensitivity
+        );
+        connectSettings(
+            settings,
+            `changed::${pointerRevealKey}`,
             syncSensitivity
         );
         syncSensitivity();

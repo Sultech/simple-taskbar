@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:26+0100\n"
+"POT-Creation-Date: 2026-09-15 06:40+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -225,41 +225,57 @@ msgstr "Shift+középső kattintás művelete"
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Válassza ki, mi történjen egy alkalmazásra Shift+középső kattintáskor"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
-msgid "Reveal Options"
-msgstr "Megjelenítési beállítások"
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+msgid "Timing Options"
+msgstr "Időzítési beállítások"
 
-#: src/prefs/autoHideDialog.js:45
+#: src/prefs/autoHideDialog.js:46
 msgid "Reveal"
 msgstr "Megjelenítés"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:47
 msgid "Choose how quickly the pointer brings the panel back"
 msgstr "Válassza ki, milyen gyorsan hozza vissza az egérmutató a panelt"
 
-#: src/prefs/autoHideDialog.js:55
+#: src/prefs/autoHideDialog.js:56
 msgid "Reveal Mode"
 msgstr "Megjelenítési mód"
 
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:57
 msgid "Choose when the panel appears at the screen edge"
 msgstr "Válassza ki, mikor jelenjen meg a panel a képernyő szélén"
 
-#: src/prefs/autoHideDialog.js:60
+#: src/prefs/autoHideDialog.js:61
 msgid "Instant"
 msgstr "Azonnal"
 
-#: src/prefs/autoHideDialog.js:64
+#: src/prefs/autoHideDialog.js:65
 msgid "After a Delay"
 msgstr "Késleltetés után"
 
-#: src/prefs/autoHideDialog.js:75
+#: src/prefs/autoHideDialog.js:76
 msgid "Reveal Delay"
 msgstr "Megjelenítési késleltetés"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:77
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Meddig időzzön az egérmutató a szélen, ezredmásodpercben"
+
+#: src/prefs/autoHideDialog.js:86
+msgid "Hide"
+msgstr "Elrejtés"
+
+#: src/prefs/autoHideDialog.js:87
+msgid "Choose how soon the panel hides again"
+msgstr "Válassza ki, milyen hamar rejtőzzön el újra a panel"
+
+#: src/prefs/autoHideDialog.js:96
+msgid "Hide Delay"
+msgstr "Elrejtési késleltetés"
+
+#: src/prefs/autoHideDialog.js:97
+msgid "How long the panel waits after the pointer leaves, in milliseconds"
+msgstr "Meddig várjon a panel, miután az egérmutató elhagyja, ezredmásodpercben"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -524,7 +540,8 @@ msgstr "Folyamatjelzők megjelenítése"
 
 #: src/prefs/applicationIconsGroup.js:269
 msgid "Display file transfer and install progress on application icons"
-msgstr "Fájlátvitel és telepítés folyamatának megjelenítése az alkalmazásikonokon"
+msgstr ""
+"Fájlátvitel és telepítés folyamatának megjelenítése az alkalmazásikonokon"
 
 #: src/prefs/applicationIconsGroup.js:286
 msgid "Show Notification Badges"
@@ -2945,7 +2962,7 @@ msgstr "Ablakok kikerülésének engedélyezése"
 msgid "Dodge Windows Mode"
 msgstr "Ablakkerülési mód"
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Reveal on Pointer"
 msgstr "Megjelenítés mutatóra"
 
@@ -3369,6 +3386,9 @@ msgstr "Alkalmazás hangereje"
 msgid "No applications are playing audio"
 msgstr "Egyetlen alkalmazás sem játszik le hangot"
 
+#~ msgid "Reveal Options"
+#~ msgstr "Megjelenítési beállítások"
+
 #~ msgid ""
 #~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
 #~ "window"
@@ -3474,9 +3494,6 @@ msgstr "Egyetlen alkalmazás sem játszik le hangot"
 
 #~ msgid "Panel Item Visibility"
 #~ msgstr "Panel-elemek láthatósága"
-
-#~ msgid "Choose which optional panel items appear."
-#~ msgstr "Válassza ki, mely opcionális panelelemek jelenjenek meg."
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr "A GNOME munkaterület-áttekintő gombjának megjelenítése a tálcán"

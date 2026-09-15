@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:26+0100\n"
+"POT-Creation-Date: 2026-09-15 06:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -221,40 +221,56 @@ msgstr ""
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
-msgid "Reveal Options"
-msgstr ""
-
-#: src/prefs/autoHideDialog.js:45
-msgid "Reveal"
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+msgid "Timing Options"
 msgstr ""
 
 #: src/prefs/autoHideDialog.js:46
+msgid "Reveal"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:47
 msgid "Choose how quickly the pointer brings the panel back"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:55
+#: src/prefs/autoHideDialog.js:56
 msgid "Reveal Mode"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:57
 msgid "Choose when the panel appears at the screen edge"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:60
+#: src/prefs/autoHideDialog.js:61
 msgid "Instant"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:64
+#: src/prefs/autoHideDialog.js:65
 msgid "After a Delay"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:75
+#: src/prefs/autoHideDialog.js:76
 msgid "Reveal Delay"
 msgstr ""
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:77
 msgid "How long the pointer rests on the edge, in milliseconds"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:86
+msgid "Hide"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:87
+msgid "Choose how soon the panel hides again"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:96
+msgid "Hide Delay"
+msgstr ""
+
+#: src/prefs/autoHideDialog.js:97
+msgid "How long the panel waits after the pointer leaves, in milliseconds"
 msgstr ""
 
 #: src/prefs/applicationGroupingDialog.js:28
@@ -2822,7 +2838,7 @@ msgstr ""
 msgid "Dodge Windows Mode"
 msgstr ""
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Reveal on Pointer"
 msgstr ""
 

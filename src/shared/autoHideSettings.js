@@ -9,6 +9,7 @@ export const AUTO_HIDE_REVEAL_MODE = Object.freeze({
 export const AUTO_HIDE_SETTINGS = Object.freeze({
     revealMode: 'panel-autohide-reveal-mode',
     revealDelay: 'panel-autohide-reveal-delay',
+    hideDelay: 'panel-autohide-hide-delay',
 });
 
 export const AUTO_HIDE_SETTING_KEYS = Object.freeze(
@@ -22,4 +23,8 @@ export function autoHideRevealDelay(settings) {
     }
 
     return settings.get_int(AUTO_HIDE_SETTINGS.revealDelay);
+}
+
+export function autoHideHideDelay(settings) {
+    return settings.get_int(AUTO_HIDE_SETTINGS.hideDelay);
 }

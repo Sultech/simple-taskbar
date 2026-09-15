@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 06:26+0100\n"
+"POT-Creation-Date: 2026-09-15 06:40+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -228,41 +228,57 @@ msgstr "Ação de Shift+Clique do meio"
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Escolha o que acontece ao usar Shift+Clique do meio em um aplicativo"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:33
-msgid "Reveal Options"
-msgstr "Opções de exibição"
+#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+msgid "Timing Options"
+msgstr "Opções de tempo"
 
-#: src/prefs/autoHideDialog.js:45
+#: src/prefs/autoHideDialog.js:46
 msgid "Reveal"
 msgstr "Exibição"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:47
 msgid "Choose how quickly the pointer brings the panel back"
 msgstr "Escolha a rapidez com que o cursor faz o painel reaparecer"
 
-#: src/prefs/autoHideDialog.js:55
+#: src/prefs/autoHideDialog.js:56
 msgid "Reveal Mode"
 msgstr "Modo de exibição"
 
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:57
 msgid "Choose when the panel appears at the screen edge"
 msgstr "Escolha quando o painel aparece na borda da tela"
 
-#: src/prefs/autoHideDialog.js:60
+#: src/prefs/autoHideDialog.js:61
 msgid "Instant"
 msgstr "Imediato"
 
-#: src/prefs/autoHideDialog.js:64
+#: src/prefs/autoHideDialog.js:65
 msgid "After a Delay"
 msgstr "Após um atraso"
 
-#: src/prefs/autoHideDialog.js:75
+#: src/prefs/autoHideDialog.js:76
 msgid "Reveal Delay"
 msgstr "Atraso de exibição"
 
-#: src/prefs/autoHideDialog.js:76
+#: src/prefs/autoHideDialog.js:77
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Por quanto tempo o cursor permanece na borda, em milissegundos"
+
+#: src/prefs/autoHideDialog.js:86
+msgid "Hide"
+msgstr "Ocultação"
+
+#: src/prefs/autoHideDialog.js:87
+msgid "Choose how soon the panel hides again"
+msgstr "Escolha com que rapidez o painel se oculta novamente"
+
+#: src/prefs/autoHideDialog.js:96
+msgid "Hide Delay"
+msgstr "Atraso de ocultação"
+
+#: src/prefs/autoHideDialog.js:97
+msgid "How long the panel waits after the pointer leaves, in milliseconds"
+msgstr "Quanto tempo o painel espera depois que o cursor sai, em milissegundos"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -530,7 +546,9 @@ msgstr "Mostrar barras de progresso"
 
 #: src/prefs/applicationIconsGroup.js:269
 msgid "Display file transfer and install progress on application icons"
-msgstr "Mostrar o progresso de transferências de arquivos e instalações nos ícones dos aplicativos"
+msgstr ""
+"Mostrar o progresso de transferências de arquivos e instalações nos ícones "
+"dos aplicativos"
 
 #: src/prefs/applicationIconsGroup.js:286
 msgid "Show Notification Badges"
@@ -2963,7 +2981,7 @@ msgstr "Ativar ocultação por janelas"
 msgid "Dodge Windows Mode"
 msgstr "Modo de ocultação por janelas"
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:63
 msgid "Reveal on Pointer"
 msgstr "Exibir ao passar o ponteiro"
 
@@ -3390,6 +3408,9 @@ msgstr "Volume de aplicativos"
 msgid "No applications are playing audio"
 msgstr "Nenhum aplicativo está reproduzindo áudio"
 
+#~ msgid "Reveal Options"
+#~ msgstr "Opções de exibição"
+
 #~ msgid ""
 #~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
 #~ "window"
@@ -3499,9 +3520,6 @@ msgstr "Nenhum aplicativo está reproduzindo áudio"
 
 #~ msgid "Panel Item Visibility"
 #~ msgstr "Visibilidade dos itens do painel"
-
-#~ msgid "Choose which optional panel items appear."
-#~ msgstr "Escolha quais itens opcionais do painel aparecem."
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr ""
