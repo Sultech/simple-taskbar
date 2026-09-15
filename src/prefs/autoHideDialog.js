@@ -18,18 +18,22 @@ import {
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
 
-export function createRevealOptionsButton(settings, pointerRevealKey) {
+export function createRevealOptionsButton(
+    settings,
+    pointerRevealKey,
+    descriptions
+) {
     return createPreferencesDialogButton(
         settings,
         _('Timing Options'),
         RevealOptionsDialog,
-        {pointerRevealKey}
+        {pointerRevealKey, descriptions}
     );
 }
 
 export const RevealOptionsDialog = GObject.registerClass(
 class RevealOptionsDialog extends Adw.Window {
-    _init({settings, parent, pointerRevealKey}) {
+    _init({settings, parent, pointerRevealKey, descriptions}) {
         super._init({
             title: _('Timing Options'),
             transient_for: parent,
@@ -44,7 +48,7 @@ class RevealOptionsDialog extends Adw.Window {
 
         const revealGroup = new Adw.PreferencesGroup({
             title: _('Reveal'),
-            description: _('Choose how quickly the pointer brings the panel back'),
+            description: descriptions.reveal,
         });
         content.append(revealGroup);
 
@@ -54,7 +58,7 @@ class RevealOptionsDialog extends Adw.Window {
             {
                 key: AUTO_HIDE_SETTINGS.revealMode,
                 title: _('Reveal Mode'),
-                subtitle: _('Choose when the panel appears at the screen edge'),
+                subtitle: descriptions.revealMode,
                 choices: [
                     {
                         value: AUTO_HIDE_REVEAL_MODE.INSTANT,
@@ -102,7 +106,7 @@ class RevealOptionsDialog extends Adw.Window {
 
         const hideGroup = new Adw.PreferencesGroup({
             title: _('Hide'),
-            description: _('Choose how soon the panel hides again'),
+            description: descriptions.hide,
         });
         content.append(hideGroup);
 
@@ -112,7 +116,7 @@ class RevealOptionsDialog extends Adw.Window {
             {
                 key: AUTO_HIDE_SETTINGS.hideDelay,
                 title: _('Hide Delay'),
-                subtitle: _('How long the panel waits after the pointer leaves, in milliseconds'),
+                subtitle: descriptions.hideDelay,
                 lower: 0,
                 upper: 2000,
                 step: 50,

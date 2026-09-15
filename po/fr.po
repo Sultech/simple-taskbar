@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 15:39+0100\n"
+"POT-Creation-Date: 2026-09-15 15:50+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -230,71 +230,53 @@ msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr ""
 "Choisir l’action effectuée lors d’un Maj+Clic central sur une application"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+#: src/prefs/autoHideDialog.js:28 src/prefs/autoHideDialog.js:38
 msgid "Timing Options"
 msgstr "Options de délai"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:50
 msgid "Reveal"
 msgstr "Affichage"
 
-#: src/prefs/autoHideDialog.js:47
-msgid "Choose how quickly the pointer brings the panel back"
-msgstr ""
-"Choisir la rapidité avec laquelle le curseur fait réapparaître la barre"
-
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:60
 msgid "Reveal Mode"
 msgstr "Mode d’affichage"
 
-#: src/prefs/autoHideDialog.js:57
-msgid "Choose when the panel appears at the screen edge"
-msgstr "Choisir quand la barre apparaît au bord de l’écran"
-
-#: src/prefs/autoHideDialog.js:61
+#: src/prefs/autoHideDialog.js:65
 msgid "Instant"
 msgstr "Immédiat"
 
-#: src/prefs/autoHideDialog.js:65
+#: src/prefs/autoHideDialog.js:69
 msgid "After a Delay"
 msgstr "Après un délai"
 
-#: src/prefs/autoHideDialog.js:69
+#: src/prefs/autoHideDialog.js:73
 msgid "After Pushing Against the Edge"
 msgstr "Après avoir poussé contre le bord"
 
-#: src/prefs/autoHideDialog.js:80
+#: src/prefs/autoHideDialog.js:84
 msgid "Reveal Delay"
 msgstr "Délai d’affichage"
 
-#: src/prefs/autoHideDialog.js:81
+#: src/prefs/autoHideDialog.js:85
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Durée pendant laquelle le curseur reste au bord, en millisecondes"
 
-#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+#: src/prefs/autoHideDialog.js:98 src/prefs/taskbarBehaviorGroup.js:94
 msgid "Activation Pressure"
 msgstr "Pression d’activation"
 
-#: src/prefs/autoHideDialog.js:95
+#: src/prefs/autoHideDialog.js:99
 msgid "How far to push past the edge before revealing"
 msgstr "Distance à pousser au-delà du bord avant l’affichage"
 
-#: src/prefs/autoHideDialog.js:104
+#: src/prefs/autoHideDialog.js:108
 msgid "Hide"
 msgstr "Masquage"
 
-#: src/prefs/autoHideDialog.js:105
-msgid "Choose how soon the panel hides again"
-msgstr "Choisir la rapidité avec laquelle la barre se masque à nouveau"
-
-#: src/prefs/autoHideDialog.js:114
+#: src/prefs/autoHideDialog.js:118
 msgid "Hide Delay"
 msgstr "Délai de masquage"
-
-#: src/prefs/autoHideDialog.js:115
-msgid "How long the panel waits after the pointer leaves, in milliseconds"
-msgstr ""
-"Durée d’attente de la barre après le départ du curseur, en millisecondes"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -949,18 +931,18 @@ msgid "Choose the animation shown when an application is clicked"
 msgstr "Choisir l’animation affichée lors d’un clic sur une application"
 
 #: src/prefs/applicationInteractionGroup.js:178
-#: src/prefs/dockBehaviorGroup.js:71 src/prefs/taskbarBehaviorGroup.js:125
+#: src/prefs/dockBehaviorGroup.js:83 src/prefs/taskbarBehaviorGroup.js:137
 msgid "Switch Workspace"
 msgstr "Changer d’espace de travail"
 
 #: src/prefs/applicationInteractionGroup.js:182
-#: src/prefs/dockBehaviorGroup.js:75 src/prefs/taskbarBehaviorGroup.js:129
+#: src/prefs/dockBehaviorGroup.js:87 src/prefs/taskbarBehaviorGroup.js:141
 msgid "Cycle Windows"
 msgstr "Parcourir les fenêtres"
 
 #: src/prefs/applicationInteractionGroup.js:186
 #: src/prefs/applicationInteractionGroup.js:312
-#: src/prefs/dockBehaviorGroup.js:83 src/prefs/taskbarBehaviorGroup.js:137
+#: src/prefs/dockBehaviorGroup.js:95 src/prefs/taskbarBehaviorGroup.js:149
 msgid "Do Nothing"
 msgstr "Ne rien faire"
 
@@ -974,7 +956,7 @@ msgstr ""
 "Choisir l’action effectuée lors du défilement sur une icône d’application"
 
 #: src/prefs/applicationInteractionGroup.js:215
-#: src/prefs/dockBehaviorGroup.js:96 src/prefs/taskbarBehaviorGroup.js:150
+#: src/prefs/dockBehaviorGroup.js:108 src/prefs/taskbarBehaviorGroup.js:162
 msgid "Scroll Delay"
 msgstr "Délai de défilement"
 
@@ -1472,35 +1454,51 @@ msgstr "Choisir les fenêtres qui masquent le Dock"
 msgid "Let the pointer reveal the hidden Dock at its screen edge"
 msgstr "Laisser le curseur afficher le dock masqué au bord de l’écran"
 
-#: src/prefs/dockBehaviorGroup.js:58
+#: src/prefs/dockBehaviorGroup.js:54
+msgid "Choose how quickly the pointer brings the Dock back"
+msgstr "Choisir la rapidité avec laquelle le curseur fait réapparaître le dock"
+
+#: src/prefs/dockBehaviorGroup.js:57
+msgid "Choose when the Dock appears at the screen edge"
+msgstr "Choisir quand le dock apparaît au bord de l’écran"
+
+#: src/prefs/dockBehaviorGroup.js:59
+msgid "Choose how soon the Dock hides again"
+msgstr "Choisir la rapidité avec laquelle le dock se masque à nouveau"
+
+#: src/prefs/dockBehaviorGroup.js:61
+msgid "How long the Dock waits after the pointer leaves, in milliseconds"
+msgstr "Durée d’attente de le dock après le départ du curseur, en millisecondes"
+
+#: src/prefs/dockBehaviorGroup.js:70
 msgid "Dock Scroll"
 msgstr "Défilement du Dock"
 
-#: src/prefs/dockBehaviorGroup.js:59
+#: src/prefs/dockBehaviorGroup.js:71
 msgid "Configure scrolling over empty Dock space"
 msgstr "Configurer le défilement sur l’espace vide du Dock"
 
-#: src/prefs/dockBehaviorGroup.js:66 src/prefs/taskbarBehaviorGroup.js:120
+#: src/prefs/dockBehaviorGroup.js:78 src/prefs/taskbarBehaviorGroup.js:132
 msgid "Scroll Action"
 msgstr "Action de défilement"
 
-#: src/prefs/dockBehaviorGroup.js:67
+#: src/prefs/dockBehaviorGroup.js:79
 msgid "Action used when scrolling over empty Dock space"
 msgstr "Action utilisée lors du défilement sur l’espace vide du Dock"
 
-#: src/prefs/dockBehaviorGroup.js:79 src/prefs/taskbarBehaviorGroup.js:133
+#: src/prefs/dockBehaviorGroup.js:91 src/prefs/taskbarBehaviorGroup.js:145
 msgid "Change Volume"
 msgstr "Modifier le volume"
 
-#: src/prefs/dockBehaviorGroup.js:97
+#: src/prefs/dockBehaviorGroup.js:109
 msgid "Minimum delay between Dock scroll actions in milliseconds"
 msgstr "Délai minimal entre les actions de défilement du Dock en millisecondes"
 
-#: src/prefs/dockBehaviorGroup.js:109
+#: src/prefs/dockBehaviorGroup.js:121
 msgid "Show Dock on All Monitors"
 msgstr "Afficher le dock sur tous les moniteurs"
 
-#: src/prefs/dockBehaviorGroup.js:110
+#: src/prefs/dockBehaviorGroup.js:122
 msgid "Show the Dock on every connected monitor"
 msgstr "Afficher le Dock sur chaque écran connecté"
 
@@ -2867,11 +2865,27 @@ msgid "Let the pointer reveal the hidden taskbar at its screen edge"
 msgstr ""
 "Laisser le curseur afficher la barre des tâches masquée au bord de l’écran"
 
-#: src/prefs/taskbarBehaviorGroup.js:63
+#: src/prefs/taskbarBehaviorGroup.js:59
+msgid "Choose how quickly the pointer brings the taskbar back"
+msgstr "Choisir la rapidité avec laquelle le curseur fait réapparaître la barre des tâches"
+
+#: src/prefs/taskbarBehaviorGroup.js:62
+msgid "Choose when the taskbar appears at the screen edge"
+msgstr "Choisir quand la barre des tâches apparaît au bord de l’écran"
+
+#: src/prefs/taskbarBehaviorGroup.js:64
+msgid "Choose how soon the taskbar hides again"
+msgstr "Choisir la rapidité avec laquelle la barre des tâches se masque à nouveau"
+
+#: src/prefs/taskbarBehaviorGroup.js:66
+msgid "How long the taskbar waits after the pointer leaves, in milliseconds"
+msgstr "Durée d’attente de la barre des tâches après le départ du curseur, en millisecondes"
+
+#: src/prefs/taskbarBehaviorGroup.js:75
 msgid "Bottom Hot Edge"
 msgstr "Bord chaud en bas"
 
-#: src/prefs/taskbarBehaviorGroup.js:65
+#: src/prefs/taskbarBehaviorGroup.js:77
 msgid ""
 "Configure the bottom-edge gesture, pressure, and animation for toggling "
 "Overview"
@@ -2879,95 +2893,95 @@ msgstr ""
 "Configurer le geste, la pression et l’animation du bord inférieur pour "
 "activer ou désactiver la vue d’ensemble"
 
-#: src/prefs/taskbarBehaviorGroup.js:70
+#: src/prefs/taskbarBehaviorGroup.js:82
 msgid "Enable Bottom Hot Edge"
 msgstr "Activer la zone active inférieure"
 
-#: src/prefs/taskbarBehaviorGroup.js:72
+#: src/prefs/taskbarBehaviorGroup.js:84
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr ""
 "Appuyer le curseur contre le bord inférieur de l’écran pour déclencher "
 "l’aperçu"
 
-#: src/prefs/taskbarBehaviorGroup.js:84
+#: src/prefs/taskbarBehaviorGroup.js:96
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr ""
 "Nombre de pixels que le curseur doit parcourir au-delà du bord inférieur "
 "avant que l’aperçu ne s’active"
 
-#: src/prefs/taskbarBehaviorGroup.js:96
+#: src/prefs/taskbarBehaviorGroup.js:108
 msgid "Hot Edge Animation"
 msgstr "Animation du bord chaud"
 
-#: src/prefs/taskbarBehaviorGroup.js:97
+#: src/prefs/taskbarBehaviorGroup.js:109
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "Afficher une ondulation à l'activation du bord chaud"
 
-#: src/prefs/taskbarBehaviorGroup.js:112
+#: src/prefs/taskbarBehaviorGroup.js:124
 msgid "Taskbar Scroll"
 msgstr "Défilement de la barre des tâches"
 
-#: src/prefs/taskbarBehaviorGroup.js:113
+#: src/prefs/taskbarBehaviorGroup.js:125
 msgid "Configure scrolling over empty taskbar space"
 msgstr "Configurer le défilement sur l’espace vide de la barre des tâches"
 
-#: src/prefs/taskbarBehaviorGroup.js:121
+#: src/prefs/taskbarBehaviorGroup.js:133
 msgid "Action used when scrolling over empty taskbar space"
 msgstr ""
 "Action utilisée lors du défilement sur l’espace vide de la barre des tâches"
 
-#: src/prefs/taskbarBehaviorGroup.js:151
+#: src/prefs/taskbarBehaviorGroup.js:163
 msgid "Minimum delay between taskbar scroll actions in milliseconds"
 msgstr ""
 "Délai minimal entre les actions de défilement de la barre des tâches en "
 "millisecondes"
 
-#: src/prefs/taskbarBehaviorGroup.js:173
+#: src/prefs/taskbarBehaviorGroup.js:185
 msgid "Taskbar Menus and Notifications"
 msgstr "Menus et notifications de la barre des tâches"
 
-#: src/prefs/taskbarBehaviorGroup.js:175
+#: src/prefs/taskbarBehaviorGroup.js:187
 msgid "Configure taskbar menu activation and notification banner placement"
 msgstr ""
 "Configurer l’activation des menus de la barre des tâches et le placement des "
 "bannières de notification"
 
-#: src/prefs/taskbarBehaviorGroup.js:180
+#: src/prefs/taskbarBehaviorGroup.js:192
 msgid "Taskbar Menus Require Click"
 msgstr "Les menus de la barre des tâches nécessitent un clic"
 
-#: src/prefs/taskbarBehaviorGroup.js:181
+#: src/prefs/taskbarBehaviorGroup.js:193
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr ""
 "Basculer entre les menus d’horloge, système et tiroir uniquement en cas de "
 "clic"
 
-#: src/prefs/taskbarBehaviorGroup.js:187
+#: src/prefs/taskbarBehaviorGroup.js:199
 msgid "Taskbar-aligned Notification Banners"
 msgstr "Bannières de notifications alignées à la barre des tâches."
 
-#: src/prefs/taskbarBehaviorGroup.js:188
+#: src/prefs/taskbarBehaviorGroup.js:200
 msgid "Follow the taskbar edge and the clock position"
 msgstr "Suivre le bord de la barre des tâches et la position de l’horloge"
 
-#: src/prefs/taskbarBehaviorGroup.js:217
+#: src/prefs/taskbarBehaviorGroup.js:229
 msgid "Automatic Fallback"
 msgstr "Repli automatique"
 
-#: src/prefs/taskbarBehaviorGroup.js:225
+#: src/prefs/taskbarBehaviorGroup.js:237
 msgid "Task Manager Application"
 msgstr "Application de gestionnaire de tâches"
 
-#: src/prefs/taskbarBehaviorGroup.js:226
+#: src/prefs/taskbarBehaviorGroup.js:238
 msgid "Application opened from the taskbar context menu"
 msgstr "Application ouverte par le menu contextuel de la barre des tâches"
 
-#: src/prefs/taskbarBehaviorGroup.js:245
+#: src/prefs/taskbarBehaviorGroup.js:257
 msgid "Show Taskbar on All Monitors"
 msgstr "Afficher la barre de tâches sur tous les moniteurs"
 
-#: src/prefs/taskbarBehaviorGroup.js:246
+#: src/prefs/taskbarBehaviorGroup.js:258
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 "Afficher les activités, les applications, l’horloge et le menu système sur "
@@ -3045,15 +3059,15 @@ msgstr "Opacité des autres fenêtres"
 msgid "Opacity of other windows while peeking"
 msgstr "Opacité des autres fenêtres pendant la mise en avant"
 
-#: src/prefs/windowDodgeGroup.js:41
+#: src/prefs/windowDodgeGroup.js:42
 msgid "Enable Dodge Windows"
 msgstr "Activer l’évitement des fenêtres"
 
-#: src/prefs/windowDodgeGroup.js:51
+#: src/prefs/windowDodgeGroup.js:52
 msgid "Dodge Windows Mode"
 msgstr "Mode d’évitement des fenêtres"
 
-#: src/prefs/windowDodgeGroup.js:63
+#: src/prefs/windowDodgeGroup.js:68
 msgid "Reveal on Pointer"
 msgstr "Afficher au passage du pointeur"
 

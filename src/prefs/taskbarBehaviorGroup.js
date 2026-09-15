@@ -54,6 +54,18 @@ export function addTaskbarBehaviorGroup({
             pointerRevealSubtitle: _(
                 'Let the pointer reveal the hidden taskbar at its screen edge'
             ),
+            timingDescriptions: {
+                reveal: _(
+                    'Choose how quickly the pointer brings the taskbar back'
+                ),
+                revealMode: _(
+                    'Choose when the taskbar appears at the screen edge'
+                ),
+                hide: _('Choose how soon the taskbar hides again'),
+                hideDelay: _(
+                    'How long the taskbar waits after the pointer leaves, in milliseconds'
+                ),
+            },
             visibilityRows: [],
             connectSettings,
         }

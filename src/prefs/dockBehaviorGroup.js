@@ -49,6 +49,18 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             pointerRevealSubtitle: _(
                 'Let the pointer reveal the hidden Dock at its screen edge'
             ),
+            timingDescriptions: {
+                reveal: _(
+                    'Choose how quickly the pointer brings the Dock back'
+                ),
+                revealMode: _(
+                    'Choose when the Dock appears at the screen edge'
+                ),
+                hide: _('Choose how soon the Dock hides again'),
+                hideDelay: _(
+                    'How long the Dock waits after the pointer leaves, in milliseconds'
+                ),
+            },
             visibilityRows: [edgeRevealSwitch],
             connectSettings,
         }

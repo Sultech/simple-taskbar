@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 15:39+0100\n"
+"POT-Creation-Date: 2026-09-15 15:50+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -223,69 +223,53 @@ msgstr "Shift+中键点击操作"
 msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "选择按住 Shift 中键点击应用时执行的操作"
 
-#: src/prefs/autoHideDialog.js:24 src/prefs/autoHideDialog.js:34
+#: src/prefs/autoHideDialog.js:28 src/prefs/autoHideDialog.js:38
 msgid "Timing Options"
 msgstr "时间选项"
 
-#: src/prefs/autoHideDialog.js:46
+#: src/prefs/autoHideDialog.js:50
 msgid "Reveal"
 msgstr "显示"
 
-#: src/prefs/autoHideDialog.js:47
-msgid "Choose how quickly the pointer brings the panel back"
-msgstr "选择指针让面板重新出现的速度"
-
-#: src/prefs/autoHideDialog.js:56
+#: src/prefs/autoHideDialog.js:60
 msgid "Reveal Mode"
 msgstr "显示方式"
 
-#: src/prefs/autoHideDialog.js:57
-msgid "Choose when the panel appears at the screen edge"
-msgstr "选择面板何时在屏幕边缘出现"
-
-#: src/prefs/autoHideDialog.js:61
+#: src/prefs/autoHideDialog.js:65
 msgid "Instant"
 msgstr "立即"
 
-#: src/prefs/autoHideDialog.js:65
+#: src/prefs/autoHideDialog.js:69
 msgid "After a Delay"
 msgstr "延迟后"
 
-#: src/prefs/autoHideDialog.js:69
+#: src/prefs/autoHideDialog.js:73
 msgid "After Pushing Against the Edge"
 msgstr "向边缘推动后"
 
-#: src/prefs/autoHideDialog.js:80
+#: src/prefs/autoHideDialog.js:84
 msgid "Reveal Delay"
 msgstr "显示延迟"
 
-#: src/prefs/autoHideDialog.js:81
+#: src/prefs/autoHideDialog.js:85
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "指针在边缘停留的时长（毫秒）"
 
-#: src/prefs/autoHideDialog.js:94 src/prefs/taskbarBehaviorGroup.js:82
+#: src/prefs/autoHideDialog.js:98 src/prefs/taskbarBehaviorGroup.js:94
 msgid "Activation Pressure"
 msgstr "激活压力"
 
-#: src/prefs/autoHideDialog.js:95
+#: src/prefs/autoHideDialog.js:99
 msgid "How far to push past the edge before revealing"
 msgstr "显示前需要越过边缘推动的距离"
 
-#: src/prefs/autoHideDialog.js:104
+#: src/prefs/autoHideDialog.js:108
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/prefs/autoHideDialog.js:105
-msgid "Choose how soon the panel hides again"
-msgstr "选择面板多快重新隐藏"
-
-#: src/prefs/autoHideDialog.js:114
+#: src/prefs/autoHideDialog.js:118
 msgid "Hide Delay"
 msgstr "隐藏延迟"
-
-#: src/prefs/autoHideDialog.js:115
-msgid "How long the panel waits after the pointer leaves, in milliseconds"
-msgstr "指针离开后面板等待的时长（毫秒）"
 
 #: src/prefs/applicationGroupingDialog.js:28
 #: src/prefs/applicationGroupingDialog.js:37
@@ -893,18 +877,18 @@ msgid "Choose the animation shown when an application is clicked"
 msgstr "选择点击应用时显示的动画"
 
 #: src/prefs/applicationInteractionGroup.js:178
-#: src/prefs/dockBehaviorGroup.js:71 src/prefs/taskbarBehaviorGroup.js:125
+#: src/prefs/dockBehaviorGroup.js:83 src/prefs/taskbarBehaviorGroup.js:137
 msgid "Switch Workspace"
 msgstr "切换工作区"
 
 #: src/prefs/applicationInteractionGroup.js:182
-#: src/prefs/dockBehaviorGroup.js:75 src/prefs/taskbarBehaviorGroup.js:129
+#: src/prefs/dockBehaviorGroup.js:87 src/prefs/taskbarBehaviorGroup.js:141
 msgid "Cycle Windows"
 msgstr "循环切换窗口"
 
 #: src/prefs/applicationInteractionGroup.js:186
 #: src/prefs/applicationInteractionGroup.js:312
-#: src/prefs/dockBehaviorGroup.js:83 src/prefs/taskbarBehaviorGroup.js:137
+#: src/prefs/dockBehaviorGroup.js:95 src/prefs/taskbarBehaviorGroup.js:149
 msgid "Do Nothing"
 msgstr "不执行操作"
 
@@ -917,7 +901,7 @@ msgid "Choose what happens when scrolling over an application icon"
 msgstr "选择在应用图标上滚动时执行的操作"
 
 #: src/prefs/applicationInteractionGroup.js:215
-#: src/prefs/dockBehaviorGroup.js:96 src/prefs/taskbarBehaviorGroup.js:150
+#: src/prefs/dockBehaviorGroup.js:108 src/prefs/taskbarBehaviorGroup.js:162
 msgid "Scroll Delay"
 msgstr "滚动延迟"
 
@@ -1387,35 +1371,51 @@ msgstr "选择哪些窗口会使 Dock 隐藏"
 msgid "Let the pointer reveal the hidden Dock at its screen edge"
 msgstr "当指针到达屏幕边缘时显示隐藏的 Dock"
 
-#: src/prefs/dockBehaviorGroup.js:58
+#: src/prefs/dockBehaviorGroup.js:54
+msgid "Choose how quickly the pointer brings the Dock back"
+msgstr "选择指针让Dock重新出现的速度"
+
+#: src/prefs/dockBehaviorGroup.js:57
+msgid "Choose when the Dock appears at the screen edge"
+msgstr "选择Dock何时在屏幕边缘出现"
+
+#: src/prefs/dockBehaviorGroup.js:59
+msgid "Choose how soon the Dock hides again"
+msgstr "选择Dock多快重新隐藏"
+
+#: src/prefs/dockBehaviorGroup.js:61
+msgid "How long the Dock waits after the pointer leaves, in milliseconds"
+msgstr "指针离开后Dock等待的时长（毫秒）"
+
+#: src/prefs/dockBehaviorGroup.js:70
 msgid "Dock Scroll"
 msgstr "Dock 滚动"
 
-#: src/prefs/dockBehaviorGroup.js:59
+#: src/prefs/dockBehaviorGroup.js:71
 msgid "Configure scrolling over empty Dock space"
 msgstr "配置在 Dock 空白区域上的滚动操作"
 
-#: src/prefs/dockBehaviorGroup.js:66 src/prefs/taskbarBehaviorGroup.js:120
+#: src/prefs/dockBehaviorGroup.js:78 src/prefs/taskbarBehaviorGroup.js:132
 msgid "Scroll Action"
 msgstr "滚动操作"
 
-#: src/prefs/dockBehaviorGroup.js:67
+#: src/prefs/dockBehaviorGroup.js:79
 msgid "Action used when scrolling over empty Dock space"
 msgstr "在 Dock 空白区域滚动时执行的操作"
 
-#: src/prefs/dockBehaviorGroup.js:79 src/prefs/taskbarBehaviorGroup.js:133
+#: src/prefs/dockBehaviorGroup.js:91 src/prefs/taskbarBehaviorGroup.js:145
 msgid "Change Volume"
 msgstr "更改音量"
 
-#: src/prefs/dockBehaviorGroup.js:97
+#: src/prefs/dockBehaviorGroup.js:109
 msgid "Minimum delay between Dock scroll actions in milliseconds"
 msgstr "Dock 滚动操作之间的最小延迟（毫秒）"
 
-#: src/prefs/dockBehaviorGroup.js:109
+#: src/prefs/dockBehaviorGroup.js:121
 msgid "Show Dock on All Monitors"
 msgstr "在所有显示器上展示 Dock"
 
-#: src/prefs/dockBehaviorGroup.js:110
+#: src/prefs/dockBehaviorGroup.js:122
 msgid "Show the Dock on every connected monitor"
 msgstr "在每个已连接的显示器上显示 Dock"
 
@@ -2684,94 +2684,110 @@ msgstr "选择哪些窗口会使任务栏隐藏"
 msgid "Let the pointer reveal the hidden taskbar at its screen edge"
 msgstr "当指针到达屏幕边缘时显示隐藏的任务栏"
 
-#: src/prefs/taskbarBehaviorGroup.js:63
+#: src/prefs/taskbarBehaviorGroup.js:59
+msgid "Choose how quickly the pointer brings the taskbar back"
+msgstr "选择指针让任务栏重新出现的速度"
+
+#: src/prefs/taskbarBehaviorGroup.js:62
+msgid "Choose when the taskbar appears at the screen edge"
+msgstr "选择任务栏何时在屏幕边缘出现"
+
+#: src/prefs/taskbarBehaviorGroup.js:64
+msgid "Choose how soon the taskbar hides again"
+msgstr "选择任务栏多快重新隐藏"
+
+#: src/prefs/taskbarBehaviorGroup.js:66
+msgid "How long the taskbar waits after the pointer leaves, in milliseconds"
+msgstr "指针离开后任务栏等待的时长（毫秒）"
+
+#: src/prefs/taskbarBehaviorGroup.js:75
 msgid "Bottom Hot Edge"
 msgstr "底部热区"
 
-#: src/prefs/taskbarBehaviorGroup.js:65
+#: src/prefs/taskbarBehaviorGroup.js:77
 msgid ""
 "Configure the bottom-edge gesture, pressure, and animation for toggling "
 "Overview"
 msgstr "配置底部边缘手势、压力和动画以切换概览"
 
-#: src/prefs/taskbarBehaviorGroup.js:70
+#: src/prefs/taskbarBehaviorGroup.js:82
 msgid "Enable Bottom Hot Edge"
 msgstr "启用底部热边缘"
 
-#: src/prefs/taskbarBehaviorGroup.js:72
+#: src/prefs/taskbarBehaviorGroup.js:84
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
 msgstr "将指针抵住屏幕底部边缘以切换概览"
 
-#: src/prefs/taskbarBehaviorGroup.js:84
+#: src/prefs/taskbarBehaviorGroup.js:96
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr "指针越过底部边缘所移动的像素数，超过此值后才会激活概览"
 
-#: src/prefs/taskbarBehaviorGroup.js:96
+#: src/prefs/taskbarBehaviorGroup.js:108
 msgid "Hot Edge Animation"
 msgstr "热区动画"
 
-#: src/prefs/taskbarBehaviorGroup.js:97
+#: src/prefs/taskbarBehaviorGroup.js:109
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "底部热区激活时展示波纹动画"
 
-#: src/prefs/taskbarBehaviorGroup.js:112
+#: src/prefs/taskbarBehaviorGroup.js:124
 msgid "Taskbar Scroll"
 msgstr "任务栏滚动"
 
-#: src/prefs/taskbarBehaviorGroup.js:113
+#: src/prefs/taskbarBehaviorGroup.js:125
 msgid "Configure scrolling over empty taskbar space"
 msgstr "配置在任务栏空白区域上的滚动操作"
 
-#: src/prefs/taskbarBehaviorGroup.js:121
+#: src/prefs/taskbarBehaviorGroup.js:133
 msgid "Action used when scrolling over empty taskbar space"
 msgstr "在任务栏空白区域滚动时执行的操作"
 
-#: src/prefs/taskbarBehaviorGroup.js:151
+#: src/prefs/taskbarBehaviorGroup.js:163
 msgid "Minimum delay between taskbar scroll actions in milliseconds"
 msgstr "任务栏滚动操作之间的最小延迟（毫秒）"
 
-#: src/prefs/taskbarBehaviorGroup.js:173
+#: src/prefs/taskbarBehaviorGroup.js:185
 msgid "Taskbar Menus and Notifications"
 msgstr "任务栏菜单和通知"
 
-#: src/prefs/taskbarBehaviorGroup.js:175
+#: src/prefs/taskbarBehaviorGroup.js:187
 msgid "Configure taskbar menu activation and notification banner placement"
 msgstr "配置任务栏菜单激活方式和通知横幅位置"
 
-#: src/prefs/taskbarBehaviorGroup.js:180
+#: src/prefs/taskbarBehaviorGroup.js:192
 msgid "Taskbar Menus Require Click"
 msgstr "任务栏菜单需要点击"
 
-#: src/prefs/taskbarBehaviorGroup.js:181
+#: src/prefs/taskbarBehaviorGroup.js:193
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "仅在点击时切换时钟、系统与托盘菜单"
 
-#: src/prefs/taskbarBehaviorGroup.js:187
+#: src/prefs/taskbarBehaviorGroup.js:199
 msgid "Taskbar-aligned Notification Banners"
 msgstr "与任务栏对齐的通知横幅"
 
-#: src/prefs/taskbarBehaviorGroup.js:188
+#: src/prefs/taskbarBehaviorGroup.js:200
 msgid "Follow the taskbar edge and the clock position"
 msgstr "跟随任务栏边缘和时钟位置"
 
-#: src/prefs/taskbarBehaviorGroup.js:217
+#: src/prefs/taskbarBehaviorGroup.js:229
 msgid "Automatic Fallback"
 msgstr "自动回退"
 
-#: src/prefs/taskbarBehaviorGroup.js:225
+#: src/prefs/taskbarBehaviorGroup.js:237
 msgid "Task Manager Application"
 msgstr "任务管理器程序"
 
-#: src/prefs/taskbarBehaviorGroup.js:226
+#: src/prefs/taskbarBehaviorGroup.js:238
 msgid "Application opened from the taskbar context menu"
 msgstr "从任务栏右键菜单打开的应用程序"
 
-#: src/prefs/taskbarBehaviorGroup.js:245
+#: src/prefs/taskbarBehaviorGroup.js:257
 msgid "Show Taskbar on All Monitors"
 msgstr "在所有显示器上展示任务栏"
 
-#: src/prefs/taskbarBehaviorGroup.js:246
+#: src/prefs/taskbarBehaviorGroup.js:258
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr "在每台显示器上展示活动、应用、时钟与系统菜单"
 
@@ -2847,15 +2863,15 @@ msgstr "其他窗口不透明度"
 msgid "Opacity of other windows while peeking"
 msgstr "窥视时其他窗口的不透明度"
 
-#: src/prefs/windowDodgeGroup.js:41
+#: src/prefs/windowDodgeGroup.js:42
 msgid "Enable Dodge Windows"
 msgstr "启用躲避窗口"
 
-#: src/prefs/windowDodgeGroup.js:51
+#: src/prefs/windowDodgeGroup.js:52
 msgid "Dodge Windows Mode"
 msgstr "窗口避让模式"
 
-#: src/prefs/windowDodgeGroup.js:63
+#: src/prefs/windowDodgeGroup.js:68
 msgid "Reveal on Pointer"
 msgstr "指针触发显示"
 

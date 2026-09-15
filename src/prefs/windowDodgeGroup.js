@@ -27,6 +27,7 @@ export function addWindowDodgeRows(
         dodgeSubtitle,
         modeSubtitle,
         pointerRevealSubtitle,
+        timingDescriptions,
         visibilityRows,
         connectSettings,
     }
@@ -57,7 +58,11 @@ export function addWindowDodgeRows(
     );
 
     const revealOptionsButton =
-        createRevealOptionsButton(settings, pointerRevealKey);
+        createRevealOptionsButton(
+            settings,
+            pointerRevealKey,
+            timingDescriptions
+        );
     const {row: pointerRevealSwitch} = addSwitchRow(null, settings, {
         key: pointerRevealKey,
         title: _('Reveal on Pointer'),
