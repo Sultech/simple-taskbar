@@ -10,6 +10,8 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 
+const RESET_BATCH_SIZE = 255;
+
 export function confirmReset(window, createSettings) {
     const dialog = new Adw.AlertDialog({
         heading: _('Reset all settings?'),
@@ -31,14 +33,21 @@ export function confirmReset(window, createSettings) {
 
         const resetSettings = createSettings();
         resetSettings.delay();
+        let batchSize = 0;
         for (const key of resetSettings.settings_schema.list_keys()) {
             if (key === 'start-menu-displaced-overlay-key' ||
                 key === 'start-menu-pinned-apps') {
                 continue;
             }
             resetSettings.reset(key);
+            batchSize++;
+            if (batchSize === RESET_BATCH_SIZE) {
+                resetSettings.apply();
+                batchSize = 0;
+            }
         }
-        resetSettings.apply();
+        if (batchSize > 0)
+            resetSettings.apply();
     });
 }
 
