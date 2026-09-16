@@ -31,7 +31,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         Gtk.IconTheme.get_for_display(window.get_display()).add_search_path(
             `${this.path}/icons/scalable/actions`
         );
-        window.set_default_size(600, 740);
+        window.set_default_size(640, 740);
         window._settings = this.getSettings();
         const settingsSignalTracker = new SettingsSignalTracker();
         window.connect('close-request', () => settingsSignalTracker.destroy());
