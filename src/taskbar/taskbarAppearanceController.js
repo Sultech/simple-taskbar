@@ -21,6 +21,7 @@ import {
 import {
     GLASS_VERTICAL_INSET,
     iconEdgePadding,
+    taskbarCrossAxisParityOffset,
     taskbarGlassHeight,
     taskbarIconButtonWidth,
     taskbarVisualPanelHeight,
@@ -61,6 +62,17 @@ export class TaskbarAppearanceController {
         this._getPanelHeight = getPanelHeight;
         this._showAppLabels = showAppLabels;
         this._iconColors = new IconDominantColorCache();
+    }
+
+    crossAxisParityOffset() {
+        if (!panelIsVertical(this._settings))
+            return 0;
+
+        return taskbarCrossAxisParityOffset(
+            this._settings,
+            this.visualPanelHeight(),
+            this._getIconSize()
+        );
     }
 
     visualPanelHeight() {
@@ -117,8 +129,7 @@ export class TaskbarAppearanceController {
         item._taskbarButtonContent.set_height(
             vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
         );
-        const parityOffset = vertical &&
-            (itemWidth - this._getIconSize()) % 2 !== 0 ? 1 : 0;
+        const parityOffset = this.crossAxisParityOffset();
         item._taskbarButtonContent.translation_x = parityOffset;
         item._taskbarVisual.y_align = vertical
             ? Clutter.ActorAlign.CENTER
@@ -139,7 +150,7 @@ export class TaskbarAppearanceController {
         const glassInset = this.glassInset();
         const glassOuterHeight = vertical ? itemHeight : glassHeight;
         const glassX = vertical
-            ? Math.floor((itemWidth - glassWidth) / 2)
+            ? Math.floor((itemWidth - glassWidth) / 2) + parityOffset
             : 0;
         const glassY = vertical ? 0 : this.glassY();
         const glassContentWidth = glassWidth - glassInset * 2;
@@ -284,7 +295,10 @@ export class TaskbarAppearanceController {
         const visualPanelHeight = this.visualPanelHeight();
         const itemWidth = vertical ? visualPanelHeight : glassWidth;
         return {
-            x: vertical ? Math.floor((itemWidth - glassWidth) / 2) : 0,
+            x: vertical
+                ? Math.floor((itemWidth - glassWidth) / 2) +
+                    this.crossAxisParityOffset()
+                : 0,
             y: vertical ? 0 : this.glassY(),
             width: glassWidth,
             height: vertical

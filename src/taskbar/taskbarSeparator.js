@@ -73,13 +73,21 @@ export function syncSeparatorVisibility(
     return true;
 }
 
-export function syncSeparatorGeometry(separator, line, vertical, iconSize) {
+export function syncSeparatorGeometry(
+    separator,
+    line,
+    vertical,
+    iconSize,
+    parityOffset
+) {
     if (vertical) {
         separator.set_width(iconSize);
         line.set_size(iconSize, TASKBAR_SEPARATOR_LINE_SIZE);
+        separator.translation_x = parityOffset;
     } else {
         separator.set_height(iconSize);
         line.set_size(TASKBAR_SEPARATOR_LINE_SIZE, iconSize);
+        separator.translation_x = 0;
     }
 }
 

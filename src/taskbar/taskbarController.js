@@ -848,6 +848,10 @@ export class TaskbarController {
         return this._iconSize;
     }
 
+    crossAxisParityOffset() {
+        return this._appearanceController.crossAxisParityOffset();
+    }
+
     disableHoverAnimations() {
         this._iconHoverAnimationController.disable();
     }
@@ -1004,6 +1008,7 @@ export class TaskbarController {
             );
             this._updateGlassGeometry(item);
         }
+        this._syncPinnedSeparatorGeometry();
         this._syncTaskbarEdgeSpacing();
         this.queueIconGeometryUpdate();
     }
@@ -1768,7 +1773,8 @@ export class TaskbarController {
             this._pinnedSeparator,
             this._pinnedSeparatorLine,
             vertical,
-            this._iconSize
+            this._iconSize,
+            this._appearanceController.crossAxisParityOffset()
         );
         this._pinnedSeparator[
             vertical ? 'height' : 'width'

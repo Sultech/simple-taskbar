@@ -93,7 +93,7 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         const childX = (availableWidth - childWidth) / 2;
         const childY = (availableHeight - childHeight) / 2;
         childBox.x1 = this._snapChildAllocation
-            ? Math.round(childX)
+            ? Math.floor(childX)
             : childX;
         childBox.y1 = this._snapChildAllocation
             ? Math.round(childY)

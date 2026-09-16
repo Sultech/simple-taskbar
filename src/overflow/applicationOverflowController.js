@@ -660,7 +660,8 @@ export class ApplicationOverflowController {
             this._locationSeparator,
             this._locationSeparatorLine,
             vertical,
-            this._taskbarController.getIconSize()
+            this._taskbarController.getIconSize(),
+            this._taskbarController.crossAxisParityOffset()
         );
         if (orientationChanged)
             resetSeparatorToTarget(this._locationSeparator, vertical);

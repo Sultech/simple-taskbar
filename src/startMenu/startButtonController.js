@@ -34,6 +34,7 @@ import {
 import {
     taskbarGlassHeight,
     taskbarIconButtonWidth,
+    taskbarCrossAxisParityOffset,
     taskbarVisualPanelHeight,
     taskbarVerticalItemExtent,
 } from '../shared/panelSizing.js';
@@ -276,6 +277,19 @@ export class StartButtonController {
         this._classicHover.translation_y = 0;
         this._classicHover.y_align = Clutter.ActorAlign.CENTER;
         this._classicHover.y_expand = false;
+        this._parityOffset = vertical
+            ? taskbarCrossAxisParityOffset(
+                this._settings,
+                taskbarVisualPanelHeight(
+                    this._settings,
+                    this._settings.get_int('panel-height'),
+                    iconSize,
+                    floatingDock
+                ),
+                iconSize
+            )
+            : 0;
+        this._content.translation_x = this._parityOffset;
         const startButtonPosition = this._settings.get_boolean(
             'start-button-follow-app-alignment'
         )
@@ -942,7 +956,8 @@ export class StartButtonController {
             this._separator,
             this._separatorLine,
             vertical,
-            this._icon.icon_size
+            this._icon.icon_size,
+            this._parityOffset ?? 0
         );
         if (orientationChanged)
             resetSeparatorToTarget(this._separator, vertical);

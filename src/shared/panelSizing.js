@@ -43,9 +43,11 @@ export function taskbarVisualPanelHeight(
     iconSize,
     floatingDock
 ) {
-    return floatingDock
-        ? iconSize + iconEdgeReserve(settings)
-        : panelHeight;
+    if (!floatingDock)
+        return panelHeight;
+
+    const reserve = iconEdgeReserve(settings);
+    return iconSize + reserve + reserve % 2;
 }
 
 export function taskbarGlassHeight(panelHeight, windowsXpTheme) {
@@ -58,6 +60,13 @@ export function taskbarGlassHeight(panelHeight, windowsXpTheme) {
 export function taskbarIconButtonWidth(iconSize) {
     const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
     return Math.max(iconSize, minimumIconWidth) + 8;
+}
+
+export function taskbarCrossAxisParityOffset(settings, panelThickness, iconSize) {
+    if (settings.isDock && !settings.get_boolean('dock-panel-mode'))
+        return 0;
+
+    return iconSize % 2 !== 0 && panelThickness % 2 === 0 ? 1 : 0;
 }
 
 export function taskbarVerticalItemExtent(iconSize) {
