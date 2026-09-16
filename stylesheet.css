@@ -1070,7 +1070,8 @@
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-recommended:hover,
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-recommended:focus,
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:hover,
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:focus {
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:focus,
+.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-app-list-button:selected {
     background-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -1373,6 +1374,7 @@
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-recommended:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-list-button:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-list-button:focus,
+.simple-taskbar-windows-start-light .simple-taskbar-windows-start-app-list-button:selected,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer-button:hover,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-footer-button:focus,
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-icon-button:hover,
@@ -1526,6 +1528,7 @@
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-recommended:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button:focus,
+.simple-taskbar-windows-start-shell .simple-taskbar-windows-start-app-list-button:selected,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-footer-button:hover,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-footer-button:focus,
 .simple-taskbar-windows-start-shell .simple-taskbar-windows-start-icon-button:hover,

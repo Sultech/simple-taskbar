@@ -147,7 +147,9 @@ export class StartMenuController {
                 },
             }
         );
-        this._firstSearchResult = null;
+        this._selectedSearchResult = null;
+        this._selectedSearchButton = null;
+        this._searchSelectionVisible = false;
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePress = new SourcePressGuard();
@@ -719,7 +721,8 @@ export class StartMenuController {
         this._settingsGIcon = null;
         this._settings = null;
         this._onSourceContextMenu = null;
-        this._firstSearchResult = null;
+        this._selectedSearchResult = null;
+        this._selectedSearchButton = null;
         this._appSystem = null;
         this._favorites = null;
         this._appliedTheme = null;
@@ -754,6 +757,10 @@ export class StartMenuController {
             }
             return Clutter.EVENT_PROPAGATE;
         });
+        this._searchEntry.clutter_text.connect('key-focus-in', () =>
+            this._setSearchSelectionVisible(true));
+        this._searchEntry.clutter_text.connect('key-focus-out', () =>
+            this._setSearchSelectionVisible(false));
         this._searchEntry.clutter_text.connect('text-changed', () => {
             const text = this._searchEntry.get_text();
             const query = text.trim();
@@ -781,8 +788,8 @@ export class StartMenuController {
             if (symbol !== Clutter.KEY_Return && symbol !== Clutter.KEY_KP_Enter)
                 return Clutter.EVENT_PROPAGATE;
 
-            if (this._firstSearchResult) {
-                const result = this._firstSearchResult;
+            if (this._selectedSearchResult) {
+                const result = this._selectedSearchResult;
                 const actor = result.app
                     ? this._findAppIcon(result.app)
                     : null;
@@ -921,7 +928,7 @@ export class StartMenuController {
             this._backButton.hide();
             this._ensurePinnedView();
             this._firstVisibleApp = this._pinnedApps[0] ?? null;
-            this._firstSearchResult = null;
+            this._selectedSearchResult = null;
 
             const children = this._content.get_children();
             if (children.length !== 1 || children[0] !== this._pinnedView) {
@@ -1028,7 +1035,7 @@ export class StartMenuController {
             this._allAppsButton.hide();
             this._backButton.show();
             this._firstVisibleApp = folder.apps[0] ?? null;
-            this._firstSearchResult = null;
+            this._selectedSearchResult = null;
 
             const view = new St.BoxLayout({
                 style_class: 'simple-taskbar-windows-start-pinned-view',
@@ -1131,7 +1138,7 @@ export class StartMenuController {
         this._allAppsButton.hide();
         this._backButton.show();
         this._firstVisibleApp = null;
-        this._firstSearchResult = null;
+        this._selectedSearchResult = null;
         this._clearContent();
 
         this._searchController.search(query, (groups, complete) => {
@@ -1159,7 +1166,7 @@ export class StartMenuController {
 
     _displaySearchResults(groups, complete) {
         this._clearContent();
-        this._firstSearchResult = groups[0]?.results[0] ?? null;
+        this._selectedSearchResult = groups[0]?.results[0] ?? null;
         if (groups.length === 0) {
             if (!complete)
                 return;
@@ -1178,18 +1185,54 @@ export class StartMenuController {
                 style_class: 'simple-taskbar-windows-start-app-list',
                 orientation: Clutter.Orientation.VERTICAL,
             });
-            for (const result of group.results)
-                list.add_child(
-                    this._listViewBuilder.createSearchResultButton(result)
-                );
+            for (const result of group.results) {
+                const button =
+                    this._listViewBuilder.createSearchResultButton(result);
+                button.connect('notify::hover', () => {
+                    if (button.hover)
+                        this._setSearchSelection(result, button);
+                });
+                this._selectedSearchButton ??= button;
+                list.add_child(button);
+            }
             this._content.add_child(list);
         }
+        this._syncSearchSelection();
+    }
+
+    _setSearchSelection(result, button) {
+        if (this._selectedSearchButton === button)
+            return;
+
+        this._selectedSearchButton?.remove_style_pseudo_class('selected');
+        this._selectedSearchResult = result;
+        this._selectedSearchButton = button;
+        this._syncSearchSelection();
+    }
+
+    _setSearchSelectionVisible(visible) {
+        if (this._searchSelectionVisible === visible)
+            return;
+
+        this._searchSelectionVisible = visible;
+        this._syncSearchSelection();
+    }
+
+    _syncSearchSelection() {
+        const button = this._selectedSearchButton;
+        if (!button)
+            return;
+
+        if (this._searchSelectionVisible)
+            button.add_style_pseudo_class('selected');
+        else
+            button.remove_style_pseudo_class('selected');
     }
 
     _displayAppList(apps, categorized = false) {
         this._clearContent();
         this._firstVisibleApp = apps[0] ?? null;
-        this._firstSearchResult = null;
+        this._selectedSearchResult = null;
         if (apps.length === 0) {
             this._showEmptyMessage();
             return;
@@ -1211,6 +1254,7 @@ export class StartMenuController {
     }
 
     _clearContent(resetTransition = true) {
+        this._selectedSearchButton = null;
         if (resetTransition)
             resetStartMenuContentTransition(this._content);
         this._tooltipController.hide(true);
