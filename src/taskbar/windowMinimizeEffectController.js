@@ -178,6 +178,10 @@ export class WindowMinimizeEffectController {
             return null;
         }
 
+        const live = this._liveIconGeometry(actor.meta_window);
+        if (live)
+            return live;
+
         const [success, geometry] = actor.meta_window.get_icon_geometry();
         if (!success || geometry.width <= 0 || geometry.height <= 0)
             return null;
@@ -187,6 +191,24 @@ export class WindowMinimizeEffectController {
             y: geometry.y,
             width: geometry.width,
             height: geometry.height,
+        };
+    }
+
+    _liveIconGeometry(window) {
+        const icon = window._simpleTaskbarIconActor;
+        if (!icon || !icon.get_stage() || !icon.has_allocation())
+            return null;
+
+        const [x, y] = icon.get_transformed_position();
+        const [width, height] = icon.get_transformed_size();
+        if (width <= 0 || height <= 0)
+            return null;
+
+        return {
+            x: Math.round(x),
+            y: Math.round(y),
+            width: Math.round(width),
+            height: Math.round(height),
         };
     }
 

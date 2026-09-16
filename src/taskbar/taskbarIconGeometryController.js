@@ -85,6 +85,7 @@ export class TaskbarIconGeometryController {
                 window.get_monitor() !== monitor.index)
                 continue;
             window.set_icon_geometry(geometry);
+            window._simpleTaskbarIconActor = icon;
         }
     }
 }
