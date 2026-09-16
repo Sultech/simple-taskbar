@@ -24,6 +24,11 @@ export const PANEL_MODE_TASKBAR = 'taskbar';
 export const PANEL_MODE_DEFAULT = 'default-panel';
 export const PANEL_MODE_WINDOWS_XP = 'windows-xp';
 
+export const PANEL_AXIS_PROFILE_ENABLED_KEYS = Object.freeze({
+    [PANEL_MODE_TASKBAR]: 'taskbar-axis-profiles-enabled',
+    [PANEL_MODE_DEFAULT]: 'default-panel-axis-profiles-enabled',
+});
+
 const XP_PREVIOUS_DOCK_MODE = 'dock';
 
 const PANEL_AXIS_HORIZONTAL = 'horizontal';
@@ -103,6 +108,8 @@ const MODE_SETTING_KEYS = new Set([
     'dock-panel-height',
     'dock-panel-height-follow-icon-size',
     'dock-position',
+    'taskbar-axis-profiles-enabled',
+    'default-panel-axis-profiles-enabled',
     'panel-axis-profiles-initialized',
     'panel-mode-profiles-initialized',
     'panel-profile-transition',
@@ -127,6 +134,10 @@ function getPanelAxis(settings) {
 
 function axisProfile(mode, axis) {
     return AXIS_PROFILE_KEYS.get(`${mode}:${axis}`);
+}
+
+function axisProfilesEnabled(settings, mode) {
+    return settings.get_boolean(PANEL_AXIS_PROFILE_ENABLED_KEYS[mode]);
 }
 
 function getRequestedPanelMode(settings) {
@@ -237,7 +248,8 @@ function applyInitialPanelAxisSettings(settings, mode, axis) {
 function activateRestoredPanelAxis(settings, mode) {
     const axis = getPanelAxis(settings);
     settings.set_string('active-panel-axis', axis);
-    if (mode !== PANEL_MODE_WINDOWS_XP) {
+    if (mode !== PANEL_MODE_WINDOWS_XP &&
+        axisProfilesEnabled(settings, mode)) {
         const profile = axisProfile(mode, axis);
         if (!settings.get_boolean(profile.saved))
             savePanelAxisSettings(settings, mode, axis);
@@ -323,7 +335,8 @@ export function setPanelMode(settings, mode) {
         );
     }
     if (currentMode !== mode) {
-        if (currentMode !== PANEL_MODE_WINDOWS_XP) {
+        if (currentMode !== PANEL_MODE_WINDOWS_XP &&
+            axisProfilesEnabled(settings, currentMode)) {
             savePanelAxisSettings(
                 settings,
                 currentMode,
@@ -385,12 +398,27 @@ export function setPanelPosition(settings, position) {
     settings.set_string('panel-position', position);
     const axis = getPanelAxis(settings);
     if (mode !== PANEL_MODE_WINDOWS_XP && currentAxis !== axis) {
-        savePanelAxisSettings(settings, mode, currentAxis);
-        if (!restorePanelAxisSettings(settings, mode, axis))
-            applyInitialPanelAxisSettings(settings, mode, axis);
+        if (axisProfilesEnabled(settings, mode)) {
+            savePanelAxisSettings(settings, mode, currentAxis);
+            if (!restorePanelAxisSettings(settings, mode, axis))
+                applyInitialPanelAxisSettings(settings, mode, axis);
+        }
         settings.set_string('active-panel-axis', axis);
     }
     settings.set_boolean('panel-profile-transition', false);
+}
+
+export function setPanelAxisProfilesEnabled(settings, mode, enabled) {
+    const key = PANEL_AXIS_PROFILE_ENABLED_KEYS[mode];
+    if (settings.get_boolean(key) === enabled)
+        return;
+
+    if (enabled && settings.get_string('active-panel-mode') === mode) {
+        const axis = getPanelAxis(settings);
+        savePanelAxisSettings(settings, mode, axis);
+        settings.set_string('active-panel-axis', axis);
+    }
+    settings.set_boolean(key, enabled);
 }
 
 export function initializePanelAxisProfiles(settings) {

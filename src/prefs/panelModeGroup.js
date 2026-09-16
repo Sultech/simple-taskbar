@@ -7,6 +7,7 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
+    PANEL_AXIS_PROFILE_ENABLED_KEYS,
     PANEL_MODE_DEFAULT,
     PANEL_MODE_TASKBAR,
     setPanelMode,
@@ -29,13 +30,15 @@ function addModeRow(settings, {
     tooltip,
     active,
     keys,
+    axisProfile,
     addRow,
 }) {
     const row = new Adw.ActionRow({title, subtitle});
     const optionsButton = createOverviewBehaviorButton(
         settings,
         tooltip,
-        keys
+        keys,
+        axisProfile
     );
     row.add_suffix(optionsButton);
     const toggle = new Gtk.Switch({
@@ -67,7 +70,11 @@ export function addPanelModeGroup({
     } = addModeRow(settings, {
         title: _('Taskbar Mode'),
         subtitle: _('Show applications in the taskbar'),
-        tooltip: _('Taskbar Mode Overview Behavior'),
+        tooltip: _('Taskbar Mode Options'),
+        axisProfile: {
+            key: PANEL_AXIS_PROFILE_ENABLED_KEYS[PANEL_MODE_TASKBAR],
+            mode: PANEL_MODE_TASKBAR,
+        },
         active: !settings.get_boolean('default-gnome-panel') &&
             !settings.get_boolean('dock-mode') &&
             !settings.get_boolean('windows-xp-theme-enabled'),
@@ -92,7 +99,11 @@ export function addPanelModeGroup({
     } = addModeRow(settings, {
         title: _('Default GNOME Panel'),
         subtitle: _('Hide taskbar applications and use the original Dash in Overview'),
-        tooltip: _('Default GNOME Panel Overview Behavior'),
+        tooltip: _('Default GNOME Panel Options'),
+        axisProfile: {
+            key: PANEL_AXIS_PROFILE_ENABLED_KEYS[PANEL_MODE_DEFAULT],
+            mode: PANEL_MODE_DEFAULT,
+        },
         active: settings.get_boolean('default-gnome-panel'),
         addRow: row => alternativeModesRow.add_row(row),
     });

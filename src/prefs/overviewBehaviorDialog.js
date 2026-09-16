@@ -6,6 +6,7 @@ import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {setPanelAxisProfilesEnabled} from '../shared/panelModeProfiles.js';
 import {
     createPreferencesDialogButton,
     createPreferencesDialogContent,
@@ -25,30 +26,33 @@ const PANEL_OVERVIEW_BEHAVIOR_KEYS = {
 export function createOverviewBehaviorButton(
     settings,
     tooltip,
-    keys = PANEL_OVERVIEW_BEHAVIOR_KEYS
+    keys = PANEL_OVERVIEW_BEHAVIOR_KEYS,
+    axisProfile = null
 ) {
     return createPreferencesDialogButton(
         settings,
         tooltip,
         OverviewBehaviorDialog,
-        {keys}
+        {keys, axisProfile, title: tooltip}
     );
 }
 
 export const OverviewBehaviorDialog = GObject.registerClass(
 class OverviewBehaviorDialog extends Adw.Window {
-    _init({settings, parent, keys}) {
+    _init({settings, parent, keys, axisProfile, title}) {
         super._init({
-            title: _('Overview Behavior'),
+            title,
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: 300,
+            default_height: axisProfile ? 430 : 300,
         });
 
         this._settings = settings;
         this._keys = keys;
-        const {content} = createPreferencesDialogContent(this);
+        this._axisProfile = axisProfile;
+        const {content, connectSettings} =
+            createPreferencesDialogContent(this);
         const overviewGroup = new Adw.PreferencesGroup({
             title: _('Overview'),
             description: _('These options apply to the mode that is currently active'),
@@ -65,11 +69,56 @@ class OverviewBehaviorDialog extends Adw.Window {
             title: _('Launch to Desktop'),
             subtitle: _('Start the session on the desktop instead of the Overview; applies at the next login'),
         }));
+
+        if (axisProfile) {
+            const profileGroup = new Adw.PreferencesGroup({
+                title: _('Profiles'),
+            });
+            content.append(profileGroup);
+            const profileRow = new Adw.SwitchRow({
+                title: _('Separate Horizontal and Vertical Profiles'),
+                subtitle: _('Remember different settings for horizontal and vertical panel layouts'),
+                active: settings.get_boolean(axisProfile.key),
+            });
+            profileGroup.add(profileRow);
+
+            let syncingProfile = false;
+            profileRow.connect('notify::active', () => {
+                if (syncingProfile || profileRow.active ===
+                    settings.get_boolean(axisProfile.key)) {
+                    return;
+                }
+                setPanelAxisProfilesEnabled(
+                    settings,
+                    axisProfile.mode,
+                    profileRow.active
+                );
+            });
+            connectSettings(
+                settings,
+                `changed::${axisProfile.key}`,
+                () => {
+                    syncingProfile = true;
+                    profileRow.active = settings.get_boolean(
+                        axisProfile.key
+                    );
+                    syncingProfile = false;
+                }
+            );
+        }
     }
 
     _reset() {
         this._settings.reset(this._keys.hideDash);
         this._settings.reset(this._keys.launchToDesktop);
+        if (this._axisProfile) {
+            const {key, mode} = this._axisProfile;
+            setPanelAxisProfilesEnabled(
+                this._settings,
+                mode,
+                this._settings.get_default_value(key).deepUnpack()
+            );
+        }
     }
 }
 );

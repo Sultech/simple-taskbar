@@ -808,6 +808,14 @@
       <default>false</default>
       <summary>Whether vertical Default GNOME Panel settings are saved</summary>
     </key>
+    <key name="taskbar-axis-profiles-enabled" type="b">
+      <default>true</default>
+      <summary>Keep separate horizontal and vertical Taskbar settings</summary>
+    </key>
+    <key name="default-panel-axis-profiles-enabled" type="b">
+      <default>true</default>
+      <summary>Keep separate horizontal and vertical Default GNOME Panel settings</summary>
+    </key>
     <key name="active-panel-axis" type="s">
       <choices>
         <choice value="horizontal"/>
