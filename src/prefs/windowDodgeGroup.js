@@ -63,7 +63,10 @@ export function addWindowDodgeRows(
             pointerRevealKey,
             timingDescriptions
         );
-    const {row: pointerRevealSwitch} = addSwitchRow(null, settings, {
+    const {
+        row: pointerRevealRow,
+        toggle: pointerRevealSwitch,
+    } = addSwitchRow(null, settings, {
         key: pointerRevealKey,
         title: _('Reveal on Pointer'),
         subtitle: pointerRevealSubtitle,
@@ -103,12 +106,15 @@ export function addWindowDodgeRows(
         dodgeRow.sensitive = available;
         dodgeSwitch.sensitive = available;
         modeRow.sensitive = available && dodgeSwitch.active;
+        const autoHideEnabled = settings.get_boolean(autohideKey);
         const revealable = available &&
-            (dodgeSwitch.active || settings.get_boolean(autohideKey));
-        pointerRevealSwitch.sensitive = revealable;
-        revealOptionsButton.sensitive = revealable;
+            (dodgeSwitch.active || autoHideEnabled);
+        pointerRevealRow.sensitive = revealable;
+        revealOptionsButton.sensitive = revealable &&
+            (autoHideEnabled || pointerRevealSwitch.active);
     };
     dodgeSwitch.connect('notify::active', syncAvailability);
+    pointerRevealSwitch.connect('notify::active', syncAvailability);
     connectSettings(settings, `changed::${autohideKey}`, syncAvailability);
     syncAvailability();
 
