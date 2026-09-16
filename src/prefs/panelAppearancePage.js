@@ -128,7 +128,7 @@ export function addPanelAppearancePage({
         syncingWindowsXpTheme = true;
         windowsXpThemeSwitch.active = enabled;
         panelHeightRow.get_adjustment().set_lower(
-            enabled
+            enabled || settings.get_boolean('default-gnome-panel')
                 ? MIN_PANEL_HEIGHT
                 : standardMinimumPanelHeight(settings)
         );
