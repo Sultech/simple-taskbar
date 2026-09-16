@@ -244,7 +244,7 @@ export class SecondaryPanelDockController {
         const strutGeometry = panelGeometry(
             this._settings,
             this._monitor,
-            this._getPanelHeight() + this.getPanelEdgeGap(),
+            this._getPanelHeight(),
             0,
             100
         );
@@ -373,7 +373,7 @@ export class SecondaryPanelDockController {
         const strutGeometry = panelGeometry(
             this._settings,
             this._monitor,
-            this._getPanelHeight() + this.getPanelEdgeGap(),
+            this._getPanelHeight(),
             0,
             100
         );
