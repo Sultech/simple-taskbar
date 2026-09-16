@@ -151,7 +151,11 @@ export class TaskbarIconHoverAnimationController {
             'changed::animate-appicon-hover-animation-type',
             () => this._onAnimationTypeChanged(),
             'changed::panel-position',
-            () => this._settingsController.invalidate(),
+            () => this._onAnimationTypeChanged(),
+            'changed::combine-app-buttons-mode',
+            () => this._onAnimationTypeChanged(),
+            'changed::hide-app-labels',
+            () => this._onAnimationTypeChanged(),
             'changed::application-click-animation',
             () => this._onClickAnimationChanged(),
             this._signalHolder

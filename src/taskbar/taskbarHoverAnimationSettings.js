@@ -5,6 +5,7 @@ import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
     APP_ICON_HOVER_RENDER_SCALE,
+    appIconMagnifyAllowed,
     hoverRenderScale,
     iconRenderScale,
 } from '../shared/applicationHoverAnimation.js';
@@ -25,7 +26,10 @@ export class TaskbarHoverAnimationSettings {
             const type = this._settings.get_string(
                 'animate-appicon-hover-animation-type'
             );
-            this._animationTypeCache = type === APP_ICON_HOVER_ANIMATION.NONE
+            this._animationTypeCache =
+                type === APP_ICON_HOVER_ANIMATION.NONE ||
+                type === APP_ICON_HOVER_ANIMATION.MAGNIFY &&
+                !appIconMagnifyAllowed(this._settings)
                 ? ''
                 : type;
         }

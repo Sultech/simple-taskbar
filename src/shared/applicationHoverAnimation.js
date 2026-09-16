@@ -21,6 +21,15 @@ export const APP_ICON_HOVER_ANIMATION_SETTINGS = {
     extent: 'animate-appicon-hover-animation-extent',
 };
 
+export function appIconMagnifyAllowed(settings) {
+    const position = settings.get_boolean('dock-mode')
+        ? settings.get_string('dock-position')
+        : settings.get_string('panel-position');
+    return position === 'left' || position === 'right' ||
+        settings.get_string('combine-app-buttons-mode') === 'always' ||
+        settings.get_boolean('hide-app-labels');
+}
+
 export function hoverRenderScale(settings) {
     const hover = settings.get_string(
         'animate-appicon-hover-animation-type'

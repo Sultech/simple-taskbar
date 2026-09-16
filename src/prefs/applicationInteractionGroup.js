@@ -17,7 +17,10 @@ import {
 import {
     createWindowPreviewOptionsButton,
 } from './windowPreviewDialog.js';
-import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
+import {
+    APP_ICON_HOVER_ANIMATION,
+    appIconMagnifyAllowed,
+} from '../shared/applicationHoverAnimation.js';
 import {
     APPLICATION_CLICK_ANIMATION,
 } from '../shared/applicationClickAnimation.js';
@@ -330,6 +333,24 @@ export function addApplicationInteractionGroup({
     syncPreviewOptionsButtonSensitivity();
     const animationOptionsButton =
         createApplicationHoverAnimationOptionsButton(settings);
+    const hoverAnimationChoices = [
+        {
+            value: APP_ICON_HOVER_ANIMATION.NONE,
+            label: _('None'),
+        },
+        {
+            value: APP_ICON_HOVER_ANIMATION.SIMPLE,
+            label: _('Simple'),
+        },
+        {
+            value: APP_ICON_HOVER_ANIMATION.RIPPLE,
+            label: _('Ripple'),
+        },
+        {
+            value: APP_ICON_HOVER_ANIMATION.MAGNIFY,
+            label: _('Magnify'),
+        },
+    ];
     const hoverAnimationTypeRow = addComboRow(
         windowInteractionRow,
         settings,
@@ -339,23 +360,19 @@ export function addApplicationInteractionGroup({
             subtitle: _(
                 'Choose the animation style for application icon hover'
             ),
-            choices: [
-                {
-                    value: APP_ICON_HOVER_ANIMATION.NONE,
-                    label: _('None'),
-                },
-                {
-                    value: APP_ICON_HOVER_ANIMATION.SIMPLE,
-                    label: _('Simple'),
-                },
-                {
-                    value: APP_ICON_HOVER_ANIMATION.RIPPLE,
-                    label: _('Ripple'),
-                },
-                {
-                    value: APP_ICON_HOVER_ANIMATION.MAGNIFY,
-                    label: _('Magnify'),
-                },
+            choices: hoverAnimationChoices,
+            choicesProvider: () => appIconMagnifyAllowed(settings)
+                ? hoverAnimationChoices
+                : hoverAnimationChoices.filter(
+                    choice => choice.value !==
+                        APP_ICON_HOVER_ANIMATION.MAGNIFY
+                ),
+            choicesChangedKeys: [
+                'combine-app-buttons-mode',
+                'dock-mode',
+                'dock-position',
+                'hide-app-labels',
+                'panel-position',
             ],
             addSuffix: row => row.add_suffix(animationOptionsButton),
             addRow: row => windowInteractionRow.add_row(row),
@@ -388,10 +405,13 @@ export function addApplicationInteractionGroup({
     const syncAnimationOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         hoverAnimationTypeRow.sensitive = enabled;
+        const type = settings.get_string(
+            'animate-appicon-hover-animation-type'
+        );
         animationOptionsButton.sensitive = enabled &&
-            settings.get_string(
-                'animate-appicon-hover-animation-type'
-            ) !== APP_ICON_HOVER_ANIMATION.NONE;
+            type !== APP_ICON_HOVER_ANIMATION.NONE &&
+            (type !== APP_ICON_HOVER_ANIMATION.MAGNIFY ||
+                appIconMagnifyAllowed(settings));
     };
     connectSettings(
         settings,
@@ -403,5 +423,18 @@ export function addApplicationInteractionGroup({
         'changed::windows-xp-theme-enabled',
         syncAnimationOptionsSensitivity
     );
+    for (const key of [
+        'combine-app-buttons-mode',
+        'dock-mode',
+        'dock-position',
+        'hide-app-labels',
+        'panel-position',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncAnimationOptionsSensitivity
+        );
+    }
     syncAnimationOptionsSensitivity();
 }
