@@ -88,6 +88,7 @@ const BLUR_MY_SHELL_POPUP_CLASSES = [
 export class StartMenuController {
     constructor(sourceActor, settings, params = {}) {
         this._sourceActor = sourceActor;
+        this._getPanelEdgeGap = params.getPanelEdgeGap ?? (() => 0);
         this._settings = settings;
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
@@ -576,7 +577,11 @@ export class StartMenuController {
             const geometry = panelGeometry(
                 this._settings,
                 monitor,
-                panelHeight
+                panelHeight,
+                0,
+                null,
+                null,
+                this._getPanelEdgeGap()
             );
             let sourceX = monitor.x + monitor.width / 2;
             let sourceY = monitor.y + monitor.height / 2;

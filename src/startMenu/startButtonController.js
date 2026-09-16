@@ -65,6 +65,7 @@ export class StartButtonController {
         switcherKeybindings = null,
         toggleDesktop,
         onMenuOpenStateChanged,
+        getPanelEdgeGap = () => 0,
     }) {
         this._extensionDir = extensionDir;
         this._settings = settings;
@@ -72,6 +73,7 @@ export class StartButtonController {
         this._openPreferences = openPreferences;
         this._closeApp = closeApp;
         this._getInterestingWindows = getInterestingWindows;
+        this._getPanelEdgeGap = getPanelEdgeGap;
         this._toggleFromShortcut = toggleFromShortcut;
         this._toggleDesktop = toggleDesktop;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
@@ -474,6 +476,7 @@ export class StartButtonController {
                     this._getInterestingWindows(app),
                 powerGIcon: this._powerGIcon,
                 settingsGIcon: this._settingsGIcon,
+                getPanelEdgeGap: this._getPanelEdgeGap,
             }
         );
         return this._startMenuController;

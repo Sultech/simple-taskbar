@@ -185,6 +185,9 @@ export class SecondaryPanelController {
             settings,
             iconSize: this._iconSize,
             previewController: this._windowPreviews,
+            getPanelEdgeGap: () => this._dockController
+                ? this._dockController.getPanelEdgeGap()
+                : 0,
             openPreferences,
             closeApp: (app, timestamp) =>
                 this._taskbarController.closeApp(app, timestamp),
