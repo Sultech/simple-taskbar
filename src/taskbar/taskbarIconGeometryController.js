@@ -18,6 +18,7 @@ export class TaskbarIconGeometryController {
         this._appButtons = appButtons;
         this._windowsForItem = windowsForItem;
         this._iconGeometryUpdateId = 0;
+        this._windowIconActors = new Map();
     }
 
     queueIconGeometryUpdate() {
@@ -35,6 +36,7 @@ export class TaskbarIconGeometryController {
     }
 
     updateWindowIconGeometries() {
+        this._clearWindowIconActors();
         for (const item of this._appButtons.values())
             this._updateItemIconGeometry(item);
     }
@@ -43,6 +45,7 @@ export class TaskbarIconGeometryController {
         if (!app)
             return;
 
+        this._clearWindowIconActors(app);
         for (const item of this._appButtons.values()) {
             if (item._taskbarApp === app)
                 this._updateItemIconGeometry(item);
@@ -53,10 +56,23 @@ export class TaskbarIconGeometryController {
         if (this._iconGeometryUpdateId)
             GLib.Source.remove(this._iconGeometryUpdateId);
         this._iconGeometryUpdateId = 0;
+        this._clearWindowIconActors();
+        this._windowIconActors = null;
         this._windowsForItem = null;
         this._appButtons = null;
         this._taskbarActor = null;
         this._settings = null;
+    }
+
+    _clearWindowIconActors(app = null) {
+        for (const [window, assignment] of this._windowIconActors) {
+            if (app && assignment.app !== app)
+                continue;
+
+            if (window._simpleTaskbarIconActor === assignment.icon)
+                window._simpleTaskbarIconActor = null;
+            this._windowIconActors.delete(window);
+        }
     }
 
     _updateItemIconGeometry(item) {
@@ -86,6 +102,10 @@ export class TaskbarIconGeometryController {
                 continue;
             window.set_icon_geometry(geometry);
             window._simpleTaskbarIconActor = icon;
+            this._windowIconActors.set(window, {
+                app: item._taskbarApp,
+                icon,
+            });
         }
     }
 }
