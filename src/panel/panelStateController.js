@@ -33,8 +33,9 @@ export class PanelStateController {
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = [];
         this._dateMenuDisplayBox = null;
-        this._dateMenuDisplayBoxTranslationX = null;
-        this._dateMenuDisplayBoxTranslationY = null;
+        this._dateMenuClockText = null;
+        this._dateMenuClockTextTranslationX = null;
+        this._dateMenuClockTextTranslationY = null;
         this._desktopSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.interface',
         });
@@ -99,8 +100,11 @@ export class PanelStateController {
             return;
 
         this._dateMenuDisplayBox = displayBox;
-        this._dateMenuDisplayBoxTranslationX = displayBox.translation_x;
-        this._dateMenuDisplayBoxTranslationY = displayBox.translation_y;
+        this._dateMenuClockText = dateMenu._clockDisplay.clutter_text;
+        this._dateMenuClockTextTranslationX =
+            this._dateMenuClockText.translation_x;
+        this._dateMenuClockTextTranslationY =
+            this._dateMenuClockText.translation_y;
         this._dateMenuIndicatorPad = indicatorPad;
         this._dateMenuIndicatorPadConstraints =
             [...indicatorPad.get_constraints()];
@@ -126,20 +130,20 @@ export class PanelStateController {
                 this._desktopSettings.get_boolean(CLOCK_SHOW_WEEKDAY_SETTING);
             const parityOffset = clockHasAdditionalText &&
                 panelHeight % 2 === 0 ? 1 : 0;
-            this._dateMenuDisplayBox.translation_x =
-                this._dateMenuDisplayBoxTranslationX + parityOffset;
-            this._dateMenuDisplayBox.translation_y =
-                this._dateMenuDisplayBoxTranslationY;
+            this._dateMenuClockText.translation_x =
+                this._dateMenuClockTextTranslationX + parityOffset;
+            this._dateMenuClockText.translation_y =
+                this._dateMenuClockTextTranslationY;
             return;
         }
-        this._dateMenuDisplayBox.translation_x =
-            this._dateMenuDisplayBoxTranslationX;
+        this._dateMenuClockText.translation_x =
+            this._dateMenuClockTextTranslationX;
         const dateShown = this._desktopSettings.get_boolean(
             CLOCK_SHOW_DATE_SETTING
         );
         const parityOffset = dateShown ? 0 : panelHeight % 2 === 0 ? 1 : 0;
-        this._dateMenuDisplayBox.translation_y =
-            this._dateMenuDisplayBoxTranslationY + parityOffset;
+        this._dateMenuClockText.translation_y =
+            this._dateMenuClockTextTranslationY + parityOffset;
     }
 
     syncActivitiesVisibility() {
@@ -192,8 +196,9 @@ export class PanelStateController {
         this._dateMenuIndicatorPad = null;
         this._dateMenuIndicatorPadConstraints = null;
         this._dateMenuDisplayBox = null;
-        this._dateMenuDisplayBoxTranslationX = null;
-        this._dateMenuDisplayBoxTranslationY = null;
+        this._dateMenuClockText = null;
+        this._dateMenuClockTextTranslationX = null;
+        this._dateMenuClockTextTranslationY = null;
         this._clockShowDateChangedId = 0;
         this._desktopSettings = null;
         this._showDesktopButton = null;
@@ -218,10 +223,10 @@ export class PanelStateController {
         if (!this._dateMenuDisplayBox)
             return;
 
-        this._dateMenuDisplayBox.translation_x =
-            this._dateMenuDisplayBoxTranslationX;
-        this._dateMenuDisplayBox.translation_y =
-            this._dateMenuDisplayBoxTranslationY;
+        this._dateMenuClockText.translation_x =
+            this._dateMenuClockTextTranslationX;
+        this._dateMenuClockText.translation_y =
+            this._dateMenuClockTextTranslationY;
     }
 
     _restorePanelItems() {
