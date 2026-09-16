@@ -117,6 +117,9 @@ export class TaskbarAppearanceController {
         item._taskbarButtonContent.set_height(
             vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
         );
+        const parityOffset = vertical &&
+            (itemWidth - this._getIconSize()) % 2 !== 0 ? 1 : 0;
+        item._taskbarButtonContent.translation_x = parityOffset;
         item._taskbarVisual.y_align = vertical
             ? Clutter.ActorAlign.CENTER
             : Clutter.ActorAlign.FILL;
