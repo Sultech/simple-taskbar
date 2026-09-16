@@ -629,7 +629,7 @@ export class PanelAutoHideController {
     _hideForOverview() {
         this._overviewEdgeRevealBlocked = true;
         this._restoreFullscreenVisibility();
-        if (this._enabled() || this._dodgeActive)
+        if ((this._enabled() || this._dodgeActive) && !this._isBlocked())
             this._hide();
     }
 
@@ -640,6 +640,10 @@ export class PanelAutoHideController {
         this._overviewSuspended = false;
         if (!this._enabled() && !this._dodgeActive)
             return;
+        if (this._isBlocked()) {
+            this._scheduleHide();
+            return;
+        }
 
         this._hide(false);
     }
