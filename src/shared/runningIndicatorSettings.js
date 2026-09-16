@@ -37,3 +37,11 @@ export function runningIndicatorFillsLength(style) {
 export function runningIndicatorPositionIsHorizontal(position) {
     return position === 'top' || position === 'bottom';
 }
+
+export function runningIndicatorTopReserve(position) {
+    return position === 'top' ? RUNNING_INDICATOR_RESERVE : 0;
+}
+
+export function runningIndicatorBottomReserve(position) {
+    return position === 'bottom' ? RUNNING_INDICATOR_RESERVE : 0;
+}

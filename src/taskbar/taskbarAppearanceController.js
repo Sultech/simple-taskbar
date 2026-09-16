@@ -14,9 +14,10 @@ import {
 } from '../shared/classicHighlightSettings.js';
 import {
     RUNNING_INDICATOR_LENGTH_RATIO,
-    RUNNING_INDICATOR_RESERVE,
+    runningIndicatorBottomReserve,
     runningIndicatorFillsLength,
     runningIndicatorPositionIsHorizontal,
+    runningIndicatorTopReserve,
 } from '../shared/runningIndicatorSettings.js';
 import {
     GLASS_VERTICAL_INSET,
@@ -121,10 +122,14 @@ export class TaskbarAppearanceController {
         item.setVertical(vertical);
         const iconEdgeSpace = this.iconEdgeSpace();
         item._taskbarTopSpacer.set_height(
-            vertical ? 0 : iconEdgeSpace
+            vertical
+                ? runningIndicatorTopReserve(this.indicatorPosition())
+                : iconEdgeSpace
         );
         item._taskbarBottomSpacer.set_height(
-            vertical ? RUNNING_INDICATOR_RESERVE : iconEdgeSpace
+            vertical
+                ? runningIndicatorBottomReserve(this.indicatorPosition())
+                : iconEdgeSpace
         );
         item._taskbarButtonContent.set_height(
             vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
@@ -148,12 +153,11 @@ export class TaskbarAppearanceController {
         item._taskbarGlassHost.set_size(itemWidth, itemHeight);
         item._taskbarIndicatorHost.set_size(itemWidth, itemHeight);
         const glassInset = this.glassInset();
+        const glassOuterWidth = vertical ? glassHeight : glassWidth;
         const glassOuterHeight = vertical ? itemHeight : glassHeight;
-        const glassX = vertical
-            ? Math.floor((itemWidth - glassWidth) / 2) + parityOffset
-            : 0;
+        const glassX = vertical ? this.glassY() : 0;
         const glassY = vertical ? 0 : this.glassY();
-        const glassContentWidth = glassWidth - glassInset * 2;
+        const glassContentWidth = glassOuterWidth - glassInset * 2;
         const glassContentHeight = glassOuterHeight - glassInset * 2;
         const windowsXpTheme = this._settings.get_boolean(
             'windows-xp-theme-enabled'
@@ -199,7 +203,7 @@ export class TaskbarAppearanceController {
             glassY
         );
         item._taskbarGlassBorder.set_size(
-            glassWidth * renderScale,
+            glassOuterWidth * renderScale,
             glassOuterHeight * renderScale
         );
         item._taskbarGlassBorder.set_scale(
@@ -219,7 +223,7 @@ export class TaskbarAppearanceController {
         ]) {
             actor.set_position(glassX, glassY);
             actor.set_size(
-                glassWidth * renderScale,
+                glassOuterWidth * renderScale,
                 glassOuterHeight * renderScale
             );
             actor.set_scale(inverseRenderScale, inverseRenderScale);
@@ -236,7 +240,7 @@ export class TaskbarAppearanceController {
         this.updateIndicatorGeometry(item, false, {
             x: glassX,
             y: glassY,
-            width: glassWidth,
+            width: glassOuterWidth,
             height: glassOuterHeight,
         });
     }
@@ -260,7 +264,10 @@ export class TaskbarAppearanceController {
     }
 
     verticalItemExtent(iconSize = this._getIconSize()) {
-        return taskbarVerticalItemExtent(iconSize);
+        return taskbarVerticalItemExtent(
+            iconSize,
+            this.indicatorPosition()
+        );
     }
 
     glassHeight(panelHeight = this.visualPanelHeight()) {
@@ -293,14 +300,12 @@ export class TaskbarAppearanceController {
         );
         const vertical = panelIsVertical(this._settings);
         const visualPanelHeight = this.visualPanelHeight();
-        const itemWidth = vertical ? visualPanelHeight : glassWidth;
         return {
-            x: vertical
-                ? Math.floor((itemWidth - glassWidth) / 2) +
-                    this.crossAxisParityOffset()
-                : 0,
+            x: vertical ? this.glassY() : 0,
             y: vertical ? 0 : this.glassY(),
-            width: glassWidth,
+            width: vertical
+                ? this.glassHeight(visualPanelHeight)
+                : glassWidth,
             height: vertical
                 ? this.verticalItemExtent()
                 : this.glassHeight(visualPanelHeight),

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {RUNNING_INDICATOR_RESERVE} from './runningIndicatorSettings.js';
+import {
+    runningIndicatorBottomReserve,
+    runningIndicatorTopReserve,
+} from './runningIndicatorSettings.js';
 import {setInteger} from './settingsUtils.js';
 
 export const MIN_PANEL_HEIGHT = 30;
@@ -69,8 +72,10 @@ export function taskbarCrossAxisParityOffset(settings, panelThickness, iconSize)
     return iconSize % 2 !== 0 && panelThickness % 2 === 0 ? 1 : 0;
 }
 
-export function taskbarVerticalItemExtent(iconSize) {
-    return iconSize + GLASS_VERTICAL_INSET * 2 + RUNNING_INDICATOR_RESERVE;
+export function taskbarVerticalItemExtent(iconSize, indicatorPosition) {
+    return taskbarIconButtonWidth(iconSize) +
+        runningIndicatorTopReserve(indicatorPosition) +
+        runningIndicatorBottomReserve(indicatorPosition);
 }
 
 export function panelHeightForIconSize(settings, iconSize) {
