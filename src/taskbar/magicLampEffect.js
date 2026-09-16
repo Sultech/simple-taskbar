@@ -79,18 +79,24 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         timeline.start();
     }
 
-    vfunc_deform_vertex(_width, _height, vertex) {
+    vfunc_deform_vertex(width, height, vertex) {
         if (!this._timeline || this._progress <= 0)
             return;
 
         const windowGeometry = this._windowGeometry;
         const targetGeometry = this._targetGeometry;
-        const targetX = targetGeometry.x + targetGeometry.width / 2 -
-            windowGeometry.x;
-        const targetY = targetGeometry.y + targetGeometry.height / 2 -
-            windowGeometry.y;
-        const currentX = vertex.tx * windowGeometry.width;
-        const currentY = vertex.ty * windowGeometry.height;
+        const scaleX = windowGeometry.width > 0
+            ? width / windowGeometry.width
+            : 1;
+        const scaleY = windowGeometry.height > 0
+            ? height / windowGeometry.height
+            : 1;
+        const targetX = (targetGeometry.x + targetGeometry.width / 2 -
+            windowGeometry.x) * scaleX;
+        const targetY = (targetGeometry.y + targetGeometry.height / 2 -
+            windowGeometry.y) * scaleY;
+        const currentX = vertex.tx * width;
+        const currentY = vertex.ty * height;
         let distanceFromDock;
         switch (this._panelPosition) {
         case 'bottom':
