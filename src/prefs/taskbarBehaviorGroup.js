@@ -19,6 +19,7 @@ import {
     AUTO_HIDE_REVEAL_MODE,
     AUTO_HIDE_SETTINGS,
 } from '../shared/autoHideSettings.js';
+import {createBottomHotEdgeRow} from './bottomHotEdgeRow.js';
 
 export function addTaskbarBehaviorGroup({
     page,
@@ -75,20 +76,7 @@ export function addTaskbarBehaviorGroup({
         }
     );
 
-    const hotEdgeRow = new Adw.ExpanderRow({
-        title: _('Bottom Hot Edge'),
-        subtitle: _(
-            'Configure the bottom-edge gesture, pressure, and animation for toggling Overview'
-        ),
-    });
-    const hotEdgeOverviewSwitch = createSwitchRow(settings, {
-        key: 'hot-edge-overview-enabled',
-        title: _('Enable Bottom Hot Edge'),
-        subtitle: _(
-            'Push the pointer against the bottom screen edge to toggle Overview. Turns off pressure reveal.'
-        ),
-    });
-    hotEdgeRow.add_row(hotEdgeOverviewSwitch);
+    behaviorGroup.add(createBottomHotEdgeRow(settings, connectSettings));
     const disablePressureWithHotEdge = () => {
         if (!settings.get_boolean('hot-edge-overview-enabled'))
             return;
@@ -107,40 +95,6 @@ export function addTaskbarBehaviorGroup({
         disablePressureWithHotEdge
     );
     disablePressureWithHotEdge();
-
-    const hotEdgePressureRow = addSpinRow(
-        hotEdgeRow,
-        settings,
-        {
-            key: 'hot-edge-pressure-threshold',
-            title: _('Activation Pressure'),
-            subtitle: _(
-                'Pixels the pointer must travel past the bottom edge before Overview activates'
-            ),
-            lower: 0,
-            upper: 500,
-            step: 25,
-            addRow: row => hotEdgeRow.add_row(row),
-        },
-        connectSettings
-    );
-
-    const hotEdgeAnimationSwitch = createSwitchRow(settings, {
-        key: 'hot-edge-animation-enabled',
-        title: _('Hot Edge Animation'),
-        subtitle: _('Show a ripple when the bottom hot edge activates'),
-    });
-    hotEdgeRow.add_row(hotEdgeAnimationSwitch);
-    const syncHotEdgeControls = () => {
-        hotEdgeAnimationSwitch.sensitive = hotEdgeOverviewSwitch.active;
-        hotEdgePressureRow.sensitive = hotEdgeOverviewSwitch.active;
-    };
-    hotEdgeOverviewSwitch.connect(
-        'notify::active',
-        syncHotEdgeControls
-    );
-    syncHotEdgeControls();
-    behaviorGroup.add(hotEdgeRow);
 
     const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Taskbar Scroll'),

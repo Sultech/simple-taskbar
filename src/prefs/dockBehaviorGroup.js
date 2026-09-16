@@ -10,6 +10,7 @@ import {
     addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {createBottomHotEdgeRow} from './bottomHotEdgeRow.js';
 import {addWindowDodgeRows} from './windowDodgeGroup.js';
 
 export function addDockBehaviorGroup({page, settings, connectSettings}) {
@@ -65,6 +66,8 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             connectSettings,
         }
     );
+
+    group.add(createBottomHotEdgeRow(settings, connectSettings));
 
     const workspaceScrollRow = new Adw.ExpanderRow({
         title: _('Dock Scroll'),
