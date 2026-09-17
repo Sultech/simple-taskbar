@@ -22,11 +22,13 @@ import {
 
 export const PANEL_MODE_TASKBAR = 'taskbar';
 export const PANEL_MODE_DEFAULT = 'default-panel';
+export const PANEL_MODE_DOCK = 'dock';
 export const PANEL_MODE_WINDOWS_XP = 'windows-xp';
 
 export const PANEL_AXIS_PROFILE_ENABLED_KEYS = Object.freeze({
     [PANEL_MODE_TASKBAR]: 'taskbar-axis-profiles-enabled',
     [PANEL_MODE_DEFAULT]: 'default-panel-axis-profiles-enabled',
+    [PANEL_MODE_DOCK]: 'dock-axis-profiles-enabled',
 });
 
 const XP_PREVIOUS_DOCK_MODE = 'dock';
@@ -66,10 +68,19 @@ const AXIS_PROFILE_KEYS = new Map([
         settings: 'default-panel-vertical-settings',
         saved: 'default-panel-vertical-settings-saved',
     }],
+    [`${PANEL_MODE_DOCK}:${PANEL_AXIS_HORIZONTAL}`, {
+        settings: 'dock-horizontal-settings',
+        saved: 'dock-horizontal-settings-saved',
+    }],
+    [`${PANEL_MODE_DOCK}:${PANEL_AXIS_VERTICAL}`, {
+        settings: 'dock-vertical-settings',
+        saved: 'dock-vertical-settings-saved',
+    }],
 ]);
 
 const MODE_SETTING_KEYS = new Set([
     'active-panel-axis',
+    'active-dock-axis',
     'active-panel-mode',
     'default-gnome-panel',
     'dock-item-order',
@@ -108,6 +119,8 @@ const MODE_SETTING_KEYS = new Set([
     'dock-panel-height',
     'dock-panel-height-follow-icon-size',
     'dock-position',
+    'dock-axis-profiles-enabled',
+    'dock-axis-profiles-initialized',
     'taskbar-axis-profiles-enabled',
     'default-panel-axis-profiles-enabled',
     'panel-axis-profiles-initialized',
@@ -125,8 +138,27 @@ for (const profile of AXIS_PROFILE_KEYS.values()) {
     MODE_SETTING_KEYS.add(profile.saved);
 }
 
-function getPanelAxis(settings) {
-    const position = settings.get_string('panel-position');
+const PANEL_AXIS_DOMAIN = Object.freeze({
+    positionKey: 'panel-position',
+    activeAxisKey: 'active-panel-axis',
+    initializedKey: 'panel-axis-profiles-initialized',
+    isActiveMode: (settings, mode) =>
+        settings.get_string('active-panel-mode') === mode,
+});
+
+const DOCK_AXIS_DOMAIN = Object.freeze({
+    positionKey: 'dock-position',
+    activeAxisKey: 'active-dock-axis',
+    initializedKey: 'dock-axis-profiles-initialized',
+    isActiveMode: settings => settings.get_boolean('dock-mode'),
+});
+
+function axisDomainForMode(mode) {
+    return mode === PANEL_MODE_DOCK ? DOCK_AXIS_DOMAIN : PANEL_AXIS_DOMAIN;
+}
+
+function domainAxis(settings, domain) {
+    const position = settings.get_string(domain.positionKey);
     return position === 'left' || position === 'right'
         ? PANEL_AXIS_VERTICAL
         : PANEL_AXIS_HORIZONTAL;
@@ -230,31 +262,54 @@ function syncActivitiesPanelItemOrder(settings, vertical) {
 }
 
 function applyInitialPanelAxisSettings(settings, mode, axis) {
-    if (mode !== PANEL_MODE_TASKBAR)
+    if (mode !== PANEL_MODE_TASKBAR && mode !== PANEL_MODE_DOCK)
         return;
 
     const vertical = axis === PANEL_AXIS_VERTICAL;
     setString(settings, 'app-alignment', vertical ? 'left' : 'center');
     setInteger(settings, 'icon-spacing', vertical ? 6 : 3);
-    setInteger(settings, 'start-button-padding', 2);
     setString(
         settings,
-        'activities-button-position',
-        vertical ? 'right' : 'left'
+        'running-indicator-position',
+        vertical ? 'left' : 'bottom'
     );
-    syncActivitiesPanelItemOrder(settings, vertical);
+    setInteger(settings, 'start-button-padding', 2);
+    if (mode === PANEL_MODE_TASKBAR) {
+        setString(
+            settings,
+            'activities-button-position',
+            vertical ? 'right' : 'left'
+        );
+        syncActivitiesPanelItemOrder(settings, vertical);
+    }
 }
 
-function activateRestoredPanelAxis(settings, mode) {
-    const axis = getPanelAxis(settings);
-    settings.set_string('active-panel-axis', axis);
+function activateRestoredAxis(settings, domain, mode) {
+    const axis = domainAxis(settings, domain);
+    settings.set_string(domain.activeAxisKey, axis);
     if (mode !== PANEL_MODE_WINDOWS_XP &&
         axisProfilesEnabled(settings, mode)) {
         const profile = axisProfile(mode, axis);
         if (!settings.get_boolean(profile.saved))
             savePanelAxisSettings(settings, mode, axis);
     }
-    settings.set_boolean('panel-axis-profiles-initialized', true);
+    settings.set_boolean(domain.initializedKey, true);
+}
+
+function applyAxisPositionChange(settings, domain, mode, position) {
+    const currentAxis = settings.get_string(domain.activeAxisKey);
+    settings.set_boolean('panel-profile-transition', true);
+    settings.set_string(domain.positionKey, position);
+    const axis = domainAxis(settings, domain);
+    if (mode !== PANEL_MODE_WINDOWS_XP && currentAxis !== axis) {
+        if (axisProfilesEnabled(settings, mode)) {
+            savePanelAxisSettings(settings, mode, currentAxis);
+            if (!restorePanelAxisSettings(settings, mode, axis))
+                applyInitialPanelAxisSettings(settings, mode, axis);
+        }
+        settings.set_string(domain.activeAxisKey, axis);
+    }
+    settings.set_boolean('panel-profile-transition', false);
 }
 
 function applyDefaultPanelSettings(settings) {
@@ -348,7 +403,7 @@ export function setPanelMode(settings, mode) {
         if (!restorePanelModeSettings(settings, mode))
             applyInitialPanelModeSettings(settings, mode);
         settings.set_string('active-panel-mode', mode);
-        activateRestoredPanelAxis(settings, mode);
+        activateRestoredAxis(settings, PANEL_AXIS_DOMAIN, mode);
     } else {
         setModeFlags(settings, mode);
     }
@@ -392,20 +447,24 @@ export function setPanelPosition(settings, position) {
     if (!settings.get_boolean('panel-axis-profiles-initialized'))
         initializePanelAxisProfiles(settings);
 
-    const mode = settings.get_string('active-panel-mode');
-    const currentAxis = settings.get_string('active-panel-axis');
-    settings.set_boolean('panel-profile-transition', true);
-    settings.set_string('panel-position', position);
-    const axis = getPanelAxis(settings);
-    if (mode !== PANEL_MODE_WINDOWS_XP && currentAxis !== axis) {
-        if (axisProfilesEnabled(settings, mode)) {
-            savePanelAxisSettings(settings, mode, currentAxis);
-            if (!restorePanelAxisSettings(settings, mode, axis))
-                applyInitialPanelAxisSettings(settings, mode, axis);
-        }
-        settings.set_string('active-panel-axis', axis);
-    }
-    settings.set_boolean('panel-profile-transition', false);
+    applyAxisPositionChange(
+        settings,
+        PANEL_AXIS_DOMAIN,
+        settings.get_string('active-panel-mode'),
+        position
+    );
+}
+
+export function setDockPosition(settings, position) {
+    if (!settings.get_boolean('dock-axis-profiles-initialized'))
+        initializeDockAxisProfiles(settings);
+
+    applyAxisPositionChange(
+        settings,
+        DOCK_AXIS_DOMAIN,
+        PANEL_MODE_DOCK,
+        position
+    );
 }
 
 export function setPanelAxisProfilesEnabled(settings, mode, enabled) {
@@ -413,10 +472,11 @@ export function setPanelAxisProfilesEnabled(settings, mode, enabled) {
     if (settings.get_boolean(key) === enabled)
         return;
 
-    if (enabled && settings.get_string('active-panel-mode') === mode) {
-        const axis = getPanelAxis(settings);
+    const domain = axisDomainForMode(mode);
+    if (enabled && domain.isActiveMode(settings, mode)) {
+        const axis = domainAxis(settings, domain);
         savePanelAxisSettings(settings, mode, axis);
-        settings.set_string('active-panel-axis', axis);
+        settings.set_string(domain.activeAxisKey, axis);
     }
     settings.set_boolean(key, enabled);
 }
@@ -427,8 +487,18 @@ export function initializePanelAxisProfiles(settings) {
         return;
     }
 
-    const mode = settings.get_string('active-panel-mode');
-    activateRestoredPanelAxis(settings, mode);
+    activateRestoredAxis(
+        settings,
+        PANEL_AXIS_DOMAIN,
+        settings.get_string('active-panel-mode')
+    );
+}
+
+export function initializeDockAxisProfiles(settings) {
+    if (settings.get_boolean('dock-axis-profiles-initialized'))
+        return;
+
+    activateRestoredAxis(settings, DOCK_AXIS_DOMAIN, PANEL_MODE_DOCK);
 }
 
 export function synchronizePanelPosition(settings) {

@@ -45,7 +45,11 @@ import {
 } from '../shared/classicHighlightSettings.js';
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
+    RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
     runningIndicatorBottomReserve,
+    runningIndicatorLeftReserve,
+    runningIndicatorReserveOffset,
+    runningIndicatorRightReserve,
     runningIndicatorTopReserve,
 } from '../shared/runningIndicatorSettings.js';
 import {
@@ -264,20 +268,33 @@ export class StartButtonController {
         const indicatorPosition = this._settings.get_string(
             'running-indicator-position'
         );
+        const leftReserve = runningIndicatorLeftReserve(
+            this._settings,
+            indicatorPosition
+        );
+        const rightReserve = runningIndicatorRightReserve(
+            this._settings,
+            indicatorPosition
+        );
         const glassMainExtent = vertical
             ? taskbarVerticalItemExtent(
+                this._settings,
                 iconSize,
                 indicatorPosition
             )
-            : glassHeight;
-        const glassCrossExtent = vertical ? glassHeight : glassWidth;
+            : glassWidth + leftReserve + rightReserve;
+        const glassCrossExtent = glassHeight;
         const width = windowsXpTheme
             ? this._windowsXpStartButton.width
-            : (vertical ? glassMainExtent : glassWidth) + iconSpacing;
-        this._hover.set_width(glassCrossExtent);
-        this._hover.set_height(glassMainExtent);
-        this._classicHover.set_width(glassCrossExtent);
-        this._classicHover.set_height(glassMainExtent);
+            : glassMainExtent + iconSpacing;
+        this._hover.set_width(vertical ? glassCrossExtent : glassMainExtent);
+        this._hover.set_height(vertical ? glassMainExtent : glassCrossExtent);
+        this._classicHover.set_width(
+            vertical ? glassCrossExtent : glassMainExtent
+        );
+        this._classicHover.set_height(
+            vertical ? glassMainExtent : glassCrossExtent
+        );
         if (vertical) {
             this._hover.translation_y = 0;
             this._hover.y_align = Clutter.ActorAlign.CENTER;
@@ -300,9 +317,20 @@ export class StartButtonController {
         this._content.translation_x = this._parityOffset;
         this._hover.translation_x = -this._parityOffset;
         this._classicHover.translation_x = -this._parityOffset;
+        this._icon.translation_x = vertical
+            ? 0
+            : runningIndicatorReserveOffset(leftReserve, rightReserve);
         this._icon.translation_y = vertical
-            ? (runningIndicatorTopReserve(indicatorPosition) -
-                runningIndicatorBottomReserve(indicatorPosition)) / 2
+            ? runningIndicatorReserveOffset(
+                runningIndicatorTopReserve(
+                    this._settings,
+                    indicatorPosition
+                ),
+                runningIndicatorBottomReserve(
+                    this._settings,
+                    indicatorPosition
+                )
+            )
             : 0;
         const startButtonPosition = this._settings.get_boolean(
             'start-button-follow-app-alignment'
@@ -611,8 +639,16 @@ export class StartButtonController {
             'changed::panel-position', syncAppearance,
             'changed::panel-height', syncAppearance,
             'changed::dock-panel-mode', syncAppearance,
+            'changed::running-indicator-position', syncAppearance,
             this._signalHolder
         );
+        for (const key of RUNNING_INDICATOR_RESERVE_SETTING_KEYS) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                syncAppearance,
+                this._signalHolder
+            );
+        }
         for (const key of TASKBAR_HIGHLIGHT_SETTING_KEYS) {
             this._settings.connectObject(
                 `changed::${key}`,

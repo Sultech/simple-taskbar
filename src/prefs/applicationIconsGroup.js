@@ -19,6 +19,9 @@ import {
 import {
     createProgressBarOptionsButton,
 } from './progressBarDialog.js';
+import {
+    createRunningIndicatorReserveOptionsButton,
+} from './runningIndicatorReserveDialog.js';
 import {addApplicationInteractionGroup} from './applicationInteractionGroup.js';
 import {
     MAX_ICON_EDGE_PADDING,
@@ -30,6 +33,7 @@ import {
     RUNNING_INDICATOR_POSITIONS,
     RUNNING_INDICATOR_STYLES,
     runningIndicatorFillsLength,
+    runningIndicatorReserveIsPossible,
 } from '../shared/runningIndicatorSettings.js';
 import {
     addColorRow,
@@ -375,6 +379,8 @@ function addIndicatorControls({
         metro: _('Metro'),
     };
 
+    const reserveOptionsButton =
+        createRunningIndicatorReserveOptionsButton(settings);
     const indicatorPositionRow = addComboRow(
         indicatorGroup,
         settings,
@@ -386,6 +392,7 @@ function addIndicatorControls({
                 value,
                 label: positionLabels[value],
             })),
+            addSuffix: row => row.add_suffix(reserveOptionsButton),
             addRow: row => indicatorGroup.add_row(row),
         },
         connectSettings
@@ -483,6 +490,14 @@ function addIndicatorControls({
                 !settings.get_boolean('dock-mode'));
         const enabled = customIndicatorColorsSwitch.active;
         indicatorPositionRow.sensitive = !blocked;
+        const panelPosition = settings.get_boolean('dock-mode')
+            ? settings.get_string('dock-position')
+            : settings.get_string('panel-position');
+        reserveOptionsButton.sensitive = !blocked &&
+            runningIndicatorReserveIsPossible(
+                panelPosition,
+                settings.get_string('running-indicator-position')
+            );
         indicatorStyleRow.sensitive = !blocked;
         indicatorSizeRow.sensitive = !blocked;
         indicatorFullLengthSwitch.sensitive = !blocked &&
@@ -509,6 +524,9 @@ function addIndicatorControls({
         'windows-xp-theme-enabled',
         'default-gnome-panel',
         'dock-mode',
+        'dock-position',
+        'panel-position',
+        'running-indicator-position',
         'running-indicator-style',
     ]) {
         connectSettings(

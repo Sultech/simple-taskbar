@@ -41,7 +41,10 @@ import {
 import {
     animateTaskbarIconClick,
 } from './taskbarClickAnimation.js';
-import {MAX_RUNNING_INDICATORS} from '../shared/runningIndicatorSettings.js';
+import {
+    MAX_RUNNING_INDICATORS,
+    RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
+} from '../shared/runningIndicatorSettings.js';
 import {
     APPLICATION_CLICK_ANIMATION,
 } from '../shared/applicationClickAnimation.js';
@@ -660,6 +663,7 @@ export class TaskbarController {
             'running-indicator-position',
             'running-indicator-size',
             'running-indicator-full-length',
+            ...RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
         ]) {
             this._settings.connectObject(
                 `changed::${key}`,

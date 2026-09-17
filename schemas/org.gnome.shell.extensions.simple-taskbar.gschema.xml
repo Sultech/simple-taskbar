@@ -246,6 +246,19 @@
       <default>true</default>
       <summary>Stretch running indicators across the application icon</summary>
     </key>
+    <key name="running-indicator-reserve-enabled" type="b">
+      <default>true</default>
+      <summary>Add space beside running indicators</summary>
+    </key>
+    <key name="running-indicator-reserve-symmetrical" type="b">
+      <default>false</default>
+      <summary>Add matching space opposite running indicators</summary>
+    </key>
+    <key name="running-indicator-reserve-size" type="i">
+      <range min="1" max="20"/>
+      <default>3</default>
+      <summary>Running indicator reserve size</summary>
+    </key>
     <key name="custom-indicator-colors-enabled" type="b">
       <default>false</default>
       <summary>Use custom running indicator colors</summary>
@@ -808,6 +821,22 @@
       <default>false</default>
       <summary>Whether vertical Default GNOME Panel settings are saved</summary>
     </key>
+    <key name="dock-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Dock</summary>
+    </key>
+    <key name="dock-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Dock settings are saved</summary>
+    </key>
+    <key name="dock-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Dock</summary>
+    </key>
+    <key name="dock-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Dock settings are saved</summary>
+    </key>
     <key name="taskbar-axis-profiles-enabled" type="b">
       <default>true</default>
       <summary>Keep separate horizontal and vertical Taskbar settings</summary>
@@ -815,6 +844,10 @@
     <key name="default-panel-axis-profiles-enabled" type="b">
       <default>true</default>
       <summary>Keep separate horizontal and vertical Default GNOME Panel settings</summary>
+    </key>
+    <key name="dock-axis-profiles-enabled" type="b">
+      <default>true</default>
+      <summary>Keep separate horizontal and vertical Dock settings</summary>
     </key>
     <key name="active-panel-axis" type="s">
       <choices>
@@ -827,6 +860,18 @@
     <key name="panel-axis-profiles-initialized" type="b">
       <default>false</default>
       <summary>Whether panel axis profiles have been initialized</summary>
+    </key>
+    <key name="active-dock-axis" type="s">
+      <choices>
+        <choice value="horizontal"/>
+        <choice value="vertical"/>
+      </choices>
+      <default>'horizontal'</default>
+      <summary>Dock axis whose settings are currently active</summary>
+    </key>
+    <key name="dock-axis-profiles-initialized" type="b">
+      <default>false</default>
+      <summary>Whether Dock axis profiles have been initialized</summary>
     </key>
     <key name="panel-profile-transition" type="b">
       <default>false</default>

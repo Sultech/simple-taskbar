@@ -9,7 +9,10 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     PANEL_AXIS_PROFILE_ENABLED_KEYS,
     PANEL_MODE_DEFAULT,
+    PANEL_MODE_DOCK,
     PANEL_MODE_TASKBAR,
+    initializeDockAxisProfiles,
+    setDockPosition,
     setPanelMode,
     setPanelPosition,
 } from '../shared/panelModeProfiles.js';
@@ -115,7 +118,11 @@ export function addPanelModeGroup({
     } = addModeRow(settings, {
         title: _('Dock Mode'),
         subtitle: _('Show applications in a separate Dock instead of the taskbar'),
-        tooltip: _('Dock Mode Overview Behavior'),
+        tooltip: _('Dock Mode Options'),
+        axisProfile: {
+            key: PANEL_AXIS_PROFILE_ENABLED_KEYS[PANEL_MODE_DOCK],
+            mode: PANEL_MODE_DOCK,
+        },
         active: settings.get_boolean('dock-mode'),
         keys: DOCK_OVERVIEW_BEHAVIOR_KEYS,
         addRow: row => dockModeGroup.add(row),
@@ -135,8 +142,8 @@ export function addPanelModeGroup({
         if (settings.get_string('dock-position') !== panelPosition)
             return;
 
-        settings.set_string(
-            'dock-position',
+        setDockPosition(
+            settings,
             alternativePanelPosition(panelPosition)
         );
     };
@@ -165,7 +172,7 @@ export function addPanelModeGroup({
             title: _('Dock Position'),
             subtitle: _('Place the Dock at a different screen edge from the taskbar'),
             choices: dockPositionChoices,
-            setValue: position => settings.set_string('dock-position', position),
+            setValue: position => setDockPosition(settings, position),
         },
         connectSettings
     );
@@ -383,6 +390,7 @@ export function connectDefaultGnomePanelSync({
                 settings.set_boolean('dock-mode-initialized', true);
             }
             settings.set_boolean('dock-mode', true);
+            initializeDockAxisProfiles(settings);
         } else {
             settings.set_boolean('dock-mode', false);
             setPanelMode(settings, PANEL_MODE_TASKBAR);

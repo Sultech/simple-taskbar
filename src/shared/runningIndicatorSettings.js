@@ -19,9 +19,17 @@ export const RUNNING_INDICATOR_POSITIONS = [
     'right',
 ];
 
-export const MAX_RUNNING_INDICATORS = 4;
+export const RUNNING_INDICATOR_RESERVE_SETTINGS = Object.freeze({
+    enabled: 'running-indicator-reserve-enabled',
+    symmetrical: 'running-indicator-reserve-symmetrical',
+    size: 'running-indicator-reserve-size',
+});
 
-export const RUNNING_INDICATOR_RESERVE = 4;
+export const RUNNING_INDICATOR_RESERVE_SETTING_KEYS = Object.freeze(
+    Object.values(RUNNING_INDICATOR_RESERVE_SETTINGS)
+);
+
+export const MAX_RUNNING_INDICATORS = 4;
 
 export const RUNNING_INDICATOR_LENGTH_RATIO = 0.55;
 
@@ -38,10 +46,62 @@ export function runningIndicatorPositionIsHorizontal(position) {
     return position === 'top' || position === 'bottom';
 }
 
-export function runningIndicatorTopReserve(position) {
-    return position === 'top' ? RUNNING_INDICATOR_RESERVE : 0;
+export function runningIndicatorReserveIsPossible(
+    panelPosition,
+    indicatorPosition
+) {
+    const panelVertical = panelPosition === 'left' ||
+        panelPosition === 'right';
+    return panelVertical ===
+        runningIndicatorPositionIsHorizontal(indicatorPosition);
 }
 
-export function runningIndicatorBottomReserve(position) {
-    return position === 'bottom' ? RUNNING_INDICATOR_RESERVE : 0;
+function runningIndicatorReserveSize(settings) {
+    if (settings.get_boolean('windows-xp-theme-enabled') ||
+        !settings.get_boolean(RUNNING_INDICATOR_RESERVE_SETTINGS.enabled)) {
+        return 0;
+    }
+
+    return settings.get_int(RUNNING_INDICATOR_RESERVE_SETTINGS.size);
+}
+
+function runningIndicatorOppositeReserve(settings, position, side) {
+    const reserve = runningIndicatorReserveSize(settings);
+    return position === side ||
+        settings.get_boolean(RUNNING_INDICATOR_RESERVE_SETTINGS.symmetrical)
+        ? reserve
+        : 0;
+}
+
+export function runningIndicatorTopReserve(settings, position) {
+    if (!runningIndicatorPositionIsHorizontal(position))
+        return 0;
+
+    return runningIndicatorOppositeReserve(settings, position, 'top');
+}
+
+export function runningIndicatorBottomReserve(settings, position) {
+    if (!runningIndicatorPositionIsHorizontal(position))
+        return 0;
+
+    return runningIndicatorOppositeReserve(settings, position, 'bottom');
+}
+
+export function runningIndicatorLeftReserve(settings, position) {
+    if (runningIndicatorPositionIsHorizontal(position))
+        return 0;
+
+    return runningIndicatorOppositeReserve(settings, position, 'left');
+}
+
+export function runningIndicatorRightReserve(settings, position) {
+    if (runningIndicatorPositionIsHorizontal(position))
+        return 0;
+
+    return runningIndicatorOppositeReserve(settings, position, 'right');
+}
+
+export function runningIndicatorReserveOffset(startReserve, endReserve) {
+    const difference = startReserve - endReserve;
+    return Math.sign(difference) * Math.round(Math.abs(difference) / 2);
 }

@@ -16,7 +16,10 @@ import {
     RUNNING_INDICATOR_LENGTH_RATIO,
     runningIndicatorBottomReserve,
     runningIndicatorFillsLength,
+    runningIndicatorLeftReserve,
     runningIndicatorPositionIsHorizontal,
+    runningIndicatorReserveOffset,
+    runningIndicatorRightReserve,
     runningIndicatorTopReserve,
 } from '../shared/runningIndicatorSettings.js';
 import {
@@ -117,25 +120,42 @@ export class TaskbarAppearanceController {
         const itemHeight = vertical
             ? this.verticalItemExtent()
             : visualPanelHeight;
+        const indicatorPosition = this.indicatorPosition();
+        const leftReserve = runningIndicatorLeftReserve(
+            this._settings,
+            indicatorPosition
+        );
+        const rightReserve = runningIndicatorRightReserve(
+            this._settings,
+            indicatorPosition
+        );
 
         this.syncLauncherIconPosition(item);
         item.setVertical(vertical);
         const iconEdgeSpace = this.iconEdgeSpace();
         item._taskbarTopSpacer.set_height(
             vertical
-                ? runningIndicatorTopReserve(this.indicatorPosition())
+                ? runningIndicatorTopReserve(
+                    this._settings,
+                    indicatorPosition
+                )
                 : iconEdgeSpace
         );
         item._taskbarBottomSpacer.set_height(
             vertical
-                ? runningIndicatorBottomReserve(this.indicatorPosition())
+                ? runningIndicatorBottomReserve(
+                    this._settings,
+                    indicatorPosition
+                )
                 : iconEdgeSpace
         );
         item._taskbarButtonContent.set_height(
             vertical ? -1 : this.buttonContentHeight(visualPanelHeight)
         );
         const parityOffset = this.crossAxisParityOffset();
-        item._taskbarButtonContent.translation_x = parityOffset;
+        item._taskbarButtonContent.translation_x = vertical
+            ? parityOffset
+            : runningIndicatorReserveOffset(leftReserve, rightReserve);
         item._taskbarVisual.y_align = vertical
             ? Clutter.ActorAlign.CENTER
             : Clutter.ActorAlign.FILL;
@@ -265,6 +285,7 @@ export class TaskbarAppearanceController {
 
     verticalItemExtent(iconSize = this._getIconSize()) {
         return taskbarVerticalItemExtent(
+            this._settings,
             iconSize,
             this.indicatorPosition()
         );
@@ -466,18 +487,26 @@ export class TaskbarAppearanceController {
     ) {
         const hasLabel = (Boolean(window) || isCombined) &&
             !panelIsVertical(this._settings);
-        if (this._settings.get_boolean('windows-xp-theme-enabled') &&
-            hasLabel && showLabels) {
-            return WINDOWS_XP_TASKBUTTON_WIDTH;
+        if (this._settings.get_boolean('windows-xp-theme-enabled')) {
+            return hasLabel && showLabels
+                ? WINDOWS_XP_TASKBUTTON_WIDTH
+                : taskbarIconButtonWidth(iconSize);
         }
 
         const iconWidth = taskbarIconButtonWidth(iconSize);
         const actualLabelWidth = label
             ? this.labelWidthForButton(window, isCombined, label)
             : labelWidth;
-        return hasLabel && showLabels && actualLabelWidth > 0
+        const width = hasLabel && showLabels && actualLabelWidth > 0
             ? iconWidth + APP_LABEL_SPACING + actualLabelWidth
             : iconWidth;
+        if (panelIsVertical(this._settings))
+            return width;
+
+        const position = this.indicatorPosition();
+        return width +
+            runningIndicatorLeftReserve(this._settings, position) +
+            runningIndicatorRightReserve(this._settings, position);
     }
 
     labelWidthForButton(window, isCombined = false, label = null) {

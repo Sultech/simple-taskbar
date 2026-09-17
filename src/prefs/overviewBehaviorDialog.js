@@ -77,7 +77,7 @@ class OverviewBehaviorDialog extends Adw.Window {
             content.append(profileGroup);
             const profileRow = new Adw.SwitchRow({
                 title: _('Separate Horizontal and Vertical Profiles'),
-                subtitle: _('Remember different settings for horizontal and vertical panel layouts'),
+                subtitle: _('Remember different settings for horizontal and vertical layouts'),
                 active: settings.get_boolean(axisProfile.key),
             });
             profileGroup.add(profileRow);

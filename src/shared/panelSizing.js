@@ -72,10 +72,14 @@ export function taskbarCrossAxisParityOffset(settings, panelThickness, iconSize)
     return iconSize % 2 !== 0 && panelThickness % 2 === 0 ? 1 : 0;
 }
 
-export function taskbarVerticalItemExtent(iconSize, indicatorPosition) {
+export function taskbarVerticalItemExtent(
+    settings,
+    iconSize,
+    indicatorPosition
+) {
     return taskbarIconButtonWidth(iconSize) +
-        runningIndicatorTopReserve(indicatorPosition) +
-        runningIndicatorBottomReserve(indicatorPosition);
+        runningIndicatorTopReserve(settings, indicatorPosition) +
+        runningIndicatorBottomReserve(settings, indicatorPosition);
 }
 
 export function panelHeightForIconSize(settings, iconSize) {

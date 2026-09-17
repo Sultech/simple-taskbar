@@ -20,6 +20,7 @@ import {
 import {SecondaryPanelController} from '../secondaryPanel/secondaryPanelController.js';
 import {PanelManagerBase} from '../panel/panelManagerBase.js';
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
+import {setDockPosition} from '../shared/panelModeProfiles.js';
 import {DockPanelSettings} from './dockPanelSettings.js';
 
 const DOCK_PANEL_ITEM_IDS = new Set([
@@ -145,7 +146,7 @@ export class DockPanelManager extends PanelManagerBase {
             return false;
 
         const replacement = alternativePanelPosition(panelPosition);
-        this._settings.set_string('dock-position', replacement);
+        setDockPosition(this._settings, replacement);
         return true;
     }
 
