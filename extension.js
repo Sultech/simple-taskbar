@@ -257,15 +257,15 @@ export default class SimpleTaskbarExtension extends Extension {
                 Main.panel.statusArea.quickSettings._volumeOutput,
         });
         this._applicationOverflowController.enable();
-        this._panelController.enable();
         this._trayOverflowController.enable();
+        this._panelInteractionController.enable();
+        this._startButtonController.enable();
+        this._panelController.enable();
         this._panelController.applyLayout();
         this._taskbarController.setShowDesktopButton(
             this._showDesktopButton,
             button => this._showDesktopButtonController.replace(button)
         );
-        this._panelInteractionController.enable();
-        this._startButtonController.enable();
         this._volumeMixerController = new VolumeMixerController(
             this._settings,
             Main.panel.statusArea.quickSettings
@@ -589,14 +589,14 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _panelInteractionIsBlocked(includeWindowPreviews) {
         return Boolean(
-            this._panelInteractionController.menuIsOpen ||
-            this._startButtonController.menuIsOpen ||
-            this._folderMenuController.menuIsOpen ||
-            this._trayOverflowController.menuIsOpen ||
-            this._applicationOverflowController.menuIsOpen ||
-            (includeWindowPreviews && this._windowPreviews.isOpen) ||
-            this._taskbarController.isDragging ||
-            this._taskbarController.hasOpenMenu() ||
+            this._panelInteractionController?.menuIsOpen ||
+            this._startButtonController?.menuIsOpen ||
+            this._folderMenuController?.menuIsOpen ||
+            this._trayOverflowController?.menuIsOpen ||
+            this._applicationOverflowController?.menuIsOpen ||
+            (includeWindowPreviews && this._windowPreviews?.isOpen) ||
+            this._taskbarController?.isDragging ||
+            this._taskbarController?.hasOpenMenu() ||
             Main.panel.menuManager.activeMenu?.isOpen
         );
     }

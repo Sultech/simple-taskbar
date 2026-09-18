@@ -276,12 +276,18 @@ export function connectDefaultGnomePanelSync({
             !windowsXpModeEnabled;
         taskbarModeSwitch.active = taskbarModeEnabled;
         defaultGnomePanelSwitch.active = enabled;
-        taskbarModeRow.sensitive = true;
-        taskbarOverviewButton.sensitive = taskbarModeEnabled;
-        defaultGnomePanelRow.sensitive = !dockModeEnabled;
-        defaultGnomePanelOverviewButton.sensitive = enabled &&
-            !dockModeEnabled;
-        windowsXpOverviewButton.sensitive = windowsXpModeEnabled;
+        if (taskbarModeRow)
+            taskbarModeRow.sensitive = true;
+        if (taskbarOverviewButton)
+            taskbarOverviewButton.sensitive = taskbarModeEnabled;
+        if (defaultGnomePanelRow)
+            defaultGnomePanelRow.sensitive = !dockModeEnabled;
+        if (defaultGnomePanelOverviewButton) {
+            defaultGnomePanelOverviewButton.sensitive = enabled &&
+                !dockModeEnabled;
+        }
+        if (windowsXpOverviewButton)
+            windowsXpOverviewButton.sensitive = windowsXpModeEnabled;
         appearanceGroup.visible = !dockModeEnabled &&
             !defaultPanelRestrictions;
         appearanceGroup.sensitive = !dockModeEnabled &&
@@ -355,8 +361,10 @@ export function connectDefaultGnomePanelSync({
         const dockPanelModeEnabled = settings.get_boolean('dock-panel-mode');
         dockModeSwitch.active = settings.get_boolean('dock-mode');
         dockPanelModeSwitch.active = dockPanelModeEnabled;
-        dockOverviewButton.sensitive = dockModeEnabled &&
-            !settings.get_boolean('windows-xp-theme-enabled');
+        if (dockOverviewButton) {
+            dockOverviewButton.sensitive = dockModeEnabled &&
+                !settings.get_boolean('windows-xp-theme-enabled');
+        }
         dockPositionRow.sensitive = dockModeEnabled &&
             !settings.get_boolean('windows-xp-theme-enabled');
         dockPanelModeSwitch.sensitive = dockModeEnabled &&

@@ -116,11 +116,11 @@ export class TrayOverflowController {
     }
 
     get menuIsOpen() {
-        if (this._menu.isOpen)
+        if (this._menu?.isOpen)
             return true;
 
         return [...this._stashed.values()].some(
-            ({indicator}) => indicator.menu.isOpen
+            ({indicator}) => indicator?.menu?.isOpen
         );
     }
 

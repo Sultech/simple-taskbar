@@ -73,7 +73,7 @@ export class PanelInteractionController {
     }
 
     get menuIsOpen() {
-        return this._contextMenu.isOpen;
+        return Boolean(this._contextMenu?.isOpen);
     }
 
     destroy() {
@@ -92,7 +92,7 @@ export class PanelInteractionController {
             this._settings.disconnect(this._lockChangedId);
         this._lockChangedId = 0;
 
-        this._contextMenu.destroy();
+        this._contextMenu?.destroy();
         this._contextMenu = null;
         this._contextMenuManager = null;
         this._previews = null;
