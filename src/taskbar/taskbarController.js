@@ -49,6 +49,7 @@ import {
     APPLICATION_CLICK_ANIMATION,
 } from '../shared/applicationClickAnimation.js';
 import {
+    CLASSIC_HIGHLIGHT_SETTINGS,
     HIGHLIGHT_SIZE_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
 } from '../shared/classicHighlightSettings.js';
@@ -704,6 +705,25 @@ export class TaskbarController {
                 for (const item of this._appButtons.values())
                     this._syncClassicHighlight(item);
             }, this._signalHolder);
+        }
+        for (const key of [
+            'taskbar-highlight-style',
+            CLASSIC_HIGHLIGHT_SETTINGS.borderRadius,
+        ]) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                for (const item of this._appButtons.values())
+                    this._updateIndicatorGeometry(item);
+            }, this._signalHolder);
+        }
+        for (const key of [
+            'taskbar-highlight-style',
+            CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled,
+        ]) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this.syncButtonStates(false),
+                this._signalHolder
+            );
         }
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
@@ -1369,6 +1389,11 @@ export class TaskbarController {
             : app === focusedApp &&
                 this._interestingWindows(app).includes(focusedWindow));
         const focused = hasFocus && !this._startMenuOpen;
+        const focusHighlight = focused &&
+            (this._settings.get_boolean('windows-xp-theme-enabled') ||
+                this._settings.get_boolean(
+                    CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled
+                ));
         item.set_style_class_name(
             `dash-item-container simple-taskbar-app-item` +
             `${isLauncher ? ' simple-taskbar-app-launcher' : ''}` +
@@ -1376,7 +1401,7 @@ export class TaskbarController {
             `${!isLauncher && !window && windowCount > 1
                 ? ' multiple-windows'
                 : ''}` +
-            `${focused ? ' focused' : ''}`
+            `${focusHighlight ? ' focused' : ''}`
         );
         item._taskbarFocused = focused;
         item._taskbarRunning = running;

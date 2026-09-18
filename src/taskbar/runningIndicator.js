@@ -228,6 +228,7 @@ class RunningIndicator extends St.Widget {
             clip_to_allocation: false,
         });
         this._radiusSource = radiusSource;
+        this._radiusOverride = null;
         this._colorSource = new St.Widget({
             style_class: `${styleClass}-color-source`,
             visible: false,
@@ -309,7 +310,7 @@ class RunningIndicator extends St.Widget {
     }
 
     update({x, y, length, thickness, cross, inset, position, style, count,
-        focused, color}, animate = false) {
+        focused, color, radius = null}, animate = false) {
         const horizontal = runningIndicatorPositionIsHorizontal(position);
         const width = horizontal ? length : thickness;
         const height = horizontal ? thickness : length;
@@ -328,6 +329,7 @@ class RunningIndicator extends St.Widget {
         this._inset = inset;
         this._count = Math.min(count, MAX_RUNNING_INDICATORS);
         this._focused = focused;
+        this._radiusOverride = radius;
         this.set_position(x, y);
         this.set_size(width, height);
         for (const area of [this._area, this._fadeArea]) {
@@ -546,6 +548,9 @@ class RunningIndicator extends St.Widget {
     }
 
     _cornerRadius() {
+        if (this._radiusOverride !== null)
+            return this._radiusOverride;
+
         if (!this._radiusSource)
             return 0;
 

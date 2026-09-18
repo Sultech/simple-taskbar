@@ -197,12 +197,6 @@ export class TaskbarAppearanceController {
             inverseRenderScale,
             inverseRenderScale
         );
-        item._taskbarGlass.set_style(
-            renderScale === 1 || windowsXpTheme
-                ? null
-                : `border-radius: ${8 * renderScale}px;` +
-                    `border-width: ${renderScale}px;`
-        );
         item._taskbarGlassTexture.set_position(
             glassX + glassInset,
             glassY + glassInset
@@ -375,11 +369,35 @@ export class TaskbarAppearanceController {
             count: item._taskbarWindowCount,
             focused: item._taskbarFocused,
             color: item._taskbarRunning ? this.indicatorColor(item) : null,
+            radius: this.highlightCornerRadius(),
         }, animate);
     }
 
     syncIndicatorColor(item) {
         this.updateIndicatorGeometry(item, false);
+    }
+
+    highlightCornerRadius() {
+        if (this._settings.get_boolean('windows-xp-theme-enabled'))
+            return null;
+
+        return this._settings.get_int(
+            CLASSIC_HIGHLIGHT_SETTINGS.borderRadius
+        );
+    }
+
+    _syncGlassHighlightState(item) {
+        const hovered = item.hover || item.has_style_pseudo_class('hover');
+        const hoverEnabled = this._settings.get_boolean(
+            CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
+        );
+        const focusShown = item._taskbarFocused &&
+            this._settings.get_boolean(
+                CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled
+            );
+        item._taskbarGlass.opacity = hovered && !hoverEnabled && !focusShown
+            ? 0
+            : 255;
     }
 
     syncClassicHighlight(item) {
@@ -406,13 +424,18 @@ export class TaskbarAppearanceController {
             item._taskbarClassicFocus.opacity = 0;
             return;
         }
+        const renderScale = item._taskbarClassicRenderScale;
+        const radius = this._settings.get_int(
+            CLASSIC_HIGHLIGHT_SETTINGS.borderRadius
+        ) * renderScale;
+        item._taskbarGlass.set_style(
+            `border-radius: ${radius}px;border-width: ${renderScale}px;`
+        );
         if (!enabled) {
+            this._syncGlassHighlightState(item);
             return;
         }
 
-        const radius = this._settings.get_int(
-            CLASSIC_HIGHLIGHT_SETTINGS.borderRadius
-        ) * item._taskbarClassicRenderScale;
         const radiusStyle = `border-radius: ${radius}px;`;
         const pressed = item._taskbarButton.pressed;
         const hoverColorKey = pressed

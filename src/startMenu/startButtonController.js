@@ -918,6 +918,8 @@ export class StartButtonController {
         const hoverEnabled = this._settings.get_boolean(
             CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
         );
+        this._hover.set_style(`border-radius: ${radius}px;`);
+        this._hover.opacity = !hoverEnabled && (hovered || pressed) ? 0 : 255;
         if (windowsXpTheme)
             return;
 

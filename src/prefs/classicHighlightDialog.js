@@ -182,8 +182,9 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             const sensitive = settings.get_boolean(
                 CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
             );
-            for (const row of [hoverColorRow, pressedColorRow, borderRadiusRow])
-                row.sensitive = sensitive;
+            hoverColorRow.sensitive = isClassic && sensitive;
+            pressedColorRow.sensitive = isClassic && sensitive;
+            borderRadiusRow.sensitive = !isClassic || sensitive;
         };
         connectSettings(
             settings,
@@ -199,9 +200,9 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             const dominant = settings.get_boolean(
                 CLASSIC_HIGHLIGHT_SETTINGS.focusDominant
             );
-            focusDominantSwitch.sensitive = enabled;
-            focusColorRow.sensitive = enabled && !dominant;
-            focusOpacityRow.sensitive = enabled;
+            focusDominantSwitch.sensitive = isClassic && enabled;
+            focusColorRow.sensitive = isClassic && enabled && !dominant;
+            focusOpacityRow.sensitive = isClassic && enabled;
         };
         connectSettings(
             settings,
@@ -214,9 +215,6 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             syncFocusSensitivity
         );
         syncFocusSensitivity();
-
-        hoverGroup.sensitive = isClassic;
-        focusGroup.sensitive = isClassic;
     }
 
     _reset() {
