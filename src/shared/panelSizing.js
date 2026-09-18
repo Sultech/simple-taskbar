@@ -132,15 +132,21 @@ export function taskbarGlassHeight(
     if (windowsXpTheme)
         return panelHeight - 5;
 
+    const centreOnIcon = panelIsVertical(settings);
     const insetExtent = Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2);
-    if (!settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.enabled))
-        return matchHighlightSizeParity(insetExtent, iconSize);
+    if (!settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.enabled)) {
+        return centreOnIcon
+            ? matchHighlightSizeParity(insetExtent, iconSize)
+            : insetExtent;
+    }
 
     const requested = settings.get_int(HIGHLIGHT_SIZE_SETTINGS.size);
     if (requested >= panelHeight)
         return panelHeight;
 
-    return matchHighlightSizeParity(requested, iconSize);
+    return centreOnIcon
+        ? matchHighlightSizeParity(requested, iconSize)
+        : requested;
 }
 
 export function taskbarGlassCrossOffset(panelHeight, glassExtent, parityOffset) {
