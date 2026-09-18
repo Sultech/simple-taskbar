@@ -365,12 +365,10 @@ export class StartButtonController {
         this._content.set_height(
             visualPanelHeight
         );
-        this.actor.set_height(-1);
+        this.actor.set_height(visualPanelHeight);
         this._content.set_width(width);
         this.actor.set_width(width);
-        const borderStyle = floatingDock && !windowsXpTheme
-            ? ' border-width: 0;'
-            : '';
+        const borderStyle = windowsXpTheme ? '' : ' border-width: 0;';
         this.actor.set_style(
             `min-width: 0; padding: 0;${borderStyle}` +
                 ` margin-left: ${leadingMargin}px;` +
