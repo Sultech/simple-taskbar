@@ -23,9 +23,9 @@ import {
     runningIndicatorTopReserve,
 } from '../shared/runningIndicatorSettings.js';
 import {
-    GLASS_VERTICAL_INSET,
     iconEdgePadding,
     taskbarCrossAxisParityOffset,
+    taskbarGlassCrossOffset,
     taskbarGlassHeight,
     taskbarIconButtonWidth,
     taskbarVisualPanelHeight,
@@ -175,8 +175,9 @@ export class TaskbarAppearanceController {
         const glassInset = this.glassInset();
         const glassOuterWidth = vertical ? glassHeight : glassWidth;
         const glassOuterHeight = vertical ? itemHeight : glassHeight;
-        const glassX = vertical ? this.glassY() : 0;
-        const glassY = vertical ? 0 : this.glassY();
+        const glassCrossOffset = this.glassY(visualPanelHeight);
+        const glassX = vertical ? glassCrossOffset : 0;
+        const glassY = vertical ? 0 : glassCrossOffset;
         const glassContentWidth = glassOuterWidth - glassInset * 2;
         const glassContentHeight = glassOuterHeight - glassInset * 2;
         const windowsXpTheme = this._settings.get_boolean(
@@ -294,14 +295,20 @@ export class TaskbarAppearanceController {
     glassHeight(panelHeight = this.visualPanelHeight()) {
         return taskbarGlassHeight(
             panelHeight,
-            this._settings.get_boolean('windows-xp-theme-enabled')
+            this._settings.get_boolean('windows-xp-theme-enabled'),
+            this._getIconSize()
         );
     }
 
-    glassY() {
-        return this._settings.get_boolean('windows-xp-theme-enabled')
-            ? WINDOWS_XP_BUTTON_Y
-            : GLASS_VERTICAL_INSET;
+    glassY(panelHeight = this.visualPanelHeight()) {
+        if (this._settings.get_boolean('windows-xp-theme-enabled'))
+            return WINDOWS_XP_BUTTON_Y;
+
+        return taskbarGlassCrossOffset(
+            panelHeight,
+            this.glassHeight(panelHeight),
+            this.crossAxisParityOffset()
+        );
     }
 
     glassInset() {
@@ -321,9 +328,10 @@ export class TaskbarAppearanceController {
         );
         const vertical = panelIsVertical(this._settings);
         const visualPanelHeight = this.visualPanelHeight();
+        const glassCrossOffset = this.glassY(visualPanelHeight);
         return {
-            x: vertical ? this.glassY() : 0,
-            y: vertical ? 0 : this.glassY(),
+            x: vertical ? glassCrossOffset : 0,
+            y: vertical ? 0 : glassCrossOffset,
             width: vertical
                 ? this.glassHeight(visualPanelHeight)
                 : glassWidth,

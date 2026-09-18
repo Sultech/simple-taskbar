@@ -260,7 +260,8 @@ export class StartButtonController {
         );
         const glassHeight = taskbarGlassHeight(
             visualPanelHeight,
-            windowsXpTheme
+            windowsXpTheme,
+            iconSize
         );
         const iconSpacing = windowsXpTheme
             ? 0

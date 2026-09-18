@@ -53,11 +53,23 @@ export function taskbarVisualPanelHeight(
     return iconSize + reserve + reserve % 2;
 }
 
-export function taskbarGlassHeight(panelHeight, windowsXpTheme) {
+export function matchHighlightSizeParity(size, iconSize) {
+    return size - Math.abs(size - iconSize) % 2;
+}
+
+export function taskbarGlassHeight(panelHeight, windowsXpTheme, iconSize) {
     if (windowsXpTheme)
         return panelHeight - 5;
 
-    return Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2);
+    return matchHighlightSizeParity(
+        Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2),
+        iconSize
+    );
+}
+
+export function taskbarGlassCrossOffset(panelHeight, glassExtent, parityOffset) {
+    const centred = Math.floor((panelHeight - glassExtent) / 2) + parityOffset;
+    return Math.max(0, Math.min(centred, panelHeight - glassExtent));
 }
 
 export function taskbarIconButtonWidth(iconSize) {
