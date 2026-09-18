@@ -85,6 +85,10 @@ const BLUR_MY_SHELL_POPUP_CLASSES = [
     'bms-popup-background-dark',
 ];
 
+function searchResultKey(result) {
+    return `${result.provider.id ?? 'unknown'}:${result.id}`;
+}
+
 export class StartMenuController {
     constructor(sourceActor, settings, params = {}) {
         this._sourceActor = sourceActor;
@@ -149,6 +153,7 @@ export class StartMenuController {
         );
         this._selectedSearchResult = null;
         this._selectedSearchButton = null;
+        this._searchResultButtons = new Map();
         this._searchSelectionVisible = false;
         this._view = 'pinned';
         this._firstVisibleApp = null;
@@ -723,6 +728,7 @@ export class StartMenuController {
         this._onSourceContextMenu = null;
         this._selectedSearchResult = null;
         this._selectedSearchButton = null;
+        this._searchResultButtons = null;
         this._appSystem = null;
         this._favorites = null;
         this._appliedTheme = null;
@@ -1165,7 +1171,9 @@ export class StartMenuController {
     }
 
     _displaySearchResults(groups, complete) {
+        const focusedKey = this._focusedSearchResultKey();
         this._clearContent();
+        this._searchResultButtons.clear();
         this._selectedSearchResult = groups[0]?.results[0] ?? null;
         if (groups.length === 0) {
             if (!complete)
@@ -1193,11 +1201,38 @@ export class StartMenuController {
                         this._setSearchSelection(result, button);
                 });
                 this._selectedSearchButton ??= button;
+                this._searchResultButtons.set(
+                    searchResultKey(result),
+                    button
+                );
                 list.add_child(button);
             }
             this._content.add_child(list);
         }
         this._syncSearchSelection();
+        this._restoreSearchFocus(focusedKey);
+    }
+
+    _focusedSearchResultKey() {
+        const focus = global.stage.get_key_focus();
+        if (!focus || !this._content.contains(focus))
+            return null;
+
+        for (const [key, button] of this._searchResultButtons) {
+            if (button === focus || button.contains(focus))
+                return key;
+        }
+        return null;
+    }
+
+    _restoreSearchFocus(key) {
+        if (key === null)
+            return;
+
+        const button = this._searchResultButtons.get(key) ??
+            this._searchResultButtons.values().next().value;
+        if (button)
+            button.grab_key_focus();
     }
 
     _setSearchSelection(result, button) {
