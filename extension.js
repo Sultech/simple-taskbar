@@ -257,15 +257,15 @@ export default class SimpleTaskbarExtension extends Extension {
                 Main.panel.statusArea.quickSettings._volumeOutput,
         });
         this._applicationOverflowController.enable();
-        this._panelController.enable();
         this._trayOverflowController.enable();
+        this._panelInteractionController.enable();
+        this._startButtonController.enable();
+        this._panelController.enable();
         this._panelController.applyLayout();
         this._taskbarController.setShowDesktopButton(
             this._showDesktopButton,
             button => this._showDesktopButtonController.replace(button)
         );
-        this._panelInteractionController.enable();
-        this._startButtonController.enable();
         this._volumeMixerController = new VolumeMixerController(
             this._settings,
             Main.panel.statusArea.quickSettings
