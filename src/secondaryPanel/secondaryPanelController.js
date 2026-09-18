@@ -935,14 +935,14 @@ export class SecondaryPanelController {
 
     _interactionIsBlocked(includeWindowPreviews) {
         return Boolean(
-            this._interactionController.menuIsOpen ||
-            this._startButtonController.menuIsOpen ||
-            this._folderMenuController.menuIsOpen ||
-            this._applicationOverflowController.menuIsOpen ||
-            (includeWindowPreviews && this._windowPreviews.isOpen) ||
-            this._taskbarController.isDragging ||
-            this._taskbarController.hasOpenMenu() ||
-            this._menuManager.activeMenu?.isOpen
+            this._interactionController?.menuIsOpen ||
+            this._startButtonController?.menuIsOpen ||
+            this._folderMenuController?.menuIsOpen ||
+            this._applicationOverflowController?.menuIsOpen ||
+            (includeWindowPreviews && this._windowPreviews?.isOpen) ||
+            this._taskbarController?.isDragging ||
+            this._taskbarController?.hasOpenMenu() ||
+            this._menuManager?.activeMenu?.isOpen
         );
     }
 

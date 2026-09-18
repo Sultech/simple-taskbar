@@ -91,7 +91,7 @@ export class FolderMenuController {
     }
 
     get menuIsOpen() {
-        return this._menu.isOpen;
+        return Boolean(this._menu?.isOpen);
     }
 
     destroy() {

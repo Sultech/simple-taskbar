@@ -220,7 +220,7 @@ export class StartButtonController {
 
     get menuIsOpen() {
         return Boolean(
-            this._startMenuController?.isOpen || this._contextMenu.isOpen
+            this._startMenuController?.isOpen || this._contextMenu?.isOpen
         );
     }
 
@@ -241,7 +241,7 @@ export class StartButtonController {
 
     closeMenus() {
         this._startMenuController?.close();
-        this._contextMenu.close();
+        this._contextMenu?.close();
     }
 
     applyAppearance(iconSize, padding) {
@@ -404,7 +404,7 @@ export class StartButtonController {
         this._keybindings = null;
         this._contextMenuController.destroy();
         this._contextMenuController = null;
-        this._contextMenu.destroy();
+        this._contextMenu?.destroy();
         this._contextMenu = null;
         this._startMenuController?.destroy();
         this._startMenuController = null;
@@ -615,7 +615,7 @@ export class StartButtonController {
             this._startMenuController?.close();
             if (this._windowsModeEnabled())
                 this._ensureStartMenuController();
-            this._contextMenu.close();
+            this._contextMenu?.close();
             this._startOpenedOverview = false;
             this._icon.gicon = this._currentGIcon();
             this.actor.accessible_name = this._accessibleName();
@@ -626,7 +626,7 @@ export class StartButtonController {
         }, this._signalHolder);
         this._settings.connectObject('changed::windows-xp-theme-enabled', () => {
             this._startMenuController?.close();
-            this._contextMenu.close();
+            this._contextMenu?.close();
             this._syncWindowsXpStartButton();
             this.applyAppearance(
                 this._icon.icon_size,
@@ -712,7 +712,7 @@ export class StartButtonController {
         }, this._signalHolder);
         this._settings.connectObject('changed::default-gnome-panel', () => {
             this._startMenuController?.close();
-            this._contextMenu.close();
+            this._contextMenu?.close();
             this._syncVisibility();
             this._keybindings?.sync();
         }, this._signalHolder);
@@ -835,7 +835,7 @@ export class StartButtonController {
 
     _toggleOverviewFromShortcut() {
         this._startMenuController?.close();
-        this._contextMenu.close();
+        this._contextMenu?.close();
         this._previews.hideTooltip(false);
         this._previews.hide();
         Main.overview.toggle();
