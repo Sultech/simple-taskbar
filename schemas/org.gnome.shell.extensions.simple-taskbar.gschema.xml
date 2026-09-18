@@ -119,6 +119,15 @@
       <default>32</default>
       <summary>Hover and focus effect size across the panel</summary>
     </key>
+    <key name="taskbar-highlight-length-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom hover and focus effect length</summary>
+    </key>
+    <key name="taskbar-highlight-length" type="i">
+      <range min="8" max="256"/>
+      <default>48</default>
+      <summary>Hover and focus effect length along the panel</summary>
+    </key>
     <key name="classic-highlight-appicon-hover" type="b">
       <default>true</default>
       <summary>Highlight hovering application icons</summary>

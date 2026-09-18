@@ -33,6 +33,7 @@ import {
 } from '../panel/panelPosition.js';
 import {
     taskbarGlassHeight,
+    taskbarHighlightLength,
     taskbarIconButtonWidth,
     taskbarCrossAxisParityOffset,
     taskbarVisualPanelHeight,
@@ -40,6 +41,7 @@ import {
 } from '../shared/panelSizing.js';
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
+    HIGHLIGHT_LENGTH_SETTING_KEYS,
     HIGHLIGHT_SIZE_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_STYLE,
@@ -280,12 +282,18 @@ export class StartButtonController {
             indicatorPosition
         );
         const glassMainExtent = vertical
-            ? taskbarVerticalItemExtent(
-                this._settings,
-                iconSize,
-                indicatorPosition
+            ? Math.max(
+                taskbarVerticalItemExtent(
+                    this._settings,
+                    iconSize,
+                    indicatorPosition
+                ),
+                taskbarHighlightLength(this._settings, iconSize)
             )
-            : glassWidth + leftReserve + rightReserve;
+            : Math.max(
+                glassWidth + leftReserve + rightReserve,
+                taskbarHighlightLength(this._settings, iconSize)
+            );
         const glassCrossExtent = glassHeight;
         const width = windowsXpTheme
             ? this._windowsXpStartButton.width
@@ -646,6 +654,7 @@ export class StartButtonController {
         for (const key of [
             ...RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
             ...HIGHLIGHT_SIZE_SETTING_KEYS,
+            ...HIGHLIGHT_LENGTH_SETTING_KEYS,
         ]) {
             this._settings.connectObject(
                 `changed::${key}`,

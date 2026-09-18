@@ -27,6 +27,7 @@ import {
     taskbarCrossAxisParityOffset,
     taskbarGlassCrossOffset,
     taskbarGlassHeight,
+    taskbarHighlightLength,
     taskbarIconButtonWidth,
     taskbarVisualPanelHeight,
     taskbarVerticalItemExtent,
@@ -279,10 +280,13 @@ export class TaskbarAppearanceController {
     }
 
     verticalItemExtent(iconSize = this._getIconSize()) {
-        return taskbarVerticalItemExtent(
-            this._settings,
-            iconSize,
-            this.indicatorPosition()
+        return Math.max(
+            taskbarVerticalItemExtent(
+                this._settings,
+                iconSize,
+                this.indicatorPosition()
+            ),
+            taskbarHighlightLength(this._settings, iconSize)
         );
     }
 
@@ -536,9 +540,12 @@ export class TaskbarAppearanceController {
             return width;
 
         const position = this.indicatorPosition();
-        return width +
-            runningIndicatorLeftReserve(this._settings, position) +
-            runningIndicatorRightReserve(this._settings, position);
+        return Math.max(
+            width +
+                runningIndicatorLeftReserve(this._settings, position) +
+                runningIndicatorRightReserve(this._settings, position),
+            taskbarHighlightLength(this._settings, iconSize)
+        );
     }
 
     labelWidthForButton(window, isCombined = false, label = null) {

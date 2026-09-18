@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 02:25+0100\n"
+"POT-Creation-Date: 2026-09-18 02:10+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -1005,92 +1005,106 @@ msgstr "Стандартный GNOME"
 msgid "Magic Lamp"
 msgstr "Волшебная лампа"
 
-#: src/prefs/classicHighlightDialog.js:32
-#: src/prefs/classicHighlightDialog.js:41
+#: src/prefs/classicHighlightDialog.js:36
+#: src/prefs/classicHighlightDialog.js:45
 msgid "Effect Options"
 msgstr "Параметры эффекта"
 
-#: src/prefs/classicHighlightDialog.js:56
+#: src/prefs/classicHighlightDialog.js:60
 msgid "Effect Size"
 msgstr "Размер эффекта"
 
-#: src/prefs/classicHighlightDialog.js:58
+#: src/prefs/classicHighlightDialog.js:62
 msgid "Set how far the effect reaches across the panel"
 msgstr "Укажите, насколько эффект растягивается по панели"
 
-#: src/prefs/classicHighlightDialog.js:74
+#: src/prefs/classicHighlightDialog.js:69
 msgid "Custom Effect Size"
 msgstr "Свой размер эффекта"
 
-#: src/prefs/classicHighlightDialog.js:76
+#: src/prefs/classicHighlightDialog.js:71
 msgid "Keep the effect a fixed size instead of following the panel thickness"
 msgstr "Сохранять фиксированный размер эффекта вместо толщины панели"
 
-#: src/prefs/classicHighlightDialog.js:85
+#: src/prefs/classicHighlightDialog.js:91
+#: src/prefs/classicHighlightDialog.js:130
 msgid "Effect Width"
 msgstr "Ширина эффекта"
 
-#: src/prefs/classicHighlightDialog.js:85
+#: src/prefs/classicHighlightDialog.js:91
+#: src/prefs/classicHighlightDialog.js:130
 msgid "Effect Height"
 msgstr "Высота эффекта"
 
-#: src/prefs/classicHighlightDialog.js:86
+#: src/prefs/classicHighlightDialog.js:92
 msgid "Size across the panel in pixels"
 msgstr "Размер поперёк панели в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:101
+#: src/prefs/classicHighlightDialog.js:119
+msgid "Custom Effect Length"
+msgstr "Своя длина эффекта"
+
+#: src/prefs/classicHighlightDialog.js:121
+msgid "Grow the effect along the panel beyond the application icon"
+msgstr "Увеличить эффект вдоль панели за пределы значка приложения"
+
+#: src/prefs/classicHighlightDialog.js:131
+msgid "Size along the panel in pixels"
+msgstr "Размер вдоль панели в пикселях"
+
+#: src/prefs/classicHighlightDialog.js:147
 msgid "Hover Highlight"
 msgstr "Подсветка при наведении"
 
-#: src/prefs/classicHighlightDialog.js:102
+#: src/prefs/classicHighlightDialog.js:148
 msgid "Customize the Classic hover and pressed effect"
 msgstr "Настройте классический эффект наведения и нажатия"
 
-#: src/prefs/classicHighlightDialog.js:108
+#: src/prefs/classicHighlightDialog.js:154
 msgid "Highlight Hovering Application Icons"
 msgstr "Подсвечивать значки приложений при наведении"
 
-#: src/prefs/classicHighlightDialog.js:116
+#: src/prefs/classicHighlightDialog.js:162
 msgid "Hover Highlight Color"
 msgstr "Цвет подсветки при наведении"
 
-#: src/prefs/classicHighlightDialog.js:125
+#: src/prefs/classicHighlightDialog.js:171
 msgid "Pressed Highlight Color"
 msgstr "Цвет подсветки при нажатии"
 
-#: src/prefs/classicHighlightDialog.js:134
+#: src/prefs/classicHighlightDialog.js:180
 msgid "Hover Highlight Border Radius"
 msgstr "Радиус скругления подсветки при наведении"
 
-#: src/prefs/classicHighlightDialog.js:135
+#: src/prefs/classicHighlightDialog.js:181
 msgid "Border radius in pixels"
 msgstr "Радиус скругления в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:143
+#: src/prefs/classicHighlightDialog.js:189
 msgid "Focused Application Highlight"
 msgstr "Подсветка приложения в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:144
+#: src/prefs/classicHighlightDialog.js:190
 msgid "Customize the effect for the focused application"
 msgstr "Настройте эффект для приложения в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:150
+#: src/prefs/classicHighlightDialog.js:196
 msgid "Highlight the Focused Application"
 msgstr "Подсвечивать приложение в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:155
+#: src/prefs/classicHighlightDialog.js:201
 msgid "Use Icon Dominant Color"
 msgstr "Использовать доминирующий цвет значка"
 
-#: src/prefs/classicHighlightDialog.js:163
+#: src/prefs/classicHighlightDialog.js:209
 msgid "Custom Focus Highlight Color"
 msgstr "Пользовательский цвет подсветки фокуса"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:218
 msgid "Focus Highlight Opacity"
 msgstr "Непрозрачность подсветки фокуса"
 
-#: src/prefs/classicHighlightDialog.js:173
+#: src/prefs/classicHighlightDialog.js:219
 msgid "Opacity percentage"
 msgstr "Непрозрачность в процентах"
 
@@ -1911,7 +1925,7 @@ msgid "GNOME workspace overview button"
 msgstr "Кнопка обзора рабочих столов GNOME"
 
 #: src/prefs/panelItemsPage.js:227 src/prefs/dockItemsPage.js:80
-#: src/startMenu/startButtonController.js:1047
+#: src/startMenu/startButtonController.js:1056
 msgid "Applications"
 msgstr "Приложения"
 
@@ -3293,26 +3307,26 @@ msgstr "Открыть"
 msgid "Trash"
 msgstr "Корзина"
 
-#: src/taskbar/taskbarAppearanceController.js:661
-#: src/taskbar/taskbarController.js:1392 src/taskbar/taskbarController.js:1394
+#: src/taskbar/taskbarAppearanceController.js:691
+#: src/taskbar/taskbarController.js:1419 src/taskbar/taskbarController.js:1421
 msgid "running"
 msgstr "запущено"
 
-#: src/startMenu/startButtonController.js:553
+#: src/startMenu/startButtonController.js:559
 msgid "Start Menu Settings"
 msgstr "Настройки меню «Пуск»"
 
-#: src/startMenu/startButtonController.js:558
+#: src/startMenu/startButtonController.js:564
 #: src/panel/panelInteractionController.js:155
 msgid "Dock Settings"
 msgstr "Параметры Dock"
 
-#: src/startMenu/startButtonController.js:563
+#: src/startMenu/startButtonController.js:569
 #: src/panel/panelInteractionController.js:155
 msgid "Taskbar Settings"
 msgstr "Настройки панели задач"
 
-#: src/startMenu/startButtonController.js:1047
+#: src/startMenu/startButtonController.js:1056
 msgid "Start"
 msgstr "Пуск"
 

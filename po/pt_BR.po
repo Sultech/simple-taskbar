@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 02:25+0100\n"
+"POT-Creation-Date: 2026-09-18 02:10+0100\n"
 "PO-Revision-Date: 2026-08-22 12:38-0300\n"
 "Last-Translator: Eduardo Soares <edurbs@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -1023,92 +1023,107 @@ msgstr "Padrão do GNOME"
 msgid "Magic Lamp"
 msgstr "Lâmpada mágica"
 
-#: src/prefs/classicHighlightDialog.js:32
-#: src/prefs/classicHighlightDialog.js:41
+#: src/prefs/classicHighlightDialog.js:36
+#: src/prefs/classicHighlightDialog.js:45
 msgid "Effect Options"
 msgstr "Opções de efeito"
 
-#: src/prefs/classicHighlightDialog.js:56
+#: src/prefs/classicHighlightDialog.js:60
 msgid "Effect Size"
 msgstr "Tamanho do efeito"
 
-#: src/prefs/classicHighlightDialog.js:58
+#: src/prefs/classicHighlightDialog.js:62
 msgid "Set how far the effect reaches across the panel"
 msgstr "Defina o quanto o efeito se estende pelo painel"
 
-#: src/prefs/classicHighlightDialog.js:74
+#: src/prefs/classicHighlightDialog.js:69
 msgid "Custom Effect Size"
 msgstr "Tamanho de efeito personalizado"
 
-#: src/prefs/classicHighlightDialog.js:76
+#: src/prefs/classicHighlightDialog.js:71
 msgid "Keep the effect a fixed size instead of following the panel thickness"
-msgstr "Manter o efeito com tamanho fixo em vez de seguir a espessura do painel"
+msgstr ""
+"Manter o efeito com tamanho fixo em vez de seguir a espessura do painel"
 
-#: src/prefs/classicHighlightDialog.js:85
+#: src/prefs/classicHighlightDialog.js:91
+#: src/prefs/classicHighlightDialog.js:130
 msgid "Effect Width"
 msgstr "Largura do efeito"
 
-#: src/prefs/classicHighlightDialog.js:85
+#: src/prefs/classicHighlightDialog.js:91
+#: src/prefs/classicHighlightDialog.js:130
 msgid "Effect Height"
 msgstr "Altura do efeito"
 
-#: src/prefs/classicHighlightDialog.js:86
+#: src/prefs/classicHighlightDialog.js:92
 msgid "Size across the panel in pixels"
 msgstr "Tamanho através do painel em pixels"
 
-#: src/prefs/classicHighlightDialog.js:101
+#: src/prefs/classicHighlightDialog.js:119
+msgid "Custom Effect Length"
+msgstr "Comprimento de efeito personalizado"
+
+#: src/prefs/classicHighlightDialog.js:121
+msgid "Grow the effect along the panel beyond the application icon"
+msgstr "Aumentar o efeito ao longo do painel além do ícone do aplicativo"
+
+#: src/prefs/classicHighlightDialog.js:131
+msgid "Size along the panel in pixels"
+msgstr "Tamanho ao longo do painel em pixels"
+
+#: src/prefs/classicHighlightDialog.js:147
 msgid "Hover Highlight"
 msgstr "Destaque ao passar o ponteiro"
 
-#: src/prefs/classicHighlightDialog.js:102
+#: src/prefs/classicHighlightDialog.js:148
 msgid "Customize the Classic hover and pressed effect"
 msgstr "Personalize o efeito clássico ao passar o ponteiro e ao pressionar"
 
-#: src/prefs/classicHighlightDialog.js:108
+#: src/prefs/classicHighlightDialog.js:154
 msgid "Highlight Hovering Application Icons"
 msgstr "Destacar ícones de aplicativos sob o ponteiro"
 
-#: src/prefs/classicHighlightDialog.js:116
+#: src/prefs/classicHighlightDialog.js:162
 msgid "Hover Highlight Color"
 msgstr "Cor do destaque ao passar o ponteiro"
 
-#: src/prefs/classicHighlightDialog.js:125
+#: src/prefs/classicHighlightDialog.js:171
 msgid "Pressed Highlight Color"
 msgstr "Cor do destaque ao pressionar"
 
-#: src/prefs/classicHighlightDialog.js:134
+#: src/prefs/classicHighlightDialog.js:180
 msgid "Hover Highlight Border Radius"
 msgstr "Raio da borda do destaque ao passar o ponteiro"
 
-#: src/prefs/classicHighlightDialog.js:135
+#: src/prefs/classicHighlightDialog.js:181
 msgid "Border radius in pixels"
 msgstr "Raio da borda em pixels"
 
-#: src/prefs/classicHighlightDialog.js:143
+#: src/prefs/classicHighlightDialog.js:189
 msgid "Focused Application Highlight"
 msgstr "Destaque do aplicativo em foco"
 
-#: src/prefs/classicHighlightDialog.js:144
+#: src/prefs/classicHighlightDialog.js:190
 msgid "Customize the effect for the focused application"
 msgstr "Personalize o efeito do aplicativo em foco"
 
-#: src/prefs/classicHighlightDialog.js:150
+#: src/prefs/classicHighlightDialog.js:196
 msgid "Highlight the Focused Application"
 msgstr "Destacar o aplicativo em foco"
 
-#: src/prefs/classicHighlightDialog.js:155
+#: src/prefs/classicHighlightDialog.js:201
 msgid "Use Icon Dominant Color"
 msgstr "Usar a cor dominante do ícone"
 
-#: src/prefs/classicHighlightDialog.js:163
+#: src/prefs/classicHighlightDialog.js:209
 msgid "Custom Focus Highlight Color"
 msgstr "Cor personalizada do destaque em foco"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:218
 msgid "Focus Highlight Opacity"
 msgstr "Opacidade do destaque em foco"
 
-#: src/prefs/classicHighlightDialog.js:173
+#: src/prefs/classicHighlightDialog.js:219
 msgid "Opacity percentage"
 msgstr "Porcentagem de opacidade"
 
@@ -1948,7 +1963,7 @@ msgid "GNOME workspace overview button"
 msgstr "Botão de panorâmica de espaços de trabalho do GNOME"
 
 #: src/prefs/panelItemsPage.js:227 src/prefs/dockItemsPage.js:80
-#: src/startMenu/startButtonController.js:1047
+#: src/startMenu/startButtonController.js:1056
 msgid "Applications"
 msgstr "Aplicativos"
 
@@ -3348,26 +3363,26 @@ msgstr "Abrir"
 msgid "Trash"
 msgstr "Lixeira"
 
-#: src/taskbar/taskbarAppearanceController.js:661
-#: src/taskbar/taskbarController.js:1392 src/taskbar/taskbarController.js:1394
+#: src/taskbar/taskbarAppearanceController.js:691
+#: src/taskbar/taskbarController.js:1419 src/taskbar/taskbarController.js:1421
 msgid "running"
 msgstr "em execução"
 
-#: src/startMenu/startButtonController.js:553
+#: src/startMenu/startButtonController.js:559
 msgid "Start Menu Settings"
 msgstr "Configurações do Menu Iniciar"
 
-#: src/startMenu/startButtonController.js:558
+#: src/startMenu/startButtonController.js:564
 #: src/panel/panelInteractionController.js:155
 msgid "Dock Settings"
 msgstr "Configurações do Dock"
 
-#: src/startMenu/startButtonController.js:563
+#: src/startMenu/startButtonController.js:569
 #: src/panel/panelInteractionController.js:155
 msgid "Taskbar Settings"
 msgstr "Configurações da barra de tarefas"
 
-#: src/startMenu/startButtonController.js:1047
+#: src/startMenu/startButtonController.js:1056
 msgid "Start"
 msgstr "Iniciar"
 

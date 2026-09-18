@@ -3,10 +3,16 @@
 
 import {
     runningIndicatorBottomReserve,
+    runningIndicatorLeftReserve,
+    runningIndicatorRightReserve,
     runningIndicatorTopReserve,
 } from './runningIndicatorSettings.js';
 import {setInteger} from './settingsUtils.js';
-import {HIGHLIGHT_SIZE_SETTINGS} from './classicHighlightSettings.js';
+import {
+    HIGHLIGHT_LENGTH_SETTINGS,
+    HIGHLIGHT_SIZE_SETTINGS,
+} from './classicHighlightSettings.js';
+import {panelIsVertical} from './panelPositionUtils.js';
 
 export const MIN_PANEL_HEIGHT = 30;
 export const MAX_PANEL_HEIGHT = 175;
@@ -22,6 +28,65 @@ export const GLASS_VERTICAL_INSET = 3;
 export const MIN_HIGHLIGHT_SIZE = 8;
 
 export const MAX_HIGHLIGHT_SIZE = MAX_PANEL_HEIGHT + 1;
+
+export const MAX_HIGHLIGHT_LENGTH = 256;
+
+export function matchHighlightSizeParity(size, iconSize) {
+    return size - Math.abs(size - iconSize) % 2;
+}
+
+function raiseToIconParity(extent, iconSize) {
+    return extent + Math.abs(extent - iconSize) % 2;
+}
+
+export function highlightSizeLowerBound(iconSize) {
+    return raiseToIconParity(MIN_HIGHLIGHT_SIZE, iconSize);
+}
+
+export function highlightSizeUpperBound(iconSize) {
+    return matchHighlightSizeParity(MAX_HIGHLIGHT_SIZE, iconSize);
+}
+
+export function taskbarAppLabelsVisible(settings) {
+    return !panelIsVertical(settings) &&
+        settings.get_string('combine-app-buttons-mode') !== 'always' &&
+        !settings.get_boolean('hide-app-labels');
+}
+
+export function taskbarHighlightLength(settings, iconSize) {
+    if (settings.get_boolean('windows-xp-theme-enabled') ||
+        !settings.get_boolean(HIGHLIGHT_LENGTH_SETTINGS.enabled) ||
+        taskbarAppLabelsVisible(settings)) {
+        return 0;
+    }
+
+    return matchHighlightSizeParity(
+        settings.get_int(HIGHLIGHT_LENGTH_SETTINGS.size),
+        iconSize
+    );
+}
+
+function highlightMainAxisReserve(settings) {
+    const position = settings.get_string('running-indicator-position');
+    if (panelIsVertical(settings)) {
+        return runningIndicatorTopReserve(settings, position) +
+            runningIndicatorBottomReserve(settings, position);
+    }
+
+    return runningIndicatorLeftReserve(settings, position) +
+        runningIndicatorRightReserve(settings, position);
+}
+
+export function highlightLengthLowerBound(settings, iconSize) {
+    return raiseToIconParity(
+        taskbarIconButtonWidth(iconSize) + highlightMainAxisReserve(settings),
+        iconSize
+    );
+}
+
+export function highlightLengthUpperBound(iconSize) {
+    return matchHighlightSizeParity(MAX_HIGHLIGHT_LENGTH, iconSize);
+}
 
 export function iconEdgePadding(settings) {
     if (settings.get_boolean('windows-xp-theme-enabled'))
@@ -56,22 +121,6 @@ export function taskbarVisualPanelHeight(
 
     const reserve = iconEdgeReserve(settings);
     return iconSize + reserve + reserve % 2;
-}
-
-export function matchHighlightSizeParity(size, iconSize) {
-    return size - Math.abs(size - iconSize) % 2;
-}
-
-function raiseToIconParity(extent, iconSize) {
-    return extent + Math.abs(extent - iconSize) % 2;
-}
-
-export function highlightSizeLowerBound(iconSize) {
-    return raiseToIconParity(MIN_HIGHLIGHT_SIZE, iconSize);
-}
-
-export function highlightSizeUpperBound(iconSize) {
-    return matchHighlightSizeParity(MAX_HIGHLIGHT_SIZE, iconSize);
 }
 
 export function taskbarGlassHeight(

@@ -9,13 +9,17 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
     HIGHLIGHT_DIALOG_SETTING_KEYS,
+    HIGHLIGHT_LENGTH_SETTINGS,
     HIGHLIGHT_SIZE_SETTINGS,
     TASKBAR_HIGHLIGHT_STYLE,
 } from '../shared/classicHighlightSettings.js';
 import {
+    highlightLengthLowerBound,
+    highlightLengthUpperBound,
     highlightSizeLowerBound,
     highlightSizeUpperBound,
     matchHighlightSizeParity,
+    taskbarAppLabelsVisible,
 } from '../shared/panelSizing.js';
 import {
     addColorRow,
@@ -25,6 +29,53 @@ import {
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {activePanelIsVertical} from './panelAxis.js';
+
+function addHighlightExtentRows(group, settings, connectSettings, {
+    keys,
+    iconSize,
+    switchTitle,
+    switchSubtitle,
+    rowTitle,
+    rowSubtitle,
+    lower,
+    upper,
+    available,
+}) {
+    const stored = settings.get_int(keys.size);
+    const aligned = Math.max(
+        lower,
+        matchHighlightSizeParity(stored, iconSize)
+    );
+    if (aligned !== stored)
+        settings.set_int(keys.size, aligned);
+
+    const toggle = createSwitchRow(settings, {
+        key: keys.enabled,
+        title: switchTitle,
+        subtitle: switchSubtitle,
+    });
+    group.add(toggle);
+    const row = addSpinRow(
+        group,
+        settings,
+        {
+            key: keys.size,
+            title: rowTitle,
+            subtitle: rowSubtitle,
+            lower,
+            upper,
+            step: 2,
+        },
+        connectSettings
+    );
+    const syncSensitivity = () => {
+        toggle.sensitive = available;
+        row.sensitive = available && toggle.active;
+    };
+    toggle.connect('notify::active', syncSensitivity);
+    syncSensitivity();
+    return {toggle, row};
+}
 
 export function createClassicHighlightOptionsButton(settings) {
     return createPreferencesDialogButton(
@@ -61,41 +112,42 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         content.append(sizeGroup);
 
         const iconSize = settings.get_int('icon-size');
-        const sizeLower = highlightSizeLowerBound(iconSize);
-        const storedSize = settings.get_int(HIGHLIGHT_SIZE_SETTINGS.size);
-        const alignedSize = Math.max(
-            sizeLower,
-            matchHighlightSizeParity(storedSize, iconSize)
-        );
-        if (alignedSize !== storedSize)
-            settings.set_int(HIGHLIGHT_SIZE_SETTINGS.size, alignedSize);
-        const sizeSwitch = createSwitchRow(settings, {
-            key: HIGHLIGHT_SIZE_SETTINGS.enabled,
-            title: _('Custom Effect Size'),
-            subtitle: _(
-                'Keep the effect a fixed size instead of following the panel thickness'
-            ),
-        });
-        sizeGroup.add(sizeSwitch);
-        const sizeRow = addSpinRow(
+        addHighlightExtentRows(
             sizeGroup,
             settings,
+            connectSettings,
             {
-                key: HIGHLIGHT_SIZE_SETTINGS.size,
-                title: vertical ? _('Effect Width') : _('Effect Height'),
-                subtitle: _('Size across the panel in pixels'),
-                lower: sizeLower,
+                keys: HIGHLIGHT_SIZE_SETTINGS,
+                iconSize,
+                switchTitle: _('Custom Effect Size'),
+                switchSubtitle: _(
+                    'Keep the effect a fixed size instead of following the panel thickness'
+                ),
+                rowTitle: vertical ? _('Effect Width') : _('Effect Height'),
+                rowSubtitle: _('Size across the panel in pixels'),
+                lower: highlightSizeLowerBound(iconSize),
                 upper: highlightSizeUpperBound(iconSize),
-                step: 2,
-            },
-            connectSettings
+                available: true,
+            }
         );
-
-        const syncSizeSensitivity = () => {
-            sizeRow.sensitive = sizeSwitch.active;
-        };
-        sizeSwitch.connect('notify::active', syncSizeSensitivity);
-        syncSizeSensitivity();
+        addHighlightExtentRows(
+            sizeGroup,
+            settings,
+            connectSettings,
+            {
+                keys: HIGHLIGHT_LENGTH_SETTINGS,
+                iconSize,
+                switchTitle: _('Custom Effect Length'),
+                switchSubtitle: _(
+                    'Grow the effect along the panel beyond the application icon'
+                ),
+                rowTitle: vertical ? _('Effect Height') : _('Effect Width'),
+                rowSubtitle: _('Size along the panel in pixels'),
+                lower: highlightLengthLowerBound(settings, iconSize),
+                upper: highlightLengthUpperBound(iconSize),
+                available: !taskbarAppLabelsVisible(settings),
+            }
+        );
 
         const hoverGroup = new Adw.PreferencesGroup({
             title: _('Hover Highlight'),
