@@ -138,6 +138,19 @@ for (const profile of AXIS_PROFILE_KEYS.values()) {
     MODE_SETTING_KEYS.add(profile.saved);
 }
 
+export const PANEL_PROFILE_STATE_KEYS = Object.freeze([
+    'active-panel-mode',
+    'active-panel-axis',
+    'active-dock-axis',
+    'panel-mode-profiles-initialized',
+    'panel-axis-profiles-initialized',
+    'dock-axis-profiles-initialized',
+    'dock-mode-initialized',
+    'windows-xp-previous-mode',
+    ...[...PROFILE_KEYS.values(), ...AXIS_PROFILE_KEYS.values()]
+        .flatMap(profile => [profile.settings, profile.saved]),
+]);
+
 const PANEL_AXIS_DOMAIN = Object.freeze({
     positionKey: 'panel-position',
     activeAxisKey: 'active-panel-axis',

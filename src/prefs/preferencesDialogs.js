@@ -9,6 +9,9 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {normalizeAccelerator} from '../shared/keybindingUtils.js';
+import {
+    PANEL_PROFILE_STATE_KEYS,
+} from '../shared/panelModeProfiles.js';
 
 const RESET_BATCH_SIZE = 255;
 
@@ -32,22 +35,38 @@ export function confirmReset(window, createSettings) {
             return;
 
         const resetSettings = createSettings();
+        const keptKeys = new Set([
+            'start-menu-displaced-overlay-key',
+            'start-menu-pinned-apps',
+            'panel-profile-transition',
+        ]);
+        const profileStateKeys = new Set(PANEL_PROFILE_STATE_KEYS);
+        resetSettings.set_boolean('panel-profile-transition', true);
         resetSettings.delay();
         let batchSize = 0;
-        for (const key of resetSettings.settings_schema.list_keys()) {
-            if (key === 'start-menu-displaced-overlay-key' ||
-                key === 'start-menu-pinned-apps') {
-                continue;
-            }
+        const resetKey = key => {
             resetSettings.reset(key);
             batchSize++;
             if (batchSize === RESET_BATCH_SIZE) {
                 resetSettings.apply();
                 batchSize = 0;
             }
+        };
+        for (const key of resetSettings.settings_schema.list_keys()) {
+            if (keptKeys.has(key) || profileStateKeys.has(key))
+                continue;
+
+            resetKey(key);
         }
         if (batchSize > 0)
             resetSettings.apply();
+        batchSize = 0;
+        for (const key of PANEL_PROFILE_STATE_KEYS)
+            resetKey(key);
+        if (batchSize > 0)
+            resetSettings.apply();
+        resetSettings.reset('panel-profile-transition');
+        resetSettings.apply();
     });
 }
 
