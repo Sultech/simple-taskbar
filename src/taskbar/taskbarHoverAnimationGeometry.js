@@ -155,8 +155,10 @@ export class TaskbarHoverAnimationGeometry {
 
         const [x, y] = actor.get_transformed_position();
         const [width, height] = actor.get_transformed_size();
-        if (width <= 0 || height <= 0)
+        if (![x, y, width, height].every(Number.isFinite) ||
+            width <= 0 || height <= 0) {
             return null;
+        }
 
         return {x, y, width, height};
     }
