@@ -8,8 +8,15 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
-    CLASSIC_HIGHLIGHT_SETTING_KEYS,
+    HIGHLIGHT_DIALOG_SETTING_KEYS,
+    HIGHLIGHT_SIZE_SETTINGS,
+    TASKBAR_HIGHLIGHT_STYLE,
 } from '../shared/classicHighlightSettings.js';
+import {
+    highlightSizeLowerBound,
+    highlightSizeUpperBound,
+    matchHighlightSizeParity,
+} from '../shared/panelSizing.js';
 import {
     addColorRow,
     addSpinRow,
@@ -17,11 +24,12 @@ import {
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {activePanelIsVertical} from './panelAxis.js';
 
 export function createClassicHighlightOptionsButton(settings) {
     return createPreferencesDialogButton(
         settings,
-        _('Classic Effect Options'),
+        _('Effect Options'),
         ClassicHighlightOptionsDialog
     );
 }
@@ -30,7 +38,7 @@ export const ClassicHighlightOptionsDialog = GObject.registerClass(
 class ClassicHighlightOptionsDialog extends Adw.Window {
     _init({settings, parent}) {
         super._init({
-            title: _('Classic Effect Options'),
+            title: _('Effect Options'),
             transient_for: parent,
             modal: true,
             default_width: 640,
@@ -40,6 +48,54 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         this._settings = settings;
         const {content, connectSettings} =
             createPreferencesDialogContent(this);
+        const vertical = activePanelIsVertical(settings);
+        const isClassic = settings.get_string('taskbar-highlight-style') ===
+            TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+
+        const sizeGroup = new Adw.PreferencesGroup({
+            title: _('Effect Size'),
+            description: _(
+                'Set how far the effect reaches across the panel'
+            ),
+        });
+        content.append(sizeGroup);
+
+        const iconSize = settings.get_int('icon-size');
+        const sizeLower = highlightSizeLowerBound(iconSize);
+        const storedSize = settings.get_int(HIGHLIGHT_SIZE_SETTINGS.size);
+        const alignedSize = Math.max(
+            sizeLower,
+            matchHighlightSizeParity(storedSize, iconSize)
+        );
+        if (alignedSize !== storedSize)
+            settings.set_int(HIGHLIGHT_SIZE_SETTINGS.size, alignedSize);
+        const sizeSwitch = createSwitchRow(settings, {
+            key: HIGHLIGHT_SIZE_SETTINGS.enabled,
+            title: _('Custom Effect Size'),
+            subtitle: _(
+                'Keep the effect a fixed size instead of following the panel thickness'
+            ),
+        });
+        sizeGroup.add(sizeSwitch);
+        const sizeRow = addSpinRow(
+            sizeGroup,
+            settings,
+            {
+                key: HIGHLIGHT_SIZE_SETTINGS.size,
+                title: vertical ? _('Effect Width') : _('Effect Height'),
+                subtitle: _('Size across the panel in pixels'),
+                lower: sizeLower,
+                upper: highlightSizeUpperBound(iconSize),
+                step: 2,
+            },
+            connectSettings
+        );
+
+        const syncSizeSensitivity = () => {
+            sizeRow.sensitive = sizeSwitch.active;
+        };
+        sizeSwitch.connect('notify::active', syncSizeSensitivity);
+        syncSizeSensitivity();
 
         const hoverGroup = new Adw.PreferencesGroup({
             title: _('Hover Highlight'),
@@ -159,10 +215,12 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         );
         syncFocusSensitivity();
 
+        hoverGroup.sensitive = isClassic;
+        focusGroup.sensitive = isClassic;
     }
 
     _reset() {
-        for (const key of CLASSIC_HIGHLIGHT_SETTING_KEYS)
+        for (const key of HIGHLIGHT_DIALOG_SETTING_KEYS)
             this._settings.reset(key);
     }
 }

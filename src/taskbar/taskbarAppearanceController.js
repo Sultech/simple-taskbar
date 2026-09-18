@@ -294,6 +294,7 @@ export class TaskbarAppearanceController {
 
     glassHeight(panelHeight = this.visualPanelHeight()) {
         return taskbarGlassHeight(
+            this._settings,
             panelHeight,
             this._settings.get_boolean('windows-xp-theme-enabled'),
             this._getIconSize()

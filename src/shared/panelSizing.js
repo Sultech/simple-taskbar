@@ -6,6 +6,7 @@ import {
     runningIndicatorTopReserve,
 } from './runningIndicatorSettings.js';
 import {setInteger} from './settingsUtils.js';
+import {HIGHLIGHT_SIZE_SETTINGS} from './classicHighlightSettings.js';
 
 export const MIN_PANEL_HEIGHT = 30;
 export const MAX_PANEL_HEIGHT = 175;
@@ -17,6 +18,10 @@ export const RUNNING_INDICATOR_CLEARANCE = 5;
 export const DOCK_FLOATING_CHROME_RESERVE = 5;
 export const DOCK_EDGE_GAP = 4;
 export const GLASS_VERTICAL_INSET = 3;
+
+export const MIN_HIGHLIGHT_SIZE = 8;
+
+export const MAX_HIGHLIGHT_SIZE = MAX_PANEL_HEIGHT + 1;
 
 export function iconEdgePadding(settings) {
     if (settings.get_boolean('windows-xp-theme-enabled'))
@@ -57,14 +62,36 @@ export function matchHighlightSizeParity(size, iconSize) {
     return size - Math.abs(size - iconSize) % 2;
 }
 
-export function taskbarGlassHeight(panelHeight, windowsXpTheme, iconSize) {
+function raiseToIconParity(extent, iconSize) {
+    return extent + Math.abs(extent - iconSize) % 2;
+}
+
+export function highlightSizeLowerBound(iconSize) {
+    return raiseToIconParity(MIN_HIGHLIGHT_SIZE, iconSize);
+}
+
+export function highlightSizeUpperBound(iconSize) {
+    return matchHighlightSizeParity(MAX_HIGHLIGHT_SIZE, iconSize);
+}
+
+export function taskbarGlassHeight(
+    settings,
+    panelHeight,
+    windowsXpTheme,
+    iconSize
+) {
     if (windowsXpTheme)
         return panelHeight - 5;
 
-    return matchHighlightSizeParity(
-        Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2),
-        iconSize
-    );
+    const insetExtent = Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2);
+    if (!settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.enabled))
+        return matchHighlightSizeParity(insetExtent, iconSize);
+
+    const requested = settings.get_int(HIGHLIGHT_SIZE_SETTINGS.size);
+    if (requested >= panelHeight)
+        return panelHeight;
+
+    return matchHighlightSizeParity(requested, iconSize);
 }
 
 export function taskbarGlassCrossOffset(panelHeight, glassExtent, parityOffset) {

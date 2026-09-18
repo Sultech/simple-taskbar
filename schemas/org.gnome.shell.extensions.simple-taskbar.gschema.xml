@@ -110,6 +110,15 @@
       <default>'glass'</default>
       <summary>Application hover and focus effect</summary>
     </key>
+    <key name="taskbar-highlight-size-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom hover and focus effect size</summary>
+    </key>
+    <key name="taskbar-highlight-size" type="i">
+      <range min="8" max="176"/>
+      <default>32</default>
+      <summary>Hover and focus effect size across the panel</summary>
+    </key>
     <key name="classic-highlight-appicon-hover" type="b">
       <default>true</default>
       <summary>Highlight hovering application icons</summary>

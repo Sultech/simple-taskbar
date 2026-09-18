@@ -6,6 +6,15 @@ export const TASKBAR_HIGHLIGHT_STYLE = Object.freeze({
     CLASSIC: 'classic',
 });
 
+export const HIGHLIGHT_SIZE_SETTINGS = Object.freeze({
+    enabled: 'taskbar-highlight-size-enabled',
+    size: 'taskbar-highlight-size',
+});
+
+export const HIGHLIGHT_SIZE_SETTING_KEYS = Object.freeze(
+    Object.values(HIGHLIGHT_SIZE_SETTINGS)
+);
+
 export const CLASSIC_HIGHLIGHT_SETTINGS = Object.freeze({
     hoverEnabled: 'classic-highlight-appicon-hover',
     hoverColor: 'classic-highlight-appicon-hover-background-color',
@@ -23,5 +32,10 @@ export const CLASSIC_HIGHLIGHT_SETTING_KEYS = Object.freeze(
 
 export const TASKBAR_HIGHLIGHT_SETTING_KEYS = Object.freeze([
     'taskbar-highlight-style',
+    ...CLASSIC_HIGHLIGHT_SETTING_KEYS,
+]);
+
+export const HIGHLIGHT_DIALOG_SETTING_KEYS = Object.freeze([
+    ...HIGHLIGHT_SIZE_SETTING_KEYS,
     ...CLASSIC_HIGHLIGHT_SETTING_KEYS,
 ]);

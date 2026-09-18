@@ -6,7 +6,10 @@ import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {axisPanelPositions} from './panelAxis.js';
+import {
+    activePanelPosition,
+    axisPanelPositions,
+} from './panelAxis.js';
 import {
     createApplicationGroupingOptionsButton,
 } from './applicationGroupingDialog.js';
@@ -140,16 +143,8 @@ function addApplicationIconControls({
     const syncClassicOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         highlightStyleRow.sensitive = enabled;
-        classicOptionsButton.sensitive = enabled &&
-            settings.get_string(
-                'taskbar-highlight-style'
-            ) === TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+        classicOptionsButton.sensitive = enabled;
     };
-    connectSettings(
-        settings,
-        'changed::taskbar-highlight-style',
-        syncClassicOptionsSensitivity
-    );
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
@@ -490,12 +485,9 @@ function addIndicatorControls({
                 !settings.get_boolean('dock-mode'));
         const enabled = customIndicatorColorsSwitch.active;
         indicatorPositionRow.sensitive = !blocked;
-        const panelPosition = settings.get_boolean('dock-mode')
-            ? settings.get_string('dock-position')
-            : settings.get_string('panel-position');
         reserveOptionsButton.sensitive = !blocked &&
             runningIndicatorReserveIsPossible(
-                panelPosition,
+                activePanelPosition(settings),
                 settings.get_string('running-indicator-position')
             );
         indicatorStyleRow.sensitive = !blocked;

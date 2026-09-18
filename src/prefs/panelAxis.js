@@ -5,6 +5,17 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
+export function activePanelPosition(settings) {
+    return settings.get_boolean('dock-mode')
+        ? settings.get_string('dock-position')
+        : settings.get_string('panel-position');
+}
+
+export function activePanelIsVertical(settings) {
+    const position = activePanelPosition(settings);
+    return position === 'left' || position === 'right';
+}
+
 export function axisPanelPositions(settings, panelPositions) {
     if (!panelIsVertical(settings))
         return panelPositions;

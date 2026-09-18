@@ -49,6 +49,7 @@ import {
     APPLICATION_CLICK_ANIMATION,
 } from '../shared/applicationClickAnimation.js';
 import {
+    HIGHLIGHT_SIZE_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
 } from '../shared/classicHighlightSettings.js';
 import {
@@ -664,6 +665,7 @@ export class TaskbarController {
             'running-indicator-size',
             'running-indicator-full-length',
             ...RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
+            ...HIGHLIGHT_SIZE_SETTING_KEYS,
         ]) {
             this._settings.connectObject(
                 `changed::${key}`,

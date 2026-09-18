@@ -40,6 +40,7 @@ import {
 } from '../shared/panelSizing.js';
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
+    HIGHLIGHT_SIZE_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_STYLE,
 } from '../shared/classicHighlightSettings.js';
@@ -259,6 +260,7 @@ export class StartButtonController {
             floatingDock
         );
         const glassHeight = taskbarGlassHeight(
+            this._settings,
             visualPanelHeight,
             windowsXpTheme,
             iconSize
@@ -643,7 +645,10 @@ export class StartButtonController {
             'changed::running-indicator-position', syncAppearance,
             this._signalHolder
         );
-        for (const key of RUNNING_INDICATOR_RESERVE_SETTING_KEYS) {
+        for (const key of [
+            ...RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
+            ...HIGHLIGHT_SIZE_SETTING_KEYS,
+        ]) {
             this._settings.connectObject(
                 `changed::${key}`,
                 syncAppearance,
