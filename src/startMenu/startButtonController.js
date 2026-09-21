@@ -49,11 +49,10 @@ import {
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
     RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
-    runningIndicatorBottomReserve,
     runningIndicatorLeftReserve,
     runningIndicatorReserveOffset,
     runningIndicatorRightReserve,
-    runningIndicatorTopReserve,
+    runningIndicatorVerticalOffset,
 } from '../shared/runningIndicatorSettings.js';
 import {
     createTaskbarSeparator,
@@ -332,16 +331,7 @@ export class StartButtonController {
             ? 0
             : runningIndicatorReserveOffset(leftReserve, rightReserve);
         this._icon.translation_y = vertical
-            ? runningIndicatorReserveOffset(
-                runningIndicatorTopReserve(
-                    this._settings,
-                    indicatorPosition
-                ),
-                runningIndicatorBottomReserve(
-                    this._settings,
-                    indicatorPosition
-                )
-            )
+            ? runningIndicatorVerticalOffset(this._settings, indicatorPosition)
             : 0;
         const startButtonPosition = this._settings.get_boolean(
             'start-button-follow-app-alignment'

@@ -16,9 +16,9 @@ import {
     RUNNING_INDICATOR_LENGTH_RATIO,
     runningIndicatorBottomReserve,
     runningIndicatorFillsLength,
+    runningIndicatorHorizontalOffset,
     runningIndicatorLeftReserve,
     runningIndicatorPositionIsHorizontal,
-    runningIndicatorReserveOffset,
     runningIndicatorRightReserve,
     runningIndicatorTopReserve,
 } from '../shared/runningIndicatorSettings.js';
@@ -122,14 +122,6 @@ export class TaskbarAppearanceController {
             ? this.verticalItemExtent()
             : visualPanelHeight;
         const indicatorPosition = this.indicatorPosition();
-        const leftReserve = runningIndicatorLeftReserve(
-            this._settings,
-            indicatorPosition
-        );
-        const rightReserve = runningIndicatorRightReserve(
-            this._settings,
-            indicatorPosition
-        );
 
         this.syncLauncherIconPosition(item);
         item.setVertical(vertical);
@@ -156,7 +148,10 @@ export class TaskbarAppearanceController {
         const parityOffset = this.crossAxisParityOffset();
         item._taskbarButtonContent.translation_x = vertical
             ? parityOffset
-            : runningIndicatorReserveOffset(leftReserve, rightReserve);
+            : runningIndicatorHorizontalOffset(
+                this._settings,
+                indicatorPosition
+            );
         item._taskbarVisual.y_align = vertical
             ? Clutter.ActorAlign.CENTER
             : Clutter.ActorAlign.FILL;

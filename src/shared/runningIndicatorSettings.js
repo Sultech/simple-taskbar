@@ -105,3 +105,17 @@ export function runningIndicatorReserveOffset(startReserve, endReserve) {
     const difference = startReserve - endReserve;
     return Math.sign(difference) * Math.round(Math.abs(difference) / 2);
 }
+
+export function runningIndicatorHorizontalOffset(settings, position) {
+    return runningIndicatorReserveOffset(
+        runningIndicatorLeftReserve(settings, position),
+        runningIndicatorRightReserve(settings, position)
+    );
+}
+
+export function runningIndicatorVerticalOffset(settings, position) {
+    return runningIndicatorReserveOffset(
+        runningIndicatorTopReserve(settings, position),
+        runningIndicatorBottomReserve(settings, position)
+    );
+}
