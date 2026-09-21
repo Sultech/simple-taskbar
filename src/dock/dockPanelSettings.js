@@ -123,7 +123,28 @@ export class DockPanelSettings {
     constructor(settings) {
         this._settings = settings;
         this._runtimeIconSize = null;
+        this._cache = new Map();
+        this._changedId = settings.connect(
+            'changed',
+            () => this._cache.clear()
+        );
         this.isDock = true;
+    }
+
+    destroy() {
+        this._settings.disconnect(this._changedId);
+        this._changedId = 0;
+        this._cache.clear();
+    }
+
+    _cached(type, key, compute) {
+        const cacheKey = `${type}:${key}`;
+        if (this._cache.has(cacheKey))
+            return this._cache.get(cacheKey);
+
+        const value = compute();
+        this._cache.set(cacheKey, value);
+        return value;
     }
 
     getConfiguredIconSize() {
@@ -132,32 +153,44 @@ export class DockPanelSettings {
 
     setRuntimeIconSize(iconSize) {
         this._runtimeIconSize = iconSize;
+        this._cache.clear();
     }
 
     get_boolean(key) {
         if (key === 'default-gnome-panel') {
             return false;
         }
-        return this._settings.get_boolean(dockSettingKey(key));
+        return this._cached('boolean', key, () =>
+            this._settings.get_boolean(dockSettingKey(key))
+        );
     }
 
     get_string(key) {
-        if (key === 'app-alignment' &&
-            !this._settings.get_boolean('dock-panel-mode')) {
-            return 'center';
-        }
-        if (key === 'start-button-position' &&
-            !this._settings.get_boolean('dock-panel-mode')) {
+        if ((key === 'app-alignment' ||
+            key === 'start-button-position') &&
+            !this.get_boolean('dock-panel-mode')) {
             return 'center';
         }
 
-        return this._settings.get_string(dockSettingKey(key));
+        return this._cached('string', key, () =>
+            this._settings.get_string(dockSettingKey(key))
+        );
     }
 
     get_int(...args) {
         if (args[0] === 'icon-size' && this._runtimeIconSize !== null)
             return this._runtimeIconSize;
 
+        if (args.length === 1) {
+            return this._cached('int', args[0], () =>
+                this._computeInt(args[0])
+            );
+        }
+
+        return this._computeInt(...args);
+    }
+
+    _computeInt(...args) {
         if (args[0] === 'panel-height') {
             const iconSize = this.get_int('icon-size');
             if (!this._settings.get_boolean('dock-panel-mode'))

@@ -33,6 +33,7 @@ export class DockPanelManager extends PanelManagerBase {
     constructor(params) {
         super(params);
         this._blurMyShellResetSyncId = 0;
+        this._panelSettings = [];
     }
 
     enable() {
@@ -119,9 +120,10 @@ export class DockPanelManager extends PanelManagerBase {
             ? Main.layoutManager.monitors
             : [Main.layoutManager.primaryMonitor];
         for (const monitor of monitors) {
+            const dockSettings = new DockPanelSettings(this._settings);
             const panel = new SecondaryPanelController({
                 extensionDir: this._extensionDir,
-                settings: new DockPanelSettings(this._settings),
+                settings: dockSettings,
                 appSystem: this._appSystem,
                 tracker: this._tracker,
                 favorites: this._favorites,
@@ -133,6 +135,7 @@ export class DockPanelManager extends PanelManagerBase {
                 mainPanelSettings: this._settings,
             });
             this._panels.push(panel);
+            this._panelSettings.push(dockSettings);
             panel.enable();
             if (this._settings.get_boolean('dock-panel-blur-enabled'))
                 hidePanelBlurForPanel(panel.actor);
@@ -156,6 +159,9 @@ export class DockPanelManager extends PanelManagerBase {
             panel.destroy();
         }
         this._panels = [];
+        for (const settings of this._panelSettings)
+            settings.destroy();
+        this._panelSettings = [];
     }
 
     _queueBlurMyShellSyncAfterReset() {
