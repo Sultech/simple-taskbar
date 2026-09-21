@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 02:10+0100\n"
+"POT-Creation-Date: 2026-09-21 19:56+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -270,7 +270,7 @@ msgstr "Délai d’affichage"
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Durée pendant laquelle le curseur reste au bord, en millisecondes"
 
-#: src/prefs/autoHideDialog.js:98
+#: src/prefs/autoHideDialog.js:98 src/prefs/bottomHotEdgeRow.js:34
 msgid "Activation Pressure"
 msgstr "Pression d’activation"
 
@@ -1043,107 +1043,107 @@ msgstr "Valeur par défaut de GNOME"
 msgid "Magic Lamp"
 msgstr "Lampe magique"
 
-#: src/prefs/classicHighlightDialog.js:36
-#: src/prefs/classicHighlightDialog.js:45
+#: src/prefs/classicHighlightDialog.js:83
+#: src/prefs/classicHighlightDialog.js:92
 msgid "Effect Options"
 msgstr "Options d’effet"
 
-#: src/prefs/classicHighlightDialog.js:60
+#: src/prefs/classicHighlightDialog.js:107
 msgid "Effect Size"
 msgstr "Taille de l’effet"
 
-#: src/prefs/classicHighlightDialog.js:62
+#: src/prefs/classicHighlightDialog.js:109
 msgid "Set how far the effect reaches across the panel"
 msgstr "Définir jusqu’où l’effet s’étend en travers du panneau"
 
-#: src/prefs/classicHighlightDialog.js:69
+#: src/prefs/classicHighlightDialog.js:122
 msgid "Custom Effect Size"
 msgstr "Taille d’effet personnalisée"
 
-#: src/prefs/classicHighlightDialog.js:71
+#: src/prefs/classicHighlightDialog.js:124
 msgid "Keep the effect a fixed size instead of following the panel thickness"
 msgstr ""
 "Conserver une taille d’effet fixe au lieu de suivre l’épaisseur du panneau"
 
-#: src/prefs/classicHighlightDialog.js:91
-#: src/prefs/classicHighlightDialog.js:130
+#: src/prefs/classicHighlightDialog.js:126
+#: src/prefs/classicHighlightDialog.js:144
 msgid "Effect Width"
 msgstr "Largeur de l’effet"
 
-#: src/prefs/classicHighlightDialog.js:91
-#: src/prefs/classicHighlightDialog.js:130
+#: src/prefs/classicHighlightDialog.js:126
+#: src/prefs/classicHighlightDialog.js:144
 msgid "Effect Height"
 msgstr "Hauteur de l’effet"
 
-#: src/prefs/classicHighlightDialog.js:92
+#: src/prefs/classicHighlightDialog.js:127
 msgid "Size across the panel in pixels"
 msgstr "Taille en travers du panneau en pixels"
 
-#: src/prefs/classicHighlightDialog.js:119
+#: src/prefs/classicHighlightDialog.js:140
 msgid "Custom Effect Length"
 msgstr "Longueur d’effet personnalisée"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:142
 msgid "Grow the effect along the panel beyond the application icon"
 msgstr "Agrandir l’effet le long du panneau au-delà de l’icône d’application"
 
-#: src/prefs/classicHighlightDialog.js:131
+#: src/prefs/classicHighlightDialog.js:145
 msgid "Size along the panel in pixels"
 msgstr "Taille le long du panneau en pixels"
 
-#: src/prefs/classicHighlightDialog.js:147
+#: src/prefs/classicHighlightDialog.js:153
 msgid "Hover Highlight"
 msgstr "Surbrillance au survol"
 
-#: src/prefs/classicHighlightDialog.js:148
+#: src/prefs/classicHighlightDialog.js:154
 msgid "Customize the Classic hover and pressed effect"
 msgstr "Personnaliser l’effet classique au survol et à l’appui"
 
-#: src/prefs/classicHighlightDialog.js:154
+#: src/prefs/classicHighlightDialog.js:160
 msgid "Highlight Hovering Application Icons"
 msgstr "Mettre en surbrillance les icônes d’application survolées"
 
-#: src/prefs/classicHighlightDialog.js:162
+#: src/prefs/classicHighlightDialog.js:168
 msgid "Hover Highlight Color"
 msgstr "Couleur de surbrillance au survol"
 
-#: src/prefs/classicHighlightDialog.js:171
+#: src/prefs/classicHighlightDialog.js:177
 msgid "Pressed Highlight Color"
 msgstr "Couleur de surbrillance à l’appui"
 
-#: src/prefs/classicHighlightDialog.js:180
+#: src/prefs/classicHighlightDialog.js:186
 msgid "Hover Highlight Border Radius"
 msgstr "Rayon des angles de la surbrillance au survol"
 
-#: src/prefs/classicHighlightDialog.js:181
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Border radius in pixels"
 msgstr "Rayon des angles en pixels"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:195
 msgid "Focused Application Highlight"
 msgstr "Surbrillance de l’application active"
 
-#: src/prefs/classicHighlightDialog.js:190
+#: src/prefs/classicHighlightDialog.js:196
 msgid "Customize the effect for the focused application"
 msgstr "Personnaliser l’effet de l’application active"
 
-#: src/prefs/classicHighlightDialog.js:196
+#: src/prefs/classicHighlightDialog.js:202
 msgid "Highlight the Focused Application"
 msgstr "Mettre en surbrillance l’application active"
 
-#: src/prefs/classicHighlightDialog.js:201
+#: src/prefs/classicHighlightDialog.js:207
 msgid "Use Icon Dominant Color"
 msgstr "Utiliser la couleur dominante de l’icône"
 
-#: src/prefs/classicHighlightDialog.js:209
+#: src/prefs/classicHighlightDialog.js:215
 msgid "Custom Focus Highlight Color"
 msgstr "Couleur personnalisée de la surbrillance active"
 
-#: src/prefs/classicHighlightDialog.js:218
+#: src/prefs/classicHighlightDialog.js:224
 msgid "Focus Highlight Opacity"
 msgstr "Opacité de la surbrillance active"
 
-#: src/prefs/classicHighlightDialog.js:219
+#: src/prefs/classicHighlightDialog.js:225
 msgid "Opacity percentage"
 msgstr "Pourcentage d’opacité"
 
@@ -1557,6 +1557,45 @@ msgstr "Afficher le dock sur tous les moniteurs"
 #: src/prefs/dockBehaviorGroup.js:125
 msgid "Show the Dock on every connected monitor"
 msgstr "Afficher le Dock sur chaque écran connecté"
+
+#: src/prefs/bottomHotEdgeRow.js:15
+msgid "Bottom Hot Edge"
+msgstr "Bord chaud en bas"
+
+#: src/prefs/bottomHotEdgeRow.js:17
+msgid ""
+"Configure the bottom-edge gesture, pressure, and animation for toggling "
+"Overview"
+msgstr ""
+"Configurer le geste, la pression et l’animation du bord inférieur pour "
+"activer ou désactiver la vue d’ensemble"
+
+#: src/prefs/bottomHotEdgeRow.js:22
+msgid "Enable Bottom Hot Edge"
+msgstr "Activer la zone active inférieure"
+
+#: src/prefs/bottomHotEdgeRow.js:24
+msgid ""
+"Push the pointer against the bottom screen edge to toggle Overview. Turns "
+"off pressure reveal."
+msgstr ""
+"Pousser le curseur contre le bord inférieur de l’écran pour afficher la vue "
+"d’ensemble. Désactive l’affichage par pression."
+
+#: src/prefs/bottomHotEdgeRow.js:36
+msgid ""
+"Pixels the pointer must travel past the bottom edge before Overview activates"
+msgstr ""
+"Nombre de pixels que le curseur doit parcourir au-delà du bord inférieur "
+"avant que l’aperçu ne s’active"
+
+#: src/prefs/bottomHotEdgeRow.js:48
+msgid "Hot Edge Animation"
+msgstr "Animation du bord chaud"
+
+#: src/prefs/bottomHotEdgeRow.js:49
+msgid "Show a ripple when the bottom hot edge activates"
+msgstr "Afficher une ondulation à l'activation du bord chaud"
 
 #: src/prefs/locationsGroup.js:12
 msgid "Drive and Volume Options"
@@ -2188,11 +2227,11 @@ msgstr ""
 msgid "Match Thickness to Icon Size"
 msgstr "Adapter l’épaisseur à la taille des icônes"
 
-#: src/prefs/preferencesDialogs.js:17
+#: src/prefs/preferencesDialogs.js:20
 msgid "Reset all settings?"
 msgstr "Réinitialiser tous les réglages ?"
 
-#: src/prefs/preferencesDialogs.js:19
+#: src/prefs/preferencesDialogs.js:22
 msgid ""
 "This will restore taskbar and Start Menu settings. Pinned taskbar apps and "
 "Start Menu items, including folders and their order, will be kept."
@@ -2201,52 +2240,52 @@ msgstr ""
 "Les applications épinglées à la barre des tâches et les éléments du menu "
 "Démarrer, y compris les dossiers et leur ordre, seront conservés."
 
-#: src/prefs/preferencesDialogs.js:22 src/prefs/startIconChooser.js:141
+#: src/prefs/preferencesDialogs.js:25 src/prefs/startIconChooser.js:141
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/prefs/preferencesDialogs.js:23 src/prefs/preferencesDialogs.js:56
+#: src/prefs/preferencesDialogs.js:26 src/prefs/preferencesDialogs.js:75
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: src/prefs/preferencesDialogs.js:61
+#: src/prefs/preferencesDialogs.js:80
 msgid "Reset All Settings"
 msgstr "Réinitialiser tous les réglages"
 
-#: src/prefs/preferencesDialogs.js:62
+#: src/prefs/preferencesDialogs.js:81
 msgid ""
 "Restore defaults without changing pinned taskbar apps or Start Menu items"
 msgstr ""
 "Restaurer les valeurs par défaut sans modifier les applications épinglées à "
 "la barre des tâches ni les éléments du menu Démarrer"
 
-#: src/prefs/preferencesDialogs.js:65
+#: src/prefs/preferencesDialogs.js:84
 msgid "Reset…"
 msgstr "Réinitialiser…"
 
-#: src/prefs/preferencesDialogs.js:79
+#: src/prefs/preferencesDialogs.js:98
 msgid "Set Custom Shortcut"
 msgstr "Définir un raccourci personnalisé"
 
-#: src/prefs/preferencesDialogs.js:92
+#: src/prefs/preferencesDialogs.js:111
 msgid "Press a keyboard shortcut"
 msgstr "Veuillez saisir un raccourci clavier"
 
-#: src/prefs/preferencesDialogs.js:93
+#: src/prefs/preferencesDialogs.js:112
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "Appuyez sur Retour arrière pour l’effacer ou Échap pour annuler."
 
-#: src/prefs/preferencesDialogs.js:133
+#: src/prefs/preferencesDialogs.js:152
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 "Ce raccourci requiert une touche modificatrice. Veuillez essayer un autre "
 "raccourci."
 
-#: src/prefs/preferencesDialogs.js:147
+#: src/prefs/preferencesDialogs.js:166
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "Ce raccourci est déjà utilisé. Veuillez saisir un autre raccourci."
 
-#: src/prefs/preferencesDialogs.js:165
+#: src/prefs/preferencesDialogs.js:184
 msgid "Choose a Folder"
 msgstr "Sélectionner un dossier"
 
@@ -3203,51 +3242,51 @@ msgstr "Afficher sur le moniteur principal"
 msgid "Always display the switcher on the primary monitor"
 msgstr "Toujours afficher le sélecteur sur l’écran principal"
 
-#: src/startMenu/startMenuController.js:105
+#: src/startMenu/startMenuController.js:109
 msgid "Folder"
 msgstr "Dossier"
 
-#: src/startMenu/startMenuController.js:119
+#: src/startMenu/startMenuController.js:123
 msgid "Remove folder"
 msgstr "Supprimer le dossier"
 
-#: src/startMenu/startMenuController.js:734
+#: src/startMenu/startMenuController.js:740
 msgid "Type here to search"
 msgstr "Saisissez votre recherche ici"
 
-#: src/startMenu/startMenuController.js:818
-#: src/startMenu/startMenuController.js:926
+#: src/startMenu/startMenuController.js:824
+#: src/startMenu/startMenuController.js:932
 msgid "Pinned"
 msgstr "Épinglées"
 
-#: src/startMenu/startMenuController.js:823
-#: src/startMenu/startMenuController.js:1105
+#: src/startMenu/startMenuController.js:829
+#: src/startMenu/startMenuController.js:1111
 msgid "All apps"
 msgstr "Toutes les applications"
 
-#: src/startMenu/startMenuController.js:837
+#: src/startMenu/startMenuController.js:843
 msgid "Back"
 msgstr "Retour"
 
-#: src/startMenu/startMenuController.js:998
+#: src/startMenu/startMenuController.js:1004
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Choisir toutes les applications puis effectuer un clic droit sur une "
 "application pour l’épingler"
 
-#: src/startMenu/startMenuController.js:1006
+#: src/startMenu/startMenuController.js:1012
 msgid "Recommended"
 msgstr "Recommandées"
 
-#: src/startMenu/startMenuController.js:1050 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1056 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"
 
-#: src/startMenu/startMenuController.js:1137
+#: src/startMenu/startMenuController.js:1143
 msgid "Search results"
 msgstr "Résultats de la recherche"
 
-#: src/startMenu/startMenuController.js:1162
+#: src/startMenu/startMenuController.js:1168
 msgid "No results found"
 msgstr "Aucun résultat trouvé"
 
@@ -3571,39 +3610,6 @@ msgstr "Aucune application ne joue de l’audio"
 
 #~ msgid "Default GNOME Panel Overview Behavior"
 #~ msgstr "Comportement de l’aperçu du panneau GNOME par défaut"
-
-#~ msgid "Bottom Hot Edge"
-#~ msgstr "Bord chaud en bas"
-
-#~ msgid ""
-#~ "Configure the bottom-edge gesture, pressure, and animation for toggling "
-#~ "Overview"
-#~ msgstr ""
-#~ "Configurer le geste, la pression et l’animation du bord inférieur pour "
-#~ "activer ou désactiver la vue d’ensemble"
-
-#~ msgid "Enable Bottom Hot Edge"
-#~ msgstr "Activer la zone active inférieure"
-
-#~ msgid ""
-#~ "Push the pointer against the bottom screen edge to toggle Overview. Turns "
-#~ "off pressure reveal."
-#~ msgstr ""
-#~ "Pousser le curseur contre le bord inférieur de l’écran pour afficher la "
-#~ "vue d’ensemble. Désactive l’affichage par pression."
-
-#~ msgid ""
-#~ "Pixels the pointer must travel past the bottom edge before Overview "
-#~ "activates"
-#~ msgstr ""
-#~ "Nombre de pixels que le curseur doit parcourir au-delà du bord inférieur "
-#~ "avant que l’aperçu ne s’active"
-
-#~ msgid "Hot Edge Animation"
-#~ msgstr "Animation du bord chaud"
-
-#~ msgid "Show a ripple when the bottom hot edge activates"
-#~ msgstr "Afficher une ondulation à l'activation du bord chaud"
 
 #~ msgid "Reveal Options"
 #~ msgstr "Options d’affichage"

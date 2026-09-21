@@ -15,6 +15,7 @@ src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dynamicTransparencyDialog.js
 src/prefs/dockBehaviorGroup.js
+src/prefs/bottomHotEdgeRow.js
 src/prefs/locationsGroup.js
 src/prefs/panelAppearancePage.js
 src/prefs/overviewBehaviorDialog.js
