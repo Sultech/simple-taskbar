@@ -86,7 +86,7 @@ const BLUR_MY_SHELL_POPUP_CLASSES = [
 ];
 
 function searchResultKey(result) {
-    return `${result.provider.id ?? 'unknown'}:${result.id}`;
+    return `${result.provider.id}:${result.id}`;
 }
 
 export class StartMenuController {

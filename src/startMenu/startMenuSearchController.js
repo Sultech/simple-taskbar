@@ -112,9 +112,8 @@ export class StartMenuSearchController {
             group.results = this._normalizeResults(provider, metas, terms);
         } catch (error) {
             if (this._isCurrent(cancellable, generation)) {
-                const providerId = group.provider.id ?? 'unknown';
                 console.error(
-                    `Start menu search provider ${providerId} failed: ${error}`
+                    `Start menu search provider ${group.provider.id} failed: ${error}`
                 );
             }
         } finally {
