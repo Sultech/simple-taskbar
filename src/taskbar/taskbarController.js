@@ -1694,10 +1694,17 @@ export class TaskbarController {
         const applicationEntries = entries.filter(entry =>
             !entry.app._simpleTaskbarLocation
         );
+        const applicationIndexes = new Map();
+        for (let index = 0; index < applicationEntries.length; index++) {
+            if (!applicationIndexes.has(applicationEntries[index]))
+                applicationIndexes.set(applicationEntries[index], index);
+        }
         const width = entries.reduce((total, entry, index) => {
             const entryShowLabels = showLabels &&
                 (Boolean(entry.window) || entry.isCombined);
-            const applicationIndex = applicationEntries.indexOf(entry);
+            const applicationIndex = applicationIndexes.has(entry)
+                ? applicationIndexes.get(entry)
+                : -1;
             const nextApplicationEntry = applicationIndex >= 0
                 ? applicationEntries[applicationIndex + 1]
                 : null;
