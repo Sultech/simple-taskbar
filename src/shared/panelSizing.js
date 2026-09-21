@@ -180,16 +180,6 @@ export function panelHeightForIconSize(settings, iconSize) {
     return iconSize + iconEdgeReserve(settings);
 }
 
-function clampIconSizeToMaximumPanelHeight(settings) {
-    const iconSize = settings.get_int('icon-size');
-    const maximumIconSize = MAX_PANEL_HEIGHT - iconEdgeReserve(settings);
-    if (iconSize <= maximumIconSize)
-        return iconSize;
-
-    setInteger(settings, 'icon-size', maximumIconSize);
-    return maximumIconSize;
-}
-
 export function fitIconSizeToPanelHeight(settings, heightKey = 'panel-height') {
     let panelHeight = settings.get_int(heightKey);
     const minimumPanelHeight = standardMinimumPanelHeight(settings);
@@ -207,7 +197,7 @@ export function fitIconSizeToPanelHeight(settings, heightKey = 'panel-height') {
 export function fitPanelHeightToIconSize(settings, heightKey = 'panel-height') {
     const minimumPanelHeight = panelHeightForIconSize(
         settings,
-        clampIconSizeToMaximumPanelHeight(settings)
+        settings.get_int('icon-size')
     );
     if (settings.get_int(heightKey) < minimumPanelHeight)
         setInteger(settings, heightKey, minimumPanelHeight);
@@ -217,9 +207,6 @@ export function derivePanelHeightFromIconSize(settings, heightKey = 'panel-heigh
     setInteger(
         settings,
         heightKey,
-        panelHeightForIconSize(
-            settings,
-            clampIconSizeToMaximumPanelHeight(settings)
-        )
+        panelHeightForIconSize(settings, settings.get_int('icon-size'))
     );
 }
