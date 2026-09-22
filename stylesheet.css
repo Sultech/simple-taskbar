@@ -1906,6 +1906,7 @@
 .simple-taskbar-application-overflow-list {
     min-width: 240px;
     spacing: 2px;
+    padding: 4px 0;
 }
 
 .simple-taskbar-application-overflow-list-item {
