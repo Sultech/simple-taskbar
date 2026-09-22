@@ -370,6 +370,7 @@ export function addPanelAppearancePage({
         const windowsXpThemeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        transparencyExpander.sensitive = !windowsXpThemeEnabled;
         transparencySwitch.sensitive = !blocked &&
             !windowsXpThemeEnabled;
         transparencySwitch.subtitle = blocked
@@ -541,6 +542,7 @@ export function addPanelAppearancePage({
         const windowsXpThemeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        themeRow.sensitive = !windowsXpThemeEnabled;
         followSystemThemeSwitch.sensitive = !windowsXpThemeEnabled;
         panelThemeRow.sensitive = !windowsXpThemeEnabled &&
             !followSystemThemeSwitch.active;
@@ -617,6 +619,7 @@ export function addPanelAppearancePage({
         const enabled = !settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        bordersExpander.sensitive = enabled;
         darkPanelBorderSwitch.sensitive = enabled;
         lightPanelBorderSwitch.sensitive = enabled;
     };

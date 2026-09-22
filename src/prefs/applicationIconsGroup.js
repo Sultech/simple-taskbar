@@ -142,6 +142,7 @@ function addApplicationIconControls({
     );
     const syncClassicOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
+        iconSizingRow.sensitive = enabled;
         highlightStyleRow.sensitive = enabled;
         classicOptionsButton.sensitive = enabled;
     };
@@ -484,6 +485,7 @@ function addIndicatorControls({
             (settings.get_boolean('default-gnome-panel') &&
                 !settings.get_boolean('dock-mode'));
         const enabled = customIndicatorColorsSwitch.active;
+        indicatorGroup.sensitive = !blocked;
         indicatorPositionRow.sensitive = !blocked;
         reserveOptionsButton.sensitive = !blocked &&
             runningIndicatorReserveIsPossible(

@@ -124,6 +124,8 @@ export function addStartMenuPage({
             (!dockMode || dockPanelMode);
         followAppAlignmentSwitch.sensitive =
             !defaultPanel && !windowsXpTheme;
+        startButtonPositionRow.sensitive =
+            !defaultPanel && !windowsXpTheme;
     };
     followAppAlignmentSwitch.connect(
         'notify::active',
@@ -260,6 +262,7 @@ export function addStartMenuPage({
         updateStartButtonPaddingRow();
         startButtonSeparatorSwitch.sensitive = !enabled;
         customIconRow.sensitive = !enabled;
+        startButtonAppearanceRow.sensitive = !enabled;
     };
     connectSettings(
         settings,
