@@ -41,6 +41,8 @@ export function confirmReset(window, createSettings) {
             'panel-profile-transition',
         ]);
         const profileStateKeys = new Set(PANEL_PROFILE_STATE_KEYS);
+        const storesUserValue = key =>
+            resetSettings.get_user_value(key) !== null;
         resetSettings.set_boolean('panel-profile-transition', true);
         resetSettings.delay();
         let batchSize = 0;
@@ -53,18 +55,16 @@ export function confirmReset(window, createSettings) {
             }
         };
         for (const key of resetSettings.settings_schema.list_keys()) {
-            if (keptKeys.has(key) || profileStateKeys.has(key))
+            if (keptKeys.has(key) || profileStateKeys.has(key) ||
+                !storesUserValue(key))
                 continue;
 
             resetKey(key);
         }
-        if (batchSize > 0)
-            resetSettings.apply();
-        batchSize = 0;
-        for (const key of PANEL_PROFILE_STATE_KEYS)
-            resetKey(key);
-        if (batchSize > 0)
-            resetSettings.apply();
+        for (const key of PANEL_PROFILE_STATE_KEYS) {
+            if (storesUserValue(key))
+                resetKey(key);
+        }
         resetSettings.reset('panel-profile-transition');
         resetSettings.apply();
     });
