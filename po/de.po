@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 04:39+0100\n"
+"POT-Creation-Date: 2026-09-22 04:57+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -1022,107 +1022,109 @@ msgstr "GNOME-Standard"
 msgid "Magic Lamp"
 msgstr "Wunderlampe"
 
-#: src/prefs/classicHighlightDialog.js:83
-#: src/prefs/classicHighlightDialog.js:92
+#: src/prefs/classicHighlightDialog.js:82
+#: src/prefs/classicHighlightDialog.js:91
 msgid "Highlight Options"
 msgstr "Hervorhebungsoptionen"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:105
 msgid "Highlight Size"
 msgstr "Größe der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:107
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Festlegen, wie weit die Hervorhebung über das Panel reicht"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:118
 msgid "Highlight Border Radius"
 msgstr "Eckenradius der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:119
 msgid "Border radius in pixels"
 msgstr "Eckenradius in Pixeln"
 
-#: src/prefs/classicHighlightDialog.js:134
-msgid "Custom Highlight Size"
-msgstr "Eigene Hervorhebungsgröße"
+#: src/prefs/classicHighlightDialog.js:132
+msgid "Custom Highlight Thickness"
+msgstr "Eigene Hervorhebungsdicke"
 
-#: src/prefs/classicHighlightDialog.js:136
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
-msgstr "Die Hervorhebung auf einer festen Größe halten, statt der Panel-Dicke zu folgen"
+msgstr ""
+"Die Hervorhebung auf einer festen Größe halten, statt der Panel-Dicke zu "
+"folgen"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Width"
-msgstr "Breite der Hervorhebung"
+#: src/prefs/classicHighlightDialog.js:136
+msgid "Highlight Thickness"
+msgstr "Dicke der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Height"
-msgstr "Höhe der Hervorhebung"
-
-#: src/prefs/classicHighlightDialog.js:139
+#: src/prefs/classicHighlightDialog.js:137
 msgid "Size across the panel in pixels"
 msgstr "Größe über das Panel in Pixeln"
 
-#: src/prefs/classicHighlightDialog.js:152
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Custom Highlight Length"
 msgstr "Eigene Hervorhebungslänge"
 
-#: src/prefs/classicHighlightDialog.js:154
+#: src/prefs/classicHighlightDialog.js:152
 msgid "Grow the highlight along the panel beyond the application icon"
-msgstr "Die Hervorhebung entlang des Panels über das Anwendungssymbol hinaus vergrößern"
+msgstr ""
+"Die Hervorhebung entlang des Panels über das Anwendungssymbol hinaus "
+"vergrößern"
 
-#: src/prefs/classicHighlightDialog.js:157
+#: src/prefs/classicHighlightDialog.js:154
+msgid "Highlight Length"
+msgstr "Länge der Hervorhebung"
+
+#: src/prefs/classicHighlightDialog.js:155
 msgid "Size along the panel in pixels"
 msgstr "Größe entlang des Panels in Pixeln"
 
-#: src/prefs/classicHighlightDialog.js:165
+#: src/prefs/classicHighlightDialog.js:163
 msgid "Hover Highlight"
 msgstr "Hover-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:166
+#: src/prefs/classicHighlightDialog.js:164
 msgid "Customize the hover and pressed highlight"
 msgstr "Hervorhebung bei Mauskontakt und Klick anpassen"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:170
 msgid "Highlight Hovering Application Icons"
 msgstr "Anwendungssymbole beim Darüberfahren hervorheben"
 
-#: src/prefs/classicHighlightDialog.js:180
+#: src/prefs/classicHighlightDialog.js:178
 msgid "Hover Highlight Color"
 msgstr "Farbe der Hover-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Pressed Highlight Color"
 msgstr "Farbe der Hervorhebung beim Drücken"
 
-#: src/prefs/classicHighlightDialog.js:195
+#: src/prefs/classicHighlightDialog.js:193
 msgid "Focused Application Highlight"
 msgstr "Hervorhebung der fokussierten Anwendung"
 
-#: src/prefs/classicHighlightDialog.js:196
+#: src/prefs/classicHighlightDialog.js:194
 msgid "Customize the highlight for the focused application"
 msgstr "Hervorhebung der fokussierten Anwendung anpassen"
 
-#: src/prefs/classicHighlightDialog.js:202
+#: src/prefs/classicHighlightDialog.js:200
 msgid "Highlight the Focused Application"
 msgstr "Fokussierte Anwendung hervorheben"
 
-#: src/prefs/classicHighlightDialog.js:207
+#: src/prefs/classicHighlightDialog.js:205
 msgid "Use Icon Dominant Color"
 msgstr "Dominante Symbolfarbe verwenden"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:213
 msgid "Custom Focus Highlight Color"
 msgstr "Benutzerdefinierte Farbe der Fokus-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:224
+#: src/prefs/classicHighlightDialog.js:222
 msgid "Focus Highlight Opacity"
 msgstr "Deckkraft der Fokus-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:225
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Opacity percentage"
 msgstr "Deckkraft in Prozent"
 
@@ -3548,6 +3550,12 @@ msgstr "Anwendungslautstärke"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
+
+#~ msgid "Highlight Width"
+#~ msgstr "Breite der Hervorhebung"
+
+#~ msgid "Highlight Height"
+#~ msgstr "Höhe der Hervorhebung"
 
 #~ msgid "Effect Options"
 #~ msgstr "Effektoptionen"

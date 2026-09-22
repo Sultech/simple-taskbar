@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 04:39+0100\n"
+"POT-Creation-Date: 2026-09-22 04:57+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -1043,107 +1043,108 @@ msgstr "Valeur par défaut de GNOME"
 msgid "Magic Lamp"
 msgstr "Lampe magique"
 
-#: src/prefs/classicHighlightDialog.js:83
-#: src/prefs/classicHighlightDialog.js:92
+#: src/prefs/classicHighlightDialog.js:82
+#: src/prefs/classicHighlightDialog.js:91
 msgid "Highlight Options"
 msgstr "Options de surbrillance"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:105
 msgid "Highlight Size"
 msgstr "Taille de la surbrillance"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:107
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Définir jusqu’où la surbrillance s’étend sur le panneau"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:118
 msgid "Highlight Border Radius"
 msgstr "Rayon des coins de la surbrillance"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:119
 msgid "Border radius in pixels"
 msgstr "Rayon des angles en pixels"
 
-#: src/prefs/classicHighlightDialog.js:134
-msgid "Custom Highlight Size"
-msgstr "Taille de surbrillance personnalisée"
+#: src/prefs/classicHighlightDialog.js:132
+msgid "Custom Highlight Thickness"
+msgstr "Épaisseur de surbrillance personnalisée"
 
-#: src/prefs/classicHighlightDialog.js:136
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
-msgstr "Conserver une taille fixe pour la surbrillance au lieu de suivre l’épaisseur du panneau"
+msgstr ""
+"Conserver une taille fixe pour la surbrillance au lieu de suivre l’épaisseur "
+"du panneau"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Width"
-msgstr "Largeur de la surbrillance"
+#: src/prefs/classicHighlightDialog.js:136
+msgid "Highlight Thickness"
+msgstr "Épaisseur de la surbrillance"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Height"
-msgstr "Hauteur de la surbrillance"
-
-#: src/prefs/classicHighlightDialog.js:139
+#: src/prefs/classicHighlightDialog.js:137
 msgid "Size across the panel in pixels"
 msgstr "Taille en travers du panneau en pixels"
 
-#: src/prefs/classicHighlightDialog.js:152
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Custom Highlight Length"
 msgstr "Longueur de surbrillance personnalisée"
 
-#: src/prefs/classicHighlightDialog.js:154
+#: src/prefs/classicHighlightDialog.js:152
 msgid "Grow the highlight along the panel beyond the application icon"
-msgstr "Étendre la surbrillance le long du panneau au-delà de l’icône d’application"
+msgstr ""
+"Étendre la surbrillance le long du panneau au-delà de l’icône d’application"
 
-#: src/prefs/classicHighlightDialog.js:157
+#: src/prefs/classicHighlightDialog.js:154
+msgid "Highlight Length"
+msgstr "Longueur de la surbrillance"
+
+#: src/prefs/classicHighlightDialog.js:155
 msgid "Size along the panel in pixels"
 msgstr "Taille le long du panneau en pixels"
 
-#: src/prefs/classicHighlightDialog.js:165
+#: src/prefs/classicHighlightDialog.js:163
 msgid "Hover Highlight"
 msgstr "Surbrillance au survol"
 
-#: src/prefs/classicHighlightDialog.js:166
+#: src/prefs/classicHighlightDialog.js:164
 msgid "Customize the hover and pressed highlight"
 msgstr "Personnaliser la surbrillance au survol et au clic"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:170
 msgid "Highlight Hovering Application Icons"
 msgstr "Mettre en surbrillance les icônes d’application survolées"
 
-#: src/prefs/classicHighlightDialog.js:180
+#: src/prefs/classicHighlightDialog.js:178
 msgid "Hover Highlight Color"
 msgstr "Couleur de surbrillance au survol"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Pressed Highlight Color"
 msgstr "Couleur de surbrillance à l’appui"
 
-#: src/prefs/classicHighlightDialog.js:195
+#: src/prefs/classicHighlightDialog.js:193
 msgid "Focused Application Highlight"
 msgstr "Surbrillance de l’application active"
 
-#: src/prefs/classicHighlightDialog.js:196
+#: src/prefs/classicHighlightDialog.js:194
 msgid "Customize the highlight for the focused application"
 msgstr "Personnaliser la surbrillance de l’application active"
 
-#: src/prefs/classicHighlightDialog.js:202
+#: src/prefs/classicHighlightDialog.js:200
 msgid "Highlight the Focused Application"
 msgstr "Mettre en surbrillance l’application active"
 
-#: src/prefs/classicHighlightDialog.js:207
+#: src/prefs/classicHighlightDialog.js:205
 msgid "Use Icon Dominant Color"
 msgstr "Utiliser la couleur dominante de l’icône"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:213
 msgid "Custom Focus Highlight Color"
 msgstr "Couleur personnalisée de la surbrillance active"
 
-#: src/prefs/classicHighlightDialog.js:224
+#: src/prefs/classicHighlightDialog.js:222
 msgid "Focus Highlight Opacity"
 msgstr "Opacité de la surbrillance active"
 
-#: src/prefs/classicHighlightDialog.js:225
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Opacity percentage"
 msgstr "Pourcentage d’opacité"
 
@@ -3598,6 +3599,12 @@ msgstr "Volume de l’application"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Aucune application ne joue de l’audio"
+
+#~ msgid "Highlight Width"
+#~ msgstr "Largeur de la surbrillance"
+
+#~ msgid "Highlight Height"
+#~ msgstr "Hauteur de la surbrillance"
 
 #~ msgid "Effect Options"
 #~ msgstr "Options d’effet"

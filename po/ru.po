@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 04:39+0100\n"
+"POT-Creation-Date: 2026-09-22 04:57+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -1005,107 +1005,105 @@ msgstr "Стандартный GNOME"
 msgid "Magic Lamp"
 msgstr "Волшебная лампа"
 
-#: src/prefs/classicHighlightDialog.js:83
-#: src/prefs/classicHighlightDialog.js:92
+#: src/prefs/classicHighlightDialog.js:82
+#: src/prefs/classicHighlightDialog.js:91
 msgid "Highlight Options"
 msgstr "Параметры подсветки"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:105
 msgid "Highlight Size"
 msgstr "Размер подсветки"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:107
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Задайте, насколько далеко подсветка простирается по панели"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:118
 msgid "Highlight Border Radius"
 msgstr "Радиус скругления углов подсветки"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:119
 msgid "Border radius in pixels"
 msgstr "Радиус скругления в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:134
-msgid "Custom Highlight Size"
-msgstr "Свой размер подсветки"
+#: src/prefs/classicHighlightDialog.js:132
+msgid "Custom Highlight Thickness"
+msgstr "Своя толщина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:136
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
 msgstr "Сохранять фиксированный размер подсветки вместо толщины панели"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Width"
-msgstr "Ширина подсветки"
+#: src/prefs/classicHighlightDialog.js:136
+msgid "Highlight Thickness"
+msgstr "Толщина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Height"
-msgstr "Высота подсветки"
-
-#: src/prefs/classicHighlightDialog.js:139
+#: src/prefs/classicHighlightDialog.js:137
 msgid "Size across the panel in pixels"
 msgstr "Размер поперёк панели в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:152
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Custom Highlight Length"
 msgstr "Своя длина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:154
+#: src/prefs/classicHighlightDialog.js:152
 msgid "Grow the highlight along the panel beyond the application icon"
 msgstr "Растягивать подсветку вдоль панели за пределы значка приложения"
 
-#: src/prefs/classicHighlightDialog.js:157
+#: src/prefs/classicHighlightDialog.js:154
+msgid "Highlight Length"
+msgstr "Длина подсветки"
+
+#: src/prefs/classicHighlightDialog.js:155
 msgid "Size along the panel in pixels"
 msgstr "Размер вдоль панели в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:165
+#: src/prefs/classicHighlightDialog.js:163
 msgid "Hover Highlight"
 msgstr "Подсветка при наведении"
 
-#: src/prefs/classicHighlightDialog.js:166
+#: src/prefs/classicHighlightDialog.js:164
 msgid "Customize the hover and pressed highlight"
 msgstr "Настройка подсветки при наведении и нажатии"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:170
 msgid "Highlight Hovering Application Icons"
 msgstr "Подсвечивать значки приложений при наведении"
 
-#: src/prefs/classicHighlightDialog.js:180
+#: src/prefs/classicHighlightDialog.js:178
 msgid "Hover Highlight Color"
 msgstr "Цвет подсветки при наведении"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Pressed Highlight Color"
 msgstr "Цвет подсветки при нажатии"
 
-#: src/prefs/classicHighlightDialog.js:195
+#: src/prefs/classicHighlightDialog.js:193
 msgid "Focused Application Highlight"
 msgstr "Подсветка приложения в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:196
+#: src/prefs/classicHighlightDialog.js:194
 msgid "Customize the highlight for the focused application"
 msgstr "Настройка подсветки активного приложения"
 
-#: src/prefs/classicHighlightDialog.js:202
+#: src/prefs/classicHighlightDialog.js:200
 msgid "Highlight the Focused Application"
 msgstr "Подсвечивать приложение в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:207
+#: src/prefs/classicHighlightDialog.js:205
 msgid "Use Icon Dominant Color"
 msgstr "Использовать доминирующий цвет значка"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:213
 msgid "Custom Focus Highlight Color"
 msgstr "Пользовательский цвет подсветки фокуса"
 
-#: src/prefs/classicHighlightDialog.js:224
+#: src/prefs/classicHighlightDialog.js:222
 msgid "Focus Highlight Opacity"
 msgstr "Непрозрачность подсветки фокуса"
 
-#: src/prefs/classicHighlightDialog.js:225
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Opacity percentage"
 msgstr "Непрозрачность в процентах"
 
@@ -3474,6 +3472,12 @@ msgstr "Громкость приложений"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Нет приложений, воспроизводящих звук"
+
+#~ msgid "Highlight Width"
+#~ msgstr "Ширина подсветки"
+
+#~ msgid "Highlight Height"
+#~ msgstr "Высота подсветки"
 
 #~ msgid "Effect Options"
 #~ msgstr "Параметры эффекта"

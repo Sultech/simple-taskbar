@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 04:39+0100\n"
+"POT-Creation-Date: 2026-09-22 04:57+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -1030,107 +1030,108 @@ msgstr "Predefinito GNOME"
 msgid "Magic Lamp"
 msgstr "Lampada magica"
 
-#: src/prefs/classicHighlightDialog.js:83
-#: src/prefs/classicHighlightDialog.js:92
+#: src/prefs/classicHighlightDialog.js:82
+#: src/prefs/classicHighlightDialog.js:91
 msgid "Highlight Options"
 msgstr "Opzioni evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:105
 msgid "Highlight Size"
 msgstr "Dimensione evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:107
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Imposta quanto si estende l’evidenziazione sul pannello"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:118
 msgid "Highlight Border Radius"
 msgstr "Raggio degli angoli dell’evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:119
 msgid "Border radius in pixels"
 msgstr "Raggio degli angoli in pixel"
 
-#: src/prefs/classicHighlightDialog.js:134
-msgid "Custom Highlight Size"
-msgstr "Dimensione evidenziazione personalizzata"
+#: src/prefs/classicHighlightDialog.js:132
+msgid "Custom Highlight Thickness"
+msgstr "Spessore evidenziazione personalizzato"
 
-#: src/prefs/classicHighlightDialog.js:136
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
-msgstr "Mantieni l’evidenziazione a dimensione fissa invece di seguire lo spessore del pannello"
+msgstr ""
+"Mantieni l’evidenziazione a dimensione fissa invece di seguire lo spessore "
+"del pannello"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Width"
-msgstr "Larghezza evidenziazione"
+#: src/prefs/classicHighlightDialog.js:136
+msgid "Highlight Thickness"
+msgstr "Spessore evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:138
-#: src/prefs/classicHighlightDialog.js:156
-msgid "Highlight Height"
-msgstr "Altezza evidenziazione"
-
-#: src/prefs/classicHighlightDialog.js:139
+#: src/prefs/classicHighlightDialog.js:137
 msgid "Size across the panel in pixels"
 msgstr "Dimensione attraverso il pannello in pixel"
 
-#: src/prefs/classicHighlightDialog.js:152
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Custom Highlight Length"
 msgstr "Lunghezza evidenziazione personalizzata"
 
-#: src/prefs/classicHighlightDialog.js:154
+#: src/prefs/classicHighlightDialog.js:152
 msgid "Grow the highlight along the panel beyond the application icon"
-msgstr "Estendi l’evidenziazione lungo il pannello oltre l’icona dell’applicazione"
+msgstr ""
+"Estendi l’evidenziazione lungo il pannello oltre l’icona dell’applicazione"
 
-#: src/prefs/classicHighlightDialog.js:157
+#: src/prefs/classicHighlightDialog.js:154
+msgid "Highlight Length"
+msgstr "Lunghezza evidenziazione"
+
+#: src/prefs/classicHighlightDialog.js:155
 msgid "Size along the panel in pixels"
 msgstr "Dimensione lungo il pannello in pixel"
 
-#: src/prefs/classicHighlightDialog.js:165
+#: src/prefs/classicHighlightDialog.js:163
 msgid "Hover Highlight"
 msgstr "Evidenziazione al passaggio"
 
-#: src/prefs/classicHighlightDialog.js:166
+#: src/prefs/classicHighlightDialog.js:164
 msgid "Customize the hover and pressed highlight"
 msgstr "Personalizza l’evidenziazione al passaggio e alla pressione"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:170
 msgid "Highlight Hovering Application Icons"
 msgstr "Evidenzia le icone delle applicazioni al passaggio del puntatore"
 
-#: src/prefs/classicHighlightDialog.js:180
+#: src/prefs/classicHighlightDialog.js:178
 msgid "Hover Highlight Color"
 msgstr "Colore evidenziazione al passaggio"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Pressed Highlight Color"
 msgstr "Colore evidenziazione alla pressione"
 
-#: src/prefs/classicHighlightDialog.js:195
+#: src/prefs/classicHighlightDialog.js:193
 msgid "Focused Application Highlight"
 msgstr "Evidenziazione applicazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:196
+#: src/prefs/classicHighlightDialog.js:194
 msgid "Customize the highlight for the focused application"
 msgstr "Personalizza l’evidenziazione dell’applicazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:202
+#: src/prefs/classicHighlightDialog.js:200
 msgid "Highlight the Focused Application"
 msgstr "Evidenzia l’applicazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:207
+#: src/prefs/classicHighlightDialog.js:205
 msgid "Use Icon Dominant Color"
 msgstr "Usa colore dominante dell’icona"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:213
 msgid "Custom Focus Highlight Color"
 msgstr "Colore personalizzato evidenziazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:224
+#: src/prefs/classicHighlightDialog.js:222
 msgid "Focus Highlight Opacity"
 msgstr "Opacità evidenziazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:225
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Opacity percentage"
 msgstr "Percentuale di opacità"
 
@@ -3582,6 +3583,12 @@ msgstr "Volume delle applicazioni"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "Nessuna applicazione sta riproducendo audio"
+
+#~ msgid "Highlight Width"
+#~ msgstr "Larghezza evidenziazione"
+
+#~ msgid "Highlight Height"
+#~ msgstr "Altezza evidenziazione"
 
 #~ msgid "Effect Options"
 #~ msgstr "Opzioni effetto"

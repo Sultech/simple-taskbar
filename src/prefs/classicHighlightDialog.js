@@ -28,7 +28,6 @@ import {
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
-import {activePanelIsVertical} from './panelAxis.js';
 
 function addHighlightExtentRows(group, settings, connectSettings, {
     keys,
@@ -99,7 +98,6 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         this._settings = settings;
         const {content, connectSettings} =
             createPreferencesDialogContent(this);
-        const vertical = activePanelIsVertical(settings);
         const isClassic = settings.get_string('taskbar-highlight-style') ===
             TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
 
@@ -131,11 +129,11 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             {
                 keys: HIGHLIGHT_SIZE_SETTINGS,
                 iconSize,
-                switchTitle: _('Custom Highlight Size'),
+                switchTitle: _('Custom Highlight Thickness'),
                 switchSubtitle: _(
                     'Keep the highlight a fixed size instead of following the panel thickness'
                 ),
-                rowTitle: vertical ? _('Highlight Width') : _('Highlight Height'),
+                rowTitle: _('Highlight Thickness'),
                 rowSubtitle: _('Size across the panel in pixels'),
                 lower: highlightSizeLowerBound(iconSize),
                 upper: highlightSizeUpperBound(iconSize),
@@ -153,7 +151,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
                 switchSubtitle: _(
                     'Grow the highlight along the panel beyond the application icon'
                 ),
-                rowTitle: vertical ? _('Highlight Height') : _('Highlight Width'),
+                rowTitle: _('Highlight Length'),
                 rowSubtitle: _('Size along the panel in pixels'),
                 lower: highlightLengthLowerBound(settings, iconSize),
                 upper: highlightLengthUpperBound(iconSize),
