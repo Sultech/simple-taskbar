@@ -486,8 +486,18 @@ export class PanelAutoHideController {
     }
 
     _syncUnredirect() {
-        if (this._enabled() || this._dodgeEnabled ||
-            this._fullscreenVisibilityHeld)
+        if (this._fullscreenVisibilityHeld) {
+            this._disableUnredirect();
+            return;
+        }
+
+        if (global.window_group.visible &&
+            this._getMonitor()?.inFullscreen) {
+            this._restoreUnredirect();
+            return;
+        }
+
+        if (this._enabled() || this._dodgeEnabled)
             this._disableUnredirect();
         else
             this._restoreUnredirect();
@@ -513,6 +523,7 @@ export class PanelAutoHideController {
     }
 
     _fullscreenChanged() {
+        this._syncUnredirect();
         if (!this._fullscreenVisibilityHeld ||
             this._getMonitor()?.inFullscreen) {
             return;
