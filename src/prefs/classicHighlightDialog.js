@@ -80,7 +80,7 @@ function addHighlightExtentRows(group, settings, connectSettings, {
 export function createClassicHighlightOptionsButton(settings) {
     return createPreferencesDialogButton(
         settings,
-        _('Effect Options'),
+        _('Highlight Options'),
         ClassicHighlightOptionsDialog
     );
 }
@@ -89,7 +89,7 @@ export const ClassicHighlightOptionsDialog = GObject.registerClass(
 class ClassicHighlightOptionsDialog extends Adw.Window {
     _init({settings, parent}) {
         super._init({
-            title: _('Effect Options'),
+            title: _('Highlight Options'),
             transient_for: parent,
             modal: true,
             default_width: 640,
@@ -104,14 +104,26 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
 
         const sizeGroup = new Adw.PreferencesGroup({
-            title: _('Effect Size'),
+            title: _('Highlight Size'),
             description: _(
-                'Set how far the effect reaches across the panel'
+                'Set how far the highlight reaches across the panel'
             ),
         });
         content.append(sizeGroup);
 
         const iconSize = settings.get_int('icon-size');
+        const borderRadiusRow = addSpinRow(
+            sizeGroup,
+            settings,
+            {
+                key: CLASSIC_HIGHLIGHT_SETTINGS.borderRadius,
+                title: _('Highlight Border Radius'),
+                subtitle: _('Border radius in pixels'),
+                lower: 0,
+                upper: 10,
+            },
+            connectSettings
+        );
         addHighlightExtentRows(
             sizeGroup,
             settings,
@@ -119,11 +131,11 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             {
                 keys: HIGHLIGHT_SIZE_SETTINGS,
                 iconSize,
-                switchTitle: _('Custom Effect Size'),
+                switchTitle: _('Custom Highlight Size'),
                 switchSubtitle: _(
-                    'Keep the effect a fixed size instead of following the panel thickness'
+                    'Keep the highlight a fixed size instead of following the panel thickness'
                 ),
-                rowTitle: vertical ? _('Effect Width') : _('Effect Height'),
+                rowTitle: vertical ? _('Highlight Width') : _('Highlight Height'),
                 rowSubtitle: _('Size across the panel in pixels'),
                 lower: highlightSizeLowerBound(iconSize),
                 upper: highlightSizeUpperBound(iconSize),
@@ -137,11 +149,11 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             {
                 keys: HIGHLIGHT_LENGTH_SETTINGS,
                 iconSize,
-                switchTitle: _('Custom Effect Length'),
+                switchTitle: _('Custom Highlight Length'),
                 switchSubtitle: _(
-                    'Grow the effect along the panel beyond the application icon'
+                    'Grow the highlight along the panel beyond the application icon'
                 ),
-                rowTitle: vertical ? _('Effect Height') : _('Effect Width'),
+                rowTitle: vertical ? _('Highlight Height') : _('Highlight Width'),
                 rowSubtitle: _('Size along the panel in pixels'),
                 lower: highlightLengthLowerBound(settings, iconSize),
                 upper: highlightLengthUpperBound(iconSize),
@@ -151,7 +163,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
 
         const hoverGroup = new Adw.PreferencesGroup({
             title: _('Hover Highlight'),
-            description: _('Customize the Classic hover and pressed effect'),
+            description: _('Customize the hover and pressed highlight'),
         });
         content.append(hoverGroup);
 
@@ -178,22 +190,10 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        const borderRadiusRow = addSpinRow(
-            hoverGroup,
-            settings,
-            {
-                key: CLASSIC_HIGHLIGHT_SETTINGS.borderRadius,
-                title: _('Hover Highlight Border Radius'),
-                subtitle: _('Border radius in pixels'),
-                lower: 0,
-                upper: 10,
-            },
-            connectSettings
-        );
 
         const focusGroup = new Adw.PreferencesGroup({
             title: _('Focused Application Highlight'),
-            description: _('Customize the effect for the focused application'),
+            description: _('Customize the highlight for the focused application'),
         });
         content.append(focusGroup);
 
@@ -236,11 +236,17 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             );
             hoverColorRow.sensitive = isClassic && sensitive;
             pressedColorRow.sensitive = isClassic && sensitive;
-            borderRadiusRow.sensitive = !isClassic || sensitive;
+            borderRadiusRow.sensitive = sensitive ||
+                settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled);
         };
         connectSettings(
             settings,
             `changed::${CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled}`,
+            syncHoverSensitivity
+        );
+        connectSettings(
+            settings,
+            `changed::${CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled}`,
             syncHoverSensitivity
         );
         syncHoverSensitivity();
