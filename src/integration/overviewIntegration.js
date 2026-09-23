@@ -18,7 +18,10 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionWillBeActive} from '../extensionState.js';
-import {panelPosition} from '../panel/panelPosition.js';
+import {
+    panelPosition,
+    positionIsVertical,
+} from '../panel/panelPosition.js';
 import {
     DOCK_EDGE_GAP,
     iconEdgeReserve,
@@ -370,10 +373,8 @@ export class OverviewIntegration {
         const panelPositionValue = panelPosition(this._settings);
         const dockMode = this._settings.get_boolean('dock-mode');
         const dockPosition = this._settings.get_string('dock-position');
-        const vertical = panelPositionValue === 'left' ||
-            panelPositionValue === 'right' ||
-            (dockMode && (dockPosition === 'left' ||
-                dockPosition === 'right'));
+        const vertical = positionIsVertical(panelPositionValue) ||
+            (dockMode && positionIsVertical(dockPosition));
         const bottom = panelPositionValue === 'bottom' ||
             (dockMode && dockPosition === 'bottom');
         if (vertical)

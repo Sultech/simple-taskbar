@@ -14,6 +14,7 @@ import {
     panelArrowSide,
     panelIsTop,
     panelPosition,
+    positionIsVertical,
 } from '../panel/panelPosition.js';
 import {
     closePopupMenu,
@@ -820,7 +821,7 @@ export class WindowPreviewController {
         const outward = this._getHoverAnimationOutwardReserve();
         let x;
         let y;
-        if (position === 'left' || position === 'right') {
+        if (positionIsVertical(position)) {
             x = position === 'left'
                 ? Math.min(
                     monitor.x + monitor.width - labelWidth,

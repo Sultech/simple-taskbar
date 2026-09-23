@@ -7,6 +7,7 @@ import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
 } from './panelItemOrder.js';
+import {positionIsVertical} from './panelPositionUtils.js';
 import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
 import {
     setInteger,
@@ -171,8 +172,7 @@ function axisDomainForMode(mode) {
 }
 
 function domainAxis(settings, domain) {
-    const position = settings.get_string(domain.positionKey);
-    return position === 'left' || position === 'right'
+    return positionIsVertical(settings.get_string(domain.positionKey))
         ? PANEL_AXIS_VERTICAL
         : PANEL_AXIS_HORIZONTAL;
 }

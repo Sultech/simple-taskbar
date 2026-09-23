@@ -13,6 +13,7 @@ export {
     panelIsTop,
     panelIsVertical,
     panelPosition,
+    positionIsVertical,
 } from '../shared/panelPositionUtils.js';
 
 const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';

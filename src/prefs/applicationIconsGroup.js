@@ -7,7 +7,10 @@ import Gio from 'gi://Gio';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {axisPanelPositions} from './panelAxis.js';
-import {activePanelPosition} from '../shared/panelPositionUtils.js';
+import {
+    activePanelPosition,
+    positionIsVertical,
+} from '../shared/panelPositionUtils.js';
 import {
     createApplicationGroupingOptionsButton,
 } from './applicationGroupingDialog.js';
@@ -315,10 +318,9 @@ function addApplicationLayoutControls({
     syncSeparatorSensitivity();
 
     const syncLabelSensitivity = () => {
-        const position = activePanelPosition(settings);
         const enabled = !settings.get_boolean(
             'windows-xp-theme-enabled'
-        ) && !['left', 'right'].includes(position) &&
+        ) && !positionIsVertical(activePanelPosition(settings)) &&
             settings.get_string(
                 'combine-app-buttons-mode'
             ) !== 'always';

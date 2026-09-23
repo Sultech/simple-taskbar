@@ -1,7 +1,10 @@
 import {
     APPLICATION_CLICK_ANIMATION,
 } from './applicationClickAnimation.js';
-import {activePanelPosition} from './panelPositionUtils.js';
+import {
+    activePanelPosition,
+    positionIsVertical,
+} from './panelPositionUtils.js';
 
 export const APP_ICON_HOVER_ANIMATION = {
     NONE: 'none',
@@ -23,8 +26,7 @@ export const APP_ICON_HOVER_ANIMATION_SETTINGS = {
 };
 
 export function appIconMagnifyAllowed(settings) {
-    const position = activePanelPosition(settings);
-    return position === 'left' || position === 'right' ||
+    return positionIsVertical(activePanelPosition(settings)) ||
         settings.get_string('combine-app-buttons-mode') === 'always' ||
         settings.get_boolean('hide-app-labels');
 }

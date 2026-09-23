@@ -10,7 +10,10 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelPosition} from '../panel/panelPosition.js';
+import {
+    panelPosition,
+    positionIsVertical,
+} from '../panel/panelPosition.js';
 
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 
@@ -84,7 +87,7 @@ export class NotificationBannerController {
 
         const position = panelPosition(this._settings);
         const clockAlignment = this._getClockAlignment();
-        if (position === 'left' || position === 'right') {
+        if (positionIsVertical(position)) {
             this._messageTray.bannerAlignment = position === 'left'
                 ? Clutter.ActorAlign.START
                 : Clutter.ActorAlign.END;

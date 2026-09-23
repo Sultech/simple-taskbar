@@ -6,11 +6,11 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     activePanelPosition,
     panelIsVertical,
+    positionIsVertical,
 } from '../shared/panelPositionUtils.js';
 
 export function activePanelIsVertical(settings) {
-    const position = activePanelPosition(settings);
-    return position === 'left' || position === 'right';
+    return positionIsVertical(activePanelPosition(settings));
 }
 
 export function axisPanelPositions(settings, panelPositions) {

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {positionIsVertical} from './panelPositionUtils.js';
+
 export const RUNNING_INDICATOR_STYLES = [
     'rounded',
     'dots',
@@ -50,9 +52,7 @@ export function runningIndicatorReserveIsPossible(
     panelPosition,
     indicatorPosition
 ) {
-    const panelVertical = panelPosition === 'left' ||
-        panelPosition === 'right';
-    return panelVertical ===
+    return positionIsVertical(panelPosition) ===
         runningIndicatorPositionIsHorizontal(indicatorPosition);
 }
 

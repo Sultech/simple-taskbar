@@ -33,6 +33,7 @@ import {
 import {
     panelIsVertical,
     panelPosition,
+    positionIsVertical,
 } from '../panel/panelPosition.js';
 import {
     constrainTaskbarSize,
@@ -690,8 +691,7 @@ export class SecondaryPanelDockController {
                 ? panelEdge
                 : panelEdge - geometry.height;
         } else if (!geometry.vertical &&
-            (mainPanelPosition === 'left' ||
-                mainPanelPosition === 'right')) {
+            positionIsVertical(mainPanelPosition)) {
             const panelEdge = mainPanelPosition === 'left'
                 ? mainPanelX + mainPanelBox.width
                 : mainPanelX;
