@@ -95,6 +95,7 @@ export class StartButtonController {
         this._contextMenuController = null;
         this._menuManager = null;
         this._positionAnimationStart = null;
+        this._parityOffset = 0;
 
         this._windowsGIcon = new Gio.FileIcon({
             file: extensionDir
@@ -1007,7 +1008,7 @@ export class StartButtonController {
             this._separatorLine,
             vertical,
             this._icon.icon_size,
-            this._parityOffset ?? 0
+            this._parityOffset
         );
         if (orientationChanged)
             resetSeparatorToTarget(this._separator, vertical);
