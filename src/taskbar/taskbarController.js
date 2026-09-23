@@ -571,26 +571,16 @@ export class TaskbarController {
             },
             this._signalHolder
         );
+        const rebuildPinnedEntries = () => {
+            this._getPreviews().hideTooltip(false);
+            this._getPreviews().hide();
+            this._shownInitially = false;
+            this._queueRedisplay();
+            this._syncDragEnabled();
+        };
         this._settings.connectObject(
-            'changed::use-pinned-apps-as-launchers',
-            () => {
-                this._getPreviews().hideTooltip(false);
-                this._getPreviews().hide();
-                this._shownInitially = false;
-                this._queueRedisplay();
-                this._syncDragEnabled();
-            },
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::keep-pinned-app-windows-together',
-            () => {
-                this._getPreviews().hideTooltip(false);
-                this._getPreviews().hide();
-                this._shownInitially = false;
-                this._queueRedisplay();
-                this._syncDragEnabled();
-            },
+            'changed::use-pinned-apps-as-launchers', rebuildPinnedEntries,
+            'changed::keep-pinned-app-windows-together', rebuildPinnedEntries,
             this._signalHolder
         );
         this._settings.connectObject(
