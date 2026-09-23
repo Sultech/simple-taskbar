@@ -167,6 +167,8 @@ export class TaskbarController {
         this._rebuilding = false;
         this._previousPinnedAppIds = new Set();
         this._preserveItemWidths = false;
+        this._overflowIconButton = null;
+        this._overflowIconItems = new Set();
         this._dragEnabled = null;
         this._suppressMembershipAnimation = false;
         this._activeWorkspace = null;
@@ -200,6 +202,9 @@ export class TaskbarController {
             taskbarActor: this.actor,
             appButtons: this._appButtons,
             windowsForItem: item => this._windowsForItem(item),
+            getIconTarget: item => this._overflowIconItems.has(item)
+                ? this._overflowIconButton
+                : item._taskbarIcon,
         });
         this._locationActor = new St.BoxLayout({
             style_class: 'simple-taskbar-locations',
@@ -425,6 +430,12 @@ export class TaskbarController {
 
     getLocationItems() {
         return this._locationActor.get_children();
+    }
+
+    setOverflowIconTarget(button, items) {
+        this._overflowIconButton = button;
+        this._overflowIconItems = new Set(items);
+        this.queueIconGeometryUpdate();
     }
 
     setPreserveItemWidths(preserve) {
@@ -828,6 +839,8 @@ export class TaskbarController {
         this._pinnedSeparatorLine = null;
         this._previousPinnedAppIds = null;
         this._preserveItemWidths = false;
+        this._overflowIconButton = null;
+        this._overflowIconItems = null;
         this._activeWorkspace = null;
         this._activeWorkspaceSignalIds = null;
         this._shownInitially = false;

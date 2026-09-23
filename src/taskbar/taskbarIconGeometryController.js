@@ -29,11 +29,13 @@ export class TaskbarIconGeometryController {
         taskbarActor,
         appButtons,
         windowsForItem,
+        getIconTarget,
     }) {
         this._settings = settings;
         this._taskbarActor = taskbarActor;
         this._appButtons = appButtons;
         this._windowsForItem = windowsForItem;
+        this._getIconTarget = getIconTarget;
         this._iconGeometryUpdateId = 0;
         this._windowIconActors = new Map();
     }
@@ -75,6 +77,7 @@ export class TaskbarIconGeometryController {
         this._iconGeometryUpdateId = 0;
         this._clearWindowIconActors();
         this._windowIconActors = null;
+        this._getIconTarget = null;
         this._windowsForItem = null;
         this._appButtons = null;
         this._taskbarActor = null;
@@ -93,7 +96,7 @@ export class TaskbarIconGeometryController {
     }
 
     _updateItemIconGeometry(item) {
-        const icon = item._taskbarIcon;
+        const icon = this._getIconTarget(item);
         const screenGeometry = iconScreenGeometry(icon);
         if (!screenGeometry)
             return;

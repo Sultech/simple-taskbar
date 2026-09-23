@@ -639,6 +639,7 @@ export class ApplicationOverflowController {
             items.slice(visibleCount),
             !dragEndSyncPending
         );
+        this._syncOverflowIconTarget();
         this._themeController.sync();
     }
 
@@ -901,6 +902,14 @@ export class ApplicationOverflowController {
 
     _clearOverflow() {
         this._popupController.clear();
+        this._syncOverflowIconTarget();
+    }
+
+    _syncOverflowIconTarget() {
+        this._taskbarController.setOverflowIconTarget(
+            this._button,
+            this._popupController.overflowItems
+        );
     }
 
     _syncPopupGeometry() {
