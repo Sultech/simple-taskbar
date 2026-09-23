@@ -19,6 +19,7 @@ export class TaskbarHoverAnimationAnimator {
         isBlocked,
         getNeighbourActors,
         onReserveChanged,
+        onExtentsChanged,
         queueMagnifyFrames,
         smoothing,
     }) {
@@ -32,11 +33,14 @@ export class TaskbarHoverAnimationAnimator {
         this._isBlocked = isBlocked;
         this._getNeighbourActors = getNeighbourActors;
         this._onReserveChanged = onReserveChanged;
+        this._onExtentsChanged = onExtentsChanged;
         this._queueMagnifyFrames = queueMagnifyFrames;
         this._smoothing = smoothing;
         this._magnifyActive = false;
         this._blocked = false;
         this._reserve = 0;
+        this._extentBefore = 0;
+        this._extentAfter = 0;
     }
 
     getReserve() {
@@ -179,6 +183,7 @@ export class TaskbarHoverAnimationAnimator {
     resetAnimations() {
         this._clones.reset();
         this._setMagnifyActive(false);
+        this._syncVisualExtents();
     }
 
     settleMagnify() {
@@ -188,6 +193,7 @@ export class TaskbarHoverAnimationAnimator {
             this._raise(item, 0, items, 0);
         for (const item of [...this._clones.getStretchItems()])
             this._stretch(item, 0, 0);
+        this._syncVisualExtents();
     }
 
     destroy() {
@@ -195,6 +201,7 @@ export class TaskbarHoverAnimationAnimator {
         this._queueMagnifyFrames = null;
         this._smoothing = null;
         this._onReserveChanged = null;
+        this._onExtentsChanged = null;
         this._getNeighbourActors = null;
         this._isBlocked = null;
         this._isDragging = null;
@@ -328,6 +335,33 @@ export class TaskbarHoverAnimationAnimator {
             duration: 0,
             vertical,
         });
+        this._syncVisualExtents();
+    }
+
+    _syncVisualExtents() {
+        const vertical = this._getVertical();
+        let before = 0;
+        let after = 0;
+        for (const item of this._clones.getStretchItems()) {
+            const stretch = this._clones.getStretchEntry(item);
+            const offset = stretch.actor[stretch.property] - stretch.base;
+            const entry = this._clones.get(item);
+            const [width, height] = entry ? entry.clone.get_size() : [0, 0];
+            const growth = entry
+                ? (vertical ? height : width) * (entry.clone.scale_x - 1) / 2
+                : 0;
+            before = Math.min(before, offset - growth);
+            after = Math.max(after, offset + growth);
+        }
+
+        before = Math.round(before);
+        after = Math.round(after);
+        if (before === this._extentBefore && after === this._extentAfter)
+            return;
+
+        this._extentBefore = before;
+        this._extentAfter = after;
+        this._onExtentsChanged(before, after);
     }
 
     _clampRowOffset(entries, offset) {

@@ -127,6 +127,7 @@ export class TaskbarController {
         getPanelInteractionController,
         getHoverAnimationNeighbours,
         onHoverAnimationReserveChanged,
+        onHoverAnimationExtentsChanged = () => {},
         isHoverAnimationBlocked,
         ignoreTaskbarLock = false,
         locationScope = 'taskbar',
@@ -151,6 +152,7 @@ export class TaskbarController {
         this._getPanelInteractionController = getPanelInteractionController;
         this._getHoverAnimationNeighbours = getHoverAnimationNeighbours;
         this._onHoverAnimationReserveChanged = onHoverAnimationReserveChanged;
+        this._onHoverAnimationExtentsChanged = onHoverAnimationExtentsChanged;
         this._isHoverAnimationBlocked = isHoverAnimationBlocked;
         this._getPreviews = getPreviewController;
         this._ignoreTaskbarLock = ignoreTaskbarLock;
@@ -345,6 +347,8 @@ export class TaskbarController {
                 raiseOverlays: () => this._getPreviews().raiseOverlays(),
                 onReserveChanged: () =>
                     this._onHoverAnimationReserveChanged(),
+                onExtentsChanged: (before, after) =>
+                    this._onHoverAnimationExtentsChanged(before, after),
                 onCloneButtonPress: (item, event) => {
                     const mouseButton = event.get_button();
                     const shifted = Boolean(
@@ -817,6 +821,7 @@ export class TaskbarController {
         this._getPanelInteractionController = null;
         this._getHoverAnimationNeighbours = null;
         this._onHoverAnimationReserveChanged = null;
+        this._onHoverAnimationExtentsChanged = null;
         this._isHoverAnimationBlocked = null;
         this._auxiliaryItems = null;
         this._pinnedSeparator = null;

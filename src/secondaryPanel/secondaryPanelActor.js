@@ -38,6 +38,7 @@ class SecondaryPanelActor extends St.Widget {
         this.add_child(this.rightBox);
         this.adaptiveCenter = false;
         this.expandedSide = false;
+        this.centerOffset = 0;
         this.vertical = false;
     }
 
@@ -49,7 +50,7 @@ class SecondaryPanelActor extends St.Widget {
                 this.leftBox,
                 this.centerBox,
                 this.rightBox,
-                0,
+                this.centerOffset,
                 this.vertical
             );
             return;
@@ -61,7 +62,7 @@ class SecondaryPanelActor extends St.Widget {
                 this.leftBox,
                 this.centerBox,
                 this.rightBox,
-                0,
+                this.centerOffset,
                 this.vertical
             );
             return;

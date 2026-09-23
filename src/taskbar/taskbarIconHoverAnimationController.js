@@ -46,6 +46,7 @@ export class TaskbarIconHoverAnimationController {
         getNeighbourActors,
         raiseOverlays,
         onReserveChanged,
+        onExtentsChanged,
         onCloneButtonPress,
         onCloneActivate,
         onCloneScroll,
@@ -105,6 +106,7 @@ export class TaskbarIconHoverAnimationController {
             isBlocked,
             getNeighbourActors,
             onReserveChanged,
+            onExtentsChanged,
             queueMagnifyFrames: () => this._startMagnifyFrames(),
             smoothing: this._smoothing,
         });

@@ -81,6 +81,7 @@ export class SecondaryPanelDockController {
         setPanelHeight,
         onPosition,
         isCentered,
+        getHoverReserve,
     }) {
         this._settings = settings;
         this._monitor = monitor;
@@ -99,9 +100,11 @@ export class SecondaryPanelDockController {
         this._setPanelHeight = setPanelHeight;
         this._onPosition = onPosition;
         this._isCentered = isCentered;
+        this._getHoverReserve = getHoverReserve;
         this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = settings.getConfiguredIconSize();
         this._dockPanelLength = null;
+        this._dockBaseLength = null;
         this._taskbarWidthUpdater = new TaskbarWidthUpdater(
             () => this._updateTaskbarWidthInternal()
         );
@@ -109,7 +112,6 @@ export class SecondaryPanelDockController {
         this._activeWorkspace = null;
         this._workspaceWindows = new Set();
         this._lastPanelEdgeGap = null;
-        this._lastHoverReserve = null;
         this._mainPanelBox = null;
     }
 
@@ -158,7 +160,8 @@ export class SecondaryPanelDockController {
         this._isCentered = null;
         this._configuredIconSize = 0;
         this._dockPanelLength = null;
-        this._lastHoverReserve = null;
+        this._dockBaseLength = null;
+        this._getHoverReserve = null;
     }
 
     getPanelLengthPercentage() {
@@ -166,6 +169,10 @@ export class SecondaryPanelDockController {
             return null;
 
         return this._settings.get_int('dock-max-length');
+    }
+
+    getBaseLength() {
+        return this._dockBaseLength;
     }
 
     getPanelLengthOverride() {
@@ -508,26 +515,18 @@ export class SecondaryPanelDockController {
         if (this._settings.get_boolean('dock-panel-mode'))
             return;
 
-        const hoverReserve =
-            this._taskbarController.getHoverAnimationReserve();
         const baseRequiredLength = this._panelContentLength(vertical, 0);
         const maximumLength = vertical ? geometry.height : geometry.width;
-        const panelLength = Math.min(
+        this._dockBaseLength = Math.min(
             maximumLength,
             Math.max(1, Math.ceil(baseRequiredLength))
-        ) + hoverReserve;
-        const lengthChanged = panelLength !== this._dockPanelLength;
-        if (!lengthChanged) {
-            this._lastHoverReserve = hoverReserve;
+        );
+        const panelLength = this._dockBaseLength + this._getHoverReserve();
+        if (panelLength === this._dockPanelLength)
             return;
-        }
 
-        const animateDockLength = this._lastHoverReserve !== null &&
-            this._dockPanelLength !== null &&
-            hoverReserve !== this._lastHoverReserve;
         this._dockPanelLength = panelLength;
-        this._lastHoverReserve = hoverReserve;
-        this._onPosition(false, false, animateDockLength);
+        this._onPosition(false, false);
         this._taskbarWidthUpdater.queue();
     }
 

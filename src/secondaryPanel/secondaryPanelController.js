@@ -114,6 +114,8 @@ export class SecondaryPanelController {
         this._dockController = null;
         this._windowDragController = null;
         this._panelBlurSyncId = 0;
+        this._dockHoverReserve = 0;
+        this._hoverAnimationExtents = [0, 0];
         this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
         const configuredIconSize = isDock
@@ -167,7 +169,10 @@ export class SecondaryPanelController {
                         this._rightBox,
                     ]
                 ),
-            onHoverAnimationReserveChanged: () => this._updateTaskbarWidth(),
+            onHoverAnimationReserveChanged: () =>
+                this._onHoverAnimationReserveChanged(),
+            onHoverAnimationExtentsChanged: (before, after) =>
+                this._onHoverAnimationExtentsChanged(before, after),
             isHoverAnimationBlocked: () =>
                 this._interactionIsBlocked(false) ||
                 this._autoHideController.hidden,
@@ -280,16 +285,10 @@ export class SecondaryPanelController {
                 getIconSize: () => this._iconSize,
                 setIconSize: iconSize => this._iconSize = iconSize,
                 setPanelHeight: panelHeight => this._panelHeight = panelHeight,
-                onPosition: (
-                    updateTaskbarWidth,
-                    animateEdgeGap,
-                    animateDockLength
-                ) => this._position(
-                    updateTaskbarWidth,
-                    animateEdgeGap,
-                    animateDockLength
-                ),
+                onPosition: (updateTaskbarWidth, animateEdgeGap) =>
+                    this._position(updateTaskbarWidth, animateEdgeGap),
                 isCentered: () => this._appsAreCentered(),
+                getHoverReserve: () => this._dockHoverReserve,
             });
         }
     }
@@ -802,10 +801,60 @@ export class SecondaryPanelController {
         );
     }
 
+    _onHoverAnimationReserveChanged() {
+        const reserve = this._taskbarController.getHoverAnimationReserve();
+        const [before, after] = this._hoverAnimationExtents;
+        if (reserve > 0 || (before === 0 && after === 0))
+            this._dockHoverReserve = reserve;
+        this._updateTaskbarWidth();
+    }
+
+    _onHoverAnimationExtentsChanged(before, after) {
+        this._hoverAnimationExtents = [before, after];
+        if (!this._dockController)
+            return;
+
+        const reserve = this._taskbarController.getHoverAnimationReserve();
+        if (before === 0 && after === 0 && this._dockHoverReserve !== reserve) {
+            this._dockHoverReserve = reserve;
+            this._updateTaskbarWidth();
+            return;
+        }
+
+        this._syncDockMagnifyExtents(this.actor.vertical);
+    }
+
+    _syncDockMagnifyExtents(vertical) {
+        const lengthProperty = vertical ? 'height' : 'width';
+        const positionProperty = vertical ? 'y' : 'x';
+        const boxLength = this._panelBox[lengthProperty];
+        let start = 0;
+        let end = boxLength;
+        if (!this._settings.get_boolean('dock-panel-mode')) {
+            const [before, after] = this._hoverAnimationExtents;
+            const baseLength = Math.min(
+                this._dockController.getBaseLength() ?? boxLength,
+                boxLength
+            );
+            const baseStart = Math.floor((boxLength - baseLength) / 2);
+            start = Math.clamp(baseStart + before, 0, boxLength);
+            end = Math.clamp(
+                baseStart + baseLength + after,
+                start,
+                boxLength
+            );
+        }
+        this.actor[vertical ? 'x' : 'y'] = 0;
+        this.actor[positionProperty] = start;
+        this.actor[lengthProperty] = end - start;
+        this.actor.centerOffset = boxLength - start - end;
+        this.actor.queue_relayout();
+        this._queuePanelBlurSync();
+    }
+
     _position(
         updateTaskbarWidth = true,
-        animateEdgeGapRequested = false,
-        animateDockLength = false
+        animateEdgeGapRequested = false
     ) {
         const positionState = this._dockController
             ? this._dockController.getPositionState(
@@ -817,66 +866,32 @@ export class SecondaryPanelController {
             : this._panelGeometry();
         const property = geometry.vertical ? 'x' : 'y';
         const lengthProperty = geometry.vertical ? 'height' : 'width';
-        const positionProperty = geometry.vertical ? 'y' : 'x';
-        const crossProperty = geometry.vertical ? 'width' : 'height';
         const translationProperty = geometry.vertical
             ? 'translation_y'
             : 'translation_x';
-        const animateDockGeometry = animateDockLength &&
-            this._dockController &&
-            !animateEdgeGapRequested;
-        if (animateDockGeometry) {
-            const currentPosition = this._panelBox[positionProperty] +
-                this._panelBox[translationProperty];
-            this._panelBox.remove_transition(lengthProperty);
-            this._panelBox.remove_transition(translationProperty);
-            this._panelBox[crossProperty] = geometry[crossProperty];
-            this.actor.remove_transition(lengthProperty);
-            this.actor[crossProperty] = geometry[crossProperty];
-            if (!this._panelBox.get_transition(property))
-                this._panelBox[property] = geometry[property];
-            this._panelBox[positionProperty] = geometry[positionProperty];
-            this._panelBox[translationProperty] = currentPosition -
-                geometry[positionProperty];
-            const duration = this._taskbarController
-                .getHoverAnimationExpansionDuration();
-            this._panelBox.ease({
-                [lengthProperty]: geometry[lengthProperty],
-                [translationProperty]: 0,
-                duration,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
-            this.actor.ease({
-                [lengthProperty]: geometry[lengthProperty],
-                duration,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-                onStopped: () => this._queuePanelBlurSync(),
-            });
-        } else {
-            this._panelBox.remove_transition(lengthProperty);
-            this._panelBox.remove_transition(translationProperty);
-            this._panelBox[translationProperty] = 0;
-            this.actor.remove_transition(lengthProperty);
-            this._panelBox.set_size(geometry.width, geometry.height);
-            this.actor.set_size(geometry.width, geometry.height);
-            if (!animateEdgeGapRequested ||
-                !positionState ||
-                positionState.edgeGapChanged && !positionState.animateEdgeGap) {
-                if (this._autoHideController &&
-                    this._panelBox.get_transition(property)) {
-                    if (geometry.vertical)
-                        this._panelBox.y = geometry.y;
-                    else
-                        this._panelBox.x = geometry.x;
-                } else {
-                    this._panelBox.set_position(geometry.x, geometry.y);
-                }
+        this._panelBox.remove_transition(lengthProperty);
+        this._panelBox.remove_transition(translationProperty);
+        this._panelBox[translationProperty] = 0;
+        this.actor.remove_transition(lengthProperty);
+        this._panelBox.set_size(geometry.width, geometry.height);
+        this.actor.set_size(geometry.width, geometry.height);
+        if (!animateEdgeGapRequested ||
+            !positionState ||
+            positionState.edgeGapChanged && !positionState.animateEdgeGap) {
+            if (this._autoHideController &&
+                this._panelBox.get_transition(property)) {
+                if (geometry.vertical)
+                    this._panelBox.y = geometry.y;
+                else
+                    this._panelBox.x = geometry.x;
+            } else {
+                this._panelBox.set_position(geometry.x, geometry.y);
             }
-            if (this._dockController)
-                this._queuePanelBlurSync();
         }
-        if (this._dockController)
+        if (this._dockController) {
+            this._syncDockMagnifyExtents(geometry.vertical);
             this._dockController.syncStrut();
+        }
         this.actor.vertical = geometry.vertical;
         const orientation = geometry.vertical
             ? Clutter.Orientation.VERTICAL
