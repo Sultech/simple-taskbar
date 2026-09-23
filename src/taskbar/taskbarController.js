@@ -1188,6 +1188,7 @@ export class TaskbarController {
         const wantedAppIds = new Set(
             entries.map(entry => entry.app.get_id())
         );
+        this._handOverPinnedItems(entries, wantedKeys);
 
         for (const [key, item] of this._appButtons) {
             if (!wantedKeys.has(key)) {
@@ -1549,6 +1550,36 @@ export class TaskbarController {
             item,
             app => this._interestingWindows(app)
         );
+    }
+
+    _handOverPinnedItems(entries, wantedKeys) {
+        if (this._showAppLabels())
+            return;
+
+        for (const entry of entries) {
+            if (!entry.isPinnedPrimary || entry.isLauncher ||
+                entry.isCombined || this._appButtons.has(entry.key))
+                continue;
+
+            for (const [key, item] of this._appButtons) {
+                if (wantedKeys.has(key) ||
+                    item._taskbarApp !== entry.app ||
+                    !item._taskbarIsPinnedPrimary ||
+                    item._taskbarIsLauncher ||
+                    item._taskbarIsCombinedApp ||
+                    Boolean(item._taskbarWindow) === Boolean(entry.window))
+                    continue;
+
+                this._getPreviews().removeItem(item);
+                this._destroyAppMenu(item._taskbarButton);
+                this._appButtons.delete(key);
+                this._appButtons.set(entry.key, item);
+                this._appItemFactory.bindWindow(item, entry.window);
+                this._syncItemLabel(item);
+                this._updateGlassGeometry(item);
+                break;
+            }
+        }
     }
 
     _isPinnedPlaceholder(window, isLauncher, isPinnedPrimary) {
