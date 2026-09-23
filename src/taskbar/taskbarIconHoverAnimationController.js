@@ -224,10 +224,6 @@ export class TaskbarIconHoverAnimationController {
         return this._animator.getOutwardReserve();
     }
 
-    getExpansionDuration() {
-        return this._animator.getExpansionDuration();
-    }
-
     isPointerInMagnifyBounds() {
         if (!this._animator.isMagnifyActive())
             return false;

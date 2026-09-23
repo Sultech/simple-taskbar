@@ -31,21 +31,6 @@ function controlDefinitions() {
             subtitle: _('Animation time in milliseconds'),
         },
         {
-            property: 'expansion',
-            key: APP_ICON_HOVER_ANIMATION_SETTINGS.expansion,
-            factor: 1,
-            lower: 0,
-            upper: 600,
-            step: 1,
-            page: 5,
-            digits: 0,
-            integer: true,
-            title: _('Dock Expansion'),
-            subtitle: _('Dock resize time in milliseconds'),
-            available: settings => settings.get_boolean('dock-mode') &&
-                !settings.get_boolean('dock-panel-mode'),
-        },
-        {
             property: 'rotation',
             key: APP_ICON_HOVER_ANIMATION_SETTINGS.rotation,
             factor: 1,
@@ -176,13 +161,6 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
             'changed::animate-appicon-hover-animation-type',
             () => this._sync()
         );
-        for (const key of ['dock-mode', 'dock-panel-mode']) {
-            connectSettings(
-                settings,
-                `changed::${key}`,
-                () => this._sync()
-            );
-        }
         for (const key of Object.values(APP_ICON_HOVER_ANIMATION_SETTINGS)) {
             connectSettings(
                 settings,
@@ -227,10 +205,7 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
             ).deepUnpack();
             const defaultValue = defaults[type];
             const value = values[type] ?? defaultValue ?? 0;
-            const available = definition.available
-                ? definition.available(this._settings)
-                : true;
-            scale.sensitive = available && defaultValue !== undefined;
+            scale.sensitive = defaultValue !== undefined;
             scale.set_value(value * definition.factor);
             scale.clear_marks();
             if (defaultValue !== undefined) {

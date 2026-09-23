@@ -180,10 +180,6 @@
       <default>{'simple':160,'ripple':130,'magnify':80}</default>
       <summary>Application icon hover animation duration</summary>
     </key>
-    <key name="animate-appicon-hover-animation-expansion" type="a{su}">
-      <default>{'magnify':100}</default>
-      <summary>Application icon hover animation dock expansion time</summary>
-    </key>
     <key name="animate-appicon-hover-animation-extent" type="a{si}">
       <default>{'ripple':4,'magnify':7}</default>
       <summary>Application icon hover animation extent</summary>

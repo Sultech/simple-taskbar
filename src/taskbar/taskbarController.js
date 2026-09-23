@@ -887,10 +887,6 @@ export class TaskbarController {
         return this._iconHoverAnimationController.getOutwardReserve();
     }
 
-    getHoverAnimationExpansionDuration() {
-        return this._iconHoverAnimationController.getExpansionDuration();
-    }
-
     isPointerInMagnifyBounds() {
         return this._iconHoverAnimationController.isPointerInMagnifyBounds();
     }

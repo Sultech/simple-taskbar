@@ -60,12 +60,6 @@ export class TaskbarHoverAnimationSettings {
         return this._panelPositionCache;
     }
 
-    getExpansionDuration() {
-        return this.getAnimationProfile(
-            APP_ICON_HOVER_ANIMATION.MAGNIFY
-        ).expansion;
-    }
-
     getRenderScale() {
         this._renderScaleCache ??= iconRenderScale(this._settings);
         return this._renderScaleCache;

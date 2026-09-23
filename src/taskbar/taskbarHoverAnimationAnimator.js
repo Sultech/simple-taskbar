@@ -71,12 +71,6 @@ export class TaskbarHoverAnimationAnimator {
         );
     }
 
-    getExpansionDuration() {
-        return this.getAnimationProfile(
-            APP_ICON_HOVER_ANIMATION.MAGNIFY
-        ).expansion;
-    }
-
     getAnimationType() {
         return this._settings.getAnimationType();
     }
