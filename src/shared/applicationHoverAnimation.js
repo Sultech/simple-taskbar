@@ -25,6 +25,14 @@ export const APP_ICON_HOVER_ANIMATION_SETTINGS = {
     extent: 'animate-appicon-hover-animation-extent',
 };
 
+export const APP_ICON_MAGNIFY_SETTING_KEYS = Object.freeze([
+    'combine-app-buttons-mode',
+    'dock-mode',
+    'dock-position',
+    'hide-app-labels',
+    'panel-position',
+]);
+
 export function appIconMagnifyAllowed(settings) {
     return positionIsVertical(activePanelPosition(settings)) ||
         settings.get_string('combine-app-buttons-mode') === 'always' ||

@@ -19,6 +19,7 @@ import {
 } from './windowPreviewDialog.js';
 import {
     APP_ICON_HOVER_ANIMATION,
+    APP_ICON_MAGNIFY_SETTING_KEYS,
     appIconMagnifyAllowed,
 } from '../shared/applicationHoverAnimation.js';
 import {
@@ -367,13 +368,7 @@ export function addApplicationInteractionGroup({
                     choice => choice.value !==
                         APP_ICON_HOVER_ANIMATION.MAGNIFY
                 ),
-            choicesChangedKeys: [
-                'combine-app-buttons-mode',
-                'dock-mode',
-                'dock-position',
-                'hide-app-labels',
-                'panel-position',
-            ],
+            choicesChangedKeys: APP_ICON_MAGNIFY_SETTING_KEYS,
             addSuffix: row => row.add_suffix(animationOptionsButton),
             addRow: row => windowInteractionRow.add_row(row),
         },
@@ -423,13 +418,7 @@ export function addApplicationInteractionGroup({
         'changed::windows-xp-theme-enabled',
         syncAnimationOptionsSensitivity
     );
-    for (const key of [
-        'combine-app-buttons-mode',
-        'dock-mode',
-        'dock-position',
-        'hide-app-labels',
-        'panel-position',
-    ]) {
+    for (const key of APP_ICON_MAGNIFY_SETTING_KEYS) {
         connectSettings(
             settings,
             `changed::${key}`,
