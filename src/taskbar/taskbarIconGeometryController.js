@@ -6,6 +6,23 @@ import Mtk from 'gi://Mtk';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+export function iconScreenGeometry(icon) {
+    if (!icon.get_stage() || !icon.has_allocation())
+        return null;
+
+    const [x, y] = icon.get_transformed_position();
+    const [width, height] = icon.get_transformed_size();
+    if (width <= 0 || height <= 0)
+        return null;
+
+    return {
+        x: Math.round(x),
+        y: Math.round(y),
+        width: Math.round(width),
+        height: Math.round(height),
+    };
+}
+
 export class TaskbarIconGeometryController {
     constructor({
         settings,
@@ -77,19 +94,15 @@ export class TaskbarIconGeometryController {
 
     _updateItemIconGeometry(item) {
         const icon = item._taskbarIcon;
-        if (!icon.get_stage() || !icon.has_allocation())
-            return;
-
-        const [x, y] = icon.get_transformed_position();
-        const [width, height] = icon.get_transformed_size();
-        if (width <= 0 || height <= 0)
+        const screenGeometry = iconScreenGeometry(icon);
+        if (!screenGeometry)
             return;
 
         const geometry = new Mtk.Rectangle();
-        geometry.x = Math.round(x);
-        geometry.y = Math.round(y);
-        geometry.width = Math.max(1, Math.round(width));
-        geometry.height = Math.max(1, Math.round(height));
+        geometry.x = screenGeometry.x;
+        geometry.y = screenGeometry.y;
+        geometry.width = Math.max(1, screenGeometry.width);
+        geometry.height = Math.max(1, screenGeometry.height);
         const monitor = Main.layoutManager.findMonitorForActor(
             this._taskbarActor
         );

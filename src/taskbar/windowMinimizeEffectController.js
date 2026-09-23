@@ -10,6 +10,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {MagicLampEffect} from './magicLampEffect.js';
+import {iconScreenGeometry} from './taskbarIconGeometryController.js';
 import {
     WINDOW_MINIMIZE_EFFECT,
 } from '../shared/windowMinimizeEffect.js';
@@ -195,20 +196,7 @@ export class WindowMinimizeEffectController {
 
     _liveIconGeometry(window) {
         const icon = window._simpleTaskbarIconActor;
-        if (!icon || !icon.get_stage() || !icon.has_allocation())
-            return null;
-
-        const [x, y] = icon.get_transformed_position();
-        const [width, height] = icon.get_transformed_size();
-        if (width <= 0 || height <= 0)
-            return null;
-
-        return {
-            x: Math.round(x),
-            y: Math.round(y),
-            width: Math.round(width),
-            height: Math.round(height),
-        };
+        return icon ? iconScreenGeometry(icon) : null;
     }
 
     _isMinimizeWindowTypes(types) {
