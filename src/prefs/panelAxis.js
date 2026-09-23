@@ -3,15 +3,7 @@
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {
-    activePanelPosition,
-    panelIsVertical,
-    positionIsVertical,
-} from '../shared/panelPositionUtils.js';
-
-export function activePanelIsVertical(settings) {
-    return positionIsVertical(activePanelPosition(settings));
-}
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 export function axisPanelPositions(settings, panelPositions) {
     if (!panelIsVertical(settings))
