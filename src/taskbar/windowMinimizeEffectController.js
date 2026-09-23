@@ -13,6 +13,7 @@ import {MagicLampEffect} from './magicLampEffect.js';
 import {
     WINDOW_MINIMIZE_EFFECT,
 } from '../shared/windowMinimizeEffect.js';
+import {activePanelPosition} from '../shared/panelPositionUtils.js';
 
 const MAGIC_LAMP_EFFECT_NAME = 'simple-taskbar-magic-lamp';
 
@@ -135,9 +136,7 @@ export class WindowMinimizeEffectController {
         if (restore)
             actor.show();
 
-        const panelPosition = this._settings.get_boolean('dock-mode')
-            ? this._settings.get_string('dock-position')
-            : this._settings.get_string('panel-position');
+        const panelPosition = activePanelPosition(this._settings);
         this._activeActors.add(actor);
         actor.add_effect_with_name(
             MAGIC_LAMP_EFFECT_NAME,

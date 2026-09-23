@@ -16,6 +16,12 @@ export function panelPosition(settings) {
     return settings.get_string('panel-position');
 }
 
+export function activePanelPosition(settings) {
+    return settings.get_boolean('dock-mode')
+        ? settings.get_string('dock-position')
+        : settings.get_string('panel-position');
+}
+
 export function panelIsTop(settings) {
     return panelPosition(settings) === 'top';
 }
