@@ -18,9 +18,10 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         GObject.registerClass(this);
     }
 
-    _init(iconGeometry, panelPosition, restore, onDone) {
+    _init(iconGeometry, getIconGeometry, panelPosition, restore, onDone) {
         super._init();
         this._iconGeometry = {...iconGeometry};
+        this._getIconGeometry = getIconGeometry;
         this._panelPosition = panelPosition;
         this._restore = restore;
         this._onDone = onDone;
@@ -28,6 +29,7 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         this._timeline = null;
         this._windowGeometry = null;
         this._targetGeometry = null;
+        this._monitor = null;
     }
 
     vfunc_set_actor(actor) {
@@ -38,19 +40,14 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         const monitor = Main.layoutManager.monitors[
             actor.meta_window.get_monitor()
         ];
+        this._monitor = monitor;
         this._windowGeometry = {
             x: actor.get_x() - monitor.x,
             y: actor.get_y() - monitor.y,
             width: actor.get_width(),
             height: actor.get_height(),
         };
-        this._targetGeometry = {
-            x: this._iconGeometry.x - monitor.x,
-            y: this._iconGeometry.y - monitor.y,
-            width: this._iconGeometry.width,
-            height: this._iconGeometry.height,
-        };
-        this._buildTarget();
+        this._syncTarget();
         this.set_n_tiles(MAGIC_LAMP_TILES, MAGIC_LAMP_TILES);
 
         const timeline = new Clutter.Timeline({
@@ -67,6 +64,11 @@ export class MagicLampEffect extends Clutter.DeformEffect {
 
                 const progress = source.get_progress();
                 this._progress = this._restore ? 1 - progress : progress;
+                const iconGeometry = this._getIconGeometry();
+                if (iconGeometry) {
+                    this._iconGeometry = iconGeometry;
+                    this._syncTarget();
+                }
                 const parent = actor.get_parent();
                 if (parent)
                     parent.queue_redraw();
@@ -142,6 +144,16 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         return false;
     }
 
+    _syncTarget() {
+        this._targetGeometry = {
+            x: this._iconGeometry.x - this._monitor.x,
+            y: this._iconGeometry.y - this._monitor.y,
+            width: this._iconGeometry.width,
+            height: this._iconGeometry.height,
+        };
+        this._buildTarget();
+    }
+
     _buildTarget() {
         const target = this._targetGeometry;
         const centerX = target.x + target.width / 2;
@@ -198,6 +210,7 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         const timeline = this._timeline;
         this._timeline = null;
         this._onDone = null;
+        this._getIconGeometry = null;
         timeline.stop();
         timeline.disconnectObject(this);
 

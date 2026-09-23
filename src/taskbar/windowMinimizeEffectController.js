@@ -143,6 +143,7 @@ export class WindowMinimizeEffectController {
             MAGIC_LAMP_EFFECT_NAME,
             new MagicLampEffect(
                 iconGeometry,
+                () => this._liveIconGeometry(actor.meta_window),
                 panelPosition,
                 restore,
                 effectActor => this._onEffectDone(effectActor, restore)
