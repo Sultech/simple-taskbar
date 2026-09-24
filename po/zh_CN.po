@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 04:57+0100\n"
+"POT-Creation-Date: 2026-09-24 18:24+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -26,7 +26,7 @@ msgstr "展示桌面"
 msgid "Application overflow"
 msgstr "应用溢出"
 
-#: prefs.js:46 src/prefs/applicationIconsGroup.js:364
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:362
 #: src/prefs/panelAppearancePage.js:101 src/prefs/panelModeGroup.js:134
 msgid "Left"
 msgstr "左侧"
@@ -35,7 +35,7 @@ msgstr "左侧"
 msgid "Center"
 msgstr "居中"
 
-#: prefs.js:48 src/prefs/applicationIconsGroup.js:365
+#: prefs.js:48 src/prefs/applicationIconsGroup.js:363
 #: src/prefs/panelAppearancePage.js:102 src/prefs/panelModeGroup.js:135
 msgid "Right"
 msgstr "右侧"
@@ -371,616 +371,608 @@ msgid "Animation time in milliseconds"
 msgstr "动画时间（毫秒）"
 
 #: src/prefs/applicationHoverAnimationDialog.js:43
-msgid "Dock Expansion"
-msgstr "Dock 扩展"
-
-#: src/prefs/applicationHoverAnimationDialog.js:44
-msgid "Dock resize time in milliseconds"
-msgstr "Dock 调整大小时间（毫秒）"
-
-#: src/prefs/applicationHoverAnimationDialog.js:58
 msgid "Rotation"
 msgstr "旋转"
 
-#: src/prefs/applicationHoverAnimationDialog.js:59
+#: src/prefs/applicationHoverAnimationDialog.js:44
 msgid "Rotation angle in degrees"
 msgstr "旋转角度（度）"
 
-#: src/prefs/applicationHoverAnimationDialog.js:71
+#: src/prefs/applicationHoverAnimationDialog.js:56
 msgid "Travel"
 msgstr "位移"
 
-#: src/prefs/applicationHoverAnimationDialog.js:73
+#: src/prefs/applicationHoverAnimationDialog.js:58
 msgid "Movement beyond the taskbar or Dock edge as a percentage of icon size"
 msgstr "超出任务栏或 Dock 边缘的移动量，以图标大小的百分比表示"
 
-#: src/prefs/applicationHoverAnimationDialog.js:86
+#: src/prefs/applicationHoverAnimationDialog.js:71
 msgid "Zoom"
 msgstr "缩放"
 
-#: src/prefs/applicationHoverAnimationDialog.js:87
+#: src/prefs/applicationHoverAnimationDialog.js:72
 msgid "Maximum icon scale as a percentage"
 msgstr "最大图标缩放百分比"
 
-#: src/prefs/applicationHoverAnimationDialog.js:99
+#: src/prefs/applicationHoverAnimationDialog.js:84
 msgid "Convexity"
 msgstr "凸度"
 
-#: src/prefs/applicationHoverAnimationDialog.js:100
+#: src/prefs/applicationHoverAnimationDialog.js:85
 msgid "Shape of the hover curve"
 msgstr "悬停曲线的形状"
 
-#: src/prefs/applicationHoverAnimationDialog.js:112
+#: src/prefs/applicationHoverAnimationDialog.js:97
 msgid "Extent"
 msgstr "范围"
 
-#: src/prefs/applicationHoverAnimationDialog.js:113
+#: src/prefs/applicationHoverAnimationDialog.js:98
 msgid "Number of icons affected by the pointer"
 msgstr "受指针影响的图标数量"
 
-#: src/prefs/applicationHoverAnimationDialog.js:121
+#: src/prefs/applicationHoverAnimationDialog.js:106
 msgid "Animation Options"
 msgstr "动画选项"
 
-#: src/prefs/applicationHoverAnimationDialog.js:130
+#: src/prefs/applicationHoverAnimationDialog.js:115
 msgid "Application Icon Hover Animation"
 msgstr "应用图标悬停动画"
 
-#: src/prefs/applicationHoverAnimationDialog.js:150
+#: src/prefs/applicationHoverAnimationDialog.js:135
 msgid "Animation Profile"
 msgstr "动画配置"
 
-#: src/prefs/applicationHoverAnimationDialog.js:152
+#: src/prefs/applicationHoverAnimationDialog.js:137
 msgid "Adjust the profile selected in the application icon settings"
 msgstr "调整应用图标设置中选定的配置"
 
-#: src/prefs/applicationIconsGroup.js:59
+#: src/prefs/applicationIconsGroup.js:60
 msgid "Application Icon Appearance"
 msgstr "应用程序图标外观"
 
-#: src/prefs/applicationIconsGroup.js:60
+#: src/prefs/applicationIconsGroup.js:61
 msgid "Adjust icon size, spacing, and hover/focus effects"
 msgstr "调整图标大小、间距以及悬停/聚焦效果"
 
-#: src/prefs/applicationIconsGroup.js:69
+#: src/prefs/applicationIconsGroup.js:70
 msgid "Icon Size"
 msgstr "图标尺寸"
 
-#: src/prefs/applicationIconsGroup.js:71
+#: src/prefs/applicationIconsGroup.js:72
 msgid "The panel grows automatically when larger icons need more room"
 msgstr "当较大图标需要更多空间时，面板会自动增大"
 
-#: src/prefs/applicationIconsGroup.js:84
+#: src/prefs/applicationIconsGroup.js:85
 msgid "Minimum Icon Size"
 msgstr "最小图标大小"
 
-#: src/prefs/applicationIconsGroup.js:86
+#: src/prefs/applicationIconsGroup.js:87
 msgid "Smallest application icon size used when space is limited"
 msgstr "空间不足时使用的最小应用图标大小"
 
-#: src/prefs/applicationIconsGroup.js:99
+#: src/prefs/applicationIconsGroup.js:100
 msgid "Icon Spacing"
 msgstr "图标间距"
 
-#: src/prefs/applicationIconsGroup.js:100
+#: src/prefs/applicationIconsGroup.js:101
 msgid "Space between application icons"
 msgstr "应用图标之间的间距"
 
-#: src/prefs/applicationIconsGroup.js:112
+#: src/prefs/applicationIconsGroup.js:113
 msgid "Icon Edge Padding"
 msgstr "图标边距"
 
-#: src/prefs/applicationIconsGroup.js:126
+#: src/prefs/applicationIconsGroup.js:127
 msgid "Hover and Focus Effect"
 msgstr "悬停和聚焦效果"
 
-#: src/prefs/applicationIconsGroup.js:127
+#: src/prefs/applicationIconsGroup.js:128
 msgid "Choose the effect used by application icons"
 msgstr "选择应用图标使用的效果"
 
-#: src/prefs/applicationIconsGroup.js:131
+#: src/prefs/applicationIconsGroup.js:132
 msgid "Glass"
 msgstr "玻璃"
 
-#: src/prefs/applicationIconsGroup.js:135
+#: src/prefs/applicationIconsGroup.js:136
 msgid "Classic"
 msgstr "经典"
 
-#: src/prefs/applicationIconsGroup.js:160
+#: src/prefs/applicationIconsGroup.js:161
 msgid "Icon Alignment"
 msgstr "图标对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:161
+#: src/prefs/applicationIconsGroup.js:162
 msgid "Choose the application icon alignment"
 msgstr "选择应用图标对齐方式"
 
-#: src/prefs/applicationIconsGroup.js:216
+#: src/prefs/applicationIconsGroup.js:217
 msgid "Application Layout and Behavior"
 msgstr "应用布局和行为"
 
-#: src/prefs/applicationIconsGroup.js:218
+#: src/prefs/applicationIconsGroup.js:219
 msgid "Choose which applications appear and how they are grouped and indicated"
 msgstr "选择要显示的应用，以及它们的分组和指示方式"
 
-#: src/prefs/applicationIconsGroup.js:226
+#: src/prefs/applicationIconsGroup.js:227
 #: src/prefs/pinnedApplicationBehaviorDialog.js:27
 #: src/prefs/pinnedApplicationBehaviorDialog.js:36
 msgid "Pinned Application Behavior"
 msgstr "已固定应用的行为"
 
-#: src/prefs/applicationIconsGroup.js:227
+#: src/prefs/applicationIconsGroup.js:228
 msgid "Choose how pinned and running applications appear"
 msgstr "选择已固定和正在运行的应用的显示方式"
 
-#: src/prefs/applicationIconsGroup.js:234
+#: src/prefs/applicationIconsGroup.js:235
 msgid "Always"
 msgstr "始终"
 
-#: src/prefs/applicationIconsGroup.js:235
-#: src/prefs/applicationIconsGroup.js:239
+#: src/prefs/applicationIconsGroup.js:236
+#: src/prefs/applicationIconsGroup.js:240
 msgid "Only When Full"
 msgstr "仅当占满时"
 
-#: src/prefs/applicationIconsGroup.js:236
-#: src/prefs/applicationIconsGroup.js:240
+#: src/prefs/applicationIconsGroup.js:237
+#: src/prefs/applicationIconsGroup.js:241
 msgid "Never"
 msgstr "从不"
 
-#: src/prefs/applicationIconsGroup.js:249
+#: src/prefs/applicationIconsGroup.js:250
 msgid "Combine Application Windows"
 msgstr "合并应用窗口"
 
-#: src/prefs/applicationIconsGroup.js:250
+#: src/prefs/applicationIconsGroup.js:251
 msgid "Choose when windows share one application icon"
 msgstr "选择窗口在何时共用一个应用图标"
 
-#: src/prefs/applicationIconsGroup.js:268
+#: src/prefs/applicationIconsGroup.js:269
 msgid "Show Progress Bars"
 msgstr "显示进度条"
 
-#: src/prefs/applicationIconsGroup.js:269
+#: src/prefs/applicationIconsGroup.js:270
 msgid "Display file transfer and install progress on application icons"
 msgstr "在应用程序图标上显示文件传输和安装进度"
 
-#: src/prefs/applicationIconsGroup.js:286
+#: src/prefs/applicationIconsGroup.js:287
 msgid "Show Notification Badges"
 msgstr "显示通知徽章"
 
-#: src/prefs/applicationIconsGroup.js:287
+#: src/prefs/applicationIconsGroup.js:288
 msgid "Display unread counts on application icons"
 msgstr "在应用图标上显示未读通知数量"
 
-#: src/prefs/applicationIconsGroup.js:293
+#: src/prefs/applicationIconsGroup.js:294
 msgid "Show Pinned App Separator"
 msgstr "显示已固定应用分隔线"
 
-#: src/prefs/applicationIconsGroup.js:294
+#: src/prefs/applicationIconsGroup.js:295
 msgid "Show a line between pinned and running applications"
 msgstr "在已固定和正在运行的应用之间显示分隔线"
 
-#: src/prefs/applicationIconsGroup.js:300
+#: src/prefs/applicationIconsGroup.js:301
 msgid "Show Location Separator"
 msgstr "显示位置分隔线"
 
-#: src/prefs/applicationIconsGroup.js:301
+#: src/prefs/applicationIconsGroup.js:302
 msgid "Show a line between applications and locations"
 msgstr "在应用和位置之间显示分隔线"
 
-#: src/prefs/applicationIconsGroup.js:355
+#: src/prefs/applicationIconsGroup.js:353
 msgid "Running Indicators"
 msgstr "运行指示器"
 
-#: src/prefs/applicationIconsGroup.js:357
+#: src/prefs/applicationIconsGroup.js:355
 msgid "Configure the position, style, size, and colours of running indicators"
 msgstr "配置运行指示器的位置、样式、大小和颜色"
 
-#: src/prefs/applicationIconsGroup.js:362 src/prefs/panelAppearancePage.js:99
-#: src/prefs/panelAxis.js:24 src/prefs/panelModeGroup.js:132
+#: src/prefs/applicationIconsGroup.js:360 src/prefs/panelAppearancePage.js:99
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:132
 msgid "Top"
 msgstr "顶部"
 
-#: src/prefs/applicationIconsGroup.js:363 src/prefs/panelAppearancePage.js:100
-#: src/prefs/panelAxis.js:26 src/prefs/panelModeGroup.js:133
+#: src/prefs/applicationIconsGroup.js:361 src/prefs/panelAppearancePage.js:100
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:133
 msgid "Bottom"
 msgstr "底部"
 
-#: src/prefs/applicationIconsGroup.js:368
+#: src/prefs/applicationIconsGroup.js:366
 msgid "Rounded"
 msgstr "圆角"
 
-#: src/prefs/applicationIconsGroup.js:369
+#: src/prefs/applicationIconsGroup.js:367
 msgid "Dots"
 msgstr "圆点"
 
-#: src/prefs/applicationIconsGroup.js:370
+#: src/prefs/applicationIconsGroup.js:368
 msgid "Squares"
 msgstr "方块"
 
-#: src/prefs/applicationIconsGroup.js:371
+#: src/prefs/applicationIconsGroup.js:369
 msgid "Dashes"
 msgstr "短线"
 
-#: src/prefs/applicationIconsGroup.js:372
+#: src/prefs/applicationIconsGroup.js:370
 msgid "Segmented"
 msgstr "分段"
 
-#: src/prefs/applicationIconsGroup.js:373
+#: src/prefs/applicationIconsGroup.js:371
 msgid "Solid"
 msgstr "实线"
 
-#: src/prefs/applicationIconsGroup.js:374
+#: src/prefs/applicationIconsGroup.js:372
 msgid "Ciliora"
 msgstr "Ciliora"
 
-#: src/prefs/applicationIconsGroup.js:375
+#: src/prefs/applicationIconsGroup.js:373
 msgid "Metro"
 msgstr "Metro"
 
-#: src/prefs/applicationIconsGroup.js:385
+#: src/prefs/applicationIconsGroup.js:383
 msgid "Running Indicator Position"
 msgstr "运行指示器位置"
 
-#: src/prefs/applicationIconsGroup.js:386
+#: src/prefs/applicationIconsGroup.js:384
 msgid "Choose which edge of the application icon to use"
 msgstr "选择使用应用图标的哪一边"
 
-#: src/prefs/applicationIconsGroup.js:401
+#: src/prefs/applicationIconsGroup.js:399
 msgid "Running Indicator Style"
 msgstr "运行指示器样式"
 
-#: src/prefs/applicationIconsGroup.js:403
+#: src/prefs/applicationIconsGroup.js:401
 msgid "Choose the shape of indicators around running applications"
 msgstr "选择正在运行的应用周围指示器的形状"
 
-#: src/prefs/applicationIconsGroup.js:418
+#: src/prefs/applicationIconsGroup.js:416
 msgid "Running Indicator Size"
 msgstr "运行指示器大小"
 
-#: src/prefs/applicationIconsGroup.js:419
+#: src/prefs/applicationIconsGroup.js:417
 msgid "Choose the indicator thickness in pixels"
 msgstr "选择指示器的像素厚度"
 
-#: src/prefs/applicationIconsGroup.js:428
+#: src/prefs/applicationIconsGroup.js:426
 msgid "Stretch Indicators"
 msgstr "拉伸指示器"
 
-#: src/prefs/applicationIconsGroup.js:430
+#: src/prefs/applicationIconsGroup.js:428
 msgid "Run indicators the full length of the application icon"
 msgstr "使指示器覆盖整个应用图标"
 
-#: src/prefs/applicationIconsGroup.js:435
+#: src/prefs/applicationIconsGroup.js:433
 msgid "Custom Indicator Colors"
 msgstr "自定义指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:436
+#: src/prefs/applicationIconsGroup.js:434
 msgid "Choose colors for running application indicators"
 msgstr "为运行指示器选择颜色"
 
-#: src/prefs/applicationIconsGroup.js:449
+#: src/prefs/applicationIconsGroup.js:447
 msgid "Match Icon Color"
 msgstr "匹配图标颜色"
 
-#: src/prefs/applicationIconsGroup.js:451
+#: src/prefs/applicationIconsGroup.js:449
 msgid "Color the focused indicator from the application icon"
 msgstr "根据应用图标的颜色显示聚焦指示器"
 
-#: src/prefs/applicationIconsGroup.js:467
+#: src/prefs/applicationIconsGroup.js:465
 msgid "Focused Indicator Color"
 msgstr "聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:477
+#: src/prefs/applicationIconsGroup.js:475
 msgid "Unfocused Indicator Color"
 msgstr "未聚焦的指示器颜色"
 
-#: src/prefs/applicationIconsGroup.js:542
+#: src/prefs/applicationIconsGroup.js:540
 msgid "Application Overflow"
 msgstr "应用溢出"
 
-#: src/prefs/applicationIconsGroup.js:543
+#: src/prefs/applicationIconsGroup.js:541
 msgid "Choose how overflowing applications are handled"
 msgstr "选择如何处理超出空间的应用"
 
-#: src/prefs/applicationIconsGroup.js:549
+#: src/prefs/applicationIconsGroup.js:547
 msgid "Enable Application Overflow"
 msgstr "启用应用溢出"
 
-#: src/prefs/applicationIconsGroup.js:559
+#: src/prefs/applicationIconsGroup.js:557
 msgid "Overflow Style"
 msgstr "溢出样式"
 
-#: src/prefs/applicationIconsGroup.js:561
+#: src/prefs/applicationIconsGroup.js:559
 msgid "Taskbar Flyout"
 msgstr "任务栏弹出"
 
-#: src/prefs/applicationIconsGroup.js:562
+#: src/prefs/applicationIconsGroup.js:560
 msgid "Application List"
 msgstr "应用程序列表"
 
-#: src/prefs/applicationIconsGroup.js:595 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:593 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "按工作区隔离"
 
-#: src/prefs/applicationIconsGroup.js:596
+#: src/prefs/applicationIconsGroup.js:594
 msgid "Show running applications from the current workspace only"
 msgstr "仅展示当前工作区中正在运行的应用"
 
-#: src/prefs/applicationIconsGroup.js:600 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:598 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "按显示器隔离"
 
-#: src/prefs/applicationIconsGroup.js:604
+#: src/prefs/applicationIconsGroup.js:602
 msgid "Running Application Isolation"
 msgstr "正在运行的应用隔离"
 
-#: src/prefs/applicationIconsGroup.js:621
-#: src/prefs/applicationIconsGroup.js:692
+#: src/prefs/applicationIconsGroup.js:619
+#: src/prefs/applicationIconsGroup.js:690
 msgid "Application Icons"
 msgstr "应用程序图标"
 
-#: src/prefs/applicationIconsGroup.js:623
+#: src/prefs/applicationIconsGroup.js:621
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr "更改 Dock 图标的大小、间距、位置和运行指示器。"
 
-#: src/prefs/applicationIconsGroup.js:633
+#: src/prefs/applicationIconsGroup.js:631
 msgid ""
 "Space between icons and the Dock edges; lower it to fit larger icons in a "
 "thinner Dock"
 msgstr "图标与 Dock 边缘之间的间距；调小可在更薄的 Dock 中容纳更大的图标"
 
-#: src/prefs/applicationIconsGroup.js:641
+#: src/prefs/applicationIconsGroup.js:639
 msgid ""
 "Show applications that do not fit in an overflow popup instead of scrolling "
 "the Dock"
 msgstr "将无法容纳的应用显示在溢出弹窗中，而不是滚动 Dock"
 
-#: src/prefs/applicationIconsGroup.js:648
-#: src/prefs/applicationIconsGroup.js:725
+#: src/prefs/applicationIconsGroup.js:646
+#: src/prefs/applicationIconsGroup.js:723
 msgid "Limit running applications to the current workspace or monitor"
 msgstr "将正在运行的应用限制为当前工作区或显示器"
 
-#: src/prefs/applicationIconsGroup.js:651
+#: src/prefs/applicationIconsGroup.js:649
 msgid "Show running applications only in the Dock for their monitor"
 msgstr "仅在应用所在的显示器 Dock 中显示正在运行的应用"
 
-#: src/prefs/applicationIconsGroup.js:694
+#: src/prefs/applicationIconsGroup.js:692
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
 msgstr "更改任务栏图标的大小、间距、位置和运行指示器。"
 
-#: src/prefs/applicationIconsGroup.js:710
+#: src/prefs/applicationIconsGroup.js:708
 msgid ""
 "Space between icons and the taskbar edges; lower it to fit larger icons in a "
 "thinner taskbar"
 msgstr "图标与任务栏边缘之间的间距；调小可在更薄的任务栏中容纳更大的图标"
 
-#: src/prefs/applicationIconsGroup.js:718
+#: src/prefs/applicationIconsGroup.js:716
 msgid ""
 "Show applications that do not fit in an overflow popup instead of scrolling "
 "the taskbar"
 msgstr "将无法容纳的应用显示在溢出弹窗中，而不是滚动任务栏"
 
-#: src/prefs/applicationIconsGroup.js:728
+#: src/prefs/applicationIconsGroup.js:726
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr "仅展示其所在显示器的任务栏上的正在运行的应用"
 
-#: src/prefs/applicationInteractionGroup.js:41
-#: src/prefs/applicationInteractionGroup.js:339
+#: src/prefs/applicationInteractionGroup.js:42
+#: src/prefs/applicationInteractionGroup.js:340
 msgid "None"
 msgstr "无"
 
-#: src/prefs/applicationInteractionGroup.js:45
+#: src/prefs/applicationInteractionGroup.js:46
 msgid "GNOME Launch Zoom"
 msgstr "GNOME 启动缩放"
 
-#: src/prefs/applicationInteractionGroup.js:49
+#: src/prefs/applicationInteractionGroup.js:50
 msgid "Bounce"
 msgstr "弹跳"
 
-#: src/prefs/applicationInteractionGroup.js:53
+#: src/prefs/applicationInteractionGroup.js:54
 msgid "Jump"
 msgstr "跳动"
 
-#: src/prefs/applicationInteractionGroup.js:57
+#: src/prefs/applicationInteractionGroup.js:58
 msgid "Heartbeat"
 msgstr "心跳"
 
-#: src/prefs/applicationInteractionGroup.js:61
+#: src/prefs/applicationInteractionGroup.js:62
 msgid "Squish"
 msgstr "压扁"
 
-#: src/prefs/applicationInteractionGroup.js:65
+#: src/prefs/applicationInteractionGroup.js:66
 msgid "Jelly"
 msgstr "果冻"
 
-#: src/prefs/applicationInteractionGroup.js:69
+#: src/prefs/applicationInteractionGroup.js:70
 msgid "Spin"
 msgstr "旋转"
 
-#: src/prefs/applicationInteractionGroup.js:73
+#: src/prefs/applicationInteractionGroup.js:74
 msgid "3D Spin"
 msgstr "3D 旋转"
 
-#: src/prefs/applicationInteractionGroup.js:77
+#: src/prefs/applicationInteractionGroup.js:78
 msgid "Horizontal Flip"
 msgstr "水平翻转"
 
-#: src/prefs/applicationInteractionGroup.js:81
+#: src/prefs/applicationInteractionGroup.js:82
 msgid "Roll"
 msgstr "滚动"
 
-#: src/prefs/applicationInteractionGroup.js:85
+#: src/prefs/applicationInteractionGroup.js:86
 msgid "Zoom Out & Fade"
 msgstr "缩小并淡出"
 
-#: src/prefs/applicationInteractionGroup.js:89
+#: src/prefs/applicationInteractionGroup.js:90
 msgid "Squeeze"
 msgstr "挤压"
 
-#: src/prefs/applicationInteractionGroup.js:93
+#: src/prefs/applicationInteractionGroup.js:94
 msgid "Glow"
 msgstr "发光"
 
-#: src/prefs/applicationInteractionGroup.js:97
+#: src/prefs/applicationInteractionGroup.js:98
 msgid "Dim"
 msgstr "变暗"
 
-#: src/prefs/applicationInteractionGroup.js:101
+#: src/prefs/applicationInteractionGroup.js:102
 msgid "Tada"
 msgstr "惊喜"
 
-#: src/prefs/applicationInteractionGroup.js:105
+#: src/prefs/applicationInteractionGroup.js:106
 msgid "Swing"
 msgstr "摆动"
 
-#: src/prefs/applicationInteractionGroup.js:109
+#: src/prefs/applicationInteractionGroup.js:110
 msgid "Shake"
 msgstr "抖动"
 
-#: src/prefs/applicationInteractionGroup.js:113
+#: src/prefs/applicationInteractionGroup.js:114
 msgid "Nudge Up"
 msgstr "向上微移"
 
-#: src/prefs/applicationInteractionGroup.js:117
+#: src/prefs/applicationInteractionGroup.js:118
 msgid "Nudge Down"
 msgstr "向下微移"
 
-#: src/prefs/applicationInteractionGroup.js:121
+#: src/prefs/applicationInteractionGroup.js:122
 msgid "Nudge Left"
 msgstr "向左微移"
 
-#: src/prefs/applicationInteractionGroup.js:125
+#: src/prefs/applicationInteractionGroup.js:126
 msgid "Nudge Right"
 msgstr "向右微移"
 
-#: src/prefs/applicationInteractionGroup.js:129
+#: src/prefs/applicationInteractionGroup.js:130
 msgid "Pulse Larger"
 msgstr "放大脉冲"
 
-#: src/prefs/applicationInteractionGroup.js:133
+#: src/prefs/applicationInteractionGroup.js:134
 msgid "Pulse Smaller"
 msgstr "缩小脉冲"
 
-#: src/prefs/applicationInteractionGroup.js:144
+#: src/prefs/applicationInteractionGroup.js:145
 msgid "Application Interaction"
 msgstr "应用交互"
 
-#: src/prefs/applicationInteractionGroup.js:146
+#: src/prefs/applicationInteractionGroup.js:147
 msgid "Configure clicks, scrolling, hovering, previews, and window effects"
 msgstr "配置点击、滚动、悬停、预览和窗口效果"
 
-#: src/prefs/applicationInteractionGroup.js:158
+#: src/prefs/applicationInteractionGroup.js:159
 msgid "Click Action"
 msgstr "点击操作"
 
-#: src/prefs/applicationInteractionGroup.js:159
+#: src/prefs/applicationInteractionGroup.js:160
 msgid "Choose what happens when a running application is clicked"
 msgstr "选择点击正在运行的应用时执行的操作"
 
-#: src/prefs/applicationInteractionGroup.js:171
+#: src/prefs/applicationInteractionGroup.js:172
 msgid "Click Animation"
 msgstr "点击动画"
 
-#: src/prefs/applicationInteractionGroup.js:172
+#: src/prefs/applicationInteractionGroup.js:173
 msgid "Choose the animation shown when an application is clicked"
 msgstr "选择点击应用时显示的动画"
 
-#: src/prefs/applicationInteractionGroup.js:181
+#: src/prefs/applicationInteractionGroup.js:182
 #: src/prefs/dockBehaviorGroup.js:86 src/prefs/taskbarBehaviorGroup.js:113
 msgid "Switch Workspace"
 msgstr "切换工作区"
 
-#: src/prefs/applicationInteractionGroup.js:185
+#: src/prefs/applicationInteractionGroup.js:186
 #: src/prefs/dockBehaviorGroup.js:90 src/prefs/taskbarBehaviorGroup.js:117
 msgid "Cycle Windows"
 msgstr "循环切换窗口"
 
-#: src/prefs/applicationInteractionGroup.js:189
-#: src/prefs/applicationInteractionGroup.js:315
+#: src/prefs/applicationInteractionGroup.js:190
+#: src/prefs/applicationInteractionGroup.js:316
 #: src/prefs/dockBehaviorGroup.js:98 src/prefs/taskbarBehaviorGroup.js:125
 msgid "Do Nothing"
 msgstr "不执行操作"
 
-#: src/prefs/applicationInteractionGroup.js:200
+#: src/prefs/applicationInteractionGroup.js:201
 msgid "Scroll App/Icon Action"
 msgstr "应用/图标滚动操作"
 
-#: src/prefs/applicationInteractionGroup.js:201
+#: src/prefs/applicationInteractionGroup.js:202
 msgid "Choose what happens when scrolling over an application icon"
 msgstr "选择在应用图标上滚动时执行的操作"
 
-#: src/prefs/applicationInteractionGroup.js:218
+#: src/prefs/applicationInteractionGroup.js:219
 #: src/prefs/dockBehaviorGroup.js:111 src/prefs/taskbarBehaviorGroup.js:138
 msgid "Scroll Delay"
 msgstr "滚动延迟"
 
-#: src/prefs/applicationInteractionGroup.js:220
+#: src/prefs/applicationInteractionGroup.js:221
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr "应用图标滚动之间的最短延迟（毫秒）"
 
-#: src/prefs/applicationInteractionGroup.js:240
-#: src/prefs/applicationInteractionGroup.js:286
+#: src/prefs/applicationInteractionGroup.js:241
+#: src/prefs/applicationInteractionGroup.js:287
 msgid "Follow Taskbar Scroll Delay"
 msgstr "跟随任务栏滚动延迟"
 
-#: src/prefs/applicationInteractionGroup.js:257
+#: src/prefs/applicationInteractionGroup.js:258
 msgid "Configure Scroll Delay"
 msgstr "配置滚动延迟"
 
-#: src/prefs/applicationInteractionGroup.js:285
+#: src/prefs/applicationInteractionGroup.js:286
 msgid "Follow Dock Scroll Delay"
 msgstr "跟随 Dock 滚动延迟"
 
-#: src/prefs/applicationInteractionGroup.js:300
+#: src/prefs/applicationInteractionGroup.js:301
 msgid "Application Hover Action"
 msgstr "应用悬停操作"
 
-#: src/prefs/applicationInteractionGroup.js:302
+#: src/prefs/applicationInteractionGroup.js:303
 msgid "Choose what happens when hovering over an application icon"
 msgstr "选择悬停在应用图标上时执行的操作"
 
-#: src/prefs/applicationInteractionGroup.js:307
+#: src/prefs/applicationInteractionGroup.js:308
 msgid "Show Previews"
 msgstr "显示预览"
 
-#: src/prefs/applicationInteractionGroup.js:311
+#: src/prefs/applicationInteractionGroup.js:312
 msgid "Show Tooltip"
 msgstr "显示工具提示"
 
-#: src/prefs/applicationInteractionGroup.js:343
+#: src/prefs/applicationInteractionGroup.js:344
 msgid "Simple"
 msgstr "简单"
 
-#: src/prefs/applicationInteractionGroup.js:347
+#: src/prefs/applicationInteractionGroup.js:348
 msgid "Ripple"
 msgstr "波纹"
 
-#: src/prefs/applicationInteractionGroup.js:351
+#: src/prefs/applicationInteractionGroup.js:352
 msgid "Magnify"
 msgstr "放大"
 
-#: src/prefs/applicationInteractionGroup.js:359
+#: src/prefs/applicationInteractionGroup.js:360
 msgid "Hover Animation Type"
 msgstr "悬停动画类型"
 
-#: src/prefs/applicationInteractionGroup.js:361
+#: src/prefs/applicationInteractionGroup.js:362
 msgid "Choose the animation style for application icon hover"
 msgstr "选择应用图标悬停动画样式"
 
-#: src/prefs/applicationInteractionGroup.js:387
+#: src/prefs/applicationInteractionGroup.js:382
 msgid "Window Minimize Effect"
 msgstr "窗口最小化效果"
 
-#: src/prefs/applicationInteractionGroup.js:389
+#: src/prefs/applicationInteractionGroup.js:384
 msgid "Choose the effect shown when a window is minimized or restored"
 msgstr "选择窗口最小化或还原时显示的效果"
 
-#: src/prefs/applicationInteractionGroup.js:394
+#: src/prefs/applicationInteractionGroup.js:389
 msgid "GNOME Default"
 msgstr "GNOME 默认"
 
-#: src/prefs/applicationInteractionGroup.js:398
+#: src/prefs/applicationInteractionGroup.js:393
 msgid "Magic Lamp"
 msgstr "神灯"
 
@@ -1210,10 +1202,8 @@ msgid "Dock Corner Radius"
 msgstr "Dock 圆角半径"
 
 #: src/prefs/dockAppearanceGroup.js:126
-msgid ""
-"Applies to the floating Dock without blur and with Dynamic Blur; Static Blur "
-"is not supported"
-msgstr "适用于无模糊和使用动态模糊的浮动 Dock；不支持静态模糊"
+msgid "Applies to the floating Dock, including Dynamic and Static Blur"
+msgstr "适用于浮动 Dock，包括动态模糊和静态模糊"
 
 #: src/prefs/dockAppearanceGroup.js:136
 msgid "Make the Dock background transparent"
@@ -1803,7 +1793,7 @@ msgstr "独立的水平和垂直配置文件"
 msgid "Remember different settings for horizontal and vertical layouts"
 msgstr "记住水平和垂直布局的不同设置"
 
-#: src/prefs/panelAxis.js:25
+#: src/prefs/panelAxis.js:14
 msgid "Middle"
 msgstr "中间"
 
@@ -1910,7 +1900,7 @@ msgid "GNOME workspace overview button"
 msgstr "GNOME 工作区概览按钮"
 
 #: src/prefs/panelItemsPage.js:227 src/prefs/dockItemsPage.js:80
-#: src/startMenu/startButtonController.js:1046
+#: src/startMenu/startButtonController.js:1047
 msgid "Applications"
 msgstr "应用程序"
 
@@ -3253,25 +3243,25 @@ msgid "Trash"
 msgstr "回收站"
 
 #: src/taskbar/taskbarAppearanceController.js:686
-#: src/taskbar/taskbarController.js:1419 src/taskbar/taskbarController.js:1421
+#: src/taskbar/taskbarController.js:1424 src/taskbar/taskbarController.js:1426
 msgid "running"
 msgstr "正在运行"
 
-#: src/startMenu/startButtonController.js:549
+#: src/startMenu/startButtonController.js:550
 msgid "Start Menu Settings"
 msgstr "开始菜单设置"
 
-#: src/startMenu/startButtonController.js:554
+#: src/startMenu/startButtonController.js:555
 #: src/panel/panelInteractionController.js:155
 msgid "Dock Settings"
 msgstr "Dock 设置"
 
-#: src/startMenu/startButtonController.js:559
+#: src/startMenu/startButtonController.js:560
 #: src/panel/panelInteractionController.js:155
 msgid "Taskbar Settings"
 msgstr "任务栏设置"
 
-#: src/startMenu/startButtonController.js:1046
+#: src/startMenu/startButtonController.js:1047
 msgid "Start"
 msgstr "开始"
 
@@ -3325,13 +3315,13 @@ msgstr "锁定任务栏"
 msgid "Tray icons"
 msgstr "托盘图标"
 
-#: src/taskbar/windowPreviewController.js:924
+#: src/taskbar/windowPreviewController.js:925
 #: src/windowSwitching/gridAltTabPopup.js:222
 #: src/windowSwitching/gridAltTabPopup.js:307
 msgid "Untitled Window"
 msgstr "无标题窗口"
 
-#: src/taskbar/windowPreviewController.js:986
+#: src/taskbar/windowPreviewController.js:987
 msgid "Close Window"
 msgstr "关闭窗口"
 
@@ -3379,6 +3369,12 @@ msgstr "应用音量"
 #: src/integration/volumeMixerController.js:405
 msgid "No applications are playing audio"
 msgstr "没有应用正在播放音频"
+
+#~ msgid "Dock Expansion"
+#~ msgstr "Dock 扩展"
+
+#~ msgid "Dock resize time in milliseconds"
+#~ msgstr "Dock 调整大小时间（毫秒）"
 
 #~ msgid "Highlight Width"
 #~ msgstr "高亮宽度"

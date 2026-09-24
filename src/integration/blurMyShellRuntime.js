@@ -30,11 +30,22 @@ export function syncPanelBlurCornerRadius(panel, radius) {
 
     const pipeline = actors.bg_manager._bms_pipeline;
     if (actors.static_blur) {
+        pipeline.effect_overrides = {
+            ...pipeline.effect_overrides,
+            corner: {radius},
+        };
         const pipelineId = radius
             ? BLUR_MY_SHELL_ROUNDED_PIPELINE
             : panelBlur.settings.panel.PIPELINE;
-        if (pipeline.pipeline_id !== pipelineId)
+        if (pipeline.pipeline_id !== pipelineId) {
             pipeline.change_pipeline_to(pipelineId);
+            return;
+        }
+
+        for (const effect of pipeline.effects) {
+            if (effect._bms_effect_type === 'corner')
+                effect.radius = radius;
+        }
         return;
     }
 

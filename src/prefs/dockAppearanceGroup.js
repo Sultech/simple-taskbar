@@ -123,7 +123,7 @@ export function addDockAppearanceGroup({
             key: 'dock-corner-radius',
             title: _('Dock Corner Radius'),
             subtitle: _(
-                'Applies to the floating Dock without blur and with Dynamic Blur; Static Blur is not supported'
+                'Applies to the floating Dock, including Dynamic and Static Blur'
             ),
             lower: 0,
             upper: 64,
