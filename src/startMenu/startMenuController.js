@@ -155,6 +155,7 @@ export class StartMenuController {
         this._selectedSearchButton = null;
         this._searchResultButtons = new Map();
         this._searchSelectionVisible = false;
+        this._blockSearchHover = false;
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePress = new SourcePressGuard();
@@ -776,14 +777,16 @@ export class StartMenuController {
             if (this._ignoreSearchChanged)
                 return;
             this._setSearchFocusVisible(Boolean(text));
-            if (query)
+            if (query) {
+                this._blockSearchHover = true;
                 this._showSearchResults(query);
-            else if (this._view === 'all')
+            } else if (this._view === 'all') {
                 this._showAllApps();
-            else if (this._view === 'folder' && this._activeFolderId)
+            } else if (this._view === 'folder' && this._activeFolderId) {
                 this._showPinnedFolder(this._activeFolderId);
-            else
+            } else {
                 this._showPinnedApps();
+            }
         });
         this._searchEntry.clutter_text.connect('key-press-event', (_actor, event) => {
             const navigationResult = this._navigationController.handle(event);
@@ -1197,8 +1200,19 @@ export class StartMenuController {
                 const button =
                     this._listViewBuilder.createSearchResultButton(result);
                 button.connect('notify::hover', () => {
-                    if (button.hover)
+                    if (!button.hover)
+                        return;
+                    if (this._blockSearchHover)
+                        button.hover = false;
+                    else
                         this._setSearchSelection(result, button);
+                });
+                button.connect('motion-event', () => {
+                    if (this._blockSearchHover) {
+                        this._blockSearchHover = false;
+                        button.hover = true;
+                    }
+                    return Clutter.EVENT_PROPAGATE;
                 });
                 this._selectedSearchButton ??= button;
                 this._searchResultButtons.set(
