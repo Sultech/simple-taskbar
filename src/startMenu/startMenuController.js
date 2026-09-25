@@ -155,7 +155,6 @@ export class StartMenuController {
         this._selectedSearchButton = null;
         this._searchResultButtons = new Map();
         this._searchSelectionVisible = false;
-        this._blockSearchHover = false;
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePress = new SourcePressGuard();
@@ -778,7 +777,7 @@ export class StartMenuController {
                 return;
             this._setSearchFocusVisible(Boolean(text));
             if (query) {
-                this._blockSearchHover = true;
+                this._navigationController.blockHover();
                 this._showSearchResults(query);
             } else if (this._view === 'all') {
                 this._showAllApps();
@@ -1200,19 +1199,8 @@ export class StartMenuController {
                 const button =
                     this._listViewBuilder.createSearchResultButton(result);
                 button.connect('notify::hover', () => {
-                    if (!button.hover)
-                        return;
-                    if (this._blockSearchHover)
-                        button.hover = false;
-                    else
+                    if (button.hover)
                         this._setSearchSelection(result, button);
-                });
-                button.connect('motion-event', () => {
-                    if (this._blockSearchHover) {
-                        this._blockSearchHover = false;
-                        button.hover = true;
-                    }
-                    return Clutter.EVENT_PROPAGATE;
                 });
                 this._selectedSearchButton ??= button;
                 this._searchResultButtons.set(

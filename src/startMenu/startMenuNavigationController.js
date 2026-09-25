@@ -13,6 +13,7 @@ export class StartMenuNavigationController {
         this._getActors = getActors;
         this._getView = getView;
         this._setSearchFocusVisible = setSearchFocusVisible;
+        this._hoverBlocked = false;
     }
 
     handle(event) {
@@ -50,6 +51,7 @@ export class StartMenuNavigationController {
         if (!target)
             return Clutter.EVENT_PROPAGATE;
 
+        this.blockHover();
         target.grab_key_focus();
         if (target === searchEntry)
             this._setSearchFocusVisible(true);
@@ -63,6 +65,23 @@ export class StartMenuNavigationController {
         actor.connect('key-press-event', (_actor, event) =>
             this.handle(event)
         );
+        actor.connect('notify::hover', () => this._onHover(actor));
+        actor.connect('motion-event', () => {
+            if (this._hoverBlocked) {
+                this._hoverBlocked = false;
+                actor.hover = true;
+            }
+            return Clutter.EVENT_PROPAGATE;
+        });
+    }
+
+    blockHover() {
+        this._hoverBlocked = true;
+        const {searchEntry} = this._getActors();
+        for (const actor of this._focusableActors()) {
+            if (actor !== searchEntry)
+                actor.hover = false;
+        }
     }
 
     focusFirstViewControl() {
@@ -108,6 +127,22 @@ export class StartMenuNavigationController {
         this._setSearchFocusVisible = null;
         this._getView = null;
         this._getActors = null;
+    }
+
+    _onHover(actor) {
+        if (!actor.hover)
+            return;
+
+        if (this._hoverBlocked) {
+            actor.hover = false;
+            return;
+        }
+
+        const {root, searchEntry} = this._getActors();
+        const focus = global.stage.get_key_focus();
+        if (focus && focus !== actor && root.contains(focus) &&
+            !searchEntry.contains(focus))
+            actor.grab_key_focus();
     }
 
     _focusableActors() {
