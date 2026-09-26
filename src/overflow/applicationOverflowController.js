@@ -45,7 +45,7 @@ import {
     ApplicationOverflowPopupController,
     TASKBAR_SCROLLBAR_CLASS,
 } from './applicationOverflowPopupController.js';
-import {closePopupMenu} from '../shared/popupMenuUtils.js';
+import {closePopupMenu} from '../popupMenuUtils.js';
 
 const POPUP_MARGIN = 32;
 const OVERFLOW_BUTTON_ANIMATION_TIME = 150;

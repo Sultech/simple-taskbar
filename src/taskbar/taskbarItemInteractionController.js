@@ -12,7 +12,7 @@ import {
 } from '../shared/applicationClickActions.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
-import {openPopupMenu} from '../shared/popupMenuUtils.js';
+import {openPopupMenu} from '../popupMenuUtils.js';
 
 export class TaskbarItemInteractionController {
     constructor({

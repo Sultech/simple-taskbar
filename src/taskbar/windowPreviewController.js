@@ -19,7 +19,7 @@ import {
 import {
     closePopupMenu,
     openPopupMenu,
-} from '../shared/popupMenuUtils.js';
+} from '../popupMenuUtils.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta} from '../scrollUtils.js';

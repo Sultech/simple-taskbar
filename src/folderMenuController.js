@@ -14,7 +14,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {shellMenusUseLightTheme} from './themeUtils.js';
-import {closePopupMenu} from './shared/popupMenuUtils.js';
+import {closePopupMenu} from './popupMenuUtils.js';
 import {
     panelArrowSide,
     syncPanelMenuPosition,

@@ -20,7 +20,7 @@ import {
 import {getScrollDelta} from '../scrollUtils.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
-import {openPopupMenu} from '../shared/popupMenuUtils.js';
+import {openPopupMenu} from '../popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);

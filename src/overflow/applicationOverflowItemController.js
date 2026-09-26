@@ -8,7 +8,7 @@ import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {closePopupMenu} from '../shared/popupMenuUtils.js';
+import {closePopupMenu} from '../popupMenuUtils.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 import {modifierClickActionKey} from '../pointerUtils.js';
 

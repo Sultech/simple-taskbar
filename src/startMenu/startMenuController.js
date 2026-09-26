@@ -24,7 +24,7 @@ import {panelGeometry} from '../panel/panelGeometry.js';
 import {
     closePopupMenu,
     openPopupMenu,
-} from '../shared/popupMenuUtils.js';
+} from '../popupMenuUtils.js';
 import {StartMenuContextMenuController} from './startMenuContextMenuController.js';
 import {StartMenuCategorySidebar} from './startMenuCategorySidebar.js';
 import {StartMenuFooterController} from './startMenuFooterController.js';

@@ -10,7 +10,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
 import {panelArrowSide} from '../panel/panelPosition.js';
-import {closePopupMenu, openPopupMenu} from '../shared/popupMenuUtils.js';
+import {closePopupMenu, openPopupMenu} from '../popupMenuUtils.js';
 import {StartMenuAppMenu} from './startMenuAppMenu.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 

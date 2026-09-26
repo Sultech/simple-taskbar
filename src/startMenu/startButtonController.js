@@ -18,7 +18,7 @@ import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
 import {StartButtonContextMenuController} from './startButtonContextMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
-import {openPopupMenu} from '../shared/popupMenuUtils.js';
+import {openPopupMenu} from '../popupMenuUtils.js';
 import {TaskbarItemContainer} from '../taskbar/taskbarItemContainer.js';
 import {
     BLUR_MY_SHELL_UUID,
