@@ -21,7 +21,6 @@ import {
 } from './taskbarItemInteractionController.js';
 import {
     animatePinnedLaunch,
-    animateTaskbarItemIn,
     animateTaskbarItemOutAndDestroy,
     placeTaskbarItemAtIndex,
 } from './taskbarItemLifecycle.js';
@@ -1279,8 +1278,7 @@ export class TaskbarController {
                     isLauncher,
                     isPinnedPrimary
                 );
-                animateTaskbarItemIn(
-                    item,
+                item.show(
                     animateMembershipChanges &&
                         (!pinnedPlaceholder ||
                             newlyPinnedAppIds.has(app.get_id())) &&

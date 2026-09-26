@@ -26,11 +26,11 @@ export class StartMenuSearchController {
         const previousTerms = this._terms;
         const previousProviderResults = this._providerResults;
 
-        this._stopActiveSearch();
         this._terms = terms;
         this._providerResults = new Map();
 
         if (terms.length === 0) {
+            this._stopActiveSearch();
             onUpdate([], true);
             return;
         }
@@ -42,13 +42,14 @@ export class StartMenuSearchController {
             results: [],
             complete: false,
         }));
-        const generation = this._generation;
-        const cancellable = new Gio.Cancellable();
         const previousSearch = previousTerms.join(' ');
         const currentSearch = terms.join(' ');
         const isSubsearch = previousSearch.length > 0 &&
             currentSearch.startsWith(previousSearch);
 
+        this._stopActiveSearch();
+        const generation = this._generation;
+        const cancellable = new Gio.Cancellable();
         this._cancellable = cancellable;
         this._searchTimeoutId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,

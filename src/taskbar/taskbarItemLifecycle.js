@@ -3,10 +3,6 @@
 
 import * as IconGrid from 'resource:///org/gnome/shell/ui/iconGrid.js';
 
-export function animateTaskbarItemIn(item, animate) {
-    item.show(animate);
-}
-
 export function animateTaskbarItemOutAndDestroy(item) {
     if (!item.get_stage()) {
         item.destroy();
