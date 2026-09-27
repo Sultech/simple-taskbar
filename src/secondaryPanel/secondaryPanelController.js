@@ -2,8 +2,6 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
-import GLib from 'gi://GLib';
-import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -113,7 +111,6 @@ export class SecondaryPanelController {
         this._windowDodgeController = null;
         this._dockController = null;
         this._windowDragController = null;
-        this._panelBlurSyncId = 0;
         this._dockHoverReserve = 0;
         this._hoverAnimationExtents = [0, 0];
         this._signalHolder = new TransientSignalHolder();
@@ -479,10 +476,6 @@ export class SecondaryPanelController {
         }
         this._panelBox.remove_all_transitions();
         this.actor.remove_all_transitions();
-        if (this._panelBlurSyncId) {
-            global.compositor.get_laters().remove(this._panelBlurSyncId);
-            this._panelBlurSyncId = 0;
-        }
         this._interactionController.destroy();
         this._interactionController = null;
         if (this._buttonPaddingController) {
@@ -787,20 +780,6 @@ export class SecondaryPanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _queuePanelBlurSync() {
-        if (this._panelBlurSyncId)
-            return;
-
-        this._panelBlurSyncId = global.compositor.get_laters().add(
-            Meta.LaterType.BEFORE_REDRAW,
-            () => {
-                this._panelBlurSyncId = 0;
-                syncPanelBlurGeometry(this.actor);
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
     _onHoverAnimationReserveChanged() {
         const reserve = this._taskbarController.getHoverAnimationReserve();
         const [before, after] = this._hoverAnimationExtents;
@@ -849,7 +828,7 @@ export class SecondaryPanelController {
         this.actor[lengthProperty] = end - start;
         this.actor.centerOffset = boxLength - start - end;
         this.actor.queue_relayout();
-        this._queuePanelBlurSync();
+        syncPanelBlurGeometry(this.actor);
     }
 
     _position(
