@@ -9,8 +9,12 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
+    BLUR_MY_SHELL_PANEL_STYLES,
+    blurMyShellDockStyleIsTransparent,
+} from '../shared/blurMyShellUtils.js';
+import {
+    dockBlurIsActive,
     panelBlurIsActive,
     syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
@@ -339,8 +343,14 @@ export class SecondaryPanelDockController {
             return;
         }
 
-        const blurActive = panelBlurIsActive(this._actor);
-        syncPanelBlurClasses(this._actor, blurActive, light);
+        const dockBlurActive = dockBlurIsActive(this._actor);
+        const blurActive = dockBlurActive || panelBlurIsActive(this._actor);
+        syncPanelBlurClasses(
+            this._actor,
+            blurActive,
+            light,
+            dockBlurActive ? blurMyShellDockStyleIsTransparent : undefined
+        );
         syncPanelBlurCornerRadius(this._actor, cornerRadius);
         if (blurActive) {
             const borderStyle = panelBorderStyle(

@@ -14,8 +14,10 @@ import {
 import {
     getPanelBlur,
     hidePanelBlurForPanel,
+    panelBlurSuitsDock,
     removePanelBlurForPanel,
     refreshPanelBlurVisibility,
+    syncDockBlurTarget,
 } from '../integration/blurMyShellRuntime.js';
 import {SecondaryPanelController} from '../secondaryPanel/secondaryPanelController.js';
 import {PanelManagerBase} from '../panel/panelManagerBase.js';
@@ -67,18 +69,32 @@ export class DockPanelManager extends PanelManagerBase {
             },
             this._signalHolder
         );
-        const panelSettings = getBlurMyShellChildSettings(
-            getBlurMyShellSettings(),
-            'panel'
+        this._connectBlurMyShellKeys(
+            'panel',
+            ['blur', 'corner-radius', 'pipeline', 'static-blur'],
+            'static-blur'
         );
-        for (const key of ['blur', 'corner-radius', 'pipeline', 'static-blur']) {
-            if (!blurMyShellHasKey(panelSettings, key))
+        this._connectBlurMyShellKeys(
+            'dash-to-dock',
+            ['blur', 'override-background', 'style-dash-to-dock'],
+            'blur'
+        );
+        this._queueRebuild();
+    }
+
+    _connectBlurMyShellKeys(childName, keys, resetKey) {
+        const settings = getBlurMyShellChildSettings(
+            getBlurMyShellSettings(),
+            childName
+        );
+        for (const key of keys) {
+            if (!blurMyShellHasKey(settings, key))
                 continue;
 
-            panelSettings.connectObject(
+            settings.connectObject(
                 `changed::${key}`,
                 () => {
-                    if (key === 'static-blur')
+                    if (key === resetKey)
                         this._queueBlurMyShellSyncAfterReset();
                     else
                         this._queueBlurMyShellSync();
@@ -86,7 +102,6 @@ export class DockPanelManager extends PanelManagerBase {
                 this._signalHolder
             );
         }
-        this._queueRebuild();
     }
 
     destroy() {
@@ -137,7 +152,8 @@ export class DockPanelManager extends PanelManagerBase {
             this._panels.push(panel);
             this._panelSettings.push(dockSettings);
             panel.enable();
-            if (this._settings.get_boolean('dock-panel-blur-enabled'))
+            if (this._settings.get_boolean('dock-panel-blur-enabled') &&
+                panelBlurSuitsDock())
                 hidePanelBlurForPanel(panel.actor);
         }
         this._queueBlurMyShellSync();
@@ -183,22 +199,30 @@ export class DockPanelManager extends PanelManagerBase {
         if (this._panels.length === 0)
             return;
 
-        const panelBlur = getPanelBlur();
-        if (!panelBlur)
-            return;
-
         const dockPanelBlurEnabled = this._settings.get_boolean(
             'dock-panel-blur-enabled'
         );
+        const panelBlurEnabled = dockPanelBlurEnabled && panelBlurSuitsDock();
         for (const panel of this._panels) {
-            if (dockPanelBlurEnabled)
-                panelBlur.maybe_blur_panel(panel.actor);
-            else
-                removePanelBlurForPanel(panel.actor);
+            syncDockBlurTarget(
+                panel.actor.get_parent(),
+                panel.actor,
+                dockPanelBlurEnabled
+            );
         }
 
-        if (!Main.overview.visibleTarget)
-            refreshPanelBlurVisibility(panelBlur);
+        const panelBlur = getPanelBlur();
+        if (panelBlur) {
+            for (const panel of this._panels) {
+                if (panelBlurEnabled)
+                    panelBlur.maybe_blur_panel(panel.actor);
+                else
+                    removePanelBlurForPanel(panel.actor);
+            }
+
+            if (!Main.overview.visibleTarget)
+                refreshPanelBlurVisibility(panelBlur);
+        }
 
         for (const panel of this._panels)
             panel.syncTheme();

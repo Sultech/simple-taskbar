@@ -13,6 +13,7 @@ import {
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
     panelBlurIsActive,
+    syncDockBlurGeometry,
     syncPanelBlurGeometry,
 } from '../integration/blurMyShellRuntime.js';
 import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
@@ -352,6 +353,11 @@ export class SecondaryPanelController {
         if (this._dockController) {
             this._lowerBelowPanels();
             this._dockController.enable();
+            this.actor.connectObject(
+                'notify::allocation',
+                () => syncDockBlurGeometry(this.actor),
+                this._signalHolder
+            );
         }
         this._position();
         this._applyLayout();

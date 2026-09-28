@@ -31,8 +31,13 @@ function setStyleClass(actor, styleClass, present) {
         actor.remove_style_class_name(styleClass);
 }
 
-export function syncPanelBlurClasses(panel, active, light) {
-    const transparent = active && blurMyShellPanelStyleIsTransparent();
+export function syncPanelBlurClasses(
+    panel,
+    active,
+    light,
+    styleIsTransparent = blurMyShellPanelStyleIsTransparent
+) {
+    const transparent = active && styleIsTransparent();
     setStyleClass(panel, BLUR_MY_SHELL_ACTIVE_CLASS, active);
     setStyleClass(panel, BLUR_TRANSPARENT_CLASS, transparent);
     setStyleClass(panel, BLUR_TINTED_CLASS, active && !transparent);

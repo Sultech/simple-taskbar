@@ -16,6 +16,7 @@ export const BLUR_MY_SHELL_PANEL_STYLES = [
 const BLUR_MY_SHELL_SCHEMA =
     'org.gnome.shell.extensions.blur-my-shell';
 const TRANSPARENT_PANEL_STYLE = 'transparent-panel';
+const TRANSPARENT_DOCK_STYLE = 0;
 const STYLE_PANEL_ORDER = [
     TRANSPARENT_PANEL_STYLE,
     'light-panel',
@@ -105,6 +106,26 @@ export function blurMyShellPanelStyleIsTransparent() {
 
     const style = STYLE_PANEL_ORDER[panelSettings.get_int('style-panel')];
     return style === undefined || style === TRANSPARENT_PANEL_STYLE;
+}
+
+function blurMyShellDockSettings() {
+    return getBlurMyShellChildSettings(getBlurMyShellSettings(), 'dash-to-dock');
+}
+
+export function blurMyShellOverridesDockBackground() {
+    const dockSettings = blurMyShellDockSettings();
+    if (!blurMyShellHasKey(dockSettings, 'override-background'))
+        return false;
+
+    return dockSettings.get_boolean('override-background');
+}
+
+export function blurMyShellDockStyleIsTransparent() {
+    const dockSettings = blurMyShellDockSettings();
+    if (!blurMyShellHasKey(dockSettings, 'style-dash-to-dock'))
+        return true;
+
+    return dockSettings.get_int('style-dash-to-dock') === TRANSPARENT_DOCK_STYLE;
 }
 
 export function blurMyShellHasKey(settings, key) {
