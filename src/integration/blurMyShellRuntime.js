@@ -8,7 +8,8 @@ import {
 
 const BLUR_MY_SHELL_ROUNDED_PIPELINE = 'pipeline_default_rounded';
 const DOCK_BLUR_TARGET_NAME = 'SimpleTaskbarDock';
-const DOCK_BOX_NAME = 'panelBox';
+const DOCK_PANEL_BLUR_NAME = 'panelBox';
+export const DOCK_BOX_NAME = 'simpleTaskbarDockBox';
 
 export function panelBlurIsActive(panel) {
     const panelBlur = getPanelBlur();
@@ -88,16 +89,17 @@ function getDockBlur() {
 }
 
 export function dockBlurIsActive(panel) {
-    return Boolean(getDockBlur()) &&
-        panel.get_parent().get_name() === DOCK_BLUR_TARGET_NAME &&
-        blurMyShellOverridesDockBackground();
+    return blurMyShellOverridesDockBackground() &&
+        dockBlurSurfaces(getDockBlur(), panel).length > 0;
 }
 
 export function syncDockBlurTarget(panelBox, panel, enabled) {
     const dockBlur = getDockBlur();
-    const name = blurMyShellSupportsDock() && enabled
-        ? DOCK_BLUR_TARGET_NAME
-        : DOCK_BOX_NAME;
+    let name = DOCK_BOX_NAME;
+    if (enabled && blurMyShellSupportsDock())
+        name = DOCK_BLUR_TARGET_NAME;
+    else if (enabled && panelBlurSuitsDock())
+        name = DOCK_PANEL_BLUR_NAME;
     if (panelBox.get_name() !== name)
         panelBox.set_name(name);
 

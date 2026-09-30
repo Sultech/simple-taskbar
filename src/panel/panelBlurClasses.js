@@ -35,9 +35,9 @@ export function syncPanelBlurClasses(
     panel,
     active,
     light,
-    styleIsTransparent = blurMyShellPanelStyleIsTransparent
+    styleIsTransparent = blurMyShellPanelStyleIsTransparent()
 ) {
-    const transparent = active && styleIsTransparent();
+    const transparent = active && styleIsTransparent;
     setStyleClass(panel, BLUR_MY_SHELL_ACTIVE_CLASS, active);
     setStyleClass(panel, BLUR_TRANSPARENT_CLASS, transparent);
     setStyleClass(panel, BLUR_TINTED_CLASS, active && !transparent);

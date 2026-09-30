@@ -11,7 +11,8 @@ import {
 
 import {
     BLUR_MY_SHELL_PANEL_STYLES,
-    blurMyShellDockStyleIsTransparent,
+    TRANSPARENT_PANEL_STYLE,
+    blurMyShellDockStyleClass,
 } from '../shared/blurMyShellUtils.js';
 import {
     dockBlurIsActive,
@@ -322,10 +323,18 @@ export class SecondaryPanelDockController {
                 style !== 'simple-taskbar-panel-vertical' &&
                 !EXTERNAL_PANEL_STYLES.has(style) &&
                 !OWN_BLUR_CLASSES.has(style));
-        const externalStyles = this._actor.get_style_class_name()
-            .split(/\s+/)
-            .filter(style => EXTERNAL_PANEL_STYLES.has(style));
-        classes.push(...externalStyles);
+        const dockBlurActive = dockBlurIsActive(this._actor);
+        const panelBlurActive = panelBlurIsActive(this._actor);
+        const dockStyleClass = dockBlurActive
+            ? blurMyShellDockStyleClass(light)
+            : null;
+        if (dockBlurActive) {
+            classes.push(dockStyleClass);
+        } else if (panelBlurActive) {
+            classes.push(...this._actor.get_style_class_name()
+                .split(/\s+/)
+                .filter(style => EXTERNAL_PANEL_STYLES.has(style)));
+        }
         classes.push('simple-taskbar-panel', 'simple-taskbar-secondary-panel');
         if (dockFloating)
             classes.push('simple-taskbar-dock-floating');
@@ -343,13 +352,14 @@ export class SecondaryPanelDockController {
             return;
         }
 
-        const dockBlurActive = dockBlurIsActive(this._actor);
-        const blurActive = dockBlurActive || panelBlurIsActive(this._actor);
+        const blurActive = dockBlurActive || panelBlurActive;
         syncPanelBlurClasses(
             this._actor,
             blurActive,
             light,
-            dockBlurActive ? blurMyShellDockStyleIsTransparent : undefined
+            dockBlurActive
+                ? dockStyleClass === TRANSPARENT_PANEL_STYLE
+                : undefined
         );
         syncPanelBlurCornerRadius(this._actor, cornerRadius);
         if (blurActive) {

@@ -2,6 +2,8 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -12,6 +14,7 @@ import {
 
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
+    DOCK_BOX_NAME,
     panelBlurIsActive,
     syncDockBlurGeometry,
     syncPanelBlurGeometry,
@@ -113,6 +116,7 @@ export class SecondaryPanelController {
         this._dockController = null;
         this._windowDragController = null;
         this._dockHoverReserve = 0;
+        this._themeSyncLaterId = 0;
         this._hoverAnimationExtents = [0, 0];
         this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
@@ -219,7 +223,7 @@ export class SecondaryPanelController {
         this._taskbarBin = overflowController.actor;
 
         this._panelBox = new St.Widget({
-            name: 'panelBox',
+            name: isDock ? DOCK_BOX_NAME : 'panelBox',
             clip_to_allocation: true,
         });
         this._panelBox._simpleTaskbarPanelBox = isDock ? 'dock' : 'panel';
@@ -353,9 +357,9 @@ export class SecondaryPanelController {
         if (this._dockController) {
             this._lowerBelowPanels();
             this._dockController.enable();
-            this.actor.connectObject(
-                'notify::allocation',
-                () => syncDockBlurGeometry(this.actor),
+            this._panelBox.connectObject(
+                'child-added', () => this._queueThemeSync(),
+                'child-removed', () => this._queueThemeSync(),
                 this._signalHolder
             );
         }
@@ -464,6 +468,10 @@ export class SecondaryPanelController {
     }
 
     destroy() {
+        if (this._themeSyncLaterId) {
+            global.compositor.get_laters().remove(this._themeSyncLaterId);
+            this._themeSyncLaterId = 0;
+        }
         this._taskbarController.disableHoverAnimations();
         if (this._windowDragController) {
             this._windowDragController.destroy();
@@ -835,6 +843,7 @@ export class SecondaryPanelController {
         this.actor.centerOffset = boxLength - start - end;
         this.actor.queue_relayout();
         syncPanelBlurGeometry(this.actor);
+        syncDockBlurGeometry(this.actor);
     }
 
     _position(
@@ -976,6 +985,20 @@ export class SecondaryPanelController {
         }
 
         this._updateTaskbarWidth();
+    }
+
+    _queueThemeSync() {
+        if (this._themeSyncLaterId)
+            return;
+
+        this._themeSyncLaterId = global.compositor.get_laters().add(
+            Meta.LaterType.BEFORE_REDRAW,
+            () => {
+                this._themeSyncLaterId = 0;
+                this.syncTheme();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     syncTheme() {
