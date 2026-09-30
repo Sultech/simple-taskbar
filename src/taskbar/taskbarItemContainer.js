@@ -16,8 +16,21 @@ class TaskbarItemContainer extends Dash.DashItemContainer {
         this._snapChildAllocation = false;
         this._vertical = false;
         this._positionAnimationStart = null;
+        this._taskbarWindow = null;
         this.x_expand = false;
         this.y_expand = false;
+    }
+
+    bindWindow(window, onTitleChanged) {
+        this._taskbarWindow?.disconnectObject(this);
+        this._taskbarWindow = window;
+        window?.connectObject('notify::title', onTitleChanged, this);
+    }
+
+    destroy() {
+        this._taskbarWindow?.disconnectObject(this);
+        this._taskbarWindow = null;
+        super.destroy();
     }
 
     preparePositionAnimation() {

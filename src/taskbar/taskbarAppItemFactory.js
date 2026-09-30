@@ -285,7 +285,6 @@ export class TaskbarAppItemFactory {
 
         Object.assign(item, {
             _taskbarApp: app,
-            _taskbarWindow: window,
             _taskbarIsLauncher: isLauncher,
             _taskbarIsCombinedApp: isCombined,
             _taskbarIsPinnedPrimary: isPinnedPrimary,
@@ -321,9 +320,8 @@ export class TaskbarAppItemFactory {
             _taskbarRunning: false,
             _taskbarWindowCount: 0,
         });
+        this.bindWindow(item, window);
         this._syncLauncherIconPosition(item);
-        if (window)
-            this._connectWindowTitle(item, window);
 
         item.connect('notify::hover', () => {
             this._handleHover(item, item.hover);
@@ -369,22 +367,10 @@ export class TaskbarAppItemFactory {
     }
 
     bindWindow(item, window) {
-        if (item._taskbarWindow)
-            item._taskbarWindow.disconnectObject(item);
-        item._taskbarWindow = window;
-        if (window)
-            this._connectWindowTitle(item, window);
-    }
-
-    _connectWindowTitle(item, window) {
-        window.connectObject(
-            'notify::title',
-            () => {
-                this._syncItemLabel(item);
-                this._updateItemGeometry(item);
-            },
-            item
-        );
+        item.bindWindow(window, () => {
+            this._syncItemLabel(item);
+            this._updateItemGeometry(item);
+        });
     }
 
     sync(item) {
