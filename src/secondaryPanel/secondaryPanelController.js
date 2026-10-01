@@ -18,6 +18,7 @@ import {
     panelBlurIsActive,
     syncDockBlurGeometry,
     syncPanelBlurGeometry,
+    syncPanelBlurOriginalStyle,
 } from '../integration/blurMyShellRuntime.js';
 import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
 import {
@@ -1086,6 +1087,7 @@ export class SecondaryPanelController {
         const blurActive = panelBlurIsActive(this.actor);
         syncPanelBlurClasses(this.actor, blurActive, light);
         if (blurActive) {
+            syncPanelBlurOriginalStyle(this.actor, '');
             this.actor.set_style('');
             return;
         }
