@@ -124,6 +124,7 @@ export class SecondaryPanelController {
             ? settings.getConfiguredIconSize()
             : settings.get_int('icon-size');
         this._panelHeight = settings.get_int('panel-height');
+        this._maximumIconSize = configuredIconSize;
         this._iconSize = configuredIconSize;
 
         this._windowController = new WindowController(tracker, {
@@ -577,15 +578,15 @@ export class SecondaryPanelController {
         }
         if (!this._dockController) {
             this._settings.connectObject('changed::icon-size', () => {
-                this._iconSize = this._settings.get_int('icon-size');
-                this._startButtonController.applyAppearance(
-                    this._iconSize,
-                    this._settings.get_int('start-button-padding')
-                );
-                this._taskbarController.setIconSize(this._iconSize);
+                this._resetTaskbarIconSize();
                 this._verticalItemsController.sync();
                 this._updateTaskbarWidth();
             }, this._signalHolder);
+            this._settings.connectObject(
+                'changed::dock-min-icon-size',
+                () => this._updateTaskbarWidth(),
+                this._signalHolder
+            );
             for (const key of [
                 'transparency-on-unmaximized',
                 'transparency-dynamic-behavior',
@@ -974,8 +975,52 @@ export class SecondaryPanelController {
             centered: this._appsAreCentered(),
             vertical,
         });
-        if (availableWidth !== undefined)
+        if (availableWidth !== undefined) {
             this._taskbarController.setAvailableWidth(availableWidth);
+            this._syncTaskbarIconSize(availableWidth);
+        }
+    }
+
+    _syncTaskbarIconSize(availableLength) {
+        if (this._taskbarController.isRebuilding() ||
+            this._settings.get_boolean('default-gnome-panel') ||
+            this._settings.get_boolean('windows-xp-theme-enabled')) {
+            return;
+        }
+
+        const maximum = this._maximumIconSize;
+        const minimum = Math.min(
+            this._settings.get_int('dock-min-icon-size'),
+            maximum
+        );
+        const iconSize = this._taskbarController.getIconSizeForLength(
+            availableLength,
+            maximum,
+            minimum,
+            this._startButtonController.actor.visible ? this._iconSize : null
+        );
+        if (iconSize === this._iconSize)
+            return;
+
+        this._iconSize = iconSize;
+        this._taskbarController.setIconSize(iconSize);
+        this._startButtonController.applyAppearance(
+            iconSize,
+            this._settings.get_int('start-button-padding')
+        );
+        this._verticalItemsController.sync();
+        this._applicationOverflowController.syncIconSizeChange();
+    }
+
+    _resetTaskbarIconSize() {
+        this._maximumIconSize = this._settings.get_int('icon-size');
+        this._iconSize = this._maximumIconSize;
+        this._taskbarController.setIconSize(this._iconSize);
+        this._startButtonController.applyAppearance(
+            this._iconSize,
+            this._settings.get_int('start-button-padding')
+        );
+        this._applicationOverflowController.sync();
     }
 
     _queueTaskbarWidth() {
