@@ -52,6 +52,7 @@ export class PanelAutoHideController {
         isBlocked,
         getOutwardReserve,
         onHidden,
+        onPositionFrame = () => {},
     }) {
         this._settings = settings;
         this._panelActor = panelActor;
@@ -66,6 +67,7 @@ export class PanelAutoHideController {
         this._isBlockedCallback = isBlocked;
         this._getOutwardReserve = getOutwardReserve;
         this._onHidden = onHidden;
+        this._onPositionFrame = onPositionFrame;
         this._signalHolder = new TransientSignalHolder();
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._cursorPositionInvalidatedId = 0;
@@ -206,6 +208,7 @@ export class PanelAutoHideController {
         this._isBlockedCallback = null;
         this._getOutwardReserve = null;
         this._onHidden = null;
+        this._onPositionFrame = null;
         this._trackedActorData = null;
         this._strutActorData = null;
         this._positionTarget = null;
@@ -971,9 +974,16 @@ export class PanelAutoHideController {
             return;
         }
 
+        let transition = null;
+        let frameId = 0;
         const params = {
             duration: ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            onStopped: () => {
+                if (frameId)
+                    transition.disconnect(frameId);
+                frameId = 0;
+            },
             onComplete: () => {
                 this._syncMonitorClip();
                 Main.layoutManager._queueUpdateRegions();
@@ -985,5 +995,8 @@ export class PanelAutoHideController {
         };
         params[property] = offset;
         actor.ease(params);
+        transition = actor.get_transition(property);
+        if (transition)
+            frameId = transition.connect_after('new-frame', this._onPositionFrame);
     }
 }

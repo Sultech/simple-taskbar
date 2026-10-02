@@ -400,6 +400,7 @@ export class SecondaryPanelController {
             },
             getOutwardReserve: () =>
                 this._taskbarController.getHoverAnimationOutwardReserve(),
+            onPositionFrame: () => syncDockBlurGeometry(this.actor),
             strutActor: this._dockController
                 ? this._dockController.strutActor
                 : null,
