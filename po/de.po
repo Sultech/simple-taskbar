@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-24 18:24+0100\n"
+"POT-Creation-Date: 2026-10-02 21:20+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -1188,209 +1188,223 @@ msgstr "Super+Zahl-Tastenkombinationen"
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "Angeheftete Anwendungen mit Super+1 bis Super+9 öffnen"
 
-#: src/prefs/dockAppearanceGroup.js:41
+#: src/prefs/dockAppearanceGroup.js:42
 msgid "Dock Appearance"
 msgstr "Dock-Erscheinungsbild"
 
-#: src/prefs/dockAppearanceGroup.js:42
+#: src/prefs/dockAppearanceGroup.js:43
 msgid "Configure the Dock independently of the taskbar."
 msgstr "Dock unabhängig von der Taskleiste konfigurieren."
 
-#: src/prefs/dockAppearanceGroup.js:58
+#: src/prefs/dockAppearanceGroup.js:59
 msgid "Keep the full-width Dock only as thick as its icons need"
 msgstr ""
 "Das Dock in voller Breite nur so dick halten, wie es seine Symbole benötigen"
 
-#: src/prefs/dockAppearanceGroup.js:69
+#: src/prefs/dockAppearanceGroup.js:70
 msgid "Dock Thickness"
 msgstr "Dicke des Docks"
 
-#: src/prefs/dockAppearanceGroup.js:71
+#: src/prefs/dockAppearanceGroup.js:72
 msgid ""
 "Oversized icons shrink automatically when the full-width Dock is reduced"
 msgstr ""
 "Übergroße Symbole werden automatisch verkleinert, wenn das Dock in voller "
 "Breite verkleinert wird"
 
-#: src/prefs/dockAppearanceGroup.js:83 src/prefs/panelAppearancePage.js:262
+#: src/prefs/dockAppearanceGroup.js:84 src/prefs/panelAppearancePage.js:262
 msgid "Theme and Styling"
 msgstr "Thema und Gestaltung"
 
-#: src/prefs/dockAppearanceGroup.js:85
+#: src/prefs/dockAppearanceGroup.js:86
 msgid ""
 "Choose the Dock theme, colours, gradient, corner radius, and text appearance"
 msgstr ""
 "Dock-Thema, Farben, Farbverlauf, Eckenradius und Textdarstellung auswählen"
 
-#: src/prefs/dockAppearanceGroup.js:91 src/prefs/panelAppearancePage.js:270
+#: src/prefs/dockAppearanceGroup.js:92 src/prefs/panelAppearancePage.js:270
 msgid "Follow System Theme"
 msgstr "Systemthema folgen"
 
-#: src/prefs/dockAppearanceGroup.js:92
+#: src/prefs/dockAppearanceGroup.js:93
 msgid "Match the active GNOME Shell theme"
 msgstr "An das aktive GNOME-Shell-Thema anpassen"
 
-#: src/prefs/dockAppearanceGroup.js:108
+#: src/prefs/dockAppearanceGroup.js:109
 msgid "Dock Theme"
 msgstr "Dock-Thema"
 
-#: src/prefs/dockAppearanceGroup.js:109 src/prefs/panelAppearancePage.js:288
+#: src/prefs/dockAppearanceGroup.js:110 src/prefs/panelAppearancePage.js:288
 msgid "Choose the colour scheme when system matching is off"
 msgstr "Wählen Sie das Farbschema, wenn die Systemanpassung deaktiviert ist"
 
-#: src/prefs/dockAppearanceGroup.js:111 src/prefs/panelAppearancePage.js:290
+#: src/prefs/dockAppearanceGroup.js:112 src/prefs/panelAppearancePage.js:290
 #: src/prefs/startMenuPage.js:758
 msgid "Light"
 msgstr "Hell"
 
-#: src/prefs/dockAppearanceGroup.js:112 src/prefs/panelAppearancePage.js:291
+#: src/prefs/dockAppearanceGroup.js:113 src/prefs/panelAppearancePage.js:291
 #: src/prefs/startMenuPage.js:757
 msgid "Dark"
 msgstr "Dunkel"
 
-#: src/prefs/dockAppearanceGroup.js:124
+#: src/prefs/dockAppearanceGroup.js:125
 msgid "Dock Corner Radius"
 msgstr "Dock-Eckenradius"
 
-#: src/prefs/dockAppearanceGroup.js:126
+#: src/prefs/dockAppearanceGroup.js:127
 msgid "Applies to the floating Dock, including Dynamic and Static Blur"
-msgstr "Gilt für das schwebende Dock, einschließlich dynamischer und statischer Unschärfe"
+msgstr ""
+"Gilt für das schwebende Dock, einschließlich dynamischer und statischer "
+"Unschärfe"
 
-#: src/prefs/dockAppearanceGroup.js:136
+#: src/prefs/dockAppearanceGroup.js:137
 msgid "Make the Dock background transparent"
 msgstr "Den Dock-Hintergrund transparent machen"
 
-#: src/prefs/dockAppearanceGroup.js:139 src/prefs/panelAppearancePage.js:310
+#: src/prefs/dockAppearanceGroup.js:140 src/prefs/panelAppearancePage.js:310
 msgid "Adjust transparency according to the selected window state"
 msgstr "Transparenz entsprechend dem ausgewählten Fensterstatus anpassen"
 
-#: src/prefs/dockAppearanceGroup.js:142 src/prefs/panelAppearancePage.js:313
+#: src/prefs/dockAppearanceGroup.js:144
+msgid "Apply Blur My Shell panel blur to the Dock"
+msgstr "Die Panel-Unschärfe von Blur My Shell auf das Dock anwenden"
+
+#: src/prefs/dockAppearanceGroup.js:145 src/prefs/panelAppearancePage.js:313
 #: src/prefs/startMenuPage.js:784
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "Deaktivieren Sie die Panel-Unschärfe von Blur My Shell, um diese Option zu "
 "nutzen"
 
-#: src/prefs/dockAppearanceGroup.js:145
+#: src/prefs/dockAppearanceGroup.js:148
+msgid "Apply Blur My Shell dock blur to the Dock"
+msgstr "Die Dock-Unschärfe von Blur My Shell auf das Dock anwenden"
+
+#: src/prefs/dockAppearanceGroup.js:149
+msgid "Disable Blur My Shell dock blur to use this option"
+msgstr "Deaktivieren Sie die Dock-Unschärfe von Blur My Shell, um diese Option zu nutzen"
+
+#: src/prefs/dockAppearanceGroup.js:152
+msgid "This Blur My Shell version cannot blur the Dock"
+msgstr "Diese Version von Blur My Shell kann das Dock nicht weichzeichnen"
+
+#: src/prefs/dockAppearanceGroup.js:166
 msgid "Transparency and Blur"
 msgstr "Transparenz und Unschärfe"
 
-#: src/prefs/dockAppearanceGroup.js:146
+#: src/prefs/dockAppearanceGroup.js:167
 msgid "Configure Dock transparency and Blur My Shell integration"
 msgstr "Dock-Transparenz und die Integration mit Blur My Shell konfigurieren"
 
-#: src/prefs/dockAppearanceGroup.js:151 src/prefs/panelAppearancePage.js:322
+#: src/prefs/dockAppearanceGroup.js:172 src/prefs/panelAppearancePage.js:322
 msgid "Enable Transparency"
 msgstr "Transparenz aktivieren"
 
-#: src/prefs/dockAppearanceGroup.js:164
+#: src/prefs/dockAppearanceGroup.js:185
 msgid "Blur Dock with Blur My Shell"
 msgstr "Dock mit Blur My Shell weichzeichnen"
 
-#: src/prefs/dockAppearanceGroup.js:165
-msgid "Apply Blur My Shell panel blur to the Dock"
-msgstr "Die Panel-Unschärfe von Blur My Shell auf das Dock anwenden"
-
-#: src/prefs/dockAppearanceGroup.js:170
+#: src/prefs/dockAppearanceGroup.js:191
 #: src/prefs/dynamicTransparencyDialog.js:99
 #: src/prefs/panelAppearancePage.js:335
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0 % ist undurchsichtig und 100 % ist vollständig transparent"
 
-#: src/prefs/dockAppearanceGroup.js:177 src/prefs/panelAppearancePage.js:316
+#: src/prefs/dockAppearanceGroup.js:198 src/prefs/panelAppearancePage.js:316
 #: src/prefs/panelAppearancePage.js:342
 msgid "Transparency"
 msgstr "Transparenz"
 
-#: src/prefs/dockAppearanceGroup.js:187
+#: src/prefs/dockAppearanceGroup.js:208
 msgid "Dock Dynamic Transparency Options"
 msgstr "Optionen für dynamische Dock-Transparenz"
 
-#: src/prefs/dockAppearanceGroup.js:198
+#: src/prefs/dockAppearanceGroup.js:219
 #: src/prefs/dynamicTransparencyDialog.js:58
 #: src/prefs/panelAppearancePage.js:363
 msgid "Dynamic Transparency"
 msgstr "Dynamische Transparenz"
 
-#: src/prefs/dockAppearanceGroup.js:205 src/prefs/panelAppearancePage.js:409
+#: src/prefs/dockAppearanceGroup.js:226 src/prefs/panelAppearancePage.js:409
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr ""
 "Verwendet eine gewählte Farbe anstelle der Farbe des hellen oder dunklen "
 "Themas"
 
-#: src/prefs/dockAppearanceGroup.js:208
+#: src/prefs/dockAppearanceGroup.js:229
 msgid "Custom Dock Color"
 msgstr "Benutzerdefinierte Dock-Farbe"
 
-#: src/prefs/dockAppearanceGroup.js:225
+#: src/prefs/dockAppearanceGroup.js:246
 msgid "Dock Color"
 msgstr "Dock-Farbe"
 
-#: src/prefs/dockAppearanceGroup.js:231
+#: src/prefs/dockAppearanceGroup.js:252
 msgid "Use Dock Gradient"
 msgstr "Dock-Verlauf verwenden"
 
-#: src/prefs/dockAppearanceGroup.js:232
+#: src/prefs/dockAppearanceGroup.js:253
 msgid "Blend the Dock color with a second color"
 msgstr "Dock-Farbe mit einer zweiten Farbe verblenden"
 
-#: src/prefs/dockAppearanceGroup.js:249
+#: src/prefs/dockAppearanceGroup.js:270
 msgid "Dock Gradient Color"
 msgstr "Dock-Verlaufsfarbe"
 
-#: src/prefs/dockAppearanceGroup.js:259
+#: src/prefs/dockAppearanceGroup.js:280
 msgid "Dock Gradient Direction"
 msgstr "Richtung des Dock-Verlaufs"
 
-#: src/prefs/dockAppearanceGroup.js:260 src/prefs/panelAppearancePage.js:463
+#: src/prefs/dockAppearanceGroup.js:281 src/prefs/panelAppearancePage.js:463
 msgid "Choose how the gradient flows"
 msgstr "Wählen Sie den Verlauf des Farbverlaufs"
 
-#: src/prefs/dockAppearanceGroup.js:262 src/prefs/panelAppearancePage.js:465
+#: src/prefs/dockAppearanceGroup.js:283 src/prefs/panelAppearancePage.js:465
 msgid "Vertical"
 msgstr "Vertikal"
 
-#: src/prefs/dockAppearanceGroup.js:263 src/prefs/panelAppearancePage.js:466
+#: src/prefs/dockAppearanceGroup.js:284 src/prefs/panelAppearancePage.js:466
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: src/prefs/dockAppearanceGroup.js:270
+#: src/prefs/dockAppearanceGroup.js:291
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr ""
 "Weißer Text verwendet das dunkle Dock-Thema; schwarzer Text verwendet das "
 "helle Dock-Thema"
 
-#: src/prefs/dockAppearanceGroup.js:277
+#: src/prefs/dockAppearanceGroup.js:298
 msgid "Dock Text Color"
 msgstr "Dock-Textfarbe"
 
-#: src/prefs/dockAppearanceGroup.js:280 src/prefs/panelAppearancePage.js:483
+#: src/prefs/dockAppearanceGroup.js:301 src/prefs/panelAppearancePage.js:483
 msgid "White"
 msgstr "Weiß"
 
-#: src/prefs/dockAppearanceGroup.js:281 src/prefs/panelAppearancePage.js:484
+#: src/prefs/dockAppearanceGroup.js:302 src/prefs/panelAppearancePage.js:484
 msgid "Black"
 msgstr "Schwarz"
 
-#: src/prefs/dockAppearanceGroup.js:289 src/prefs/panelAppearancePage.js:586
+#: src/prefs/dockAppearanceGroup.js:310 src/prefs/panelAppearancePage.js:586
 msgid "Borders"
 msgstr "Rahmen"
 
-#: src/prefs/dockAppearanceGroup.js:290 src/prefs/panelAppearancePage.js:587
+#: src/prefs/dockAppearanceGroup.js:311 src/prefs/panelAppearancePage.js:587
 msgid "Choose whether to show a border in light and dark themes"
 msgstr "Wählen Sie, ob in hellen und dunklen Themen ein Rahmen angezeigt wird"
 
-#: src/prefs/dockAppearanceGroup.js:295 src/prefs/panelAppearancePage.js:592
+#: src/prefs/dockAppearanceGroup.js:316 src/prefs/panelAppearancePage.js:592
 msgid "Show Border in Dark Mode"
 msgstr "Rahmen im dunklen Modus anzeigen"
 
-#: src/prefs/dockAppearanceGroup.js:296 src/prefs/dockAppearanceGroup.js:309
+#: src/prefs/dockAppearanceGroup.js:317 src/prefs/dockAppearanceGroup.js:330
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 "Einen dünnen Rahmen an der zur Arbeitsfläche gerichteten Dock-Kante anzeigen"
 
-#: src/prefs/dockAppearanceGroup.js:308 src/prefs/panelAppearancePage.js:605
+#: src/prefs/dockAppearanceGroup.js:329 src/prefs/panelAppearancePage.js:605
 msgid "Show Border in Light Mode"
 msgstr "Rahmen im hellen Modus anzeigen"
 
@@ -3194,39 +3208,39 @@ msgstr "Ordner entfernen"
 msgid "Type here to search"
 msgstr "Hier tippen, um zu suchen"
 
-#: src/startMenu/startMenuController.js:824
-#: src/startMenu/startMenuController.js:932
+#: src/startMenu/startMenuController.js:826
+#: src/startMenu/startMenuController.js:934
 msgid "Pinned"
 msgstr "Angeheftet"
 
-#: src/startMenu/startMenuController.js:829
-#: src/startMenu/startMenuController.js:1111
+#: src/startMenu/startMenuController.js:831
+#: src/startMenu/startMenuController.js:1113
 msgid "All apps"
 msgstr "Alle Apps"
 
-#: src/startMenu/startMenuController.js:843
+#: src/startMenu/startMenuController.js:845
 msgid "Back"
 msgstr "Zurück"
 
-#: src/startMenu/startMenuController.js:1004
+#: src/startMenu/startMenuController.js:1006
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Wählen Sie Alle und klicken Sie dann mit der rechten Maustaste auf eine App, "
 "um sie anzuheften"
 
-#: src/startMenu/startMenuController.js:1012
+#: src/startMenu/startMenuController.js:1014
 msgid "Recommended"
 msgstr "Empfohlen"
 
-#: src/startMenu/startMenuController.js:1056 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1058 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Dieser Ordner ist leer"
 
-#: src/startMenu/startMenuController.js:1143
+#: src/startMenu/startMenuController.js:1145
 msgid "Search results"
 msgstr "Suchergebnisse"
 
-#: src/startMenu/startMenuController.js:1168
+#: src/startMenu/startMenuController.js:1170
 msgid "No results found"
 msgstr "Keine Ergebnisse gefunden"
 
@@ -3412,7 +3426,7 @@ msgid "Trash"
 msgstr "Papierkorb"
 
 #: src/taskbar/taskbarAppearanceController.js:686
-#: src/taskbar/taskbarController.js:1424 src/taskbar/taskbarController.js:1426
+#: src/taskbar/taskbarController.js:1422 src/taskbar/taskbarController.js:1424
 msgid "running"
 msgstr "läuft"
 
