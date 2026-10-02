@@ -22,6 +22,7 @@ import {
 import {
     panelBackgroundStyle,
     panelBorderStyle,
+    panelBorderWidth,
 } from '../panel/panelBackgroundStyle.js';
 import {
     PANEL_BLUR_CLASSES,
@@ -368,7 +369,8 @@ export class SecondaryPanelDockController {
                 light,
                 borderEnabled,
                 dockFloating,
-                true
+                true,
+                panelBorderWidth(this._monitor.geometry_scale)
             );
             this._actor.set_style(
                 cornerRadiusStyle
@@ -390,7 +392,8 @@ export class SecondaryPanelDockController {
             cornerRadiusStyle,
             dockFloating,
             dynamicOpacity,
-            transitionDuration
+            transitionDuration,
+            panelBorderWidth(this._monitor.geometry_scale)
         ));
     }
 

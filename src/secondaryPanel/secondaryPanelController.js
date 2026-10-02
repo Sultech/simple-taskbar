@@ -840,6 +840,10 @@ export class SecondaryPanelController {
                 boxLength
             );
         }
+        const scale = this._monitor.geometry_scale;
+        const boxStart = this._panelBox[positionProperty];
+        start = Math.ceil((boxStart + start) * scale) / scale - boxStart;
+        end = Math.max(start, Math.floor((boxStart + end) * scale) / scale - boxStart);
         this.actor[vertical ? 'x' : 'y'] = 0;
         this.actor[positionProperty] = start;
         this.actor[lengthProperty] = end - start;

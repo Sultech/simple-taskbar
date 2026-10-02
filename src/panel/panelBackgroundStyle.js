@@ -9,6 +9,8 @@ import {panelTransparencyOpacity} from '../transparencyUtils.js';
 const DARK_BORDER_COLOR = '255, 255, 255';
 const LIGHT_BORDER_COLOR = '0, 0, 0';
 const BORDER_OPACITY = 0.20;
+const BORDER_WIDTHS = [1, 2];
+const PIXEL_EPSILON = 0.001;
 
 function colorComponents(value) {
     const [, color] = Cogl.Color.from_string(value);
@@ -22,8 +24,14 @@ function panelBackgroundColor(settings, light) {
     return colorComponents(settings.get_string('custom-panel-color'));
 }
 
+export function panelBorderWidth(scale) {
+    return BORDER_WIDTHS.find(width =>
+        Math.abs(width * scale - Math.round(width * scale)) < PIXEL_EPSILON) ??
+        BORDER_WIDTHS[0];
+}
+
 export function panelBorderStyle(settings, light, borderEnabled,
-    fullBorder = false, important = false) {
+    fullBorder = false, important = false, borderWidth = 1) {
     const position = panelPosition(settings);
     const borderColor = light
         ? LIGHT_BORDER_COLOR
@@ -35,7 +43,7 @@ export function panelBorderStyle(settings, light, borderEnabled,
         `border-left: 0${priority}; ` +
         `border-right: 0${priority}; `;
     if (borderEnabled && fullBorder) {
-        borderStyle += 'border: 1px solid ' +
+        borderStyle += `border: ${borderWidth}px solid ` +
             `rgba(${borderColor}, ${BORDER_OPACITY.toFixed(3)})` +
             `${priority}; `;
     } else if (borderEnabled) {
@@ -54,14 +62,16 @@ export function panelBorderStyle(settings, light, borderEnabled,
 
 export function panelBackgroundStyle(settings, light, borderEnabled,
     originalStyle = '', fullBorder = false, dynamicOpacity = null,
-    transitionDuration = 0) {
+    transitionDuration = 0, borderWidth = 1) {
     const opacity = dynamicOpacity ?? panelTransparencyOpacity(settings);
     const background = panelBackgroundColor(settings, light);
     const borderStyle = panelBorderStyle(
         settings,
         light,
         borderEnabled && dynamicOpacity !== 0,
-        fullBorder
+        fullBorder,
+        false,
+        borderWidth
     );
     const gradientEnabled =
         settings.get_boolean('custom-panel-color-enabled') &&
