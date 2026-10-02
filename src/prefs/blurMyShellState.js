@@ -19,6 +19,7 @@ export function createBlurMyShellState(connectSettings) {
     const blurMyShellSettings = getBlurMyShellSettings();
     let blurMyShellPanelSettings = null;
     let blurMyShellPopupSettings = null;
+    let blurMyShellDockSettings = null;
     if (blurMyShellSettings) {
         blurMyShellPanelSettings = getBlurMyShellChildSettings(
             blurMyShellSettings,
@@ -27,6 +28,10 @@ export function createBlurMyShellState(connectSettings) {
         blurMyShellPopupSettings = getBlurMyShellChildSettings(
             blurMyShellSettings,
             'popup'
+        );
+        blurMyShellDockSettings = getBlurMyShellChildSettings(
+            blurMyShellSettings,
+            'dash-to-dock'
         );
     }
     const blurMyShellExtensionEnabled = () => {
@@ -50,6 +55,8 @@ export function createBlurMyShellState(connectSettings) {
         blurMyShellBlurEnabled(blurMyShellPanelSettings);
     const blurMyShellPopupBlurEnabled = () =>
         blurMyShellBlurEnabled(blurMyShellPopupSettings);
+    const blurMyShellDockBlurEnabled = () =>
+        blurMyShellBlurEnabled(blurMyShellDockSettings);
     let syncPanelTransparencyControls = () => {};
     let syncCustomPanelColorControls = () => {};
     let syncDockTransparencyControls = () => {};
@@ -62,21 +69,18 @@ export function createBlurMyShellState(connectSettings) {
         syncDockCustomPanelColorControls();
         syncStartMenuTransparencyControl();
     };
-    if (blurMyShellPanelSettings &&
-        blurMyShellHasKey(blurMyShellPanelSettings, 'blur')) {
-        connectSettings(
-            blurMyShellPanelSettings,
-            'changed::blur',
-            syncBlurMyShellTransparencyState
-        );
-    }
-    if (blurMyShellPopupSettings &&
-        blurMyShellHasKey(blurMyShellPopupSettings, 'blur')) {
-        connectSettings(
-            blurMyShellPopupSettings,
-            'changed::blur',
-            syncBlurMyShellTransparencyState
-        );
+    for (const childSettings of [
+        blurMyShellPanelSettings,
+        blurMyShellPopupSettings,
+        blurMyShellDockSettings,
+    ]) {
+        if (blurMyShellHasKey(childSettings, 'blur')) {
+            connectSettings(
+                childSettings,
+                'changed::blur',
+                syncBlurMyShellTransparencyState
+            );
+        }
     }
     for (const key of [
         'enabled-extensions',
@@ -92,6 +96,7 @@ export function createBlurMyShellState(connectSettings) {
     return {
         blurMyShellPanelBlurEnabled,
         blurMyShellPopupBlurEnabled,
+        blurMyShellDockBlurEnabled,
         setStartMenuSync(syncTransparency) {
             syncStartMenuTransparencyControl = syncTransparency;
         },

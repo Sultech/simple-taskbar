@@ -33,6 +33,7 @@ export function addDockAppearanceGroup({
     settings,
     connectSettings,
     blurMyShellPanelBlurEnabled,
+    blurMyShellDockBlurEnabled,
     dockModeGroup,
     dockPositionRow,
     dockMaxLengthRow,
@@ -138,9 +139,29 @@ export function addDockAppearanceGroup({
     const dynamicTransparencySubtitle = _(
         'Adjust transparency according to the selected window state'
     );
-    const panelBlurTransparencySubtitle = _(
-        'Disable Blur My Shell panel blur to use this option'
-    );
+    const dockBlurSubtitles = {
+        panel: {
+            blur: _('Apply Blur My Shell panel blur to the Dock'),
+            blocked: _('Disable Blur My Shell panel blur to use this option'),
+        },
+        dock: {
+            blur: _('Apply Blur My Shell dock blur to the Dock'),
+            blocked: _('Disable Blur My Shell dock blur to use this option'),
+        },
+        none: {
+            blur: _('This Blur My Shell version cannot blur the Dock'),
+            blocked: '',
+        },
+    };
+    const dockBlurMode = () => settings.get_string('blur-my-shell-dock-mode');
+    const dockBlurAvailable = () => {
+        const mode = dockBlurMode();
+        if (mode === 'dock')
+            return blurMyShellDockBlurEnabled();
+        return mode === 'panel' && blurMyShellPanelBlurEnabled();
+    };
+    const dockBlurBlocksAppearance = () =>
+        settings.get_boolean('dock-panel-blur-enabled') && dockBlurAvailable();
     const transparencyExpander = new Adw.ExpanderRow({
         title: _('Transparency and Blur'),
         subtitle: _('Configure Dock transparency and Blur My Shell integration'),
@@ -162,7 +183,7 @@ export function addDockAppearanceGroup({
     const dockPanelBlurSwitch = createSwitchRow(settings, {
         key: 'dock-panel-blur-enabled',
         title: _('Blur Dock with Blur My Shell'),
-        subtitle: _('Apply Blur My Shell panel blur to the Dock'),
+        subtitle: dockBlurSubtitles.panel.blur,
     });
     transparencyExpander.add_row(dockPanelBlurSwitch);
 
@@ -324,30 +345,31 @@ export function addDockAppearanceGroup({
             !followSystemThemeSwitch.active;
     };
     const syncTransparencyControls = () => {
-        const panelBlurAvailable = blurMyShellPanelBlurEnabled();
-        const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
-            panelBlurAvailable;
+        const blocked = dockBlurBlocksAppearance();
         const available = dockAvailable();
-        dockPanelBlurSwitch.sensitive = available && panelBlurAvailable;
+        const {blur: blurSubtitle, blocked: blockedSubtitle} =
+            dockBlurSubtitles[dockBlurMode()];
+        dockPanelBlurSwitch.sensitive = available && dockBlurAvailable();
+        dockPanelBlurSwitch.subtitle = blurSubtitle;
         transparencySwitch.sensitive = available && !blocked;
         transparencySwitch.subtitle = blocked
-            ? panelBlurTransparencySubtitle
+            ? blockedSubtitle
             : transparencySwitchSubtitle;
         transparencyRow.sensitive = available &&
             !blocked && transparencySwitch.active;
         transparencyRow.subtitle = blocked
-            ? panelBlurTransparencySubtitle
+            ? blockedSubtitle
             : transparencyRowSubtitle;
         dynamicTransparencyRow.sensitive = available && !blocked;
         dynamicTransparencyRow.subtitle = blocked
-            ? panelBlurTransparencySubtitle
+            ? blockedSubtitle
             : dynamicTransparencySubtitle;
         dynamicTransparencyOptionsButton.sensitive = available &&
             !blocked && dynamicTransparencyToggle.active;
     };
     const syncCustomColorControls = () => {
-        const blocked = settings.get_boolean('dock-panel-blur-enabled') &&
-            blurMyShellPanelBlurEnabled();
+        const blocked = dockBlurBlocksAppearance();
+        const {blocked: blockedSubtitle} = dockBlurSubtitles[dockBlurMode()];
         if (blocked &&
             settings.get_boolean('dock-custom-panel-color-enabled')) {
             settings.set_boolean(
@@ -362,7 +384,7 @@ export function addDockAppearanceGroup({
         );
         customPanelColorSwitch.sensitive = available && !blocked;
         customPanelColorSwitch.subtitle = blocked
-            ? panelBlurTransparencySubtitle
+            ? blockedSubtitle
             : customPanelColorSubtitle;
         customPanelGradientSwitch.visible = enabled;
         customPanelGradientSwitch.sensitive = available &&
@@ -381,7 +403,7 @@ export function addDockAppearanceGroup({
         customPanelTextColorRow.sensitive = available &&
             !blocked && enabled;
         customPanelTextColorRow.subtitle = blocked
-            ? panelBlurTransparencySubtitle
+            ? blockedSubtitle
             : customPanelTextColorSubtitle;
     };
     const syncAvailability = () => {
@@ -446,14 +468,12 @@ export function addDockAppearanceGroup({
         'changed::dock-transparency-enabled',
         syncTransparencyControls
     );
-    connectSettings(
-        settings,
-        'changed::dock-panel-blur-enabled',
-        () => {
+    for (const key of ['dock-panel-blur-enabled', 'blur-my-shell-dock-mode']) {
+        connectSettings(settings, `changed::${key}`, () => {
             syncTransparencyControls();
             syncCustomColorControls();
-        }
-    );
+        });
+    }
     syncAvailability();
 
     return {

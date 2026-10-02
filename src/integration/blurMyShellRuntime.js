@@ -86,6 +86,14 @@ export function panelBlurSuitsDock() {
         typeof panelBlur.update_panel_border_radius !== 'function';
 }
 
+export function blurMyShellDockMode() {
+    if (!global.blur_my_shell)
+        return null;
+    if (blurMyShellSupportsDock())
+        return 'dock';
+    return panelBlurSuitsDock() ? 'panel' : 'none';
+}
+
 function blurMyShellSupportsDock() {
     return typeof global.blur_my_shell?._dash_to_dock_blur
         ?.get_corner_radius === 'function';

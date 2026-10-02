@@ -12,6 +12,7 @@ import {
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
 import {
+    blurMyShellDockMode,
     getPanelBlur,
     hidePanelBlurForPanel,
     panelBlurSuitsDock,
@@ -30,6 +31,7 @@ const DOCK_PANEL_ITEM_IDS = new Set([
     'applications',
 ]);
 const BLUR_MY_SHELL_RESET_SYNC_DELAY = 2;
+const BLUR_MY_SHELL_DOCK_MODE_KEY = 'blur-my-shell-dock-mode';
 
 export class DockPanelManager extends PanelManagerBase {
     constructor(params) {
@@ -196,6 +198,11 @@ export class DockPanelManager extends PanelManagerBase {
     }
 
     _syncBlurMyShell() {
+        const dockMode = blurMyShellDockMode();
+        if (dockMode &&
+            this._settings.get_string(BLUR_MY_SHELL_DOCK_MODE_KEY) !== dockMode)
+            this._settings.set_string(BLUR_MY_SHELL_DOCK_MODE_KEY, dockMode);
+
         if (this._panels.length === 0)
             return;
 

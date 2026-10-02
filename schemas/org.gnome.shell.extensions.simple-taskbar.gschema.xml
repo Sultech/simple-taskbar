@@ -658,7 +658,16 @@
     </key>
     <key name="dock-panel-blur-enabled" type="b">
       <default>true</default>
-      <summary>Apply Blur My Shell panel blur to the Dock</summary>
+      <summary>Blur the Dock with Blur My Shell</summary>
+    </key>
+    <key name="blur-my-shell-dock-mode" type="s">
+      <choices>
+        <choice value="panel"/>
+        <choice value="dock"/>
+        <choice value="none"/>
+      </choices>
+      <default>'panel'</default>
+      <summary>Which Blur My Shell blur the running version can apply to the Dock</summary>
     </key>
     <key name="dock-transparency-level" type="i">
       <range min="0" max="100"/>

@@ -137,6 +137,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             settings: window._settings,
             connectSettings,
             blurMyShellPanelBlurEnabled,
+            blurMyShellDockBlurEnabled: blurMyShell.blurMyShellDockBlurEnabled,
             dockModeGroup,
             dockPositionRow,
             dockMaxLengthRow,
