@@ -78,7 +78,13 @@ export class DockPanelManager extends PanelManagerBase {
         );
         this._connectBlurMyShellKeys(
             'dash-to-dock',
-            ['blur', 'override-background', 'style-dash-to-dock'],
+            [
+                'blur',
+                'corner-radius',
+                'override-background',
+                'rounded-corners',
+                'style-dash-to-dock',
+            ],
             'blur'
         );
         this._queueRebuild();

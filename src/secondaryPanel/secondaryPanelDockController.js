@@ -11,8 +11,9 @@ import {
 
 import {
     BLUR_MY_SHELL_PANEL_STYLES,
-    TRANSPARENT_PANEL_STYLE,
-    blurMyShellDockStyleClass,
+    BLUR_MY_SHELL_DOCK_STYLES,
+    blurMyShellDockCornerRadius,
+    blurMyShellDockRoundedCorners,
 } from '../shared/blurMyShellUtils.js';
 import {
     dockBlurIsActive,
@@ -49,6 +50,8 @@ import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
+const EXTERNAL_DOCK_STYLES = new Set(BLUR_MY_SHELL_DOCK_STYLES);
+const DOCK_BACKGROUND_CLASS = 'dash-background';
 const OWN_BLUR_CLASSES = new Set(PANEL_BLUR_CLASSES);
 const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
@@ -296,13 +299,29 @@ export class SecondaryPanelDockController {
         this._applicationOverflowController.sync();
     }
 
+    _externalStyles(styles) {
+        return this._actor.get_style_class_name()
+            .split(/\s+/)
+            .filter(style => styles.has(style));
+    }
+
     syncTheme() {
         const dockFloating = !this._settings.get_boolean('dock-panel-mode');
+        const dockBlurActive = dockBlurIsActive(this._actor);
+        const panelBlurActive = panelBlurIsActive(this._actor);
+        const dockCornerRadius = dockBlurActive
+            ? blurMyShellDockCornerRadius()
+            : null;
         const cornerRadius = dockFloating
-            ? this._settings.get_int('dock-corner-radius')
+            ? dockCornerRadius ?? this._settings.get_int('dock-corner-radius')
             : 0;
+        const {top: roundTop, bottom: roundBottom} = dockBlurActive
+            ? blurMyShellDockRoundedCorners()
+            : {top: true, bottom: true};
+        const topRadius = roundTop ? cornerRadius : 0;
+        const bottomRadius = roundBottom ? cornerRadius : 0;
         const cornerRadiusStyle = dockFloating
-            ? `border-radius: ${cornerRadius}px;`
+            ? `border-radius: ${topRadius}px ${topRadius}px ${bottomRadius}px ${bottomRadius}px;`
             : '';
         const vertical = panelIsVertical(this._settings);
         const light = panelUsesLightTheme(this._settings);
@@ -323,19 +342,13 @@ export class SecondaryPanelDockController {
                 !PANEL_EDGE_CLASSES.has(style) &&
                 style !== 'simple-taskbar-panel-vertical' &&
                 !EXTERNAL_PANEL_STYLES.has(style) &&
+                !EXTERNAL_DOCK_STYLES.has(style) &&
+                style !== DOCK_BACKGROUND_CLASS &&
                 !OWN_BLUR_CLASSES.has(style));
-        const dockBlurActive = dockBlurIsActive(this._actor);
-        const panelBlurActive = panelBlurIsActive(this._actor);
-        const dockStyleClass = dockBlurActive
-            ? blurMyShellDockStyleClass(light)
-            : null;
-        if (dockBlurActive) {
-            classes.push(dockStyleClass);
-        } else if (panelBlurActive) {
-            classes.push(...this._actor.get_style_class_name()
-                .split(/\s+/)
-                .filter(style => EXTERNAL_PANEL_STYLES.has(style)));
-        }
+        if (dockBlurActive)
+            classes.push(DOCK_BACKGROUND_CLASS, ...this._externalStyles(EXTERNAL_DOCK_STYLES));
+        else if (panelBlurActive)
+            classes.push(...this._externalStyles(EXTERNAL_PANEL_STYLES));
         classes.push('simple-taskbar-panel', 'simple-taskbar-secondary-panel');
         if (dockFloating)
             classes.push('simple-taskbar-dock-floating');
@@ -357,10 +370,8 @@ export class SecondaryPanelDockController {
         syncPanelBlurClasses(
             this._actor,
             blurActive,
-            light,
-            dockBlurActive
-                ? dockStyleClass === TRANSPARENT_PANEL_STYLE
-                : undefined
+            light && !dockBlurActive,
+            dockBlurActive ? true : undefined
         );
         syncPanelBlurCornerRadius(this._actor, cornerRadius);
         if (blurActive) {

@@ -15,11 +15,11 @@ export const BLUR_MY_SHELL_PANEL_STYLES = [
 ];
 const BLUR_MY_SHELL_SCHEMA =
     'org.gnome.shell.extensions.blur-my-shell';
-export const TRANSPARENT_PANEL_STYLE = 'transparent-panel';
-const DOCK_STYLE_CLASSES = [
-    TRANSPARENT_PANEL_STYLE,
-    'light-panel',
-    'dark-panel',
+const TRANSPARENT_PANEL_STYLE = 'transparent-panel';
+export const BLUR_MY_SHELL_DOCK_STYLES = [
+    'transparent-dash',
+    'light-dash',
+    'dark-dash',
 ];
 const STYLE_PANEL_ORDER = [
     TRANSPARENT_PANEL_STYLE,
@@ -124,13 +124,31 @@ export function blurMyShellOverridesDockBackground() {
     return dockSettings.get_boolean('override-background');
 }
 
-export function blurMyShellDockStyleClass(light) {
+export function blurMyShellDockStyle() {
     const dockSettings = blurMyShellDockSettings();
     if (!blurMyShellHasKey(dockSettings, 'style-dash-to-dock'))
-        return TRANSPARENT_PANEL_STYLE;
+        return null;
 
-    return DOCK_STYLE_CLASSES[dockSettings.get_int('style-dash-to-dock')] ??
-        (light ? 'light-panel' : 'dark-panel');
+    return dockSettings.get_int('style-dash-to-dock');
+}
+
+export function blurMyShellDockRoundedCorners() {
+    const dockSettings = blurMyShellDockSettings();
+    const corners = blurMyShellHasKey(dockSettings, 'rounded-corners')
+        ? dockSettings.get_int('rounded-corners')
+        : 0;
+    return {
+        top: corners === 0 || corners === 1,
+        bottom: corners === 0 || corners === 2,
+    };
+}
+
+export function blurMyShellDockCornerRadius() {
+    const dockSettings = blurMyShellDockSettings();
+    if (!blurMyShellHasKey(dockSettings, 'corner-radius'))
+        return null;
+
+    return dockSettings.get_int('corner-radius');
 }
 
 export function blurMyShellHasKey(settings, key) {

@@ -95,13 +95,20 @@ export function blurMyShellDockMode() {
 }
 
 function blurMyShellSupportsDock() {
-    return typeof global.blur_my_shell?._dash_to_dock_blur
-        ?.get_corner_radius === 'function';
+    return Boolean(global.blur_my_shell?._dash_to_dock_blur) &&
+        Boolean(global.blur_my_shell._panel_blur) &&
+        !panelBlurSuitsDock();
 }
 
 function getDockBlur() {
     const dockBlur = global.blur_my_shell?._dash_to_dock_blur;
     return blurMyShellSupportsDock() && dockBlur.enabled ? dockBlur : null;
+}
+
+export function dockBlurStylesDock(settings) {
+    return settings.get_boolean('dock-panel-blur-enabled') &&
+        Boolean(getDockBlur()) &&
+        blurMyShellOverridesDockBackground();
 }
 
 export function dockBlurIsActive(panel) {

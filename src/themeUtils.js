@@ -5,6 +5,13 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {dockBlurStylesDock} from './integration/blurMyShellRuntime.js';
+import {blurMyShellDockStyle} from './shared/blurMyShellUtils.js';
+
+const BLUR_MY_SHELL_DOCK_TRANSPARENT = 0;
+const BLUR_MY_SHELL_DOCK_LIGHT = 1;
+const BLUR_MY_SHELL_DOCK_DARK = 2;
+
 function _luminance(color) {
     return (0.299 * color.red +
         0.587 * color.green +
@@ -39,6 +46,14 @@ export function panelUsesLightTheme(settings) {
         return Main.panel.has_style_class_name(
             'simple-taskbar-theme-light'
         );
+
+    const blurStyle = dockBlurStylesDock(settings) ? blurMyShellDockStyle() : null;
+    if (blurStyle === BLUR_MY_SHELL_DOCK_LIGHT)
+        return true;
+    if (blurStyle === BLUR_MY_SHELL_DOCK_DARK)
+        return false;
+    if (blurStyle !== null && blurStyle !== BLUR_MY_SHELL_DOCK_TRANSPARENT)
+        return shellMenusUseLightTheme();
 
     if (!settings.get_boolean('panel-theme-follow-system'))
         return settings.get_string('panel-theme') === 'light';
