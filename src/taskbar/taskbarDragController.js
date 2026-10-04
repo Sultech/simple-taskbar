@@ -178,7 +178,7 @@ export class TaskbarDragController {
         });
         this._cloneDraggables.set(clone, {
             draggable,
-            pendingRelease: false,
+            destroyClone: null,
             beginId: draggable.connect('drag-begin', () => {
                 dragSource._taskbarDropAccepted = false;
                 this._draggingClone = clone;
@@ -189,26 +189,32 @@ export class TaskbarDragController {
                 this._draggingClone = null;
                 this.finish(item);
                 const pending = this._cloneDraggables.get(clone);
-                if (pending && pending.pendingRelease)
+                if (pending && pending.destroyClone)
                     this.releaseCloneDraggable(clone);
             }),
         });
     }
 
-    releaseCloneDraggable(clone) {
+    releaseCloneDraggable(clone, destroyClone = null) {
         const entry = this._cloneDraggables.get(clone);
-        if (!entry)
-            return;
-
-        if (this._draggingClone === clone) {
-            entry.pendingRelease = true;
+        if (!entry) {
+            if (destroyClone)
+                destroyClone();
             return;
         }
+
+        if (destroyClone)
+            entry.destroyClone = destroyClone;
+
+        if (this._draggingClone === clone)
+            return;
 
         entry.draggable.disconnect(entry.beginId);
         entry.draggable.disconnect(entry.endId);
         clone._delegate = null;
         this._cloneDraggables.delete(clone);
+        if (entry.destroyClone)
+            entry.destroyClone();
     }
 
     releaseDraggable(item) {

@@ -250,11 +250,14 @@ export class TaskbarHoverAnimationCloneController {
                 item.hover = false;
         }
 
-        this._onCloneDestroyed(entry.clone);
         entry.clone.remove_all_transitions();
         if (restoreSource)
             entry.source.opacity = entry.sourceOpacity;
-        entry.cloneContainer.destroy();
+        entry.cloneContainer.hide();
+        this._onCloneDestroyed(
+            entry.clone,
+            () => entry.cloneContainer.destroy()
+        );
     }
 
     reset() {

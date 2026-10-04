@@ -383,8 +383,8 @@ export class TaskbarController {
                 },
                 onCloneCreated: (item, clone) =>
                     this._dragController.makeCloneDraggable(item, clone),
-                onCloneDestroyed: clone =>
-                    this._dragController.releaseCloneDraggable(clone),
+                onCloneDestroyed: (clone, destroyClone) =>
+                    this._dragController.releaseCloneDraggable(clone, destroyClone),
             });
     }
 
