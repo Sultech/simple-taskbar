@@ -1766,11 +1766,11 @@ msgstr "Ajouter les lecteurs montés ou connectés au Dock"
 msgid "Show Trash and connected drives in the Dock."
 msgstr "Afficher la corbeille et les lecteurs connectés dans le Dock."
 
-#: src/prefs/locationsGroup.js:153
+#: src/prefs/locationsGroup.js:78
 msgid "Nautilus Folder Shortcuts"
 msgstr "Raccourcis de dossiers de Nautilus"
 
-#: src/prefs/locationsGroup.js:154
+#: src/prefs/locationsGroup.js:172
 msgid "Show common folders in the Files taskbar menu"
 msgstr ""
 "Afficher les dossiers communs dans le menu de la barre des tâches de Fichiers"
@@ -2921,11 +2921,11 @@ msgstr ""
 "Utiliser le raccourci du sélecteur d’applications GNOME pour le menu "
 "démarrer de style Eleven lorsque ceci est activé"
 
-#: src/prefs/startMenuPage.js:951
+#: src/prefs/locationsGroup.js:83
 msgid "Super+E Opens File Manager"
 msgstr "Super+E ouvre le gestionnaire de fichiers"
 
-#: src/prefs/startMenuPage.js:953
+#: src/prefs/locationsGroup.js:85
 msgid "Open your home folder with the system’s default file manager"
 msgstr ""
 "Ouvrir votre dossier personnel avec le gestionnaire de fichiers par défaut "
@@ -3791,3 +3791,7 @@ msgstr "Aucune application ne joue de l’audio"
 
 #~ msgid "Auto-hide Panel"
 #~ msgstr "Masquer automatiquement le panneau"
+
+#: src/prefs/locationsGroup.js:180
+msgid "Show common folders in the Files dock menu"
+msgstr "Afficher les dossiers courants dans le menu de Fichiers du dock"

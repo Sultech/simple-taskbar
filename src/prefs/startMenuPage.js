@@ -947,23 +947,6 @@ export function addStartMenuPage({
     );
     updateSuperTabRow();
 
-    const superEFileManagerRow = new Adw.SwitchRow({
-        title: _('Super+E Opens File Manager'),
-        subtitle: _(
-            'Open your home folder with the system’s default file manager'
-        ),
-        active: settings.get_boolean(
-            'super-e-file-manager-enabled'
-        ),
-    });
-    startMenuKeybindingsGroup.add(superEFileManagerRow);
-    settings.bind(
-        'super-e-file-manager-enabled',
-        superEFileManagerRow,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-
     const customShortcutLabel = new Gtk.ShortcutLabel({
         disabled_text: _('Not set'),
         valign: Gtk.Align.CENTER,

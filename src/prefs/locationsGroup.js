@@ -72,6 +72,24 @@ function createCommonFoldersRow(settings) {
     return row;
 }
 
+function addFileManagerShortcuts(group, settings, subtitle) {
+    const placesRow = createSwitchRow(settings, {
+        key: 'nautilus-places-enabled',
+        title: _('Nautilus Folder Shortcuts'),
+        subtitle,
+    });
+    const superERow = createSwitchRow(settings, {
+        key: 'super-e-file-manager-enabled',
+        title: _('Super+E Opens File Manager'),
+        subtitle: _(
+            'Open your home folder with the system’s default file manager'
+        ),
+    });
+    group.add(placesRow);
+    group.add(superERow);
+    return {placesRow, superERow};
+}
+
 export function addLocationsGroup({
     page,
     dockPage,
@@ -148,24 +166,33 @@ export function addLocationsGroup({
     group.add(taskbarDriveOptionsRow);
     group.add(taskbarCommonFoldersRow);
 
-    const nautilusPlacesSwitch = createSwitchRow(settings, {
-        key: 'nautilus-places-enabled',
-        title: _('Nautilus Folder Shortcuts'),
-        subtitle: _('Show common folders in the Files taskbar menu'),
-    });
-    group.add(nautilusPlacesSwitch);
+    const taskbarFileManagerShortcuts = addFileManagerShortcuts(
+        group,
+        settings,
+        _('Show common folders in the Files taskbar menu')
+    );
 
     dockGroup.add(dockDriveOptionsRow);
     dockGroup.add(dockCommonFoldersRow);
+    const dockFileManagerShortcuts = addFileManagerShortcuts(
+        dockGroup,
+        settings,
+        _('Show common folders in the Files dock menu')
+    );
 
     const syncAvailability = () => {
         const xpEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const dockMode = settings.get_boolean('dock-mode');
         const defaultPanel = settings.get_boolean(
             'default-gnome-panel'
-        ) && !settings.get_boolean('dock-mode');
-        nautilusPlacesSwitch.sensitive = !defaultPanel;
+        ) && !dockMode;
+        taskbarFileManagerShortcuts.placesRow.sensitive = !defaultPanel &&
+            !dockMode;
+        dockFileManagerShortcuts.placesRow.sensitive = dockMode;
+        taskbarFileManagerShortcuts.superERow.sensitive = !dockMode;
+        dockFileManagerShortcuts.superERow.sensitive = dockMode;
         if (xpEnabled && taskbarLocationsRow.active)
             taskbarLocationsRow.active = false;
         taskbarLocationsRow.sensitive = !xpEnabled;

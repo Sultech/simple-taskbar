@@ -1743,11 +1743,11 @@ msgstr "Eingehängte oder verbundene Laufwerke zum Dock hinzufügen"
 msgid "Show Trash and connected drives in the Dock."
 msgstr "Papierkorb und verbundene Laufwerke im Dock anzeigen."
 
-#: src/prefs/locationsGroup.js:153
+#: src/prefs/locationsGroup.js:78
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus-Ordnerverknüpfungen"
 
-#: src/prefs/locationsGroup.js:154
+#: src/prefs/locationsGroup.js:172
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Zeigt häufig verwendete Ordner im Dateien-Menü der Taskleiste"
 
@@ -2886,11 +2886,11 @@ msgstr ""
 "Verwendet die Anwendungswechsel-Tastenkombination von GNOME für das "
 "Startmenü im Eleven-Stil, solange es aktiviert ist"
 
-#: src/prefs/startMenuPage.js:951
+#: src/prefs/locationsGroup.js:83
 msgid "Super+E Opens File Manager"
 msgstr "Super+E öffnet den Dateimanager"
 
-#: src/prefs/startMenuPage.js:953
+#: src/prefs/locationsGroup.js:85
 msgid "Open your home folder with the system’s default file manager"
 msgstr "Öffnet Ihren Home-Ordner mit dem Standard-Dateimanager des Systems"
 
@@ -3740,3 +3740,7 @@ msgstr "Keine Anwendung spielt Audio ab"
 
 #~ msgid "Auto-hide Panel"
 #~ msgstr "Panel automatisch ausblenden"
+
+#: src/prefs/locationsGroup.js:180
+msgid "Show common folders in the Files dock menu"
+msgstr "Häufig verwendete Ordner im Dock-Menü von Dateien anzeigen"

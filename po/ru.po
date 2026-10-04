@@ -1707,11 +1707,11 @@ msgstr "Добавить подключённые или смонтирован�
 msgid "Show Trash and connected drives in the Dock."
 msgstr "Показывать Корзину и подключённые накопители в Dock."
 
-#: src/prefs/locationsGroup.js:153
+#: src/prefs/locationsGroup.js:78
 msgid "Nautilus Folder Shortcuts"
 msgstr "Ярлыки папок Nautilus"
 
-#: src/prefs/locationsGroup.js:154
+#: src/prefs/locationsGroup.js:172
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Показывать основные папки в меню «Файлы» на панели задач"
 
@@ -2817,11 +2817,11 @@ msgstr ""
 "Использовать сочетание клавиш переключения приложений GNOME для Eleven-style "
 "Start Menu, пока оно включено"
 
-#: src/prefs/startMenuPage.js:951
+#: src/prefs/locationsGroup.js:83
 msgid "Super+E Opens File Manager"
 msgstr "Super+E открывает файловый менеджер"
 
-#: src/prefs/startMenuPage.js:953
+#: src/prefs/locationsGroup.js:85
 msgid "Open your home folder with the system’s default file manager"
 msgstr "Открывать домашнюю папку в файловом менеджере по умолчанию"
 
@@ -3654,3 +3654,7 @@ msgstr "Нет приложений, воспроизводящих звук"
 
 #~ msgid "Auto-hide Panel"
 #~ msgstr "Автоскрытие панели"
+
+#: src/prefs/locationsGroup.js:180
+msgid "Show common folders in the Files dock menu"
+msgstr "Показывать основные папки в меню приложения «Файлы» в доке"

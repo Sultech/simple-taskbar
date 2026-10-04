@@ -1718,11 +1718,11 @@ msgstr "Csatlakoztatott vagy csatolt meghajtók hozzáadása a Dockhoz"
 msgid "Show Trash and connected drives in the Dock."
 msgstr "A Kuka és a csatlakoztatott meghajtók megjelenítése a Dockban."
 
-#: src/prefs/locationsGroup.js:153
+#: src/prefs/locationsGroup.js:78
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus mappa gyorslinkek"
 
-#: src/prefs/locationsGroup.js:154
+#: src/prefs/locationsGroup.js:172
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Gyakori mappák megjelenítése a Fájlok tálcamenüben"
 
@@ -2845,11 +2845,11 @@ msgstr ""
 "A GNOME alkalmazásváltó gyorsbillentyűjének használata a Windows 11 stílusú "
 "Start menühöz, amíg az engedélyezve van"
 
-#: src/prefs/startMenuPage.js:951
+#: src/prefs/locationsGroup.js:83
 msgid "Super+E Opens File Manager"
 msgstr "Super+E megnyitja a Fájlkezelőt"
 
-#: src/prefs/startMenuPage.js:953
+#: src/prefs/locationsGroup.js:85
 msgid "Open your home folder with the system’s default file manager"
 msgstr "A saját mappa megnyitása a rendszer alapértelmezett fájlkezelőjével"
 
@@ -3688,3 +3688,7 @@ msgstr "Egyetlen alkalmazás sem játszik le hangot"
 
 #~ msgid "Auto-hide Panel"
 #~ msgstr "Panel automatikus elrejtése"
+
+#: src/prefs/locationsGroup.js:180
+msgid "Show common folders in the Files dock menu"
+msgstr "Gyakori mappák megjelenítése a Fájlok dokkmenüjében"

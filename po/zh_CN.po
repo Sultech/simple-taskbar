@@ -1664,11 +1664,11 @@ msgstr "将已挂载或已连接的驱动器添加到 Dock"
 msgid "Show Trash and connected drives in the Dock."
 msgstr "在 Dock 中显示回收站和已连接的驱动器。"
 
-#: src/prefs/locationsGroup.js:153
+#: src/prefs/locationsGroup.js:78
 msgid "Nautilus Folder Shortcuts"
 msgstr "Nautilus（文件管理器）文件夹快捷方式"
 
-#: src/prefs/locationsGroup.js:154
+#: src/prefs/locationsGroup.js:172
 msgid "Show common folders in the Files taskbar menu"
 msgstr "在“文件”任务栏菜单中展示常用文件夹"
 
@@ -2736,11 +2736,11 @@ msgid ""
 "while it is enabled"
 msgstr "启用后，使用 GNOME 的应用切换快捷键（Super）打开 11 风格开始菜单"
 
-#: src/prefs/startMenuPage.js:951
+#: src/prefs/locationsGroup.js:83
 msgid "Super+E Opens File Manager"
 msgstr "按 Super+E 以打开文件管理器"
 
-#: src/prefs/startMenuPage.js:953
+#: src/prefs/locationsGroup.js:85
 msgid "Open your home folder with the system’s default file manager"
 msgstr "使用系统默认的文件管理器打开主文件夹"
 
@@ -3554,3 +3554,7 @@ msgstr "没有应用正在播放音频"
 
 #~ msgid "Auto-hide Panel"
 #~ msgstr "自动隐藏面板"
+
+#: src/prefs/locationsGroup.js:180
+msgid "Show common folders in the Files dock menu"
+msgstr "在文件应用的程序坞菜单中显示常用文件夹"
