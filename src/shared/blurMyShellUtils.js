@@ -15,7 +15,10 @@ export const BLUR_MY_SHELL_PANEL_STYLES = [
 ];
 const BLUR_MY_SHELL_SCHEMA =
     'org.gnome.shell.extensions.blur-my-shell';
-const TRANSPARENT_PANEL_STYLE = 'transparent-panel';
+export const BLUR_MY_SHELL_PANEL_TRANSPARENT = 0;
+export const BLUR_MY_SHELL_PANEL_LIGHT = 1;
+export const BLUR_MY_SHELL_PANEL_DARK = 2;
+export const BLUR_MY_SHELL_PANEL_CONTRASTED = 3;
 export const BLUR_MY_SHELL_DOCK_TRANSPARENT = 0;
 export const BLUR_MY_SHELL_DOCK_LIGHT = 1;
 export const BLUR_MY_SHELL_DOCK_DARK = 2;
@@ -23,12 +26,6 @@ export const BLUR_MY_SHELL_DOCK_STYLES = [
     'transparent-dash',
     'light-dash',
     'dark-dash',
-];
-const STYLE_PANEL_ORDER = [
-    TRANSPARENT_PANEL_STYLE,
-    'light-panel',
-    'dark-panel',
-    'contrasted-panel',
 ];
 
 export function getBlurMyShellSettings() {
@@ -108,11 +105,15 @@ export function blurMyShellPanelStyleIsTransparent() {
         panelSettings.get_boolean('gradient-panel'))
         return false;
 
-    if (!blurMyShellHasKey(panelSettings, 'style-panel'))
-        return true;
+    return blurMyShellPanelStyle() === BLUR_MY_SHELL_PANEL_TRANSPARENT;
+}
 
-    const style = STYLE_PANEL_ORDER[panelSettings.get_int('style-panel')];
-    return style === undefined || style === TRANSPARENT_PANEL_STYLE;
+export function blurMyShellPanelStyle() {
+    const panelSettings = blurMyShellPanelSettings();
+    if (!blurMyShellHasKey(panelSettings, 'style-panel'))
+        return BLUR_MY_SHELL_PANEL_TRANSPARENT;
+
+    return panelSettings.get_int('style-panel');
 }
 
 function blurMyShellDockSettings() {

@@ -41,5 +41,5 @@ export function syncPanelBlurClasses(
     setStyleClass(panel, BLUR_MY_SHELL_ACTIVE_CLASS, active);
     setStyleClass(panel, BLUR_TRANSPARENT_CLASS, transparent);
     setStyleClass(panel, BLUR_TINTED_CLASS, active && !transparent);
-    setStyleClass(panel, LIGHT_BLUR_OVERLAY_CLASS, active && light);
+    setStyleClass(panel, LIGHT_BLUR_OVERLAY_CLASS, transparent && light);
 }

@@ -10,8 +10,13 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
+    BLUR_MY_SHELL_PANEL_CONTRASTED,
+    BLUR_MY_SHELL_PANEL_DARK,
+    BLUR_MY_SHELL_PANEL_LIGHT,
+    BLUR_MY_SHELL_PANEL_TRANSPARENT,
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
+    blurMyShellPanelStyle,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
@@ -220,7 +225,7 @@ export class PanelThemeController {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._blurMyShellSyncId = 0;
-                this._syncBlurMyShell();
+                this.applyTheme();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -263,7 +268,8 @@ export class PanelThemeController {
     }
 
     _applySystemTheme() {
-        if (this._settings.get_boolean('panel-theme-follow-system'))
+        if (this._settings.get_boolean('panel-theme-follow-system') ||
+            this._blurMyShellPanelStyle() !== null)
             this.applyTheme();
     }
 
@@ -281,15 +287,24 @@ export class PanelThemeController {
         );
     }
 
-    _syncBlurMyShell() {
-        const panelBlur = getPanelBlur();
-        if (panelBlur && !Main.overview.visibleTarget)
-            refreshPanelBlurVisibility(panelBlur);
+    _blurMyShellPanelStyle() {
+        if (this._settings.get_boolean('windows-xp-theme-enabled') ||
+            !panelBlurIsActive(Main.panel))
+            return null;
 
-        this.applyTransparency();
+        return blurMyShellPanelStyle();
     }
 
     _usesLightTheme() {
+        const blurStyle = this._blurMyShellPanelStyle();
+        if (blurStyle === BLUR_MY_SHELL_PANEL_LIGHT)
+            return true;
+        if (blurStyle === BLUR_MY_SHELL_PANEL_DARK ||
+            blurStyle === BLUR_MY_SHELL_PANEL_CONTRASTED)
+            return false;
+        if (blurStyle !== null && blurStyle !== BLUR_MY_SHELL_PANEL_TRANSPARENT)
+            return shellMenusUseLightTheme();
+
         if (!this._settings.get_boolean('panel-theme-follow-system'))
             return this._settings.get_string('panel-theme') === 'light';
 
