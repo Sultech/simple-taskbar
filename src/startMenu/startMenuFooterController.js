@@ -150,6 +150,7 @@ export class StartMenuFooterController {
     }
 
     destroy() {
+        this._user.disconnectObject(this._userAvatar);
         this._locationController.destroy();
         this._locationController = null;
         this.actor.destroy();

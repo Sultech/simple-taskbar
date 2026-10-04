@@ -432,7 +432,7 @@ export class ApplicationOverflowController {
         item.connectObject(
             'notify::scale-x',
             () => this._queueSync(),
-            this.actor
+            this._signalHolder
         );
     }
 

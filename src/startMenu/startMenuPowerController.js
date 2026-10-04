@@ -13,6 +13,25 @@ import {openPopupMenu} from '../popupMenuUtils.js';
 import {SourcePressGuard} from './sourcePressGuard.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
+class StartMenuPowerMenu extends PopupMenu.PopupMenu {
+    constructor(...args) {
+        super(...args);
+        this._signalSources = new Set();
+    }
+
+    connectVisibility(source, signal, callback) {
+        source.connectObject(signal, callback, this.actor);
+        this._signalSources.add(source);
+    }
+
+    destroy() {
+        for (const source of this._signalSources)
+            source.disconnectObject(this.actor);
+        this._signalSources.clear();
+        super.destroy();
+    }
+}
+
 export class StartMenuPowerController {
     constructor(settings, {closeMenu, applyTheme}) {
         this._settings = settings;
@@ -90,7 +109,7 @@ export class StartMenuPowerController {
     _open() {
         this.close();
 
-        const menu = new PopupMenu.PopupMenu(
+        const menu = new StartMenuPowerMenu(
             this._button,
             0.5,
             panelArrowSide(this._settings)
@@ -152,7 +171,7 @@ export class StartMenuPowerController {
                 sessionItems.some(item => item.visible);
         };
         for (const item of [...powerItems, ...sessionItems])
-            item.connectObject('notify::visible', syncSeparator, menu.actor);
+            menu.connectVisibility(item, 'notify::visible', syncSeparator);
         syncSeparator();
 
         this._systemActions.forceUpdate();
@@ -167,7 +186,7 @@ export class StartMenuPowerController {
         const syncVisibility = () => {
             item.visible = this._systemActions[property];
         };
-        this._systemActions.connectObject(signal, syncVisibility, menu.actor);
+        menu.connectVisibility(this._systemActions, signal, syncVisibility);
         syncVisibility();
         return item;
     }

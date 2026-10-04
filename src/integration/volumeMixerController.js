@@ -303,6 +303,17 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
     destroy() {
         this.slider.disconnect(this._sliderChangedId);
         this._sliderChangedId = 0;
+        this._stream.disconnectObject(this);
+        if (this._app) {
+            this._app.disconnectObject(this);
+            global.display.disconnectObject(this);
+        }
+        if (this._window)
+            this._window.disconnectObject(this);
+        this._window = null;
+        this._app = null;
+        this._stream = null;
+        this._control = null;
         super.destroy();
     }
 });

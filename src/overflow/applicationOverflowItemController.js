@@ -96,7 +96,8 @@ export class ApplicationOverflowItemController {
         };
         item.connectObject('notify::style-class', syncState, button);
         syncState();
-        this._configure(button, item, button, false);
+        this._configure(button, item, button, false,
+            window ? [window, item] : [item]);
         return button;
     }
 
@@ -104,7 +105,9 @@ export class ApplicationOverflowItemController {
         const taskbarItems = new Set(
             this._taskbarController.getOrderedApplicationItems()
         );
-        for (const {auxiliaryItem, styleItem} of this._records) {
+        for (const {auxiliaryItem, styleItem, signalSources} of this._records) {
+            for (const source of signalSources)
+                source.disconnectObject(auxiliaryItem);
             this._releaseDraggable(auxiliaryItem);
             if (taskbarItems.has(styleItem)) {
                 if (styleItem._taskbarIsShowDesktop) {
@@ -158,14 +161,18 @@ export class ApplicationOverflowItemController {
         return button;
     }
 
-    _configure(auxiliaryItem, sourceItem, styleItem, previewsEnabled) {
+    _configure(auxiliaryItem, sourceItem, styleItem, previewsEnabled,
+        signalSources = []) {
         auxiliaryItem._taskbarApp = sourceItem._taskbarApp;
         auxiliaryItem._taskbarWindow = sourceItem._taskbarWindow;
         auxiliaryItem._taskbarIsLauncher = sourceItem._taskbarIsLauncher;
         auxiliaryItem._taskbarIsShowDesktop =
             sourceItem._taskbarIsShowDesktop;
         auxiliaryItem._taskbarButton = auxiliaryItem;
-        this._records.push({auxiliaryItem, sourceItem, styleItem});
+        signalSources.push(sourceItem._taskbarButton);
+        this._records.push({
+            auxiliaryItem, sourceItem, styleItem, signalSources,
+        });
         this._taskbarController.registerAuxiliaryItem(auxiliaryItem);
         sourceItem._taskbarButton.connectObject(
             'notify::accessible-name',
