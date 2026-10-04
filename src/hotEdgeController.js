@@ -14,6 +14,8 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {destroyPressureBarrier} from './pointerUtils.js';
+
 const PRESSURE_TIMEOUT = 1000;
 const FALLBACK_TIMEOUT = 250;
 
@@ -141,14 +143,13 @@ class HotEdge {
         this._fallbackEnterId = 0;
         this._fallbackLeaveId = 0;
 
-        if (this._pressureBarrier && this._pressureTriggerId)
-            this._pressureBarrier.disconnect(this._pressureTriggerId);
+        destroyPressureBarrier(
+            this._pressureBarrier,
+            this._barrier,
+            this._pressureTriggerId
+        );
         this._pressureTriggerId = 0;
-        if (this._pressureBarrier && this._barrier)
-            this._pressureBarrier.removeBarrier(this._barrier);
-        this._barrier?.destroy();
         this._barrier = null;
-        this._pressureBarrier?.destroy();
         this._pressureBarrier = null;
 
         this._ripples.destroy();

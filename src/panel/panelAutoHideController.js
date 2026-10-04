@@ -18,7 +18,10 @@ import {
     panelIsVertical,
     panelPosition,
 } from './panelPosition.js';
-import {pointerButtonIsPressed} from '../pointerUtils.js';
+import {
+    destroyPressureBarrier,
+    pointerButtonIsPressed,
+} from '../pointerUtils.js';
 import {
     autoHideHideDelay,
     autoHideRevealDelay,
@@ -794,14 +797,13 @@ export class PanelAutoHideController {
     }
 
     _destroyPressureBarrier() {
-        if (this._pressureBarrier && this._pressureTriggerId)
-            this._pressureBarrier.disconnect(this._pressureTriggerId);
+        destroyPressureBarrier(
+            this._pressureBarrier,
+            this._barrier,
+            this._pressureTriggerId
+        );
         this._pressureTriggerId = 0;
-        if (this._pressureBarrier && this._barrier)
-            this._pressureBarrier.removeBarrier(this._barrier);
-        this._barrier?.destroy();
         this._barrier = null;
-        this._pressureBarrier?.destroy();
         this._pressureBarrier = null;
     }
 

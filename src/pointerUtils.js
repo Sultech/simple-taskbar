@@ -20,3 +20,12 @@ export function modifierClickActionKey(event) {
         return 'ctrl-click-action';
     return null;
 }
+
+export function destroyPressureBarrier(pressureBarrier, barrier, triggerId) {
+    if (pressureBarrier && triggerId)
+        pressureBarrier.disconnect(triggerId);
+    if (pressureBarrier && barrier)
+        pressureBarrier.removeBarrier(barrier);
+    barrier?.destroy();
+    pressureBarrier?.destroy();
+}
