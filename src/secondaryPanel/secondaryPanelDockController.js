@@ -439,6 +439,15 @@ export class SecondaryPanelDockController {
     }
 
     _connectSignals() {
+        for (const box of this._boxes) {
+            box.connectObject(
+                'queue-relayout', () => {
+                    if (!this._taskbarWidthUpdater.isUpdating)
+                        this._taskbarWidthUpdater.queue();
+                },
+                this._signalHolder
+            );
+        }
         global.workspace_manager.connectObject(
             'active-workspace-changed',
             () => {

@@ -11,6 +11,10 @@ export class TaskbarWidthUpdater {
         this._queuedId = 0;
     }
 
+    get isUpdating() {
+        return this._updating;
+    }
+
     update() {
         if (this._updating) {
             this.queue();
