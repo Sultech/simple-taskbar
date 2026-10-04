@@ -173,6 +173,11 @@ export class WindowMinimizeEffectController {
     }
 
     _getIconGeometry(actor) {
+        if (this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('dock-mode')) {
+            return null;
+        }
+
         if (this._settings.get_string('window-minimize-effect') !==
             WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP ||
             !St.Settings.get().enable_animations) {

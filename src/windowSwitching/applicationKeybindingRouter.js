@@ -34,6 +34,10 @@ export class ApplicationKeybindingRouter {
         this._settings.connectObject(
             `changed::${ENABLED_SETTING}`,
             () => this._sync(),
+            'changed::default-gnome-panel',
+            () => this._sync(),
+            'changed::dock-mode',
+            () => this._sync(),
             this
         );
         this._sync();
@@ -55,9 +59,13 @@ export class ApplicationKeybindingRouter {
     }
 
     _sync() {
-        const handler = this._settings.get_boolean(ENABLED_SETTING)
-            ? this._handler
-            : DISABLED_HANDLER;
+        const defaultPanel = this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('dock-mode');
+        const handler = defaultPanel
+            ? this._defaultHandler
+            : this._settings.get_boolean(ENABLED_SETTING)
+                ? this._handler
+                : DISABLED_HANDLER;
         for (const binding of APPLICATION_BINDINGS) {
             Main.wm.setCustomKeybindingHandler(
                 binding,
