@@ -16,6 +16,9 @@ export const BLUR_MY_SHELL_PANEL_STYLES = [
 const BLUR_MY_SHELL_SCHEMA =
     'org.gnome.shell.extensions.blur-my-shell';
 const TRANSPARENT_PANEL_STYLE = 'transparent-panel';
+export const BLUR_MY_SHELL_DOCK_TRANSPARENT = 0;
+export const BLUR_MY_SHELL_DOCK_LIGHT = 1;
+export const BLUR_MY_SHELL_DOCK_DARK = 2;
 export const BLUR_MY_SHELL_DOCK_STYLES = [
     'transparent-dash',
     'light-dash',

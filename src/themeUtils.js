@@ -6,11 +6,12 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {dockBlurStylesDock} from './integration/blurMyShellRuntime.js';
-import {blurMyShellDockStyle} from './shared/blurMyShellUtils.js';
-
-const BLUR_MY_SHELL_DOCK_TRANSPARENT = 0;
-const BLUR_MY_SHELL_DOCK_LIGHT = 1;
-const BLUR_MY_SHELL_DOCK_DARK = 2;
+import {
+    BLUR_MY_SHELL_DOCK_DARK,
+    BLUR_MY_SHELL_DOCK_LIGHT,
+    BLUR_MY_SHELL_DOCK_TRANSPARENT,
+    blurMyShellDockStyle,
+} from './shared/blurMyShellUtils.js';
 
 function _luminance(color) {
     return (0.299 * color.red +

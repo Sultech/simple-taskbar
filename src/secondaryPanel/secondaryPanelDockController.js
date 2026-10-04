@@ -12,7 +12,9 @@ import {
 import {
     BLUR_MY_SHELL_PANEL_STYLES,
     BLUR_MY_SHELL_DOCK_STYLES,
+    BLUR_MY_SHELL_DOCK_TRANSPARENT,
     blurMyShellDockCornerRadius,
+    blurMyShellDockStyle,
     blurMyShellDockRoundedCorners,
 } from '../shared/blurMyShellUtils.js';
 import {
@@ -370,7 +372,8 @@ export class SecondaryPanelDockController {
         syncPanelBlurClasses(
             this._actor,
             blurActive,
-            light && !dockBlurActive,
+            light && (!dockBlurActive ||
+                blurMyShellDockStyle() === BLUR_MY_SHELL_DOCK_TRANSPARENT),
             dockBlurActive ? true : undefined
         );
         syncPanelBlurCornerRadius(this._actor, cornerRadius);
