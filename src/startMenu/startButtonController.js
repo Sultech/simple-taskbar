@@ -218,6 +218,51 @@ export class StartButtonController {
         this._syncState();
     }
 
+    destroy() {
+        this._signalHolder.destroy();
+        this._signalHolder = null;
+        this._setActivitiesOverviewState(Main.overview._shown);
+
+        this._keybindings?.destroy();
+        this._keybindings = null;
+        this._contextMenuController.destroy();
+        this._contextMenuController = null;
+        this._contextMenu.destroy();
+        this._contextMenu = null;
+        this._startMenuController?.destroy();
+        this._startMenuController = null;
+        this._menuManager = null;
+        this._windowsXpStartButton.destroy();
+        this._windowsXpStartButton = null;
+        this.panelActor.destroy();
+        this.panelActor = null;
+        this.actor = null;
+
+        this._separator = null;
+        this._separatorLine = null;
+        this._separatorVertical = null;
+        this._hover = null;
+        this._classicHover = null;
+        this._contentContainer = null;
+        this._content = null;
+        this._icon = null;
+        this._windowsGIcon = null;
+        this._powerGIcon = null;
+        this._settingsGIcon = null;
+        this._gnomeGIcon = null;
+        this._extensionDir = null;
+        this._previews = null;
+        this._openPreferences = null;
+        this._closeApp = null;
+        this._getInterestingWindows = null;
+        this._toggleFromShortcut = null;
+        this._toggleDesktop = null;
+        this._onMenuOpenStateChanged = null;
+        this._settings = null;
+        this._startOpenedOverview = false;
+        this._positionAnimationStart = null;
+    }
+
     get menuIsOpen() {
         return Boolean(
             this._startMenuController?.isOpen || this._contextMenu.isOpen
@@ -384,51 +429,6 @@ export class StartButtonController {
 
         const [x, y] = this.panelActor.get_transformed_position();
         this._positionAnimationStart = {x, y};
-    }
-
-    destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
-        this._setActivitiesOverviewState(Main.overview._shown);
-
-        this._keybindings?.destroy();
-        this._keybindings = null;
-        this._contextMenuController.destroy();
-        this._contextMenuController = null;
-        this._contextMenu.destroy();
-        this._contextMenu = null;
-        this._startMenuController?.destroy();
-        this._startMenuController = null;
-        this._menuManager = null;
-        this._windowsXpStartButton.destroy();
-        this._windowsXpStartButton = null;
-        this.panelActor.destroy();
-        this.panelActor = null;
-        this.actor = null;
-
-        this._separator = null;
-        this._separatorLine = null;
-        this._separatorVertical = null;
-        this._hover = null;
-        this._classicHover = null;
-        this._contentContainer = null;
-        this._content = null;
-        this._icon = null;
-        this._windowsGIcon = null;
-        this._powerGIcon = null;
-        this._settingsGIcon = null;
-        this._gnomeGIcon = null;
-        this._extensionDir = null;
-        this._previews = null;
-        this._openPreferences = null;
-        this._closeApp = null;
-        this._getInterestingWindows = null;
-        this._toggleFromShortcut = null;
-        this._toggleDesktop = null;
-        this._onMenuOpenStateChanged = null;
-        this._settings = null;
-        this._startOpenedOverview = false;
-        this._positionAnimationStart = null;
     }
 
     _animatePosition() {

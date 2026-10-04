@@ -111,6 +111,50 @@ export class TrayOverflowController {
         this._queueRescan();
     }
 
+    destroy() {
+        if (this._rescanId) {
+            GLib.Source.remove(this._rescanId);
+            this._rescanId = 0;
+        }
+        if (this._relayoutId) {
+            GLib.Source.remove(this._relayoutId);
+            this._relayoutId = 0;
+        }
+        if (this._menuRaiseId) {
+            GLib.Source.remove(this._menuRaiseId);
+            this._menuRaiseId = 0;
+        }
+        if (this._activationCloseId) {
+            GLib.Source.remove(this._activationCloseId);
+            this._activationCloseId = 0;
+        }
+        if (this._alignBeforeUpdateId) {
+            global.stage.disconnect(this._alignBeforeUpdateId);
+            this._alignBeforeUpdateId = 0;
+        }
+        this._menuRaiseIndicator = null;
+        this._signalHolder.destroy();
+        this._signalHolder = null;
+
+        this._releaseAll();
+
+        if (this._menu) {
+            this._menuManager.removeMenu(this._menu);
+            this._menu.destroy();
+        }
+        this._menu = null;
+        this._menuManager = null;
+        this._grid = null;
+
+        if (this._button) {
+            delete Main.panel.statusArea[TRAY_OVERFLOW_ROLE];
+            this._button.destroy();
+        }
+        this._button = null;
+        this._icon = null;
+        this._settings = null;
+    }
+
     close() {
         closePopupMenu(this._menu, false);
     }
@@ -202,50 +246,6 @@ export class TrayOverflowController {
                 'simple-taskbar-bottom-panel-menu'
             );
         }
-    }
-
-    destroy() {
-        if (this._rescanId) {
-            GLib.Source.remove(this._rescanId);
-            this._rescanId = 0;
-        }
-        if (this._relayoutId) {
-            GLib.Source.remove(this._relayoutId);
-            this._relayoutId = 0;
-        }
-        if (this._menuRaiseId) {
-            GLib.Source.remove(this._menuRaiseId);
-            this._menuRaiseId = 0;
-        }
-        if (this._activationCloseId) {
-            GLib.Source.remove(this._activationCloseId);
-            this._activationCloseId = 0;
-        }
-        if (this._alignBeforeUpdateId) {
-            global.stage.disconnect(this._alignBeforeUpdateId);
-            this._alignBeforeUpdateId = 0;
-        }
-        this._menuRaiseIndicator = null;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
-
-        this._releaseAll();
-
-        if (this._menu) {
-            this._menuManager.removeMenu(this._menu);
-            this._menu.destroy();
-        }
-        this._menu = null;
-        this._menuManager = null;
-        this._grid = null;
-
-        if (this._button) {
-            delete Main.panel.statusArea[TRAY_OVERFLOW_ROLE];
-            this._button.destroy();
-        }
-        this._button = null;
-        this._icon = null;
-        this._settings = null;
     }
 
     _createButton() {

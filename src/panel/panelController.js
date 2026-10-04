@@ -208,6 +208,62 @@ export class PanelController {
         this._windowDodgeController.enable();
     }
 
+    destroy() {
+        const restoringUnlockPanel = Main.sessionMode.isLocked;
+        if (this._layoutRepairId) {
+            GLib.Source.remove(this._layoutRepairId);
+            this._layoutRepairId = 0;
+        }
+        this._taskbarWidthUpdater.destroy();
+        this._taskbarWidthUpdater = null;
+        this._signalHolder.destroy();
+        this._signalHolder = null;
+
+        this._windowDodgeController.destroy();
+        this._windowDodgeController = null;
+        this._autoHideController.destroy();
+        this._autoHideController = null;
+        this._buttonPaddingController.destroy();
+        this._buttonPaddingController = null;
+        this._verticalItemsController.destroy();
+        this._verticalItemsController = null;
+        this._activitiesController.destroy();
+        this._activitiesController = null;
+        this._activitiesDotWidthOverride.destroy();
+        this._activitiesDotWidthOverride = null;
+        this._clockController.destroy();
+        this._clockController = null;
+        this._notificationAreaController.destroy();
+        this._restoreNativeLayouts();
+
+        this._menuPositioner.destroy();
+        this._menuPositioner = null;
+        this._injectionManager.clear();
+        this._injectionManager = null;
+
+        this._themeController.destroy();
+        this._themeController = null;
+        this._stateController.destroy(restoringUnlockPanel);
+        this._stateController = null;
+        this._verticalPanelCompatibilityController.destroy();
+        this._verticalPanelCompatibilityController = null;
+        this._restoreHotCornerSizing();
+
+        this._startButton = null;
+        this._taskbarBin = null;
+        this._taskbarActor = null;
+        this._showDesktopButton = null;
+        this._folderMenuButton = null;
+        this._onAppAlignmentChanged = null;
+        this._onTaskbarAvailableWidthChanged = null;
+        this._isTaskbarAdaptive = null;
+        this._queueOverviewRelayout = null;
+        this._isAutoHideBlocked = null;
+        this._settings = null;
+        this._notificationAreaController = null;
+        this._applyingLayout = false;
+    }
+
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         this.position();
@@ -413,62 +469,6 @@ export class PanelController {
 
     appsAreCentered() {
         return this._settings.get_string('app-alignment') === 'center';
-    }
-
-    destroy() {
-        const restoringUnlockPanel = Main.sessionMode.isLocked;
-        if (this._layoutRepairId) {
-            GLib.Source.remove(this._layoutRepairId);
-            this._layoutRepairId = 0;
-        }
-        this._taskbarWidthUpdater.destroy();
-        this._taskbarWidthUpdater = null;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
-
-        this._windowDodgeController.destroy();
-        this._windowDodgeController = null;
-        this._autoHideController.destroy();
-        this._autoHideController = null;
-        this._buttonPaddingController.destroy();
-        this._buttonPaddingController = null;
-        this._verticalItemsController.destroy();
-        this._verticalItemsController = null;
-        this._activitiesController.destroy();
-        this._activitiesController = null;
-        this._activitiesDotWidthOverride.destroy();
-        this._activitiesDotWidthOverride = null;
-        this._clockController.destroy();
-        this._clockController = null;
-        this._notificationAreaController.destroy();
-        this._restoreNativeLayouts();
-
-        this._menuPositioner.destroy();
-        this._menuPositioner = null;
-        this._injectionManager.clear();
-        this._injectionManager = null;
-
-        this._themeController.destroy();
-        this._themeController = null;
-        this._stateController.destroy(restoringUnlockPanel);
-        this._stateController = null;
-        this._verticalPanelCompatibilityController.destroy();
-        this._verticalPanelCompatibilityController = null;
-        this._restoreHotCornerSizing();
-
-        this._startButton = null;
-        this._taskbarBin = null;
-        this._taskbarActor = null;
-        this._showDesktopButton = null;
-        this._folderMenuButton = null;
-        this._onAppAlignmentChanged = null;
-        this._onTaskbarAvailableWidthChanged = null;
-        this._isTaskbarAdaptive = null;
-        this._queueOverviewRelayout = null;
-        this._isAutoHideBlocked = null;
-        this._settings = null;
-        this._notificationAreaController = null;
-        this._applyingLayout = false;
     }
 
     _configurePanelMenuSwitching() {

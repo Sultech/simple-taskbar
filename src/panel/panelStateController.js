@@ -90,6 +90,63 @@ export class PanelStateController {
         }
     }
 
+    destroy(restoringUnlockPanel) {
+        this._desktopSettings.disconnect(this._clockShowDateChangedId);
+        this._restoreDateMenuIndicatorPadding();
+        this._restoreDateMenuVerticalAlignment();
+
+        for (const actor of [
+            this._startButton,
+            this._taskbarBin,
+            this._folderMenuButton,
+            this._showDesktopButton,
+        ]) {
+            const parent = actor.get_parent();
+            if (parent)
+                parent.remove_child(actor);
+        }
+        this._restorePanelItems();
+
+        if (!restoringUnlockPanel) {
+            Main.panel.statusArea.activities.container.visible =
+                this._activitiesWasVisible;
+        }
+
+        const panelBox = Main.layoutManager.panelBox;
+        const primaryMonitor = Main.layoutManager.primaryMonitor;
+        Main.panel.set_size(-1, -1);
+        panelBox.set_size(
+            primaryMonitor?.width ?? this._oldPanelGeometry.width,
+            -1
+        );
+        panelBox.set_position(
+            primaryMonitor?.x ?? this._oldPanelGeometry.x,
+            primaryMonitor?.y ?? this._oldPanelGeometry.y
+        );
+        Main.layoutManager._queueUpdateRegions();
+
+        if (restoringUnlockPanel)
+            Main.panel._updatePanel();
+
+        this._panelBoxState = null;
+        this._oldPanelGeometry = null;
+        this._oldPanelStyle = null;
+        this._activitiesWasVisible = null;
+        this._dateMenuIndicatorPad = null;
+        this._dateMenuIndicatorPadConstraints = null;
+        this._dateMenuDisplayBox = null;
+        this._dateMenuClockText = null;
+        this._dateMenuClockTextTranslationX = null;
+        this._dateMenuClockTextTranslationY = null;
+        this._clockShowDateChangedId = 0;
+        this._desktopSettings = null;
+        this._showDesktopButton = null;
+        this._folderMenuButton = null;
+        this._taskbarBin = null;
+        this._startButton = null;
+        this._settings = null;
+    }
+
     removeDateMenuIndicatorPadding() {
         const dateMenu = Main.panel.statusArea.dateMenu;
         const displayBox = dateMenu.get_first_child();
@@ -149,63 +206,6 @@ export class PanelStateController {
     syncActivitiesVisibility() {
         Main.panel.statusArea.activities.container.visible =
             this._settings.get_boolean('activities-button-visible');
-    }
-
-    destroy(restoringUnlockPanel) {
-        this._desktopSettings.disconnect(this._clockShowDateChangedId);
-        this._restoreDateMenuIndicatorPadding();
-        this._restoreDateMenuVerticalAlignment();
-
-        for (const actor of [
-            this._startButton,
-            this._taskbarBin,
-            this._folderMenuButton,
-            this._showDesktopButton,
-        ]) {
-            const parent = actor.get_parent();
-            if (parent)
-                parent.remove_child(actor);
-        }
-        this._restorePanelItems();
-
-        if (!restoringUnlockPanel) {
-            Main.panel.statusArea.activities.container.visible =
-                this._activitiesWasVisible;
-        }
-
-        const panelBox = Main.layoutManager.panelBox;
-        const primaryMonitor = Main.layoutManager.primaryMonitor;
-        Main.panel.set_size(-1, -1);
-        panelBox.set_size(
-            primaryMonitor?.width ?? this._oldPanelGeometry.width,
-            -1
-        );
-        panelBox.set_position(
-            primaryMonitor?.x ?? this._oldPanelGeometry.x,
-            primaryMonitor?.y ?? this._oldPanelGeometry.y
-        );
-        Main.layoutManager._queueUpdateRegions();
-
-        if (restoringUnlockPanel)
-            Main.panel._updatePanel();
-
-        this._panelBoxState = null;
-        this._oldPanelGeometry = null;
-        this._oldPanelStyle = null;
-        this._activitiesWasVisible = null;
-        this._dateMenuIndicatorPad = null;
-        this._dateMenuIndicatorPadConstraints = null;
-        this._dateMenuDisplayBox = null;
-        this._dateMenuClockText = null;
-        this._dateMenuClockTextTranslationX = null;
-        this._dateMenuClockTextTranslationY = null;
-        this._clockShowDateChangedId = 0;
-        this._desktopSettings = null;
-        this._showDesktopButton = null;
-        this._folderMenuButton = null;
-        this._taskbarBin = null;
-        this._startButton = null;
-        this._settings = null;
     }
 
     _restoreDateMenuIndicatorPadding() {

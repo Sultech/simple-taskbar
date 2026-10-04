@@ -96,6 +96,51 @@ export class TaskbarDragController {
         DND.addDragMonitor(this._dragMonitor);
     }
 
+    destroy() {
+        DND.removeDragMonitor(this._dragMonitor);
+        this._dragMonitor = null;
+        this._draggingClone = null;
+        for (const clone of [...this._cloneDraggables.keys()])
+            this.releaseCloneDraggable(clone);
+        this._cloneDraggables = null;
+        for (const item of [...this._draggables.keys()])
+            this.releaseDraggable(item);
+        this._draggables = null;
+        for (const child of this._taskbarActor.get_children()) {
+            if (!child._taskbarApp)
+                continue;
+            child.remove_all_transitions();
+            child.translation_x = 0;
+            child.translation_y = 0;
+        }
+        this._clearExternalPlaceholder(false);
+        this._listeners.clear();
+        this._dragging = false;
+        this._draggingItem = null;
+        this._pinnedDropActive = false;
+        this._externalPlaceholderSize = 0;
+        this._externalPlaceholderTargetIndex = -1;
+        this._externalFavoriteIndex = -1;
+        this._externalFavoriteCenters = null;
+        this._externalDropAppId = null;
+        this._ignoreTaskbarLock = false;
+        this._alignmentActor = null;
+        this._showDesktopController = null;
+        this._usePinnedAppLaunchers = null;
+        this._hidePinned = null;
+        this._setSessionOrder = null;
+        this._queueRedisplay = null;
+        this._isPersistentPinned = null;
+        this._hidePreviews = null;
+        this._getPanelHeight = null;
+        this._getIconSize = null;
+        this._dragIsEnabled = null;
+        this._dropTarget = null;
+        this._taskbarActor = null;
+        this._favorites = null;
+        this._settings = null;
+    }
+
     addListener(listener) {
         this._listeners.add(listener);
     }
@@ -413,51 +458,6 @@ export class TaskbarDragController {
         source._clearTaskbarDropTarget();
         this._favorites.addFavoriteAtPos(appId, favoriteIndex);
         return true;
-    }
-
-    destroy() {
-        DND.removeDragMonitor(this._dragMonitor);
-        this._dragMonitor = null;
-        this._draggingClone = null;
-        for (const clone of [...this._cloneDraggables.keys()])
-            this.releaseCloneDraggable(clone);
-        this._cloneDraggables = null;
-        for (const item of [...this._draggables.keys()])
-            this.releaseDraggable(item);
-        this._draggables = null;
-        for (const child of this._taskbarActor.get_children()) {
-            if (!child._taskbarApp)
-                continue;
-            child.remove_all_transitions();
-            child.translation_x = 0;
-            child.translation_y = 0;
-        }
-        this._clearExternalPlaceholder(false);
-        this._listeners.clear();
-        this._dragging = false;
-        this._draggingItem = null;
-        this._pinnedDropActive = false;
-        this._externalPlaceholderSize = 0;
-        this._externalPlaceholderTargetIndex = -1;
-        this._externalFavoriteIndex = -1;
-        this._externalFavoriteCenters = null;
-        this._externalDropAppId = null;
-        this._ignoreTaskbarLock = false;
-        this._alignmentActor = null;
-        this._showDesktopController = null;
-        this._usePinnedAppLaunchers = null;
-        this._hidePinned = null;
-        this._setSessionOrder = null;
-        this._queueRedisplay = null;
-        this._isPersistentPinned = null;
-        this._hidePreviews = null;
-        this._getPanelHeight = null;
-        this._getIconSize = null;
-        this._dragIsEnabled = null;
-        this._dropTarget = null;
-        this._taskbarActor = null;
-        this._favorites = null;
-        this._settings = null;
     }
 
     _isRunningItem(item) {

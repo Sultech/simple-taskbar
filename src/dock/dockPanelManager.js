@@ -90,6 +90,14 @@ export class DockPanelManager extends PanelManagerBase {
         this._queueRebuild();
     }
 
+    destroy() {
+        if (this._blurMyShellResetSyncId) {
+            GLib.Source.remove(this._blurMyShellResetSyncId);
+            this._blurMyShellResetSyncId = 0;
+        }
+        super.destroy();
+    }
+
     _connectBlurMyShellKeys(childName, keys, resetKey) {
         const settings = getBlurMyShellChildSettings(
             getBlurMyShellSettings(),
@@ -110,14 +118,6 @@ export class DockPanelManager extends PanelManagerBase {
                 this._signalHolder
             );
         }
-    }
-
-    destroy() {
-        if (this._blurMyShellResetSyncId) {
-            GLib.Source.remove(this._blurMyShellResetSyncId);
-            this._blurMyShellResetSyncId = 0;
-        }
-        super.destroy();
     }
 
     toggleStartMenuAt(x, y) {

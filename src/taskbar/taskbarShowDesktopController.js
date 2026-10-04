@@ -69,6 +69,22 @@ export class TaskbarShowDesktopController {
         this.sync();
     }
 
+    destroy() {
+        this._settings.disconnectObject(this);
+        this._removeItem();
+        this._startDrag = null;
+        this._cancelDrag = null;
+        this._replaceButton = null;
+        this._queueRedisplay = null;
+        this._notifyModeChanged = null;
+        this._getPreserveItemWidths = null;
+        this._getPanelHeight = null;
+        this._finishDrag = null;
+        this._dragIsEnabled = null;
+        this._taskbarActor = null;
+        this._settings = null;
+    }
+
     sync() {
         const hadItem = this._item !== null;
         const shouldShow =
@@ -225,22 +241,6 @@ export class TaskbarShowDesktopController {
         if (sourceIndex !== targetIndex)
             this._taskbarActor.set_child_at_index(item, targetIndex);
         return DND.DragMotionResult.MOVE_DROP;
-    }
-
-    destroy() {
-        this._settings.disconnectObject(this);
-        this._removeItem();
-        this._startDrag = null;
-        this._cancelDrag = null;
-        this._replaceButton = null;
-        this._queueRedisplay = null;
-        this._notifyModeChanged = null;
-        this._getPreserveItemWidths = null;
-        this._getPanelHeight = null;
-        this._finishDrag = null;
-        this._dragIsEnabled = null;
-        this._taskbarActor = null;
-        this._settings = null;
     }
 
     _createItem() {

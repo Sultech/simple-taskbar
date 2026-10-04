@@ -126,6 +126,26 @@ export class OverviewIntegration {
         this._adaptAllocation();
     }
 
+    destroy() {
+        const restoreVisible = this._shouldHideDash();
+        this._cancelStartupOverview();
+        this._cancelDashVisibilityRepair();
+        this._disconnectAppSpreadSignal();
+        this._signalHolder.destroy();
+        this._signalHolder = null;
+        this._restoreAppSpreadState(true);
+        this._spreadInjectionManager.clear();
+        this._spreadInjectionManager = null;
+        this._injectionManager.clear();
+        this._injectionManager = null;
+        this._restoreStartupOverview();
+        this._restoreDash(restoreVisible);
+        this.queueRelayout();
+        this._maximizedWindowDrag = null;
+        this._tracker = null;
+        this._settings = null;
+    }
+
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         if (this._dashState)
@@ -163,26 +183,6 @@ export class OverviewIntegration {
             Main.overview.hide();
         else
             this._restoreAppSpread(false);
-    }
-
-    destroy() {
-        const restoreVisible = this._shouldHideDash();
-        this._cancelStartupOverview();
-        this._cancelDashVisibilityRepair();
-        this._disconnectAppSpreadSignal();
-        this._signalHolder.destroy();
-        this._signalHolder = null;
-        this._restoreAppSpreadState(true);
-        this._spreadInjectionManager.clear();
-        this._spreadInjectionManager = null;
-        this._injectionManager.clear();
-        this._injectionManager = null;
-        this._restoreStartupOverview();
-        this._restoreDash(restoreVisible);
-        this.queueRelayout();
-        this._maximizedWindowDrag = null;
-        this._tracker = null;
-        this._settings = null;
     }
 
     _beginMaximizedWindowDrag(window) {

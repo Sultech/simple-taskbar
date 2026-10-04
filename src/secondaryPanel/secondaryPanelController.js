@@ -445,33 +445,6 @@ export class SecondaryPanelController {
         this._connectSignals();
     }
 
-    _lowerBelowPanels() {
-        for (const child of Main.uiGroup.get_children()) {
-            if (child._simpleTaskbarPanelBox === 'panel')
-                Main.uiGroup.set_child_below_sibling(this._panelBox, child);
-        }
-    }
-
-    containsPoint(x, y) {
-        return x >= this._monitor.x &&
-            x < this._monitor.x + this._monitor.width &&
-            y >= this._monitor.y &&
-            y < this._monitor.y + this._monitor.height;
-    }
-
-    toggleStartMenu() {
-        this._startButtonController.toggleStartMenu();
-    }
-
-    closeStartMenus() {
-        this._startButtonController.closeMenus();
-    }
-
-    closePanelMenu() {
-        this._menuManager.activeMenu?.close();
-        this._applicationOverflowController.close();
-    }
-
     destroy() {
         if (this._themeSyncLaterId) {
             global.compositor.get_laters().remove(this._themeSyncLaterId);
@@ -560,6 +533,33 @@ export class SecondaryPanelController {
         this._openPreferencesCallback = null;
         this._visiblePanelItemIds = null;
         this._settings = null;
+    }
+
+    _lowerBelowPanels() {
+        for (const child of Main.uiGroup.get_children()) {
+            if (child._simpleTaskbarPanelBox === 'panel')
+                Main.uiGroup.set_child_below_sibling(this._panelBox, child);
+        }
+    }
+
+    containsPoint(x, y) {
+        return x >= this._monitor.x &&
+            x < this._monitor.x + this._monitor.width &&
+            y >= this._monitor.y &&
+            y < this._monitor.y + this._monitor.height;
+    }
+
+    toggleStartMenu() {
+        this._startButtonController.toggleStartMenu();
+    }
+
+    closeStartMenus() {
+        this._startButtonController.closeMenus();
+    }
+
+    closePanelMenu() {
+        this._menuManager.activeMenu?.close();
+        this._applicationOverflowController.close();
     }
 
     _connectSignals() {
