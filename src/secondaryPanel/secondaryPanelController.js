@@ -156,8 +156,7 @@ export class SecondaryPanelController {
             openNewWindow: app => this._windowController.openNewWindow(app),
             getPreviewController: () => this._windowPreviews,
             onRedisplay: () => {
-                if (isDock)
-                    this._updateTaskbarWidth();
+                this._updateTaskbarWidth();
                 this._applicationOverflowController.sync();
             },
             locationScope: isDock ? 'dock' : 'taskbar',
@@ -1022,6 +1021,7 @@ export class SecondaryPanelController {
     }
 
     _applyTaskbarIconSize() {
+        this.actor.preserveStart = this._iconSize < this._maximumIconSize;
         applyTaskbarIconSize({
             settings: this._settings,
             taskbarController: this._taskbarController,

@@ -40,6 +40,7 @@ class SecondaryPanelActor extends St.Widget {
         this.expandedSide = false;
         this.centerOffset = 0;
         this.vertical = false;
+        this.preserveStart = false;
     }
 
     vfunc_allocate(box) {
@@ -51,7 +52,8 @@ class SecondaryPanelActor extends St.Widget {
                 this.centerBox,
                 this.rightBox,
                 this.centerOffset,
-                this.vertical
+                this.vertical,
+                this.preserveStart
             );
             return;
         }
