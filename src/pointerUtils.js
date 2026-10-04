@@ -21,9 +21,7 @@ export function modifierClickActionKey(event) {
     return null;
 }
 
-export function destroyPressureBarrier(pressureBarrier, barrier, triggerId) {
-    if (pressureBarrier && triggerId)
-        pressureBarrier.disconnect(triggerId);
+export function destroyPressureBarrier(pressureBarrier, barrier) {
     if (pressureBarrier && barrier)
         pressureBarrier.removeBarrier(barrier);
     barrier?.destroy();
