@@ -36,6 +36,7 @@ export class TaskbarIconHoverAnimationController {
     constructor({
         settings,
         taskbarActor,
+        dragController,
         getIconSize,
         getPanelThickness,
         getVertical,
@@ -50,8 +51,6 @@ export class TaskbarIconHoverAnimationController {
         onCloneButtonPress,
         onCloneActivate,
         onCloneScroll,
-        onCloneCreated,
-        onCloneDestroyed,
     }) {
         this._settings = settings;
         this._taskbarActor = taskbarActor;
@@ -82,6 +81,7 @@ export class TaskbarIconHoverAnimationController {
         });
         this._cloneController = new TaskbarHoverAnimationCloneController({
             geometry: this._geometry,
+            dragController,
             getAnimationType: () =>
                 this._settingsController.getAnimationType(),
             getMonitor,
@@ -91,8 +91,6 @@ export class TaskbarIconHoverAnimationController {
             onCloneButtonPress,
             onCloneActivate,
             onCloneScroll,
-            onCloneCreated,
-            onCloneDestroyed,
             smoothing: this._smoothing,
         });
         this._animator = new TaskbarHoverAnimationAnimator({

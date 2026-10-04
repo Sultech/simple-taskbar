@@ -22,6 +22,7 @@ class HoverAnimationCloneHost extends Clutter.Actor {
 export class TaskbarHoverAnimationCloneController {
     constructor({
         geometry,
+        dragController,
         getAnimationType,
         getMonitor,
         getVertical,
@@ -30,11 +31,10 @@ export class TaskbarHoverAnimationCloneController {
         onCloneButtonPress,
         onCloneActivate,
         onCloneScroll,
-        onCloneCreated,
-        onCloneDestroyed,
         smoothing,
     }) {
         this._geometry = geometry;
+        this._dragController = dragController;
         this._smoothing = smoothing;
         this._getAnimationType = getAnimationType;
         this._getMonitor = getMonitor;
@@ -44,9 +44,10 @@ export class TaskbarHoverAnimationCloneController {
         this._onCloneButtonPress = onCloneButtonPress;
         this._onCloneActivate = onCloneActivate;
         this._onCloneScroll = onCloneScroll;
-        this._onCloneCreated = onCloneCreated;
-        this._onCloneDestroyed = onCloneDestroyed;
         this._clones = new Map();
+        this._pendingCloneContainers = new Map();
+        this._dragEndListener = () => this._releasePendingClones();
+        this._dragController.addListener(this._dragEndListener);
         this._stretchActors = new Map();
         this._hoveredCloneItem = null;
         this._host = new HoverAnimationCloneHost({
@@ -254,10 +255,18 @@ export class TaskbarHoverAnimationCloneController {
         if (restoreSource)
             entry.source.opacity = entry.sourceOpacity;
         entry.cloneContainer.hide();
-        this._onCloneDestroyed(
-            entry.clone,
-            () => entry.cloneContainer.destroy()
-        );
+        this._pendingCloneContainers.set(entry.clone, entry.cloneContainer);
+        this._releasePendingClones();
+    }
+
+    _releasePendingClones(releaseActive = false) {
+        for (const [clone, container] of this._pendingCloneContainers) {
+            if (!this._dragController.releaseCloneDraggable(clone, releaseActive))
+                continue;
+
+            this._pendingCloneContainers.delete(clone);
+            container.destroy();
+        }
     }
 
     reset() {
@@ -267,7 +276,12 @@ export class TaskbarHoverAnimationCloneController {
     }
 
     destroy() {
+        this._dragController.removeListener(this._dragEndListener);
+        this._dragEndListener = null;
         this.reset();
+        this._releasePendingClones(true);
+        this._pendingCloneContainers = null;
+        this._dragController = null;
         this._host.destroy();
         this._host = null;
         this._hostGeometry = null;
@@ -278,8 +292,6 @@ export class TaskbarHoverAnimationCloneController {
         this._onCloneButtonPress = null;
         this._onCloneActivate = null;
         this._onCloneScroll = null;
-        this._onCloneCreated = null;
-        this._onCloneDestroyed = null;
         this._raiseOverlays = null;
         this._isDragging = null;
         this._getVertical = null;
@@ -348,7 +360,7 @@ export class TaskbarHoverAnimationCloneController {
             'scroll-event',
             (_actor, event) => this._onCloneScroll(item, event)
         ));
-        this._onCloneCreated(item, clone);
+        this._dragController.makeCloneDraggable(item, clone);
         return signalIds;
     }
 

@@ -339,6 +339,7 @@ export class TaskbarController {
             new TaskbarIconHoverAnimationController({
                 settings: this._settings,
                 taskbarActor: this.actor,
+                dragController: this._dragController,
                 getIconSize: () => this._iconSize,
                 getPanelThickness: () => this._panelHeight,
                 getVertical: () => panelIsVertical(this._settings),
@@ -381,10 +382,6 @@ export class TaskbarController {
 
                     return interaction.handleTargetedEvent(item, event);
                 },
-                onCloneCreated: (item, clone) =>
-                    this._dragController.makeCloneDraggable(item, clone),
-                onCloneDestroyed: (clone, destroyClone) =>
-                    this._dragController.releaseCloneDraggable(clone, destroyClone),
             });
     }
 
