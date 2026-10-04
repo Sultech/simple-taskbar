@@ -6,6 +6,7 @@ import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {
     createPreferencesDialogButton,
     createPreferencesDialogContent,
@@ -59,8 +60,7 @@ class StartButtonOptionsDialog extends Adw.Window {
         alignmentGroup.add(windowsStartMenuSwitch);
 
         const syncSensitivity = () => {
-            const defaultPanel = settings.get_boolean('default-gnome-panel') &&
-                !settings.get_boolean('dock-mode');
+            const defaultPanel = isDefaultPanelWithoutDock(settings);
             const windowsXpTheme = settings.get_boolean(
                 'windows-xp-theme-enabled'
             );

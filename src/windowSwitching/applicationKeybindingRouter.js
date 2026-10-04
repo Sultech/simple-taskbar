@@ -6,6 +6,8 @@ import Shell from 'gi://Shell';
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+
 const APPLICATION_BINDINGS = [
     'switch-to-application-1',
     'switch-to-application-2',
@@ -59,8 +61,7 @@ export class ApplicationKeybindingRouter {
     }
 
     _sync() {
-        const defaultPanel = this._settings.get_boolean('default-gnome-panel') &&
-            !this._settings.get_boolean('dock-mode');
+        const defaultPanel = isDefaultPanelWithoutDock(this._settings);
         const handler = defaultPanel
             ? this._defaultHandler
             : this._settings.get_boolean(ENABLED_SETTING)

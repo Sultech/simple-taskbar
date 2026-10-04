@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+
 export class QuickSettingsPowerController {
     constructor(settings, quickSettings) {
         this._settings = settings;
@@ -145,7 +147,6 @@ export class QuickSettingsPowerController {
         );
         return powerOptionsEnabled &&
             this._settings.get_boolean('windows-start-menu-enabled') &&
-            (!this._settings.get_boolean('default-gnome-panel') ||
-                this._settings.get_boolean('dock-mode'));
+            !isDefaultPanelWithoutDock(this._settings);
     }
 }

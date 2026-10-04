@@ -7,6 +7,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
@@ -371,8 +372,7 @@ export function addPanelItemsPage({
         }
         if (settings.get_boolean('dock-mode'))
             return id === 'start-button' || id === 'applications';
-        if (settings.get_boolean('default-gnome-panel') &&
-            !settings.get_boolean('dock-mode'))
+        if (isDefaultPanelWithoutDock(settings))
             return id === 'start-button' || id === 'applications';
         return false;
     };
@@ -495,8 +495,7 @@ export function addPanelItemsPage({
     }
 
     const syncPanelPositionSensitivity = () => {
-        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
-            !settings.get_boolean('dock-mode');
+        const defaultPanel = isDefaultPanelWithoutDock(settings);
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );

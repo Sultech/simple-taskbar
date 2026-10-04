@@ -26,6 +26,11 @@ export const PANEL_MODE_DEFAULT = 'default-panel';
 export const PANEL_MODE_DOCK = 'dock';
 export const PANEL_MODE_WINDOWS_XP = 'windows-xp';
 
+export function isDefaultPanelWithoutDock(settings) {
+    return settings.get_boolean('default-gnome-panel') &&
+        !settings.get_boolean('dock-mode');
+}
+
 export const PANEL_AXIS_PROFILE_ENABLED_KEYS = Object.freeze({
     [PANEL_MODE_TASKBAR]: 'taskbar-axis-profiles-enabled',
     [PANEL_MODE_DEFAULT]: 'default-panel-axis-profiles-enabled',

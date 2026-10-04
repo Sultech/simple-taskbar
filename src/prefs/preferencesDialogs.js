@@ -10,6 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 import {
+    isDefaultPanelWithoutDock,
     PANEL_PROFILE_STATE_KEYS,
 } from '../shared/panelModeProfiles.js';
 
@@ -215,8 +216,7 @@ function findManagedShortcutConflict(settings, accelerator) {
     }
     const startMenuAvailable =
         settings.get_boolean('windows-start-menu-enabled') &&
-        (!settings.get_boolean('default-gnome-panel') ||
-            settings.get_boolean('dock-mode'));
+        !isDefaultPanelWithoutDock(settings);
     if (startMenuAvailable &&
         (settings.get_boolean('start-menu-super-key') ||
             settings.get_boolean('start-menu-super-tab'))) {

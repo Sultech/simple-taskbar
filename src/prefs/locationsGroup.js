@@ -5,6 +5,7 @@ import Adw from 'gi://Adw';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {createSwitchRow} from './preferencesWidgets.js';
 
 function createDriveOptionsRow(settings) {
@@ -185,9 +186,7 @@ export function addLocationsGroup({
             'windows-xp-theme-enabled'
         );
         const dockMode = settings.get_boolean('dock-mode');
-        const defaultPanel = settings.get_boolean(
-            'default-gnome-panel'
-        ) && !dockMode;
+        const defaultPanel = isDefaultPanelWithoutDock(settings);
         taskbarFileManagerShortcuts.placesRow.sensitive = !defaultPanel &&
             !dockMode;
         dockFileManagerShortcuts.placesRow.sensitive = dockMode;

@@ -6,6 +6,7 @@ import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {
     activePanelPosition,
@@ -175,8 +176,7 @@ function addApplicationIconControls({
     });
     const syncMinimumIconSize = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
-            (!settings.get_boolean('default-gnome-panel') ||
-                settings.get_boolean('dock-mode'));
+            !isDefaultPanelWithoutDock(settings);
         dockMinIconSizeRow.sensitive = enabled;
         if (!enabled)
             return;
@@ -480,8 +480,7 @@ function addIndicatorControls({
     const syncIndicatorControls = () => {
         const blocked =
             settings.get_boolean('windows-xp-theme-enabled') ||
-            (settings.get_boolean('default-gnome-panel') &&
-                !settings.get_boolean('dock-mode'));
+            isDefaultPanelWithoutDock(settings);
         const enabled = customIndicatorColorsSwitch.active;
         indicatorGroup.sensitive = !blocked;
         indicatorPositionRow.sensitive = !blocked;

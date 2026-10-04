@@ -9,6 +9,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {MagicLampEffect} from './magicLampEffect.js';
 import {iconScreenGeometry} from './taskbarIconGeometryController.js';
 import {
@@ -173,8 +174,7 @@ export class WindowMinimizeEffectController {
     }
 
     _getIconGeometry(actor) {
-        if (this._settings.get_boolean('default-gnome-panel') &&
-            !this._settings.get_boolean('dock-mode')) {
+        if (isDefaultPanelWithoutDock(this._settings)) {
             return null;
         }
 

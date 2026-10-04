@@ -7,6 +7,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {
     getStartIconDisplayName,
     StartIconChooserDialog,
@@ -111,8 +112,7 @@ export function addStartMenuPage({
         connectSettings
     );
     const updateStartPositionRow = () => {
-        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
-            !settings.get_boolean('dock-mode');
+        const defaultPanel = isDefaultPanelWithoutDock(settings);
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -166,8 +166,7 @@ export function addStartMenuPage({
         connectSettings
     );
     const updateStartButtonPaddingRow = () => {
-        const defaultPanel = settings.get_boolean('default-gnome-panel') &&
-            !settings.get_boolean('dock-mode');
+        const defaultPanel = isDefaultPanelWithoutDock(settings);
         const dockMode = settings.get_boolean('dock-mode');
         const dockPanelMode = settings.get_boolean('dock-panel-mode');
         const windowsXpTheme = settings.get_boolean(
