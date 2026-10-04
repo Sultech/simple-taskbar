@@ -225,7 +225,7 @@ export class PanelThemeController {
             GLib.PRIORITY_DEFAULT_IDLE,
             () => {
                 this._blurMyShellSyncId = 0;
-                this.applyTheme();
+                this._syncBlurMyShell();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -285,6 +285,14 @@ export class PanelThemeController {
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    _syncBlurMyShell() {
+        const panelBlur = getPanelBlur();
+        if (panelBlur && !Main.overview.visibleTarget)
+            refreshPanelBlurVisibility(panelBlur);
+
+        this.applyTheme();
     }
 
     _blurMyShellPanelStyle() {
