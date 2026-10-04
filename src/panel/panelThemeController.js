@@ -20,7 +20,6 @@ import {
     hidePanelBlur,
     panelBlurIsActive,
     refreshPanelBlurVisibility,
-    syncPanelBlurOriginalStyle,
 } from '../integration/blurMyShellRuntime.js';
 import {extensionStateIsActive} from '../extensionState.js';
 import {
@@ -190,7 +189,6 @@ export class PanelThemeController {
         const light = this._usesLightTheme();
         syncPanelBlurClasses(Main.panel, externalPanelStyle, light);
         if (externalPanelStyle) {
-            syncPanelBlurOriginalStyle(Main.panel, originalStyle);
             this._setPanelStyle(originalStyle);
             return;
         }

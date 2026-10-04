@@ -21,14 +21,6 @@ export function panelBlurIsActive(panel) {
     );
 }
 
-export function syncPanelBlurOriginalStyle(panel, style) {
-    const actors = getPanelBlur()?.actors_list.find(
-        actors => actors.widgets.panel === panel
-    );
-    if (actors)
-        actors.original_style = style;
-}
-
 export function syncPanelBlurCornerRadius(panel, radius) {
     const panelBlur = getPanelBlur();
     if (!panelBlur)
