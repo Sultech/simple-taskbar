@@ -38,6 +38,10 @@ import {
 } from './src/windowSwitching/applicationKeybindingRouter.js';
 import {TaskbarController} from './src/taskbar/taskbarController.js';
 import {
+    adaptiveTaskbarIconSize,
+    applyTaskbarIconSize,
+} from './src/taskbar/taskbarIconSize.js';
+import {
     getTaskbarHoverAnimationNeighbours,
 } from './src/taskbar/taskbarHoverAnimationUtils.js';
 import {
@@ -527,26 +531,19 @@ export default class SimpleTaskbarExtension extends Extension {
             return false;
         }
 
-        const maximum = this._maximumIconSize;
-        const minimum = Math.min(
-            this._settings.get_int('dock-min-icon-size'),
-            maximum
-        );
-        const iconSize = this._taskbarController.getIconSizeForLength(
+        const iconSize = adaptiveTaskbarIconSize({
+            settings: this._settings,
+            taskbarController: this._taskbarController,
+            startButtonController: this._startButtonController,
             availableLength,
-            maximum,
-            minimum,
-            this._startButtonController.actor.visible ? this._iconSize : null
-        );
+            maximumIconSize: this._maximumIconSize,
+            iconSize: this._iconSize,
+        });
         if (iconSize === this._iconSize)
             return false;
 
         this._iconSize = iconSize;
-        this._taskbarController.setIconSize(iconSize);
-        this._startButtonController.applyAppearance(
-            iconSize,
-            this._settings.get_int('start-button-padding')
-        );
+        this._applyTaskbarIconSize();
         this._panelController.syncVerticalItems();
         this._applicationOverflowController.syncIconSizeChange();
         return true;
@@ -555,12 +552,17 @@ export default class SimpleTaskbarExtension extends Extension {
     _resetTaskbarIconSize() {
         this._maximumIconSize = this._settings.get_int('icon-size');
         this._iconSize = this._maximumIconSize;
-        this._taskbarController.setIconSize(this._iconSize);
-        this._startButtonController.applyAppearance(
-            this._iconSize,
-            this._settings.get_int('start-button-padding')
-        );
+        this._applyTaskbarIconSize();
         this._applicationOverflowController.sync();
+    }
+
+    _applyTaskbarIconSize() {
+        applyTaskbarIconSize({
+            settings: this._settings,
+            taskbarController: this._taskbarController,
+            startButtonController: this._startButtonController,
+            iconSize: this._iconSize,
+        });
     }
 
     _syncTaskbarVisibility() {
