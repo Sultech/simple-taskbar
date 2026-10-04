@@ -5,6 +5,7 @@ import Adw from 'gi://Adw';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
+import {getPanelScrollActionChoices} from './taskbarBehaviorGroup.js';
 import {
     addComboRow,
     addSpinRow,
@@ -80,24 +81,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             key: 'dock-workspace-scroll-action',
             title: _('Scroll Action'),
             subtitle: _('Action used when scrolling over empty Dock space'),
-            choices: [
-                {
-                    value: PANEL_SCROLL_ACTION.SWITCH_WORKSPACE,
-                    label: _('Switch Workspace'),
-                },
-                {
-                    value: PANEL_SCROLL_ACTION.CYCLE_WINDOWS,
-                    label: _('Cycle Windows'),
-                },
-                {
-                    value: PANEL_SCROLL_ACTION.CHANGE_VOLUME,
-                    label: _('Change Volume'),
-                },
-                {
-                    value: PANEL_SCROLL_ACTION.DO_NOTHING,
-                    label: _('Do Nothing'),
-                },
-            ],
+            choices: getPanelScrollActionChoices(),
             addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings

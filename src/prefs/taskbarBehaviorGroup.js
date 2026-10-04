@@ -21,6 +21,27 @@ import {
 } from '../shared/autoHideSettings.js';
 import {createBottomHotEdgeRow} from './bottomHotEdgeRow.js';
 
+export function getPanelScrollActionChoices() {
+    return [
+        {
+            value: PANEL_SCROLL_ACTION.SWITCH_WORKSPACE,
+            label: _('Switch Workspace'),
+        },
+        {
+            value: PANEL_SCROLL_ACTION.CYCLE_WINDOWS,
+            label: _('Cycle Windows'),
+        },
+        {
+            value: PANEL_SCROLL_ACTION.CHANGE_VOLUME,
+            label: _('Change Volume'),
+        },
+        {
+            value: PANEL_SCROLL_ACTION.DO_NOTHING,
+            label: _('Do Nothing'),
+        },
+    ];
+}
+
 export function addTaskbarBehaviorGroup({
     page,
     settings,
@@ -107,24 +128,7 @@ export function addTaskbarBehaviorGroup({
             key: 'workspace-scroll-action',
             title: _('Scroll Action'),
             subtitle: _('Action used when scrolling over empty taskbar space'),
-            choices: [
-                {
-                    value: PANEL_SCROLL_ACTION.SWITCH_WORKSPACE,
-                    label: _('Switch Workspace'),
-                },
-                {
-                    value: PANEL_SCROLL_ACTION.CYCLE_WINDOWS,
-                    label: _('Cycle Windows'),
-                },
-                {
-                    value: PANEL_SCROLL_ACTION.CHANGE_VOLUME,
-                    label: _('Change Volume'),
-                },
-                {
-                    value: PANEL_SCROLL_ACTION.DO_NOTHING,
-                    label: _('Do Nothing'),
-                },
-            ],
+            choices: getPanelScrollActionChoices(),
             addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
