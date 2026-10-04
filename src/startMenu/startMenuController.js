@@ -52,7 +52,7 @@ import {
     panelUsesLightTheme,
     shellMenusUseLightTheme,
 } from '../themeUtils.js';
-import {panelTransparencyOpacity} from '../transparencyUtils.js';
+import {panelTransparencyOpacity} from '../panel/dynamicTransparency.js';
 import {
     blurMyShellHasKey,
     getBlurMyShellChildSettings,

@@ -7,7 +7,7 @@ import GObject from 'gi://GObject';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
-import {windowDodgeModeChoices} from './windowDodgeModeChoices.js';
+import {windowDodgeModeChoices} from './windowDodgeGroup.js';
 import {
     addComboRow,
     addSpinRow,

@@ -3,7 +3,7 @@
 
 import {getPopupBlur} from '../integration/blurMyShellRuntime.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
-import {panelTransparencyOpacity} from '../transparencyUtils.js';
+import {panelTransparencyOpacity} from '../panel/dynamicTransparency.js';
 
 const LIGHT_MENU_CLASS = 'simple-taskbar-application-overflow-light';
 const DARK_MENU_CLASS = 'simple-taskbar-application-overflow-dark';

@@ -4,8 +4,10 @@
 import Clutter from 'gi://Clutter';
 
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
-import {applySmoothedProperties} from './taskbarHoverAnimationUtils.js';
-import {MAGNIFY_EPSILON} from './taskbarHoverAnimationConstants.js';
+import {
+    applySmoothedProperties,
+    MAGNIFY_EPSILON,
+} from './taskbarHoverAnimationUtils.js';
 
 export class TaskbarHoverAnimationAnimator {
     constructor({

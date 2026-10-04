@@ -4,7 +4,7 @@
 import Cogl from 'gi://Cogl';
 
 import {panelPosition} from './panelPosition.js';
-import {panelTransparencyOpacity} from '../transparencyUtils.js';
+import {panelTransparencyOpacity} from './dynamicTransparency.js';
 
 const DARK_BORDER_COLOR = '255, 255, 255';
 const LIGHT_BORDER_COLOR = '0, 0, 0';

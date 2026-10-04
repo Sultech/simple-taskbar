@@ -15,7 +15,7 @@ import {
 } from '../shared/applicationHoverAnimation.js';
 import {
     MAGNIFY_MOTION_THROTTLE,
-} from './taskbarHoverAnimationConstants.js';
+} from './taskbarHoverAnimationUtils.js';
 import {
     TaskbarHoverAnimationAnimator,
 } from './taskbarHoverAnimationAnimator.js';

@@ -2,7 +2,18 @@
 // Copyright (C) 2026 sultech
 
 import {hasWindowAffectingPanel} from '../windowVisibility.js';
-import {panelDynamicTransparencyOpacity} from '../transparencyUtils.js';
+
+export function panelTransparencyOpacity(settings) {
+    const transparency = settings.get_boolean('transparency-enabled')
+        ? settings.get_int('transparency-level')
+        : 0;
+    return 1 - transparency / 100;
+}
+
+export function panelDynamicTransparencyOpacity(settings) {
+    const transparency = settings.get_int('transparency-dynamic-level');
+    return 1 - transparency / 100;
+}
 
 export function hasDynamicTransparencyWindow(settings, monitor, geometry) {
     return hasWindowAffectingPanel(

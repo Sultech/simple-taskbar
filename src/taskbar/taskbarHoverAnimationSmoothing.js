@@ -5,7 +5,7 @@ import GLib from 'gi://GLib';
 
 import {
     MAGNIFY_SETTLE_TIME_CONSTANTS,
-} from './taskbarHoverAnimationConstants.js';
+} from './taskbarHoverAnimationUtils.js';
 
 export class TaskbarHoverAnimationSmoothing {
     constructor() {

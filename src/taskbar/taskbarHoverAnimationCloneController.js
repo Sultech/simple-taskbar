@@ -8,8 +8,10 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
-import {MAGNIFY_EPSILON} from './taskbarHoverAnimationConstants.js';
-import {applySmoothedProperties} from './taskbarHoverAnimationUtils.js';
+import {
+    applySmoothedProperties,
+    MAGNIFY_EPSILON,
+} from './taskbarHoverAnimationUtils.js';
 
 const HoverAnimationCloneHost = GObject.registerClass(
 class HoverAnimationCloneHost extends Clutter.Actor {
