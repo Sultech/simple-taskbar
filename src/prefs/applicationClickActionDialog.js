@@ -36,7 +36,7 @@ export function getApplicationClickActionChoices() {
         },
         {
             value: CLICK_ACTION.TOGGLE_SPREAD,
-            label: _('Spread Multiple Windows'),
+            label: _('Toggle Single / Spread Multiple'),
         },
         {
             value: CLICK_ACTION.TOGGLE_WINDOWS,

@@ -153,10 +153,6 @@ msgstr ""
 msgid "Toggle Single / Cycle Multiple"
 msgstr ""
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr ""
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr ""
@@ -175,6 +171,7 @@ msgstr ""
 msgid "Minimize Window"
 msgstr ""
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr ""

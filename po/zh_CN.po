@@ -155,10 +155,6 @@ msgstr "切换单个窗口 / 预览多个窗口"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "切换单个窗口 / 循环多个窗口"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "展开多个窗口"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "切换窗口"
@@ -177,6 +173,7 @@ msgstr "启动新实例"
 msgid "Minimize Window"
 msgstr "最小化窗口"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "切换单个窗口 / 展开多个窗口"

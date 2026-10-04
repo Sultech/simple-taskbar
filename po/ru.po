@@ -156,10 +156,6 @@ msgstr "Переключить одно / Показать эскизы неск
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Переключить одно / Переключать несколько по кругу"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "Развернуть несколько окон"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Переключить окна"
@@ -178,6 +174,7 @@ msgstr "Запустить новый экземпляр"
 msgid "Minimize Window"
 msgstr "Свернуть окно"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "Переключить одно / Развернуть несколько"

@@ -158,10 +158,6 @@ msgstr "Einzelfenster umschalten / mehrere Fenster als Vorschau anzeigen"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Einzelfenster umschalten / mehrere Fenster durchlaufen"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "Mehrere Fenster verteilen"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Fenster umschalten"
@@ -180,6 +176,7 @@ msgstr "Neue Instanz starten"
 msgid "Minimize Window"
 msgstr "Fenster minimieren"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "Einzelfenster umschalten / mehrere Fenster verteilen"

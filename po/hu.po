@@ -157,10 +157,6 @@ msgstr "Egyetlen váltása / Több előnézete"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Egyetlen váltása / Több léptetése"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "Több ablak szétterítése"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Ablakok váltása"
@@ -179,6 +175,7 @@ msgstr "Új példány indítása"
 msgid "Minimize Window"
 msgstr "Ablak kis méretre állítása"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "Egyetlen váltása / Több szétterítése"

@@ -160,10 +160,6 @@ msgstr "Basculer une fenêtre / Prévisualiser plusieurs fenêtres"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Basculer une fenêtre / Parcourir plusieurs fenêtres"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "Répartir plusieurs fenêtres"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Basculer les fenêtres"
@@ -182,6 +178,7 @@ msgstr "Lancer une nouvelle instance"
 msgid "Minimize Window"
 msgstr "Minimiser la fenêtre"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "Basculer une fenêtre / Répartir plusieurs fenêtres"

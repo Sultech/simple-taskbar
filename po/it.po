@@ -158,10 +158,6 @@ msgstr "Attiva/disattiva singola / Anteprima multiple"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Attiva/disattiva singola / Scorri multiple"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "Disponi più finestre"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Attiva/disattiva finestre"
@@ -180,6 +176,7 @@ msgstr "Avvia nuova istanza"
 msgid "Minimize Window"
 msgstr "Minimizza finestra"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "Attiva/disattiva singola / Disponi multiple"

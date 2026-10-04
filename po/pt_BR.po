@@ -160,10 +160,6 @@ msgstr "Alternar única / Visualizar várias"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Alternar única / Percorrer várias"
 
-#: src/prefs/applicationClickActionDialog.js:39
-msgid "Spread Multiple Windows"
-msgstr "Espalhar várias janelas"
-
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Alternar janelas"
@@ -182,6 +178,7 @@ msgstr "Iniciar nova instância"
 msgid "Minimize Window"
 msgstr "Minimizar janela"
 
+#: src/prefs/applicationClickActionDialog.js:39
 #: src/prefs/applicationClickActionDialog.js:88
 msgid "Toggle Single / Spread Multiple"
 msgstr "Alternar única / Espalhar várias"
