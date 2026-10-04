@@ -114,7 +114,8 @@ export class ApplicationOverflowPopupController {
     }
 
     clear() {
-        this._close();
+        if (this._menu.isOpen)
+            this._close();
         if (this._overflowItems.length > 0)
             this.setOverflowItems([]);
     }
