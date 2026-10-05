@@ -76,6 +76,7 @@ export class OverviewIntegration {
                 this.queueRelayout();
             },
             'changed::dock-panel-mode', () => this.queueRelayout(),
+            'changed::dock-multi-monitor-panels', () => this.queueRelayout(),
             'changed::dock-autohide-enabled', () => this.queueRelayout(),
             'changed::dock-dodge-windows-enabled', () =>
                 this.queueRelayout(),
@@ -424,20 +425,11 @@ export class OverviewIntegration {
                     else
                         box.x2 -= inset;
                 }
-                const dockPosition = integration._settings.get_string(
-                    'dock-position'
+                integration._reserveDockSpace(
+                    box,
+                    controls._stateAdjustment,
+                    true
                 );
-                const dockInset = integration._dockOverviewInset();
-                if (dockInset > 0) {
-                    if (dockPosition === 'top')
-                        box.y1 += dockInset;
-                    else if (dockPosition === 'bottom')
-                        box.y2 -= dockInset;
-                    else if (dockPosition === 'left')
-                        box.x1 += dockInset;
-                    else
-                        box.x2 -= dockInset;
-                }
                 originalAllocate.call(controls, box);
             }
         );
@@ -468,14 +460,23 @@ export class OverviewIntegration {
                     else
                         box.x2 -= inset;
                 }
+                integration._reserveDockSpace(
+                    box,
+                    this._overviewAdjustment,
+                    false
+                );
                 originalAllocate.call(this, box);
             }
         );
     }
 
-    _dockOverviewInset() {
-        if (!this._settings.get_boolean('dock-mode'))
-            return 0;
+    _reserveDockSpace(box, overviewAdjustment, primaryMonitor) {
+        if (!this._settings.get_boolean('dock-mode') ||
+            (!primaryMonitor && !this._settings.get_boolean(
+                'dock-multi-monitor-panels'
+            ))) {
+            return;
+        }
 
         const dockAutohide = this._settings.get_boolean(
             'dock-autohide-enabled'
@@ -488,15 +489,23 @@ export class OverviewIntegration {
         const panelMode = this._settings.get_boolean('dock-panel-mode');
         const dockHeight = panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
         const position = this._settings.get_string('dock-position');
-        if (!dockAutohide && !dockDodge)
-            return position === 'bottom' ? dockHeight : 0;
+        if (!dockAutohide && !dockDodge &&
+            (!primaryMonitor || position !== 'bottom')) {
+            return;
+        }
 
-        const progress = Math.clamp(
-            Main.overview._overview.controls._stateAdjustment.value,
-            0,
-            1
-        );
-        return dockHeight * progress;
+        const progress = dockAutohide || dockDodge
+            ? Math.clamp(overviewAdjustment.value, 0, 1)
+            : 1;
+        const inset = dockHeight * progress;
+        if (position === 'top')
+            box.y1 += inset;
+        else if (position === 'bottom')
+            box.y2 -= inset;
+        else if (position === 'left')
+            box.x1 += inset;
+        else
+            box.x2 -= inset;
     }
 
     _beginAppSpread() {
