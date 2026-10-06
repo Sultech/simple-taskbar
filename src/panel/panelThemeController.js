@@ -43,6 +43,7 @@ const BLUR_MY_SHELL_PANEL_KEYS = [
     'blur',
     'override-background',
     'override-background-dynamically',
+    'override-background-dynamically-mode',
     'style-panel',
     'gradient-panel',
 ];

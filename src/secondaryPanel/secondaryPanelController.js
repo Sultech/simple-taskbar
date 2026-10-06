@@ -120,6 +120,7 @@ export class SecondaryPanelController {
         this._dockController = null;
         this._windowDragController = null;
         this._dockHoverReserve = 0;
+        this._blurActive = false;
         this._themeSyncLaterId = 0;
         this._hoverAnimationExtents = [0, 0];
         this._signalHolder = new TransientSignalHolder();
@@ -569,6 +570,12 @@ export class SecondaryPanelController {
         Main.panel.connectObject('notify::style', () => {
             this.syncTheme();
         }, this._signalHolder);
+        if (!this._dockController) {
+            this.actor.connectObject('notify::style-class', () => {
+                if (panelBlurIsActive(this.actor) !== this._blurActive)
+                    this.syncTheme();
+            }, this._signalHolder);
+        }
         for (const box of [
             this._leftBox,
             this._centerBox,
@@ -1059,6 +1066,8 @@ export class SecondaryPanelController {
             return;
         }
 
+        const blurActive = panelBlurIsActive(this.actor);
+        this._blurActive = blurActive;
         const vertical = panelIsVertical(this._settings);
         const light = Main.panel.has_style_class_name(
             'simple-taskbar-theme-light'
@@ -1090,7 +1099,6 @@ export class SecondaryPanelController {
             return;
         }
 
-        const blurActive = panelBlurIsActive(this.actor);
         syncPanelBlurClasses(this.actor, blurActive, light);
         if (blurActive) {
             this.actor.set_style('');

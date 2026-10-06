@@ -99,6 +99,13 @@ export function blurMyShellOverridesPanelBackground() {
     return panelSettings.get_boolean('override-background');
 }
 
+export function blurMyShellBackgroundOnProximity() {
+    const panelSettings = blurMyShellPanelSettings();
+    return blurMyShellHasKey(panelSettings, 'override-background-dynamically-mode') &&
+        panelSettings.get_boolean('override-background-dynamically') &&
+        panelSettings.get_int('override-background-dynamically-mode') === 1;
+}
+
 export function blurMyShellPanelStyleIsTransparent() {
     const panelSettings = blurMyShellPanelSettings();
     if (blurMyShellHasKey(panelSettings, 'gradient-panel') &&

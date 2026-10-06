@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {
+    blurMyShellBackgroundOnProximity,
     blurMyShellOverridesDockBackground,
     blurMyShellOverridesPanelBackground,
 } from '../shared/blurMyShellUtils.js';
@@ -16,9 +17,14 @@ export function panelBlurIsActive(panel) {
     if (!panelBlur || !blurMyShellOverridesPanelBackground())
         return false;
 
-    return panelBlur.actors_list.some(
+    const actors = panelBlur.actors_list.find(
         actors => actors.widgets.panel === panel
     );
+    if (!actors)
+        return false;
+
+    return actors.should_override !== false ||
+        !blurMyShellBackgroundOnProximity();
 }
 
 export function syncPanelBlurCornerRadius(panel, radius) {
