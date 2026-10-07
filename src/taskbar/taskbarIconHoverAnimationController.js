@@ -240,6 +240,9 @@ export class TaskbarIconHoverAnimationController {
     }
 
     dropAnimations() {
+        if (!this._viewport)
+            return;
+
         this._animator.dropAnimations();
     }
 
