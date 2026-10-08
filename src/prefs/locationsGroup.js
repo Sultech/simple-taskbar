@@ -86,9 +86,15 @@ function addFileManagerShortcuts(group, settings, subtitle) {
             'Open your home folder with the system’s default file manager'
         ),
     });
+    const superWRow = createSwitchRow(settings, {
+        key: 'super-w-overview-enabled',
+        title: _('Super+W Shows Overview'),
+        subtitle: _('Open and close the Overview with Super+W'),
+    });
     group.add(placesRow);
     group.add(superERow);
-    return {placesRow, superERow};
+    group.add(superWRow);
+    return {placesRow, superERow, superWRow};
 }
 
 export function addLocationsGroup({

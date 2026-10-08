@@ -163,6 +163,7 @@ export class StartMenuController {
         this._searchSelectionVisible = false;
         this._searchFirstResultFinal = false;
         this._activatePendingSearchResult = false;
+        this._clickThroughIdleId = 0;
         this._view = 'pinned';
         this._sourcePress = new SourcePressGuard();
         this._blurMyShellPopupSettings = getBlurMyShellChildSettings(
@@ -338,6 +339,7 @@ export class StartMenuController {
                     this._tooltipController.hide(true);
                     this._contextMenuController.close();
                     this._powerController.close();
+                    this._passOutsideClickThrough();
                 }
                 this._onOpenStateChanged(open);
             }
@@ -378,6 +380,41 @@ export class StartMenuController {
 
     get isOpen() {
         return this._menu.isOpen;
+    }
+
+    _passOutsideClickThrough() {
+        const event = Clutter.get_current_event();
+        if (!event ||
+            event.type() !== Clutter.EventType.BUTTON_PRESS ||
+            event.get_button() !== Clutter.BUTTON_PRIMARY ||
+            event.get_state() & SEARCH_REDIRECT_BLOCKING_MODIFIERS)
+            return;
+
+        const button = this._panelButtonAt(global.stage.get_event_actor(event));
+        if (!button)
+            return;
+
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this._clickThroughIdleId = 0;
+            if (button.mapped && button.reactive)
+                button.emit('clicked', Clutter.BUTTON_PRIMARY);
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _panelButtonAt(actor) {
+        let button = null;
+        for (let current = actor; current; current = current.get_parent()) {
+            if (current === this._sourceActor)
+                return null;
+            if (!button && current instanceof St.Button)
+                button = current;
+            if (button && current.has_style_class_name?.('simple-taskbar-panel'))
+                return button.reactive ? button : null;
+        }
+        return null;
     }
 
     toggle() {
@@ -685,6 +722,10 @@ export class StartMenuController {
         if (this._refreshIdleId) {
             GLib.Source.remove(this._refreshIdleId);
             this._refreshIdleId = 0;
+        }
+        if (this._clickThroughIdleId) {
+            GLib.Source.remove(this._clickThroughIdleId);
+            this._clickThroughIdleId = 0;
         }
         this._content.remove_all_transitions();
         this._appSystem.disconnect(this._installedChangedId);

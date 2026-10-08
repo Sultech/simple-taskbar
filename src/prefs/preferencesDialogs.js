@@ -214,6 +214,8 @@ function findManagedShortcutConflict(settings, accelerator) {
             ...settings.get_strv('super-e-file-manager-hotkey')
         );
     }
+    if (settings.get_boolean('super-w-overview-enabled'))
+        managed.push(...settings.get_strv('super-w-overview-hotkey'));
     const startMenuAvailable =
         settings.get_boolean('windows-start-menu-enabled') &&
         !isDefaultPanelWithoutDock(settings);

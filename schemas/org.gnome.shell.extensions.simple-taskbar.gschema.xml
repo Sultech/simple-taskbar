@@ -1414,6 +1414,14 @@
       <default>['&lt;Super&gt;e']</default>
       <summary>Internal Super+E shortcut for the default file manager</summary>
     </key>
+    <key name="super-w-overview-enabled" type="b">
+      <default>true</default>
+      <summary>Show the Overview with Super+W</summary>
+    </key>
+    <key name="super-w-overview-hotkey" type="as">
+      <default>['&lt;Super&gt;w']</default>
+      <summary>Internal Super+W shortcut for the Overview</summary>
+    </key>
     <key name="start-menu-pinned-apps" type="as">
       <default>[]</default>
       <summary>Applications and folders pinned to the Eleven-style Start Menu</summary>

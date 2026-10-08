@@ -16,6 +16,8 @@ const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';
 const CUSTOM_KEYBINDING = 'start-menu-custom-hotkey';
 const FILE_MANAGER_SETTING = 'super-e-file-manager-enabled';
 const FILE_MANAGER_KEYBINDING = 'super-e-file-manager-hotkey';
+const OVERVIEW_SETTING = 'super-w-overview-enabled';
+const OVERVIEW_KEYBINDING = 'super-w-overview-hotkey';
 const DISPLACED_OVERLAY_KEY = 'start-menu-displaced-overlay-key';
 const OVERLAY_KEY = 'overlay-key';
 const ACTION_MODES = Shell.ActionMode.NORMAL |
@@ -44,6 +46,7 @@ export class StartMenuKeybindings {
         this._superTabAction = Meta.KeyBindingAction.NONE;
         this._customEnabled = false;
         this._fileManagerEnabled = false;
+        this._overviewEnabled = false;
         this._overlayEnabled = false;
         this._overlayHandlerId = 0;
         this._overlaySettingChangedId = 0;
@@ -53,6 +56,7 @@ export class StartMenuKeybindings {
 
     sync() {
         this._syncFileManager();
+        this._syncOverview();
         if (!this._startMenuAvailable()) {
             this._disableStartMenuBindings();
             return;
@@ -91,6 +95,7 @@ export class StartMenuKeybindings {
     disable() {
         this._disableStartMenuBindings();
         this._disableFileManager();
+        this._disableOverview();
     }
 
     destroy() {
@@ -143,6 +148,37 @@ export class StartMenuKeybindings {
 
         Main.wm.removeKeybinding(FILE_MANAGER_KEYBINDING);
         this._fileManagerEnabled = false;
+    }
+
+    _syncOverview() {
+        if (!this._settings.get_boolean(OVERVIEW_SETTING)) {
+            this._disableOverview();
+            return;
+        }
+        if (this._overviewEnabled)
+            return;
+
+        const action = Main.wm.addKeybinding(
+            OVERVIEW_KEYBINDING,
+            this._settings,
+            Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+            ACTION_MODES,
+            () => this._toggleOverview()
+        );
+        this._overviewEnabled = action !== Meta.KeyBindingAction.NONE;
+        if (!this._overviewEnabled) {
+            this._reportFailure(
+                'Super+W Overview shortcut could not be registered'
+            );
+        }
+    }
+
+    _disableOverview() {
+        if (!this._overviewEnabled)
+            return;
+
+        Main.wm.removeKeybinding(OVERVIEW_KEYBINDING);
+        this._overviewEnabled = false;
     }
 
     _enableSuperTab(mode) {
@@ -369,6 +405,8 @@ export class StartMenuKeybindings {
                 ...this._settings.get_strv(FILE_MANAGER_KEYBINDING)
             );
         }
+        if (this._settings.get_boolean(OVERVIEW_SETTING))
+            managed.push(...this._settings.get_strv(OVERVIEW_KEYBINDING));
         const managedSet = new Set(managed.map(normalizeAccelerator));
         return accelerators.some(accelerator =>
             managedSet.has(normalizeAccelerator(accelerator)));
