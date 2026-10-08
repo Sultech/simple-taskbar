@@ -16,6 +16,7 @@ export class StartMenuSearchController {
         this._appSystem = Shell.AppSystem.get_default();
         this._cancellable = null;
         this._searchTimeoutId = 0;
+        this._pendingSearch = null;
         this._generation = 0;
         this._terms = [];
         this._providerResults = new Map();
@@ -51,27 +52,49 @@ export class StartMenuSearchController {
         const generation = this._generation;
         const cancellable = new Gio.Cancellable();
         this._cancellable = cancellable;
+        this._pendingSearch = () => {
+            for (const group of groups) {
+                this._queryProvider(
+                    group,
+                    terms,
+                    isSubsearch
+                        ? previousProviderResults.get(group.provider)
+                        : null,
+                    cancellable,
+                    generation,
+                    groups,
+                    onUpdate
+                );
+            }
+        };
         this._searchTimeoutId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
             SEARCH_DELAY,
             () => {
                 this._searchTimeoutId = 0;
-                for (const group of groups) {
-                    this._queryProvider(
-                        group,
-                        terms,
-                        isSubsearch
-                            ? previousProviderResults.get(group.provider)
-                            : null,
-                        cancellable,
-                        generation,
-                        groups,
-                        onUpdate
-                    );
-                }
+                this._runPendingSearch();
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    get isSearching() {
+        return this._searchTimeoutId !== 0 || this._cancellable !== null;
+    }
+
+    flush() {
+        if (!this._searchTimeoutId)
+            return;
+
+        GLib.Source.remove(this._searchTimeoutId);
+        this._searchTimeoutId = 0;
+        this._runPendingSearch();
+    }
+
+    _runPendingSearch() {
+        const search = this._pendingSearch;
+        this._pendingSearch = null;
+        search?.();
     }
 
     cancel() {
@@ -126,7 +149,11 @@ export class StartMenuSearchController {
             const visibleGroups = groups.filter(item =>
                 item.complete && item.results.length > 0
             );
-            onUpdate(visibleGroups, complete);
+            const leadingGroup = groups.find(item =>
+                !item.complete || item.results.length > 0
+            );
+            const firstResultFinal = !leadingGroup || leadingGroup.complete;
+            onUpdate(visibleGroups, complete, firstResultFinal);
             if (complete && this._cancellable === cancellable)
                 this._cancellable = null;
         }
@@ -176,6 +203,7 @@ export class StartMenuSearchController {
             GLib.Source.remove(this._searchTimeoutId);
             this._searchTimeoutId = 0;
         }
+        this._pendingSearch = null;
         this._cancellable?.cancel();
         this._cancellable = null;
     }
