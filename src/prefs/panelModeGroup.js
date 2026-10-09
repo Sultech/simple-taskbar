@@ -24,7 +24,7 @@ import {
 import {addComboRow, addSpinRow} from './preferencesWidgets.js';
 
 const DOCK_DEFAULT_ICON_SIZE = 48;
-const DOCK_DEFAULT_ICON_SPACING = 5;
+const DOCK_DEFAULT_ICON_SPACING = 6;
 const DOCK_DEFAULT_START_BUTTON_PADDING = 2;
 
 function addModeRow(settings, {

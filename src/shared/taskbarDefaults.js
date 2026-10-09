@@ -20,7 +20,7 @@ import {
 
 export const DEFAULT_TASKBAR_PANEL_HEIGHT = 51;
 export const DEFAULT_TASKBAR_ICON_SIZE = 32;
-export const DEFAULT_TASKBAR_ICON_SPACING = 3;
+export const DEFAULT_TASKBAR_ICON_SPACING = 6;
 export const DEFAULT_TASKBAR_ALIGNMENT = 'center';
 export const DEFAULT_TASKBAR_COMBINE_MODE = 'always';
 

@@ -8,7 +8,10 @@ import {
     normalizePanelItemOrder,
 } from './panelItemOrder.js';
 import {positionIsVertical} from './panelPositionUtils.js';
-import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
+import {
+    applyDefaultTaskbarSettings,
+    DEFAULT_TASKBAR_ICON_SPACING,
+} from './taskbarDefaults.js';
 import {
     setInteger,
     setString,
@@ -285,7 +288,7 @@ function applyInitialPanelAxisSettings(settings, mode, axis) {
 
     const vertical = axis === PANEL_AXIS_VERTICAL;
     setString(settings, 'app-alignment', vertical ? 'left' : 'center');
-    setInteger(settings, 'icon-spacing', vertical ? 6 : 3);
+    setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
     setString(
         settings,
         'running-indicator-position',

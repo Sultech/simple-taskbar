@@ -94,7 +94,7 @@
     </key>
     <key name="icon-spacing" type="i">
       <range min="-5" max="16"/>
-      <default>3</default>
+      <default>6</default>
       <summary>Space between application icons</summary>
     </key>
     <key name="icon-edge-padding" type="i">
