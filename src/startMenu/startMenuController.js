@@ -231,6 +231,7 @@ export class StartMenuController {
                 root: this._root,
                 scrollView: this._scrollView,
                 searchEntry: this._searchEntry,
+                selectedSearchButton: this._selectedSearchButton,
             }),
             getView: () => this._view,
             setSearchFocusVisible: visible =>

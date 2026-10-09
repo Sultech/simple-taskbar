@@ -20,7 +20,7 @@ export class StartMenuNavigationController {
         if (event.type() !== Clutter.EventType.KEY_PRESS)
             return Clutter.EVENT_PROPAGATE;
 
-        const {searchEntry} = this._getActors();
+        const {searchEntry, selectedSearchButton} = this._getActors();
         const symbol = event.get_key_symbol();
         const actors = this._focusableActors();
         if (actors.length === 0)
@@ -38,7 +38,11 @@ export class StartMenuNavigationController {
         } else if (symbol === Clutter.KEY_ISO_Left_Tab) {
             target = this._nextActor(actors, current, -1);
         } else if (symbol === Clutter.KEY_Down) {
-            target = this._spatialActor(actors, current, 0, 1);
+            const origin = current === searchEntry && selectedSearchButton
+                ? selectedSearchButton
+                : current;
+            target = this._spatialActor(actors, origin, 0, 1) ??
+                (origin === current ? null : origin);
         } else if (symbol === Clutter.KEY_Up) {
             target = this._spatialActor(actors, current, 0, -1);
         } else if (current !== searchEntry) {
