@@ -199,6 +199,9 @@ export class StartMenuNavigationController {
                 : deltaY * vertical;
             if (primary <= 0)
                 continue;
+            if (horizontal !== 0 &&
+                Math.abs(deltaY) * 2 >= currentHeight + actorHeight)
+                continue;
 
             const secondary = horizontal !== 0
                 ? Math.abs(deltaY)
