@@ -800,24 +800,32 @@ export class StartMenuController {
             if (symbol !== Clutter.KEY_Return && symbol !== Clutter.KEY_KP_Enter)
                 return Clutter.EVENT_PROPAGATE;
 
-            if (this._selectedSearchResult) {
-                const result = this._selectedSearchResult;
-                const actor = result.app
-                    ? this._findAppIcon(result.app)
-                    : null;
-                this._activateSearchResult(result, actor);
-                return Clutter.EVENT_STOP;
-            }
-            if (this._firstVisibleApp) {
-                this._launchApp(
-                    this._firstVisibleApp,
-                    this._findAppIcon(this._firstVisibleApp)
-                );
-                return Clutter.EVENT_STOP;
-            }
-            return Clutter.EVENT_PROPAGATE;
+            return this._activateSearchSelection()
+                ? Clutter.EVENT_STOP
+                : Clutter.EVENT_PROPAGATE;
         });
+        this._searchEntry.clutter_text.connect('activate', () =>
+            this._activateSearchSelection());
         this._root.add_child(this._searchEntry);
+    }
+
+    _activateSearchSelection() {
+        if (this._selectedSearchResult) {
+            const result = this._selectedSearchResult;
+            const actor = result.app
+                ? this._findAppIcon(result.app)
+                : null;
+            this._activateSearchResult(result, actor);
+            return true;
+        }
+        if (this._firstVisibleApp) {
+            this._launchApp(
+                this._firstVisibleApp,
+                this._findAppIcon(this._firstVisibleApp)
+            );
+            return true;
+        }
+        return false;
     }
 
     _createHeader() {
