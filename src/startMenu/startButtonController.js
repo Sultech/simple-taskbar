@@ -45,6 +45,7 @@ import {
     HIGHLIGHT_SIZE_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_SETTING_KEYS,
     TASKBAR_HIGHLIGHT_STYLE,
+    customClassicHighlightColorStyle,
 } from '../shared/classicHighlightSettings.js';
 import {normalizePanelItemOrder} from '../shared/panelItemOrder.js';
 import {
@@ -906,10 +907,15 @@ export class StartButtonController {
             ? CLASSIC_HIGHLIGHT_SETTINGS.pressedColor
             : CLASSIC_HIGHLIGHT_SETTINGS.hoverColor;
         this._classicHover.set_style(
-            `background-color: ${this._settings.get_string(
+            `${customClassicHighlightColorStyle(
+                this._settings,
                 colorKey
-            )};border-radius: ${radius}px;`
+            )}border-radius: ${radius}px;`
         );
+        if (pressed)
+            this._classicHover.add_style_pseudo_class('active');
+        else
+            this._classicHover.remove_style_pseudo_class('active');
         const hovered = this.actor.hover ||
             this.actor.has_style_pseudo_class('hover') ||
             this.actor.has_style_pseudo_class('focus');

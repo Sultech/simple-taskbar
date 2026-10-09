@@ -11,6 +11,7 @@ import {panelIsVertical} from '../panel/panelPosition.js';
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
     TASKBAR_HIGHLIGHT_STYLE,
+    customClassicHighlightColorStyle,
 } from '../shared/classicHighlightSettings.js';
 import {
     RUNNING_INDICATOR_LENGTH_RATIO,
@@ -441,16 +442,21 @@ export class TaskbarAppearanceController {
             ? CLASSIC_HIGHLIGHT_SETTINGS.pressedColor
             : CLASSIC_HIGHLIGHT_SETTINGS.hoverColor;
         item._taskbarClassicHover.set_style(
-            `background-color: ${this._settings.get_string(
+            `${customClassicHighlightColorStyle(
+                this._settings,
                 hoverColorKey
-            )};${radiusStyle}`
+            )}${radiusStyle}`
         );
+        if (pressed)
+            item._taskbarClassicHover.add_style_pseudo_class('active');
+        else
+            item._taskbarClassicHover.remove_style_pseudo_class('active');
         const focusEnabled = this._settings.get_boolean(
             CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled
         );
         if (focusEnabled) {
             item._taskbarClassicFocus.set_style(
-                `background-color: ${this._classicFocusColor(item)};${radiusStyle}`
+                `${this._classicFocusColorStyle(item)}${radiusStyle}`
             );
         }
 
@@ -488,16 +494,17 @@ export class TaskbarAppearanceController {
         );
     }
 
-    _classicFocusColor(item) {
+    _classicFocusColorStyle(item) {
         if (this._settings.get_boolean(
             CLASSIC_HIGHLIGHT_SETTINGS.focusDominant
         )) {
             const color = this._iconColors.getColor(item._taskbarApp);
             if (color)
-                return color;
+                return `background-color: ${color};`;
         }
 
-        return this._settings.get_string(
+        return customClassicHighlightColorStyle(
+            this._settings,
             CLASSIC_HIGHLIGHT_SETTINGS.focusColor
         );
     }

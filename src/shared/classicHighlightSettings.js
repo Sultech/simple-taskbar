@@ -35,6 +35,13 @@ export const CLASSIC_HIGHLIGHT_SETTINGS = Object.freeze({
     focusOpacity: 'classic-focus-highlight-opacity',
 });
 
+export function customClassicHighlightColorStyle(settings, key) {
+    if (!settings.get_user_value(key))
+        return '';
+
+    return `background-color: ${settings.get_string(key)};`;
+}
+
 export const CLASSIC_HIGHLIGHT_SETTING_KEYS = Object.freeze(
     Object.values(CLASSIC_HIGHLIGHT_SETTINGS)
 );
