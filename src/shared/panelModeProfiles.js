@@ -142,6 +142,7 @@ const MODE_SETTING_KEYS = new Set([
     'windows-10-theme-enabled',
     'windows-xp-previous-mode',
     'start-menu-displaced-overlay-key',
+    'start-menu-pinned-apps',
 ]);
 for (const profile of PROFILE_KEYS.values()) {
     MODE_SETTING_KEYS.add(profile.settings);
