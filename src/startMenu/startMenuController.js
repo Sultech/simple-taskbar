@@ -77,6 +77,12 @@ const MENU_MAX_HEIGHT = 810;
 const MENU_MONITOR_MARGIN = 96;
 const BLURRED_CLASS =
     'simple-taskbar-windows-start-blurred';
+const SEARCH_REDIRECT_BLOCKING_MODIFIERS =
+    Clutter.ModifierType.CONTROL_MASK |
+    Clutter.ModifierType.MOD1_MASK |
+    Clutter.ModifierType.MOD4_MASK |
+    Clutter.ModifierType.SUPER_MASK |
+    Clutter.ModifierType.META_MASK;
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
 const BLUR_MY_SHELL_POPUP_CLASSES = [
@@ -257,6 +263,7 @@ export class StartMenuController {
         });
 
         this._createSearchEntry();
+        this._redirectTypingToSearch();
         this._createHeader();
 
         this._scrollView = new St.ScrollView({
@@ -1421,6 +1428,65 @@ export class StartMenuController {
         this._ignoreSearchChanged = true;
         this._searchEntry.set_text(text);
         this._ignoreSearchChanged = false;
+    }
+
+    _redirectTypingToSearch() {
+        if (Clutter.KeyController) {
+            const controller = new Clutter.KeyController();
+            controller.connect('key-press', () => {
+                const [, symbol] = controller.get_key();
+                const [, pressed, latched] = controller.get_state();
+                return this._redirectKeyToSearch(symbol, pressed | latched);
+            });
+            this._menu.actor.add_action_full(
+                'simple-taskbar-start-search-redirect',
+                Clutter.EventPhase.CAPTURE,
+                controller
+            );
+            return;
+        }
+
+        this._menu.actor.connect('captured-event', (_actor, event) => {
+            if (event.type() !== Clutter.EventType.KEY_PRESS)
+                return Clutter.EVENT_PROPAGATE;
+
+            return this._redirectKeyToSearch(
+                event.get_key_symbol(),
+                event.get_state()
+            );
+        });
+    }
+
+    _redirectKeyToSearch(symbol, state) {
+        const focus = global.stage.get_key_focus();
+        if (!focus || focus instanceof Clutter.Text ||
+            !this._root.contains(focus) ||
+            state & SEARCH_REDIRECT_BLOCKING_MODIFIERS)
+            return Clutter.EVENT_PROPAGATE;
+
+        const text = this._searchEntry.get_text();
+        if (symbol === Clutter.KEY_BackSpace) {
+            if (!text)
+                return Clutter.EVENT_PROPAGATE;
+
+            this._focusSearchWithText([...text].slice(0, -1).join(''));
+            return Clutter.EVENT_STOP;
+        }
+
+        const character = Clutter.keysym_to_unicode(symbol);
+        if (character <= 0x20 || character === 0x7f)
+            return Clutter.EVENT_PROPAGATE;
+
+        this._focusSearchWithText(text + String.fromCodePoint(character));
+        return Clutter.EVENT_STOP;
+    }
+
+    _focusSearchWithText(text) {
+        const clutterText = this._searchEntry.clutter_text;
+        this._searchEntry.grab_key_focus();
+        this._searchEntry.set_text(text);
+        clutterText.set_cursor_position(-1);
+        clutterText.set_selection_bound(-1);
     }
 
     _setSearchFocusVisible(visible) {
