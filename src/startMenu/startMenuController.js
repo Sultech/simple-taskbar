@@ -399,17 +399,19 @@ export class StartMenuController {
             if (!button.mapped || !button.reactive)
                 return GLib.SOURCE_REMOVE;
 
-            if (this._ownsPanelMenu(button))
-                button.menu.toggle();
+            const menu = this._panelMenuOf(button);
+            if (menu)
+                menu.toggle();
             else
                 button.emit('clicked', Clutter.BUTTON_PRIMARY);
             return GLib.SOURCE_REMOVE;
         });
     }
 
-    _ownsPanelMenu(actor) {
-        return actor.menu instanceof PopupMenu.PopupMenu &&
-            actor.menu.sourceActor === actor;
+    _panelMenuOf(actor) {
+        return [actor.menu, actor.simpleTaskbarMenu].find(menu =>
+            menu instanceof PopupMenu.PopupMenu &&
+            menu.sourceActor === actor) ?? null;
     }
 
     _panelButtonAt(actor) {
@@ -418,7 +420,7 @@ export class StartMenuController {
             if (current === this._sourceActor)
                 return null;
             if (!button && (current instanceof St.Button ||
-                this._ownsPanelMenu(current)))
+                this._panelMenuOf(current)))
                 button = current;
             if (button && current.has_style_class_name?.('simple-taskbar-panel'))
                 return button.reactive ? button : null;
