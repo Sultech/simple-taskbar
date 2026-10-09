@@ -13,18 +13,21 @@ import {appendStyle} from '../shared/styleUtils.js';
 import {panelIsVertical} from './panelPosition.js';
 
 const AUTOMATIC_PADDING = -1;
-const AUTOMATIC_FALLBACK_PADDING = 3;
+const AUTOMATIC_HORIZONTAL_PADDING = 12;
+const AUTOMATIC_VERTICAL_PADDING = 3;
 const STATUS_ICON_CLASS = 'system-status-icon';
 const SHOW_DESKTOP_CLASS = 'simple-taskbar-show-desktop';
 const SELF_SIZED_BUTTON_CLASS = 'simple-taskbar-start';
+const CLOCK_BUTTON_CLASS = 'clock-display';
+const CLOCK_LABEL_CLASS = 'clock';
 const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const HOVER_INSET_CLASS_PREFIX =
     'simple-taskbar-panel-button-hover-inset-';
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
     'just-perfection-api-panel-button-padding-size';
-const ICON_HORIZONTAL_PADDING_STYLE =
-    'padding-left: 0; padding-right: 0;';
+const ICON_HORIZONTAL_SPACING_STYLE =
+    'padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0;';
 const REGULAR_PANEL_HEIGHT = 49;
 const MINIMUM_HOVER_INSET = 3;
 const REGULAR_HOVER_INSET = 6;
@@ -59,14 +62,10 @@ export class PanelButtonPaddingController {
         for (const box of this._panelBoxes) {
             box.connectObject(
                 'child-added', (_box, actor) => {
-                    const padding = this.effectivePadding();
-                    if (padding !== null) {
-                        this._applyToSubtree(
-                            actor,
-                            padding,
-                            panelIsVertical(this._settings)
-                        );
-                    }
+                    const vertical = panelIsVertical(this._settings);
+                    const padding = this.effectivePadding(vertical);
+                    if (padding !== null)
+                        this._applyToSubtree(actor, padding, vertical);
                 },
                 'child-removed', (_box, actor) => this._restoreSubtree(actor),
                 this._signalHolder
@@ -80,8 +79,8 @@ export class PanelButtonPaddingController {
         const automatic =
             this._settings.get_int('panel-button-padding') ===
             AUTOMATIC_PADDING;
-        const padding = this.effectivePadding();
         const vertical = panelIsVertical(this._settings);
+        const padding = this.effectivePadding(vertical);
         if (this._appliedVertical !== null &&
             this._appliedVertical !== vertical)
             this._restoreAll();
@@ -155,13 +154,15 @@ export class PanelButtonPaddingController {
         this._panelActor.add_style_class_name(this._hoverInsetClass);
     }
 
-    effectivePadding() {
+    effectivePadding(vertical = panelIsVertical(this._settings)) {
         const configured = this._settings.get_int('panel-button-padding');
         if (configured !== AUTOMATIC_PADDING)
             return configured;
         if (this._externalPaddingIsActive())
             return null;
-        return AUTOMATIC_FALLBACK_PADDING;
+        return vertical
+            ? AUTOMATIC_VERTICAL_PADDING
+            : AUTOMATIC_HORIZONTAL_PADDING;
     }
 
     _applyToSubtree(actor, padding, vertical) {
@@ -187,8 +188,13 @@ export class PanelButtonPaddingController {
     _paddingTarget(actor, vertical) {
         if (vertical && actor.has_style_class_name(SELF_SIZED_BUTTON_CLASS))
             return null;
-        if (!vertical)
-            return actor;
+        if (!vertical) {
+            if (!actor.has_style_class_name(CLOCK_BUTTON_CLASS))
+                return actor;
+            return actor.get_first_child()?.get_children().find(child =>
+                child.has_style_class_name?.(CLOCK_LABEL_CLASS)
+            ) ?? actor;
+        }
 
         const child = actor.get_first_child();
         if (!child)
@@ -235,7 +241,7 @@ export class PanelButtonPaddingController {
         const stripped = this._styleWithoutMargin(currentStyle);
         const appliedStyle = vertical
             ? stripped
-            : appendStyle(stripped, ICON_HORIZONTAL_PADDING_STYLE);
+            : appendStyle(stripped, ICON_HORIZONTAL_SPACING_STYLE);
         if (!state) {
             this._styledActors.set(actor, {
                 originalStyle: currentStyle,
@@ -266,6 +272,10 @@ export class PanelButtonPaddingController {
                 'notify::style',
                 onStyleChanged
             ),
+            styleChangedId: actor.connect(
+                'style-changed',
+                onStyleChanged
+            ),
             destroyId: actor.connect(
                 'destroy',
                 () => this._styledActors.delete(actor)
@@ -274,14 +284,10 @@ export class PanelButtonPaddingController {
     }
 
     _reapplyToActor(actor) {
-        const padding = this.effectivePadding();
-        if (padding !== null) {
-            this._applyToActor(
-                actor,
-                padding,
-                panelIsVertical(this._settings)
-            );
-        }
+        const vertical = panelIsVertical(this._settings);
+        const padding = this.effectivePadding(vertical);
+        if (padding !== null)
+            this._applyToActor(actor, padding, vertical);
     }
 
     syncPanelHeight() {
@@ -289,36 +295,45 @@ export class PanelButtonPaddingController {
     }
 
     _applyToActor(actor, padding, vertical) {
+        const paddingStyle = this._paddingStyle(actor, padding, vertical);
         let state = this._styledActors.get(actor);
         const currentStyle = actor.get_style() ?? '';
         if (!state) {
             state = {
                 originalStyle: currentStyle,
                 appliedStyle: null,
-                appliedPadding: null,
+                appliedPaddingStyle: null,
                 ...this._trackActor(
                     actor,
                     () => this._reapplyToActor(actor)
                 ),
             };
         } else if (currentStyle === state.appliedStyle &&
-            padding === state.appliedPadding &&
-            vertical === state.appliedVertical) {
+            paddingStyle === state.appliedPaddingStyle) {
             return;
         } else if (currentStyle !== state.appliedStyle) {
             state.originalStyle = currentStyle;
         }
-        state.appliedPadding = padding;
-        state.appliedVertical = vertical;
-
-        const paddingStyle = vertical
-            ? `padding-top: ${padding}px; padding-bottom: ${padding}px;`
-            : `-natural-hpadding: ${padding}px; ` +
-                `-minimum-hpadding: ${padding}px;`;
+        state.appliedPaddingStyle = paddingStyle;
         state.appliedStyle = appendStyle(state.originalStyle, paddingStyle);
         this._styledActors.set(actor, state);
         actor.set_style(state.appliedStyle);
         actor.queue_relayout();
+    }
+
+    _paddingStyle(actor, padding, vertical) {
+        if (vertical)
+            return `padding-top: ${padding}px; padding-bottom: ${padding}px;`;
+        if (!actor.has_style_class_name(CLOCK_LABEL_CLASS)) {
+            return `-natural-hpadding: ${padding}px; ` +
+                `-minimum-hpadding: ${padding}px;`;
+        }
+
+        const themeNode = actor.peek_theme_node();
+        const [left, right] = [St.Side.LEFT, St.Side.RIGHT].map(side =>
+            Math.max(0, padding - (themeNode?.get_border_width(side) ?? 0))
+        );
+        return `padding-left: ${left}px; padding-right: ${right}px;`;
     }
 
     _restoreSubtree(actor) {
@@ -333,6 +348,7 @@ export class PanelButtonPaddingController {
             return;
 
         actor.disconnect(state.styleNotifyId);
+        actor.disconnect(state.styleChangedId);
         actor.disconnect(state.destroyId);
         if ((actor.get_style() ?? '') === state.appliedStyle) {
             actor.set_style(state.originalStyle === ''
