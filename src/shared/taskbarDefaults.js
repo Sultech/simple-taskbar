@@ -89,6 +89,7 @@ export function applyDefaultTaskbarSettings(settings) {
     setBoolean(settings, 'hide-pinned-taskbar-apps', false);
     setBoolean(settings, 'hide-pinned-secondary-monitors', false);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
+    setBoolean(settings, 'show-pinned-app-separator', false);
     setBoolean(settings, 'super-number-keybindings-enabled', true);
     setBoolean(settings, 'hide-dash-enabled', true);
     setBoolean(settings, 'launch-to-desktop-enabled', true);
