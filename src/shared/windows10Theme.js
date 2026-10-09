@@ -2,7 +2,6 @@
 // Copyright (C) 2026 sultech
 
 import {
-    CLASSIC_HIGHLIGHT_SETTING_KEYS,
     CLASSIC_HIGHLIGHT_SETTINGS,
     HIGHLIGHT_LENGTH_SETTINGS,
     HIGHLIGHT_SIZE_SETTINGS,
@@ -37,33 +36,6 @@ const LOCKED_SETTINGS = [
     ['running-indicator-full-length', 'b', true],
 ];
 
-const RESET_APPEARANCE_KEYS = [
-    ...CLASSIC_HIGHLIGHT_SETTING_KEYS,
-    'custom-indicator-colors-enabled',
-    'match-icon-color',
-    'focused-indicator-color',
-    'unfocused-indicator-color',
-    'running-indicator-reserve-enabled',
-    'running-indicator-reserve-symmetrical',
-    'running-indicator-reserve-size',
-    'animate-appicon-hover-animation-type',
-    'custom-panel-color-enabled',
-    'custom-panel-color',
-    'custom-panel-gradient-enabled',
-    'custom-panel-gradient-color',
-    'custom-panel-gradient-direction',
-    'transparency-level',
-    'panel-theme',
-    'progress-bar-follow-indicator-colors',
-    'progress-bar-color',
-    'progress-bar-automatic-thickness',
-    'progress-bar-thickness',
-    'show-desktop-button-width',
-    'show-desktop-button-invisible',
-    'show-desktop-button-custom-line-color-enabled',
-    'show-desktop-button-custom-line-color',
-];
-
 const SETTERS = {
     s: setString,
     i: setInteger,
@@ -87,8 +59,6 @@ export function applyWindows10ThemeSettings(settings) {
 }
 
 export function applyWindows10ThemeDefaults(settings) {
-    for (const key of RESET_APPEARANCE_KEYS)
-        settings.reset(key);
     applyDefaultTaskbarSettings(settings);
     setInteger(settings, 'icon-edge-padding', WINDOWS_10_ICON_EDGE_PADDING);
     setInteger(settings, 'icon-size', WINDOWS_10_ICON_SIZE);
@@ -101,5 +71,6 @@ export function applyWindows10ThemeDefaults(settings) {
     setInteger(settings, 'start-button-padding', 0);
     setBoolean(settings, 'transparency-enabled', false);
     setBoolean(settings, 'activities-button-visible', false);
+    setBoolean(settings, 'start-menu-super-key', true);
     applyWindows10ThemeSettings(settings);
 }

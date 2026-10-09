@@ -149,6 +149,7 @@ const MODE_SETTING_KEYS = new Set([
     'windows-xp-theme-enabled',
     'windows-10-theme-enabled',
     'windows-xp-previous-mode',
+    'start-menu-displaced-overlay-key',
 ]);
 for (const profile of PROFILE_KEYS.values()) {
     MODE_SETTING_KEYS.add(profile.settings);
@@ -254,6 +255,13 @@ function restorePanelModeSettings(settings, mode) {
             settings.reset(key);
     }
     return true;
+}
+
+function resetPanelModeSettings(settings) {
+    for (const key of settings.settings_schema.list_keys()) {
+        if (!MODE_SETTING_KEYS.has(key))
+            settings.reset(key);
+    }
 }
 
 function savePanelAxisSettings(settings, mode, axis) {
@@ -440,8 +448,10 @@ export function setPanelMode(settings, mode) {
         }
         savePanelModeSettings(settings, currentMode);
         setModeFlags(settings, mode);
-        if (!restorePanelModeSettings(settings, mode))
+        if (!restorePanelModeSettings(settings, mode)) {
+            resetPanelModeSettings(settings);
             applyInitialPanelModeSettings(settings, mode);
+        }
         settings.set_string('active-panel-mode', mode);
         activateRestoredAxis(settings, PANEL_AXIS_DOMAIN, mode);
     } else {
