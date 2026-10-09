@@ -257,6 +257,7 @@ export class StartMenuController {
         });
 
         this._createSearchEntry();
+        this._skipSelectedResultOnDown();
         this._createHeader();
 
         this._scrollView = new St.ScrollView({
@@ -1421,6 +1422,42 @@ export class StartMenuController {
         this._ignoreSearchChanged = true;
         this._searchEntry.set_text(text);
         this._ignoreSearchChanged = false;
+    }
+
+    _skipSelectedResultOnDown() {
+        const handleKey = symbol => {
+            const selected = this._selectedSearchButton;
+            if (symbol !== Clutter.KEY_Down ||
+                !this._searchEntry.clutter_text.has_key_focus() ||
+                !this._searchEntry.get_text().trim() ||
+                !selected?.mapped)
+                return Clutter.EVENT_PROPAGATE;
+
+            return this._navigationController.focusBelow(selected)
+                ? Clutter.EVENT_STOP
+                : Clutter.EVENT_PROPAGATE;
+        };
+
+        if (Clutter.KeyController) {
+            const controller = new Clutter.KeyController();
+            controller.connect('key-press', () => {
+                const [, symbol] = controller.get_key();
+                return handleKey(symbol);
+            });
+            this._menu.actor.add_action_full(
+                'simple-taskbar-start-search-down',
+                Clutter.EventPhase.CAPTURE,
+                controller
+            );
+            return;
+        }
+
+        this._menu.actor.connect('captured-event', (_actor, event) => {
+            if (event.type() !== Clutter.EventType.KEY_PRESS)
+                return Clutter.EVENT_PROPAGATE;
+
+            return handleKey(event.get_key_symbol());
+        });
     }
 
     _setSearchFocusVisible(visible) {

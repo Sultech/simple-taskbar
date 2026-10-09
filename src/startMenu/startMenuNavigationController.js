@@ -84,6 +84,22 @@ export class StartMenuNavigationController {
         }
     }
 
+    focusBelow(actor) {
+        const target = this._spatialActor(
+            this._focusableActors(),
+            actor,
+            0,
+            1
+        );
+        if (!target)
+            return false;
+
+        this.blockHover();
+        target.grab_key_focus();
+        this._ensureFocusedActorVisible();
+        return true;
+    }
+
     focusFirstViewControl() {
         const {
             allAppsButton,
