@@ -52,7 +52,7 @@ export class SwitcherKeybindingRouter {
 
         let modes = Shell.ActionMode.NORMAL;
         if (this._superTabHandler)
-            modes |= Shell.ActionMode.OVERVIEW;
+            modes |= Shell.ActionMode.OVERVIEW | Shell.ActionMode.POPUP;
         this._installHandlers(modes);
     }
 
