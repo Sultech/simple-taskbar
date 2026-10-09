@@ -79,6 +79,11 @@ const BLURRED_CLASS =
     'simple-taskbar-windows-start-blurred';
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
+const TYPE_TO_SEARCH_BLOCKING_MODIFIERS =
+    Clutter.ModifierType.CONTROL_MASK |
+    Clutter.ModifierType.MOD1_MASK |
+    Clutter.ModifierType.MOD4_MASK |
+    Clutter.ModifierType.SUPER_MASK;
 const BLUR_MY_SHELL_POPUP_CLASSES = [
     'bms-popup-background-transparent',
     'bms-popup-background-light',
@@ -211,6 +216,7 @@ export class StartMenuController {
 
         this._root = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start',
+            reactive: true,
             orientation: Clutter.Orientation.VERTICAL,
             x_expand: true,
             y_expand: true,
@@ -257,6 +263,8 @@ export class StartMenuController {
         });
 
         this._createSearchEntry();
+        this._root.connect('key-press-event', (_actor, event) =>
+            this._typeIntoSearch(event));
         this._createHeader();
 
         this._scrollView = new St.ScrollView({
@@ -1424,6 +1432,32 @@ export class StartMenuController {
             actors.push(...actor.get_children());
         }
         return null;
+    }
+
+    _typeIntoSearch(event) {
+        if (this._searchEntry.clutter_text.has_key_focus() ||
+            event.get_state() & TYPE_TO_SEARCH_BLOCKING_MODIFIERS)
+            return Clutter.EVENT_PROPAGATE;
+
+        const text = this._searchEntry.get_text();
+        const symbol = event.get_key_symbol();
+        let newText;
+        if (symbol === Clutter.KEY_BackSpace) {
+            if (!text)
+                return Clutter.EVENT_PROPAGATE;
+            newText = [...text].slice(0, -1).join('');
+        } else {
+            const character = Clutter.keysym_to_unicode(symbol);
+            if (character <= 0x20 || character === 0x7f)
+                return Clutter.EVENT_PROPAGATE;
+            newText = text + String.fromCodePoint(character);
+        }
+
+        this._searchEntry.grab_key_focus();
+        this._searchEntry.set_text(newText);
+        this._searchEntry.clutter_text.set_cursor_position(-1);
+        this._searchEntry.clutter_text.set_selection_bound(-1);
+        return Clutter.EVENT_STOP;
     }
 
     _setSearchText(text) {
