@@ -3,15 +3,8 @@
 
 import GLib from 'gi://GLib';
 
-import {
-    DEFAULT_PANEL_ITEM_ORDER,
-    normalizePanelItemOrder,
-} from './panelItemOrder.js';
+import {normalizePanelItemOrder} from './panelItemOrder.js';
 import {positionIsVertical} from './panelPositionUtils.js';
-import {
-    applyDefaultTaskbarSettings,
-    DEFAULT_TASKBAR_ICON_SPACING,
-} from './taskbarDefaults.js';
 import {
     setInteger,
     setString,
@@ -19,9 +12,7 @@ import {
 } from './settingsUtils.js';
 import {
     applyWindowsXpThemeAppearance,
-    applyWindowsXpThemeBehaviorDefaults,
     applyWindowsXpThemeSettings,
-    WINDOWS_XP_COMBINE_MODE,
 } from './windowsXpTheme.js';
 import {applyWindows10ThemeDefaults} from './windows10Theme.js';
 
@@ -48,6 +39,7 @@ export const PANEL_AXIS_PROFILE_ENABLED_KEYS = Object.freeze({
 });
 
 const WINDOWS_THEME_PREVIOUS_DOCK_MODE = 'dock';
+const DEFAULT_TASKBAR_ICON_SPACING = 6;
 
 const PANEL_AXIS_HORIZONTAL = 'horizontal';
 const PANEL_AXIS_VERTICAL = 'vertical';
@@ -356,51 +348,24 @@ function applyAxisPositionChange(settings, domain, mode, position) {
 }
 
 function applyDefaultPanelSettings(settings) {
-    settings.set_boolean('panel-height-follow-icon-size', false);
     settings.set_int('panel-height', 32);
     settings.set_int('panel-button-padding', 12);
     settings.set_string('panel-position', 'top');
-    settings.set_boolean('activities-button-visible', true);
-    settings.set_string('activities-button-position', 'left');
     settings.set_string('clock-position', 'center');
-    settings.set_string('system-menu-position', 'right');
-    settings.set_string('folder-menu-position', 'right');
-    settings.set_string('tray-overflow-position', 'right');
-    settings.set_strv('panel-item-order', DEFAULT_PANEL_ITEM_ORDER);
-    settings.set_boolean('multi-monitor-panels', true);
     settings.set_boolean('windows-start-menu-enabled', false);
     settings.set_boolean('gnome-start-button-visible', false);
-    settings.set_boolean('system-menu-visible', true);
-    settings.set_boolean('clock-visible', true);
-    settings.set_boolean('transparency-on-unmaximized', false);
-    settings.set_string(
-        'transparency-dynamic-behavior',
-        'maximized-windows'
-    );
-    settings.set_int('transparency-dynamic-distance', 20);
-    settings.set_int('transparency-dynamic-level', 100);
-    settings.set_int('transparency-dynamic-animation-time', 300);
     settings.set_boolean('show-desktop-button-visible', false);
-    settings.set_boolean('panel-border-enabled', false);
-    settings.set_boolean('panel-border-light-enabled', false);
     settings.set_boolean('hide-dash-enabled', false);
     settings.set_boolean('launch-to-desktop-enabled', false);
 }
 
 function applyInitialPanelModeSettings(settings, mode) {
-    if (mode === PANEL_MODE_TASKBAR) {
-        applyDefaultTaskbarSettings(settings);
-    } else if (mode === PANEL_MODE_DEFAULT) {
+    if (mode === PANEL_MODE_DEFAULT) {
         applyDefaultPanelSettings(settings);
     } else if (mode === PANEL_MODE_WINDOWS_10) {
         applyWindows10ThemeDefaults(settings);
-    } else {
+    } else if (mode === PANEL_MODE_WINDOWS_XP) {
         settings.set_boolean('activities-button-visible', false);
-        settings.set_string(
-            'combine-app-buttons-mode',
-            WINDOWS_XP_COMBINE_MODE
-        );
-        applyWindowsXpThemeBehaviorDefaults(settings);
         applyWindowsXpThemeAppearance(settings);
         applyWindowsXpThemeSettings(settings);
     }

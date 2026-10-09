@@ -13,7 +13,6 @@ import {
     setInteger,
     setString,
 } from './settingsUtils.js';
-import {applyDefaultTaskbarSettings} from './taskbarDefaults.js';
 
 export const WINDOWS_10_PANEL_HEIGHT = 40;
 export const WINDOWS_10_ICON_SIZE = 24;
@@ -59,18 +58,15 @@ export function applyWindows10ThemeSettings(settings) {
 }
 
 export function applyWindows10ThemeDefaults(settings) {
-    applyDefaultTaskbarSettings(settings);
     setInteger(settings, 'icon-edge-padding', WINDOWS_10_ICON_EDGE_PADDING);
     setInteger(settings, 'icon-size', WINDOWS_10_ICON_SIZE);
     setInteger(settings, 'panel-height', WINDOWS_10_PANEL_HEIGHT);
     setInteger(settings, 'icon-spacing', WINDOWS_10_ICON_SPACING);
     setString(settings, 'app-alignment', WINDOWS_10_ALIGNMENT);
     setString(settings, 'start-button-position', WINDOWS_10_ALIGNMENT);
-    setString(settings, 'running-indicator-position', 'bottom');
     setString(settings, 'start-button-custom-icon', 'builtin:ten');
     setInteger(settings, 'start-button-padding', 0);
     setBoolean(settings, 'transparency-enabled', false);
     setBoolean(settings, 'activities-button-visible', false);
-    setBoolean(settings, 'start-menu-super-key', true);
     applyWindows10ThemeSettings(settings);
 }

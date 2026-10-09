@@ -5,7 +5,6 @@ import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
 import {APP_ICON_HOVER_ANIMATION} from './applicationHoverAnimation.js';
-import {applySharedInteractionDefaults} from './interactionDefaults.js';
 import {
     setBoolean,
     setInteger,
@@ -25,18 +24,6 @@ export const WINDOWS_XP_SYSTEM_MENU_POSITION = 'right';
 export function applyWindowsXpThemeAppearance(settings) {
     setBoolean(settings, 'panel-theme-follow-system', false);
     setString(settings, 'panel-theme', 'dark');
-}
-
-export function applyWindowsXpThemeBehaviorDefaults(settings) {
-    applySharedInteractionDefaults(settings);
-    setBoolean(settings, 'hot-edge-overview-enabled', true);
-    setBoolean(settings, 'multi-monitor-panels', true);
-    setBoolean(settings, 'tray-overflow-enabled', true);
-    setBoolean(settings, 'folder-menu-enabled', false);
-    setBoolean(settings, 'panel-menu-click-only', true);
-    setBoolean(settings, 'notification-banner-bottom-end', true);
-    setBoolean(settings, 'hide-dash-enabled', true);
-    setBoolean(settings, 'launch-to-desktop-enabled', true);
 }
 
 export function applyWindowsXpThemeSettings(settings) {
