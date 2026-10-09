@@ -434,6 +434,7 @@ export class SecondaryPanelDockController {
         Shell.util_set_hidden_from_pick(this._dockStrutActor, true);
         Main.layoutManager.addChrome(this._dockStrutActor, {
             affectsStruts: true,
+            affectsInputRegion: false,
             trackFullscreen: true,
         });
     }
