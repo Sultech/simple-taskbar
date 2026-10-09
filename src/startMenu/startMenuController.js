@@ -396,10 +396,20 @@ export class StartMenuController {
             GLib.Source.remove(this._clickThroughIdleId);
         this._clickThroughIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
             this._clickThroughIdleId = 0;
-            if (button.mapped && button.reactive)
+            if (!button.mapped || !button.reactive)
+                return GLib.SOURCE_REMOVE;
+
+            if (this._ownsPanelMenu(button))
+                button.menu.toggle();
+            else
                 button.emit('clicked', Clutter.BUTTON_PRIMARY);
             return GLib.SOURCE_REMOVE;
         });
+    }
+
+    _ownsPanelMenu(actor) {
+        return actor.menu instanceof PopupMenu.PopupMenu &&
+            actor.menu.sourceActor === actor;
     }
 
     _panelButtonAt(actor) {
@@ -407,7 +417,8 @@ export class StartMenuController {
         for (let current = actor; current; current = current.get_parent()) {
             if (current === this._sourceActor)
                 return null;
-            if (!button && current instanceof St.Button)
+            if (!button && (current instanceof St.Button ||
+                this._ownsPanelMenu(current)))
                 button = current;
             if (button && current.has_style_class_name?.('simple-taskbar-panel'))
                 return button.reactive ? button : null;
