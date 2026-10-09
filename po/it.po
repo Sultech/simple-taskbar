@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 21:20+0100\n"
+"POT-Creation-Date: 2026-10-09 17:37+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/taskbar/showDesktopButtonController.js:128
-#: src/overflow/applicationOverflowItemController.js:138
+#: src/overflow/applicationOverflowItemController.js:141
 msgid "Show desktop"
 msgstr "Mostra desktop"
 
@@ -26,8 +26,8 @@ msgstr "Mostra desktop"
 msgid "Application overflow"
 msgstr "Overflow delle applicazioni"
 
-#: prefs.js:46 src/prefs/applicationIconsGroup.js:362
-#: src/prefs/panelAppearancePage.js:101 src/prefs/panelModeGroup.js:134
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:368
+#: src/prefs/panelAppearancePage.js:101 src/prefs/panelModeGroup.js:137
 msgid "Left"
 msgstr "Sinistra"
 
@@ -35,8 +35,8 @@ msgstr "Sinistra"
 msgid "Center"
 msgstr "Centro"
 
-#: prefs.js:48 src/prefs/applicationIconsGroup.js:363
-#: src/prefs/panelAppearancePage.js:102 src/prefs/panelModeGroup.js:135
+#: prefs.js:48 src/prefs/applicationIconsGroup.js:369
+#: src/prefs/panelAppearancePage.js:102 src/prefs/panelModeGroup.js:138
 msgid "Right"
 msgstr "Destra"
 
@@ -158,6 +158,11 @@ msgstr "Attiva/disattiva singola / Anteprima multiple"
 msgid "Toggle Single / Cycle Multiple"
 msgstr "Attiva/disattiva singola / Scorri multiple"
 
+#: src/prefs/applicationClickActionDialog.js:39
+#: src/prefs/applicationClickActionDialog.js:88
+msgid "Toggle Single / Spread Multiple"
+msgstr "Attiva/disattiva singola / Disponi multiple"
+
 #: src/prefs/applicationClickActionDialog.js:43
 msgid "Toggle Windows"
 msgstr "Attiva/disattiva finestre"
@@ -175,11 +180,6 @@ msgstr "Avvia nuova istanza"
 #: src/prefs/applicationClickActionDialog.js:64
 msgid "Minimize Window"
 msgstr "Minimizza finestra"
-
-#: src/prefs/applicationClickActionDialog.js:39
-#: src/prefs/applicationClickActionDialog.js:88
-msgid "Toggle Single / Spread Multiple"
-msgstr "Attiva/disattiva singola / Disponi multiple"
 
 #: src/prefs/applicationClickActionDialog.js:92
 #: src/taskbar/taskbarAppMenu.js:23
@@ -364,378 +364,378 @@ msgstr "Usa larghezza etichetta fissa"
 msgid "Use the maximum label width for every application"
 msgstr "Usa la larghezza massima dell’etichetta per ogni applicazione"
 
-#: src/prefs/applicationHoverAnimationDialog.js:30
+#: src/prefs/applicationHoverAnimationDialog.js:33
 msgid "Duration"
 msgstr "Durata"
 
-#: src/prefs/applicationHoverAnimationDialog.js:31
+#: src/prefs/applicationHoverAnimationDialog.js:34
 msgid "Animation time in milliseconds"
 msgstr "Durata dell’animazione in millisecondi"
 
-#: src/prefs/applicationHoverAnimationDialog.js:43
+#: src/prefs/applicationHoverAnimationDialog.js:46
 msgid "Rotation"
 msgstr "Rotazione"
 
-#: src/prefs/applicationHoverAnimationDialog.js:44
+#: src/prefs/applicationHoverAnimationDialog.js:47
 msgid "Rotation angle in degrees"
 msgstr "Angolo di rotazione in gradi"
 
-#: src/prefs/applicationHoverAnimationDialog.js:56
+#: src/prefs/applicationHoverAnimationDialog.js:59
 msgid "Travel"
 msgstr "Spostamento"
 
-#: src/prefs/applicationHoverAnimationDialog.js:58
+#: src/prefs/applicationHoverAnimationDialog.js:61
 msgid "Movement beyond the taskbar or Dock edge as a percentage of icon size"
 msgstr ""
 "Spostamento oltre il bordo della barra delle applicazioni o del dock come "
 "percentuale della dimensione dell’icona"
 
-#: src/prefs/applicationHoverAnimationDialog.js:71
+#: src/prefs/applicationHoverAnimationDialog.js:74
 msgid "Zoom"
 msgstr "Ingrandimento"
 
-#: src/prefs/applicationHoverAnimationDialog.js:72
+#: src/prefs/applicationHoverAnimationDialog.js:75
 msgid "Maximum icon scale as a percentage"
 msgstr "Scala massima dell’icona in percentuale"
 
-#: src/prefs/applicationHoverAnimationDialog.js:84
+#: src/prefs/applicationHoverAnimationDialog.js:87
 msgid "Convexity"
 msgstr "Convessità"
 
-#: src/prefs/applicationHoverAnimationDialog.js:85
+#: src/prefs/applicationHoverAnimationDialog.js:88
 msgid "Shape of the hover curve"
 msgstr "Forma della curva al passaggio del puntatore"
 
-#: src/prefs/applicationHoverAnimationDialog.js:97
+#: src/prefs/applicationHoverAnimationDialog.js:100
 msgid "Extent"
 msgstr "Estensione"
 
-#: src/prefs/applicationHoverAnimationDialog.js:98
+#: src/prefs/applicationHoverAnimationDialog.js:101
 msgid "Number of icons affected by the pointer"
 msgstr "Numero di icone interessate dal puntatore"
 
-#: src/prefs/applicationHoverAnimationDialog.js:106
+#: src/prefs/applicationHoverAnimationDialog.js:109
 msgid "Animation Options"
 msgstr "Opzioni animazione"
 
-#: src/prefs/applicationHoverAnimationDialog.js:115
+#: src/prefs/applicationHoverAnimationDialog.js:118
 msgid "Application Icon Hover Animation"
 msgstr "Animazione al passaggio sulle icone delle applicazioni"
 
-#: src/prefs/applicationHoverAnimationDialog.js:135
+#: src/prefs/applicationHoverAnimationDialog.js:138
 msgid "Animation Profile"
 msgstr "Profilo animazione"
 
-#: src/prefs/applicationHoverAnimationDialog.js:137
+#: src/prefs/applicationHoverAnimationDialog.js:140
 msgid "Adjust the profile selected in the application icon settings"
 msgstr ""
 "Regola il profilo selezionato nelle impostazioni delle icone delle "
 "applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:60
+#: src/prefs/applicationIconsGroup.js:61
 msgid "Application Icon Appearance"
 msgstr "Aspetto delle icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:61
+#: src/prefs/applicationIconsGroup.js:62
 msgid "Adjust icon size, spacing, and hover/focus effects"
 msgstr ""
 "Regola la dimensione, la spaziatura e gli effetti al passaggio del mouse e "
 "del focus delle icone"
 
-#: src/prefs/applicationIconsGroup.js:70
+#: src/prefs/applicationIconsGroup.js:71
 msgid "Icon Size"
 msgstr "Dimensione icone"
 
-#: src/prefs/applicationIconsGroup.js:72
+#: src/prefs/applicationIconsGroup.js:73
 msgid "The panel grows automatically when larger icons need more room"
 msgstr ""
 "Il pannello si ingrandisce automaticamente quando le icone più grandi "
 "necessitano di più spazio"
 
-#: src/prefs/applicationIconsGroup.js:85
+#: src/prefs/applicationIconsGroup.js:86
 msgid "Minimum Icon Size"
 msgstr "Dimensione minima delle icone"
 
-#: src/prefs/applicationIconsGroup.js:87
+#: src/prefs/applicationIconsGroup.js:88
 msgid "Smallest application icon size used when space is limited"
 msgstr ""
 "Dimensione minima delle icone delle applicazioni usata quando lo spazio è "
 "limitato"
 
-#: src/prefs/applicationIconsGroup.js:100
+#: src/prefs/applicationIconsGroup.js:101
 msgid "Icon Spacing"
 msgstr "Spaziatura icone"
 
-#: src/prefs/applicationIconsGroup.js:101
+#: src/prefs/applicationIconsGroup.js:102
 msgid "Space between application icons"
 msgstr "Spazio tra le icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:113
+#: src/prefs/applicationIconsGroup.js:114
 msgid "Icon Edge Padding"
 msgstr "Margine icone"
 
-#: src/prefs/applicationIconsGroup.js:127
+#: src/prefs/applicationIconsGroup.js:128
 msgid "Hover and Focus Effect"
 msgstr "Effetto al passaggio del mouse e del focus"
 
-#: src/prefs/applicationIconsGroup.js:128
+#: src/prefs/applicationIconsGroup.js:129
 msgid "Choose the effect used by application icons"
 msgstr "Scegli l’effetto usato dalle icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:132
+#: src/prefs/applicationIconsGroup.js:133
 msgid "Glass"
 msgstr "Vetro"
 
-#: src/prefs/applicationIconsGroup.js:136
+#: src/prefs/applicationIconsGroup.js:137
 msgid "Classic"
 msgstr "Classico"
 
-#: src/prefs/applicationIconsGroup.js:161
+#: src/prefs/applicationIconsGroup.js:168
 msgid "Icon Alignment"
 msgstr "Allineamento icone"
 
-#: src/prefs/applicationIconsGroup.js:162
+#: src/prefs/applicationIconsGroup.js:169
 msgid "Choose the application icon alignment"
 msgstr "Scegli l’allineamento delle icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:217
+#: src/prefs/applicationIconsGroup.js:223
 msgid "Application Layout and Behavior"
 msgstr "Disposizione e comportamento delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:219
+#: src/prefs/applicationIconsGroup.js:225
 msgid "Choose which applications appear and how they are grouped and indicated"
 msgstr "Scegli quali applicazioni visualizzare e come raggrupparle e indicarle"
 
-#: src/prefs/applicationIconsGroup.js:227
+#: src/prefs/applicationIconsGroup.js:233
 #: src/prefs/pinnedApplicationBehaviorDialog.js:27
 #: src/prefs/pinnedApplicationBehaviorDialog.js:36
 msgid "Pinned Application Behavior"
 msgstr "Comportamento delle applicazioni bloccate"
 
-#: src/prefs/applicationIconsGroup.js:228
+#: src/prefs/applicationIconsGroup.js:234
 msgid "Choose how pinned and running applications appear"
 msgstr "Scegli come visualizzare le applicazioni bloccate e in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:235
+#: src/prefs/applicationIconsGroup.js:241
 msgid "Always"
 msgstr "Sempre"
 
-#: src/prefs/applicationIconsGroup.js:236
-#: src/prefs/applicationIconsGroup.js:240
+#: src/prefs/applicationIconsGroup.js:242
+#: src/prefs/applicationIconsGroup.js:246
 msgid "Only When Full"
 msgstr "Solo quando piena"
 
-#: src/prefs/applicationIconsGroup.js:237
-#: src/prefs/applicationIconsGroup.js:241
+#: src/prefs/applicationIconsGroup.js:243
+#: src/prefs/applicationIconsGroup.js:247
 msgid "Never"
 msgstr "Mai"
 
-#: src/prefs/applicationIconsGroup.js:250
+#: src/prefs/applicationIconsGroup.js:256
 msgid "Combine Application Windows"
 msgstr "Combina finestre delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:251
+#: src/prefs/applicationIconsGroup.js:257
 msgid "Choose when windows share one application icon"
 msgstr "Scegli quando le finestre condividono un’unica icona dell’applicazione"
 
-#: src/prefs/applicationIconsGroup.js:269
+#: src/prefs/applicationIconsGroup.js:275
 msgid "Show Progress Bars"
 msgstr "Mostra le barre di avanzamento"
 
-#: src/prefs/applicationIconsGroup.js:270
+#: src/prefs/applicationIconsGroup.js:276
 msgid "Display file transfer and install progress on application icons"
 msgstr ""
 "Mostra l’avanzamento di trasferimenti di file e installazioni sulle icone "
 "delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:287
+#: src/prefs/applicationIconsGroup.js:293
 msgid "Show Notification Badges"
 msgstr "Mostra i badge delle notifiche"
 
-#: src/prefs/applicationIconsGroup.js:288
+#: src/prefs/applicationIconsGroup.js:294
 msgid "Display unread counts on application icons"
 msgstr ""
 "Visualizza il numero di notifiche non lette sulle icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:294
+#: src/prefs/applicationIconsGroup.js:300
 msgid "Show Pinned App Separator"
 msgstr "Mostra il separatore delle applicazioni bloccate"
 
-#: src/prefs/applicationIconsGroup.js:295
+#: src/prefs/applicationIconsGroup.js:301
 msgid "Show a line between pinned and running applications"
 msgstr "Mostra una linea tra le applicazioni bloccate e quelle in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:301
+#: src/prefs/applicationIconsGroup.js:307
 msgid "Show Location Separator"
 msgstr "Mostra il separatore delle posizioni"
 
-#: src/prefs/applicationIconsGroup.js:302
+#: src/prefs/applicationIconsGroup.js:308
 msgid "Show a line between applications and locations"
 msgstr "Mostra una linea tra le applicazioni e le posizioni"
 
-#: src/prefs/applicationIconsGroup.js:353
+#: src/prefs/applicationIconsGroup.js:359
 msgid "Running Indicators"
 msgstr "Indicatori delle applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:355
+#: src/prefs/applicationIconsGroup.js:361
 msgid "Configure the position, style, size, and colours of running indicators"
 msgstr ""
 "Configura la posizione, lo stile, la dimensione e i colori degli indicatori "
 "di esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:360 src/prefs/panelAppearancePage.js:99
-#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:132
+#: src/prefs/applicationIconsGroup.js:366 src/prefs/panelAppearancePage.js:99
+#: src/prefs/panelAxis.js:13 src/prefs/panelModeGroup.js:135
 msgid "Top"
 msgstr "In alto"
 
-#: src/prefs/applicationIconsGroup.js:361 src/prefs/panelAppearancePage.js:100
-#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:133
+#: src/prefs/applicationIconsGroup.js:367 src/prefs/panelAppearancePage.js:100
+#: src/prefs/panelAxis.js:15 src/prefs/panelModeGroup.js:136
 msgid "Bottom"
 msgstr "In basso"
 
-#: src/prefs/applicationIconsGroup.js:366
+#: src/prefs/applicationIconsGroup.js:372
 msgid "Rounded"
 msgstr "Arrotondato"
 
-#: src/prefs/applicationIconsGroup.js:367
+#: src/prefs/applicationIconsGroup.js:373
 msgid "Dots"
 msgstr "Punti"
 
-#: src/prefs/applicationIconsGroup.js:368
+#: src/prefs/applicationIconsGroup.js:374
 msgid "Squares"
 msgstr "Quadrati"
 
-#: src/prefs/applicationIconsGroup.js:369
+#: src/prefs/applicationIconsGroup.js:375
 msgid "Dashes"
 msgstr "Trattini"
 
-#: src/prefs/applicationIconsGroup.js:370
+#: src/prefs/applicationIconsGroup.js:376
 msgid "Segmented"
 msgstr "Segmentato"
 
-#: src/prefs/applicationIconsGroup.js:371
+#: src/prefs/applicationIconsGroup.js:377
 msgid "Solid"
 msgstr "Pieno"
 
-#: src/prefs/applicationIconsGroup.js:372
+#: src/prefs/applicationIconsGroup.js:378
 msgid "Ciliora"
 msgstr "Ciliora"
 
-#: src/prefs/applicationIconsGroup.js:373
+#: src/prefs/applicationIconsGroup.js:379
 msgid "Metro"
 msgstr "Metro"
 
-#: src/prefs/applicationIconsGroup.js:383
+#: src/prefs/applicationIconsGroup.js:389
 msgid "Running Indicator Position"
 msgstr "Posizione dell’indicatore di esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:384
+#: src/prefs/applicationIconsGroup.js:390
 msgid "Choose which edge of the application icon to use"
 msgstr "Scegli quale bordo dell’icona dell’applicazione usare"
 
-#: src/prefs/applicationIconsGroup.js:399
+#: src/prefs/applicationIconsGroup.js:405
 msgid "Running Indicator Style"
 msgstr "Stile dell’indicatore di esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:401
+#: src/prefs/applicationIconsGroup.js:407
 msgid "Choose the shape of indicators around running applications"
 msgstr ""
 "Scegli la forma degli indicatori attorno alle applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:416
+#: src/prefs/applicationIconsGroup.js:422
 msgid "Running Indicator Size"
 msgstr "Dimensione dell’indicatore di esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:417
+#: src/prefs/applicationIconsGroup.js:423
 msgid "Choose the indicator thickness in pixels"
 msgstr "Scegli lo spessore dell’indicatore in pixel"
 
-#: src/prefs/applicationIconsGroup.js:426
+#: src/prefs/applicationIconsGroup.js:432
 msgid "Stretch Indicators"
 msgstr "Allunga indicatori"
 
-#: src/prefs/applicationIconsGroup.js:428
+#: src/prefs/applicationIconsGroup.js:434
 msgid "Run indicators the full length of the application icon"
 msgstr ""
 "Mostra gli indicatori per tutta la lunghezza dell’icona dell’applicazione"
 
-#: src/prefs/applicationIconsGroup.js:433
+#: src/prefs/applicationIconsGroup.js:439
 msgid "Custom Indicator Colors"
 msgstr "Colori personalizzati degli indicatori"
 
-#: src/prefs/applicationIconsGroup.js:434
+#: src/prefs/applicationIconsGroup.js:440
 msgid "Choose colors for running application indicators"
 msgstr "Scegli i colori per gli indicatori delle applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:447
+#: src/prefs/applicationIconsGroup.js:453
 msgid "Match Icon Color"
 msgstr "Abbina il colore dell’icona"
 
-#: src/prefs/applicationIconsGroup.js:449
+#: src/prefs/applicationIconsGroup.js:455
 msgid "Color the focused indicator from the application icon"
 msgstr "Colora l’indicatore attivo con il colore dell’icona dell’applicazione"
 
-#: src/prefs/applicationIconsGroup.js:465
+#: src/prefs/applicationIconsGroup.js:471
 msgid "Focused Indicator Color"
 msgstr "Colore dell’indicatore per la finestra attiva"
 
-#: src/prefs/applicationIconsGroup.js:475
+#: src/prefs/applicationIconsGroup.js:481
 msgid "Unfocused Indicator Color"
 msgstr "Colore dell’indicatore per la finestra non attiva"
 
-#: src/prefs/applicationIconsGroup.js:540
+#: src/prefs/applicationIconsGroup.js:549
 msgid "Application Overflow"
 msgstr "Overflow delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:541
+#: src/prefs/applicationIconsGroup.js:550
 msgid "Choose how overflowing applications are handled"
 msgstr "Scegli come gestire le applicazioni oltre il limite"
 
-#: src/prefs/applicationIconsGroup.js:547
+#: src/prefs/applicationIconsGroup.js:556
 msgid "Enable Application Overflow"
 msgstr "Abilita il menu di overflow delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:557
+#: src/prefs/applicationIconsGroup.js:566
 msgid "Overflow Style"
 msgstr "Stile dell’overflow"
 
-#: src/prefs/applicationIconsGroup.js:559
+#: src/prefs/applicationIconsGroup.js:568
 msgid "Taskbar Flyout"
 msgstr "Menu a comparsa della barra delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:560
+#: src/prefs/applicationIconsGroup.js:569
 msgid "Application List"
 msgstr "Elenco delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:593 src/prefs/windowSwitchingPage.js:49
+#: src/prefs/applicationIconsGroup.js:602 src/prefs/windowSwitchingPage.js:49
 msgid "Isolate Workspaces"
 msgstr "Isola gli spazi di lavoro"
 
-#: src/prefs/applicationIconsGroup.js:594
+#: src/prefs/applicationIconsGroup.js:603
 msgid "Show running applications from the current workspace only"
 msgstr ""
 "Mostra solo le applicazioni in esecuzione dello spazio di lavoro corrente"
 
-#: src/prefs/applicationIconsGroup.js:598 src/prefs/windowSwitchingPage.js:57
+#: src/prefs/applicationIconsGroup.js:607 src/prefs/windowSwitchingPage.js:57
 msgid "Isolate Monitors"
 msgstr "Isola i monitor"
 
-#: src/prefs/applicationIconsGroup.js:602
+#: src/prefs/applicationIconsGroup.js:611
 msgid "Running Application Isolation"
 msgstr "Isolamento delle applicazioni in esecuzione"
 
-#: src/prefs/applicationIconsGroup.js:619
-#: src/prefs/applicationIconsGroup.js:690
+#: src/prefs/applicationIconsGroup.js:628
+#: src/prefs/applicationIconsGroup.js:699
 msgid "Application Icons"
 msgstr "Icone delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:621
+#: src/prefs/applicationIconsGroup.js:630
 msgid ""
 "Change the size, spacing, placement, and running indicators for Dock icons."
 msgstr ""
 "Modifica dimensioni, spaziatura, posizione e indicatori delle icone del Dock."
 
-#: src/prefs/applicationIconsGroup.js:631
+#: src/prefs/applicationIconsGroup.js:640
 msgid ""
 "Space between icons and the Dock edges; lower it to fit larger icons in a "
 "thinner Dock"
@@ -743,7 +743,7 @@ msgstr ""
 "Spazio tra le icone e i bordi del Dock; riducilo per far stare icone più "
 "grandi in un Dock più sottile"
 
-#: src/prefs/applicationIconsGroup.js:639
+#: src/prefs/applicationIconsGroup.js:648
 msgid ""
 "Show applications that do not fit in an overflow popup instead of scrolling "
 "the Dock"
@@ -751,19 +751,19 @@ msgstr ""
 "Mostra in un pop-up di overflow le applicazioni che non entrano, invece di "
 "scorrere il Dock"
 
-#: src/prefs/applicationIconsGroup.js:646
-#: src/prefs/applicationIconsGroup.js:723
+#: src/prefs/applicationIconsGroup.js:655
+#: src/prefs/applicationIconsGroup.js:732
 msgid "Limit running applications to the current workspace or monitor"
 msgstr ""
 "Limita le applicazioni in esecuzione allo spazio di lavoro o al monitor "
 "corrente"
 
-#: src/prefs/applicationIconsGroup.js:649
+#: src/prefs/applicationIconsGroup.js:658
 msgid "Show running applications only in the Dock for their monitor"
 msgstr ""
 "Mostra le applicazioni in esecuzione nel Dock solo sul monitor corrispondente"
 
-#: src/prefs/applicationIconsGroup.js:692
+#: src/prefs/applicationIconsGroup.js:701
 msgid ""
 "Change the size, spacing, placement, and running indicators for taskbar "
 "icons."
@@ -771,7 +771,7 @@ msgstr ""
 "Modifica dimensioni, spaziatura, posizione e indicatori delle icone della "
 "barra delle applicazioni."
 
-#: src/prefs/applicationIconsGroup.js:708
+#: src/prefs/applicationIconsGroup.js:717
 msgid ""
 "Space between icons and the taskbar edges; lower it to fit larger icons in a "
 "thinner taskbar"
@@ -779,7 +779,7 @@ msgstr ""
 "Spazio tra le icone e i bordi della barra delle applicazioni; riducilo per "
 "far stare icone più grandi in una barra più sottile"
 
-#: src/prefs/applicationIconsGroup.js:716
+#: src/prefs/applicationIconsGroup.js:725
 msgid ""
 "Show applications that do not fit in an overflow popup instead of scrolling "
 "the taskbar"
@@ -787,7 +787,7 @@ msgstr ""
 "Mostra le applicazioni che non trovano spazio in un popup di overflow invece "
 "di scorrere la barra delle applicazioni"
 
-#: src/prefs/applicationIconsGroup.js:726
+#: src/prefs/applicationIconsGroup.js:735
 msgid "Show running applications only on the taskbar for their monitor"
 msgstr ""
 "Mostra le applicazioni in esecuzione solo sulla barra delle applicazioni del "
@@ -917,18 +917,18 @@ msgid "Choose the animation shown when an application is clicked"
 msgstr "Scegli l’animazione mostrata quando si fa clic su un’applicazione"
 
 #: src/prefs/applicationInteractionGroup.js:182
-#: src/prefs/dockBehaviorGroup.js:86 src/prefs/taskbarBehaviorGroup.js:113
+#: src/prefs/taskbarBehaviorGroup.js:28
 msgid "Switch Workspace"
 msgstr "Cambia spazio di lavoro"
 
 #: src/prefs/applicationInteractionGroup.js:186
-#: src/prefs/dockBehaviorGroup.js:90 src/prefs/taskbarBehaviorGroup.js:117
+#: src/prefs/taskbarBehaviorGroup.js:32
 msgid "Cycle Windows"
 msgstr "Scorri le finestre"
 
 #: src/prefs/applicationInteractionGroup.js:190
 #: src/prefs/applicationInteractionGroup.js:316
-#: src/prefs/dockBehaviorGroup.js:98 src/prefs/taskbarBehaviorGroup.js:125
+#: src/prefs/taskbarBehaviorGroup.js:40
 msgid "Do Nothing"
 msgstr "Non fare nulla"
 
@@ -941,7 +941,7 @@ msgid "Choose what happens when scrolling over an application icon"
 msgstr "Scegli cosa accade scorrendo su un’icona dell’applicazione"
 
 #: src/prefs/applicationInteractionGroup.js:219
-#: src/prefs/dockBehaviorGroup.js:111 src/prefs/taskbarBehaviorGroup.js:138
+#: src/prefs/dockBehaviorGroup.js:95 src/prefs/taskbarBehaviorGroup.js:142
 msgid "Scroll Delay"
 msgstr "Ritardo scorrimento"
 
@@ -1019,108 +1019,108 @@ msgstr "Predefinito GNOME"
 msgid "Magic Lamp"
 msgstr "Lampada magica"
 
-#: src/prefs/classicHighlightDialog.js:82
-#: src/prefs/classicHighlightDialog.js:91
+#: src/prefs/classicHighlightDialog.js:83
+#: src/prefs/classicHighlightDialog.js:92
 msgid "Highlight Options"
 msgstr "Opzioni evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:105
+#: src/prefs/classicHighlightDialog.js:109
 msgid "Highlight Size"
 msgstr "Dimensione evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:111
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Imposta quanto si estende l’evidenziazione sul pannello"
 
-#: src/prefs/classicHighlightDialog.js:118
+#: src/prefs/classicHighlightDialog.js:122
 msgid "Highlight Border Radius"
 msgstr "Raggio degli angoli dell’evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:119
+#: src/prefs/classicHighlightDialog.js:123
 msgid "Border radius in pixels"
 msgstr "Raggio degli angoli in pixel"
 
-#: src/prefs/classicHighlightDialog.js:132
+#: src/prefs/classicHighlightDialog.js:136
 msgid "Custom Highlight Thickness"
 msgstr "Spessore evidenziazione personalizzato"
 
-#: src/prefs/classicHighlightDialog.js:134
+#: src/prefs/classicHighlightDialog.js:138
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
 msgstr ""
 "Mantieni l’evidenziazione a dimensione fissa invece di seguire lo spessore "
 "del pannello"
 
-#: src/prefs/classicHighlightDialog.js:136
+#: src/prefs/classicHighlightDialog.js:140
 msgid "Highlight Thickness"
 msgstr "Spessore evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:137
+#: src/prefs/classicHighlightDialog.js:141
 msgid "Size across the panel in pixels"
 msgstr "Dimensione attraverso il pannello in pixel"
 
-#: src/prefs/classicHighlightDialog.js:150
+#: src/prefs/classicHighlightDialog.js:155
 msgid "Custom Highlight Length"
 msgstr "Lunghezza evidenziazione personalizzata"
 
-#: src/prefs/classicHighlightDialog.js:152
+#: src/prefs/classicHighlightDialog.js:157
 msgid "Grow the highlight along the panel beyond the application icon"
 msgstr ""
 "Estendi l’evidenziazione lungo il pannello oltre l’icona dell’applicazione"
 
-#: src/prefs/classicHighlightDialog.js:154
+#: src/prefs/classicHighlightDialog.js:159
 msgid "Highlight Length"
 msgstr "Lunghezza evidenziazione"
 
-#: src/prefs/classicHighlightDialog.js:155
+#: src/prefs/classicHighlightDialog.js:160
 msgid "Size along the panel in pixels"
 msgstr "Dimensione lungo il pannello in pixel"
 
-#: src/prefs/classicHighlightDialog.js:163
+#: src/prefs/classicHighlightDialog.js:169
 msgid "Hover Highlight"
 msgstr "Evidenziazione al passaggio"
 
-#: src/prefs/classicHighlightDialog.js:164
+#: src/prefs/classicHighlightDialog.js:170
 msgid "Customize the hover and pressed highlight"
 msgstr "Personalizza l’evidenziazione al passaggio e alla pressione"
 
-#: src/prefs/classicHighlightDialog.js:170
+#: src/prefs/classicHighlightDialog.js:176
 msgid "Highlight Hovering Application Icons"
 msgstr "Evidenzia le icone delle applicazioni al passaggio del puntatore"
 
-#: src/prefs/classicHighlightDialog.js:178
+#: src/prefs/classicHighlightDialog.js:184
 msgid "Hover Highlight Color"
 msgstr "Colore evidenziazione al passaggio"
 
-#: src/prefs/classicHighlightDialog.js:187
+#: src/prefs/classicHighlightDialog.js:193
 msgid "Pressed Highlight Color"
 msgstr "Colore evidenziazione alla pressione"
 
-#: src/prefs/classicHighlightDialog.js:193
+#: src/prefs/classicHighlightDialog.js:199
 msgid "Focused Application Highlight"
 msgstr "Evidenziazione applicazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:194
+#: src/prefs/classicHighlightDialog.js:200
 msgid "Customize the highlight for the focused application"
 msgstr "Personalizza l’evidenziazione dell’applicazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:200
+#: src/prefs/classicHighlightDialog.js:206
 msgid "Highlight the Focused Application"
 msgstr "Evidenzia l’applicazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:205
+#: src/prefs/classicHighlightDialog.js:211
 msgid "Use Icon Dominant Color"
 msgstr "Usa colore dominante dell’icona"
 
-#: src/prefs/classicHighlightDialog.js:213
+#: src/prefs/classicHighlightDialog.js:219
 msgid "Custom Focus Highlight Color"
 msgstr "Colore personalizzato evidenziazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:222
+#: src/prefs/classicHighlightDialog.js:228
 msgid "Focus Highlight Opacity"
 msgstr "Opacità evidenziazione attiva"
 
-#: src/prefs/classicHighlightDialog.js:223
+#: src/prefs/classicHighlightDialog.js:229
 msgid "Opacity percentage"
 msgstr "Percentuale di opacità"
 
@@ -1247,12 +1247,12 @@ msgstr ""
 "Scegli lo schema di colori quando la corrispondenza col sistema è disattivata"
 
 #: src/prefs/dockAppearanceGroup.js:112 src/prefs/panelAppearancePage.js:290
-#: src/prefs/startMenuPage.js:758
+#: src/prefs/startMenuPage.js:757
 msgid "Light"
 msgstr "Chiaro"
 
 #: src/prefs/dockAppearanceGroup.js:113 src/prefs/panelAppearancePage.js:291
-#: src/prefs/startMenuPage.js:757
+#: src/prefs/startMenuPage.js:756
 msgid "Dark"
 msgstr "Scuro"
 
@@ -1277,7 +1277,7 @@ msgid "Apply Blur My Shell panel blur to the Dock"
 msgstr "Applica la sfocatura del pannello di Blur My Shell al Dock"
 
 #: src/prefs/dockAppearanceGroup.js:145 src/prefs/panelAppearancePage.js:313
-#: src/prefs/startMenuPage.js:784
+#: src/prefs/startMenuPage.js:783
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "Disabilita la sfocatura del pannello di Blur My Shell per usare questa "
@@ -1289,7 +1289,8 @@ msgstr "Applica la sfocatura del dock di Blur My Shell al Dock"
 
 #: src/prefs/dockAppearanceGroup.js:149
 msgid "Disable Blur My Shell dock blur to use this option"
-msgstr "Disabilita la sfocatura del dock di Blur My Shell per usare questa opzione"
+msgstr ""
+"Disabilita la sfocatura del dock di Blur My Shell per usare questa opzione"
 
 #: src/prefs/dockAppearanceGroup.js:152
 msgid "This Blur My Shell version cannot blur the Dock"
@@ -1450,99 +1451,95 @@ msgstr "Durata dell’animazione della trasparenza"
 msgid "Transition time in milliseconds"
 msgstr "Durata della transizione in millisecondi"
 
-#: src/prefs/dockBehaviorGroup.js:18
+#: src/prefs/dockBehaviorGroup.js:19
 msgid "Dock Behavior"
 msgstr "Comportamento del dock"
 
-#: src/prefs/dockBehaviorGroup.js:19
+#: src/prefs/dockBehaviorGroup.js:20
 msgid "Configure Dock interaction independently of the taskbar."
 msgstr ""
 "Configura l’interazione con il Dock indipendentemente dalla barra delle "
 "applicazioni."
 
-#: src/prefs/dockBehaviorGroup.js:25
+#: src/prefs/dockBehaviorGroup.js:26
 msgid "Auto-hide Dock"
 msgstr "Nascondi automaticamente il dock"
 
-#: src/prefs/dockBehaviorGroup.js:26
+#: src/prefs/dockBehaviorGroup.js:27
 msgid "Reveal the Dock when the pointer reaches its screen edge"
 msgstr "Mostra il dock quando il puntatore raggiunge il bordo dello schermo"
 
-#: src/prefs/dockBehaviorGroup.js:30
+#: src/prefs/dockBehaviorGroup.js:31
 msgid "Limit Reveal to Dock Edge"
 msgstr "Limita la visualizzazione al bordo del Dock"
 
-#: src/prefs/dockBehaviorGroup.js:31
+#: src/prefs/dockBehaviorGroup.js:32
 msgid "Only reveal a floating Dock when the pointer reaches its edge"
 msgstr ""
 "Mostra un dock fluttuante solo quando il puntatore raggiunge il suo bordo"
 
-#: src/prefs/dockBehaviorGroup.js:42
+#: src/prefs/dockBehaviorGroup.js:43
 msgid "Dock Auto-hide and Window Dodge"
 msgstr "Nascondimento automatico e schivamento delle finestre del Dock"
 
-#: src/prefs/dockBehaviorGroup.js:44
+#: src/prefs/dockBehaviorGroup.js:45
 msgid "Choose when the Dock hides and how it is revealed"
 msgstr "Scegli quando nascondere il Dock e come mostrarlo"
 
-#: src/prefs/dockBehaviorGroup.js:47
+#: src/prefs/dockBehaviorGroup.js:48
 msgid "Hide the Dock when a qualifying window overlaps it"
 msgstr "Nascondi il Dock quando una finestra idonea lo sovrappone"
 
-#: src/prefs/dockBehaviorGroup.js:49
+#: src/prefs/dockBehaviorGroup.js:50
 msgid "Choose which windows make the Dock hide"
 msgstr "Scegli quali finestre nascondono il Dock"
 
-#: src/prefs/dockBehaviorGroup.js:51
+#: src/prefs/dockBehaviorGroup.js:52
 msgid "Let the pointer reveal the hidden Dock at its screen edge"
 msgstr ""
 "Consenti al puntatore di mostrare il dock nascosto sul bordo dello schermo"
 
-#: src/prefs/dockBehaviorGroup.js:55
+#: src/prefs/dockBehaviorGroup.js:56
 msgid "Choose how quickly the pointer brings the Dock back"
 msgstr "Scegli quanto rapidamente il puntatore fa riapparire il dock"
 
-#: src/prefs/dockBehaviorGroup.js:58
+#: src/prefs/dockBehaviorGroup.js:59
 msgid "Choose when the Dock appears at the screen edge"
 msgstr "Scegli quando il dock appare sul bordo dello schermo"
 
-#: src/prefs/dockBehaviorGroup.js:60
+#: src/prefs/dockBehaviorGroup.js:61
 msgid "Choose how soon the Dock hides again"
 msgstr "Scegli quanto presto il dock si nasconde di nuovo"
 
-#: src/prefs/dockBehaviorGroup.js:62
+#: src/prefs/dockBehaviorGroup.js:63
 msgid "How long the Dock waits after the pointer leaves, in milliseconds"
 msgstr "Quanto attende il dock dopo che il puntatore se ne va, in millisecondi"
 
-#: src/prefs/dockBehaviorGroup.js:73
+#: src/prefs/dockBehaviorGroup.js:74
 msgid "Dock Scroll"
 msgstr "Scorrimento del Dock"
 
-#: src/prefs/dockBehaviorGroup.js:74
+#: src/prefs/dockBehaviorGroup.js:75
 msgid "Configure scrolling over empty Dock space"
 msgstr "Configura lo scorrimento sullo spazio vuoto del Dock"
 
-#: src/prefs/dockBehaviorGroup.js:81 src/prefs/taskbarBehaviorGroup.js:108
+#: src/prefs/dockBehaviorGroup.js:82 src/prefs/taskbarBehaviorGroup.js:129
 msgid "Scroll Action"
 msgstr "Azione di scorrimento"
 
-#: src/prefs/dockBehaviorGroup.js:82
+#: src/prefs/dockBehaviorGroup.js:83
 msgid "Action used when scrolling over empty Dock space"
 msgstr "Azione usata scorrendo sullo spazio vuoto del Dock"
 
-#: src/prefs/dockBehaviorGroup.js:94 src/prefs/taskbarBehaviorGroup.js:121
-msgid "Change Volume"
-msgstr "Cambia volume"
-
-#: src/prefs/dockBehaviorGroup.js:112
+#: src/prefs/dockBehaviorGroup.js:96
 msgid "Minimum delay between Dock scroll actions in milliseconds"
 msgstr "Ritardo minimo tra le azioni di scorrimento del Dock in millisecondi"
 
-#: src/prefs/dockBehaviorGroup.js:124
+#: src/prefs/dockBehaviorGroup.js:108
 msgid "Show Dock on All Monitors"
 msgstr "Mostra il dock su tutti i monitor"
 
-#: src/prefs/dockBehaviorGroup.js:125
+#: src/prefs/dockBehaviorGroup.js:109
 msgid "Show the Dock on every connected monitor"
 msgstr "Mostra il Dock su ogni monitor collegato"
 
@@ -1585,183 +1582,195 @@ msgstr "Animazione del bordo attivo"
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "Mostra un’onda quando si attiva il bordo attivo inferiore"
 
-#: src/prefs/locationsGroup.js:12
+#: src/prefs/locationsGroup.js:13
 msgid "Drive and Volume Options"
 msgstr "Opzioni di unità e volumi"
 
-#: src/prefs/locationsGroup.js:13
+#: src/prefs/locationsGroup.js:14
 msgid "Choose which drives and network volumes appear"
 msgstr "Scegli quali unità e volumi di rete visualizzare"
 
-#: src/prefs/locationsGroup.js:17
+#: src/prefs/locationsGroup.js:18
 msgid "Only Show Mounted Drives"
 msgstr "Mostra solo le unità montate"
 
-#: src/prefs/locationsGroup.js:18
+#: src/prefs/locationsGroup.js:19
 msgid "Hide drives that are connected but not mounted"
 msgstr "Nascondi le unità collegate ma non montate"
 
-#: src/prefs/locationsGroup.js:22
+#: src/prefs/locationsGroup.js:23
 msgid "Include Network Volumes"
 msgstr "Includi i volumi di rete"
 
-#: src/prefs/locationsGroup.js:23
+#: src/prefs/locationsGroup.js:24
 msgid "Include network-mounted locations"
 msgstr "Includi le posizioni montate in rete"
 
-#: src/prefs/locationsGroup.js:30
+#: src/prefs/locationsGroup.js:31
 msgid "Common Folders"
 msgstr "Cartelle comuni"
 
-#: src/prefs/locationsGroup.js:31
+#: src/prefs/locationsGroup.js:32
 msgid "Choose which common folders appear"
 msgstr "Scegli quali cartelle comuni visualizzare"
 
-#: src/prefs/locationsGroup.js:36 src/prefs/startMenuPage.js:575
+#: src/prefs/locationsGroup.js:37 src/prefs/startMenuPage.js:574
 #: src/integration/fileManagerPlacesSection.js:25
 msgid "Home"
 msgstr "Home"
 
-#: src/prefs/locationsGroup.js:37 src/prefs/startMenuPage.js:576
+#: src/prefs/locationsGroup.js:38 src/prefs/startMenuPage.js:575
 msgid "Add the Home folder"
 msgstr "Aggiungi la cartella Home"
 
-#: src/prefs/locationsGroup.js:41 src/prefs/startMenuPage.js:580
-#: src/prefs/startMenuPage.js:697
+#: src/prefs/locationsGroup.js:42 src/prefs/startMenuPage.js:579
+#: src/prefs/startMenuPage.js:696
 #: src/startMenu/startButtonContextMenuController.js:142
 #: src/integration/fileManagerPlacesSection.js:30
 msgid "Desktop"
 msgstr "Scrivania"
 
-#: src/prefs/locationsGroup.js:42 src/prefs/startMenuPage.js:581
+#: src/prefs/locationsGroup.js:43 src/prefs/startMenuPage.js:580
 msgid "Add the Desktop folder"
 msgstr "Aggiungi la cartella Scrivania"
 
-#: src/prefs/locationsGroup.js:46 src/prefs/startMenuPage.js:585
+#: src/prefs/locationsGroup.js:47 src/prefs/startMenuPage.js:584
 #: src/integration/fileManagerPlacesSection.js:35
 msgid "Documents"
 msgstr "Documenti"
 
-#: src/prefs/locationsGroup.js:47 src/prefs/startMenuPage.js:586
+#: src/prefs/locationsGroup.js:48 src/prefs/startMenuPage.js:585
 msgid "Add the Documents folder"
 msgstr "Aggiungi la cartella Documenti"
 
-#: src/prefs/locationsGroup.js:51 src/prefs/startMenuPage.js:590
+#: src/prefs/locationsGroup.js:52 src/prefs/startMenuPage.js:589
 #: src/integration/fileManagerPlacesSection.js:40
 msgid "Downloads"
 msgstr "Scaricati"
 
-#: src/prefs/locationsGroup.js:52 src/prefs/startMenuPage.js:591
+#: src/prefs/locationsGroup.js:53 src/prefs/startMenuPage.js:590
 msgid "Add the Downloads folder"
 msgstr "Aggiungi la cartella Download"
 
-#: src/prefs/locationsGroup.js:56 src/prefs/startMenuPage.js:595
+#: src/prefs/locationsGroup.js:57 src/prefs/startMenuPage.js:594
 #: src/integration/fileManagerPlacesSection.js:45
 msgid "Music"
 msgstr "Musica"
 
-#: src/prefs/locationsGroup.js:57 src/prefs/startMenuPage.js:596
+#: src/prefs/locationsGroup.js:58 src/prefs/startMenuPage.js:595
 msgid "Add the Music folder"
 msgstr "Aggiungi la cartella Musica"
 
-#: src/prefs/locationsGroup.js:61 src/prefs/startMenuPage.js:600
+#: src/prefs/locationsGroup.js:62 src/prefs/startMenuPage.js:599
 #: src/integration/fileManagerPlacesSection.js:50
 msgid "Pictures"
 msgstr "Immagini"
 
-#: src/prefs/locationsGroup.js:62 src/prefs/startMenuPage.js:601
+#: src/prefs/locationsGroup.js:63 src/prefs/startMenuPage.js:600
 msgid "Add the Pictures folder"
 msgstr "Aggiungi la cartella Immagini"
 
-#: src/prefs/locationsGroup.js:66 src/prefs/startMenuPage.js:605
+#: src/prefs/locationsGroup.js:67 src/prefs/startMenuPage.js:604
 #: src/integration/fileManagerPlacesSection.js:55
 msgid "Videos"
 msgstr "Video"
 
-#: src/prefs/locationsGroup.js:67 src/prefs/startMenuPage.js:606
+#: src/prefs/locationsGroup.js:68 src/prefs/startMenuPage.js:605
 msgid "Add the Videos folder"
 msgstr "Aggiungi la cartella Video"
 
-#: src/prefs/locationsGroup.js:82 src/prefs/locationsGroup.js:138
+#: src/prefs/locationsGroup.js:79
+msgid "Nautilus Folder Shortcuts"
+msgstr "Scorciatoie cartelle di Nautilus"
+
+#: src/prefs/locationsGroup.js:84
+msgid "Super+E Opens File Manager"
+msgstr "Super+E apre il gestore file"
+
+#: src/prefs/locationsGroup.js:86
+msgid "Open your home folder with the system’s default file manager"
+msgstr "Apre la tua cartella Home con il gestore file predefinito del sistema"
+
+#: src/prefs/locationsGroup.js:101 src/prefs/locationsGroup.js:157
 msgid "Locations"
 msgstr "Posizioni"
 
-#: src/prefs/locationsGroup.js:83
+#: src/prefs/locationsGroup.js:102
 msgid "Configure taskbar locations and Files menu shortcuts."
 msgstr ""
 "Configura le posizioni della barra delle applicazioni e i collegamenti del "
 "menu File."
 
-#: src/prefs/locationsGroup.js:88
+#: src/prefs/locationsGroup.js:107
 msgid "Taskbar Locations"
 msgstr "Posizioni della barra delle applicazioni"
 
-#: src/prefs/locationsGroup.js:90
+#: src/prefs/locationsGroup.js:109
 msgid ""
 "Choose which folders, drives, and Trash appear with taskbar applications"
 msgstr ""
 "Scegli quali cartelle, unità e Cestino visualizzare insieme alle "
 "applicazioni della barra delle applicazioni"
 
-#: src/prefs/locationsGroup.js:95 src/prefs/locationsGroup.js:121
+#: src/prefs/locationsGroup.js:114 src/prefs/locationsGroup.js:140
 msgid "Show Locations"
 msgstr "Mostra le posizioni"
 
-#: src/prefs/locationsGroup.js:96
+#: src/prefs/locationsGroup.js:115
 msgid "Display selected locations after taskbar applications"
 msgstr ""
 "Mostra le posizioni selezionate dopo le applicazioni della barra delle "
 "applicazioni"
 
-#: src/prefs/locationsGroup.js:100 src/prefs/locationsGroup.js:126
+#: src/prefs/locationsGroup.js:119 src/prefs/locationsGroup.js:145
 msgid "Show Trash"
 msgstr "Mostra il Cestino"
 
-#: src/prefs/locationsGroup.js:101
+#: src/prefs/locationsGroup.js:120
 msgid "Add the Trash to the taskbar"
 msgstr "Aggiungi il Cestino alla barra delle applicazioni"
 
-#: src/prefs/locationsGroup.js:105 src/prefs/locationsGroup.js:131
+#: src/prefs/locationsGroup.js:124 src/prefs/locationsGroup.js:150
 msgid "Show Drives and Volumes"
 msgstr "Mostra unità e volumi"
 
-#: src/prefs/locationsGroup.js:106
+#: src/prefs/locationsGroup.js:125
 msgid "Add mounted or connected drives to the taskbar"
 msgstr "Aggiungi le unità montate o collegate alla barra delle applicazioni"
 
-#: src/prefs/locationsGroup.js:114
+#: src/prefs/locationsGroup.js:133
 msgid "Dock Locations"
 msgstr "Posizioni del Dock"
 
-#: src/prefs/locationsGroup.js:116
+#: src/prefs/locationsGroup.js:135
 msgid "Choose which folders, drives, and Trash appear with Dock applications"
 msgstr ""
 "Scegli quali cartelle, unità e Cestino visualizzare insieme alle "
 "applicazioni del Dock"
 
-#: src/prefs/locationsGroup.js:122
+#: src/prefs/locationsGroup.js:141
 msgid "Display selected locations after Dock applications"
 msgstr "Mostra le posizioni selezionate dopo le applicazioni del Dock"
 
-#: src/prefs/locationsGroup.js:127
+#: src/prefs/locationsGroup.js:146
 msgid "Add the Trash to the Dock"
 msgstr "Aggiungi il Cestino al Dock"
 
-#: src/prefs/locationsGroup.js:132
+#: src/prefs/locationsGroup.js:151
 msgid "Add mounted or connected drives to the Dock"
 msgstr "Aggiungi le unità montate o collegate al Dock"
 
-#: src/prefs/locationsGroup.js:139
+#: src/prefs/locationsGroup.js:158
 msgid "Show Trash and connected drives in the Dock."
 msgstr "Mostra il Cestino e le unità collegate nel Dock."
 
-#: src/prefs/locationsGroup.js:78
-msgid "Nautilus Folder Shortcuts"
-msgstr "Scorciatoie cartelle di Nautilus"
-
-#: src/prefs/locationsGroup.js:172
+#: src/prefs/locationsGroup.js:173
 msgid "Show common folders in the Files taskbar menu"
 msgstr "Mostra le cartelle comuni nel menu File della barra delle applicazioni"
+
+#: src/prefs/locationsGroup.js:181
+msgid "Show common folders in the Files dock menu"
+msgstr "Mostra le cartelle comuni nel menu di File nel dock"
 
 #: src/prefs/panelAppearancePage.js:58
 msgid "Taskbar Appearance"
@@ -1916,21 +1925,21 @@ msgstr ""
 msgid "Middle"
 msgstr "Centro"
 
-#: src/prefs/panelItemsPage.js:39
+#: src/prefs/panelItemsPage.js:40
 msgid "Taskbar Items"
 msgstr "Elementi della barra delle applicazioni"
 
-#: src/prefs/panelItemsPage.js:40
+#: src/prefs/panelItemsPage.js:41
 msgid "Configure optional taskbar items and the folder menu."
 msgstr ""
 "Configura gli elementi opzionali della barra delle applicazioni e il menu "
 "delle cartelle."
 
-#: src/prefs/panelItemsPage.js:49
+#: src/prefs/panelItemsPage.js:50
 msgid "Taskbar Button Padding"
 msgstr "Spaziatura interna dei pulsanti della barra delle applicazioni"
 
-#: src/prefs/panelItemsPage.js:51
+#: src/prefs/panelItemsPage.js:52
 msgid ""
 "Space between taskbar buttons. Use -1 for automatic: Just Perfection’s value "
 "when it is configured, otherwise 3 px"
@@ -1939,161 +1948,161 @@ msgstr ""
 "l’impostazione automatica: il valore di Just Perfection quando configurato, "
 "altrimenti 3 px"
 
-#: src/prefs/panelItemsPage.js:63
+#: src/prefs/panelItemsPage.js:64
 msgid "Quick Settings Icon Spacing"
 msgstr "Spaziatura icone impostazioni rapide"
 
-#: src/prefs/panelItemsPage.js:65
+#: src/prefs/panelItemsPage.js:66
 msgid ""
 "Space between the Quick Settings status icons. Use -1 for the GNOME default"
 msgstr ""
 "Spazio tra le icone di stato delle impostazioni rapide. Usa -1 per il valore "
 "predefinito di GNOME"
 
-#: src/prefs/panelItemsPage.js:86
+#: src/prefs/panelItemsPage.js:87
 msgid "Application Volume Mixer"
 msgstr "Mixer del volume delle applicazioni"
 
-#: src/prefs/panelItemsPage.js:87
+#: src/prefs/panelItemsPage.js:88
 msgid "Add per-application volume controls to Quick Settings"
 msgstr ""
 "Aggiunge controlli del volume per applicazione alle Impostazioni rapide"
 
-#: src/prefs/panelItemsPage.js:92
+#: src/prefs/panelItemsPage.js:93
 msgid "Folder Menu Location"
 msgstr "Posizione del menu cartella"
 
-#: src/prefs/panelItemsPage.js:95 src/prefs/startMenuPage.js:219
+#: src/prefs/panelItemsPage.js:96 src/prefs/startMenuPage.js:218
 msgid "Choose…"
 msgstr "Scegli…"
 
-#: src/prefs/panelItemsPage.js:110
+#: src/prefs/panelItemsPage.js:111
 msgid "No folder selected"
 msgstr "Nessuna cartella selezionata"
 
-#: src/prefs/panelItemsPage.js:171 src/prefs/panelItemsPage.js:283
+#: src/prefs/panelItemsPage.js:172 src/prefs/panelItemsPage.js:284
 #: src/prefs/dockItemsPage.js:27 src/prefs/dockItemsPage.js:119
 msgid "Left Items"
 msgstr "Elementi a sinistra"
 
-#: src/prefs/panelItemsPage.js:173
+#: src/prefs/panelItemsPage.js:174
 msgid "Move items only within their current taskbar position."
 msgstr ""
 "Sposta gli elementi solo all’interno della loro posizione attuale nella "
 "barra delle applicazioni."
 
-#: src/prefs/panelItemsPage.js:177 src/prefs/panelItemsPage.js:283
+#: src/prefs/panelItemsPage.js:178 src/prefs/panelItemsPage.js:284
 #: src/prefs/dockItemsPage.js:33 src/prefs/dockItemsPage.js:119
 msgid "Center Items"
 msgstr "Elementi al centro"
 
-#: src/prefs/panelItemsPage.js:180 src/prefs/panelItemsPage.js:283
+#: src/prefs/panelItemsPage.js:181 src/prefs/panelItemsPage.js:284
 #: src/prefs/dockItemsPage.js:36 src/prefs/dockItemsPage.js:119
 msgid "Right Items"
 msgstr "Elementi a destra"
 
-#: src/prefs/panelItemsPage.js:192 src/prefs/panelItemsPage.js:286
+#: src/prefs/panelItemsPage.js:193 src/prefs/panelItemsPage.js:287
 msgid "Left Box"
 msgstr "Riquadro sinistro"
 
-#: src/prefs/panelItemsPage.js:193 src/prefs/panelItemsPage.js:199
-#: src/prefs/panelItemsPage.js:205
+#: src/prefs/panelItemsPage.js:194 src/prefs/panelItemsPage.js:200
+#: src/prefs/panelItemsPage.js:206
 msgid "Other GNOME Shell and extension items"
 msgstr "Altri elementi di GNOME Shell e delle estensioni"
 
-#: src/prefs/panelItemsPage.js:198 src/prefs/panelItemsPage.js:286
+#: src/prefs/panelItemsPage.js:199 src/prefs/panelItemsPage.js:287
 msgid "Center Box"
 msgstr "Riquadro centrale"
 
-#: src/prefs/panelItemsPage.js:204 src/prefs/panelItemsPage.js:286
+#: src/prefs/panelItemsPage.js:205 src/prefs/panelItemsPage.js:287
 msgid "Right Box"
 msgstr "Riquadro destro"
 
-#: src/prefs/panelItemsPage.js:212 src/prefs/startButtonDialog.js:32
-#: src/prefs/startMenuPage.js:37
+#: src/prefs/panelItemsPage.js:213 src/prefs/startButtonDialog.js:33
+#: src/prefs/startMenuPage.js:38
 msgid "Start Button"
 msgstr "Pulsante Start"
 
-#: src/prefs/panelItemsPage.js:213
+#: src/prefs/panelItemsPage.js:214
 msgid "Eleven-style or original GNOME Start button"
 msgstr "Pulsante Start in stile Eleven o GNOME originale"
 
-#: src/prefs/panelItemsPage.js:220
+#: src/prefs/panelItemsPage.js:221
 msgid "Activities"
 msgstr "Attività"
 
-#: src/prefs/panelItemsPage.js:221
+#: src/prefs/panelItemsPage.js:222
 msgid "GNOME workspace overview button"
 msgstr "Pulsante della panoramica degli spazi di lavoro di GNOME"
 
-#: src/prefs/panelItemsPage.js:227 src/prefs/dockItemsPage.js:80
-#: src/startMenu/startButtonController.js:1047
+#: src/prefs/panelItemsPage.js:228 src/prefs/dockItemsPage.js:80
+#: src/startMenu/startButtonController.js:1061
 msgid "Applications"
 msgstr "Applicazioni"
 
-#: src/prefs/panelItemsPage.js:228
+#: src/prefs/panelItemsPage.js:229
 msgid "Taskbar applications"
 msgstr "Applicazioni nella barra delle applicazioni"
 
-#: src/prefs/panelItemsPage.js:234
+#: src/prefs/panelItemsPage.js:235
 msgid "Folder Menu"
 msgstr "Menu cartella"
 
-#: src/prefs/panelItemsPage.js:235
+#: src/prefs/panelItemsPage.js:236
 msgid "Selected folder shortcuts"
 msgstr "Scorciatoie della cartella selezionata"
 
-#: src/prefs/panelItemsPage.js:241
+#: src/prefs/panelItemsPage.js:242
 msgid "Tray Icon Arrow"
 msgstr "Freccia delle icone dell’area di notifica"
 
-#: src/prefs/panelItemsPage.js:242
+#: src/prefs/panelItemsPage.js:243
 msgid "Gather application tray icons behind a taskbar arrow"
 msgstr ""
 "Raggruppa le icone dell’area di notifica delle applicazioni dietro una "
 "freccia della barra delle applicazioni"
 
-#: src/prefs/panelItemsPage.js:248
+#: src/prefs/panelItemsPage.js:249
 msgid "System Menu"
 msgstr "Menu di sistema"
 
-#: src/prefs/panelItemsPage.js:249
+#: src/prefs/panelItemsPage.js:250
 msgid "Quick Settings, volume, network, and power"
 msgstr "Impostazioni rapide, volume, rete e alimentazione"
 
-#: src/prefs/panelItemsPage.js:255
+#: src/prefs/panelItemsPage.js:256
 msgid "Clock"
 msgstr "Orologio"
 
-#: src/prefs/panelItemsPage.js:261 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:262 src/prefs/showDesktopButtonDialog.js:36
 msgid "Show Desktop Button"
 msgstr "Pulsante Mostra scrivania"
 
-#: src/prefs/panelItemsPage.js:262
+#: src/prefs/panelItemsPage.js:263
 msgid "Minimize or restore all windows"
 msgstr "Minimizza o ripristina tutte le finestre"
 
-#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:283 src/prefs/dockItemsPage.js:118
 msgid "Top Items"
 msgstr "Elementi superiori"
 
-#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:283 src/prefs/dockItemsPage.js:118
 msgid "Middle Items"
 msgstr "Elementi centrali"
 
-#: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:118
+#: src/prefs/panelItemsPage.js:283 src/prefs/dockItemsPage.js:118
 msgid "Bottom Items"
 msgstr "Elementi inferiori"
 
-#: src/prefs/panelItemsPage.js:285
+#: src/prefs/panelItemsPage.js:286
 msgid "Top Box"
 msgstr "Riquadro superiore"
 
-#: src/prefs/panelItemsPage.js:285
+#: src/prefs/panelItemsPage.js:286
 msgid "Middle Box"
 msgstr "Riquadro centrale"
 
-#: src/prefs/panelItemsPage.js:285
+#: src/prefs/panelItemsPage.js:286
 msgid "Bottom Box"
 msgstr "Riquadro inferiore"
 
@@ -2110,103 +2119,115 @@ msgstr "Menu Start in stile Eleven o menu Start originale di GNOME"
 msgid "Dock applications"
 msgstr "Applicazioni del Dock"
 
-#: src/prefs/panelModeGroup.js:65 src/prefs/panelModeGroup.js:94
+#: src/prefs/panelModeGroup.js:67 src/prefs/panelModeGroup.js:97
 msgid "General"
 msgstr "Generale"
 
-#: src/prefs/panelModeGroup.js:74
+#: src/prefs/panelModeGroup.js:76
 msgid "Taskbar Mode"
 msgstr "Modalità barra delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:75
+#: src/prefs/panelModeGroup.js:77
 msgid "Show applications in the taskbar"
 msgstr "Mostra le applicazioni nella barra delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:76
+#: src/prefs/panelModeGroup.js:78
 msgid "Taskbar Mode Options"
 msgstr "Opzioni della modalità barra delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:88
+#: src/prefs/panelModeGroup.js:91
 msgid "Alternative Modes"
 msgstr "Modalità alternative"
 
-#: src/prefs/panelModeGroup.js:89
-msgid "Choose the original GNOME panel or the Windows XP theme"
-msgstr "Scegli il pannello GNOME originale o il tema Windows XP"
+#: src/prefs/panelModeGroup.js:92
+msgid "Choose the original GNOME panel or a Windows theme"
+msgstr "Scegli il pannello GNOME originale o un tema Windows"
 
-#: src/prefs/panelModeGroup.js:103
+#: src/prefs/panelModeGroup.js:106
 msgid "Default GNOME Panel"
 msgstr "Pannello GNOME predefinito"
 
-#: src/prefs/panelModeGroup.js:104
+#: src/prefs/panelModeGroup.js:107
 msgid "Hide taskbar applications and use the original Dash in Overview"
 msgstr ""
 "Nasconde le applicazioni della barra delle applicazioni e usa la Dash "
 "originale nella Panoramica"
 
-#: src/prefs/panelModeGroup.js:105
+#: src/prefs/panelModeGroup.js:108
 msgid "Default GNOME Panel Options"
 msgstr "Opzioni del pannello GNOME predefinito"
 
-#: src/prefs/panelModeGroup.js:119
+#: src/prefs/panelModeGroup.js:122
 msgid "Dock Mode"
 msgstr "Modalità Dock"
 
-#: src/prefs/panelModeGroup.js:120
+#: src/prefs/panelModeGroup.js:123
 msgid "Show applications in a separate Dock instead of the taskbar"
 msgstr ""
 "Mostra le applicazioni in un Dock separato invece che nella barra delle "
 "applicazioni"
 
-#: src/prefs/panelModeGroup.js:121
+#: src/prefs/panelModeGroup.js:124
 msgid "Dock Mode Options"
 msgstr "Opzioni della modalità Dock"
 
-#: src/prefs/panelModeGroup.js:172
+#: src/prefs/panelModeGroup.js:175
 msgid "Dock Position"
 msgstr "Posizione del Dock"
 
-#: src/prefs/panelModeGroup.js:173
+#: src/prefs/panelModeGroup.js:176
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr ""
 "Posiziona il Dock su un bordo dello schermo diverso da quello della barra "
 "delle applicazioni"
 
-#: src/prefs/panelModeGroup.js:184
+#: src/prefs/panelModeGroup.js:187
 msgid "Maximum Dock Length"
 msgstr "Lunghezza massima del Dock"
 
-#: src/prefs/panelModeGroup.js:185
+#: src/prefs/panelModeGroup.js:188
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Limita il Dock a questa percentuale della lunghezza del monitor"
 
-#: src/prefs/panelModeGroup.js:192
+#: src/prefs/panelModeGroup.js:195
 msgid "Full-width Dock"
 msgstr "Dock a larghezza completa"
 
-#: src/prefs/panelModeGroup.js:193
+#: src/prefs/panelModeGroup.js:196
 msgid "Extend the Dock fully to the monitor edge"
 msgstr "Estendi il Dock fino al bordo del monitor"
 
-#: src/prefs/panelModeGroup.js:218
+#: src/prefs/panelModeGroup.js:221
 msgid "Windows XP Theme"
 msgstr "Tema Windows XP"
 
-#: src/prefs/panelModeGroup.js:219
+#: src/prefs/panelModeGroup.js:222
 msgid "Apply a Windows XP-inspired taskbar style"
 msgstr "Applica uno stile della barra delle applicazioni ispirato a Windows XP"
 
-#: src/prefs/panelModeGroup.js:220
+#: src/prefs/panelModeGroup.js:223
 msgid "Windows XP Theme Overview Behavior"
 msgstr "Comportamento della Panoramica del tema Windows XP"
 
-#: src/prefs/panelModeGroup.js:291
+#: src/prefs/panelModeGroup.js:232
+msgid "Windows 10 Theme"
+msgstr "Tema Windows 10"
+
+#: src/prefs/panelModeGroup.js:233
+msgid "Apply a Windows 10-inspired taskbar style"
+msgstr "Applica uno stile della barra delle applicazioni ispirato a Windows 10"
+
+#: src/prefs/panelModeGroup.js:234
+msgid "Windows 10 Theme Overview Behavior"
+msgstr "Comportamento della Panoramica del tema Windows 10"
+
+#: src/prefs/panelModeGroup.js:314
 msgid "Application icons are unavailable in Default GNOME Panel mode."
 msgstr ""
 "Le icone delle applicazioni non sono disponibili in modalità Pannello GNOME "
 "predefinito."
 
-#: src/prefs/panelModeGroup.js:292
+#: src/prefs/panelModeGroup.js:315
 msgid "Change the size, spacing, and placement of taskbar icons."
 msgstr ""
 "Cambia dimensione, spaziatura e posizione delle icone della barra delle "
@@ -2216,11 +2237,11 @@ msgstr ""
 msgid "Match Thickness to Icon Size"
 msgstr "Adatta lo spessore alla dimensione delle icone"
 
-#: src/prefs/preferencesDialogs.js:20
+#: src/prefs/preferencesDialogs.js:21
 msgid "Reset all settings?"
 msgstr "Ripristinare tutte le impostazioni?"
 
-#: src/prefs/preferencesDialogs.js:22
+#: src/prefs/preferencesDialogs.js:23
 msgid ""
 "This will restore taskbar and Start Menu settings. Pinned taskbar apps and "
 "Start Menu items, including folders and their order, will be kept."
@@ -2229,52 +2250,52 @@ msgstr ""
 "menu Start. Le app bloccate nella barra delle applicazioni e gli elementi "
 "del menu Start, incluse le cartelle e il loro ordine, verranno mantenuti."
 
-#: src/prefs/preferencesDialogs.js:25 src/prefs/startIconChooser.js:141
+#: src/prefs/preferencesDialogs.js:26 src/prefs/startIconChooser.js:149
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/prefs/preferencesDialogs.js:26 src/prefs/preferencesDialogs.js:75
+#: src/prefs/preferencesDialogs.js:27 src/prefs/preferencesDialogs.js:76
 msgid "Reset"
 msgstr "Ripristina"
 
-#: src/prefs/preferencesDialogs.js:80
+#: src/prefs/preferencesDialogs.js:81
 msgid "Reset All Settings"
 msgstr "Ripristina tutte le impostazioni"
 
-#: src/prefs/preferencesDialogs.js:81
+#: src/prefs/preferencesDialogs.js:82
 msgid ""
 "Restore defaults without changing pinned taskbar apps or Start Menu items"
 msgstr ""
 "Ripristina i valori predefiniti senza modificare le app bloccate nella barra "
 "delle applicazioni o gli elementi del menu Start"
 
-#: src/prefs/preferencesDialogs.js:84
+#: src/prefs/preferencesDialogs.js:85
 msgid "Reset…"
 msgstr "Ripristina…"
 
-#: src/prefs/preferencesDialogs.js:98
+#: src/prefs/preferencesDialogs.js:99
 msgid "Set Custom Shortcut"
 msgstr "Imposta scorciatoia personalizzata"
 
-#: src/prefs/preferencesDialogs.js:111
+#: src/prefs/preferencesDialogs.js:112
 msgid "Press a keyboard shortcut"
 msgstr "Premi una scorciatoia da tastiera"
 
-#: src/prefs/preferencesDialogs.js:112
+#: src/prefs/preferencesDialogs.js:113
 msgid "Press Backspace to clear it, or Escape to cancel."
 msgstr "Premi Backspace per cancellarla, o Esc per annullare."
 
-#: src/prefs/preferencesDialogs.js:152
+#: src/prefs/preferencesDialogs.js:153
 msgid "That shortcut needs a modifier key. Try another shortcut."
 msgstr ""
 "Quella scorciatoia richiede un tasto modificatore. Prova un’altra "
 "scorciatoia."
 
-#: src/prefs/preferencesDialogs.js:166
+#: src/prefs/preferencesDialogs.js:167
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "Quella scorciatoia è già in uso. Premi una scorciatoia diversa."
 
-#: src/prefs/preferencesDialogs.js:184
+#: src/prefs/preferencesDialogs.js:185
 msgid "Choose a Folder"
 msgstr "Scegli una cartella"
 
@@ -2486,62 +2507,62 @@ msgstr "Usa un colore scelto per il separatore Mostra scrivania"
 msgid "Separator Color"
 msgstr "Colore separatore"
 
-#: src/prefs/startButtonDialog.js:23
+#: src/prefs/startButtonDialog.js:24
 msgid "Start Button Options"
 msgstr "Opzioni pulsante Start"
 
-#: src/prefs/startButtonDialog.js:43
+#: src/prefs/startButtonDialog.js:44
 msgid "Alignment and Menu"
 msgstr "Allineamento e menu"
 
-#: src/prefs/startButtonDialog.js:49 src/prefs/startMenuPage.js:82
+#: src/prefs/startButtonDialog.js:50 src/prefs/startMenuPage.js:83
 msgid "Follow Application Alignment"
 msgstr "Segui l’allineamento delle applicazioni"
 
-#: src/prefs/startButtonDialog.js:50 src/prefs/startMenuPage.js:83
+#: src/prefs/startButtonDialog.js:51 src/prefs/startMenuPage.js:84
 msgid "Move the Start button with the application icons"
 msgstr "Sposta il pulsante Start insieme alle icone delle applicazioni"
 
-#: src/prefs/startButtonDialog.js:56 src/prefs/startMenuPage.js:43
-#: src/prefs/startMenuPage.js:275
+#: src/prefs/startButtonDialog.js:57 src/prefs/startMenuPage.js:44
+#: src/prefs/startMenuPage.js:274
 msgid "Eleven-style Start Menu"
 msgstr "Menu Start in stile Eleven"
 
-#: src/prefs/startButtonDialog.js:57 src/prefs/startMenuPage.js:276
+#: src/prefs/startButtonDialog.js:58 src/prefs/startMenuPage.js:275
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "Sostituisce la griglia app di GNOME con un menu in stile Eleven"
 
-#: src/prefs/startMenuPage.js:38
+#: src/prefs/startMenuPage.js:39
 msgid "Configure the Start button position and appearance."
 msgstr "Configura posizione e aspetto del pulsante Start."
 
-#: src/prefs/startMenuPage.js:44
+#: src/prefs/startMenuPage.js:45
 msgid "Configure the optional Eleven-style application menu."
 msgstr "Configura il menu applicazioni opzionale in stile Eleven."
 
-#: src/prefs/startMenuPage.js:49
+#: src/prefs/startMenuPage.js:50
 msgid "Keyboard Shortcuts"
 msgstr "Scorciatoie da tastiera"
 
-#: src/prefs/startMenuPage.js:50
+#: src/prefs/startMenuPage.js:51
 msgid "Configure Start menu shortcuts."
 msgstr "Configura le scorciatoie del menu Start."
 
-#: src/prefs/startMenuPage.js:74
+#: src/prefs/startMenuPage.js:75
 msgid "Start Button Alignment"
 msgstr "Allineamento del pulsante Start"
 
-#: src/prefs/startMenuPage.js:76
+#: src/prefs/startMenuPage.js:77
 msgid "Choose the Start button position or follow application alignment"
 msgstr ""
 "Scegli la posizione del pulsante Start o segui l’allineamento delle "
 "applicazioni"
 
-#: src/prefs/startMenuPage.js:101
+#: src/prefs/startMenuPage.js:102
 msgid "Manual Alignment"
 msgstr "Allineamento manuale"
 
-#: src/prefs/startMenuPage.js:103
+#: src/prefs/startMenuPage.js:104
 msgid "Used when the Start button does not follow applications"
 msgstr "Usato quando il pulsante Start non segue le applicazioni"
 
@@ -2568,101 +2589,101 @@ msgstr ""
 "Spazio in pixel tra l’icona Start e il bordo del pannello quando è "
 "posizionata a una delle estremità"
 
-#: src/prefs/startMenuPage.js:206
+#: src/prefs/startMenuPage.js:205
 msgid "Show Start Button Separator"
 msgstr "Mostra il separatore del pulsante Start"
 
-#: src/prefs/startMenuPage.js:207
+#: src/prefs/startMenuPage.js:206
 msgid "Show a line between the Start button and applications"
 msgstr "Mostra una linea tra il pulsante Start e le applicazioni"
 
-#: src/prefs/startMenuPage.js:211
+#: src/prefs/startMenuPage.js:210
 msgid "Custom Start Button Icon"
 msgstr "Icona personalizzata del pulsante Start"
 
-#: src/prefs/startMenuPage.js:214
+#: src/prefs/startMenuPage.js:213
 msgid "Use the built-in icon"
 msgstr "Usa l’icona integrata"
 
-#: src/prefs/startMenuPage.js:236
+#: src/prefs/startMenuPage.js:235
 msgid "Using the built-in icon"
 msgstr "Utilizzo dell’icona integrata"
 
-#: src/prefs/startMenuPage.js:288
+#: src/prefs/startMenuPage.js:287
 msgid "Start Menu Options"
 msgstr "Opzioni del menu Start"
 
-#: src/prefs/startMenuPage.js:289
+#: src/prefs/startMenuPage.js:288
 msgid "Configure Start Menu content and behavior"
 msgstr "Configura il contenuto e il comportamento del menu Start"
 
-#: src/prefs/startMenuPage.js:294
+#: src/prefs/startMenuPage.js:293
 msgid "Show Profile Picture"
 msgstr "Mostra immagine del profilo"
 
-#: src/prefs/startMenuPage.js:295
+#: src/prefs/startMenuPage.js:294
 msgid "Use your account picture in the Start Menu"
 msgstr "Usa l’immagine del tuo account nel menu Start"
 
-#: src/prefs/startMenuPage.js:316
+#: src/prefs/startMenuPage.js:315
 msgid "Power Options in Start Menu"
 msgstr "Opzioni di alimentazione nel menu Start"
 
-#: src/prefs/startMenuPage.js:318
+#: src/prefs/startMenuPage.js:317
 msgid "Show power actions here instead of in Quick Settings"
 msgstr ""
 "Mostra qui le azioni di alimentazione invece che nelle Impostazioni rapide"
 
-#: src/prefs/startMenuPage.js:340
+#: src/prefs/startMenuPage.js:339
 msgid "Open All Apps by Default"
 msgstr "Apri Tutte le app come impostazione predefinita"
 
-#: src/prefs/startMenuPage.js:341
+#: src/prefs/startMenuPage.js:340
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr "Salta Bloccate e apri direttamente su applicazioni e categorie"
 
-#: src/prefs/startMenuPage.js:362
+#: src/prefs/startMenuPage.js:361
 msgid "Show Recommended Apps"
 msgstr "Mostra app consigliate"
 
-#: src/prefs/startMenuPage.js:363
+#: src/prefs/startMenuPage.js:362
 msgid "Display frequently used applications below pinned apps"
 msgstr "Mostra le applicazioni usate di frequente sotto le app bloccate"
 
-#: src/prefs/startMenuPage.js:375
+#: src/prefs/startMenuPage.js:374
 msgid "Hide Pinned App Titles"
 msgstr "Nascondi titoli delle app bloccate"
 
-#: src/prefs/startMenuPage.js:377
+#: src/prefs/startMenuPage.js:376
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
 "Nasconde i nomi sotto le icone bloccate e li mostra in un suggerimento al "
 "passaggio del mouse"
 
-#: src/prefs/startMenuPage.js:390
+#: src/prefs/startMenuPage.js:389
 msgid "Show Running App Indicators"
 msgstr "Mostra gli indicatori delle app in esecuzione"
 
-#: src/prefs/startMenuPage.js:391
+#: src/prefs/startMenuPage.js:390
 msgid "Show taskbar-style indicators below running application icons"
 msgstr ""
 "Mostra indicatori in stile barra delle applicazioni sotto le icone delle "
 "applicazioni in esecuzione"
 
-#: src/prefs/startMenuPage.js:439
+#: src/prefs/startMenuPage.js:438
 msgid "Organize All Apps into Categories"
 msgstr "Organizza tutte le app in categorie"
 
-#: src/prefs/startMenuPage.js:440
+#: src/prefs/startMenuPage.js:439
 msgid "Browse applications by category in the Start menu"
 msgstr "Sfoglia le applicazioni per categoria nel menu Start"
 
-#: src/prefs/startMenuPage.js:462
+#: src/prefs/startMenuPage.js:461
 msgid "Show App Grid Button"
 msgstr "Mostra pulsante griglia applicazioni"
 
-#: src/prefs/startMenuPage.js:463
+#: src/prefs/startMenuPage.js:462
 msgid ""
 "Show a Start button that opens the GNOME app grid when the Eleven-style "
 "Start Menu is disabled"
@@ -2670,234 +2691,234 @@ msgstr ""
 "Mostra un pulsante Start che apre la griglia applicazioni di GNOME quando il "
 "menu Start in stile Eleven è disattivato"
 
-#: src/prefs/startMenuPage.js:488
+#: src/prefs/startMenuPage.js:487
 msgid "App Grid Layout"
 msgstr "Disposizione griglia applicazioni"
 
-#: src/prefs/startMenuPage.js:489
+#: src/prefs/startMenuPage.js:488
 msgid "Columns and rows of the GNOME app grid"
 msgstr "Colonne e righe della griglia applicazioni di GNOME"
 
-#: src/prefs/startMenuPage.js:491
+#: src/prefs/startMenuPage.js:490
 msgid "Automatic"
 msgstr "Automatica"
 
-#: src/prefs/startMenuPage.js:492
+#: src/prefs/startMenuPage.js:491
 msgid "Custom"
 msgstr "Personalizzata"
 
-#: src/prefs/startMenuPage.js:503
+#: src/prefs/startMenuPage.js:502
 msgid "App Grid Columns"
 msgstr "Colonne griglia applicazioni"
 
-#: src/prefs/startMenuPage.js:504
+#: src/prefs/startMenuPage.js:503
 msgid "Applications across each page"
 msgstr "Applicazioni per riga in ogni pagina"
 
-#: src/prefs/startMenuPage.js:516
+#: src/prefs/startMenuPage.js:515
 msgid "App Grid Rows"
 msgstr "Righe griglia applicazioni"
 
-#: src/prefs/startMenuPage.js:517
+#: src/prefs/startMenuPage.js:516
 msgid "Applications down each page"
 msgstr "Applicazioni per colonna in ogni pagina"
 
-#: src/prefs/startMenuPage.js:543
+#: src/prefs/startMenuPage.js:542
 msgid "Follow Taskbar/Dock Theme"
 msgstr "Segui il tema della barra delle applicazioni/Dock"
 
-#: src/prefs/startMenuPage.js:544
+#: src/prefs/startMenuPage.js:543
 msgid "Use the taskbar or Dock’s effective light or dark appearance"
 msgstr ""
 "Usa l’aspetto chiaro o scuro effettivo della barra delle applicazioni o del "
 "Dock"
 
-#: src/prefs/startMenuPage.js:550
+#: src/prefs/startMenuPage.js:549
 msgid "Start Menu Appearance"
 msgstr "Aspetto del menu Start"
 
-#: src/prefs/startMenuPage.js:551
+#: src/prefs/startMenuPage.js:550
 msgid "Configure the Start Menu theme and transparency"
 msgstr "Configura il tema e la trasparenza del menu Start"
 
-#: src/prefs/startMenuPage.js:556
+#: src/prefs/startMenuPage.js:555
 msgid "Folder Shortcuts"
 msgstr "Scorciatoie delle cartelle"
 
-#: src/prefs/startMenuPage.js:557
+#: src/prefs/startMenuPage.js:556
 msgid "Choose which folders appear beside the Settings icon"
 msgstr "Scegli quali cartelle visualizzare accanto all’icona Impostazioni"
 
-#: src/prefs/startMenuPage.js:560
+#: src/prefs/startMenuPage.js:559
 msgid "Show Folder Shortcuts"
 msgstr "Mostra le scorciatoie delle cartelle"
 
-#: src/prefs/startMenuPage.js:561
+#: src/prefs/startMenuPage.js:560
 msgid "Show selected folders beside the Settings icon in the Start Menu"
 msgstr ""
 "Mostra le cartelle selezionate accanto all’icona Impostazioni nel menu Start"
 
-#: src/prefs/startMenuPage.js:643
+#: src/prefs/startMenuPage.js:642
 #: src/startMenu/startButtonContextMenuController.js:76
 msgid "Installed Apps"
 msgstr "Applicazioni installate"
 
-#: src/prefs/startMenuPage.js:644
+#: src/prefs/startMenuPage.js:643
 msgid "Open installed applications in Settings"
 msgstr "Apri le applicazioni installate nelle Impostazioni"
 
-#: src/prefs/startMenuPage.js:649
+#: src/prefs/startMenuPage.js:648
 #: src/startMenu/startButtonContextMenuController.js:84
 msgid "Event Viewer"
 msgstr "Visualizzatore eventi"
 
-#: src/prefs/startMenuPage.js:650
+#: src/prefs/startMenuPage.js:649
 msgid "Open system logs"
 msgstr "Apri i log di sistema"
 
-#: src/prefs/startMenuPage.js:655 src/startMenu/startMenuAppModel.js:51
+#: src/prefs/startMenuPage.js:654 src/startMenu/startMenuAppModel.js:51
 #: src/startMenu/startButtonContextMenuController.js:91
 msgid "System"
 msgstr "Sistema"
 
-#: src/prefs/startMenuPage.js:656
+#: src/prefs/startMenuPage.js:655
 msgid "Open system information in Settings"
 msgstr "Apri le informazioni di sistema nelle Impostazioni"
 
-#: src/prefs/startMenuPage.js:661
+#: src/prefs/startMenuPage.js:660
 #: src/startMenu/startButtonContextMenuController.js:97
 msgid "Network Connections"
 msgstr "Connessioni di rete"
 
-#: src/prefs/startMenuPage.js:662
+#: src/prefs/startMenuPage.js:661
 msgid "Open network settings"
 msgstr "Apri le impostazioni di rete"
 
-#: src/prefs/startMenuPage.js:667
+#: src/prefs/startMenuPage.js:666
 #: src/startMenu/startButtonContextMenuController.js:105
 msgid "Disk Management"
 msgstr "Gestione disco"
 
-#: src/prefs/startMenuPage.js:668
+#: src/prefs/startMenuPage.js:667
 msgid "Open GNOME Disks"
 msgstr "Apri GNOME Disks"
 
-#: src/prefs/startMenuPage.js:673
+#: src/prefs/startMenuPage.js:672
 #: src/startMenu/startButtonContextMenuController.js:110
 msgid "Terminal"
 msgstr "Terminale"
 
-#: src/prefs/startMenuPage.js:674
+#: src/prefs/startMenuPage.js:673
 msgid "Open the available terminal application"
 msgstr "Apri l’applicazione terminale disponibile"
 
-#: src/prefs/startMenuPage.js:679
+#: src/prefs/startMenuPage.js:678
 #: src/startMenu/startButtonContextMenuController.js:120
 #: src/panel/panelInteractionController.js:120
 msgid "Task Manager"
 msgstr "Gestore attività"
 
-#: src/prefs/startMenuPage.js:680
+#: src/prefs/startMenuPage.js:679
 msgid "Open the configured task manager"
 msgstr "Apri il gestore attività configurato"
 
-#: src/prefs/startMenuPage.js:685
+#: src/prefs/startMenuPage.js:684
 #: src/startMenu/startButtonContextMenuController.js:129
 msgid "File Explorer"
 msgstr "Esplora file"
 
-#: src/prefs/startMenuPage.js:686
+#: src/prefs/startMenuPage.js:685
 msgid "Open the default file manager"
 msgstr "Apri il gestore file predefinito"
 
-#: src/prefs/startMenuPage.js:691
+#: src/prefs/startMenuPage.js:690
 #: src/startMenu/startButtonContextMenuController.js:136
 msgid "Run"
 msgstr "Esegui"
 
-#: src/prefs/startMenuPage.js:692
+#: src/prefs/startMenuPage.js:691
 msgid "Open the Run Command dialog"
 msgstr "Apri la finestra di dialogo Esegui comando"
 
-#: src/prefs/startMenuPage.js:698
+#: src/prefs/startMenuPage.js:697
 msgid "Show the desktop"
 msgstr "Mostra il desktop"
 
-#: src/prefs/startMenuPage.js:703
+#: src/prefs/startMenuPage.js:702
 msgid "Start Button Context Menu"
 msgstr "Menu contestuale del pulsante Start"
 
-#: src/prefs/startMenuPage.js:705
+#: src/prefs/startMenuPage.js:704
 msgid "Choose which shortcuts appear in the Start button’s context menu"
 msgstr ""
 "Scegli quali scorciatoie visualizzare nel menu contestuale del pulsante Start"
 
-#: src/prefs/startMenuPage.js:710
+#: src/prefs/startMenuPage.js:709
 msgid "Show Context Menu Shortcuts"
 msgstr "Mostra le scorciatoie del menu contestuale"
 
-#: src/prefs/startMenuPage.js:711
+#: src/prefs/startMenuPage.js:710
 msgid "Add selected system shortcuts to the Start button context menu"
 msgstr ""
 "Aggiungi le scorciatoie di sistema selezionate al menu contestuale del "
 "pulsante Start"
 
-#: src/prefs/startMenuPage.js:754
+#: src/prefs/startMenuPage.js:753
 msgid "Start Menu Theme"
 msgstr "Tema del menu Start"
 
-#: src/prefs/startMenuPage.js:755
+#: src/prefs/startMenuPage.js:754
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "Usa un aspetto personalizzato o segui il tema di GNOME Shell"
 
-#: src/prefs/startMenuPage.js:759
+#: src/prefs/startMenuPage.js:758
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: src/prefs/startMenuPage.js:781
+#: src/prefs/startMenuPage.js:780
 msgid "Use the taskbar’s configured transparency level"
 msgstr ""
 "Usa il livello di trasparenza configurato della barra delle applicazioni"
 
-#: src/prefs/startMenuPage.js:787
+#: src/prefs/startMenuPage.js:786
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr ""
 "Disabilita la sfocatura dei popup di Blur My Shell per usare questa opzione"
 
-#: src/prefs/startMenuPage.js:790
+#: src/prefs/startMenuPage.js:789
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr ""
 "Disabilita la sfocatura del pannello e dei popup di Blur My Shell per usare "
 "questa opzione"
 
-#: src/prefs/startMenuPage.js:793
+#: src/prefs/startMenuPage.js:792
 msgid "Follow Taskbar Transparency"
 msgstr "Segui la trasparenza della barra delle applicazioni"
 
-#: src/prefs/startMenuPage.js:842
+#: src/prefs/startMenuPage.js:841
 msgid "Center Start Menu on Monitor"
 msgstr "Centra il menu Start sul monitor"
 
-#: src/prefs/startMenuPage.js:844
+#: src/prefs/startMenuPage.js:843
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr ""
 "Posiziona il menu al vero centro orizzontale invece che sopra il pulsante "
 "Start"
 
-#: src/prefs/startMenuPage.js:899
+#: src/prefs/startMenuPage.js:898
 msgid "Super Opens Start Menu"
 msgstr "Super apre il menu Start"
 
-#: src/prefs/startMenuPage.js:900
+#: src/prefs/startMenuPage.js:899
 msgid "Use Super for the Start Menu and move Overview to Super+Tab"
 msgstr "Usa Super per il menu Start e sposta la Panoramica su Super+Tab"
 
-#: src/prefs/startMenuPage.js:912
+#: src/prefs/startMenuPage.js:911
 msgid "Super+Tab Opens Start Menu"
 msgstr "Super+Tab apre il menu Start"
 
-#: src/prefs/startMenuPage.js:914
+#: src/prefs/startMenuPage.js:913
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
@@ -2905,276 +2926,272 @@ msgstr ""
 "Usa la scorciatoia di cambio applicazione di GNOME per il menu Start in "
 "stile Eleven mentre è abilitato"
 
-#: src/prefs/locationsGroup.js:83
-msgid "Super+E Opens File Manager"
-msgstr "Super+E apre il gestore file"
-
-#: src/prefs/locationsGroup.js:85
-msgid "Open your home folder with the system’s default file manager"
-msgstr "Apre la tua cartella Home con il gestore file predefinito del sistema"
-
-#: src/prefs/startMenuPage.js:968
+#: src/prefs/startMenuPage.js:950
 msgid "Not set"
 msgstr "Non impostato"
 
-#: src/prefs/startMenuPage.js:972
+#: src/prefs/startMenuPage.js:954
 msgid "Set custom shortcut"
 msgstr "Imposta scorciatoia personalizzata"
 
-#: src/prefs/startMenuPage.js:977
+#: src/prefs/startMenuPage.js:959
 msgid "Clear custom shortcut"
 msgstr "Cancella scorciatoia personalizzata"
 
-#: src/prefs/startMenuPage.js:982
+#: src/prefs/startMenuPage.js:964
 msgid "Custom Start Menu Shortcut"
 msgstr "Scorciatoia personalizzata del menu Start"
 
-#: src/prefs/startMenuPage.js:1001
+#: src/prefs/startMenuPage.js:983
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr ""
 "Disattiva la scorciatoia Super per usare una scorciatoia personalizzata"
 
-#: src/prefs/startMenuPage.js:1004
+#: src/prefs/startMenuPage.js:986
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr "Disattiva Super+Tab per usare una scorciatoia personalizzata"
 
-#: src/prefs/startMenuPage.js:1007
+#: src/prefs/startMenuPage.js:989
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
 "Scegli una qualsiasi scorciatoia da tastiera non utilizzata; nessuna è "
 "assegnata per impostazione predefinita"
 
-#: src/prefs/taskbarBehaviorGroup.js:31
+#: src/prefs/taskbarBehaviorGroup.js:36
+msgid "Change Volume"
+msgstr "Cambia volume"
+
+#: src/prefs/taskbarBehaviorGroup.js:52
 msgid "Taskbar Behavior"
 msgstr "Comportamento della barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:37
+#: src/prefs/taskbarBehaviorGroup.js:58
 msgid "Auto-hide Taskbar"
 msgstr "Nascondi automaticamente la barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:38
+#: src/prefs/taskbarBehaviorGroup.js:59
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr ""
 "Mostra la barra delle applicazioni quando il puntatore raggiunge il bordo "
 "dello schermo"
 
-#: src/prefs/taskbarBehaviorGroup.js:49
+#: src/prefs/taskbarBehaviorGroup.js:70
 msgid "Taskbar Auto-hide and Window Dodge"
 msgstr ""
 "Nascondimento automatico e schivamento delle finestre della barra delle "
 "applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:51
+#: src/prefs/taskbarBehaviorGroup.js:72
 msgid "Choose when the taskbar hides and how it is revealed"
 msgstr "Scegli quando nascondere la barra delle applicazioni e come mostrarla"
 
-#: src/prefs/taskbarBehaviorGroup.js:54
+#: src/prefs/taskbarBehaviorGroup.js:75
 msgid "Hide the taskbar when a qualifying window overlaps it"
 msgstr ""
 "Nascondi la barra delle applicazioni quando una finestra idonea la sovrappone"
 
-#: src/prefs/taskbarBehaviorGroup.js:57
+#: src/prefs/taskbarBehaviorGroup.js:78
 msgid "Choose which windows make the taskbar hide"
 msgstr "Scegli quali finestre nascondono la barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:60
+#: src/prefs/taskbarBehaviorGroup.js:81
 msgid "Let the pointer reveal the hidden taskbar at its screen edge"
 msgstr ""
 "Consenti al puntatore di mostrare la barra delle applicazioni nascosta sul "
 "bordo dello schermo"
 
-#: src/prefs/taskbarBehaviorGroup.js:64
+#: src/prefs/taskbarBehaviorGroup.js:85
 msgid "Choose how quickly the pointer brings the taskbar back"
 msgstr ""
 "Scegli quanto rapidamente il puntatore fa riapparire la barra delle "
 "applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:67
+#: src/prefs/taskbarBehaviorGroup.js:88
 msgid "Choose when the taskbar appears at the screen edge"
 msgstr ""
 "Scegli quando la barra delle applicazioni appare sul bordo dello schermo"
 
-#: src/prefs/taskbarBehaviorGroup.js:69
+#: src/prefs/taskbarBehaviorGroup.js:90
 msgid "Choose how soon the taskbar hides again"
 msgstr "Scegli quanto presto la barra delle applicazioni si nasconde di nuovo"
 
-#: src/prefs/taskbarBehaviorGroup.js:71
+#: src/prefs/taskbarBehaviorGroup.js:92
 msgid "How long the taskbar waits after the pointer leaves, in milliseconds"
 msgstr ""
 "Quanto attende la barra delle applicazioni dopo che il puntatore se ne va, "
 "in millisecondi"
 
-#: src/prefs/taskbarBehaviorGroup.js:100
+#: src/prefs/taskbarBehaviorGroup.js:121
 msgid "Taskbar Scroll"
 msgstr "Scorrimento della barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:101
+#: src/prefs/taskbarBehaviorGroup.js:122
 msgid "Configure scrolling over empty taskbar space"
 msgstr ""
 "Configura lo scorrimento sullo spazio vuoto della barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:109
+#: src/prefs/taskbarBehaviorGroup.js:130
 msgid "Action used when scrolling over empty taskbar space"
 msgstr ""
 "Azione usata scorrendo sullo spazio vuoto della barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:139
+#: src/prefs/taskbarBehaviorGroup.js:143
 msgid "Minimum delay between taskbar scroll actions in milliseconds"
 msgstr ""
 "Ritardo minimo tra le azioni di scorrimento della barra delle applicazioni "
 "in millisecondi"
 
-#: src/prefs/taskbarBehaviorGroup.js:161
+#: src/prefs/taskbarBehaviorGroup.js:165
 msgid "Taskbar Menus and Notifications"
 msgstr "Menu e notifiche della barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:163
+#: src/prefs/taskbarBehaviorGroup.js:167
 msgid "Configure taskbar menu activation and notification banner placement"
 msgstr ""
 "Configura l’attivazione dei menu della barra delle applicazioni e il "
 "posizionamento dei banner di notifica"
 
-#: src/prefs/taskbarBehaviorGroup.js:168
+#: src/prefs/taskbarBehaviorGroup.js:172
 msgid "Taskbar Menus Require Click"
 msgstr "I menu della barra delle applicazioni richiedono un clic"
 
-#: src/prefs/taskbarBehaviorGroup.js:169
+#: src/prefs/taskbarBehaviorGroup.js:173
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr ""
 "Passa tra i menu di orologio, sistema e area di notifica solo quando vengono "
 "cliccati"
 
-#: src/prefs/taskbarBehaviorGroup.js:175
+#: src/prefs/taskbarBehaviorGroup.js:179
 msgid "Taskbar-aligned Notification Banners"
 msgstr "Banner di notifica allineati alla barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:176
+#: src/prefs/taskbarBehaviorGroup.js:180
 msgid "Follow the taskbar edge and the clock position"
 msgstr ""
 "Segui il bordo della barra delle applicazioni e la posizione dell’orologio"
 
-#: src/prefs/taskbarBehaviorGroup.js:205
+#: src/prefs/taskbarBehaviorGroup.js:209
 msgid "Automatic Fallback"
 msgstr "Ripiego automatico"
 
-#: src/prefs/taskbarBehaviorGroup.js:213
+#: src/prefs/taskbarBehaviorGroup.js:217
 msgid "Task Manager Application"
 msgstr "Applicazione gestore attività"
 
-#: src/prefs/taskbarBehaviorGroup.js:214
+#: src/prefs/taskbarBehaviorGroup.js:218
 msgid "Application opened from the taskbar context menu"
 msgstr ""
 "Applicazione aperta dal menu contestuale della barra delle applicazioni"
 
-#: src/prefs/taskbarBehaviorGroup.js:233
+#: src/prefs/taskbarBehaviorGroup.js:237
 msgid "Show Taskbar on All Monitors"
 msgstr "Mostra la barra delle applicazioni su tutti i monitor"
 
-#: src/prefs/taskbarBehaviorGroup.js:234
+#: src/prefs/taskbarBehaviorGroup.js:238
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 "Mostra Attività, applicazioni, orologio e menu di sistema su ogni monitor"
 
-#: src/prefs/windowPreviewDialog.js:25 src/prefs/windowPreviewDialog.js:34
+#: src/prefs/windowPreviewDialog.js:28 src/prefs/windowPreviewDialog.js:37
 msgid "Window Preview Options"
 msgstr "Opzioni anteprima finestre"
 
-#: src/prefs/windowPreviewDialog.js:46
+#: src/prefs/windowPreviewDialog.js:49
 msgid "Preview Timing"
 msgstr "Tempi anteprima"
 
-#: src/prefs/windowPreviewDialog.js:47
+#: src/prefs/windowPreviewDialog.js:50
 msgid "Control when previews open and close"
 msgstr "Controlla quando le anteprime si aprono e si chiudono"
 
-#: src/prefs/windowPreviewDialog.js:55
+#: src/prefs/windowPreviewDialog.js:58
 msgid "Time Before Showing"
 msgstr "Tempo prima della visualizzazione"
 
-#: src/prefs/windowPreviewDialog.js:56
+#: src/prefs/windowPreviewDialog.js:59
 msgid "Delay in milliseconds before opening a preview"
 msgstr "Ritardo in millisecondi prima dell’apertura di un’anteprima"
 
-#: src/prefs/windowPreviewDialog.js:68
+#: src/prefs/windowPreviewDialog.js:71
 msgid "Time Before Hiding"
 msgstr "Tempo prima di nascondere"
 
-#: src/prefs/windowPreviewDialog.js:69
+#: src/prefs/windowPreviewDialog.js:72
 msgid "Delay in milliseconds before closing a preview"
 msgstr "Ritardo in millisecondi prima della chiusura di un’anteprima"
 
-#: src/prefs/windowPreviewDialog.js:78
+#: src/prefs/windowPreviewDialog.js:81
 msgid "Preview Interaction"
 msgstr "Interazione con l’anteprima"
 
-#: src/prefs/windowPreviewDialog.js:83
+#: src/prefs/windowPreviewDialog.js:86
 msgid "Middle-Click Closes the Window"
 msgstr "Il clic centrale chiude la finestra"
 
-#: src/prefs/windowPreviewDialog.js:84
+#: src/prefs/windowPreviewDialog.js:87
 msgid "Close a window by middle-clicking its preview"
 msgstr "Chiudi una finestra facendo clic centrale sulla sua anteprima"
 
-#: src/prefs/windowPreviewDialog.js:88
+#: src/prefs/windowPreviewDialog.js:91
 msgid "Window Peeking"
 msgstr "Visualizzazione temporanea finestra"
 
-#: src/prefs/windowPreviewDialog.js:89
+#: src/prefs/windowPreviewDialog.js:92
 msgid "Show a window above other windows while hovering its preview"
 msgstr ""
 "Mostra una finestra sopra le altre passando il puntatore sulla sua anteprima"
 
-#: src/prefs/windowPreviewDialog.js:94
+#: src/prefs/windowPreviewDialog.js:97
 msgid "Enable Window Peeking"
 msgstr "Abilita visualizzazione temporanea finestra"
 
-#: src/prefs/windowPreviewDialog.js:95
+#: src/prefs/windowPreviewDialog.js:98
 msgid "Bring the hovered window to the front temporarily"
 msgstr "Porta temporaneamente in primo piano la finestra sotto il puntatore"
 
-#: src/prefs/windowPreviewDialog.js:102
+#: src/prefs/windowPreviewDialog.js:105
 msgid "Time Before Peeking"
 msgstr "Tempo prima della visualizzazione temporanea"
 
-#: src/prefs/windowPreviewDialog.js:103
+#: src/prefs/windowPreviewDialog.js:106
 msgid "Delay in milliseconds before peeking"
 msgstr "Ritardo in millisecondi prima della visualizzazione temporanea"
 
-#: src/prefs/windowPreviewDialog.js:115
+#: src/prefs/windowPreviewDialog.js:118
 msgid "Other Window Opacity"
 msgstr "Opacità delle altre finestre"
 
-#: src/prefs/windowPreviewDialog.js:116
+#: src/prefs/windowPreviewDialog.js:119
 msgid "Opacity of other windows while peeking"
 msgstr "Opacità delle altre finestre durante la visualizzazione temporanea"
 
-#: src/prefs/windowDodgeGroup.js:42
-msgid "Enable Dodge Windows"
-msgstr "Abilita l’evitamento delle finestre"
-
-#: src/prefs/windowDodgeGroup.js:52
-msgid "Dodge Windows Mode"
-msgstr "Modalità di evitamento delle finestre"
-
-#: src/prefs/windowDodgeGroup.js:71
-msgid "Reveal on Pointer"
-msgstr "Mostra al passaggio del puntatore"
-
-#: src/prefs/windowDodgeModeChoices.js:12
+#: src/prefs/windowDodgeGroup.js:20
 msgid "All windows"
 msgstr "Tutte le finestre"
 
-#: src/prefs/windowDodgeModeChoices.js:16
+#: src/prefs/windowDodgeGroup.js:24
 msgid "Only focused application’s windows"
 msgstr "Solo le finestre dell’applicazione attiva"
 
-#: src/prefs/windowDodgeModeChoices.js:20
+#: src/prefs/windowDodgeGroup.js:28
 msgid "Only focused window"
 msgstr "Solo la finestra attiva"
 
-#: src/prefs/windowDodgeModeChoices.js:24
+#: src/prefs/windowDodgeGroup.js:32
 msgid "Only maximized windows"
 msgstr "Solo finestre massimizzate"
+
+#: src/prefs/windowDodgeGroup.js:63
+msgid "Enable Dodge Windows"
+msgstr "Abilita l’evitamento delle finestre"
+
+#: src/prefs/windowDodgeGroup.js:73
+msgid "Dodge Windows Mode"
+msgstr "Modalità di evitamento delle finestre"
+
+#: src/prefs/windowDodgeGroup.js:92
+msgid "Reveal on Pointer"
+msgstr "Mostra al passaggio del puntatore"
 
 #: src/prefs/windowSwitchingPage.js:15
 msgid "Window Switching"
@@ -3344,27 +3361,27 @@ msgstr "Impostazioni"
 msgid "Power Options"
 msgstr "Opzioni di alimentazione"
 
-#: src/startMenu/startMenuPowerController.js:104
+#: src/startMenu/startMenuPowerController.js:123
 msgid "Suspend"
 msgstr "Sospendi"
 
-#: src/startMenu/startMenuPowerController.js:111
+#: src/startMenu/startMenuPowerController.js:130
 msgid "Restart"
 msgstr "Riavvia"
 
-#: src/startMenu/startMenuPowerController.js:118
+#: src/startMenu/startMenuPowerController.js:137
 msgid "Power Off"
 msgstr "Spegni"
 
-#: src/startMenu/startMenuPowerController.js:129
+#: src/startMenu/startMenuPowerController.js:148
 msgid "Lock Screen"
 msgstr "Blocca schermo"
 
-#: src/startMenu/startMenuPowerController.js:136
+#: src/startMenu/startMenuPowerController.js:155
 msgid "Log Out"
 msgstr "Termina sessione"
 
-#: src/startMenu/startMenuPowerController.js:143
+#: src/startMenu/startMenuPowerController.js:162
 msgid "Switch User"
 msgstr "Cambia utente"
 
@@ -3453,26 +3470,26 @@ msgstr "Apri"
 msgid "Trash"
 msgstr "Cestino"
 
-#: src/taskbar/taskbarAppearanceController.js:686
-#: src/taskbar/taskbarController.js:1422 src/taskbar/taskbarController.js:1424
+#: src/taskbar/taskbarAppearanceController.js:699
+#: src/taskbar/taskbarController.js:1420 src/taskbar/taskbarController.js:1422
 msgid "running"
 msgstr "in esecuzione"
 
-#: src/startMenu/startButtonController.js:550
+#: src/startMenu/startButtonController.js:551
 msgid "Start Menu Settings"
 msgstr "Impostazioni del menu Start"
 
-#: src/startMenu/startButtonController.js:555
+#: src/startMenu/startButtonController.js:556
 #: src/panel/panelInteractionController.js:155
 msgid "Dock Settings"
 msgstr "Impostazioni del Dock"
 
-#: src/startMenu/startButtonController.js:560
+#: src/startMenu/startButtonController.js:561
 #: src/panel/panelInteractionController.js:155
 msgid "Taskbar Settings"
 msgstr "Impostazioni della barra delle applicazioni"
 
-#: src/startMenu/startButtonController.js:1047
+#: src/startMenu/startButtonController.js:1061
 msgid "Start"
 msgstr "Start"
 
@@ -3486,35 +3503,39 @@ msgstr "%s alternativa"
 msgid "%s (Symbolic)"
 msgstr "%s (simbolica)"
 
-#: src/prefs/startIconChooser.js:99 src/prefs/startIconChooser.js:216
+#: src/prefs/startIconChooser.js:105 src/prefs/startIconChooser.js:224
 msgid "Default Icon"
 msgstr "Icona predefinita"
 
-#: src/prefs/startIconChooser.js:101 src/prefs/startIconChooser.js:222
+#: src/prefs/startIconChooser.js:107 src/prefs/startIconChooser.js:230
 msgid "GNOME"
 msgstr "GNOME"
 
-#: src/prefs/startIconChooser.js:103 src/prefs/startIconChooser.js:227
+#: src/prefs/startIconChooser.js:109 src/prefs/startIconChooser.js:235
 msgid "Eleven-style"
 msgstr "Stile Eleven"
 
-#: src/prefs/startIconChooser.js:120 src/prefs/startIconChooser.js:352
+#: src/prefs/startIconChooser.js:111 src/prefs/startIconChooser.js:240
+msgid "Ten-style"
+msgstr "Stile Ten"
+
+#: src/prefs/startIconChooser.js:128 src/prefs/startIconChooser.js:365
 msgid "Choose a Start Button Icon"
 msgstr "Scegli un’icona per il pulsante Start"
 
-#: src/prefs/startIconChooser.js:147
+#: src/prefs/startIconChooser.js:155
 msgid "Select"
 msgstr "Seleziona"
 
-#: src/prefs/startIconChooser.js:167
+#: src/prefs/startIconChooser.js:175
 msgid "Search icons…"
 msgstr "Cerca icone…"
 
-#: src/prefs/startIconChooser.js:201
+#: src/prefs/startIconChooser.js:209
 msgid "Browse Files…"
 msgstr "Sfoglia file…"
 
-#: src/prefs/startIconChooser.js:336
+#: src/prefs/startIconChooser.js:349
 msgid "Image Files"
 msgstr "File immagine"
 
@@ -3565,19 +3586,19 @@ msgstr "Applicazione"
 msgid "%s volume"
 msgstr "Volume di %s"
 
-#: src/integration/volumeMixerController.js:314
+#: src/integration/volumeMixerController.js:325
 msgid "Mixer"
 msgstr "Mixer"
 
-#: src/integration/volumeMixerController.js:325
+#: src/integration/volumeMixerController.js:336
 msgid "Open application volume controls"
 msgstr "Apri i controlli del volume delle applicazioni"
 
-#: src/integration/volumeMixerController.js:328
+#: src/integration/volumeMixerController.js:339
 msgid "Application Volume"
 msgstr "Volume delle applicazioni"
 
-#: src/integration/volumeMixerController.js:405
+#: src/integration/volumeMixerController.js:416
 msgid "No applications are playing audio"
 msgstr "Nessuna applicazione sta riproducendo audio"
 
@@ -3774,7 +3795,3 @@ msgstr "Nessuna applicazione sta riproducendo audio"
 
 #~ msgid "Auto-hide Panel"
 #~ msgstr "Nascondi automaticamente il pannello"
-
-#: src/prefs/locationsGroup.js:180
-msgid "Show common folders in the Files dock menu"
-msgstr "Mostra le cartelle comuni nel menu di File nel dock"
