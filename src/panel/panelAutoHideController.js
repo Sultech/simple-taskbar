@@ -94,6 +94,7 @@ export class PanelAutoHideController {
         this._pointerReveal = false;
         this._positionTarget = null;
         this._positionTargetProperty = null;
+        this._positionAnimating = false;
         this._revealDwellTimeoutId = 0;
         this._barrier = null;
         this._pressureBarrier = null;
@@ -327,6 +328,8 @@ export class PanelAutoHideController {
         }
         actor.remove_transition('x');
         actor.remove_transition('y');
+        this._positionAnimating = false;
+        this._syncUnredirect();
         actor[property] = offset;
         this._positionTarget = offset;
         this._positionTargetProperty = property;
@@ -503,10 +506,16 @@ export class PanelAutoHideController {
             return;
         }
 
-        if (this._enabled() || this._dodgeEnabled)
+        if ((this._enabled() || this._dodgeEnabled) &&
+            !this._isFullyHidden())
             this._disableUnredirect();
         else
             this._restoreUnredirect();
+    }
+
+    _isFullyHidden() {
+        return this._hidden && (this._enabled() || this._dodgeActive) &&
+            !this._positionAnimating;
     }
 
     _restoreFullscreenVisibility() {
@@ -968,6 +977,8 @@ export class PanelAutoHideController {
         this._positionTargetProperty = property;
         actor.remove_transition('x');
         actor.remove_transition('y');
+        this._positionAnimating = animate;
+        this._syncUnredirect();
         if (!animate) {
             actor[property] = offset;
             this._syncMonitorClip();
@@ -986,6 +997,8 @@ export class PanelAutoHideController {
                 frameId = 0;
             },
             onComplete: () => {
+                this._positionAnimating = false;
+                this._syncUnredirect();
                 this._syncMonitorClip();
                 Main.layoutManager._queueUpdateRegions();
                 if (!this._hidden && this._hideAfterReveal) {
