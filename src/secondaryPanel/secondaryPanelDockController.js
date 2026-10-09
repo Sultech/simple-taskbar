@@ -4,6 +4,7 @@
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {
     TransientSignalHolder,
@@ -51,6 +52,7 @@ import {
 import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
+const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 const EXTERNAL_DOCK_STYLES = new Set(BLUR_MY_SHELL_DOCK_STYLES);
 const DOCK_BACKGROUND_CLASS = 'dash-background';
@@ -432,11 +434,13 @@ export class SecondaryPanelDockController {
             height: strutGeometry.height,
         });
         Shell.util_set_hidden_from_pick(this._dockStrutActor, true);
-        Main.layoutManager.addChrome(this._dockStrutActor, {
+        const chromeParams = {
             affectsStruts: true,
-            affectsInputRegion: false,
             trackFullscreen: true,
-        });
+        };
+        if (SHELL_VERSION < 50)
+            chromeParams.affectsInputRegion = false;
+        Main.layoutManager.addChrome(this._dockStrutActor, chromeParams);
     }
 
     _connectSignals() {
