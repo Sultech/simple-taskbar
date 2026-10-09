@@ -635,6 +635,8 @@ export class SecondaryPanelController {
                 this._applyLayout();
                 this.syncTheme();
             },
+            'changed::windows-10-theme-enabled',
+            () => this.syncTheme(),
             this._signalHolder
         );
         this._settings.connectObject('changed::app-alignment', () => {

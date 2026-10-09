@@ -766,6 +766,10 @@
       <default>false</default>
       <summary>Use Windows XP taskbar dimensions</summary>
     </key>
+    <key name="windows-10-theme-enabled" type="b">
+      <default>false</default>
+      <summary>Use the Windows 10 taskbar style</summary>
+    </key>
     <key name="windows-xp-previous-mode" type="s">
       <choices>
         <choice value="taskbar"/>
@@ -773,7 +777,7 @@
         <choice value="dock"/>
       </choices>
       <default>'taskbar'</default>
-      <summary>Panel mode to restore after Windows XP mode</summary>
+      <summary>Panel mode to restore after Windows XP or Windows 10 mode</summary>
     </key>
     <key name="taskbar-mode-settings" type="a{sv}">
       <default>{}</default>
@@ -799,11 +803,20 @@
       <default>false</default>
       <summary>Whether Windows XP mode settings are saved</summary>
     </key>
+    <key name="windows-10-mode-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for Windows 10 mode</summary>
+    </key>
+    <key name="windows-10-mode-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether Windows 10 mode settings are saved</summary>
+    </key>
     <key name="active-panel-mode" type="s">
       <choices>
         <choice value="taskbar"/>
         <choice value="default-panel"/>
         <choice value="windows-xp"/>
+        <choice value="windows-10"/>
       </choices>
       <default>'taskbar'</default>
       <summary>Panel mode whose settings are currently active</summary>

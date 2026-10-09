@@ -11,7 +11,9 @@ import {
     PANEL_MODE_DEFAULT,
     PANEL_MODE_DOCK,
     PANEL_MODE_TASKBAR,
+    PANEL_MODE_WINDOWS_10,
     initializeDockAxisProfiles,
+    restorePanelModeAfterWindowsTheme,
     setDockPosition,
     setPanelMode,
     setPanelPosition,
@@ -80,13 +82,14 @@ export function addPanelModeGroup({
         },
         active: !settings.get_boolean('default-gnome-panel') &&
             !settings.get_boolean('dock-mode') &&
-            !settings.get_boolean('windows-xp-theme-enabled'),
+            !settings.get_boolean('windows-xp-theme-enabled') &&
+            !settings.get_boolean('windows-10-theme-enabled'),
         addRow: row => panelModeGroup.add(row),
     });
 
     const alternativeModesRow = new Adw.ExpanderRow({
         title: _('Alternative Modes'),
-        subtitle: _('Choose the original GNOME panel or the Windows XP theme'),
+        subtitle: _('Choose the original GNOME panel or a Windows theme'),
     });
     panelModeGroup.add(alternativeModesRow);
 
@@ -222,6 +225,17 @@ export function addPanelModeGroup({
         addRow: row => alternativeModesRow.add_row(row),
     });
 
+    const {
+        toggle: windows10ThemeSwitch,
+        optionsButton: windows10OverviewButton,
+    } = addModeRow(settings, {
+        title: _('Windows 10 Theme'),
+        subtitle: _('Apply a Windows 10-inspired taskbar style'),
+        tooltip: _('Windows 10 Theme Overview Behavior'),
+        active: settings.get_boolean('windows-10-theme-enabled'),
+        addRow: row => alternativeModesRow.add_row(row),
+    });
+
     return {
         taskbarModeRow,
         taskbarModeSwitch,
@@ -231,6 +245,8 @@ export function addPanelModeGroup({
         defaultGnomePanelOverviewButton,
         windowsXpThemeRow,
         windowsXpOverviewButton,
+        windows10ThemeSwitch,
+        windows10OverviewButton,
         dockModeRow,
         dockModeSwitch,
         dockOverviewButton,
@@ -253,6 +269,8 @@ export function connectDefaultGnomePanelSync({
     defaultGnomePanelSwitch,
     defaultGnomePanelOverviewButton,
     windowsXpOverviewButton,
+    windows10ThemeSwitch,
+    windows10OverviewButton,
     dockModeSwitch,
     dockOverviewButton,
     dockPositionRow,
@@ -270,10 +288,13 @@ export function connectDefaultGnomePanelSync({
         const windowsXpModeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
+        const windows10ModeEnabled = settings.get_boolean(
+            'windows-10-theme-enabled'
+        );
         const defaultPanelRestrictions = enabled && !dockModeEnabled;
         syncingPanelModes = true;
         const taskbarModeEnabled = !enabled && !dockModeEnabled &&
-            !windowsXpModeEnabled;
+            !windowsXpModeEnabled && !windows10ModeEnabled;
         taskbarModeSwitch.active = taskbarModeEnabled;
         defaultGnomePanelSwitch.active = enabled;
         taskbarModeRow.sensitive = true;
@@ -282,6 +303,8 @@ export function connectDefaultGnomePanelSync({
         defaultGnomePanelOverviewButton.sensitive = enabled &&
             !dockModeEnabled;
         windowsXpOverviewButton.sensitive = windowsXpModeEnabled;
+        windows10ThemeSwitch.active = windows10ModeEnabled;
+        windows10OverviewButton.sensitive = windows10ModeEnabled;
         appearanceGroup.visible = !dockModeEnabled &&
             !defaultPanelRestrictions;
         appearanceGroup.sensitive = !dockModeEnabled &&
@@ -339,7 +362,8 @@ export function connectDefaultGnomePanelSync({
             const taskbarModeEnabled =
                 !settings.get_boolean('default-gnome-panel') &&
                 !settings.get_boolean('dock-mode') &&
-                !settings.get_boolean('windows-xp-theme-enabled');
+                !settings.get_boolean('windows-xp-theme-enabled') &&
+                !settings.get_boolean('windows-10-theme-enabled');
             if (enabled === taskbarModeEnabled)
                 return;
 
@@ -348,6 +372,24 @@ export function connectDefaultGnomePanelSync({
             syncDockMode();
         }
     );
+    windows10ThemeSwitch.connect('notify::active', () => {
+        if (syncingPanelModes)
+            return;
+
+        const enabled = windows10ThemeSwitch.active;
+        if (enabled === settings.get_boolean('windows-10-theme-enabled'))
+            return;
+
+        const modeSettings = createSettings();
+        modeSettings.delay();
+        if (enabled)
+            setPanelMode(modeSettings, PANEL_MODE_WINDOWS_10);
+        else
+            restorePanelModeAfterWindowsTheme(modeSettings);
+        modeSettings.apply();
+        syncDefaultGnomePanel();
+        syncDockMode();
+    });
     let syncingDockMode = false;
     const syncDockMode = () => {
         syncingDockMode = true;
@@ -433,6 +475,11 @@ export function connectDefaultGnomePanelSync({
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
+        syncDefaultGnomePanel
+    );
+    connectSettings(
+        settings,
+        'changed::windows-10-theme-enabled',
         syncDefaultGnomePanel
     );
     connectSettings(settings, 'changed::dock-mode', () => {

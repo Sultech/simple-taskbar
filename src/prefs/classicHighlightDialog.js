@@ -39,13 +39,14 @@ function addHighlightExtentRows(group, settings, connectSettings, {
     lower,
     upper,
     available,
+    locked,
 }) {
     const stored = settings.get_int(keys.size);
     const aligned = Math.max(
         lower,
         matchHighlightSizeParity(stored, iconSize)
     );
-    if (aligned !== stored)
+    if (!locked && aligned !== stored)
         settings.set_int(keys.size, aligned);
 
     const toggle = createSwitchRow(settings, {
@@ -68,8 +69,8 @@ function addHighlightExtentRows(group, settings, connectSettings, {
         connectSettings
     );
     const syncSensitivity = () => {
-        toggle.sensitive = available;
-        row.sensitive = available && toggle.active;
+        toggle.sensitive = available && !locked;
+        row.sensitive = available && !locked && toggle.active;
     };
     toggle.connect('notify::active', syncSensitivity);
     syncSensitivity();
@@ -100,6 +101,9 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             createPreferencesDialogContent(this);
         const isClassic = settings.get_string('taskbar-highlight-style') ===
             TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
+        const windows10Theme = settings.get_boolean(
+            'windows-10-theme-enabled'
+        );
 
         const sizeGroup = new Adw.PreferencesGroup({
             title: _('Highlight Size'),
@@ -138,6 +142,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
                 lower: highlightSizeLowerBound(iconSize),
                 upper: highlightSizeUpperBound(iconSize),
                 available: true,
+                locked: windows10Theme,
             }
         );
         addHighlightExtentRows(
@@ -156,6 +161,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
                 lower: highlightLengthLowerBound(settings, iconSize),
                 upper: highlightLengthUpperBound(iconSize),
                 available: !taskbarAppLabelsVisible(settings),
+                locked: windows10Theme,
             }
         );
 
@@ -234,8 +240,8 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             );
             hoverColorRow.sensitive = isClassic && sensitive;
             pressedColorRow.sensitive = isClassic && sensitive;
-            borderRadiusRow.sensitive = sensitive ||
-                settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled);
+            borderRadiusRow.sensitive = !windows10Theme && (sensitive ||
+                settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled));
         };
         connectSettings(
             settings,

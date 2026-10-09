@@ -36,6 +36,7 @@ import {
 import {
     hoverRenderScale,
 } from '../shared/applicationHoverAnimation.js';
+import {windows10IndicatorInset} from '../shared/windows10Theme.js';
 
 const APP_LABEL_SPACING = 8;
 const WINDOWS_XP_BUTTON_Y = 3;
@@ -346,12 +347,17 @@ export class TaskbarAppearanceController {
             this.indicatorThickness(),
             horizontal ? glass.height : glass.width
         );
-        const inset = runningIndicatorFillsLength(style) &&
-            !this._settings.get_boolean('running-indicator-full-length')
-            ? Math.round(
+        let inset = 0;
+        if (this._settings.get_boolean('windows-10-theme-enabled')) {
+            inset = item._taskbarFocused
+                ? 0
+                : windows10IndicatorInset(glassLength);
+        } else if (runningIndicatorFillsLength(style) &&
+            !this._settings.get_boolean('running-indicator-full-length')) {
+            inset = Math.round(
                 glassLength * (1 - RUNNING_INDICATOR_LENGTH_RATIO) / 2
-            )
-            : 0;
+            );
+        }
         const length = Math.max(1, glassLength - inset * 2);
         item._taskbarIndicator.update({
             x: position === 'right'

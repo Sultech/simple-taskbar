@@ -85,6 +85,12 @@ function bundledIconFile(extensionPath, location) {
             .get_child('start')
             .get_child('eleven-start-symbolic.svg');
     }
+    if (location === 'builtin:ten') {
+        return extensionDir
+            .get_child('icons')
+            .get_child('start')
+            .get_child('ten-start-symbolic.svg');
+    }
     if (location.startsWith('distro:')) {
         return extensionDir
             .get_child('icons')
@@ -101,6 +107,8 @@ export function getStartIconDisplayName(location) {
         return _('GNOME');
     if (location === 'builtin:eleven')
         return _('Eleven-style');
+    if (location === 'builtin:ten')
+        return _('Ten-style');
     if (location.startsWith('distro:')) {
         return distroIconDetails(
             location.slice('distro:'.length)
@@ -226,6 +234,11 @@ class StartIconChooserDialog extends Adw.Window {
                 location: 'builtin:eleven',
                 displayName: _('Eleven-style'),
                 searchText: 'eleven style built in',
+            },
+            {
+                location: 'builtin:ten',
+                displayName: _('Ten-style'),
+                searchText: 'ten style built in',
             },
         ];
 

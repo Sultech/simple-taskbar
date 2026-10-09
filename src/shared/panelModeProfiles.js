@@ -23,11 +23,18 @@ import {
     applyWindowsXpThemeSettings,
     WINDOWS_XP_COMBINE_MODE,
 } from './windowsXpTheme.js';
+import {applyWindows10ThemeDefaults} from './windows10Theme.js';
 
 export const PANEL_MODE_TASKBAR = 'taskbar';
 export const PANEL_MODE_DEFAULT = 'default-panel';
 export const PANEL_MODE_DOCK = 'dock';
 export const PANEL_MODE_WINDOWS_XP = 'windows-xp';
+export const PANEL_MODE_WINDOWS_10 = 'windows-10';
+
+const WINDOWS_THEME_MODES = new Set([
+    PANEL_MODE_WINDOWS_XP,
+    PANEL_MODE_WINDOWS_10,
+]);
 
 export function isDefaultPanelWithoutDock(settings) {
     return settings.get_boolean('default-gnome-panel') &&
@@ -40,7 +47,7 @@ export const PANEL_AXIS_PROFILE_ENABLED_KEYS = Object.freeze({
     [PANEL_MODE_DOCK]: 'dock-axis-profiles-enabled',
 });
 
-const XP_PREVIOUS_DOCK_MODE = 'dock';
+const WINDOWS_THEME_PREVIOUS_DOCK_MODE = 'dock';
 
 const PANEL_AXIS_HORIZONTAL = 'horizontal';
 const PANEL_AXIS_VERTICAL = 'vertical';
@@ -57,6 +64,10 @@ const PROFILE_KEYS = new Map([
     [PANEL_MODE_WINDOWS_XP, {
         settings: 'windows-xp-mode-settings',
         saved: 'windows-xp-mode-settings-saved',
+    }],
+    [PANEL_MODE_WINDOWS_10, {
+        settings: 'windows-10-mode-settings',
+        saved: 'windows-10-mode-settings-saved',
     }],
 ]);
 
@@ -136,6 +147,7 @@ const MODE_SETTING_KEYS = new Set([
     'panel-mode-profiles-initialized',
     'panel-profile-transition',
     'windows-xp-theme-enabled',
+    'windows-10-theme-enabled',
     'windows-xp-previous-mode',
 ]);
 for (const profile of PROFILE_KEYS.values()) {
@@ -190,22 +202,25 @@ function axisProfile(mode, axis) {
 }
 
 function axisProfilesEnabled(settings, mode) {
-    return settings.get_boolean(PANEL_AXIS_PROFILE_ENABLED_KEYS[mode]);
+    return !WINDOWS_THEME_MODES.has(mode) &&
+        settings.get_boolean(PANEL_AXIS_PROFILE_ENABLED_KEYS[mode]);
 }
 
 function getRequestedPanelMode(settings) {
     if (settings.get_boolean('windows-xp-theme-enabled'))
         return PANEL_MODE_WINDOWS_XP;
+    if (settings.get_boolean('windows-10-theme-enabled'))
+        return PANEL_MODE_WINDOWS_10;
     if (settings.get_boolean('default-gnome-panel'))
         return PANEL_MODE_DEFAULT;
     return PANEL_MODE_TASKBAR;
 }
 
-function getModeBeforeWindowsXp(settings) {
+function getModeBeforeWindowsTheme(settings) {
     const mode = settings.get_string('active-panel-mode');
     if (mode === PANEL_MODE_DEFAULT &&
         settings.get_boolean('dock-mode')) {
-        return XP_PREVIOUS_DOCK_MODE;
+        return WINDOWS_THEME_PREVIOUS_DOCK_MODE;
     }
     return mode;
 }
@@ -308,8 +323,7 @@ function applyInitialPanelAxisSettings(settings, mode, axis) {
 function activateRestoredAxis(settings, domain, mode) {
     const axis = domainAxis(settings, domain);
     settings.set_string(domain.activeAxisKey, axis);
-    if (mode !== PANEL_MODE_WINDOWS_XP &&
-        axisProfilesEnabled(settings, mode)) {
+    if (axisProfilesEnabled(settings, mode)) {
         const profile = axisProfile(mode, axis);
         if (!settings.get_boolean(profile.saved))
             savePanelAxisSettings(settings, mode, axis);
@@ -322,7 +336,7 @@ function applyAxisPositionChange(settings, domain, mode, position) {
     settings.set_boolean('panel-profile-transition', true);
     settings.set_string(domain.positionKey, position);
     const axis = domainAxis(settings, domain);
-    if (mode !== PANEL_MODE_WINDOWS_XP && currentAxis !== axis) {
+    if (currentAxis !== axis) {
         if (axisProfilesEnabled(settings, mode)) {
             savePanelAxisSettings(settings, mode, currentAxis);
             if (!restorePanelAxisSettings(settings, mode, axis))
@@ -370,6 +384,8 @@ function applyInitialPanelModeSettings(settings, mode) {
         applyDefaultTaskbarSettings(settings);
     } else if (mode === PANEL_MODE_DEFAULT) {
         applyDefaultPanelSettings(settings);
+    } else if (mode === PANEL_MODE_WINDOWS_10) {
+        applyWindows10ThemeDefaults(settings);
     } else {
         settings.set_boolean('activities-button-visible', false);
         settings.set_string(
@@ -391,6 +407,10 @@ function setModeFlags(settings, mode) {
         'windows-xp-theme-enabled',
         mode === PANEL_MODE_WINDOWS_XP
     );
+    settings.set_boolean(
+        'windows-10-theme-enabled',
+        mode === PANEL_MODE_WINDOWS_10
+    );
     if (mode !== PANEL_MODE_DEFAULT)
         settings.set_boolean('dock-mode', false);
 }
@@ -403,16 +423,15 @@ export function setPanelMode(settings, mode) {
 
     const currentMode = settings.get_string('active-panel-mode');
     settings.set_boolean('panel-profile-transition', true);
-    if (mode === PANEL_MODE_WINDOWS_XP &&
-        currentMode !== PANEL_MODE_WINDOWS_XP) {
+    if (WINDOWS_THEME_MODES.has(mode) &&
+        !WINDOWS_THEME_MODES.has(currentMode)) {
         settings.set_string(
             'windows-xp-previous-mode',
-            getModeBeforeWindowsXp(settings)
+            getModeBeforeWindowsTheme(settings)
         );
     }
     if (currentMode !== mode) {
-        if (currentMode !== PANEL_MODE_WINDOWS_XP &&
-            axisProfilesEnabled(settings, currentMode)) {
+        if (axisProfilesEnabled(settings, currentMode)) {
             savePanelAxisSettings(
                 settings,
                 currentMode,
@@ -432,9 +451,9 @@ export function setPanelMode(settings, mode) {
     settings.set_boolean('panel-mode-profiles-initialized', true);
 }
 
-export function restorePanelModeAfterWindowsXp(settings) {
+export function restorePanelModeAfterWindowsTheme(settings) {
     const previousMode = settings.get_string('windows-xp-previous-mode');
-    if (previousMode === XP_PREVIOUS_DOCK_MODE) {
+    if (previousMode === WINDOWS_THEME_PREVIOUS_DOCK_MODE) {
         setPanelMode(settings, PANEL_MODE_DEFAULT);
         settings.set_boolean('dock-mode', true);
         return;

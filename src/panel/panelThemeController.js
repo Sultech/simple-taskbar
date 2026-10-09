@@ -51,6 +51,8 @@ const BORDER_DISABLED_CLASS =
     'simple-taskbar-border-disabled';
 const XP_PANEL_CLASS =
     'simple-taskbar-windows-xp-theme';
+const WINDOWS_10_PANEL_CLASS =
+    'simple-taskbar-windows-10-theme';
 
 export class PanelThemeController {
     constructor(settings, oldPanelStyle, getPanelGeometry) {
@@ -135,6 +137,7 @@ export class PanelThemeController {
                 onWindowsXpThemeChanged();
                 this.queueBlurMyShellSync();
             },
+            'changed::windows-10-theme-enabled', () => this.applyTheme(),
             this._signalHolder
         );
         this._themeContext.connectObject(
@@ -178,6 +181,10 @@ export class PanelThemeController {
             Main.panel.add_style_class_name(XP_PANEL_CLASS);
         else
             Main.panel.remove_style_class_name(XP_PANEL_CLASS);
+        if (this._settings.get_boolean('windows-10-theme-enabled'))
+            Main.panel.add_style_class_name(WINDOWS_10_PANEL_CLASS);
+        else
+            Main.panel.remove_style_class_name(WINDOWS_10_PANEL_CLASS);
         this.syncBorder();
         this.applyTransparency();
     }

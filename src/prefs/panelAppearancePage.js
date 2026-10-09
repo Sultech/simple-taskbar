@@ -17,7 +17,7 @@ import {
 } from '../shared/windowsXpTheme.js';
 import {
     PANEL_MODE_WINDOWS_XP,
-    restorePanelModeAfterWindowsXp,
+    restorePanelModeAfterWindowsTheme,
     setPanelMode,
     setPanelPosition,
 } from '../shared/panelModeProfiles.js';
@@ -169,7 +169,7 @@ export function addPanelAppearancePage({
         if (enabled)
             setPanelMode(settings, PANEL_MODE_WINDOWS_XP);
         else
-            restorePanelModeAfterWindowsXp(settings);
+            restorePanelModeAfterWindowsTheme(settings);
         settings.apply();
     };
     windowsXpThemeSwitch.connect('notify::active', () => {

@@ -145,14 +145,20 @@ function addApplicationIconControls({
     const syncClassicOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         iconSizingRow.sensitive = enabled;
-        highlightStyleRow.sensitive = enabled;
+        highlightStyleRow.sensitive = enabled &&
+            !settings.get_boolean('windows-10-theme-enabled');
         classicOptionsButton.sensitive = enabled;
     };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncClassicOptionsSensitivity
-    );
+    for (const key of [
+        'windows-xp-theme-enabled',
+        'windows-10-theme-enabled',
+    ]) {
+        connectSettings(
+            settings,
+            `changed::${key}`,
+            syncClassicOptionsSensitivity
+        );
+    }
     syncClassicOptionsSensitivity();
     const appAlignmentRow = addComboRow(
         group,
@@ -481,6 +487,9 @@ function addIndicatorControls({
         const blocked =
             settings.get_boolean('windows-xp-theme-enabled') ||
             isDefaultPanelWithoutDock(settings);
+        const windows10Theme = settings.get_boolean(
+            'windows-10-theme-enabled'
+        );
         const enabled = customIndicatorColorsSwitch.active;
         indicatorGroup.sensitive = !blocked;
         indicatorPositionRow.sensitive = !blocked;
@@ -489,9 +498,9 @@ function addIndicatorControls({
                 activePanelPosition(settings),
                 settings.get_string('running-indicator-position')
             );
-        indicatorStyleRow.sensitive = !blocked;
-        indicatorSizeRow.sensitive = !blocked;
-        indicatorFullLengthSwitch.sensitive = !blocked &&
+        indicatorStyleRow.sensitive = !blocked && !windows10Theme;
+        indicatorSizeRow.sensitive = !blocked && !windows10Theme;
+        indicatorFullLengthSwitch.sensitive = !blocked && !windows10Theme &&
             runningIndicatorFillsLength(
                 settings.get_string('running-indicator-style')
             );
@@ -513,6 +522,7 @@ function addIndicatorControls({
     });
     for (const key of [
         'windows-xp-theme-enabled',
+        'windows-10-theme-enabled',
         'default-gnome-panel',
         'dock-mode',
         'dock-position',

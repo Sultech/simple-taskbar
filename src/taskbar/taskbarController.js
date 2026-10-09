@@ -663,6 +663,7 @@ export class TaskbarController {
             this._signalHolder
         );
         for (const key of [
+            'windows-10-theme-enabled',
             'running-indicator-style',
             'running-indicator-position',
             'running-indicator-size',

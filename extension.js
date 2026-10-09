@@ -59,6 +59,7 @@ import {AppGridLayout} from './src/integration/appGridLayout.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
 import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
+import {Windows10ModeController} from './src/windows10ModeController.js';
 import {CLICK_ACTION} from './src/shared/applicationClickActions.js';
 
 export default class SimpleTaskbarExtension extends Extension {
@@ -325,6 +326,10 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
         this._windowsXpModeController.enable();
+        this._windows10ModeController = new Windows10ModeController(
+            this._settings
+        );
+        this._windows10ModeController.enable();
         this._connectSignals();
         this._startButtonController.syncKeybindings();
         this._panelController.position();
@@ -342,6 +347,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appGridLayout.destroy();
         this._appGridLayout = null;
         this._taskbarController.disableHoverAnimations();
+        this._windows10ModeController.destroy();
+        this._windows10ModeController = null;
         this._windowsXpModeController.destroy();
         this._windowsXpModeController = null;
 

@@ -561,6 +561,10 @@ export class StartMenuController {
             actor.add_style_class_name('simple-taskbar-windows-start-light');
         else
             actor.add_style_class_name('simple-taskbar-windows-start-shell');
+        if (this._settings.get_boolean('windows-10-theme-enabled'))
+            actor.add_style_class_name('simple-taskbar-windows-start-windows-10');
+        else
+            actor.remove_style_class_name('simple-taskbar-windows-start-windows-10');
     }
 
     _syncPositionSource() {

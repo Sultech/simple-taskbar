@@ -741,6 +741,8 @@ export class StartButtonController {
             syncStartMenuTheme,
             'changed::panel-theme-follow-system', syncStartMenuTheme,
             'changed::panel-theme', syncStartMenuTheme,
+            'changed::windows-10-theme-enabled',
+            () => this._startMenuController?.syncTheme(true),
             this._signalHolder
         );
         this._settings.connectObject(
@@ -964,6 +966,14 @@ export class StartButtonController {
                     .get_child('icons')
                     .get_child('start')
                     .get_child('eleven-start-symbolic.svg'),
+            });
+        }
+        if (location === 'builtin:ten') {
+            return new Gio.FileIcon({
+                file: this._extensionDir
+                    .get_child('icons')
+                    .get_child('start')
+                    .get_child('ten-start-symbolic.svg'),
             });
         }
         if (location.startsWith('distro:')) {

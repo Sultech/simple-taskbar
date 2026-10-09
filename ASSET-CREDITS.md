@@ -90,3 +90,10 @@ The `taskband_tray_horz.png` and `taskband_tray_horz_body.png` files in
 `icons/taskbar/xp/notification-area/` are copied unchanged from the Luna Blue
 resources in the [xfce-winxp-tc](https://github.com/rozniak/xfce-winxp-tc)
 project.
+
+## Ten-style Start icon
+
+`icons/start/ten-start-symbolic.svg` was drawn for Simple Taskbar from
+measurements of the Windows 10 Start glyph at 16 px. The Windows logo is a
+Microsoft trademark and is included only to reproduce the Windows 10 visual
+style.

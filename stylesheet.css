@@ -685,6 +685,36 @@
     background-color: #0067c0;
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-color-source,
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-color-source {
+    background-color: #76b9ed;
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running
+    .simple-taskbar-running-indicator-color-source,
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-segment,
+#panel.simple-taskbar-panel.simple-taskbar-windows-10-theme.simple-taskbar-theme-light
+    .simple-taskbar-app-item.running.focused
+    .simple-taskbar-running-indicator-color-source {
+    background-color: #0078d7;
+}
+
 .simple-taskbar-drag-placeholder {
     margin: 5px 1px;
     border-radius: 5px;
@@ -1144,6 +1174,20 @@
 .simple-taskbar-windows-start-light
     .simple-taskbar-windows-start-running-indicator-color-source {
     background-color: #555a60;
+}
+
+.simple-taskbar-windows-start-windows-10
+    .simple-taskbar-windows-start-running-indicator-segment,
+.simple-taskbar-windows-start-windows-10
+    .simple-taskbar-windows-start-running-indicator-color-source {
+    background-color: #76b9ed;
+}
+
+.simple-taskbar-windows-start-windows-10.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-running-indicator-segment,
+.simple-taskbar-windows-start-windows-10.simple-taskbar-windows-start-light
+    .simple-taskbar-windows-start-running-indicator-color-source {
+    background-color: #0078d7;
 }
 
 .simple-taskbar-windows-start-folder-tile {

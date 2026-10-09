@@ -105,6 +105,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         const defaultGnomePanelOverviewButton =
             panelMode.defaultGnomePanelOverviewButton;
         const windowsXpOverviewButton = panelMode.windowsXpOverviewButton;
+        const windows10ThemeSwitch = panelMode.windows10ThemeSwitch;
+        const windows10OverviewButton = panelMode.windows10OverviewButton;
         const dockModeRow = panelMode.dockModeRow;
         const dockModeSwitch = panelMode.dockModeSwitch;
         const dockOverviewButton = panelMode.dockOverviewButton;
@@ -163,6 +165,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             defaultGnomePanelSwitch,
             defaultGnomePanelOverviewButton,
             windowsXpOverviewButton,
+            windows10ThemeSwitch,
+            windows10OverviewButton,
             dockModeSwitch,
             dockOverviewButton,
             dockPositionRow,
