@@ -49,6 +49,18 @@ export function windowReachesPanel(window) {
         window.fullscreen;
 }
 
+export function hasWindowCoveringMonitor(monitor) {
+    return global.get_window_actors().some(actor => {
+        if (!actor.visible)
+            return false;
+
+        const rect = actor.get_meta_window().get_buffer_rect();
+        return rect.x <= monitor.x && rect.y <= monitor.y &&
+            rect.x + rect.width >= monitor.x + monitor.width &&
+            rect.y + rect.height >= monitor.y + monitor.height;
+    });
+}
+
 function visibleWindowsOnMonitor(monitor) {
     const activeWorkspace = global.workspace_manager.get_active_workspace();
     return global.get_window_actors()

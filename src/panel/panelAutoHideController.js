@@ -27,6 +27,7 @@ import {
     autoHideRevealDelay,
     autoHideUsesPressure,
 } from '../shared/autoHideSettings.js';
+import {hasWindowCoveringMonitor} from '../windowVisibility.js';
 
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
@@ -500,14 +501,15 @@ export class PanelAutoHideController {
             return;
         }
 
-        if (global.window_group.visible &&
-            this._getMonitor()?.inFullscreen) {
+        const monitor = this._getMonitor();
+        if (global.window_group.visible && monitor?.inFullscreen) {
             this._restoreUnredirect();
             return;
         }
 
         if ((this._enabled() || this._dodgeEnabled) &&
-            !this._isFullyHidden())
+            !this._isFullyHidden() &&
+            monitor && hasWindowCoveringMonitor(monitor))
             this._disableUnredirect();
         else
             this._restoreUnredirect();
