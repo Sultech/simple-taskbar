@@ -20,7 +20,7 @@ export class StartMenuNavigationController {
         if (event.type() !== Clutter.EventType.KEY_PRESS)
             return Clutter.EVENT_PROPAGATE;
 
-        const {searchEntry, selectedSearchButton} = this._getActors();
+        const {searchEntry} = this._getActors();
         const symbol = event.get_key_symbol();
         const actors = this._focusableActors();
         if (actors.length === 0)
@@ -38,18 +38,15 @@ export class StartMenuNavigationController {
         } else if (symbol === Clutter.KEY_ISO_Left_Tab) {
             target = this._nextActor(actors, current, -1);
         } else if (symbol === Clutter.KEY_Down) {
-            const origin = current === searchEntry && selectedSearchButton
-                ? selectedSearchButton
-                : current;
-            target = this._spatialActor(actors, origin, 0, 1) ??
-                (origin === current ? null : origin);
+            target = this._spatialActor(actors, current, 0, 1);
         } else if (symbol === Clutter.KEY_Up) {
             target = this._spatialActor(actors, current, 0, -1);
-        } else if (current !== searchEntry) {
-            if (symbol === Clutter.KEY_Left)
-                target = this._spatialActor(actors, current, -1, 0);
-            else if (symbol === Clutter.KEY_Right)
-                target = this._spatialActor(actors, current, 1, 0);
+        } else if (current && current !== searchEntry &&
+            (symbol === Clutter.KEY_Left || symbol === Clutter.KEY_Right)) {
+            const direction = symbol === Clutter.KEY_Left ? -1 : 1;
+            target = this._horizontalActor(actors, current, direction);
+            if (!target)
+                return Clutter.EVENT_STOP;
         }
 
         if (!target)
@@ -199,9 +196,6 @@ export class StartMenuNavigationController {
                 : deltaY * vertical;
             if (primary <= 0)
                 continue;
-            if (horizontal !== 0 &&
-                Math.abs(deltaY) * 2 >= currentHeight + actorHeight)
-                continue;
 
             const secondary = horizontal !== 0
                 ? Math.abs(deltaY)
@@ -213,6 +207,53 @@ export class StartMenuNavigationController {
             }
         }
         return closest;
+    }
+
+    _horizontalActor(actors, current, direction) {
+        const [currentX, currentY] = current.get_transformed_position();
+        const [currentWidth, currentHeight] = current.get_transformed_size();
+        const centerX = currentX + currentWidth / 2;
+        const centerY = currentY + currentHeight / 2;
+        let closest = null;
+        let closestScore = Number.POSITIVE_INFINITY;
+        for (const actor of actors) {
+            if (actor === current)
+                continue;
+
+            const [actorX, actorY] = actor.get_transformed_position();
+            const [actorWidth, actorHeight] = actor.get_transformed_size();
+            if (actorY >= currentY + currentHeight ||
+                actorY + actorHeight <= currentY)
+                continue;
+
+            const primary = (actorX + actorWidth / 2 - centerX) * direction;
+            if (primary <= 0)
+                continue;
+
+            const secondary = Math.abs(actorY + actorHeight / 2 - centerY);
+            const score = primary * 4 + secondary;
+            if (score < closestScore) {
+                closest = actor;
+                closestScore = score;
+            }
+        }
+        return closest ?? this._adjacentRowActor(actors, current, direction);
+    }
+
+    _adjacentRowActor(actors, current, direction) {
+        const target = actors[actors.indexOf(current) + direction];
+        const row = current.get_parent();
+        const targetRow = target?.get_parent();
+        if (!this._isRow(row) || !this._isRow(targetRow) ||
+            row.get_parent() !== targetRow.get_parent())
+            return null;
+
+        return target;
+    }
+
+    _isRow(actor) {
+        return actor instanceof St.BoxLayout &&
+            actor.orientation === Clutter.Orientation.HORIZONTAL;
     }
 
     _ensureFocusedActorVisible() {
