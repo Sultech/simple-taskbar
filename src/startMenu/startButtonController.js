@@ -92,8 +92,6 @@ export class StartButtonController {
         this._signalHolder = new TransientSignalHolder();
         this._startOpenedOverview = false;
         this._startMenuController = null;
-        this._overviewHiddenId = 0;
-        this._overviewShowingId = 0;
         this._openAfterOverviewIdleId = 0;
         this._contextMenu = null;
         this._contextMenuController = null;
@@ -294,33 +292,26 @@ export class StartButtonController {
 
     _openStartMenuAfterOverview() {
         this._cancelStartMenuAfterOverview();
-        this._overviewHiddenId = Main.overview.connect('hidden', () => {
-            this._cancelStartMenuAfterOverview();
-            this._openAfterOverviewIdleId = GLib.idle_add(
-                GLib.PRIORITY_DEFAULT,
-                () => {
-                    this._openAfterOverviewIdleId = 0;
-                    if (this._windowsModeEnabled())
-                        this._ensureStartMenuController().open();
-                    return GLib.SOURCE_REMOVE;
-                }
-            );
-        });
-        this._overviewShowingId = Main.overview.connect(
-            'showing',
-            () => this._cancelStartMenuAfterOverview()
+        Main.overview.connectObject(
+            'hidden', () => {
+                this._cancelStartMenuAfterOverview();
+                this._openAfterOverviewIdleId = GLib.idle_add(
+                    GLib.PRIORITY_DEFAULT,
+                    () => {
+                        this._openAfterOverviewIdleId = 0;
+                        if (this._windowsModeEnabled())
+                            this._ensureStartMenuController().open();
+                        return GLib.SOURCE_REMOVE;
+                    }
+                );
+            },
+            'showing', () => this._cancelStartMenuAfterOverview(),
+            this
         );
     }
 
     _cancelStartMenuAfterOverview() {
-        if (this._overviewHiddenId) {
-            Main.overview.disconnect(this._overviewHiddenId);
-            this._overviewHiddenId = 0;
-        }
-        if (this._overviewShowingId) {
-            Main.overview.disconnect(this._overviewShowingId);
-            this._overviewShowingId = 0;
-        }
+        Main.overview.disconnectObject(this);
         if (this._openAfterOverviewIdleId) {
             GLib.Source.remove(this._openAfterOverviewIdleId);
             this._openAfterOverviewIdleId = 0;
