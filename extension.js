@@ -59,7 +59,6 @@ import {AppGridLayout} from './src/integration/appGridLayout.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
 import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
-import {Windows10ModeController} from './src/windows10ModeController.js';
 import {CLICK_ACTION} from './src/shared/applicationClickActions.js';
 
 export default class SimpleTaskbarExtension extends Extension {
@@ -214,6 +213,7 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
                     this._trayOverflowController.close();
+                    this._panelInteractionController.close();
                 }
             },
         });
@@ -260,6 +260,11 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._windowController.handlePanelScrolled(direction),
             getVolumeIndicator: () =>
                 Main.panel.statusArea.quickSettings._volumeOutput,
+            getClickThroughMenus: () => [
+                Main.panel.statusArea.quickSettings?.menu,
+                Main.panel.statusArea.dateMenu?.menu,
+                this._trayOverflowController.menu,
+            ],
         });
         this._applicationOverflowController.enable();
         this._trayOverflowController.enable();
@@ -326,10 +331,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
         this._windowsXpModeController.enable();
-        this._windows10ModeController = new Windows10ModeController(
-            this._settings
-        );
-        this._windows10ModeController.enable();
         this._connectSignals();
         this._startButtonController.syncKeybindings();
         this._panelController.position();
@@ -347,8 +348,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appGridLayout.destroy();
         this._appGridLayout = null;
         this._taskbarController.disableHoverAnimations();
-        this._windows10ModeController.destroy();
-        this._windows10ModeController = null;
         this._windowsXpModeController.destroy();
         this._windowsXpModeController = null;
 
@@ -612,6 +611,7 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _toggleStartMenuAtPointer() {
         Main.panel.menuManager.activeMenu?.close();
+        this._panelInteractionController.close();
         this._secondaryPanelManager.closePanelMenus();
         this._dockPanelManager.closePanelMenus();
 

@@ -159,6 +159,10 @@ export class TrayOverflowController {
         closePopupMenu(this._menu, false);
     }
 
+    get menu() {
+        return this._menu;
+    }
+
     get menuIsOpen() {
         if (this._menu.isOpen)
             return true;

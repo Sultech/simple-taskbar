@@ -213,6 +213,7 @@ export class SecondaryPanelController {
                 if (open) {
                     this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
+                    this._interactionController?.close();
                 }
             },
         });
@@ -391,6 +392,10 @@ export class SecondaryPanelController {
             panelActor: this.actor,
             panelBoxes: [this._leftBox, this._centerBox, this._rightBox],
             allowTaskbarLock: !this._dockController,
+            getClickThroughMenus: () => [
+                this._indicatorController.get('quickSettings')?.menu,
+                this._indicatorController.get('dateMenu')?.menu,
+            ],
         });
         this._interactionController.enable();
         this._autoHideController = new PanelAutoHideController({
@@ -561,6 +566,7 @@ export class SecondaryPanelController {
     closePanelMenu() {
         this._menuManager.activeMenu?.close();
         this._applicationOverflowController.close();
+        this._interactionController?.close();
     }
 
     _connectSignals() {
@@ -635,8 +641,6 @@ export class SecondaryPanelController {
                 this._applyLayout();
                 this.syncTheme();
             },
-            'changed::windows-10-theme-enabled',
-            () => this.syncTheme(),
             this._signalHolder
         );
         this._settings.connectObject('changed::app-alignment', () => {

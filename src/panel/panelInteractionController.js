@@ -24,6 +24,12 @@ import {openPopupMenu} from '../popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
+const CLICK_THROUGH_BLOCKING_MODIFIERS =
+    Clutter.ModifierType.CONTROL_MASK |
+    Clutter.ModifierType.MOD1_MASK |
+    Clutter.ModifierType.MOD4_MASK |
+    Clutter.ModifierType.SUPER_MASK |
+    Clutter.ModifierType.META_MASK;
 
 export class PanelInteractionController {
     constructor({
@@ -43,6 +49,7 @@ export class PanelInteractionController {
             Main.panel._rightBox,
         ],
         allowTaskbarLock = true,
+        getClickThroughMenus = () => [],
     }) {
         this._settings = settings;
         this._taskbarController = taskbarController;
@@ -56,6 +63,9 @@ export class PanelInteractionController {
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
+        this._getClickThroughMenus = getClickThroughMenus;
+        this._clickThroughMenus = [];
+        this._clickThroughIdleId = 0;
         this._capturedEventId = 0;
         this._workspaceScrollTimeoutId = 0;
         this._appScrollTimeoutId = 0;
@@ -70,13 +80,43 @@ export class PanelInteractionController {
             'captured-event',
             (_actor, event) => this._onCapturedEvent(event)
         );
+        this._panelActor.connectObject(
+            'popup-menu', () => this._onPanelPopupMenu(),
+            this
+        );
+        this._clickThroughMenus = [
+            this._contextMenu,
+            ...this._getClickThroughMenus(),
+        ].filter(Boolean);
+        for (const menu of this._clickThroughMenus) {
+            menu.connectObject('open-state-changed', (_menu, open) => {
+                if (!open)
+                    this._passOutsideClickThrough(menu);
+            }, this);
+            menu.actor.connectObject('captured-event', (_actor, event) =>
+                this._openHoveredMenu(menu, event), this);
+        }
     }
 
     get menuIsOpen() {
         return this._contextMenu.isOpen;
     }
 
+    close() {
+        this._contextMenu?.close();
+    }
+
     destroy() {
+        this._panelActor.disconnectObject(this);
+        for (const menu of this._clickThroughMenus) {
+            menu.disconnectObject(this);
+            menu.actor.disconnectObject(this);
+        }
+        this._clickThroughMenus = [];
+        this._getClickThroughMenus = null;
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = 0;
         if (this._workspaceScrollTimeoutId)
             GLib.Source.remove(this._workspaceScrollTimeoutId);
         this._workspaceScrollTimeoutId = 0;
@@ -107,6 +147,112 @@ export class PanelInteractionController {
         this._onAppScrolled = null;
         this._onPanelScrolled = null;
         this._getVolumeIndicator = null;
+    }
+
+    _passOutsideClickThrough(menu) {
+        const event = Clutter.get_current_event();
+        if (!event ||
+            event.type() !== Clutter.EventType.BUTTON_PRESS ||
+            event.get_state() & CLICK_THROUGH_BLOCKING_MODIFIERS)
+            return;
+
+        const mouseButton = event.get_button();
+        if (mouseButton !== Clutter.BUTTON_PRIMARY &&
+            mouseButton !== Clutter.BUTTON_SECONDARY)
+            return;
+
+        const button = this._panelButtonAt(
+            global.stage.get_event_actor(event),
+            menu.sourceActor,
+            mouseButton === Clutter.BUTTON_SECONDARY
+        );
+        if (!button)
+            return;
+
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this._clickThroughIdleId = 0;
+            if (!button.mapped || !button.reactive)
+                return GLib.SOURCE_REMOVE;
+
+            const buttonMenu = this._panelMenuOf(button);
+            if (buttonMenu)
+                buttonMenu.toggle();
+            else if (mouseButton === Clutter.BUTTON_SECONDARY)
+                button.emit('popup-menu');
+            else if (this._isActivitiesButton(button))
+                this._toggleOverview();
+            else
+                button.emit('clicked', Clutter.BUTTON_PRIMARY);
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _openHoveredMenu(menu, event) {
+        if (!menu.isOpen || event.type() !== Clutter.EventType.MOTION)
+            return Clutter.EVENT_PROPAGATE;
+
+        const [stageX, stageY] = event.get_coords();
+        const hoveredMenu = this._clickThroughMenuAt(
+            global.stage.get_actor_at_pos(
+                Clutter.PickMode.REACTIVE,
+                stageX,
+                stageY
+            )
+        );
+        if (!hoveredMenu || hoveredMenu === menu || hoveredMenu.isOpen ||
+            !hoveredMenu.sourceActor.reactive)
+            return Clutter.EVENT_PROPAGATE;
+
+        menu.close();
+        hoveredMenu.open();
+        return Clutter.EVENT_PROPAGATE;
+    }
+
+    _clickThroughMenuAt(actor) {
+        for (let current = actor; current; current = current.get_parent()) {
+            if (current === this._panelActor)
+                return null;
+
+            const menu = this._clickThroughMenus.find(clickThroughMenu =>
+                clickThroughMenu.sourceActor === current);
+            if (menu)
+                return menu;
+        }
+        return null;
+    }
+
+    _panelMenuOf(actor) {
+        return [actor.menu, ...this._clickThroughMenus].find(menu =>
+            menu instanceof PopupMenu.PopupMenu &&
+            menu.sourceActor === actor) ?? null;
+    }
+
+    _isActivitiesButton(actor) {
+        return actor.name === 'panelActivities';
+    }
+
+    _toggleOverview() {
+        if (Main.overview.shouldToggleByCornerOrButton())
+            Main.overview.toggle();
+    }
+
+    _panelButtonAt(actor, sourceActor, includePanel = false) {
+        let button = null;
+        for (let current = actor; current; current = current.get_parent()) {
+            if (current === sourceActor)
+                return null;
+            if (!button && (current instanceof St.Button ||
+                this._panelMenuOf(current) ||
+                this._isActivitiesButton(current)))
+                button = current;
+            if (current === this._panelActor) {
+                const found = button ?? (includePanel ? current : null);
+                return found?.reactive ? found : null;
+            }
+        }
+        return null;
     }
 
     _createContextMenu() {
@@ -435,8 +581,23 @@ export class PanelInteractionController {
         return null;
     }
 
+    _onPanelPopupMenu() {
+        const [stageX, stageY] = global.get_pointer();
+        const target = global.stage.get_actor_at_pos(
+            Clutter.PickMode.REACTIVE,
+            stageX,
+            stageY
+        );
+        if (this._isFreePanelTarget(target))
+            this._openContextMenuAt(stageX, stageY);
+    }
+
     _openContextMenu(event) {
         const [stageX, stageY] = event.get_coords();
+        this._openContextMenuAt(stageX, stageY);
+    }
+
+    _openContextMenuAt(stageX, stageY) {
         Main.layoutManager.setDummyCursorGeometry(stageX, stageY, 0, 0);
         this._taskbarController.dropHoverAnimations();
         this._previews.hideTooltip(false);

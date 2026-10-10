@@ -77,13 +77,14 @@ const MENU_MAX_HEIGHT = 810;
 const MENU_MONITOR_MARGIN = 96;
 const BLURRED_CLASS =
     'simple-taskbar-windows-start-blurred';
-const PASSIVE_SEARCH_CLASS =
-    'simple-taskbar-windows-start-search-passive';
-const TYPE_TO_SEARCH_BLOCKING_MODIFIERS =
+const CLICK_THROUGH_BLOCKING_MODIFIERS =
     Clutter.ModifierType.CONTROL_MASK |
     Clutter.ModifierType.MOD1_MASK |
     Clutter.ModifierType.MOD4_MASK |
-    Clutter.ModifierType.SUPER_MASK;
+    Clutter.ModifierType.SUPER_MASK |
+    Clutter.ModifierType.META_MASK;
+const PASSIVE_SEARCH_CLASS =
+    'simple-taskbar-windows-start-search-passive';
 const BLUR_MY_SHELL_POPUP_CLASSES = [
     'bms-popup-background-transparent',
     'bms-popup-background-light',
@@ -160,6 +161,7 @@ export class StartMenuController {
         this._selectedSearchButton = null;
         this._searchResultButtons = new Map();
         this._searchSelectionVisible = false;
+        this._clickThroughIdleId = 0;
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePress = new SourcePressGuard();
@@ -216,7 +218,6 @@ export class StartMenuController {
 
         this._root = new St.BoxLayout({
             style_class: 'simple-taskbar-windows-start',
-            reactive: true,
             orientation: Clutter.Orientation.VERTICAL,
             x_expand: true,
             y_expand: true,
@@ -231,7 +232,6 @@ export class StartMenuController {
                 root: this._root,
                 scrollView: this._scrollView,
                 searchEntry: this._searchEntry,
-                selectedSearchButton: this._selectedSearchButton,
             }),
             getView: () => this._view,
             setSearchFocusVisible: visible =>
@@ -264,8 +264,6 @@ export class StartMenuController {
         });
 
         this._createSearchEntry();
-        this._root.connect('key-press-event', (_actor, event) =>
-            this._typeIntoSearch(event));
         this._createHeader();
 
         this._scrollView = new St.ScrollView({
@@ -339,6 +337,7 @@ export class StartMenuController {
                     this._tooltipController.hide(true);
                     this._contextMenuController.close();
                     this._powerController.close();
+                    this._passOutsideClickThrough();
                 }
                 this._onOpenStateChanged(open);
             }
@@ -379,6 +378,67 @@ export class StartMenuController {
 
     get isOpen() {
         return this._menu.isOpen;
+    }
+
+    _passOutsideClickThrough() {
+        const event = Clutter.get_current_event();
+        if (!event ||
+            event.type() !== Clutter.EventType.BUTTON_PRESS ||
+            event.get_state() & CLICK_THROUGH_BLOCKING_MODIFIERS)
+            return;
+
+        const mouseButton = event.get_button();
+        if (mouseButton !== Clutter.BUTTON_PRIMARY &&
+            mouseButton !== Clutter.BUTTON_SECONDARY)
+            return;
+
+        const button = this._panelButtonAt(
+            global.stage.get_event_actor(event),
+            mouseButton === Clutter.BUTTON_SECONDARY
+        );
+        if (!button)
+            return;
+
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this._clickThroughIdleId = 0;
+            if (!button.mapped || !button.reactive)
+                return GLib.SOURCE_REMOVE;
+
+            if (mouseButton === Clutter.BUTTON_SECONDARY)
+                button.emit('popup-menu');
+            else if (this._isActivitiesButton(button))
+                this._toggleOverview();
+            else
+                button.emit('clicked', Clutter.BUTTON_PRIMARY);
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _isActivitiesButton(actor) {
+        return actor.name === 'panelActivities';
+    }
+
+    _toggleOverview() {
+        if (Main.overview.shouldToggleByCornerOrButton())
+            Main.overview.toggle();
+    }
+
+    _panelButtonAt(actor, includePanel = false) {
+        let button = null;
+        for (let current = actor; current; current = current.get_parent()) {
+            if (current === this._sourceActor)
+                return null;
+            if (!button && (current instanceof St.Button ||
+                this._isActivitiesButton(current)))
+                button = current;
+            if (current.has_style_class_name?.('simple-taskbar-panel')) {
+                const found = button ?? (includePanel ? current : null);
+                return found?.reactive ? found : null;
+            }
+        }
+        return null;
     }
 
     toggle() {
@@ -570,10 +630,6 @@ export class StartMenuController {
             actor.add_style_class_name('simple-taskbar-windows-start-light');
         else
             actor.add_style_class_name('simple-taskbar-windows-start-shell');
-        if (this._settings.get_boolean('windows-10-theme-enabled'))
-            actor.add_style_class_name('simple-taskbar-windows-start-windows-10');
-        else
-            actor.remove_style_class_name('simple-taskbar-windows-start-windows-10');
     }
 
     _syncPositionSource() {
@@ -689,6 +745,10 @@ export class StartMenuController {
         if (this._refreshIdleId) {
             GLib.Source.remove(this._refreshIdleId);
             this._refreshIdleId = 0;
+        }
+        if (this._clickThroughIdleId) {
+            GLib.Source.remove(this._clickThroughIdleId);
+            this._clickThroughIdleId = 0;
         }
         this._content.remove_all_transitions();
         this._appSystem.disconnect(this._installedChangedId);
@@ -809,32 +869,24 @@ export class StartMenuController {
             if (symbol !== Clutter.KEY_Return && symbol !== Clutter.KEY_KP_Enter)
                 return Clutter.EVENT_PROPAGATE;
 
-            return this._activateSearchSelection()
-                ? Clutter.EVENT_STOP
-                : Clutter.EVENT_PROPAGATE;
+            if (this._selectedSearchResult) {
+                const result = this._selectedSearchResult;
+                const actor = result.app
+                    ? this._findAppIcon(result.app)
+                    : null;
+                this._activateSearchResult(result, actor);
+                return Clutter.EVENT_STOP;
+            }
+            if (this._firstVisibleApp) {
+                this._launchApp(
+                    this._firstVisibleApp,
+                    this._findAppIcon(this._firstVisibleApp)
+                );
+                return Clutter.EVENT_STOP;
+            }
+            return Clutter.EVENT_PROPAGATE;
         });
-        this._searchEntry.clutter_text.connect('activate', () =>
-            this._activateSearchSelection());
         this._root.add_child(this._searchEntry);
-    }
-
-    _activateSearchSelection() {
-        if (this._selectedSearchResult) {
-            const result = this._selectedSearchResult;
-            const actor = result.app
-                ? this._findAppIcon(result.app)
-                : null;
-            this._activateSearchResult(result, actor);
-            return true;
-        }
-        if (this._firstVisibleApp) {
-            this._launchApp(
-                this._firstVisibleApp,
-                this._findAppIcon(this._firstVisibleApp)
-            );
-            return true;
-        }
-        return false;
     }
 
     _createHeader() {
@@ -1433,32 +1485,6 @@ export class StartMenuController {
             actors.push(...actor.get_children());
         }
         return null;
-    }
-
-    _typeIntoSearch(event) {
-        if (this._searchEntry.clutter_text.has_key_focus() ||
-            event.get_state() & TYPE_TO_SEARCH_BLOCKING_MODIFIERS)
-            return Clutter.EVENT_PROPAGATE;
-
-        const text = this._searchEntry.get_text();
-        const symbol = event.get_key_symbol();
-        let newText;
-        if (symbol === Clutter.KEY_BackSpace) {
-            if (!text)
-                return Clutter.EVENT_PROPAGATE;
-            newText = [...text].slice(0, -1).join('');
-        } else {
-            const character = Clutter.keysym_to_unicode(symbol);
-            if (character <= 0x20 || character === 0x7f)
-                return Clutter.EVENT_PROPAGATE;
-            newText = text + String.fromCodePoint(character);
-        }
-
-        this._searchEntry.grab_key_focus();
-        this._searchEntry.set_text(newText);
-        this._searchEntry.clutter_text.set_cursor_position(-1);
-        this._searchEntry.clutter_text.set_selection_bound(-1);
-        return Clutter.EVENT_STOP;
     }
 
     _setSearchText(text) {
