@@ -569,6 +569,9 @@ export class TrayOverflowController {
         const origin = this._recordOrigin(parent, container);
         parent.remove_child(container);
         const cell = new St.Bin({
+            style_class: 'simple-taskbar-tray-overflow-cell',
+            reactive: true,
+            track_hover: true,
             child: container,
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
