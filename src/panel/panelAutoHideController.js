@@ -236,8 +236,11 @@ export class PanelAutoHideController {
             return;
         }
 
-        if (this._fullscreenVisibilityHeld)
+        if (this._fullscreenVisibilityHeld) {
+            this._pointerButtonPressed = pointerButtonIsPressed();
+            this._fullscreenReleasePending = true;
             return;
+        }
         if (this._dodgeEnabled && this._dodgeActive) {
             if (!this._pointerReveal ||
                 !this._pointerIsInsidePanel()) {
