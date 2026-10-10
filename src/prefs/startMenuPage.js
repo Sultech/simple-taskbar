@@ -1009,6 +1009,88 @@ export function addStartMenuPage({
     );
     updateCustomShortcutRow();
 
+    const superTabOverviewRow = new Adw.SwitchRow({
+        title: _('Super+Tab Opens Overview'),
+        active: settings.get_boolean('start-menu-super-tab-overview'),
+    });
+    startMenuKeybindingsGroup.add(superTabOverviewRow);
+    settings.bind(
+        'start-menu-super-tab-overview',
+        superTabOverviewRow,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT
+    );
+
+    const overviewShortcutLabel = new Gtk.ShortcutLabel({
+        disabled_text: _('Not set'),
+        valign: Gtk.Align.CENTER,
+    });
+    const editOverviewShortcutButton = new Gtk.Button({
+        tooltip_text: _('Set custom shortcut'),
+        valign: Gtk.Align.CENTER,
+    });
+    setButtonIcon(editOverviewShortcutButton, 'document-edit-symbolic');
+    const clearOverviewShortcutButton = new Gtk.Button({
+        tooltip_text: _('Clear custom shortcut'),
+        valign: Gtk.Align.CENTER,
+    });
+    setButtonIcon(clearOverviewShortcutButton, 'edit-clear-symbolic');
+    const overviewShortcutRow = new Adw.ActionRow({
+        title: _('Custom Overview Shortcut'),
+        activatable_widget: editOverviewShortcutButton,
+    });
+    overviewShortcutRow.add_suffix(overviewShortcutLabel);
+    overviewShortcutRow.add_suffix(clearOverviewShortcutButton);
+    overviewShortcutRow.add_suffix(editOverviewShortcutButton);
+    startMenuKeybindingsGroup.add(overviewShortcutRow);
+
+    const updateOverviewShortcutRows = () => {
+        const superKeyActive =
+            windowsStartMenuSwitch.active && superKeyRow.active;
+        superTabOverviewRow.sensitive = superKeyActive;
+        superTabOverviewRow.subtitle = superKeyActive
+            ? _('Use GNOME’s application-switch shortcut for the Overview while Super opens the Start Menu')
+            : _('Turn on the Super shortcut to change the Overview shortcut');
+
+        const [accelerator] = settings.get_strv('overview-custom-hotkey');
+        overviewShortcutLabel.accelerator = accelerator ?? '';
+        clearOverviewShortcutButton.visible = Boolean(accelerator);
+        overviewShortcutRow.sensitive =
+            superKeyActive && !superTabOverviewRow.active;
+        if (!superKeyActive) {
+            overviewShortcutRow.subtitle =
+                _('Turn on the Super shortcut to use a custom Overview shortcut');
+        } else if (superTabOverviewRow.active) {
+            overviewShortcutRow.subtitle =
+                _('Turn off Super+Tab to use a custom shortcut');
+        } else {
+            overviewShortcutRow.subtitle =
+                _('Choose any unused keyboard shortcut; none is assigned by default');
+        }
+    };
+
+    editOverviewShortcutButton.connect('clicked', () => {
+        openCustomShortcutDialog(window, 'overview-custom-hotkey');
+    });
+    clearOverviewShortcutButton.connect('clicked', () => {
+        settings.set_strv('overview-custom-hotkey', []);
+    });
+    connectSettings(
+        settings,
+        'changed::overview-custom-hotkey',
+        updateOverviewShortcutRows
+    );
+    superKeyRow.connect('notify::active', updateOverviewShortcutRows);
+    superTabOverviewRow.connect(
+        'notify::active',
+        updateOverviewShortcutRows
+    );
+    windowsStartMenuSwitch.connect(
+        'notify::active',
+        updateOverviewShortcutRows
+    );
+    updateOverviewShortcutRows();
+
     return {
         followAppAlignmentSwitch,
         syncTransparency: updateStartMenuTransparencyRow,
