@@ -214,6 +214,7 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
                     this._trayOverflowController.close();
+                    this._panelInteractionController.close();
                 }
             },
         });
@@ -260,6 +261,11 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._windowController.handlePanelScrolled(direction),
             getVolumeIndicator: () =>
                 Main.panel.statusArea.quickSettings._volumeOutput,
+            getPanelMenus: () => [
+                Main.panel.statusArea.quickSettings?.menu,
+                Main.panel.statusArea.dateMenu?.menu,
+                this._trayOverflowController.menu,
+            ],
         });
         this._applicationOverflowController.enable();
         this._trayOverflowController.enable();
@@ -612,6 +618,7 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _toggleStartMenuAtPointer() {
         Main.panel.menuManager.activeMenu?.close();
+        this._panelInteractionController.close();
         this._secondaryPanelManager.closePanelMenus();
         this._dockPanelManager.closePanelMenus();
 

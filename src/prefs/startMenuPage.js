@@ -457,6 +457,13 @@ export function addStartMenuPage({
     );
     updateAppCategoriesSwitch();
 
+    const taskbarClickThroughSwitch = createSwitchRow(settings, {
+        key: 'taskbar-click-through',
+        title: _('Click Through to Taskbar Items'),
+        subtitle: _('Clicking a taskbar item or tray icon while the Start Menu or a taskbar menu is open also activates it'),
+    });
+    startMenuOptionsRow.add_row(taskbarClickThroughSwitch);
+
     const gnomeStartButtonVisibleSwitch = new Adw.SwitchRow({
         title: _('Show App Grid Button'),
         subtitle: _('Show a Start button that opens the GNOME app grid when the Eleven-style Start Menu is disabled'),

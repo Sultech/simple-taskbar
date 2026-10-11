@@ -157,6 +157,7 @@ export class ApplicationOverflowController {
         this._menu.actor.add_style_class_name(
             'simple-taskbar-application-overflow-menu'
         );
+        this._button.simpleTaskbarMenu = this._menu;
         this._section = new PopupMenu.PopupMenuSection();
         this._menu.addMenuItem(this._section);
         this._itemController = new ApplicationOverflowItemController(
@@ -402,6 +403,7 @@ export class ApplicationOverflowController {
         this._buttonController = null;
         this._themeController.destroy();
         this._themeController = null;
+        this._button.simpleTaskbarMenu = null;
         this._menu.destroy();
         this._menu = null;
         this._section = null;

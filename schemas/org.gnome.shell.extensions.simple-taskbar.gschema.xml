@@ -1361,6 +1361,11 @@
       <default>false</default>
       <summary>Open the Eleven-style Start Menu directly to All Apps</summary>
     </key>
+    <key name="taskbar-click-through" type="b">
+      <default>false</default>
+      <summary>Activate taskbar items clicked while a menu is open</summary>
+      <description>Clicking a taskbar item, tray icon, or panel indicator while the Start Menu or a taskbar menu is open closes the menu and activates it</description>
+    </key>
     <key name="start-menu-recommended-apps" type="b">
       <default>true</default>
       <summary>Show frequently used applications in the Eleven-style Start Menu</summary>
