@@ -4,6 +4,11 @@
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
+const WRAPPING_GRID_CLASSES = [
+    'simple-taskbar-windows-start-app-grid',
+    'simple-taskbar-windows-start-recommended-grid',
+];
+
 export class StartMenuNavigationController {
     constructor({
         getActors,
@@ -46,10 +51,13 @@ export class StartMenuNavigationController {
         } else if (symbol === Clutter.KEY_Up) {
             target = this._spatialActor(actors, current, 0, -1);
         } else if (current !== searchEntry) {
-            if (symbol === Clutter.KEY_Left)
-                target = this._spatialActor(actors, current, -1, 0);
-            else if (symbol === Clutter.KEY_Right)
-                target = this._spatialActor(actors, current, 1, 0);
+            if (symbol === Clutter.KEY_Left) {
+                target = this._spatialActor(actors, current, -1, 0) ??
+                    this._wrappedRowActor(actors, current, -1);
+            } else if (symbol === Clutter.KEY_Right) {
+                target = this._spatialActor(actors, current, 1, 0) ??
+                    this._wrappedRowActor(actors, current, 1);
+            }
         }
 
         if (!target)
@@ -213,6 +221,17 @@ export class StartMenuNavigationController {
             }
         }
         return closest;
+    }
+
+    _wrappedRowActor(actors, current, step) {
+        const target = actors[actors.indexOf(current) + step];
+        const grid = current.get_parent().get_parent();
+        if (!target || target.get_parent().get_parent() !== grid)
+            return null;
+
+        return WRAPPING_GRID_CLASSES.some(name => grid.has_style_class_name(name))
+            ? target
+            : null;
     }
 
     _ensureFocusedActorVisible() {
