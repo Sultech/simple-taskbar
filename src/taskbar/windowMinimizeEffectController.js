@@ -138,7 +138,10 @@ export class WindowMinimizeEffectController {
         if (restore)
             actor.show();
 
-        const panelPosition = activePanelPosition(this._settings);
+        const window = actor.meta_window;
+        const panelPosition = window._simpleTaskbarIconActor
+            ? window._simpleTaskbarIconPosition
+            : activePanelPosition(this._settings);
         this._activeActors.add(actor);
         actor.add_effect_with_name(
             MAGIC_LAMP_EFFECT_NAME,

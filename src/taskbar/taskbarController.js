@@ -12,6 +12,9 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+import {taskbarAppLabelsVisible} from '../shared/panelSizing.js';
+
 import {TaskbarDragController} from './taskbarDragController.js';
 import {TaskbarAppItemFactory} from './taskbarAppItemFactory.js';
 import {TaskbarAppearanceController} from './taskbarAppearanceController.js';
@@ -193,7 +196,7 @@ export class TaskbarController {
             x_align: Clutter.ActorAlign.START,
             y_align: Clutter.ActorAlign.FILL,
             y_expand: true,
-            visible: !this._settings.get_boolean('default-gnome-panel'),
+            visible: panelApplicationsEnabled(this._settings),
         });
         this.actor._delegate = this;
         this._iconGeometryController = new TaskbarIconGeometryController({
@@ -559,12 +562,23 @@ export class TaskbarController {
                 this._refreshWorkspaceIsolation();
             }, this._signalHolder);
         }
-        for (const pinnedKey of [
-            'hide-pinned-taskbar-apps',
-            'hide-pinned-secondary-monitors',
-        ]) {
+        if (!this._settings.isDefaultPanelWindows) {
+            for (const pinnedKey of [
+                'hide-pinned-taskbar-apps',
+                'hide-pinned-secondary-monitors',
+            ]) {
+                this._settings.connectObject(
+                    `changed::${pinnedKey}`,
+                    () => {
+                        this._entryModel.resetSessionOrder();
+                        this._queueRedisplay();
+                        this._syncDragEnabled(true);
+                    },
+                    this._signalHolder
+                );
+            }
             this._settings.connectObject(
-                `changed::${pinnedKey}`,
+                'changed::hide-unpinned-taskbar-apps',
                 () => {
                     this._entryModel.resetSessionOrder();
                     this._queueRedisplay();
@@ -572,40 +586,33 @@ export class TaskbarController {
                 },
                 this._signalHolder
             );
+            const rebuildPinnedEntries = () => {
+                this._getPreviews().hideTooltip(false);
+                this._getPreviews().hide();
+                this._shownInitially = false;
+                this._queueRedisplay();
+                this._syncDragEnabled();
+            };
+            this._settings.connectObject(
+                'changed::use-pinned-apps-as-launchers', rebuildPinnedEntries,
+                'changed::keep-pinned-app-windows-together', rebuildPinnedEntries,
+                this._signalHolder
+            );
+            this._settings.connectObject(
+                'changed::show-pinned-app-separator',
+                () => this._queueRedisplay(),
+                this._signalHolder
+            );
+            this._settings.connectObject(
+                'changed::show-location-separator',
+                () => this._queueRedisplay(),
+                this._signalHolder
+            );
         }
         this._settings.connectObject(
-            'changed::hide-unpinned-taskbar-apps',
-            () => {
-                this._entryModel.resetSessionOrder();
-                this._queueRedisplay();
-                this._syncDragEnabled(true);
-            },
-            this._signalHolder
-        );
-        const rebuildPinnedEntries = () => {
-            this._getPreviews().hideTooltip(false);
-            this._getPreviews().hide();
-            this._shownInitially = false;
-            this._queueRedisplay();
-            this._syncDragEnabled();
-        };
-        this._settings.connectObject(
-            'changed::use-pinned-apps-as-launchers', rebuildPinnedEntries,
-            'changed::keep-pinned-app-windows-together', rebuildPinnedEntries,
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::show-pinned-app-separator',
-            () => this._queueRedisplay(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::show-location-separator',
-            () => this._queueRedisplay(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
             'changed::default-gnome-panel',
+            () => this._syncApplicationVisibility(),
+            'changed::default-panel-show-running-windows',
             () => this._syncApplicationVisibility(),
             this._signalHolder
         );
@@ -630,21 +637,23 @@ export class TaskbarController {
             },
             this._signalHolder
         );
-        this._settings.connectObject('changed::hide-app-labels', () => {
-            const {combinationChanged} = this._syncCombineWhenFull();
-            if (combinationChanged) {
-                this._shownInitially = false;
-                this._getPreviews().hideTooltip(false);
-                this._getPreviews().hide();
-                this._queueRedisplay();
-                this._syncDragEnabled();
-            }
-            for (const item of this._appButtons.values()) {
-                this._syncItemLabel(item);
-                this._updateGlassGeometry(item);
-            }
-            this.queueIconGeometryUpdate();
-        }, this._signalHolder);
+        if (!this._settings.isDefaultPanelWindows) {
+            this._settings.connectObject('changed::hide-app-labels', () => {
+                const {combinationChanged} = this._syncCombineWhenFull();
+                if (combinationChanged) {
+                    this._shownInitially = false;
+                    this._getPreviews().hideTooltip(false);
+                    this._getPreviews().hide();
+                    this._queueRedisplay();
+                    this._syncDragEnabled();
+                }
+                for (const item of this._appButtons.values()) {
+                    this._syncItemLabel(item);
+                    this._updateGlassGeometry(item);
+                }
+                this.queueIconGeometryUpdate();
+            }, this._signalHolder);
+        }
         for (const key of [
             'group-apps-label-font-size',
             'group-apps-label-font-weight',
@@ -1154,7 +1163,7 @@ export class TaskbarController {
             return;
         }
 
-        if (this._settings.get_boolean('default-gnome-panel')) {
+        if (!panelApplicationsEnabled(this._settings)) {
             this._clearAppButtons();
             this._rebuilding = false;
             return;
@@ -1333,9 +1342,11 @@ export class TaskbarController {
     }
 
     _syncApplicationVisibility() {
-        const visible = !this._settings.get_boolean('default-gnome-panel');
+        const visible = panelApplicationsEnabled(this._settings);
         this.actor.visible = visible;
-        this._locationActor.visible = visible;
+        this._locationActor.visible = !this._settings.get_boolean('default-gnome-panel');
+        this._syncCombineWhenFull();
+        this.applyAppearance();
         if (!visible) {
             this._getPreviews().hideTooltip(false);
             this._getPreviews().hide();
@@ -1343,6 +1354,7 @@ export class TaskbarController {
             return;
         }
 
+        this._syncDragEnabled();
         this._queueRedisplay();
     }
 
@@ -1673,11 +1685,13 @@ export class TaskbarController {
         const launcherCount = this._usePinnedAppLaunchers()
             ? pinnedApps.length
             : 0;
+        const locationEntries = this._settings.isDefaultPanelWindows
+            ? [] : this._locationController.getEntries();
         const entries = [
             ...this._uncombinedEntries(apps, launcherCount),
-            ...this._locationController.getEntries(),
+            ...locationEntries,
         ];
-        const showLabels = !this._settings.get_boolean('hide-app-labels');
+        const showLabels = this._showAppLabels();
         if (this._entriesWidth(entries, showLabels) <= this._availableWidth)
             return {combinedAppIds: new Set()};
 
@@ -1710,7 +1724,7 @@ export class TaskbarController {
                     launcherCount,
                     combinedAppIds
                 ),
-                ...this._locationController.getEntries(),
+                ...locationEntries,
             ];
             if (this._entriesWidth(groupedEntries, showLabels) <=
                 this._availableWidth) {
@@ -1879,9 +1893,7 @@ export class TaskbarController {
     }
 
     _showAppLabels() {
-        return !panelIsVertical(this._settings) &&
-            this._combineMode() !== 'always' &&
-            !this._settings.get_boolean('hide-app-labels');
+        return taskbarAppLabelsVisible(this._settings);
     }
 
     _hasItemsForApp(appId) {

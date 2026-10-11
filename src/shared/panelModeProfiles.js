@@ -3,6 +3,7 @@
 
 import GLib from 'gi://GLib';
 
+import {DEFAULT_PANEL_WINDOW_SETTING_KEYS, defaultPanelWindowSettingKey} from './defaultPanelWindowSettings.js';
 import {normalizePanelItemOrder} from './panelItemOrder.js';
 import {positionIsVertical} from './panelPositionUtils.js';
 import {
@@ -95,6 +96,7 @@ const MODE_SETTING_KEYS = new Set([
     'active-dock-axis',
     'active-panel-mode',
     'default-gnome-panel',
+    'default-panel-show-running-windows',
     'dock-item-order',
     'dock-mode',
     'dock-mode-initialized',
@@ -144,6 +146,9 @@ const MODE_SETTING_KEYS = new Set([
     'start-menu-displaced-overlay-key',
     'start-menu-pinned-apps',
 ]);
+for (const key of DEFAULT_PANEL_WINDOW_SETTING_KEYS)
+    MODE_SETTING_KEYS.add(defaultPanelWindowSettingKey(key));
+
 for (const profile of PROFILE_KEYS.values()) {
     MODE_SETTING_KEYS.add(profile.settings);
     MODE_SETTING_KEYS.add(profile.saved);

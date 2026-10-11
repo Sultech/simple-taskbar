@@ -17,6 +17,7 @@ import {panelIsVertical} from './panelPositionUtils.js';
 export const MIN_PANEL_HEIGHT = 30;
 export const MAX_PANEL_HEIGHT = 175;
 export const MIN_ICON_SIZE = 13;
+export const MAX_ICON_SIZE = 128;
 export const MIN_ICON_EDGE_PADDING = 3;
 export const MAX_ICON_EDGE_PADDING = 20;
 export const DEFAULT_ICON_EDGE_PADDING = 7;
@@ -50,7 +51,8 @@ export function highlightSizeUpperBound(iconSize) {
 export function taskbarAppLabelsVisible(settings) {
     return !panelIsVertical(settings) &&
         settings.get_string('combine-app-buttons-mode') !== 'always' &&
-        !settings.get_boolean('hide-app-labels');
+        (settings.isDefaultPanelWindows ||
+            !settings.get_boolean('hide-app-labels'));
 }
 
 export function taskbarHighlightLength(settings, iconSize) {
@@ -92,11 +94,28 @@ export function iconEdgePadding(settings) {
     if (settings.get_boolean('windows-xp-theme-enabled'))
         return DEFAULT_ICON_EDGE_PADDING;
 
-    return settings.get_int('icon-edge-padding');
+    const padding = settings.get_int('icon-edge-padding');
+    if (settings.isDefaultPanelWindows)
+        return Math.min(padding, defaultPanelWindowMaxEdgePadding(settings));
+    return padding;
 }
 
 export function iconEdgeReserve(settings) {
     return iconEdgePadding(settings) * 2 + RUNNING_INDICATOR_CLEARANCE;
+}
+
+export function defaultPanelWindowMaxEdgePadding(settings) {
+    return Math.floor(
+        (settings.get_int('panel-height') - MIN_ICON_SIZE -
+            RUNNING_INDICATOR_CLEARANCE) / 2
+    );
+}
+
+export function defaultPanelWindowMaxIconSize(settings) {
+    return Math.max(
+        MIN_ICON_SIZE,
+        settings.get_int('panel-height') - iconEdgeReserve(settings)
+    );
 }
 
 export function standardMinimumPanelHeight(settings) {

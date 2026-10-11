@@ -9,6 +9,7 @@ src/prefs/autoHideDialog.js
 src/prefs/applicationGroupingDialog.js
 src/prefs/applicationHoverAnimationDialog.js
 src/prefs/applicationIconsGroup.js
+src/prefs/defaultPanelIconSizing.js
 src/prefs/applicationInteractionGroup.js
 src/prefs/classicHighlightDialog.js
 src/prefs/pinnedApplicationBehaviorDialog.js

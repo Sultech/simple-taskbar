@@ -1,6 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {defaultPanelWindowsEnabled} from '../shared/defaultPanelWindows.js';
+import {defaultPanelWindowMaxIconSize} from '../shared/panelSizing.js';
+
+export function panelTaskbarIconSize(settings, configuredIconSize) {
+    if (!defaultPanelWindowsEnabled(settings))
+        return configuredIconSize;
+
+    return Math.min(configuredIconSize, defaultPanelWindowMaxIconSize(settings));
+}
+
 export function adaptiveTaskbarIconSize({
     settings,
     taskbarController,

@@ -8,6 +8,9 @@ import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {panelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
+import {defaultPanelWindowsEnabled} from './src/shared/defaultPanelWindows.js';
+
 import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
 import {FolderMenuController} from './src/folderMenuController.js';
 import {TrayOverflowController} from './src/overflow/trayOverflowController.js';
@@ -39,6 +42,7 @@ import {
 import {TaskbarController} from './src/taskbar/taskbarController.js';
 import {
     adaptiveTaskbarIconSize,
+    panelTaskbarIconSize,
     applyTaskbarIconSize,
 } from './src/taskbar/taskbarIconSize.js';
 import {
@@ -83,10 +87,10 @@ export default class SimpleTaskbarExtension extends Extension {
         this._windowsXpModeController = new WindowsXpModeController(
             this._settings,
             {
-                onDefaultPanelChanged: () => this._syncTaskbarVisibility(),
-                onIconSizeChanged: iconSize => {
-                    this._maximumIconSize = iconSize;
-                    this._iconSize = iconSize;
+                onDefaultPanelChanged: () => this._queueRebuild(),
+                onIconSizeChanged: () => {
+                    this._maximumIconSize = this._applicationSettings.get_int('icon-size');
+                    this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
                     this._startButtonController.applyAppearance(
                         this._iconSize,
                         this._settings.get_int('start-button-padding')
@@ -111,20 +115,23 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._taskbarController.setPanelHeight(this._panelHeight);
                     this._overviewIntegration.setPanelHeight(this._panelHeight);
                     this._panelController.setPanelHeight(this._panelHeight);
+                    if (defaultPanelWindowsEnabled(this._settings))
+                        this._resetTaskbarIconSize();
                 },
             }
         );
         this._windowsXpModeController.applyInitialSettings();
-        this._maximumIconSize = this._settings.get_int('icon-size');
-        this._iconSize = this._maximumIconSize;
+        this._applicationSettings = panelApplicationSettings(this._settings);
+        this._maximumIconSize = this._applicationSettings.get_int('icon-size');
         this._panelHeight = this._settings.get_int('panel-height');
+        this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
         this._overviewIntegration = new OverviewIntegration(
             this._panelHeight,
             this._settings
         );
         this._appGridLayout = new AppGridLayout(this._settings);
         this._windowController = new WindowController(this._tracker, {
-            settings: this._settings,
+            settings: this._applicationSettings,
             spreadAppWindows: app =>
                 this._overviewIntegration.showAppWindows(app),
             getMonitor: () => Main.layoutManager.primaryMonitor,
@@ -137,7 +144,7 @@ export default class SimpleTaskbarExtension extends Extension {
         );
         this._applicationKeybindings.enable();
         this._taskbarController = new TaskbarController({
-            settings: this._settings,
+            settings: this._applicationSettings,
             appSystem: this._appSystem,
             tracker: this._tracker,
             favorites: this._favorites,
@@ -189,7 +196,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._windowPreviews = new WindowPreviewController(
             () => this._taskbarController.getItems(),
             app => this._windowController.getInterestingWindows(app),
-            this._settings,
+            this._applicationSettings,
             () => this._applicationOverflowController.closeWithAnimation(),
             () => this._taskbarController.getHoverAnimationOutwardReserve(),
             () => this._taskbarController.isPointerInMagnifyBounds()
@@ -225,7 +232,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings
         );
         this._panelController = new PanelController({
-            settings: this._settings,
+            settings: this._applicationSettings,
             panelHeight: this._panelHeight,
             onPanelHidden: () => {
                 this._taskbarController.dropHoverAnimations();
@@ -248,7 +255,7 @@ export default class SimpleTaskbarExtension extends Extension {
             isAutoHideBlocked: () => this._panelAutoHideIsBlocked(),
         });
         this._panelInteractionController = new PanelInteractionController({
-            settings: this._settings,
+            settings: this._applicationSettings,
             taskbarController: this._taskbarController,
             taskbarBin: this._taskbarViewport,
             taskbarContainer: this._taskbarBin,
@@ -410,6 +417,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._favorites = null;
         this._tracker = null;
         this._appSystem = null;
+        this._applicationSettings = null;
         this._settings = null;
         this._maximumIconSize = null;
         this._panelHeight = null;
@@ -451,7 +459,7 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _createTaskbarActors() {
         const {viewport, overflowController} = createTaskbarViewport({
-            settings: this._settings,
+            settings: this._applicationSettings,
             taskbarController: this._taskbarController,
             previewController: this._windowPreviews,
         });
@@ -476,10 +484,18 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _connectSignals() {
-        this._settings.connectObject(
+        if (this._applicationSettings.isDefaultPanelWindows) {
+            this._applicationSettings.connectObject(
+                'changed::icon-size', () => this._resetTaskbarIconSize(),
+                'changed::icon-spacing', () => this._applyTaskbarAppearance(),
+                'changed::icon-edge-padding', () => this._applyTaskbarAppearance(),
+                this
+            );
+        }
+        this._applicationSettings.connectObject(
             'changed::application-click-action',
             () => {
-                if (this._settings.get_string('application-click-action') !==
+                if (this._applicationSettings.get_string('application-click-action') !==
                     CLICK_ACTION.TOGGLE_SPREAD) {
                     this._overviewIntegration.cancelAppSpread();
                 }
@@ -494,6 +510,11 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelController.syncVerticalItems();
             this._panelController.updateTaskbarWidth();
         }, this);
+        this._settings.connectObject(
+            'changed::default-panel-show-running-windows',
+            () => this._queueRebuild(),
+            this
+        );
         this._settings.connectObject(
             'changed::dock-min-icon-size',
             () => {
@@ -520,6 +541,10 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _applyTaskbarAppearance() {
+        if (defaultPanelWindowsEnabled(this._settings)) {
+            this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
+            this._taskbarController.setIconSize(this._iconSize);
+        }
         this._startButtonController.applyAppearance(
             this._iconSize,
             this._settings.get_int('start-button-padding')
@@ -557,8 +582,8 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _resetTaskbarIconSize() {
-        this._maximumIconSize = this._settings.get_int('icon-size');
-        this._iconSize = this._maximumIconSize;
+        this._maximumIconSize = this._applicationSettings.get_int('icon-size');
+        this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
         this._applyTaskbarIconSize();
         this._applicationOverflowController.sync();
     }
@@ -570,22 +595,6 @@ export default class SimpleTaskbarExtension extends Extension {
             startButtonController: this._startButtonController,
             iconSize: this._iconSize,
         });
-    }
-
-    _syncTaskbarVisibility() {
-        const visible = !this._settings.get_boolean('default-gnome-panel');
-        this._taskbarBin.visible = visible;
-        if (!visible) {
-            this._windowPreviews.hideTooltip(false);
-            this._windowPreviews.hide();
-            this._overviewIntegration.cancelAppSpread();
-        }
-        if (visible && !this._settings.get_boolean('dock-mode') &&
-            !this._settings.get_boolean('windows-xp-theme-enabled')) {
-            this._resetTaskbarIconSize();
-        }
-        this._panelController.applyLayout();
-        this._panelController.updateTaskbarWidth();
     }
 
     _panelAutoHideIsBlocked() {

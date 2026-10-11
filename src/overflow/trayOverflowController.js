@@ -20,7 +20,7 @@ import {
     panelPosition,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
-import {closePopupMenu} from '../popupMenuUtils.js';
+import {closePopupMenu, openPopupMenu} from '../popupMenuUtils.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
 export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
@@ -87,6 +87,18 @@ export class TrayOverflowController {
                 this._closeStashedMenus();
             }
         }, this._signalHolder);
+        this._button.menu.connectObject('open-state-changed', (menu, open) => {
+            if (!open)
+                return;
+
+            menu.close();
+            openPopupMenu(this._menu);
+        }, this._signalHolder);
+        this._menu.actor.connectObject(
+            'captured-event',
+            (_actor, event) => this._switchToHoveredPanelMenu(event),
+            this._signalHolder
+        );
         this._settings.connectObject(
             'changed::tray-overflow-enabled', () => this._sync(),
             'changed::windows-xp-theme-enabled',
@@ -157,6 +169,29 @@ export class TrayOverflowController {
 
     close() {
         closePopupMenu(this._menu, false);
+    }
+
+    _switchToHoveredPanelMenu(event) {
+        if (event.type() !== Clutter.EventType.MOTION || !this._menu.isOpen ||
+            this._settings.get_boolean('panel-menu-click-only'))
+            return Clutter.EVENT_PROPAGATE;
+
+        const [x, y] = event.get_coords();
+        const target = global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE, x, y);
+        if (!Main.panel.contains(target))
+            return Clutter.EVENT_PROPAGATE;
+
+        const buttons = Object.values(Main.panel.statusArea);
+        for (let actor = target; actor !== Main.panel; actor = actor.get_parent()) {
+            if (!buttons.includes(actor))
+                continue;
+            if (actor.menu instanceof PopupMenu.PopupMenu) {
+                closePopupMenu(this._menu);
+                openPopupMenu(actor.menu);
+            }
+            break;
+        }
+        return Clutter.EVENT_PROPAGATE;
     }
 
     get menuIsOpen() {

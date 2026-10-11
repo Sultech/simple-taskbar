@@ -160,6 +160,7 @@ export function addSpinRow(group, settings, {
 
 export function createPanelOrderRow(settings, {
     key,
+    positionState = null,
     title,
     subtitle = '',
     choices,
@@ -196,7 +197,7 @@ export function createPanelOrderRow(settings, {
         currentChoices = availableChoices;
         syncingPosition = true;
         positionDropDown.set_model(createModel(currentChoices));
-        const value = fixedPosition ?? settings.get_string(key);
+        const value = fixedPosition ?? (positionState ? positionState.get() : settings.get_string(key));
         const index = currentChoices.findIndex(
             choice => choice.value === value
         );
@@ -207,18 +208,25 @@ export function createPanelOrderRow(settings, {
         syncPosition(fixedPosition);
         positionDropDown.sensitive = false;
     } else {
-        syncPosition(settings.get_string(key));
+        const position = positionState ?? {
+            get: () => settings.get_string(key),
+            set: value => settings.set_string(key, value),
+            changedKeys: [key],
+        };
+        syncPosition(position.get());
         positionDropDown.connect('notify::selected', widget => {
             if (syncingPosition)
                 return;
 
             const choice = currentChoices[widget.selected];
             if (choice)
-                settings.set_string(key, choice.value);
+                position.set(choice.value);
         });
-        connectSettings(settings, `changed::${key}`, () => {
-            syncPosition(settings.get_string(key));
-        });
+        for (const changedKey of position.changedKeys) {
+            connectSettings(settings, `changed::${changedKey}`, () => {
+                syncPosition(position.get());
+            });
+        }
     }
 
     const upButton = new Gtk.Button({

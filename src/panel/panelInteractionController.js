@@ -22,6 +22,7 @@ import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {openPopupMenu} from '../popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
@@ -119,7 +120,8 @@ export class PanelInteractionController {
         const menuManager = new PopupMenu.PopupMenuManager(this._panelActor);
         menu.addAction(_('Task Manager'), () => this._openTaskManager());
         if (this._allowTaskbarLock) {
-            menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+            const lockSeparator = new PopupMenu.PopupSeparatorMenuItem();
+            menu.addMenuItem(lockSeparator);
             const lockItem = menu.addAction(_('Lock the Taskbar'), () => {
                 this._settings.set_boolean(
                     'taskbar-locked',
@@ -136,6 +138,9 @@ export class PanelInteractionController {
             });
             lockItem.add_child(rightOrnament);
             const syncLockItem = () => {
+                const visible = panelApplicationsEnabled(this._settings);
+                lockSeparator.visible = visible;
+                lockItem.visible = visible;
                 lockItem.setOrnament(
                     this._settings.get_boolean('taskbar-locked')
                         ? PopupMenu.Ornament.CHECK
@@ -149,6 +154,7 @@ export class PanelInteractionController {
                 'changed::taskbar-locked',
                 syncLockItem
             );
+            menu.connect('open-state-changed', syncLockItem);
             syncLockItem();
         }
         menu.addAction(

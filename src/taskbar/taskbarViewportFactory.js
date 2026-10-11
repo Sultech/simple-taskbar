@@ -4,6 +4,8 @@
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
+import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+
 import {
     ApplicationOverflowController,
 } from '../overflow/applicationOverflowController.js';
@@ -56,6 +58,6 @@ export function createTaskbarViewport({
         viewport,
     });
     overflowController.actor.visible =
-        !settings.get_boolean('default-gnome-panel');
+        panelApplicationsEnabled(settings);
     return {viewport, overflowController};
 }

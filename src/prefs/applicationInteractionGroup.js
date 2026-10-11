@@ -143,15 +143,15 @@ export function addApplicationInteractionGroup({
 }) {
     const windowInteractionRow = new Adw.ExpanderRow({
         title: _('Application Interaction'),
-        subtitle: _(
-            'Configure clicks, scrolling, hovering, previews, and window effects'
-        ),
+        subtitle: settings.isDefaultPanelWindows
+            ? _('Configure clicks, scrolling, hovering, previews, and animations for this panel')
+            : _('Configure clicks, scrolling, hovering, previews, and window effects'),
     });
     group.add(windowInteractionRow);
     const clickActionOptionsButton =
         createApplicationClickActionOptionsButton(settings);
     const previewOptionsButton = createWindowPreviewOptionsButton(settings);
-    addComboRow(
+    const clickActionRow = addComboRow(
         windowInteractionRow,
         settings,
         {
@@ -159,11 +159,32 @@ export function addApplicationInteractionGroup({
             title: _('Click Action'),
             subtitle: _('Choose what happens when a running application is clicked'),
             choices: getApplicationClickActionChoices(),
-            addSuffix: row => row.add_suffix(clickActionOptionsButton),
+            addSuffix: row => {
+                if (!settings.isDefaultPanelWindows)
+                    row.add_suffix(clickActionOptionsButton);
+            },
             addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
     );
+    const syncClickActionVisibility = () => {
+        clickActionRow.visible = !settings.isDefaultPanelWindows ||
+            settings.get_string('combine-app-buttons-mode') === 'when-full';
+    };
+    if (settings.isDefaultPanelWindows) {
+        clickActionRow.title = _('Grouped Application Click Action');
+        connectSettings(settings, 'changed::combine-app-buttons-mode', syncClickActionVisibility);
+    }
+    syncClickActionVisibility();
+    if (settings.isDefaultPanelWindows) {
+        const clickOptionsRow = new Adw.ActionRow({
+            title: _('Window Click Actions'),
+            subtitle: _('Configure modifier-click and middle-click actions'),
+            activatable_widget: clickActionOptionsButton,
+        });
+        clickOptionsRow.add_suffix(clickActionOptionsButton);
+        windowInteractionRow.add_row(clickOptionsRow);
+    }
     addComboRow(
         windowInteractionRow,
         settings,
@@ -282,7 +303,7 @@ export function addApplicationInteractionGroup({
     scrollActionRow.activatable_widget = scrollActionDropDown;
     windowInteractionRow.add_row(scrollActionRow);
     const syncFollowScrollDelayLabel = () => {
-        followScrollDelayCheck.label = settings.get_boolean('dock-mode')
+        followScrollDelayCheck.label = !settings.isDefaultPanelWindows && settings.get_boolean('dock-mode')
             ? _('Follow Dock Scroll Delay')
             : _('Follow Taskbar Scroll Delay');
     };
@@ -374,7 +395,7 @@ export function addApplicationInteractionGroup({
         },
         connectSettings
     );
-    addComboRow(
+    const minimizeEffectRow = addComboRow(
         windowInteractionRow,
         settings,
         {
@@ -397,6 +418,7 @@ export function addApplicationInteractionGroup({
         },
         connectSettings
     );
+    minimizeEffectRow.visible = !settings.isDefaultPanelWindows;
     const syncAnimationOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         hoverAnimationTypeRow.sensitive = enabled;

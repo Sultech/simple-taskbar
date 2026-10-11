@@ -194,10 +194,10 @@ export class DockPanelSettings {
         if (args[0] === 'panel-height') {
             const iconSize = this.get_int('icon-size');
             if (!this._settings.get_boolean('dock-panel-mode'))
-                return iconSize + dockFloatingPanelReserve(this._settings);
+                return iconSize + dockFloatingPanelReserve(this);
 
             const derivedHeight = panelHeightForIconSize(
-                this._settings,
+                this,
                 iconSize
             );
             if (this._settings.get_boolean(

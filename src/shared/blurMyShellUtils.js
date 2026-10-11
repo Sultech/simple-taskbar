@@ -29,11 +29,7 @@ export const BLUR_MY_SHELL_DOCK_STYLES = [
 ];
 
 export function getBlurMyShellSettings() {
-    let schemaSource = Gio.SettingsSchemaSource.get_default();
-    let schema = schemaSource.lookup(BLUR_MY_SHELL_SCHEMA, true);
-    if (schema)
-        return new Gio.Settings({settings_schema: schema});
-
+    const defaultSource = Gio.SettingsSchemaSource.get_default();
     const dataDirectories = [
         GLib.get_user_data_dir(),
         ...GLib.get_system_data_dirs(),
@@ -52,13 +48,14 @@ export function getBlurMyShellSettings() {
         if (!compiledSchema.query_exists(null))
             continue;
 
+        let schemaSource;
         // query_exists() only proves the file is there. new_from_directory()
         // validates the gvdb and throws GLib.FileError on a corrupt
         // gschemas.compiled, which would otherwise escape into enable().
         try {
             schemaSource = Gio.SettingsSchemaSource.new_from_directory(
                 schemaDirectory,
-                schemaSource,
+                defaultSource,
                 false
             );
         } catch (error) {
@@ -68,12 +65,13 @@ export function getBlurMyShellSettings() {
             );
             continue;
         }
-        schema = schemaSource.lookup(BLUR_MY_SHELL_SCHEMA, true);
+        const schema = schemaSource.lookup(BLUR_MY_SHELL_SCHEMA, false);
         if (schema)
             return new Gio.Settings({settings_schema: schema});
     }
 
-    return null;
+    const schema = defaultSource.lookup(BLUR_MY_SHELL_SCHEMA, true);
+    return schema ? new Gio.Settings({settings_schema: schema}) : null;
 }
 
 export function getBlurMyShellChildSettings(settings, childName) {
