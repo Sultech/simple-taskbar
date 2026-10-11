@@ -451,19 +451,6 @@ export class TrayOverflowController {
         return Clutter.EVENT_PROPAGATE;
     }
 
-    _syncIndicatorCellHighlight(entry, open) {
-        if (!open) {
-            entry.cell.remove_style_pseudo_class('active');
-            return;
-        }
-
-        for (const {cell} of this._stashed.values()) {
-            if (cell !== entry.cell)
-                cell.hover = false;
-        }
-        entry.cell.add_style_pseudo_class('active');
-    }
-
     _syncIndicatorMenuStacking(indicator, open) {
         if (!open && this._menuRaiseIndicator !== indicator)
             return;
@@ -664,7 +651,10 @@ export class TrayOverflowController {
             'open-state-changed',
             (_menu, open) => {
                 this._syncIndicatorMenuStacking(indicator, open);
-                this._syncIndicatorCellHighlight(entry, open);
+                if (open)
+                    cell.add_style_pseudo_class('active');
+                else
+                    cell.remove_style_pseudo_class('active');
             },
             'activate', () => closePopupMenu(this._menu),
             this
