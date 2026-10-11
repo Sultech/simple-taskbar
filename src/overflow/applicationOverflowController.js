@@ -15,6 +15,8 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+
 import {
     panelArrowSide,
     panelIsVertical,
@@ -252,9 +254,11 @@ export class ApplicationOverflowController {
             'notify::color-scheme', () => this._themeController.sync(),
             this._signalHolder
         );
-        this._settings.connectObject('changed::default-gnome-panel', () => {
-            this._sync();
-        }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::default-gnome-panel', () => this._sync(),
+            'changed::default-panel-show-running-windows', () => this._sync(),
+            this._signalHolder
+        );
         this._settings.connectObject(
             'changed::show-location-separator',
             () => this._queueSync(),
@@ -544,7 +548,7 @@ export class ApplicationOverflowController {
         this._buttonController.sync();
         const enabled = this._settings.get_boolean(
             'application-overflow-enabled'
-        ) && !this._settings.get_boolean('default-gnome-panel');
+        ) && panelApplicationsEnabled(this._settings);
         this._viewport.enable_mouse_scrolling = !enabled;
         if (!enabled) {
             this._showAllItems();

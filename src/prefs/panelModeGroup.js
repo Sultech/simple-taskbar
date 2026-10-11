@@ -104,7 +104,7 @@ export function addPanelModeGroup({
         optionsButton: defaultGnomePanelOverviewButton,
     } = addModeRow(settings, {
         title: _('Default GNOME Panel'),
-        subtitle: _('Hide taskbar applications and use the original Dash in Overview'),
+        subtitle: _('Use the original GNOME panel with optional running window buttons'),
         tooltip: _('Default GNOME Panel Options'),
         axisProfile: {
             key: PANEL_AXIS_PROFILE_ENABLED_KEYS[PANEL_MODE_DEFAULT],
@@ -299,9 +299,9 @@ export function connectDefaultGnomePanelSync({
         defaultGnomePanelSwitch.active = enabled;
         taskbarModeRow.sensitive = true;
         taskbarOverviewButton.sensitive = taskbarModeEnabled;
-        defaultGnomePanelRow.sensitive = !dockModeEnabled;
-        defaultGnomePanelOverviewButton.sensitive = enabled &&
-            !dockModeEnabled;
+        defaultGnomePanelRow.sensitive = true;
+        defaultGnomePanelSwitch.sensitive = !dockModeEnabled;
+        defaultGnomePanelOverviewButton.sensitive = enabled;
         windowsXpOverviewButton.sensitive = windowsXpModeEnabled;
         windows10ThemeSwitch.active = windows10ModeEnabled;
         windows10OverviewButton.sensitive = windows10ModeEnabled;

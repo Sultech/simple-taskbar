@@ -36,6 +36,8 @@ export const APP_ICON_MAGNIFY_SETTING_KEYS = Object.freeze([
 ]);
 
 export function appIconMagnifyAllowed(settings) {
+    if (settings.isDefaultPanelWindows)
+        return false;
     return positionIsVertical(activePanelPosition(settings)) ||
         settings.get_string('combine-app-buttons-mode') === 'always' ||
         settings.get_boolean('hide-app-labels');

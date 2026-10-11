@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {defaultPanelWindowsEnabled} from '../shared/defaultPanelWindows.js';
+
 import {
     shouldHidePinnedApplications,
 } from '../shared/taskbarPinnedVisibility.js';
@@ -46,10 +48,11 @@ export class TaskbarEntryModel {
     }
 
     hidePinned() {
-        return shouldHidePinnedApplications(
-            this._settings,
-            this._isSecondary
-        );
+        return defaultPanelWindowsEnabled(this._settings) ||
+            shouldHidePinnedApplications(
+                this._settings,
+                this._isSecondary
+            );
     }
 
     isPersistentPinned(app) {
@@ -59,7 +62,8 @@ export class TaskbarEntryModel {
     }
 
     usePinnedAppLaunchers() {
-        return this._settings.get_boolean('use-pinned-apps-as-launchers');
+        return !defaultPanelWindowsEnabled(this._settings) &&
+            this._settings.get_boolean('use-pinned-apps-as-launchers');
     }
 
     keepPinnedWindowsTogether() {
@@ -84,7 +88,12 @@ export class TaskbarEntryModel {
     }
 
     orderedEntries(pinnedOnly, combineMode, combinedAppIds) {
+        const runningWindowsOnly = defaultPanelWindowsEnabled(this._settings);
         const apps = this.orderedApps(pinnedOnly, combineMode);
+        if (runningWindowsOnly)
+            return this.uncombinedEntries(apps, 0,
+                combineMode === 'when-full' ? combinedAppIds : new Set());
+
         const usePinnedAppLaunchers = this.usePinnedAppLaunchers();
         const launcherCount = usePinnedAppLaunchers
             ? this.pinnedApps().length
@@ -117,6 +126,7 @@ export class TaskbarEntryModel {
     }
 
     orderedApps(pinnedOnly, combineMode) {
+        pinnedOnly = pinnedOnly && !defaultPanelWindowsEnabled(this._settings);
         const seen = new Set();
         const runningApps = pinnedOnly ? [] : this._getRunningApps();
         const pinnedApps = this.pinnedApps();
@@ -138,9 +148,8 @@ export class TaskbarEntryModel {
             return true;
         });
         const usePinnedAppLaunchers = this.usePinnedAppLaunchers();
-        const hideUnpinnedApps = this._settings.get_boolean(
-            'hide-unpinned-taskbar-apps'
-        );
+        const hideUnpinnedApps = !defaultPanelWindowsEnabled(this._settings) &&
+            this._settings.get_boolean('hide-unpinned-taskbar-apps');
         const orderPinnedRunningApps = usePinnedAppLaunchers ||
             combineMode !== 'always';
         const appsToOrder = hideUnpinnedApps

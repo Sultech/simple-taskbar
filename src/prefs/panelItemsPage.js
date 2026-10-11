@@ -7,6 +7,9 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
+import {defaultPanelWindowsEnabled, panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
+
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {
     DEFAULT_PANEL_ITEM_ORDER,
@@ -126,10 +129,7 @@ export function addPanelItemsPage({
     );
     updateFolderMenuRow();
 
-    const applicationsAreVisible = () =>
-        !settings.get_boolean('default-gnome-panel') &&
-        !(settings.get_boolean('hide-pinned-taskbar-apps') &&
-            settings.get_boolean('hide-unpinned-taskbar-apps'));
+    const applicationsAreVisible = () => panelApplicationsVisible(settings, false);
     const startButtonVisibility = {
         get: () => !settings.get_boolean('default-gnome-panel') &&
             (settings.get_boolean('windows-start-menu-enabled') ||
@@ -147,12 +147,18 @@ export function addPanelItemsPage({
     const applicationsVisibility = {
         get: applicationsAreVisible,
         set: visible => {
+            if (settings.get_boolean('default-gnome-panel')) {
+                settings.set_boolean('default-panel-show-running-windows', visible);
+                return;
+            }
             const hidden = !visible;
             settings.set_boolean('hide-pinned-taskbar-apps', hidden);
             settings.set_boolean('hide-unpinned-taskbar-apps', hidden);
         },
         changedKeys: [
             'default-gnome-panel',
+            'default-panel-show-running-windows',
+            'panel-position',
             'hide-pinned-taskbar-apps',
             'hide-unpinned-taskbar-apps',
         ],
@@ -224,6 +230,12 @@ export function addPanelItemsPage({
         }],
         ['applications', {
             key: 'app-alignment',
+            positionState: {
+                get: () => panelApplicationSettings(settings).get_string('app-alignment'),
+                set: value => panelApplicationSettings(settings).set_string('app-alignment', value),
+                changedKeys: ['app-alignment', 'default-panel-window-app-alignment',
+                    'default-gnome-panel', 'default-panel-show-running-windows', 'panel-position'],
+            },
             visibleState: applicationsVisibility,
             title: _('Applications'),
             subtitle: _('Taskbar applications'),
@@ -355,7 +367,9 @@ export function addPanelItemsPage({
             return settings.get_string('app-alignment');
         }
 
-        return settings.get_string(definition.key);
+        return definition.positionState
+            ? definition.positionState.get()
+            : settings.get_string(definition.key);
     };
     const isPanelItemLocked = id => {
         if (settings.get_boolean('windows-xp-theme-enabled')) {
@@ -370,6 +384,8 @@ export function addPanelItemsPage({
                 'clock',
             ].includes(id);
         }
+        if (id === 'applications' && defaultPanelWindowsEnabled(settings))
+            return false;
         if (settings.get_boolean('dock-mode'))
             return id === 'start-button' || id === 'applications';
         if (isDefaultPanelWithoutDock(settings))
@@ -500,15 +516,16 @@ export function addPanelItemsPage({
             'windows-xp-theme-enabled'
         );
         const dockMode = settings.get_boolean('dock-mode');
+        const runningWindows = defaultPanelWindowsEnabled(settings);
         windowsStartMenuSwitch.sensitive = !windowsXpTheme;
         panelOrderRows.get('start-button').row.sensitive = !dockMode;
-        panelOrderRows.get('applications').row.sensitive = !dockMode;
+        panelOrderRows.get('applications').row.sensitive = !dockMode || runningWindows;
         panelOrderRows.get('start-button').positionDropDown.sensitive =
             !defaultPanel && !windowsXpTheme &&
             !followAppAlignmentSwitch.active &&
             startButtonVisibility.get();
         panelOrderRows.get('applications').positionDropDown.sensitive =
-            !defaultPanel && !windowsXpTheme && applicationsAreVisible();
+            (!defaultPanel || runningWindows) && !windowsXpTheme && applicationsAreVisible();
         panelOrderRows.get('system-menu').positionDropDown.sensitive =
             !windowsXpTheme && systemMenuVisibility.get();
         panelOrderRows.get('clock').positionDropDown.sensitive =
@@ -518,7 +535,7 @@ export function addPanelItemsPage({
             !settings.get_boolean('windows-start-menu-enabled');
         startButtonOptionsButton.sensitive = !windowsXpTheme;
         panelOrderRows.get('applications').visibleButton.sensitive =
-            !dockMode && !defaultPanel && !windowsXpTheme;
+            (runningWindows || (!dockMode && !defaultPanel)) && !windowsXpTheme;
         panelOrderRows.get('system-menu').visibleButton.sensitive =
             !windowsXpTheme;
         panelOrderRows.get('clock').visibleButton.sensitive =
@@ -558,6 +575,12 @@ export function addPanelItemsPage({
             `changed::${key}`,
             syncPanelPositionSensitivity
         );
+    }
+    for (const key of ['default-panel-show-running-windows', 'default-panel-window-app-alignment', 'panel-position']) {
+        connectSettings(settings, `changed::${key}`, () => {
+            syncPanelItemOrder();
+            syncPanelPositionSensitivity();
+        });
     }
     connectSettings(
         settings,

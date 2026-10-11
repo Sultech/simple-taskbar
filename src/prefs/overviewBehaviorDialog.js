@@ -6,8 +6,13 @@ import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {setPanelAxisProfilesEnabled} from '../shared/panelModeProfiles.js';
+import {DefaultPanelWindowSettings} from '../shared/defaultPanelWindowSettings.js';
+import {PANEL_MODE_DEFAULT, setPanelAxisProfilesEnabled} from '../shared/panelModeProfiles.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {createApplicationGroupingOptionsButton} from './applicationGroupingDialog.js';
+
 import {
+    addSwitchRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
@@ -45,7 +50,8 @@ class OverviewBehaviorDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: axisProfile ? 430 : 300,
+            default_height: axisProfile && axisProfile.mode === PANEL_MODE_DEFAULT
+                ? 580 : axisProfile ? 430 : 300,
         });
 
         this._settings = settings;
@@ -69,6 +75,28 @@ class OverviewBehaviorDialog extends Adw.Window {
             title: _('Launch to Desktop'),
             subtitle: _('Start the session on the desktop instead of the Overview; applies at the next login'),
         }));
+
+        if (axisProfile && axisProfile.mode === PANEL_MODE_DEFAULT) {
+            const windowsGroup = new Adw.PreferencesGroup({
+                title: _('Running Windows'),
+            });
+            content.append(windowsGroup);
+            const labelOptionsButton = createApplicationGroupingOptionsButton(new DefaultPanelWindowSettings(settings), true);
+            const {row: windowsRow, toggle: windowsToggle} = addSwitchRow(windowsGroup, settings, {
+                key: 'default-panel-show-running-windows',
+                title: _('Show Running Windows'),
+                subtitle: _('Show running windows with labels on horizontal default panels'),
+                addSuffix: row => row.add_suffix(labelOptionsButton),
+            });
+            const syncWindowsOptions = () => {
+                windowsRow.sensitive = settings.get_boolean('default-gnome-panel') &&
+                    !panelIsVertical(settings);
+                labelOptionsButton.sensitive = windowsToggle.active;
+            };
+            for (const key of ['default-gnome-panel', 'default-panel-show-running-windows', 'panel-position'])
+                connectSettings(settings, `changed::${key}`, syncWindowsOptions);
+            syncWindowsOptions();
+        }
 
         if (axisProfile) {
             const profileGroup = new Adw.PreferencesGroup({
@@ -111,6 +139,8 @@ class OverviewBehaviorDialog extends Adw.Window {
     _reset() {
         this._settings.reset(this._keys.hideDash);
         this._settings.reset(this._keys.launchToDesktop);
+        if (this._axisProfile && this._axisProfile.mode === PANEL_MODE_DEFAULT)
+            this._settings.reset('default-panel-show-running-windows');
         if (this._axisProfile) {
             const {key, mode} = this._axisProfile;
             setPanelAxisProfilesEnabled(

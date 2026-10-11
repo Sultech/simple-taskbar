@@ -12,6 +12,9 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
+import {defaultPanelWindowsEnabled, panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
     DOCK_BOX_NAME,
@@ -79,6 +82,7 @@ import {
 } from '../taskbar/taskbarHoverAnimationUtils.js';
 import {
     adaptiveTaskbarIconSize,
+    panelTaskbarIconSize,
     applyTaskbarIconSize,
 } from '../taskbar/taskbarIconSize.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
@@ -110,6 +114,7 @@ export class SecondaryPanelController {
         visiblePanelItemIds = null,
         mainPanelSettings = null,
     }) {
+        settings = panelApplicationSettings(settings);
         this._settings = settings;
         this._extensionDir = extensionDir;
         this._monitor = monitor;
@@ -130,7 +135,7 @@ export class SecondaryPanelController {
             : settings.get_int('icon-size');
         this._panelHeight = settings.get_int('panel-height');
         this._maximumIconSize = configuredIconSize;
-        this._iconSize = configuredIconSize;
+        this._iconSize = panelTaskbarIconSize(settings, configuredIconSize);
 
         this._windowController = new WindowController(tracker, {
             settings,
@@ -615,9 +620,13 @@ export class SecondaryPanelController {
         this._settings.connectObject('changed::panel-height', () => {
             this._panelHeight = this._settings.get_int('panel-height');
             this._taskbarController.setPanelHeight(this._panelHeight);
+            if (defaultPanelWindowsEnabled(this._settings))
+                this._resetTaskbarIconSize();
             this._position();
         }, this._signalHolder);
         const syncIconMetrics = () => {
+            if (defaultPanelWindowsEnabled(this._settings))
+                this._resetTaskbarIconSize();
             this._applyAppearance();
             this._updateTaskbarWidth();
         };
@@ -626,9 +635,11 @@ export class SecondaryPanelController {
             'changed::icon-edge-padding', syncIconMetrics,
             this._signalHolder
         );
-        this._settings.connectObject('changed::default-gnome-panel', () => {
-            this._syncTaskbarVisibility();
-        }, this._signalHolder);
+        this._settings.connectObject(
+            'changed::default-gnome-panel', () => this._syncTaskbarVisibility(),
+            'changed::default-panel-show-running-windows', () => this._syncTaskbarVisibility(),
+            this._signalHolder
+        );
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => {
@@ -731,8 +742,12 @@ export class SecondaryPanelController {
     }
 
     _syncTaskbarVisibility() {
-        const visible = !this._settings.get_boolean('default-gnome-panel');
+        const visible = panelApplicationsEnabled(this._settings);
         this._taskbarBin.visible = visible;
+        if (visible && !this._dockController &&
+            !this._settings.get_boolean('windows-xp-theme-enabled')) {
+            this._resetTaskbarIconSize();
+        }
         if (!visible) {
             this._windowPreviews.hideTooltip(false);
             this._windowPreviews.hide();
@@ -1024,7 +1039,7 @@ export class SecondaryPanelController {
 
     _resetTaskbarIconSize() {
         this._maximumIconSize = this._settings.get_int('icon-size');
-        this._iconSize = this._maximumIconSize;
+        this._iconSize = panelTaskbarIconSize(this._settings, this._maximumIconSize);
         this._applyTaskbarIconSize();
         this._applicationOverflowController.sync();
     }

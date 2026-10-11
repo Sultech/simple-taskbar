@@ -9,6 +9,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
     HIGHLIGHT_DIALOG_SETTING_KEYS,
+    HIGHLIGHT_LENGTH_SETTING_KEYS,
     HIGHLIGHT_LENGTH_SETTINGS,
     HIGHLIGHT_SIZE_SETTINGS,
     TASKBAR_HIGHLIGHT_STYLE,
@@ -145,25 +146,27 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
                 locked: windows10Theme,
             }
         );
-        addHighlightExtentRows(
-            sizeGroup,
-            settings,
-            connectSettings,
-            {
-                keys: HIGHLIGHT_LENGTH_SETTINGS,
-                iconSize,
-                switchTitle: _('Custom Highlight Length'),
-                switchSubtitle: _(
-                    'Grow the highlight along the panel beyond the application icon'
-                ),
-                rowTitle: _('Highlight Length'),
-                rowSubtitle: _('Size along the panel in pixels'),
-                lower: highlightLengthLowerBound(settings, iconSize),
-                upper: highlightLengthUpperBound(iconSize),
-                available: !taskbarAppLabelsVisible(settings),
-                locked: windows10Theme,
-            }
-        );
+        if (!settings.isDefaultPanelWindows) {
+            addHighlightExtentRows(
+                sizeGroup,
+                settings,
+                connectSettings,
+                {
+                    keys: HIGHLIGHT_LENGTH_SETTINGS,
+                    iconSize,
+                    switchTitle: _('Custom Highlight Length'),
+                    switchSubtitle: _(
+                        'Grow the highlight along the panel beyond the application icon'
+                    ),
+                    rowTitle: _('Highlight Length'),
+                    rowSubtitle: _('Size along the panel in pixels'),
+                    lower: highlightLengthLowerBound(settings, iconSize),
+                    upper: highlightLengthUpperBound(iconSize),
+                    available: !taskbarAppLabelsVisible(settings),
+                    locked: windows10Theme,
+                }
+            );
+        }
 
         const hoverGroup = new Adw.PreferencesGroup({
             title: _('Hover Highlight'),
@@ -280,8 +283,11 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
     }
 
     _reset() {
-        for (const key of HIGHLIGHT_DIALOG_SETTING_KEYS)
-            this._settings.reset(key);
+        for (const key of HIGHLIGHT_DIALOG_SETTING_KEYS) {
+            if (!this._settings.isDefaultPanelWindows ||
+                !HIGHLIGHT_LENGTH_SETTING_KEYS.includes(key))
+                this._settings.reset(key);
+        }
     }
 }
 );

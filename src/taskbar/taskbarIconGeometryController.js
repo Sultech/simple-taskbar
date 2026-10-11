@@ -6,6 +6,8 @@ import Mtk from 'gi://Mtk';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {panelPosition} from '../shared/panelPositionUtils.js';
+
 export function iconScreenGeometry(icon) {
     if (!icon.get_stage() || !icon.has_allocation())
         return null;
@@ -67,7 +69,7 @@ export class TaskbarIconGeometryController {
         this._clearWindowIconActors(app);
         for (const item of this._appButtons.values()) {
             if (item._taskbarApp === app)
-                this._updateItemIconGeometry(item);
+                this._updateItemIconGeometry(item, true);
         }
     }
 
@@ -89,13 +91,15 @@ export class TaskbarIconGeometryController {
             if (app && assignment.app !== app)
                 continue;
 
-            if (window._simpleTaskbarIconActor === assignment.icon)
+            if (window._simpleTaskbarIconActor === assignment.icon) {
                 window._simpleTaskbarIconActor = null;
+                window._simpleTaskbarIconPosition = null;
+            }
             this._windowIconActors.delete(window);
         }
     }
 
-    _updateItemIconGeometry(item) {
+    _updateItemIconGeometry(item, claimTarget = false) {
         const icon = this._getIconTarget(item);
         const screenGeometry = iconScreenGeometry(icon);
         if (!screenGeometry)
@@ -113,11 +117,15 @@ export class TaskbarIconGeometryController {
             this._settings.get_boolean('multi-monitor-panels') &&
             Main.layoutManager.monitors.length > 1;
         for (const window of this._windowsForItem(item)) {
+            if (!claimTarget && window._simpleTaskbarIconActor &&
+                window._simpleTaskbarIconActor !== icon)
+                continue;
             if (monitorScoped && monitor &&
                 window.get_monitor() !== monitor.index)
                 continue;
             window.set_icon_geometry(geometry);
             window._simpleTaskbarIconActor = icon;
+            window._simpleTaskbarIconPosition = panelPosition(this._settings);
             this._windowIconActors.set(window, {
                 app: item._taskbarApp,
                 icon,

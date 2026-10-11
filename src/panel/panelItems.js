@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {
-    shouldHidePinnedApplications,
-} from '../shared/taskbarPinnedVisibility.js';
+import {panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
 
 export function createPanelItems({
     settings,
@@ -22,11 +20,7 @@ export function createPanelItems({
         !settings.get_boolean('default-gnome-panel') &&
         (settings.get_boolean('windows-start-menu-enabled') ||
             settings.get_boolean('gnome-start-button-visible'));
-    const hidePinned = shouldHidePinnedApplications(settings, isSecondary);
-    const applicationsVisible =
-        !settings.get_boolean('default-gnome-panel') &&
-        !(hidePinned &&
-            settings.get_boolean('hide-unpinned-taskbar-apps'));
+    const applicationsVisible = panelApplicationsVisible(settings, isSecondary);
     const items = [
         {
             id: 'start-button',

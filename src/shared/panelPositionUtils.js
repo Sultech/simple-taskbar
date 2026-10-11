@@ -17,7 +17,7 @@ export function panelPosition(settings) {
 }
 
 export function activePanelPosition(settings) {
-    return settings.get_boolean('dock-mode')
+    return !settings.isDefaultPanelWindows && settings.get_boolean('dock-mode')
         ? settings.get_string('dock-position')
         : settings.get_string('panel-position');
 }

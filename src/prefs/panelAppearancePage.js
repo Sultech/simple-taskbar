@@ -146,8 +146,7 @@ export function addPanelAppearancePage({
         panelHeightRow.sensitive = !enabled && !panelHeightFollowsIcons();
         panelPositionRow.sensitive = !enabled;
         taskbarModeRow.sensitive = true;
-        defaultGnomePanelRow.sensitive =
-            !settings.get_boolean('dock-mode');
+        defaultGnomePanelRow.sensitive = true;
         dockModeRow.sensitive = true;
         dockPositionRow.sensitive = !enabled &&
             settings.get_boolean('dock-mode');

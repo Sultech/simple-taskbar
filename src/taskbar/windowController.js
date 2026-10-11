@@ -77,6 +77,7 @@ export class WindowController {
     }
 
     activateApp(app) {
+        this._getTaskbar().updateAppIconGeometry(app);
         const windows = this.getInterestingWindows(app);
         const overviewShown = Main.overview._shown;
         if (windows.length === 0) {
@@ -103,7 +104,6 @@ export class WindowController {
         }
 
         if (this._tracker.focus_app === app) {
-            this._getTaskbar().updateAppIconGeometry(app);
             for (const window of windows)
                 window.minimize();
             return;
@@ -304,6 +304,7 @@ export class WindowController {
         app,
         action = this._settings.get_string('application-click-action')
     ) {
+        this._getTaskbar().updateAppIconGeometry(app);
         const previews = this._getPreviews();
         const windows = this.getInterestingWindows(app);
         const isCycleAction = action === CLICK_ACTION.CYCLE_MINIMIZE ||
@@ -400,7 +401,6 @@ export class WindowController {
             if (Main.overview._shown)
                 Main.activateWindow(window);
             else {
-                this._getTaskbar().updateAppIconGeometry(app);
                 window.minimize();
                 Main.overview.hide();
             }
@@ -416,7 +416,6 @@ export class WindowController {
         if (!Main.overview._shown &&
             global.display.focus_window === window &&
             minimizeFocusedActions.includes(action)) {
-            this._getTaskbar().updateAppIconGeometry(app);
             window.minimize();
             return;
         }
@@ -428,6 +427,8 @@ export class WindowController {
         if (!window || window.skip_taskbar)
             return;
 
+        const app = this._tracker.get_window_app(window);
+        this._getTaskbar().updateAppIconGeometry(app);
         const overviewShown = Main.overview._shown;
         if (overviewShown) {
             Main.activateWindow(window);
@@ -436,8 +437,6 @@ export class WindowController {
         }
 
         if (global.display.focus_window === window) {
-            const app = this._tracker.get_window_app(window);
-            this._getTaskbar().updateAppIconGeometry(app);
             window.minimize();
             return;
         }

@@ -6,6 +6,9 @@ import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {DefaultPanelWindowSettings} from '../shared/defaultPanelWindowSettings.js';
+import {defaultPanelWindowsEnabled} from '../shared/defaultPanelWindows.js';
+import {createDefaultPanelIconSizingRows} from './defaultPanelIconSizing.js';
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {
@@ -30,6 +33,7 @@ import {
 import {addApplicationInteractionGroup} from './applicationInteractionGroup.js';
 import {
     MAX_ICON_EDGE_PADDING,
+    MAX_ICON_SIZE,
     MIN_ICON_SIZE,
     MIN_ICON_EDGE_PADDING,
 } from '../shared/panelSizing.js';
@@ -48,8 +52,6 @@ import {
     createSwitchRow,
 } from './preferencesWidgets.js';
 
-const MAX_ICON_SIZE = 128;
-
 function addApplicationIconControls({
     group,
     settings,
@@ -63,21 +65,24 @@ function addApplicationIconControls({
     });
     group.add(iconSizingRow);
 
-    const iconSizeRow = addSpinRow(
+    const defaultPanelSizing = settings.isDefaultPanelWindows
+        ? createDefaultPanelIconSizingRows(settings, connectSettings)
+        : null;
+    const iconSizeRow = defaultPanelSizing ? defaultPanelSizing.iconSizeRow : addSpinRow(
         iconSizingRow,
         settings,
         {
             key: 'icon-size',
             title: _('Icon Size'),
-            subtitle: _(
-                'The panel grows automatically when larger icons need more room'
-            ),
+            subtitle: _('The panel grows automatically when larger icons need more room'),
             lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
             addRow: row => iconSizingRow.add_row(row),
         },
         connectSettings
     );
+    if (defaultPanelSizing)
+        iconSizingRow.add_row(iconSizeRow);
     const dockMinIconSizeRow = addSpinRow(
         iconSizingRow,
         settings,
@@ -106,7 +111,7 @@ function addApplicationIconControls({
         },
         connectSettings
     );
-    const iconEdgePaddingRow = addSpinRow(
+    const iconEdgePaddingRow = defaultPanelSizing ? defaultPanelSizing.iconEdgePaddingRow : addSpinRow(
         iconSizingRow,
         settings,
         {
@@ -119,6 +124,8 @@ function addApplicationIconControls({
         },
         connectSettings
     );
+    if (defaultPanelSizing)
+        iconSizingRow.add_row(iconEdgePaddingRow);
     const classicOptionsButton = createClassicHighlightOptionsButton(settings);
     const highlightStyleRow = addComboRow(
         iconSizingRow,
@@ -180,8 +187,10 @@ function addApplicationIconControls({
         settings,
         connectSettings,
     });
+    dockMinIconSizeRow.visible = !settings.isDefaultPanelWindows;
     const syncMinimumIconSize = () => {
-        const enabled = !settings.get_boolean('windows-xp-theme-enabled') &&
+        const enabled = !settings.isDefaultPanelWindows &&
+            !settings.get_boolean('windows-xp-theme-enabled') &&
             !isDefaultPanelWithoutDock(settings);
         dockMinIconSizeRow.sensitive = enabled;
         if (!enabled)
@@ -235,6 +244,7 @@ function addApplicationLayoutControls({
         activatable_widget: pinnedBehaviorOptionsButton,
     });
     pinnedBehaviorRow.add_suffix(pinnedBehaviorOptionsButton);
+    pinnedBehaviorRow.visible = !settings.isDefaultPanelWindows;
     layoutGroup.add_row(pinnedBehaviorRow);
 
     const combineAppButtonsChoices = [
@@ -246,8 +256,12 @@ function addApplicationLayoutControls({
         {value: 'when-full', label: _('Only When Full')},
         {value: 'never', label: _('Never')},
     ];
+    const defaultPanelCombineAppButtonsChoices = [
+        {value: 'never', label: _('Never')},
+        {value: 'when-full', label: _('Only When Full')},
+    ];
     const combineOptionsButton =
-        createApplicationGroupingOptionsButton(settings);
+        createApplicationGroupingOptionsButton(settings, Boolean(settings.isDefaultPanelWindows));
     const combineAppButtonsRow = addComboRow(
         layoutGroup,
         settings,
@@ -256,18 +270,25 @@ function addApplicationLayoutControls({
             title: _('Combine Application Windows'),
             subtitle: _('Choose when windows share one application icon'),
             choices: combineAppButtonsChoices,
-            choicesProvider: () =>
-                settings.get_boolean(
+            choicesProvider: () => settings.isDefaultPanelWindows
+                ? defaultPanelCombineAppButtonsChoices
+                : settings.get_boolean(
                     'windows-xp-theme-enabled'
                 )
                     ? windowsXpCombineAppButtonsChoices
                     : combineAppButtonsChoices,
             choicesChangedKey: 'windows-xp-theme-enabled',
-            addSuffix: row => row.add_suffix(combineOptionsButton),
+            addSuffix: row => {
+                if (!settings.isDefaultPanelWindows)
+                    row.add_suffix(combineOptionsButton);
+            },
             addRow: row => layoutGroup.add_row(row),
         },
         connectSettings
     );
+
+    if (settings.isDefaultPanelWindows)
+        layoutGroup.subtitle = _('Configure window grouping, badges, and progress bars');
 
     const progressBarOptionsButton = createProgressBarOptionsButton(settings);
     addSwitchRow(layoutGroup, settings, {
@@ -308,6 +329,8 @@ function addApplicationLayoutControls({
         subtitle: _('Show a line between applications and locations'),
     });
     layoutGroup.add_row(locationSeparatorSwitch);
+    pinnedAppSeparatorSwitch.visible = !settings.isDefaultPanelWindows;
+    locationSeparatorSwitch.visible = !settings.isDefaultPanelWindows;
 
     const syncSeparatorSensitivity = () => {
         const enabled = !settings.get_boolean(
@@ -330,7 +353,7 @@ function addApplicationLayoutControls({
             settings.get_string(
                 'combine-app-buttons-mode'
             ) !== 'always';
-        combineOptionsButton.sensitive = enabled;
+        combineOptionsButton.sensitive = settings.isDefaultPanelWindows || enabled;
     };
     for (const key of [
         'combine-app-buttons-mode',
@@ -486,7 +509,7 @@ function addIndicatorControls({
     const syncIndicatorControls = () => {
         const blocked =
             settings.get_boolean('windows-xp-theme-enabled') ||
-            isDefaultPanelWithoutDock(settings);
+            (!settings.isDefaultPanelWindows && isDefaultPanelWithoutDock(settings));
         const windows10Theme = settings.get_boolean(
             'windows-10-theme-enabled'
         );
@@ -688,6 +711,47 @@ function addDockApplicationIconsGroup({
     syncDockApplicationIcons();
 }
 
+function addDefaultPanelApplicationIconsGroup({page, settings, connectSettings, panelPositions}) {
+    const windowSettings = new DefaultPanelWindowSettings(settings);
+    const group = new Adw.PreferencesGroup({
+        title: _('Application Icons'),
+        description: _('Customize the running window buttons in the default panel independently of the Dock.'),
+    });
+    page.add(group);
+    addApplicationIconControls({
+        group,
+        settings: windowSettings,
+        connectSettings,
+        panelPositions,
+        edgePaddingSubtitle: _('Space between window icons and the panel edges'),
+    });
+    addApplicationOverflowControls({
+        group,
+        settings: windowSettings,
+        connectSettings,
+        switchSubtitle: _('Show windows that do not fit in an overflow popup instead of scrolling the panel'),
+    });
+    const {isolateMonitorsSwitch} = addApplicationIsolationControls({
+        group,
+        settings: windowSettings,
+        groupSubtitle: _('Limit this panel’s running windows to the current workspace or monitor'),
+        monitorSubtitle: _('Show running windows only on the panel for their monitor'),
+    });
+    const syncMonitorIsolation = () => {
+        isolateMonitorsSwitch.sensitive = settings.get_boolean('multi-monitor-panels');
+    };
+    connectSettings(settings, 'changed::multi-monitor-panels', syncMonitorIsolation);
+    syncMonitorIsolation();
+    addIndicatorControls({group, settings: windowSettings, connectSettings});
+    addApplicationLayoutControls({group, settings: windowSettings, connectSettings});
+    const syncVisibility = () => {
+        group.visible = defaultPanelWindowsEnabled(settings);
+    };
+    for (const key of ['default-gnome-panel', 'default-panel-show-running-windows', 'panel-position'])
+        connectSettings(settings, `changed::${key}`, syncVisibility);
+    syncVisibility();
+}
+
 export function addApplicationIconsGroup({
     page,
     dockPage,
@@ -702,6 +766,7 @@ export function addApplicationIconsGroup({
         ),
     });
     page.add(appearanceGroup);
+    addDefaultPanelApplicationIconsGroup({page, settings, connectSettings, panelPositions});
     addDockApplicationIconsGroup({
         page: dockPage,
         settings,

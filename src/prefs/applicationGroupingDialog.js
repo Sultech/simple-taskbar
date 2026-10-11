@@ -22,17 +22,18 @@ const APPLICATION_GROUPING_SETTINGS = [
     'group-apps-use-fixed-width',
 ];
 
-export function createApplicationGroupingOptionsButton(settings) {
+export function createApplicationGroupingOptionsButton(settings, forceLabels = false) {
     return createPreferencesDialogButton(
         settings,
         _('Application Label Options'),
-        ApplicationGroupingOptionsDialog
+        ApplicationGroupingOptionsDialog,
+        {forceLabels}
     );
 }
 
 export const ApplicationGroupingOptionsDialog = GObject.registerClass(
 class ApplicationGroupingOptionsDialog extends Adw.Window {
-    _init({settings, parent}) {
+    _init({settings, parent, forceLabels = false}) {
         super._init({
             title: _('Application Label Options'),
             transient_for: parent,
@@ -42,6 +43,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
         });
 
         this._settings = settings;
+        this._forceLabels = forceLabels;
         const {content, connectSettings} =
             createPreferencesDialogContent(this);
 
@@ -51,12 +53,13 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
         });
         content.append(behaviorGroup);
 
-        const hideAppLabelsSwitch = createSwitchRow(settings, {
-            key: 'hide-app-labels',
-            title: _('Hide App Labels'),
-            subtitle: _('Hide window titles beside application icons'),
-        });
-        behaviorGroup.add(hideAppLabelsSwitch);
+        if (!forceLabels) {
+            behaviorGroup.add(createSwitchRow(settings, {
+                key: 'hide-app-labels',
+                title: _('Hide App Labels'),
+                subtitle: _('Hide window titles beside application icons'),
+            }));
+        }
         const labelFontSizeRow = addSpinRow(
             behaviorGroup,
             settings,
@@ -100,7 +103,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
                 key: 'group-apps-label-max-width',
                 title: _('Maximum Label Width'),
                 subtitle: _('Maximum application title width in pixels'),
-                lower: 0,
+                lower: forceLabels ? 1 : 0,
                 upper: 1000,
                 step: 10,
             },
@@ -122,7 +125,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
             fixedLabelWidthSwitch,
         ];
         const syncLabelOptionSensitivity = () => {
-            const sensitive = !settings.get_boolean('hide-app-labels');
+            const sensitive = forceLabels || !settings.get_boolean('hide-app-labels');
             for (const row of labelOptionRows)
                 row.sensitive = sensitive;
         };
@@ -136,8 +139,10 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
     }
 
     _reset() {
-        for (const key of APPLICATION_GROUPING_SETTINGS)
-            this._settings.reset(key);
+        for (const key of APPLICATION_GROUPING_SETTINGS) {
+            if (!this._forceLabels || key !== 'hide-app-labels')
+                this._settings.reset(key);
+        }
     }
 }
 );
