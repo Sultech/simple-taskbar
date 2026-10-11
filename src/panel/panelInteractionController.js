@@ -9,6 +9,7 @@ import St from 'gi://St';
 
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
@@ -22,8 +23,16 @@ import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {openPopupMenu} from '../popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+import {isTrayIndicatorActor} from '../overflow/trayOverflowController.js';
+import {PointerClickReplay} from '../pointerUtils.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
+const CLICK_THROUGH_BLOCKING_MODIFIERS =
+    Clutter.ModifierType.CONTROL_MASK |
+    Clutter.ModifierType.MOD1_MASK |
+    Clutter.ModifierType.MOD4_MASK |
+    Clutter.ModifierType.SUPER_MASK |
+    Clutter.ModifierType.META_MASK;
 
 export class PanelInteractionController {
     constructor({
@@ -43,6 +52,7 @@ export class PanelInteractionController {
             Main.panel._rightBox,
         ],
         allowTaskbarLock = true,
+        getPanelMenus = () => [],
     }) {
         this._settings = settings;
         this._taskbarController = taskbarController;
@@ -56,6 +66,10 @@ export class PanelInteractionController {
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
+        this._getPanelMenus = getPanelMenus;
+        this._panelMenus = [];
+        this._clickThroughIdleId = 0;
+        this._clickReplay = new PointerClickReplay();
         this._capturedEventId = 0;
         this._workspaceScrollTimeoutId = 0;
         this._appScrollTimeoutId = 0;
@@ -70,13 +84,40 @@ export class PanelInteractionController {
             'captured-event',
             (_actor, event) => this._onCapturedEvent(event)
         );
+        this._panelActor.connectObject(
+            'popup-menu', () => this._onPanelPopupMenu(),
+            this
+        );
+        this._panelMenus = [
+            this._contextMenu,
+            ...this._getPanelMenus(),
+        ].filter(Boolean);
+        for (const menu of this._panelMenus) {
+            menu.connectObject('open-state-changed', (_menu, open) => {
+                if (!open)
+                    this._passOutsideClickThrough(menu);
+            }, this);
+        }
     }
 
     get menuIsOpen() {
         return this._contextMenu.isOpen;
     }
 
+    close() {
+        this._contextMenu?.close();
+    }
+
     destroy() {
+        this._panelActor.disconnectObject(this);
+        for (const menu of this._panelMenus)
+            menu.disconnectObject(this);
+        this._panelMenus = [];
+        this._getPanelMenus = null;
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = 0;
+        this._clickReplay.destroy();
         if (this._workspaceScrollTimeoutId)
             GLib.Source.remove(this._workspaceScrollTimeoutId);
         this._workspaceScrollTimeoutId = 0;
@@ -107,6 +148,90 @@ export class PanelInteractionController {
         this._onAppScrolled = null;
         this._onPanelScrolled = null;
         this._getVolumeIndicator = null;
+    }
+
+    _passOutsideClickThrough(menu) {
+        if (!this._settings.get_boolean('taskbar-click-through'))
+            return;
+
+        const event = Clutter.get_current_event();
+        if (!event ||
+            event.type() !== Clutter.EventType.BUTTON_PRESS ||
+            event.get_state() & CLICK_THROUGH_BLOCKING_MODIFIERS)
+            return;
+
+        const mouseButton = event.get_button();
+        if (mouseButton !== Clutter.BUTTON_PRIMARY &&
+            mouseButton !== Clutter.BUTTON_SECONDARY)
+            return;
+
+        const button = this._panelButtonAt(
+            global.stage.get_event_actor(event),
+            menu.sourceActor,
+            mouseButton === Clutter.BUTTON_SECONDARY
+        );
+        if (!button)
+            return;
+
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this._clickThroughIdleId = 0;
+            if (!button.mapped || !button.reactive)
+                return GLib.SOURCE_REMOVE;
+
+            const buttonMenu = this._panelMenuOf(button);
+            if (this._replaysClick(button, buttonMenu))
+                this._clickReplay.replay(button, mouseButton);
+            else if (buttonMenu)
+                buttonMenu.toggle();
+            else if (mouseButton === Clutter.BUTTON_SECONDARY)
+                button.emit('popup-menu');
+            else if (this._isActivitiesButton(button))
+                this._toggleOverview();
+            else
+                button.emit('clicked', Clutter.BUTTON_PRIMARY);
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _replaysClick(actor, menu) {
+        return isTrayIndicatorActor(actor) ||
+            (!menu && actor instanceof PanelMenu.ButtonBox &&
+                !this._isActivitiesButton(actor));
+    }
+
+    _panelMenuOf(actor) {
+        return [actor.menu, actor.simpleTaskbarMenu, ...this._panelMenus].find(menu =>
+            menu instanceof PopupMenu.PopupMenu &&
+            menu.sourceActor === actor) ?? null;
+    }
+
+    _isActivitiesButton(actor) {
+        return actor.name === 'panelActivities';
+    }
+
+    _toggleOverview() {
+        if (Main.overview.shouldToggleByCornerOrButton())
+            Main.overview.toggle();
+    }
+
+    _panelButtonAt(actor, sourceActor, includePanel = false) {
+        let button = null;
+        for (let current = actor; current; current = current.get_parent()) {
+            if (current === sourceActor)
+                return null;
+            if (!button && (current instanceof St.Button ||
+                current instanceof PanelMenu.ButtonBox ||
+                this._panelMenuOf(current) ||
+                this._isActivitiesButton(current)))
+                button = current;
+            if (current === this._panelActor) {
+                const found = button ?? (includePanel ? current : null);
+                return found?.reactive ? found : null;
+            }
+        }
+        return null;
     }
 
     _createContextMenu() {
@@ -435,8 +560,23 @@ export class PanelInteractionController {
         return null;
     }
 
+    _onPanelPopupMenu() {
+        const [stageX, stageY] = global.get_pointer();
+        const target = global.stage.get_actor_at_pos(
+            Clutter.PickMode.REACTIVE,
+            stageX,
+            stageY
+        );
+        if (this._isFreePanelTarget(target))
+            this._openContextMenuAt(stageX, stageY);
+    }
+
     _openContextMenu(event) {
         const [stageX, stageY] = event.get_coords();
+        this._openContextMenuAt(stageX, stageY);
+    }
+
+    _openContextMenuAt(stageX, stageY) {
         Main.layoutManager.setDummyCursorGeometry(stageX, stageY, 0, 0);
         this._taskbarController.dropHoverAnimations();
         this._previews.hideTooltip(false);

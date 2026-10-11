@@ -8,6 +8,7 @@ import St from 'gi://St';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as SystemActions from 'resource:///org/gnome/shell/misc/systemActions.js';
 import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
@@ -68,6 +69,8 @@ import {
     getRecommendedApps,
     groupAppsByCategory,
 } from './startMenuAppModel.js';
+import {isTrayIndicatorActor} from '../overflow/trayOverflowController.js';
+import {PointerClickReplay} from '../pointerUtils.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
@@ -77,6 +80,12 @@ const MENU_MAX_HEIGHT = 810;
 const MENU_MONITOR_MARGIN = 96;
 const BLURRED_CLASS =
     'simple-taskbar-windows-start-blurred';
+const CLICK_THROUGH_BLOCKING_MODIFIERS =
+    Clutter.ModifierType.CONTROL_MASK |
+    Clutter.ModifierType.MOD1_MASK |
+    Clutter.ModifierType.MOD4_MASK |
+    Clutter.ModifierType.SUPER_MASK |
+    Clutter.ModifierType.META_MASK;
 const PASSIVE_SEARCH_CLASS =
     'simple-taskbar-windows-start-search-passive';
 const TYPE_TO_SEARCH_BLOCKING_MODIFIERS =
@@ -160,6 +169,8 @@ export class StartMenuController {
         this._selectedSearchButton = null;
         this._searchResultButtons = new Map();
         this._searchSelectionVisible = false;
+        this._clickThroughIdleId = 0;
+        this._clickReplay = new PointerClickReplay();
         this._view = 'pinned';
         this._firstVisibleApp = null;
         this._sourcePress = new SourcePressGuard();
@@ -339,6 +350,7 @@ export class StartMenuController {
                     this._tooltipController.hide(true);
                     this._contextMenuController.close();
                     this._powerController.close();
+                    this._passOutsideClickThrough();
                 }
                 this._onOpenStateChanged(open);
             }
@@ -379,6 +391,89 @@ export class StartMenuController {
 
     get isOpen() {
         return this._menu.isOpen;
+    }
+
+    _passOutsideClickThrough() {
+        if (!this._settings.get_boolean('taskbar-click-through'))
+            return;
+
+        const event = Clutter.get_current_event();
+        if (!event ||
+            event.type() !== Clutter.EventType.BUTTON_PRESS ||
+            event.get_state() & CLICK_THROUGH_BLOCKING_MODIFIERS)
+            return;
+
+        const mouseButton = event.get_button();
+        if (mouseButton !== Clutter.BUTTON_PRIMARY &&
+            mouseButton !== Clutter.BUTTON_SECONDARY)
+            return;
+
+        const button = this._panelButtonAt(
+            global.stage.get_event_actor(event),
+            mouseButton === Clutter.BUTTON_SECONDARY
+        );
+        if (!button)
+            return;
+
+        if (this._clickThroughIdleId)
+            GLib.Source.remove(this._clickThroughIdleId);
+        this._clickThroughIdleId = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this._clickThroughIdleId = 0;
+            if (!button.mapped || !button.reactive)
+                return GLib.SOURCE_REMOVE;
+
+            const menu = this._panelMenuOf(button);
+            if (this._replaysClick(button, menu))
+                this._clickReplay.replay(button, mouseButton);
+            else if (menu)
+                menu.toggle();
+            else if (mouseButton === Clutter.BUTTON_SECONDARY)
+                button.emit('popup-menu');
+            else if (this._isActivitiesButton(button))
+                this._toggleOverview();
+            else
+                button.emit('clicked', Clutter.BUTTON_PRIMARY);
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _replaysClick(actor, menu) {
+        return isTrayIndicatorActor(actor) ||
+            (!menu && actor instanceof PanelMenu.ButtonBox &&
+                !this._isActivitiesButton(actor));
+    }
+
+    _panelMenuOf(actor) {
+        return [actor.menu, actor.simpleTaskbarMenu].find(menu =>
+            menu instanceof PopupMenu.PopupMenu &&
+            menu.sourceActor === actor) ?? null;
+    }
+
+    _isActivitiesButton(actor) {
+        return actor.name === 'panelActivities';
+    }
+
+    _toggleOverview() {
+        if (Main.overview.shouldToggleByCornerOrButton())
+            Main.overview.toggle();
+    }
+
+    _panelButtonAt(actor, includePanel = false) {
+        let button = null;
+        for (let current = actor; current; current = current.get_parent()) {
+            if (current === this._sourceActor)
+                return null;
+            if (!button && (current instanceof St.Button ||
+                current instanceof PanelMenu.ButtonBox ||
+                this._panelMenuOf(current) ||
+                this._isActivitiesButton(current)))
+                button = current;
+            if (current.has_style_class_name?.('simple-taskbar-panel')) {
+                const found = button ?? (includePanel ? current : null);
+                return found?.reactive ? found : null;
+            }
+        }
+        return null;
     }
 
     toggle() {
@@ -690,6 +785,11 @@ export class StartMenuController {
             GLib.Source.remove(this._refreshIdleId);
             this._refreshIdleId = 0;
         }
+        if (this._clickThroughIdleId) {
+            GLib.Source.remove(this._clickThroughIdleId);
+            this._clickThroughIdleId = 0;
+        }
+        this._clickReplay.destroy();
         this._content.remove_all_transitions();
         this._appSystem.disconnect(this._installedChangedId);
         this._installedChangedId = 0;

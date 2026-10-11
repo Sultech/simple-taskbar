@@ -34,6 +34,10 @@ const TRAY_INDICATOR_STYLE =
     '-natural-hpadding: 0px; -minimum-hpadding: 0px;';
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
+export function isTrayIndicatorActor(actor) {
+    return TRAY_TYPE_NAMES.includes(actor.constructor.name);
+}
+
 export class TrayOverflowController {
     constructor(settings) {
         this._settings = settings;
@@ -76,6 +80,7 @@ export class TrayOverflowController {
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
         this._menuManager.addMenu(this._menu);
+        this._button.simpleTaskbarMenu = this._menu;
 
         this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open) {
@@ -138,6 +143,8 @@ export class TrayOverflowController {
 
         this._releaseAll();
 
+        if (this._button)
+            this._button.simpleTaskbarMenu = null;
         if (this._menu) {
             this._menuManager.removeMenu(this._menu);
             this._menu.destroy();
@@ -157,6 +164,10 @@ export class TrayOverflowController {
 
     close() {
         closePopupMenu(this._menu, false);
+    }
+
+    get menu() {
+        return this._menu;
     }
 
     get menuIsOpen() {
