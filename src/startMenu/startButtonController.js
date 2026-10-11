@@ -290,6 +290,21 @@ export class StartButtonController {
         this._ensureStartMenuController().toggle();
     }
 
+    get menus() {
+        return [this._startMenuController?.menu, this._contextMenu]
+            .filter(Boolean);
+    }
+
+    get startMenuAvailable() {
+        return this._windowsModeEnabled() && !Main.overview.visible;
+    }
+
+    openStartMenu() {
+        this._previews.hideTooltip(false);
+        this._previews.hide();
+        this._ensureStartMenuController().open();
+    }
+
     _openStartMenuAfterOverview() {
         this._cancelStartMenuAfterOverview();
         Main.overview.connectObject(

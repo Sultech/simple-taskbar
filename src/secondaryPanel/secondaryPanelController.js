@@ -213,6 +213,9 @@ export class SecondaryPanelController {
                 if (open) {
                     this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
+                    this._interactionController?.trackMenus(
+                        this._startButtonController.menus
+                    );
                 }
             },
         });
@@ -391,6 +394,8 @@ export class SecondaryPanelController {
             panelActor: this.actor,
             panelBoxes: [this._leftBox, this._centerBox, this._rightBox],
             allowTaskbarLock: !this._dockController,
+            getPanelMenus: () => [...this._menuManager._menus],
+            startButtonController: this._startButtonController,
         });
         this._interactionController.enable();
         this._autoHideController = new PanelAutoHideController({

@@ -478,7 +478,8 @@ export class PanelController {
             menuManager,
             '_changeMenu',
             originalChangeMenu => function (menu) {
-                if (!settings.get_boolean('panel-menu-click-only'))
+                if (!settings.get_boolean('panel-menu-click-only') &&
+                    menu.sourceActor?.name !== 'panelActivities')
                     originalChangeMenu.call(this, menu);
             }
         );

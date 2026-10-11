@@ -43,6 +43,8 @@ export class PanelInteractionController {
             Main.panel._rightBox,
         ],
         allowTaskbarLock = true,
+        getPanelMenus = () => [],
+        startButtonController = null,
     }) {
         this._settings = settings;
         this._taskbarController = taskbarController;
@@ -56,6 +58,9 @@ export class PanelInteractionController {
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
+        this._getPanelMenus = getPanelMenus;
+        this._startButtonController = startButtonController;
+        this._hoverMenus = new Set();
         this._capturedEventId = 0;
         this._workspaceScrollTimeoutId = 0;
         this._appScrollTimeoutId = 0;
@@ -70,13 +75,46 @@ export class PanelInteractionController {
             'captured-event',
             (_actor, event) => this._onCapturedEvent(event)
         );
+        this.trackMenus([this._contextMenu, ...this._getPanelMenus()]);
+        for (const box of this._panelBoxes) {
+            box.connectObject('child-added', (_box, container) =>
+                this.trackMenus([
+                    container.child?.menu,
+                    ...this._getPanelMenus(),
+                ]), this);
+        }
     }
 
     get menuIsOpen() {
         return this._contextMenu.isOpen;
     }
 
+    trackMenus(menus) {
+        for (const menu of menus) {
+            if (!(menu instanceof PopupMenu.PopupMenu) ||
+                this._hoverMenus.has(menu))
+                continue;
+
+            this._hoverMenus.add(menu);
+            menu.connectObject('destroy', () => {
+                this._hoverMenus.delete(menu);
+                menu.disconnectObject(this);
+            }, this);
+            menu.actor.connectObject('captured-event', (_actor, event) =>
+                this._openHoveredMenu(menu, event), this);
+        }
+    }
+
     destroy() {
+        for (const box of this._panelBoxes)
+            box.disconnectObject(this);
+        for (const menu of this._hoverMenus) {
+            menu.disconnectObject(this);
+            menu.actor.disconnectObject(this);
+        }
+        this._hoverMenus.clear();
+        this._getPanelMenus = null;
+        this._startButtonController = null;
         if (this._workspaceScrollTimeoutId)
             GLib.Source.remove(this._workspaceScrollTimeoutId);
         this._workspaceScrollTimeoutId = 0;
@@ -107,6 +145,71 @@ export class PanelInteractionController {
         this._onAppScrolled = null;
         this._onPanelScrolled = null;
         this._getVolumeIndicator = null;
+    }
+
+    _openHoveredMenu(menu, event) {
+        const type = event.type();
+        if (!menu.isOpen ||
+            (type !== Clutter.EventType.MOTION &&
+                type !== Clutter.EventType.ENTER) ||
+            this._settings.get_boolean('panel-menu-click-only'))
+            return Clutter.EVENT_PROPAGATE;
+
+        const [stageX, stageY] = event.get_coords();
+        const target = global.stage.get_actor_at_pos(
+            Clutter.PickMode.REACTIVE,
+            stageX,
+            stageY
+        );
+        if (!target || menu.actor.contains(target) ||
+            !this._panelActor.contains(target))
+            return Clutter.EVENT_PROPAGATE;
+
+        const openHoveredMenu = this._hoveredMenuOpener(menu, target);
+        if (!openHoveredMenu)
+            return Clutter.EVENT_PROPAGATE;
+
+        this._closeHoverMenu(menu);
+        openHoveredMenu();
+        return Clutter.EVENT_PROPAGATE;
+    }
+
+    _hoveredMenuOpener(menu, target) {
+        const startButton = this._startButtonController;
+        if (startButton?.actor.contains(target)) {
+            if (startButton.menus.includes(menu) ||
+                !startButton.startMenuAvailable)
+                return null;
+            return () => startButton.openStartMenu();
+        }
+
+        for (let current = target; current && current !== this._panelActor;
+            current = current.get_parent()) {
+            const hoveredMenu = this._hoverMenuOf(current);
+            if (!hoveredMenu)
+                continue;
+            if (hoveredMenu === menu || hoveredMenu.isOpen ||
+                !current.reactive)
+                return null;
+            return () => {
+                openPopupMenu(hoveredMenu);
+                this.trackMenus([hoveredMenu]);
+            };
+        }
+        return null;
+    }
+
+    _hoverMenuOf(actor) {
+        return [actor.menu, ...this._hoverMenus].find(menu =>
+            menu instanceof PopupMenu.PopupMenu &&
+            menu.sourceActor === actor) ?? null;
+    }
+
+    _closeHoverMenu(menu) {
+        if (this._startButtonController?.menus.includes(menu))
+            this._startButtonController.closeMenus();
+        else
+            menu.close();
     }
 
     _createContextMenu() {

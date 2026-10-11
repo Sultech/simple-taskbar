@@ -170,7 +170,7 @@ export function addTaskbarBehaviorGroup({
     const panelMenuClickOnlySwitch = createSwitchRow(settings, {
         key: 'panel-menu-click-only',
         title: _('Taskbar Menus Require Click'),
-        subtitle: _('Switch between clock, system, and tray menus only when clicked'),
+        subtitle: _('Switch between Start, clock, system, and tray menus only when clicked'),
     });
     panelNotificationRow.add_row(panelMenuClickOnlySwitch);
 

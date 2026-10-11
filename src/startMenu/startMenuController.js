@@ -381,6 +381,10 @@ export class StartMenuController {
         return this._menu.isOpen;
     }
 
+    get menu() {
+        return this._menu;
+    }
+
     toggle() {
         if (this._sourcePress.consume()) {
             this.close();

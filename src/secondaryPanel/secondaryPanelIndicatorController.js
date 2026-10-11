@@ -63,7 +63,8 @@ export class SecondaryPanelIndicatorController {
         const originalChangeMenu = this._originalChangeMenu;
         const settings = this._settings;
         this._menuManager._changeMenu = function (menu) {
-            if (!settings.get_boolean('panel-menu-click-only'))
+            if (!settings.get_boolean('panel-menu-click-only') &&
+                menu.sourceActor?.name !== 'panelActivities')
                 originalChangeMenu.call(this, menu);
         };
     }

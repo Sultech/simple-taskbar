@@ -20,7 +20,7 @@ import {
     panelPosition,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
-import {closePopupMenu} from '../popupMenuUtils.js';
+import {closePopupMenu, openPopupMenu} from '../popupMenuUtils.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
 export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
@@ -86,6 +86,13 @@ export class TrayOverflowController {
                 this._button.remove_style_pseudo_class('active');
                 this._closeStashedMenus();
             }
+        }, this._signalHolder);
+        this._button.menu.connectObject('open-state-changed', (menu, open) => {
+            if (!open)
+                return;
+
+            menu.close();
+            openPopupMenu(this._menu);
         }, this._signalHolder);
         this._settings.connectObject(
             'changed::tray-overflow-enabled', () => this._sync(),
@@ -159,6 +166,10 @@ export class TrayOverflowController {
         closePopupMenu(this._menu, false);
     }
 
+    get menu() {
+        return this._menu;
+    }
+
     get menuIsOpen() {
         if (this._menu.isOpen)
             return true;
@@ -166,6 +177,32 @@ export class TrayOverflowController {
         return [...this._stashed.values()].some(
             ({indicator}) => indicator.menu.isOpen
         );
+    }
+
+    _openHoveredIndicatorMenu(entry) {
+        const {indicator} = entry;
+        if (!indicator.hover) {
+            entry.hoverOpenBlocked = false;
+            return;
+        }
+
+        const menu = indicator.menu;
+        if (entry.hoverOpenBlocked || !this._menu.isOpen ||
+            !(menu instanceof PopupMenu.PopupMenu) || menu.isOpen ||
+            this._settings.get_boolean('panel-menu-click-only'))
+            return;
+
+        openPopupMenu(menu);
+    }
+
+    _pointerIsOver(actor) {
+        const [x, y] = global.get_pointer();
+        const target = global.stage.get_actor_at_pos(
+            Clutter.PickMode.REACTIVE,
+            x,
+            y
+        );
+        return Boolean(target && actor.contains(target));
     }
 
     _syncButtonVisibility(visible) {
@@ -583,6 +620,7 @@ export class TrayOverflowController {
             lastClickTime: -1,
             lastClickX: -1,
             lastClickY: -1,
+            hoverOpenBlocked: false,
         };
         this._stashed.set(role, entry);
         this._queueRelayout();
@@ -602,6 +640,8 @@ export class TrayOverflowController {
         indicator.connectObject(
             'notify::visible',
             () => this._queueRelayout(),
+            'notify::hover',
+            () => this._openHoveredIndicatorMenu(entry),
             this
         );
         indicator.connectObject(
@@ -611,7 +651,11 @@ export class TrayOverflowController {
         );
         indicator.menu.connectObject(
             'open-state-changed',
-            (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
+            (_menu, open) => {
+                this._syncIndicatorMenuStacking(indicator, open);
+                if (!open)
+                    entry.hoverOpenBlocked = this._pointerIsOver(indicator);
+            },
             'activate', () => closePopupMenu(this._menu),
             this
         );
