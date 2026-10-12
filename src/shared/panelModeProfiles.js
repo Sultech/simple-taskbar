@@ -7,6 +7,7 @@ import {DEFAULT_PANEL_WINDOW_SETTING_KEYS, defaultPanelWindowSettingKey} from '.
 import {normalizePanelItemOrder} from './panelItemOrder.js';
 import {positionIsVertical} from './panelPositionUtils.js';
 import {
+    setBoolean,
     setInteger,
     setString,
     setStringArray,
@@ -454,6 +455,10 @@ export function initializePanelModeProfiles(settings) {
     settings.set_string('active-panel-mode', mode);
     settings.set_boolean('panel-mode-profiles-initialized', true);
     initializePanelAxisProfiles(settings);
+}
+
+export function clearInterruptedProfileTransition(settings) {
+    setBoolean(settings, 'panel-profile-transition', false);
 }
 
 export function synchronizePanelMode(settings) {

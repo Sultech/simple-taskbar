@@ -61,7 +61,10 @@ import {WindowPreviewController} from './src/taskbar/windowPreviewController.js'
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
 import {AppGridLayout} from './src/integration/appGridLayout.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
-import {synchronizePanelPosition} from './src/shared/panelModeProfiles.js';
+import {
+    clearInterruptedProfileTransition,
+    synchronizePanelPosition,
+} from './src/shared/panelModeProfiles.js';
 import {WindowsXpModeController} from './src/windowsXpModeController.js';
 import {Windows10ModeController} from './src/windows10ModeController.js';
 import {CLICK_ACTION} from './src/shared/applicationClickActions.js';
@@ -74,6 +77,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._favorites = AppFavorites.getAppFavorites();
         this._settings = this.getSettings();
         restoreOverlayKey(this._settings);
+        clearInterruptedProfileTransition(this._settings);
         this._switcherKeybindings = new SwitcherKeybindingRouter();
         this._extensionConflictController =
             new ExtensionConflictController(this._settings);
