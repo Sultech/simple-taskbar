@@ -884,9 +884,6 @@ export class StartButtonController {
     }
 
     _syncState() {
-        if (!this.actor)
-            return;
-
         const shellShowAppsButton = Main.overview.dash.showAppsButton;
         const applicationsActive = shellShowAppsButton.checked;
         this.actor.checked = this._windowsModeEnabled()
@@ -899,9 +896,6 @@ export class StartButtonController {
 
     _setActivitiesOverviewState(active) {
         const activitiesButton = Main.panel.statusArea.activities;
-        if (!activitiesButton)
-            return;
-
         if (active)
             activitiesButton.add_style_pseudo_class('checked');
         else
