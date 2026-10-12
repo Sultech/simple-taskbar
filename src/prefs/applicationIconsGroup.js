@@ -57,6 +57,7 @@ function addApplicationIconControls({
     settings,
     connectSettings,
     panelPositions,
+    positionKey = 'panel-position',
     edgePaddingSubtitle,
 }) {
     const iconSizingRow = new Adw.ExpanderRow({
@@ -175,9 +176,11 @@ function addApplicationIconControls({
             title: _('Icon Alignment'),
             subtitle: _('Choose the application icon alignment'),
             choices: panelPositions.slice(0, 2),
-            choicesProvider: () =>
-                axisPanelPositions(settings, panelPositions).slice(0, 2),
-            choicesChangedKey: 'panel-position',
+            choicesProvider: () => axisPanelPositions(
+                settings.get_string(positionKey),
+                panelPositions
+            ).slice(0, 2),
+            choicesChangedKey: positionKey,
         },
         connectSettings
     );
@@ -659,6 +662,7 @@ function addDockApplicationIconsGroup({
         settings,
         connectSettings,
         panelPositions,
+        positionKey: 'dock-position',
         edgePaddingSubtitle: _(
             'Space between icons and the Dock edges; lower it to fit larger icons in a thinner Dock'
         ),

@@ -10,7 +10,7 @@ import {
     normalizeDockItemOrder,
 } from '../shared/panelItemOrder.js';
 import {axisPanelPositions} from './panelAxis.js';
-import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {positionIsVertical} from '../shared/panelPositionUtils.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
 import {
     createStartButtonOptionsButton,
@@ -82,7 +82,10 @@ export function addDockItemsPage({
             visibleState: applicationsVisibility,
         }],
     ]);
-    const initialPositions = axisPanelPositions(settings, panelPositions);
+    const initialPositions = axisPanelPositions(
+        settings.get_string('dock-position'),
+        panelPositions
+    );
     const rows = new Map();
     for (const id of DEFAULT_DOCK_ITEM_ORDER) {
         const definition = definitions.get(id);
@@ -113,8 +116,9 @@ export function addDockItemsPage({
     };
 
     const syncDockItemAxis = () => {
-        const positions = axisPanelPositions(settings, panelPositions);
-        const groupTitles = panelIsVertical(settings)
+        const dockPosition = settings.get_string('dock-position');
+        const positions = axisPanelPositions(dockPosition, panelPositions);
+        const groupTitles = positionIsVertical(dockPosition)
             ? [_('Top Items'), _('Middle Items'), _('Bottom Items')]
             : [_('Left Items'), _('Center Items'), _('Right Items')];
         for (const [index, position] of [
@@ -228,6 +232,7 @@ export function addDockItemsPage({
         'app-alignment',
         'dock-mode',
         'dock-panel-mode',
+        'dock-position',
         'gnome-start-button-visible',
         'hide-pinned-taskbar-apps',
         'hide-unpinned-taskbar-apps',

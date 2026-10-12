@@ -13,6 +13,7 @@ import {
     StartIconChooserDialog,
 } from './startIconChooser.js';
 import {axisPanelPositions} from './panelAxis.js';
+import {activePanelPosition} from '../shared/panelPositionUtils.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
 import {
     addComboRow,
@@ -105,8 +106,8 @@ export function addStartMenuPage({
             ),
             choices: panelPositions,
             choicesProvider: () =>
-                axisPanelPositions(settings, panelPositions),
-            choicesChangedKey: 'panel-position',
+                axisPanelPositions(activePanelPosition(settings), panelPositions),
+            choicesChangedKeys: ['panel-position', 'dock-position', 'dock-mode'],
             addRow: row => startButtonPositionRow.add_row(row),
         },
         connectSettings

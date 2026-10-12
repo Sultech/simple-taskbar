@@ -172,7 +172,7 @@ export function addPanelItemsPage({
             'windows-xp-theme-enabled',
         ],
     };
-    const initialPositions = axisPanelPositions(settings, panelPositions);
+    const initialPositions = axisPanelPositions(settings.get_string('panel-position'), panelPositions);
     const panelOrderGroups = new Map([
         ['left', new Adw.PreferencesGroup({
             title: _('Left Items'),
@@ -289,7 +289,7 @@ export function addPanelItemsPage({
         panelOrderRows.set(id, controls);
     }
     const syncPanelAxis = () => {
-        const positions = axisPanelPositions(settings, panelPositions);
+        const positions = axisPanelPositions(settings.get_string('panel-position'), panelPositions);
         const vertical = panelIsVertical(settings);
         const groupTitles = vertical
             ? [_('Top Items'), _('Middle Items'), _('Bottom Items')]
