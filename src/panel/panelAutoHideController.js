@@ -265,6 +265,7 @@ export class PanelAutoHideController {
         this._dodgeEnabled = enabled;
         this._dodgeActive = active;
         this._pointerReveal = pointerReveal;
+        this._releaseInactiveFullscreenReveal();
         this._syncPressureBarrier();
         this._syncPointerWatch();
         if (this._enabled() || enabled)
@@ -372,6 +373,7 @@ export class PanelAutoHideController {
     }
 
     _syncEnabled() {
+        this._releaseInactiveFullscreenReveal();
         this._syncPressureBarrier();
         this._syncPointerWatch();
         this._syncUnredirect();
@@ -536,6 +538,13 @@ export class PanelAutoHideController {
     _restoreFullscreenVisibility() {
         this._stopFullscreenWatch();
         this._restoreFullscreenVisibilityState();
+    }
+
+    _releaseInactiveFullscreenReveal() {
+        if (this._fullscreenPointerRevealHeld &&
+            (!this._pointerReveal || !this._enabled() && !this._dodgeActive)) {
+            this._restoreFullscreenVisibility();
+        }
     }
 
     _holdFullscreenVisibility(pointerReveal) {
