@@ -778,7 +778,8 @@ export class PanelAutoHideController {
         const bounds = this._getLimitRevealToPanel() ? geometry : monitor;
         const minimumEdge = panelIsMinimumEdge(this._settings);
         if (geometry.vertical) {
-            if (y < bounds.y || y >= bounds.y + bounds.height)
+            if (y < bounds.y || y >= bounds.y + bounds.height ||
+                x < monitor.x || x >= monitor.x + monitor.width)
                 return false;
             const edge = minimumEdge
                 ? geometry.x
@@ -787,7 +788,8 @@ export class PanelAutoHideController {
                 ? x <= edge + REVEAL_EDGE_SIZE
                 : x >= edge - REVEAL_EDGE_SIZE;
         }
-        if (x < bounds.x || x >= bounds.x + bounds.width)
+        if (x < bounds.x || x >= bounds.x + bounds.width ||
+            y < monitor.y || y >= monitor.y + monitor.height)
             return false;
         const edge = minimumEdge
             ? geometry.y
