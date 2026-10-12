@@ -27,7 +27,10 @@ import {
     animateTaskbarItemOutAndDestroy,
     placeTaskbarItemAtIndex,
 } from './taskbarItemLifecycle.js';
-import {windowsForTaskbarItem} from './taskbarItemWindows.js';
+import {
+    taskbarFocusWindow,
+    windowsForTaskbarItem,
+} from './taskbarItemWindows.js';
 import {
     TaskbarShowDesktopController,
 } from './taskbarShowDesktopController.js';
@@ -99,13 +102,6 @@ const PROGRESS_BAR_BORDER_WIDTH = 1;
 const PROGRESS_BAR_BOTTOM_GAP_RATIO = 0.08;
 const PROGRESS_BAR_MINIMUM_BOTTOM_GAP = 1;
 const PROGRESS_BAR_SIDE_GAP_RATIO = 0.2;
-
-function taskbarFocusWindow() {
-    let window = global.display.focus_window;
-    while (window && window.skip_taskbar)
-        window = window.get_transient_for();
-    return window;
-}
 
 export class TaskbarController {
     constructor({

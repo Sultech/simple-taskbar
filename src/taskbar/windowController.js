@@ -7,6 +7,7 @@ import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {CLICK_ACTION} from '../shared/applicationClickActions.js';
+import {taskbarFocusWindow} from './taskbarItemWindows.js';
 
 const CYCLE_MEMORY_TIME = 3000;
 
@@ -103,7 +104,7 @@ export class WindowController {
             return;
         }
 
-        if (windows.includes(global.display.focus_window)) {
+        if (windows.includes(taskbarFocusWindow())) {
             for (const window of windows)
                 window.minimize();
             return;
@@ -150,7 +151,7 @@ export class WindowController {
             return;
         }
 
-        if (!windows.includes(global.display.focus_window)) {
+        if (!windows.includes(taskbarFocusWindow())) {
             this._raiseAppWindows(app);
             return;
         }
@@ -177,7 +178,7 @@ export class WindowController {
             return;
         }
 
-        if (!windows.includes(global.display.focus_window)) {
+        if (!windows.includes(taskbarFocusWindow())) {
             this._resetCycleState();
             Main.activateWindow(windows[0]);
             Main.overview.hide();
@@ -195,7 +196,7 @@ export class WindowController {
                 action,
                 windows: [...windows],
                 index: Math.max(
-                    windows.indexOf(global.display.focus_window),
+                    windows.indexOf(taskbarFocusWindow()),
                     0
                 ),
             };
@@ -245,7 +246,7 @@ export class WindowController {
         windows.sort((a, b) =>
             a.get_stable_sequence() - b.get_stable_sequence()
         );
-        let index = windows.indexOf(global.display.focus_window);
+        let index = windows.indexOf(taskbarFocusWindow());
         if (index < 0)
             index = windows.indexOf(item._taskbarWindow);
         if (index < 0)
@@ -256,7 +257,7 @@ export class WindowController {
             ? -1
             : 1;
         const nextIndex = (index + step + windows.length) % windows.length;
-        if (windows[nextIndex] === global.display.focus_window)
+        if (windows[nextIndex] === taskbarFocusWindow())
             return;
         Main.activateWindow(windows[nextIndex]);
         Main.overview.hide();
@@ -279,7 +280,7 @@ export class WindowController {
         windows.sort((a, b) =>
             a.get_stable_sequence() - b.get_stable_sequence()
         );
-        const focusWindow = global.display.focus_window;
+        const focusWindow = taskbarFocusWindow();
         let index = windows.indexOf(focusWindow);
         if (index < 0)
             index = 0;
@@ -414,7 +415,7 @@ export class WindowController {
             CLICK_ACTION.TOGGLE_SPREAD,
         ];
         if (!Main.overview._shown &&
-            global.display.focus_window === window &&
+            taskbarFocusWindow() === window &&
             minimizeFocusedActions.includes(action)) {
             window.minimize();
             return;
@@ -436,7 +437,7 @@ export class WindowController {
             return;
         }
 
-        if (global.display.focus_window === window) {
+        if (taskbarFocusWindow() === window) {
             window.minimize();
             return;
         }
@@ -471,7 +472,7 @@ export class WindowController {
             return;
         }
 
-        const focusWindow = global.display.focus_window;
+        const focusWindow = taskbarFocusWindow();
         this._desktopStates.set(workspace, {
             windows,
             focusWindow: windows.includes(focusWindow)
