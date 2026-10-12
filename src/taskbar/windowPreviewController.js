@@ -63,6 +63,7 @@ export class WindowPreviewController {
         this._peekTimeoutId = 0;
         this._peekedWindow = null;
         this._peekedWindowStack = null;
+        this._peekWindows = new Set();
         this._closingPreviewMenus = new Set();
         this._appTooltip = null;
         this._tooltipItem = null;
@@ -139,6 +140,7 @@ export class WindowPreviewController {
         this._peekModeChangedId = 0;
         this._hideTooltip(false);
         this._hidePreview(false);
+        this._peekWindows = null;
         this._appTooltip?.destroy();
         this._appTooltip = null;
 
@@ -642,15 +644,20 @@ export class WindowPreviewController {
         const isAppSpread = !Main.sessionMode.hasWorkspaces;
         const currentWorkspace =
             global.workspace_manager.get_active_workspace();
-        const windows = isAppSpread
-            ? global.get_window_actors().map(actor => actor.meta_window)
-            : currentWorkspace.list_windows();
+        const windows = ignoreFocus
+            ? this._peekWindows
+            : isAppSpread
+                ? global.get_window_actors().map(actor => actor.meta_window)
+                : currentWorkspace.list_windows();
 
         for (const metaWindow of windows) {
             const windowActor = metaWindow.get_compositor_private();
             const isFocused = !ignoreFocus && metaWindow === window;
             if (!windowActor)
                 continue;
+
+            if (!ignoreFocus)
+                this._peekWindows.add(metaWindow);
 
             if (isFocused) {
                 const parent = windowActor.get_parent();
@@ -667,13 +674,14 @@ export class WindowPreviewController {
             this._animateWindowOpacity(
                 metaWindow,
                 windowActor,
-                isFocused ? 255 : dimOpacity
+                isFocused ? 255 : dimOpacity,
+                ignoreFocus
             );
         }
     }
 
-    _animateWindowOpacity(metaWindow, windowActor, opacity) {
-        if (metaWindow.minimized)
+    _animateWindowOpacity(metaWindow, windowActor, opacity, restore = false) {
+        if (metaWindow.minimized && !restore)
             return;
 
         const visible = opacity > 0;
@@ -682,9 +690,16 @@ export class WindowPreviewController {
         let targetOpacity = opacity;
 
         if (!windowActor.visible && visible) {
-            visual.opacity = 0;
-            windowActor.visible = visible;
-            targetOpacity = Math.min(initialOpacity, targetOpacity);
+            if (!restore) {
+                visual.opacity = 0;
+                targetOpacity = Math.min(initialOpacity, targetOpacity);
+            }
+            if (!restore ||
+                metaWindow.located_on_workspace(
+                    global.workspace_manager.get_active_workspace()
+                ) && metaWindow.showing_on_its_workspace()) {
+                windowActor.visible = visible;
+            }
         }
 
         const options = {
@@ -724,6 +739,7 @@ export class WindowPreviewController {
 
         this._restorePeekedWindowStack();
         this._focusMetaWindow(255, this._peekedWindow, true);
+        this._peekWindows.clear();
         this._peekedWindow = null;
     }
 
