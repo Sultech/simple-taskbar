@@ -7,6 +7,7 @@ import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Workspace} from 'resource:///org/gnome/shell/ui/workspace.js';
 import {
@@ -27,6 +28,7 @@ import {
     iconEdgeReserve,
 } from '../shared/panelSizing.js';
 
+const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const OVERVIEW_LABEL_MARGIN = 60;
 const STARTUP_OVERVIEW_DELAY = 600;
 const DESKTOP_DOCK_UUIDS = [
@@ -219,17 +221,17 @@ export class OverviewIntegration {
     }
 
     _maximizeWindow(window) {
-        const args = window.maximize.length
-            ? [Meta.MaximizeFlags.BOTH]
-            : [];
-        window.maximize(...args);
+        if (SHELL_VERSION === 48)
+            window.maximize(Meta.MaximizeFlags.BOTH);
+        else
+            window.maximize();
     }
 
     _unmaximizeWindow(window) {
-        const args = window.unmaximize.length
-            ? [Meta.MaximizeFlags.BOTH]
-            : [];
-        window.unmaximize(...args);
+        if (SHELL_VERSION === 48)
+            window.unmaximize(Meta.MaximizeFlags.BOTH);
+        else
+            window.unmaximize();
     }
 
     _queueStartupOverview() {
