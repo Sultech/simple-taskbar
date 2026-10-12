@@ -312,14 +312,14 @@ export const TaskbarLocation = GObject.registerClass({
                 break;
             case LOCATION_ACTIONS.UNMOUNT:
                 await this._mount.unmount_with_operation(
-                    Gio.MountUnmountFlags.FORCE,
+                    Gio.MountUnmountFlags.NONE,
                     operation.mountOp,
                     cancellable
                 );
                 break;
             case LOCATION_ACTIONS.EJECT:
                 await removable.eject_with_operation(
-                    Gio.MountUnmountFlags.FORCE,
+                    Gio.MountUnmountFlags.NONE,
                     operation.mountOp,
                     cancellable
                 );
@@ -329,7 +329,8 @@ export const TaskbarLocation = GObject.registerClass({
             }
             success = true;
         } catch (error) {
-            if (!isCancelled(error)) {
+            if (!isCancelled(error) &&
+                !error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.FAILED_HANDLED)) {
                 global.notify_error(
                     `${actionName} ${_('failed')}`,
                     error.message
