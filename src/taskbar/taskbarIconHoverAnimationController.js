@@ -403,7 +403,9 @@ export class TaskbarIconHoverAnimationController {
     _onLeaveEvent(actor) {
         const [stageX, stageY] = global.get_pointer();
         const [success, x, y] = actor.transform_stage_point(stageX, stageY);
-        if (success && !actor.allocation.contains(x, y)) {
+        const bounds = actor.get_allocation_box();
+        bounds.set_origin(0, 0);
+        if (success && !bounds.contains(x, y)) {
             if (this._animator.isMagnifyActive())
                 this._onPointerPositionInvalidated();
             else
