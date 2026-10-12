@@ -139,6 +139,11 @@ export function addStartMenuPage({
     connectSettings(settings, 'changed::dock-mode', updateStartPositionRow);
     connectSettings(
         settings,
+        'changed::dock-panel-mode',
+        updateStartPositionRow
+    );
+    connectSettings(
+        settings,
         'changed::windows-xp-theme-enabled',
         updateStartPositionRow
     );
