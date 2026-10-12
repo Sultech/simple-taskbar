@@ -315,9 +315,10 @@ export class SecondaryPanelController {
                 this._dockController ? [] : SECONDARY_PANEL_INDICATOR_ROLES
             );
         this._indicatorController.acquire();
+        const quickSettings = this._dockController
+            ? Main.panel.statusArea.quickSettings
+            : this._indicatorController.get('quickSettings');
         if (!this._dockController) {
-            const quickSettings =
-                this._indicatorController.get('quickSettings');
             const activities = this._indicatorController.get('activities');
             const dateMenu = this._indicatorController.get('dateMenu');
             this._quickSettingsIndicatorsController =
