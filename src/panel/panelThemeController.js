@@ -337,10 +337,7 @@ export class PanelThemeController {
 
     _setPanelStyle(style) {
         this._applyingTransparency = true;
-        try {
-            Main.panel.set_style(style);
-        } finally {
-            this._applyingTransparency = false;
-        }
+        Main.panel.set_style(style);
+        this._applyingTransparency = false;
     }
 }
