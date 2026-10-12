@@ -253,6 +253,7 @@ export class PanelThemeController {
         Main.panel.remove_style_class_name(BLUR_TRANSPARENT_CLASS);
         Main.panel.remove_style_class_name(BLUR_TINTED_CLASS);
         Main.panel.remove_style_class_name(XP_PANEL_CLASS);
+        Main.panel.remove_style_class_name(WINDOWS_10_PANEL_CLASS);
         Main.panel.set_style(this._oldPanelStyle ?? '');
     }
 
