@@ -9,6 +9,7 @@ export const AUTO_HIDE_REVEAL_MODE = Object.freeze({
 
 export const AUTO_HIDE_SETTINGS = Object.freeze({
     revealMode: 'panel-autohide-reveal-mode',
+    revealFullscreen: 'panel-autohide-reveal-fullscreen',
     revealDelay: 'panel-autohide-reveal-delay',
     pressureThreshold: 'panel-autohide-pressure-threshold',
     hideDelay: 'panel-autohide-hide-delay',

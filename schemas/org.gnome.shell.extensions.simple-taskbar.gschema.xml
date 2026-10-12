@@ -54,6 +54,10 @@
       <default>'instant'</default>
       <summary>Whether the pointer reveals the panel at once or after a delay</summary>
     </key>
+    <key name="panel-autohide-reveal-fullscreen" type="b">
+      <default>false</default>
+      <summary>Allow pointer reveal over fullscreen applications</summary>
+    </key>
     <key name="panel-autohide-reveal-delay" type="i">
       <range min="50" max="2000"/>
       <default>250</default>

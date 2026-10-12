@@ -14,6 +14,7 @@ import {
 import {
     addComboRow,
     addSpinRow,
+    createSwitchRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
@@ -51,6 +52,13 @@ class RevealOptionsDialog extends Adw.Window {
             description: descriptions.reveal,
         });
         content.append(revealGroup);
+
+        const fullscreenRow = createSwitchRow(settings, {
+            key: AUTO_HIDE_SETTINGS.revealFullscreen,
+            title: _('Reveal Over Fullscreen Apps'),
+            subtitle: _('Allow the pointer to reveal the taskbar or Dock over fullscreen applications'),
+        });
+        revealGroup.add(fullscreenRow);
 
         const modeRow = addComboRow(
             revealGroup,
@@ -140,6 +148,7 @@ class RevealOptionsDialog extends Adw.Window {
         const syncSensitivity = () => {
             const revealable = settings.get_boolean(pointerRevealKey);
             modeRow.sensitive = revealable;
+            fullscreenRow.sensitive = revealable;
             const mode = settings.get_string(AUTO_HIDE_SETTINGS.revealMode);
             delayRow.sensitive = revealable &&
                 mode === AUTO_HIDE_REVEAL_MODE.DELAY;
