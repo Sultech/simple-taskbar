@@ -103,7 +103,7 @@ export class WindowController {
             return;
         }
 
-        if (this._tracker.focus_app === app) {
+        if (windows.includes(global.display.focus_window)) {
             for (const window of windows)
                 window.minimize();
             return;
@@ -150,7 +150,7 @@ export class WindowController {
             return;
         }
 
-        if (this._tracker.focus_app !== app) {
+        if (!windows.includes(global.display.focus_window)) {
             this._raiseAppWindows(app);
             return;
         }
@@ -177,7 +177,7 @@ export class WindowController {
             return;
         }
 
-        if (this._tracker.focus_app !== app) {
+        if (!windows.includes(global.display.focus_window)) {
             this._resetCycleState();
             Main.activateWindow(windows[0]);
             Main.overview.hide();
