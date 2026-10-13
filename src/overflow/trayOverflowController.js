@@ -451,6 +451,13 @@ export class TrayOverflowController {
         return Clutter.EVENT_PROPAGATE;
     }
 
+    _setCellPseudoClass(cell, pseudoClass, enabled) {
+        if (enabled)
+            cell.add_style_pseudo_class(pseudoClass);
+        else
+            cell.remove_style_pseudo_class(pseudoClass);
+    }
+
     _syncIndicatorMenuStacking(indicator, open) {
         if (!open && this._menuRaiseIndicator !== indicator)
             return;
@@ -604,6 +611,7 @@ export class TrayOverflowController {
         const origin = this._recordOrigin(parent, container);
         parent.remove_child(container);
         const cell = new St.Bin({
+            style_class: 'simple-taskbar-tray-overflow-cell',
             child: container,
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.CENTER,
@@ -637,6 +645,8 @@ export class TrayOverflowController {
         indicator.connectObject(
             'notify::visible',
             () => this._queueRelayout(),
+            'notify::hover',
+            () => this._setCellPseudoClass(cell, 'hover', indicator.hover),
             this
         );
         indicator.connectObject(
@@ -646,7 +656,10 @@ export class TrayOverflowController {
         );
         indicator.menu.connectObject(
             'open-state-changed',
-            (_menu, open) => this._syncIndicatorMenuStacking(indicator, open),
+            (_menu, open) => {
+                this._syncIndicatorMenuStacking(indicator, open);
+                this._setCellPseudoClass(cell, 'checked', open);
+            },
             'activate', () => closePopupMenu(this._menu),
             this
         );

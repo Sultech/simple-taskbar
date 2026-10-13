@@ -1864,12 +1864,28 @@
 }
 
 .simple-taskbar-tray-overflow-grid {
-    padding: 2px;
-    spacing: 20px;
+    padding: 0;
+    spacing: 16px;
 }
 
 .simple-taskbar-tray-overflow-row {
-    spacing: 20px;
+    spacing: 16px;
+}
+
+.simple-taskbar-tray-overflow-cell {
+    padding: 2px;
+    border-radius: 6px;
+    transition-duration: 100ms;
+}
+
+.simple-taskbar-tray-overflow-cell:hover,
+.simple-taskbar-tray-overflow-cell:checked {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.simple-taskbar-tray-overflow-light .simple-taskbar-tray-overflow-cell:hover,
+.simple-taskbar-tray-overflow-light .simple-taskbar-tray-overflow-cell:checked {
+    background-color: rgba(0, 0, 0, 0.11);
 }
 
 .simple-taskbar-application-overflow-container {
