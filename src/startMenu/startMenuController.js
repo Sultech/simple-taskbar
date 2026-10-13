@@ -187,8 +187,6 @@ export class StartMenuController {
         this._menu.actor.hide();
         Main.uiGroup.add_child(this._menu.actor);
 
-        this.syncTheme();
-
         this._menuManager = params.menuManager ??
             new PopupMenu.PopupMenuManager(sourceActor);
         this._menuManager.addMenu(this._menu);
@@ -473,6 +471,12 @@ export class StartMenuController {
         if (changed) {
             this._applyThemeClass(this._menu.actor, theme);
             this._applyThemeClass(this._tooltipController.actor, theme);
+            const searchTextStyle = theme === 'light'
+                ? 'color: #18191b;'
+                : theme === 'dark'
+                    ? 'color: #f6f6f6;'
+                    : null;
+            this._searchEntry.set_style(searchTextStyle);
             this._syncShellButtonClasses(this._root);
             this._appliedTheme = theme;
             this._queuePrepare();

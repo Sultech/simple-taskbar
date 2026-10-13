@@ -1001,21 +1001,23 @@
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search {
     border: 1px solid rgba(255, 255, 255, 0.14);
-    background-color: rgba(18, 18, 21, 0.76);
-    color: #f6f6f6;
+    background-color: rgba(18, 18, 21, 0.76) !important;
+    color: #f6f6f6 !important;
+    caret-color: #f6f6f6;
     selection-background-color: #3479b9;
+    selected-color: #ffffff;
 }
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search:focus {
     border-color: rgba(96, 174, 247, 0.78);
 }
 
-.simple-taskbar-windows-start-search-passive:focus {
+StEntry.simple-taskbar-windows-start-search.simple-taskbar-windows-start-search-passive:focus {
     box-shadow: none !important;
 }
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search-passive:focus {
-    border-color: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.14) !important;
 }
 
 .simple-taskbar-windows-start-search-icon {
@@ -1027,7 +1029,7 @@
 }
 
 .simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search StLabel.hint-text {
-    color: rgba(255, 255, 255, 0.62);
+    color: rgba(255, 255, 255, 0.62) !important;
 }
 
 .simple-taskbar-windows-start-header {
@@ -1419,8 +1421,9 @@
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search {
     border: 1px solid rgba(30, 40, 56, 0.18);
-    background-color: rgba(255, 255, 255, 0.82);
-    color: #18191b;
+    background-color: rgba(255, 255, 255, 0.82) !important;
+    color: #18191b !important;
+    caret-color: #18191b;
     selection-background-color: #8bc5f5;
     selected-color: #101113;
 }
@@ -1430,7 +1433,7 @@
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search-passive:focus {
-    border-color: rgba(30, 40, 56, 0.18);
+    border-color: rgba(30, 40, 56, 0.18) !important;
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search-icon {
@@ -1438,7 +1441,7 @@
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-search StLabel.hint-text {
-    color: rgba(30, 34, 40, 0.58);
+    color: rgba(30, 34, 40, 0.58) !important;
 }
 
 .simple-taskbar-windows-start-light .simple-taskbar-windows-start-heading,
