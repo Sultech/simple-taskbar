@@ -79,9 +79,9 @@ export function getPanelBlur() {
 }
 
 export function panelBlurSuitsDock() {
-    const panelBlur = global.blur_my_shell?._panel_blur;
-    return Boolean(panelBlur) &&
-        typeof panelBlur.update_panel_border_radius !== 'function';
+    const blurMyShell = global.blur_my_shell;
+    return Boolean(blurMyShell?._panel_blur) &&
+        typeof blurMyShell._dash_to_dock_blur.queue_discovery !== 'function';
 }
 
 export function blurMyShellDockMode() {
