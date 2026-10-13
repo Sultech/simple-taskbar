@@ -94,7 +94,10 @@ export function addResetGroup(page, window, createSettings) {
     resetGroup.add(resetRow);
 }
 
-export function openCustomShortcutDialog(window) {
+export function openCustomShortcutDialog(
+    window,
+    key = 'start-menu-custom-hotkey'
+) {
     const dialog = new Adw.Window({
         title: _('Set Custom Shortcut'),
         transient_for: window,
@@ -129,7 +132,7 @@ export function openCustomShortcutDialog(window) {
                 return Gdk.EVENT_STOP;
             }
             if (keyval === Gdk.KEY_BackSpace && modifiers === 0) {
-                window._settings.set_strv('start-menu-custom-hotkey', []);
+                window._settings.set_strv(key, []);
                 dialog.close();
                 return Gdk.EVENT_STOP;
             }
@@ -161,7 +164,8 @@ export function openCustomShortcutDialog(window) {
             );
             if (findManagedShortcutConflict(
                 window._settings,
-                accelerator
+                accelerator,
+                key
             )) {
                 statusPage.description = _(
                     'That shortcut is already in use. Press a different shortcut.'
@@ -169,10 +173,7 @@ export function openCustomShortcutDialog(window) {
                 return Gdk.EVENT_STOP;
             }
 
-            window._settings.set_strv(
-                'start-menu-custom-hotkey',
-                [accelerator]
-            );
+            window._settings.set_strv(key, [accelerator]);
             dialog.close();
             return Gdk.EVENT_STOP;
         }
@@ -201,7 +202,7 @@ export function selectFolderMenuLocation(window) {
     });
 }
 
-function findManagedShortcutConflict(settings, accelerator) {
+function findManagedShortcutConflict(settings, accelerator, editedKey) {
     const managed = [];
     if (settings.get_boolean('grid-alt-tab-enabled')) {
         managed.push(
@@ -217,13 +218,19 @@ function findManagedShortcutConflict(settings, accelerator) {
     const startMenuAvailable =
         settings.get_boolean('windows-start-menu-enabled') &&
         !isDefaultPanelWithoutDock(settings);
+    const superKey = settings.get_boolean('start-menu-super-key');
+    const superTabOverview =
+        settings.get_boolean('start-menu-super-tab-overview');
     if (startMenuAvailable &&
-        (settings.get_boolean('start-menu-super-key') ||
+        ((superKey && superTabOverview) ||
             settings.get_boolean('start-menu-super-tab'))) {
         managed.push(
             ...settings.get_strv('start-menu-super-tab-hotkey')
         );
     }
+    if (startMenuAvailable && superKey && !superTabOverview &&
+        editedKey !== 'overview-custom-hotkey')
+        managed.push(...settings.get_strv('overview-custom-hotkey'));
 
     const normalized = normalizeAccelerator(accelerator);
     return managed.some(candidate =>

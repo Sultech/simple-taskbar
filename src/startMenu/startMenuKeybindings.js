@@ -14,6 +14,8 @@ import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 const SUPER_KEY_SETTING = 'start-menu-super-key';
 const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';
 const CUSTOM_KEYBINDING = 'start-menu-custom-hotkey';
+const SUPER_TAB_OVERVIEW_SETTING = 'start-menu-super-tab-overview';
+const OVERVIEW_CUSTOM_KEYBINDING = 'overview-custom-hotkey';
 const FILE_MANAGER_SETTING = 'super-e-file-manager-enabled';
 const FILE_MANAGER_KEYBINDING = 'super-e-file-manager-hotkey';
 const DISPLACED_OVERLAY_KEY = 'start-menu-displaced-overlay-key';
@@ -43,6 +45,7 @@ export class StartMenuKeybindings {
         this._superTabMode = null;
         this._superTabAction = Meta.KeyBindingAction.NONE;
         this._customEnabled = false;
+        this._overviewCustomEnabled = false;
         this._fileManagerEnabled = false;
         this._overlayEnabled = false;
         this._overlayHandlerId = 0;
@@ -60,15 +63,27 @@ export class StartMenuKeybindings {
 
         if (this._settings.get_boolean(SUPER_KEY_SETTING)) {
             this._disableCustom();
-            if (!this._enableSuperTab('overview') ||
-                !this._enableOverlayKey()) {
+            if (!this._enableOverlayKey()) {
                 this._disableSuperTab();
+                this._disableOverviewCustom();
                 this._disableOverlayKey();
                 this._disableSuperKeySetting();
+                return;
+            }
+            if (this._settings.get_boolean(SUPER_TAB_OVERVIEW_SETTING)) {
+                this._disableOverviewCustom();
+                this._enableSuperTab('overview');
+            } else {
+                this._disableSuperTab();
+                if (this._settings.get_strv(OVERVIEW_CUSTOM_KEYBINDING).length > 0)
+                    this._enableOverviewCustom();
+                else
+                    this._disableOverviewCustom();
             }
             return;
         }
 
+        this._disableOverviewCustom();
         this._disableOverlayKey();
         if (this._settings.get_boolean('start-menu-super-tab')) {
             this._disableCustom();
@@ -85,6 +100,11 @@ export class StartMenuKeybindings {
 
     customAcceleratorChanged() {
         this._disableCustom();
+        this.sync();
+    }
+
+    overviewAcceleratorChanged() {
+        this._disableOverviewCustom();
         this.sync();
     }
 
@@ -107,6 +127,7 @@ export class StartMenuKeybindings {
         this._disableSuperTab();
         this._disableOverlayKey();
         this._disableCustom();
+        this._disableOverviewCustom();
     }
 
     _startMenuAvailable() {
@@ -233,6 +254,7 @@ export class StartMenuKeybindings {
 
     _overlayInstallationFailed() {
         this._disableSuperTab();
+        this._disableOverviewCustom();
         this._disableOverlayKey();
         this._disableSuperKeySetting();
     }
@@ -352,6 +374,43 @@ export class StartMenuKeybindings {
 
         Main.wm.removeKeybinding(CUSTOM_KEYBINDING);
         this._customEnabled = false;
+    }
+
+    _enableOverviewCustom() {
+        const accelerators = this._settings.get_strv(
+            OVERVIEW_CUSTOM_KEYBINDING
+        );
+        if (this._customConflictsWithManagedShortcut(accelerators)) {
+            this._disableOverviewCustom();
+            this._reportFailure(
+                'Custom Overview shortcut conflicts with another Simple Taskbar shortcut'
+            );
+            return;
+        }
+        if (this._overviewCustomEnabled)
+            return;
+
+        const action = Main.wm.addKeybinding(
+            OVERVIEW_CUSTOM_KEYBINDING,
+            this._settings,
+            Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
+            ACTION_MODES,
+            () => this._toggleOverview()
+        );
+        this._overviewCustomEnabled = action !== Meta.KeyBindingAction.NONE;
+        if (!this._overviewCustomEnabled) {
+            this._reportFailure(
+                'Custom Overview shortcut could not be registered'
+            );
+        }
+    }
+
+    _disableOverviewCustom() {
+        if (!this._overviewCustomEnabled)
+            return;
+
+        Main.wm.removeKeybinding(OVERVIEW_CUSTOM_KEYBINDING);
+        this._overviewCustomEnabled = false;
     }
 
     _customConflictsWithManagedShortcut(accelerators) {
