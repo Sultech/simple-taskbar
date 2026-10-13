@@ -39,6 +39,14 @@
     border-bottom-width: 0;
 }
 
+#panel.simple-taskbar-panel .panel-button .panel-status-indicators-box {
+    spacing: 12px;
+}
+
+#panel.simple-taskbar-panel .panel-button .power-status.panel-status-indicators-box {
+    spacing: 4px;
+}
+
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical .panel-button {
     min-width: 0;
     padding-left: 0;
@@ -72,7 +80,8 @@
     margin-bottom: 8px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical .panel-status-indicators-box {
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical .panel-status-indicators-box,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical .panel-button .power-status.panel-status-indicators-box {
     spacing: 2px;
 }
 
@@ -389,8 +398,13 @@
  * with the panel. The clock paints its state on an inner actor, so it needs
  * the same transparent inset there. */
 #panel.simple-taskbar-panel.simple-taskbar-default-panel-button-padding .panel-button {
-    -natural-hpadding: 3px;
-    -minimum-hpadding: 3px;
+    -natural-hpadding: 12px;
+    -minimum-hpadding: 12px;
+}
+
+#panel.simple-taskbar-panel .panel-button.clock-display {
+    -natural-hpadding: 0;
+    -minimum-hpadding: 0;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
