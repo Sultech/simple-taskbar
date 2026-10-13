@@ -3,7 +3,7 @@
 
 import {
     dockFloatingPanelReserve,
-    panelHeightForIconSize,
+    dockPanelModeHeight,
 } from '../shared/panelSizing.js';
 
 const DOCK_SETTING_KEYS = new Map([
@@ -196,20 +196,7 @@ export class DockPanelSettings {
             if (!this._settings.get_boolean('dock-panel-mode'))
                 return iconSize + dockFloatingPanelReserve(this);
 
-            const derivedHeight = panelHeightForIconSize(
-                this,
-                iconSize
-            );
-            if (this._settings.get_boolean(
-                'dock-panel-height-follow-icon-size'
-            )) {
-                return derivedHeight;
-            }
-
-            return Math.max(
-                this._settings.get_int('dock-panel-height'),
-                derivedHeight
-            );
+            return dockPanelModeHeight(this._settings, iconSize);
         }
 
         return this._settings.get_int(

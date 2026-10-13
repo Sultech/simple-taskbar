@@ -199,6 +199,14 @@ export function panelHeightForIconSize(settings, iconSize) {
     return iconSize + iconEdgeReserve(settings);
 }
 
+export function dockPanelModeHeight(settings, iconSize) {
+    const derivedHeight = panelHeightForIconSize(settings, iconSize);
+    if (settings.get_boolean('dock-panel-height-follow-icon-size'))
+        return derivedHeight;
+
+    return Math.max(settings.get_int('dock-panel-height'), derivedHeight);
+}
+
 export function fitIconSizeToPanelHeight(settings, heightKey = 'panel-height') {
     let panelHeight = settings.get_int(heightKey);
     const minimumPanelHeight = standardMinimumPanelHeight(settings);

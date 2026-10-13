@@ -25,7 +25,8 @@ import {
 } from '../panel/panelPosition.js';
 import {
     DOCK_EDGE_GAP,
-    iconEdgeReserve,
+    dockPanelModeHeight,
+    panelHeightForIconSize,
 } from '../shared/panelSizing.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
@@ -486,10 +487,10 @@ export class OverviewIntegration {
         const dockDodge = this._settings.get_boolean(
             'dock-dodge-windows-enabled'
         );
-        const panelHeight = this._settings.get_int('icon-size') +
-            iconEdgeReserve(this._settings);
-        const panelMode = this._settings.get_boolean('dock-panel-mode');
-        const dockHeight = panelHeight + (panelMode ? 0 : DOCK_EDGE_GAP);
+        const iconSize = this._settings.get_int('icon-size');
+        const dockHeight = this._settings.get_boolean('dock-panel-mode')
+            ? dockPanelModeHeight(this._settings, iconSize)
+            : panelHeightForIconSize(this._settings, iconSize) + DOCK_EDGE_GAP;
         const position = this._settings.get_string('dock-position');
         if (!dockAutohide && !dockDodge &&
             (!primaryMonitor || position !== 'bottom')) {
