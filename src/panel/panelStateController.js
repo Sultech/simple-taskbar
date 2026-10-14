@@ -229,6 +229,12 @@ export class PanelStateController {
             this._dateMenuClockTextTranslationY;
     }
 
+    _detachedPanelActors() {
+        const {dateMenu, quickSettings} = Main.panel.statusArea;
+        return [dateMenu.container, quickSettings.container]
+            .filter(actor => !actor.get_parent());
+    }
+
     _restorePanelItems() {
         const boxes = this._panelBoxState.map(({box}) => box);
         const originalBoxByActor = new Map();
@@ -240,9 +246,10 @@ export class PanelStateController {
         const currentChildrenByBox = new Map(
             boxes.map(box => [box, box.get_children()])
         );
-        const currentPanelActors = new Set(
-            [...currentChildrenByBox.values()].flat()
-        );
+        const currentPanelActors = new Set([
+            ...[...currentChildrenByBox.values()].flat(),
+            ...this._detachedPanelActors(),
+        ]);
         const originalChildrenByBox = new Map(
             this._panelBoxState.map(({box, children}) => [
                 box,
