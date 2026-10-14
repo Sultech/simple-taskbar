@@ -68,6 +68,7 @@ import {
     getRecommendedApps,
     groupAppsByCategory,
 } from './startMenuAppModel.js';
+import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 const GRID_COLUMNS = 6;
 const APP_TILE_WIDTH = 88;
@@ -1285,10 +1286,7 @@ export class StartMenuController {
         if (!button)
             return;
 
-        if (this._searchSelectionVisible)
-            button.add_style_pseudo_class('selected');
-        else
-            button.remove_style_pseudo_class('selected');
+        setStylePseudoClass(button, 'selected', this._searchSelectionVisible);
     }
 
     _displayAppList(apps, categorized = false) {

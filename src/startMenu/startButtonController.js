@@ -62,6 +62,8 @@ import {
     syncSeparatorVisibility,
 } from '../taskbar/taskbarSeparator.js';
 import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
+import {bundledStartIconFile, isBundledStartIcon} from '../shared/startIcons.js';
+import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 export class StartButtonController {
     constructor({
@@ -896,10 +898,7 @@ export class StartButtonController {
 
     _setActivitiesOverviewState(active) {
         const activitiesButton = Main.panel.statusArea.activities;
-        if (active)
-            activitiesButton.add_style_pseudo_class('checked');
-        else
-            activitiesButton.remove_style_pseudo_class('checked');
+        setStylePseudoClass(activitiesButton, 'checked', active);
     }
 
     _windowsModeEnabled() {
@@ -941,10 +940,7 @@ export class StartButtonController {
                 colorKey
             )}border-radius: ${radius}px;`
         );
-        if (pressed)
-            this._classicHover.add_style_pseudo_class('active');
-        else
-            this._classicHover.remove_style_pseudo_class('active');
+        setStylePseudoClass(this._classicHover, 'active', pressed);
         const hovered = this.actor.hover ||
             this.actor.has_style_pseudo_class('hover') ||
             this.actor.has_style_pseudo_class('focus');
@@ -979,41 +975,9 @@ export class StartButtonController {
 
         if (location === 'theme:app-grid')
             return this._gnomeGIcon;
-        if (location === 'builtin:gnome') {
-            return new Gio.FileIcon({
-                file: this._extensionDir
-                    .get_child('icons')
-                    .get_child('start')
-                    .get_child('gnome-start-symbolic.svg'),
-            });
-        }
-        if (location === 'builtin:eleven') {
-            return new Gio.FileIcon({
-                file: this._extensionDir
-                    .get_child('icons')
-                    .get_child('start')
-                    .get_child('eleven-start-symbolic.svg'),
-            });
-        }
-        if (location === 'builtin:ten') {
-            return new Gio.FileIcon({
-                file: this._extensionDir
-                    .get_child('icons')
-                    .get_child('start')
-                    .get_child('ten-start-symbolic.svg'),
-            });
-        }
-        if (location.startsWith('distro:')) {
-            const filename = location.slice('distro:'.length);
-            if (!/^distro-[a-z0-9-]+\.(?:png|svg)$/.test(filename))
-                return null;
-
-            return new Gio.FileIcon({
-                file: this._extensionDir
-                    .get_child('icons')
-                    .get_child('distros')
-                    .get_child(filename),
-            });
+        if (isBundledStartIcon(location)) {
+            const file = bundledStartIconFile(this._extensionDir, location);
+            return file ? new Gio.FileIcon({file}) : null;
         }
 
         const file = location.includes('://')

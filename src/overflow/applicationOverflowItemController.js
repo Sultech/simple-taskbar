@@ -11,6 +11,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {closePopupMenu} from '../popupMenuUtils.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 import {modifierClickActionKey} from '../pointerUtils.js';
+import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 export class ApplicationOverflowItemController {
     constructor(settings, taskbarController, menu, section) {
@@ -184,12 +185,8 @@ export class ApplicationOverflowItemController {
         );
 
         if (sourceItem._taskbarIsShowDesktop) {
-            auxiliaryItem.connect('notify::hover', () => {
-                if (auxiliaryItem.hover)
-                    sourceItem._taskbarButton.add_style_pseudo_class('hover');
-                else
-                    sourceItem._taskbarButton.remove_style_pseudo_class('hover');
-            });
+            auxiliaryItem.connect('notify::hover', () =>
+                setStylePseudoClass(sourceItem._taskbarButton, 'hover', auxiliaryItem.hover));
             auxiliaryItem.connect('clicked', () => {
                 this._taskbarController.activateShowDesktop(sourceItem);
                 closePopupMenu(this._menu);

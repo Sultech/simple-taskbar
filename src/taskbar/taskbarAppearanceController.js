@@ -37,6 +37,7 @@ import {
     hoverRenderScale,
 } from '../shared/applicationHoverAnimation.js';
 import {windows10IndicatorInset} from '../shared/windows10Theme.js';
+import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 const APP_LABEL_SPACING = 8;
 const WINDOWS_XP_BUTTON_Y = 3;
@@ -453,10 +454,7 @@ export class TaskbarAppearanceController {
                 hoverColorKey
             )}${radiusStyle}`
         );
-        if (pressed)
-            item._taskbarClassicHover.add_style_pseudo_class('active');
-        else
-            item._taskbarClassicHover.remove_style_pseudo_class('active');
+        setStylePseudoClass(item._taskbarClassicHover, 'active', pressed);
         const focusEnabled = this._settings.get_boolean(
             CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled
         );

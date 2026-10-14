@@ -10,3 +10,10 @@ export function appendStyle(baseStyle, addition) {
         ? `${base} ${addition}`
         : `${base}; ${addition}`;
 }
+
+export function setStylePseudoClass(actor, pseudoClass, enabled) {
+    if (enabled)
+        actor.add_style_pseudo_class(pseudoClass);
+    else
+        actor.remove_style_pseudo_class(pseudoClass);
+}

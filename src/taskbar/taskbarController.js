@@ -75,6 +75,7 @@ import {
 } from './taskbarSeparator.js';
 import {panelIsVertical} from '../panel/panelPosition.js';
 import {modifierClickActionKey} from '../pointerUtils.js';
+import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const APP_LABEL_WIDTH = 160;
@@ -1431,10 +1432,7 @@ export class TaskbarController {
                 : app.get_name();
         this._syncItemLabel(item);
 
-        if (focused)
-            button.add_style_pseudo_class('selected');
-        else
-            button.remove_style_pseudo_class('selected');
+        setStylePseudoClass(button, 'selected', focused);
     }
 
     queueIconGeometryUpdate() {

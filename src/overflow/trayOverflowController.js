@@ -22,6 +22,7 @@ import {
 } from '../panel/panelPosition.js';
 import {closePopupMenu, openPopupMenu} from '../popupMenuUtils.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
+import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 export const TRAY_OVERFLOW_ROLE = 'simple-taskbar-tray-overflow';
 const TRAY_ROLE_PREFIXES = ['appindicator-', 'ubuntu-appindicator-'];
@@ -451,13 +452,6 @@ export class TrayOverflowController {
         return Clutter.EVENT_PROPAGATE;
     }
 
-    _setCellPseudoClass(cell, pseudoClass, enabled) {
-        if (enabled)
-            cell.add_style_pseudo_class(pseudoClass);
-        else
-            cell.remove_style_pseudo_class(pseudoClass);
-    }
-
     _syncIndicatorMenuStacking(indicator, open) {
         if (!open && this._menuRaiseIndicator !== indicator)
             return;
@@ -646,7 +640,7 @@ export class TrayOverflowController {
             'notify::visible',
             () => this._queueRelayout(),
             'notify::hover',
-            () => this._setCellPseudoClass(cell, 'hover', indicator.hover),
+            () => setStylePseudoClass(cell, 'hover', indicator.hover),
             this
         );
         indicator.connectObject(
@@ -658,7 +652,7 @@ export class TrayOverflowController {
             'open-state-changed',
             (_menu, open) => {
                 this._syncIndicatorMenuStacking(indicator, open);
-                this._setCellPseudoClass(cell, 'checked', open);
+                setStylePseudoClass(cell, 'checked', open);
             },
             'activate', () => closePopupMenu(this._menu),
             this

@@ -11,6 +11,8 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {bundledStartIconFile, isDistroIconFilename} from '../shared/startIcons.js';
+
 const DISTRO_NAMES = Object.freeze({
     arch: 'Arch Linux',
     athena: 'Athena OS',
@@ -69,35 +71,6 @@ function distroIconDetails(filename) {
         searchText:
             `${fullDisplayName} ${name} distro`.toLowerCase(),
     };
-}
-
-function bundledIconFile(extensionPath, location) {
-    const extensionDir = Gio.File.new_for_path(extensionPath);
-    if (location === 'builtin:gnome') {
-        return extensionDir
-            .get_child('icons')
-            .get_child('start')
-            .get_child('gnome-start-symbolic.svg');
-    }
-    if (location === 'builtin:eleven') {
-        return extensionDir
-            .get_child('icons')
-            .get_child('start')
-            .get_child('eleven-start-symbolic.svg');
-    }
-    if (location === 'builtin:ten') {
-        return extensionDir
-            .get_child('icons')
-            .get_child('start')
-            .get_child('ten-start-symbolic.svg');
-    }
-    if (location.startsWith('distro:')) {
-        return extensionDir
-            .get_child('icons')
-            .get_child('distros')
-            .get_child(location.slice('distro:'.length));
-    }
-    return null;
 }
 
 export function getStartIconDisplayName(location) {
@@ -256,10 +229,8 @@ class StartIconChooserDialog extends Adw.Window {
             info = enumerator.next_file(null)
         ) {
             const filename = info.get_name();
-            if (!filename.startsWith('distro-') ||
-                !/\.(?:png|svg)$/.test(filename)) {
+            if (!isDistroIconFilename(filename))
                 continue;
-            }
 
             const details = distroIconDetails(filename);
             entries.push({
@@ -291,17 +262,18 @@ class StartIconChooserDialog extends Adw.Window {
     }
 
     _createIconChild(entry) {
-        const file = bundledIconFile(
-            this._extensionPath,
-            entry.location
-        );
         const image = entry.iconName
             ? new Gtk.Image({
                 icon_name: entry.iconName,
                 pixel_size: 40,
             })
             : new Gtk.Image({
-                gicon: new Gio.FileIcon({file}),
+                gicon: new Gio.FileIcon({
+                    file: bundledStartIconFile(
+                        Gio.File.new_for_path(this._extensionPath),
+                        entry.location
+                    ),
+                }),
                 pixel_size: 40,
             });
         const label = new Gtk.Label({
