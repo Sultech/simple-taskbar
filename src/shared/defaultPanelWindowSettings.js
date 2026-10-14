@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {defaultPanelWindowsEnabled} from './defaultPanelWindows.js';
+import {RemappedSettings} from './remappedSettings.js';
 
 export const DEFAULT_PANEL_WINDOW_SETTING_KEYS = Object.freeze([
     'app-alignment',
@@ -76,95 +77,14 @@ export function defaultPanelWindowSettingKey(key) {
     return WINDOW_SETTING_KEYS.has(key) ? `default-panel-window-${key}` : key;
 }
 
-export class DefaultPanelWindowSettings {
+export class DefaultPanelWindowSettings extends RemappedSettings {
     constructor(settings) {
-        this._settings = settings;
+        super(settings);
         this.isDefaultPanelWindows = true;
     }
 
-    _signal(signal) {
-        if (!signal.startsWith('changed::'))
-            return signal;
-        return `changed::${defaultPanelWindowSettingKey(signal.slice('changed::'.length))}`;
-    }
-
-    connect(signal, callback) {
-        return this._settings.connect(this._signal(signal), callback);
-    }
-
-    disconnect(id) {
-        this._settings.disconnect(id);
-    }
-
-    connectObject(...args) {
-        const owner = args.pop();
-        for (let index = 0; index < args.length; index += 2)
-            args[index] = this._signal(args[index]);
-        this._settings.connectObject(...args, owner);
-    }
-
-    disconnectObject(owner) {
-        this._settings.disconnectObject(owner);
-    }
-
-    bind(key, object, property, flags) {
-        this._settings.bind(defaultPanelWindowSettingKey(key), object, property, flags);
-    }
-
-    reset(key) {
-        this._settings.reset(defaultPanelWindowSettingKey(key));
-    }
-
-    is_writable(key) {
-        return this._settings.is_writable(defaultPanelWindowSettingKey(key));
-    }
-
-    get_default_value(key) {
-        return this._settings.get_default_value(defaultPanelWindowSettingKey(key));
-    }
-
-    get_user_value(key) {
-        return this._settings.get_user_value(defaultPanelWindowSettingKey(key));
-    }
-
-    get_boolean(key) {
-        return this._settings.get_boolean(defaultPanelWindowSettingKey(key));
-    }
-
-    set_boolean(key, value) {
-        this._settings.set_boolean(defaultPanelWindowSettingKey(key), value);
-    }
-
-    get_string(key) {
-        return this._settings.get_string(defaultPanelWindowSettingKey(key));
-    }
-
-    set_string(key, value) {
-        this._settings.set_string(defaultPanelWindowSettingKey(key), value);
-    }
-
-    get_int(key) {
-        return this._settings.get_int(defaultPanelWindowSettingKey(key));
-    }
-
-    set_int(key, value) {
-        this._settings.set_int(defaultPanelWindowSettingKey(key), value);
-    }
-
-    get_strv(key) {
-        return this._settings.get_strv(defaultPanelWindowSettingKey(key));
-    }
-
-    set_strv(key, value) {
-        this._settings.set_strv(defaultPanelWindowSettingKey(key), value);
-    }
-
-    get_value(key) {
-        return this._settings.get_value(defaultPanelWindowSettingKey(key));
-    }
-
-    set_value(key, value) {
-        this._settings.set_value(defaultPanelWindowSettingKey(key), value);
+    _settingKey(key) {
+        return defaultPanelWindowSettingKey(key);
     }
 }
 

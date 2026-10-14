@@ -5,6 +5,7 @@ import {
     dockFloatingPanelReserve,
     dockPanelModeHeight,
 } from '../shared/panelSizing.js';
+import {RemappedSettings} from '../shared/remappedSettings.js';
 
 const DOCK_SETTING_KEYS = new Map([
     ['panel-position', 'dock-position'],
@@ -78,50 +79,9 @@ const DOCK_COMPUTED_SETTING_KEYS = new Map([
     ],
 ]);
 
-function dockSettingKey(key) {
-    return DOCK_SETTING_KEYS.get(key) ?? key;
-}
-
-function remapSettingSignal(signal) {
-    if (!signal.startsWith('changed::'))
-        return signal;
-
-    const key = signal.slice('changed::'.length);
-    return `changed::${dockSettingKey(key)}`;
-}
-
-function remapSettingSignals(signal) {
-    if (!signal.startsWith('changed::'))
-        return [signal];
-
-    const sourceKeys = DOCK_COMPUTED_SETTING_KEYS.get(
-        signal.slice('changed::'.length)
-    );
-    if (!sourceKeys)
-        return [remapSettingSignal(signal)];
-
-    return sourceKeys.map(sourceKey => `changed::${sourceKey}`);
-}
-
-function remapSettingArguments(args) {
-    const remapped = [];
-    for (let index = 0; index < args.length; index++) {
-        const arg = args[index];
-        if (typeof arg !== 'string') {
-            remapped.push(arg);
-            continue;
-        }
-
-        const handler = args[++index];
-        for (const signal of remapSettingSignals(arg))
-            remapped.push(signal, handler);
-    }
-    return remapped;
-}
-
-export class DockPanelSettings {
+export class DockPanelSettings extends RemappedSettings {
     constructor(settings) {
-        this._settings = settings;
+        super(settings);
         this._runtimeIconSize = null;
         this._cache = new Map();
         this._changedId = settings.connect(
@@ -135,6 +95,23 @@ export class DockPanelSettings {
         this._settings.disconnect(this._changedId);
         this._changedId = 0;
         this._cache.clear();
+    }
+
+    _settingKey(key) {
+        return DOCK_SETTING_KEYS.get(key) ?? key;
+    }
+
+    _settingSignals(signal) {
+        if (!signal.startsWith('changed::'))
+            return [signal];
+
+        const sourceKeys = DOCK_COMPUTED_SETTING_KEYS.get(
+            signal.slice('changed::'.length)
+        );
+        if (!sourceKeys)
+            return [this._settingSignal(signal)];
+
+        return sourceKeys.map(sourceKey => `changed::${sourceKey}`);
     }
 
     _cached(type, key, compute) {
@@ -160,9 +137,7 @@ export class DockPanelSettings {
         if (key === 'default-gnome-panel') {
             return false;
         }
-        return this._cached('boolean', key, () =>
-            this._settings.get_boolean(dockSettingKey(key))
-        );
+        return this._cached('boolean', key, () => super.get_boolean(key));
     }
 
     get_string(key) {
@@ -172,26 +147,18 @@ export class DockPanelSettings {
             return 'center';
         }
 
-        return this._cached('string', key, () =>
-            this._settings.get_string(dockSettingKey(key))
-        );
+        return this._cached('string', key, () => super.get_string(key));
     }
 
-    get_int(...args) {
-        if (args[0] === 'icon-size' && this._runtimeIconSize !== null)
+    get_int(key) {
+        if (key === 'icon-size' && this._runtimeIconSize !== null)
             return this._runtimeIconSize;
 
-        if (args.length === 1) {
-            return this._cached('int', args[0], () =>
-                this._computeInt(args[0])
-            );
-        }
-
-        return this._computeInt(...args);
+        return this._cached('int', key, () => this._computeInt(key));
     }
 
-    _computeInt(...args) {
-        if (args[0] === 'panel-height') {
+    _computeInt(key) {
+        if (key === 'panel-height') {
             const iconSize = this.get_int('icon-size');
             if (!this._settings.get_boolean('dock-panel-mode'))
                 return iconSize + dockFloatingPanelReserve(this);
@@ -199,87 +166,6 @@ export class DockPanelSettings {
             return dockPanelModeHeight(this._settings, iconSize);
         }
 
-        return this._settings.get_int(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    get_value(key) {
-        return this._settings.get_value(dockSettingKey(key));
-    }
-
-    get_default_value(key) {
-        return this._settings.get_default_value(dockSettingKey(key));
-    }
-
-    get_user_value(key) {
-        return this._settings.get_user_value(dockSettingKey(key));
-    }
-
-    get_strv(...args) {
-        if (args[0] === 'panel-item-order')
-            return this._settings.get_strv('dock-item-order');
-
-        return this._settings.get_strv(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    set_boolean(...args) {
-        return this._settings.set_boolean(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    set_int(...args) {
-        return this._settings.set_int(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    set_string(...args) {
-        return this._settings.set_string(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    set_strv(...args) {
-        return this._settings.set_strv(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    is_writable(...args) {
-        return this._settings.is_writable(
-            dockSettingKey(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    connect(...args) {
-        return this._settings.connect(
-            remapSettingSignal(args[0]),
-            ...args.slice(1)
-        );
-    }
-
-    disconnect(...args) {
-        return this._settings.disconnect(...args);
-    }
-
-    connectObject(...args) {
-        return this._settings.connectObject(
-            ...remapSettingArguments(args)
-        );
-    }
-
-    disconnectObject(...args) {
-        return this._settings.disconnectObject(...args);
+        return super.get_int(key);
     }
 }
