@@ -21,4 +21,3 @@ export function panelApplicationsVisible(settings, isSecondary) {
             !(shouldHidePinnedApplications(settings, isSecondary) &&
                 settings.get_boolean('hide-unpinned-taskbar-apps')));
 }
-
