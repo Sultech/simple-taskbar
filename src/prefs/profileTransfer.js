@@ -8,7 +8,9 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {PANEL_PROFILE_STATE_KEYS} from '../shared/panelModeProfiles.js';
 import {pinnedItemIsValid} from '../shared/pinnedItemFormat.js';
+import {SETTINGS_BATCH_SIZE} from './preferencesDialogs.js';
 
 Gio._promisify(Gio.File.prototype, 'load_contents_async');
 Gio._promisify(
@@ -97,10 +99,25 @@ function parseProfile(contents, settings) {
 }
 
 function applyProfile(settings, values) {
+    const profileStateKeys = new Set(PANEL_PROFILE_STATE_KEYS);
+    const ordered = [
+        ...values.filter(([key]) => !profileStateKeys.has(key)),
+        ...values.filter(([key]) => profileStateKeys.has(key)),
+    ];
     settings.set_boolean('panel-profile-transition', true);
     settings.delay();
-    for (const [key, value] of values)
+    let batchSize = 0;
+    for (const [key, value] of ordered) {
+        if (settings.get_value(key).equal(value))
+            continue;
+
         settings.set_value(key, value);
+        batchSize++;
+        if (batchSize === SETTINGS_BATCH_SIZE) {
+            settings.apply();
+            batchSize = 0;
+        }
+    }
     settings.set_boolean('panel-profile-transition', false);
     settings.apply();
 }

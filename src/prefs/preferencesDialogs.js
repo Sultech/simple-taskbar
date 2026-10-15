@@ -14,7 +14,7 @@ import {
     PANEL_PROFILE_STATE_KEYS,
 } from '../shared/panelModeProfiles.js';
 
-const RESET_BATCH_SIZE = 255;
+export const SETTINGS_BATCH_SIZE = 255;
 
 export function confirmReset(window, createSettings) {
     const dialog = new Adw.AlertDialog({
@@ -50,7 +50,7 @@ export function confirmReset(window, createSettings) {
         const resetKey = key => {
             resetSettings.reset(key);
             batchSize++;
-            if (batchSize === RESET_BATCH_SIZE) {
+            if (batchSize === SETTINGS_BATCH_SIZE) {
                 resetSettings.apply();
                 batchSize = 0;
             }
