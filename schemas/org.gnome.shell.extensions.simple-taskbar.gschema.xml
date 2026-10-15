@@ -538,7 +538,7 @@
       <description>Font weight for window title labels on uncombined applications</description>
     </key>
     <key name="default-panel-window-group-apps-label-max-width" type="i">
-      <range min="1" max="1000" />
+      <range min="30" max="1000"/>
       <default>160</default>
       <summary>Default panel windows: Application title maximum width</summary>
       <description>Maximum width in pixels for window title labels on uncombined applications</description>
@@ -880,12 +880,12 @@
       <summary>Action when hovering over an application icon</summary>
     </key>
     <key name="default-panel-window-show-window-previews-timeout" type="i">
-      <range min="0" max="9999"/>
+      <range min="0" max="2000"/>
       <default>320</default>
       <summary>Delay before showing window previews</summary>
     </key>
     <key name="default-panel-window-leave-timeout" type="i">
-      <range min="0" max="9999"/>
+      <range min="0" max="2000"/>
       <default>300</default>
       <summary>Delay before hiding window previews</summary>
     </key>
@@ -894,7 +894,7 @@
       <summary>Enable window preview peeking</summary>
     </key>
     <key name="default-panel-window-enter-peek-mode-timeout" type="i">
-      <range min="50" max="9999"/>
+      <range min="50" max="2000"/>
       <default>50</default>
       <summary>Delay before window preview peeking</summary>
     </key>
@@ -1424,7 +1424,7 @@
       <description>Font weight for window title labels on uncombined applications</description>
     </key>
     <key name="group-apps-label-max-width" type="i">
-      <range min="0" max="1000"/>
+      <range min="30" max="1000"/>
       <default>160</default>
       <summary>Application title maximum width</summary>
       <description>Maximum width in pixels for window title labels on uncombined applications</description>
@@ -1571,12 +1571,12 @@
       <summary>Action when hovering over an application icon</summary>
     </key>
     <key name="show-window-previews-timeout" type="i">
-      <range min="0" max="9999"/>
+      <range min="0" max="2000"/>
       <default>320</default>
       <summary>Delay before showing window previews</summary>
     </key>
     <key name="leave-timeout" type="i">
-      <range min="0" max="9999"/>
+      <range min="0" max="2000"/>
       <default>300</default>
       <summary>Delay before hiding window previews</summary>
     </key>
@@ -1585,7 +1585,7 @@
       <summary>Enable window preview peeking</summary>
     </key>
     <key name="enter-peek-mode-timeout" type="i">
-      <range min="50" max="9999"/>
+      <range min="50" max="2000"/>
       <default>50</default>
       <summary>Delay before window preview peeking</summary>
     </key>

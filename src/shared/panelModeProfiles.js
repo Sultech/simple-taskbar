@@ -239,6 +239,13 @@ function savePanelModeSettings(settings, mode) {
     settings.set_boolean(profile.saved, true);
 }
 
+function restoreSettingValue(settings, key, value) {
+    if (value && settings.settings_schema.get_key(key).range_check(value))
+        settings.set_value(key, value);
+    else
+        settings.reset(key);
+}
+
 function restorePanelModeSettings(settings, mode) {
     const profile = PROFILE_KEYS.get(mode);
     if (!settings.get_boolean(profile.saved))
@@ -248,10 +255,7 @@ function restorePanelModeSettings(settings, mode) {
     for (const key of settings.settings_schema.list_keys()) {
         if (MODE_SETTING_KEYS.has(key))
             continue;
-        if (values[key])
-            settings.set_value(key, values[key]);
-        else
-            settings.reset(key);
+        restoreSettingValue(settings, key, values[key]);
     }
     return true;
 }
@@ -286,10 +290,7 @@ function restorePanelAxisSettings(settings, mode, axis) {
     for (const key of settings.settings_schema.list_keys()) {
         if (MODE_SETTING_KEYS.has(key) || key === 'panel-position')
             continue;
-        if (values[key])
-            settings.set_value(key, values[key]);
-        else
-            settings.reset(key);
+        restoreSettingValue(settings, key, values[key]);
     }
     return true;
 }

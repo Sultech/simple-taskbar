@@ -691,8 +691,7 @@ export class TaskbarAppearanceController {
                 : 0;
             item._taskbarLabel.clutter_text.natural_width_set = fixedWidth;
         }
-        item._taskbarLabel.visible = hasLabel &&
-            (windowsXpTheme || maxLabelWidth > 0);
+        item._taskbarLabel.visible = hasLabel;
         if (window)
             item._taskbarButton.accessible_name = `${text}, ${_('running')}`;
     }

@@ -86,8 +86,10 @@ function parseProfile(contents, settings) {
             null,
             null
         );
-        if (!settings.settings_schema.get_key(key).range_check(value))
-            throw new Error(_('The selected profile is invalid.'));
+        if (!settings.settings_schema.get_key(key).range_check(value)) {
+            values.push([key, null]);
+            continue;
+        }
         if (key === PINNED_APPS_KEY &&
             !value.deepUnpack().every(pinnedItemIsValid)) {
             throw new Error(_('The selected profile is invalid.'));
@@ -104,14 +106,20 @@ function applyProfile(settings, values) {
         ...values.filter(([key]) => !profileStateKeys.has(key)),
         ...values.filter(([key]) => profileStateKeys.has(key)),
     ];
+    const isUnchanged = (key, value) => value
+        ? settings.get_value(key).equal(value)
+        : settings.get_user_value(key) === null;
     settings.set_boolean('panel-profile-transition', true);
     settings.delay();
     let batchSize = 0;
     for (const [key, value] of ordered) {
-        if (settings.get_value(key).equal(value))
+        if (isUnchanged(key, value))
             continue;
 
-        settings.set_value(key, value);
+        if (value)
+            settings.set_value(key, value);
+        else
+            settings.reset(key);
         batchSize++;
         if (batchSize === SETTINGS_BATCH_SIZE) {
             settings.apply();

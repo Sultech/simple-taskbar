@@ -103,7 +103,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
                 key: 'group-apps-label-max-width',
                 title: _('Maximum Label Width'),
                 subtitle: _('Maximum application title width in pixels'),
-                lower: forceLabels ? 1 : 0,
+                lower: 30,
                 upper: 1000,
                 step: 10,
             },

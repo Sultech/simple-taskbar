@@ -58,7 +58,7 @@ class WindowPreviewOptionsDialog extends Adw.Window {
                 title: _('Time Before Showing'),
                 subtitle: _('Delay in milliseconds before opening a preview'),
                 lower: 0,
-                upper: 9999,
+                upper: 2000,
                 step: 25,
             },
             connectSettings
@@ -71,7 +71,7 @@ class WindowPreviewOptionsDialog extends Adw.Window {
                 title: _('Time Before Hiding'),
                 subtitle: _('Delay in milliseconds before closing a preview'),
                 lower: 0,
-                upper: 9999,
+                upper: 2000,
                 step: 25,
             },
             connectSettings
@@ -105,7 +105,7 @@ class WindowPreviewOptionsDialog extends Adw.Window {
                 title: _('Time Before Peeking'),
                 subtitle: _('Delay in milliseconds before peeking'),
                 lower: 50,
-                upper: 9999,
+                upper: 2000,
                 step: 25,
             },
             connectSettings
