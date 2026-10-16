@@ -24,11 +24,11 @@ import {
 } from '../shared/panelSizing.js';
 import {
     addColorRow,
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 function addHighlightExtentRows(group, settings, connectSettings, {
     keys,
@@ -56,7 +56,7 @@ function addHighlightExtentRows(group, settings, connectSettings, {
         subtitle: switchSubtitle,
     });
     group.add(toggle);
-    const row = addSpinRow(
+    const row = addSliderRow(
         group,
         settings,
         {
@@ -115,7 +115,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         content.append(sizeGroup);
 
         const iconSize = settings.get_int('icon-size');
-        const borderRadiusRow = addSpinRow(
+        const borderRadiusRow = addSliderRow(
             sizeGroup,
             settings,
             {
@@ -223,11 +223,12 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        const focusOpacityRow = addSpinRow(
+        const focusOpacityRow = addSliderRow(
             focusGroup,
             settings,
             {
                 key: CLASSIC_HIGHLIGHT_SETTINGS.focusOpacity,
+                unit: '%',
                 title: _('Focus Highlight Opacity'),
                 subtitle: _('Opacity percentage'),
                 lower: 5,

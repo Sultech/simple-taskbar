@@ -31,6 +31,7 @@ import {
     createRunningIndicatorReserveOptionsButton,
 } from './runningIndicatorReserveDialog.js';
 import {addApplicationInteractionGroup} from './applicationInteractionGroup.js';
+import {addSliderRow} from './sliderRow.js';
 import {
     MAX_ICON_EDGE_PADDING,
     MAX_ICON_SIZE,
@@ -47,30 +48,32 @@ import {
 import {
     addColorRow,
     addComboRow,
-    addSpinRow,
+    addToggleChoiceRow,
     addSwitchRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 
 function addApplicationIconControls({
-    group,
+    page,
+    interactionPage,
+    groups,
     settings,
     connectSettings,
     panelPositions,
     positionKey = 'panel-position',
     edgePaddingSubtitle,
 }) {
-    const iconSizingRow = new Adw.ExpanderRow({
+    const group = page.addGroup({
         title: _('Application Icon Appearance'),
-        subtitle: _('Adjust icon size, spacing, and hover/focus effects'),
+        description: _('Adjust icon size, spacing, and hover/focus effects'),
     });
-    group.add(iconSizingRow);
+    groups.push(group);
 
     const defaultPanelSizing = settings.isDefaultPanelWindows
         ? createDefaultPanelIconSizingRows(settings, connectSettings)
         : null;
-    const iconSizeRow = defaultPanelSizing ? defaultPanelSizing.iconSizeRow : addSpinRow(
-        iconSizingRow,
+    const iconSizeRow = defaultPanelSizing ? defaultPanelSizing.iconSizeRow : addSliderRow(
+        group,
         settings,
         {
             key: 'icon-size',
@@ -78,14 +81,14 @@ function addApplicationIconControls({
             subtitle: _('The panel grows automatically when larger icons need more room'),
             lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
-            addRow: row => iconSizingRow.add_row(row),
+            addRow: row => group.add(row),
         },
         connectSettings
     );
     if (defaultPanelSizing)
-        iconSizingRow.add_row(iconSizeRow);
-    const dockMinIconSizeRow = addSpinRow(
-        iconSizingRow,
+        group.add(iconSizeRow);
+    const dockMinIconSizeRow = addSliderRow(
+        group,
         settings,
         {
             key: 'dock-min-icon-size',
@@ -95,12 +98,12 @@ function addApplicationIconControls({
             ),
             lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
-            addRow: row => iconSizingRow.add_row(row),
+            addRow: row => group.add(row),
         },
         connectSettings
     );
-    const iconSpacingRow = addSpinRow(
-        iconSizingRow,
+    const iconSpacingRow = addSliderRow(
+        group,
         settings,
         {
             key: 'icon-spacing',
@@ -108,12 +111,12 @@ function addApplicationIconControls({
             subtitle: _('Space between application icons'),
             lower: 0,
             upper: 16,
-            addRow: row => iconSizingRow.add_row(row),
+            addRow: row => group.add(row),
         },
         connectSettings
     );
-    const iconEdgePaddingRow = defaultPanelSizing ? defaultPanelSizing.iconEdgePaddingRow : addSpinRow(
-        iconSizingRow,
+    const iconEdgePaddingRow = defaultPanelSizing ? defaultPanelSizing.iconEdgePaddingRow : addSliderRow(
+        group,
         settings,
         {
             key: 'icon-edge-padding',
@@ -121,15 +124,15 @@ function addApplicationIconControls({
             subtitle: edgePaddingSubtitle,
             lower: MIN_ICON_EDGE_PADDING,
             upper: MAX_ICON_EDGE_PADDING,
-            addRow: row => iconSizingRow.add_row(row),
+            addRow: row => group.add(row),
         },
         connectSettings
     );
     if (defaultPanelSizing)
-        iconSizingRow.add_row(iconEdgePaddingRow);
+        group.add(iconEdgePaddingRow);
     const classicOptionsButton = createClassicHighlightOptionsButton(settings);
-    const highlightStyleRow = addComboRow(
-        iconSizingRow,
+    const highlightStyleRow = addToggleChoiceRow(
+        group,
         settings,
         {
             key: 'taskbar-highlight-style',
@@ -146,13 +149,13 @@ function addApplicationIconControls({
                 },
             ],
             addSuffix: row => row.add_suffix(classicOptionsButton),
-            addRow: row => iconSizingRow.add_row(row),
+            addRow: row => group.add(row),
         },
         connectSettings
     );
     const syncClassicOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
-        iconSizingRow.sensitive = enabled;
+        group.sensitive = enabled;
         highlightStyleRow.sensitive = enabled &&
             !settings.get_boolean('windows-10-theme-enabled');
         classicOptionsButton.sensitive = enabled;
@@ -186,7 +189,8 @@ function addApplicationIconControls({
     );
 
     addApplicationInteractionGroup({
-        group,
+        page: interactionPage,
+        groups,
         settings,
         connectSettings,
     });
@@ -227,17 +231,18 @@ function addApplicationIconControls({
 }
 
 function addApplicationLayoutControls({
-    group,
+    page,
+    groups,
     settings,
     connectSettings,
 }) {
-    const layoutGroup = new Adw.ExpanderRow({
+    const layoutGroup = page.addGroup({
         title: _('Application Layout and Behavior'),
-        subtitle: _(
-            'Choose which applications appear and how they are grouped and indicated'
-        ),
+        description: settings.isDefaultPanelWindows
+            ? _('Configure window grouping, badges, and progress bars')
+            : _('Choose which applications appear and how they are grouped and indicated'),
     });
-    group.add(layoutGroup);
+    groups.push(layoutGroup);
 
     const pinnedBehaviorOptionsButton =
         createPinnedApplicationBehaviorOptionsButton(settings);
@@ -248,7 +253,7 @@ function addApplicationLayoutControls({
     });
     pinnedBehaviorRow.add_suffix(pinnedBehaviorOptionsButton);
     pinnedBehaviorRow.visible = !settings.isDefaultPanelWindows;
-    layoutGroup.add_row(pinnedBehaviorRow);
+    layoutGroup.add(pinnedBehaviorRow);
 
     const combineAppButtonsChoices = [
         {value: 'always', label: _('Always')},
@@ -285,13 +290,10 @@ function addApplicationLayoutControls({
                 if (!settings.isDefaultPanelWindows)
                     row.add_suffix(combineOptionsButton);
             },
-            addRow: row => layoutGroup.add_row(row),
+            addRow: row => layoutGroup.add(row),
         },
         connectSettings
     );
-
-    if (settings.isDefaultPanelWindows)
-        layoutGroup.subtitle = _('Configure window grouping, badges, and progress bars');
 
     const progressBarOptionsButton = createProgressBarOptionsButton(settings);
     addSwitchRow(layoutGroup, settings, {
@@ -299,7 +301,7 @@ function addApplicationLayoutControls({
         title: _('Show Progress Bars'),
         subtitle: _('Display file transfer and install progress on application icons'),
         addSuffix: row => row.add_suffix(progressBarOptionsButton),
-        addRow: row => layoutGroup.add_row(row),
+        addRow: row => layoutGroup.add(row),
     });
     const syncProgressBarOptionsSensitivity = () => {
         progressBarOptionsButton.sensitive =
@@ -317,21 +319,21 @@ function addApplicationLayoutControls({
         title: _('Show Notification Badges'),
         subtitle: _('Display unread counts on application icons'),
     });
-    layoutGroup.add_row(notificationBadgeSwitch);
+    layoutGroup.add(notificationBadgeSwitch);
 
     const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
         key: 'show-pinned-app-separator',
         title: _('Show Pinned App Separator'),
         subtitle: _('Show a line between pinned and running applications'),
     });
-    layoutGroup.add_row(pinnedAppSeparatorSwitch);
+    layoutGroup.add(pinnedAppSeparatorSwitch);
 
     const locationSeparatorSwitch = createSwitchRow(settings, {
         key: 'show-location-separator',
         title: _('Show Location Separator'),
         subtitle: _('Show a line between applications and locations'),
     });
-    layoutGroup.add_row(locationSeparatorSwitch);
+    layoutGroup.add(locationSeparatorSwitch);
     pinnedAppSeparatorSwitch.visible = !settings.isDefaultPanelWindows;
     locationSeparatorSwitch.visible = !settings.isDefaultPanelWindows;
 
@@ -371,23 +373,22 @@ function addApplicationLayoutControls({
     return {
         combineAppButtonsRow,
         syncLabelSensitivity,
-        pinnedAppSeparatorSwitch,
-        locationSeparatorSwitch,
     };
 }
 
 function addIndicatorControls({
-    group,
+    page,
+    groups,
     settings,
     connectSettings,
 }) {
-    const indicatorGroup = new Adw.ExpanderRow({
+    const indicatorGroup = page.addGroup({
         title: _('Running Indicators'),
-        subtitle: _(
+        description: _(
             'Configure the position, style, size, and colours of running indicators'
         ),
     });
-    group.add(indicatorGroup);
+    groups.push(indicatorGroup);
     const positionLabels = {
         top: _('Top'),
         bottom: _('Bottom'),
@@ -419,7 +420,7 @@ function addIndicatorControls({
                 label: positionLabels[value],
             })),
             addSuffix: row => row.add_suffix(reserveOptionsButton),
-            addRow: row => indicatorGroup.add_row(row),
+            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -436,11 +437,11 @@ function addIndicatorControls({
                 value,
                 label: styleLabels[value],
             })),
-            addRow: row => indicatorGroup.add_row(row),
+            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
-    const indicatorSizeRow = addSpinRow(
+    const indicatorSizeRow = addSliderRow(
         indicatorGroup,
         settings,
         {
@@ -449,7 +450,7 @@ function addIndicatorControls({
             subtitle: _('Choose the indicator thickness in pixels'),
             lower: 1,
             upper: 5,
-            addRow: row => indicatorGroup.add_row(row),
+            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -460,7 +461,7 @@ function addIndicatorControls({
             'Run indicators the full length of the application icon'
         ),
     });
-    indicatorGroup.add_row(indicatorFullLengthSwitch);
+    indicatorGroup.add(indicatorFullLengthSwitch);
     const customIndicatorColorsSwitch = new Adw.SwitchRow({
         title: _('Custom Indicator Colors'),
         subtitle: _('Choose colors for running application indicators'),
@@ -468,7 +469,7 @@ function addIndicatorControls({
             'custom-indicator-colors-enabled'
         ),
     });
-    indicatorGroup.add_row(customIndicatorColorsSwitch);
+    indicatorGroup.add(customIndicatorColorsSwitch);
     settings.bind(
         'custom-indicator-colors-enabled',
         customIndicatorColorsSwitch,
@@ -482,7 +483,7 @@ function addIndicatorControls({
         ),
         active: settings.get_boolean('match-icon-color'),
     });
-    indicatorGroup.add_row(matchIconColorSwitch);
+    indicatorGroup.add(matchIconColorSwitch);
     settings.bind(
         'match-icon-color',
         matchIconColorSwitch,
@@ -495,7 +496,7 @@ function addIndicatorControls({
         {
             key: 'focused-indicator-color',
             title: _('Focused Indicator Color'),
-            addRow: row => indicatorGroup.add_row(row),
+            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -505,7 +506,7 @@ function addIndicatorControls({
         {
             key: 'unfocused-indicator-color',
             title: _('Unfocused Indicator Color'),
-            addRow: row => indicatorGroup.add_row(row),
+            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -566,26 +567,27 @@ function addIndicatorControls({
 }
 
 function addApplicationOverflowControls({
-    group,
+    page,
+    groups,
     settings,
     connectSettings,
     switchSubtitle,
 }) {
-    const applicationOverflowRow = new Adw.ExpanderRow({
+    const applicationOverflowGroup = page.addGroup({
         title: _('Application Overflow'),
-        subtitle: _('Choose how overflowing applications are handled'),
+        description: _('Choose how overflowing applications are handled'),
     });
-    group.add(applicationOverflowRow);
+    groups.push(applicationOverflowGroup);
 
     const applicationOverflowSwitch = createSwitchRow(settings, {
         key: 'application-overflow-enabled',
         title: _('Enable Application Overflow'),
         subtitle: switchSubtitle,
     });
-    applicationOverflowRow.add_row(applicationOverflowSwitch);
+    applicationOverflowGroup.add(applicationOverflowSwitch);
 
-    const applicationOverflowStyleRow = addComboRow(
-        applicationOverflowRow,
+    const applicationOverflowStyleRow = addToggleChoiceRow(
+        applicationOverflowGroup,
         settings,
         {
             key: 'application-overflow-style',
@@ -594,7 +596,7 @@ function addApplicationOverflowControls({
                 {value: 'taskbar', label: _('Taskbar Flyout')},
                 {value: 'list', label: _('Application List')},
             ],
-            addRow: row => applicationOverflowRow.add_row(row),
+            addRow: row => applicationOverflowGroup.add(row),
         },
         connectSettings
     );
@@ -613,14 +615,12 @@ function addApplicationOverflowControls({
         syncApplicationOverflowSensitivity
     );
     syncApplicationOverflowSensitivity();
-
-    return {applicationOverflowSwitch};
 }
 
 function addApplicationIsolationControls({
-    group,
+    page,
+    groups,
     settings,
-    groupSubtitle,
     monitorSubtitle,
 }) {
     const isolateWorkspacesSwitch = createSwitchRow(settings, {
@@ -633,32 +633,75 @@ function addApplicationIsolationControls({
         title: _('Isolate Monitors'),
         subtitle: monitorSubtitle,
     });
-    const applicationIsolationRow = new Adw.ExpanderRow({
+    const applicationIsolationGroup = page.addGroup({
         title: _('Running Application Isolation'),
-        subtitle: groupSubtitle,
+        description: settings.isDefaultPanelWindows
+            ? _('Limit this panel’s running windows to the current workspace or monitor')
+            : _('Limit running applications to the current workspace or monitor'),
     });
-    applicationIsolationRow.add_row(isolateWorkspacesSwitch);
-    applicationIsolationRow.add_row(isolateMonitorsSwitch);
-    group.add(applicationIsolationRow);
+    applicationIsolationGroup.add(isolateWorkspacesSwitch);
+    applicationIsolationGroup.add(isolateMonitorsSwitch);
+    groups.push(applicationIsolationGroup);
 
     return {isolateMonitorsSwitch};
 }
 
-function addDockApplicationIconsGroup({
-    page,
+function addApplicationSections({
+    pages,
     settings,
     connectSettings,
     panelPositions,
+    positionKey,
+    edgePaddingSubtitle,
+    overflowSubtitle,
+    monitorSubtitle,
 }) {
-    const appearanceGroup = new Adw.PreferencesGroup({
-        title: _('Application Icons'),
-        description: _(
-            'Change the size, spacing, placement, and running indicators for Dock icons.'
-        ),
-    });
-    page.add(appearanceGroup);
+    const groups = [];
     const controls = addApplicationIconControls({
-        group: appearanceGroup,
+        page: pages.icons,
+        interactionPage: pages.interaction,
+        groups,
+        settings,
+        connectSettings,
+        panelPositions,
+        positionKey,
+        edgePaddingSubtitle,
+    });
+    const layoutControls = addApplicationLayoutControls({
+        page: pages.icons,
+        groups,
+        settings,
+        connectSettings,
+    });
+    addApplicationOverflowControls({
+        page: pages.icons,
+        groups,
+        settings,
+        connectSettings,
+        switchSubtitle: overflowSubtitle,
+    });
+    const isolationControls = addApplicationIsolationControls({
+        page: pages.icons,
+        groups,
+        settings,
+        monitorSubtitle,
+    });
+    addIndicatorControls({
+        page: pages.indicators,
+        groups,
+        settings,
+        connectSettings,
+    });
+    const setVisible = visible => {
+        for (const group of groups)
+            group.visible = visible;
+    };
+    return {controls, layoutControls, isolationControls, setVisible};
+}
+
+function addDockApplicationSections({pages, settings, connectSettings, panelPositions}) {
+    const {controls} = addApplicationSections({
+        pages,
         settings,
         connectSettings,
         panelPositions,
@@ -666,90 +709,41 @@ function addDockApplicationIconsGroup({
         edgePaddingSubtitle: _(
             'Space between icons and the Dock edges; lower it to fit larger icons in a thinner Dock'
         ),
-    });
-    addApplicationOverflowControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-        switchSubtitle: _(
+        overflowSubtitle: _(
             'Show applications that do not fit in an overflow popup instead of scrolling the Dock'
-        ),
-    });
-    addApplicationIsolationControls({
-        group: appearanceGroup,
-        settings,
-        groupSubtitle: _(
-            'Limit running applications to the current workspace or monitor'
         ),
         monitorSubtitle: _(
             'Show running applications only in the Dock for their monitor'
         ),
     });
-    addIndicatorControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-    });
-    addApplicationLayoutControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-    });
     const syncDockApplicationIcons = () => {
-        const dockModeEnabled = settings.get_boolean('dock-mode');
-        appearanceGroup.visible = dockModeEnabled;
-        appearanceGroup.sensitive = dockModeEnabled;
-        controls.appAlignmentRow.sensitive = dockModeEnabled &&
+        controls.appAlignmentRow.sensitive = settings.get_boolean('dock-mode') &&
             settings.get_boolean('dock-panel-mode');
     };
-    connectSettings(
-        settings,
-        'changed::dock-mode',
-        syncDockApplicationIcons
-    );
-    connectSettings(
-        settings,
-        'changed::dock-panel-mode',
-        syncDockApplicationIcons
-    );
+    for (const key of ['dock-mode', 'dock-panel-mode'])
+        connectSettings(settings, `changed::${key}`, syncDockApplicationIcons);
     syncDockApplicationIcons();
 }
 
-function addDefaultPanelApplicationIconsGroup({page, settings, connectSettings, panelPositions}) {
+function addDefaultPanelApplicationSections({pages, settings, connectSettings, panelPositions}) {
     const windowSettings = new DefaultPanelWindowSettings(settings);
-    const group = new Adw.PreferencesGroup({
-        title: _('Application Icons'),
-        description: _('Customize the running window buttons in the default panel independently of the Dock.'),
-    });
-    page.add(group);
-    addApplicationIconControls({
-        group,
+    const {isolationControls, setVisible} = addApplicationSections({
+        pages,
         settings: windowSettings,
         connectSettings,
         panelPositions,
+        positionKey: 'panel-position',
         edgePaddingSubtitle: _('Space between window icons and the panel edges'),
-    });
-    addApplicationOverflowControls({
-        group,
-        settings: windowSettings,
-        connectSettings,
-        switchSubtitle: _('Show windows that do not fit in an overflow popup instead of scrolling the panel'),
-    });
-    const {isolateMonitorsSwitch} = addApplicationIsolationControls({
-        group,
-        settings: windowSettings,
-        groupSubtitle: _('Limit this panel’s running windows to the current workspace or monitor'),
+        overflowSubtitle: _('Show windows that do not fit in an overflow popup instead of scrolling the panel'),
         monitorSubtitle: _('Show running windows only on the panel for their monitor'),
     });
     const syncMonitorIsolation = () => {
-        isolateMonitorsSwitch.sensitive = settings.get_boolean('multi-monitor-panels');
+        isolationControls.isolateMonitorsSwitch.sensitive = settings.get_boolean('multi-monitor-panels');
     };
     connectSettings(settings, 'changed::multi-monitor-panels', syncMonitorIsolation);
     syncMonitorIsolation();
-    addIndicatorControls({group, settings: windowSettings, connectSettings});
-    addApplicationLayoutControls({group, settings: windowSettings, connectSettings});
     const syncVisibility = () => {
-        group.visible = defaultPanelWindowsEnabled(settings);
+        setVisible(defaultPanelWindowsEnabled(settings));
     };
     for (const key of ['default-gnome-panel', 'default-panel-show-running-windows', 'panel-position'])
         connectSettings(settings, `changed::${key}`, syncVisibility);
@@ -757,76 +751,54 @@ function addDefaultPanelApplicationIconsGroup({page, settings, connectSettings, 
 }
 
 export function addApplicationIconsGroup({
-    page,
-    dockPage,
+    pages,
+    dockPages,
     settings,
     connectSettings,
     panelPositions,
 }) {
-    const appearanceGroup = new Adw.PreferencesGroup({
-        title: _('Application Icons'),
-        description: _(
-            'Change the size, spacing, placement, and running indicators for taskbar icons.'
-        ),
-    });
-    page.add(appearanceGroup);
-    addDefaultPanelApplicationIconsGroup({page, settings, connectSettings, panelPositions});
-    addDockApplicationIconsGroup({
-        page: dockPage,
+    const {
+        controls,
+        layoutControls,
+        isolationControls,
+        setVisible,
+    } = addApplicationSections({
+        pages,
         settings,
         connectSettings,
         panelPositions,
-    });
-    const controls = addApplicationIconControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-        panelPositions,
+        positionKey: 'panel-position',
         edgePaddingSubtitle: _(
             'Space between icons and the taskbar edges; lower it to fit larger icons in a thinner taskbar'
         ),
-    });
-    const overflowControls = addApplicationOverflowControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
-        switchSubtitle: _(
+        overflowSubtitle: _(
             'Show applications that do not fit in an overflow popup instead of scrolling the taskbar'
-        ),
-    });
-    const isolationControls = addApplicationIsolationControls({
-        group: appearanceGroup,
-        settings,
-        groupSubtitle: _(
-            'Limit running applications to the current workspace or monitor'
         ),
         monitorSubtitle: _(
             'Show running applications only on the taskbar for their monitor'
         ),
     });
-    addIndicatorControls({
-        group: appearanceGroup,
+    const syncTaskbarApplicationIcons = () => {
+        setVisible(!settings.get_boolean('default-gnome-panel'));
+    };
+    for (const key of ['default-gnome-panel', 'dock-mode'])
+        connectSettings(settings, `changed::${key}`, syncTaskbarApplicationIcons);
+    syncTaskbarApplicationIcons();
+    addDefaultPanelApplicationSections({pages, settings, connectSettings, panelPositions});
+    addDockApplicationSections({
+        pages: dockPages,
         settings,
         connectSettings,
-    });
-    const layoutControls = addApplicationLayoutControls({
-        group: appearanceGroup,
-        settings,
-        connectSettings,
+        panelPositions,
     });
 
     return {
-        appearanceGroup,
         iconSizeRow: controls.iconSizeRow,
         iconSpacingRow: controls.iconSpacingRow,
         iconEdgePaddingRow: controls.iconEdgePaddingRow,
         appAlignmentRow: controls.appAlignmentRow,
         combineAppButtonsRow: layoutControls.combineAppButtonsRow,
         syncLabelSensitivity: layoutControls.syncLabelSensitivity,
-        pinnedAppSeparatorSwitch: layoutControls.pinnedAppSeparatorSwitch,
-        locationSeparatorSwitch: layoutControls.locationSeparatorSwitch,
-        applicationOverflowSwitch:
-            overflowControls.applicationOverflowSwitch,
         isolateMonitorsSwitch: isolationControls.isolateMonitorsSwitch,
     };
 }

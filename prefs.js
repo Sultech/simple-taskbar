@@ -9,10 +9,6 @@ import {
     gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {
-    addPanelModeGroup,
-    connectDefaultGnomePanelSync,
-} from './src/prefs/panelModeGroup.js';
 import {addApplicationIconsGroup} from './src/prefs/applicationIconsGroup.js';
 import {addDockAppearanceGroup} from './src/prefs/dockAppearanceGroup.js';
 import {addDockBehaviorGroup} from './src/prefs/dockBehaviorGroup.js';
@@ -24,7 +20,8 @@ import {addDockItemsPage} from './src/prefs/dockItemsPage.js';
 import {addLocationsGroup} from './src/prefs/locationsGroup.js';
 import {addStartMenuPage} from './src/prefs/startMenuPage.js';
 import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
-import {addWindowSwitchingPage} from './src/prefs/windowSwitchingPage.js';
+import {addGeneralPage} from './src/prefs/generalPage.js';
+import {addDockHub, addTaskbarHub} from './src/prefs/panelSettingsHubs.js';
 import {addAboutPage} from './src/prefs/aboutPage.js';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -33,210 +30,134 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         );
         window.set_default_size(640, 740);
         window._settings = this.getSettings();
+        const settings = window._settings;
+        const createSettings = () => this.getSettings();
         const settingsSignalTracker = new SettingsSignalTracker();
         window.connect('close-request', () => settingsSignalTracker.destroy());
-        const connectSettings = (settings, signal, callback) =>
-            settingsSignalTracker.connect(settings, signal, callback);
+        const connectSettings = (object, signal, callback) =>
+            settingsSignalTracker.connect(object, signal, callback);
         const blurMyShell = createBlurMyShellState(connectSettings);
         const blurMyShellPanelBlurEnabled =
             blurMyShell.blurMyShellPanelBlurEnabled;
-        const blurMyShellPopupBlurEnabled =
-            blurMyShell.blurMyShellPopupBlurEnabled;
         const panelPositions = [
             {value: 'left', label: _('Left')},
             {value: 'center', label: _('Center')},
             {value: 'right', label: _('Right')},
         ];
 
-        const page = new Adw.PreferencesPage({
+        addGeneralPage({window, settings, createSettings, connectSettings});
+
+        const taskbarPage = new Adw.PreferencesPage({
             title: _('Taskbar'),
             icon_name: 'preferences-desktop-appearance-symbolic',
         });
-        window.add(page);
+        window.add(taskbarPage);
+        const taskbar = addTaskbarHub({window, page: taskbarPage});
 
         const dockPage = new Adw.PreferencesPage({
             title: _('Dock'),
             icon_name: 'simple-taskbar-dock-symbolic',
         });
         window.add(dockPage);
+        const dock = addDockHub({window, page: dockPage, settings, connectSettings});
 
         const startMenuPage = new Adw.PreferencesPage({
             title: _('Start Menu'),
             icon_name: 'view-app-grid-symbolic',
         });
         window.add(startMenuPage);
-
-        addWindowSwitchingPage(
-            window,
-            window._settings,
-            connectSettings
-        );
-
         const startMenu = addStartMenuPage({
             window,
             page: startMenuPage,
-            taskbarPage: page,
+            taskbarPage,
             dockPage,
-            settings: window._settings,
+            settings,
             extensionPath: this.path,
             panelPositions,
             blurMyShellPanelBlurEnabled,
-            blurMyShellPopupBlurEnabled,
+            blurMyShellPopupBlurEnabled: blurMyShell.blurMyShellPopupBlurEnabled,
             connectSettings,
         });
-        const followAppAlignmentSwitch =
-            startMenu.followAppAlignmentSwitch;
-        const windowsStartMenuSwitch =
-            startMenu.windowsStartMenuSwitch;
         blurMyShell.setStartMenuSync(startMenu.syncTransparency);
 
-        const panelMode = addPanelModeGroup({
-            page,
-            dockPage,
-            settings: window._settings,
-            createSettings: () => this.getSettings(),
-            connectSettings,
-        });
-        const taskbarModeRow = panelMode.taskbarModeRow;
-        const taskbarModeSwitch = panelMode.taskbarModeSwitch;
-        const taskbarOverviewButton = panelMode.taskbarOverviewButton;
-        const defaultGnomePanelRow = panelMode.defaultGnomePanelRow;
-        const defaultGnomePanelSwitch = panelMode.defaultGnomePanelSwitch;
-        const defaultGnomePanelOverviewButton =
-            panelMode.defaultGnomePanelOverviewButton;
-        const windowsXpOverviewButton = panelMode.windowsXpOverviewButton;
-        const windows10ThemeSwitch = panelMode.windows10ThemeSwitch;
-        const windows10OverviewButton = panelMode.windows10OverviewButton;
-        const dockModeRow = panelMode.dockModeRow;
-        const dockModeSwitch = panelMode.dockModeSwitch;
-        const dockOverviewButton = panelMode.dockOverviewButton;
-        const dockModeGroup = panelMode.dockModeGroup;
-        const dockPositionRow = panelMode.dockPositionRow;
-        const dockMaxLengthRow = panelMode.dockMaxLengthRow;
-        const dockPanelModeSwitch = panelMode.dockPanelModeSwitch;
-        const windowsXpThemeSwitch = panelMode.windowsXpThemeSwitch;
-
         const icons = addApplicationIconsGroup({
-            page,
-            dockPage,
-            settings: window._settings,
+            pages: taskbar,
+            dockPages: dock,
+            settings,
             connectSettings,
             panelPositions,
         });
-        const appearanceGroup = icons.appearanceGroup;
-        const iconSizeRow = icons.iconSizeRow;
-        const iconSpacingRow = icons.iconSpacingRow;
-        const iconEdgePaddingRow = icons.iconEdgePaddingRow;
-        const appAlignmentRow = icons.appAlignmentRow;
-        const combineAppButtonsRow = icons.combineAppButtonsRow;
-        const syncLabelSensitivity = icons.syncLabelSensitivity;
-        const applicationOverflowSwitch =
-            icons.applicationOverflowSwitch;
-        const isolateMonitorsSwitch = icons.isolateMonitorsSwitch;
-
-        const dockAppearance = addDockAppearanceGroup({
-            page: dockPage,
-            settings: window._settings,
-            connectSettings,
-            blurMyShellPanelBlurEnabled,
-            blurMyShellDockBlurEnabled: blurMyShell.blurMyShellDockBlurEnabled,
-            dockModeGroup,
-            dockPositionRow,
-            dockMaxLengthRow,
-        });
-        blurMyShell.setDockPanelSyncs(
-            dockAppearance.syncTransparency,
-            dockAppearance.syncCustomColor
-        );
-        addDockBehaviorGroup({
-            page: dockPage,
-            settings: window._settings,
-            connectSettings,
-        });
-
-        connectDefaultGnomePanelSync({
-            settings: window._settings,
-            createSettings: () => this.getSettings(),
-            connectSettings,
-            taskbarModeRow,
-            taskbarModeSwitch,
-            taskbarOverviewButton,
-            defaultGnomePanelRow,
-            defaultGnomePanelSwitch,
-            defaultGnomePanelOverviewButton,
-            windowsXpOverviewButton,
-            windows10ThemeSwitch,
-            windows10OverviewButton,
-            dockModeSwitch,
-            dockOverviewButton,
-            dockPositionRow,
-            dockMaxLengthRow,
-            dockPanelModeSwitch,
-            appearanceGroup,
-            startMenuPage,
-        });
 
         const panelAppearance = addPanelAppearancePage({
-            page,
-            settings: window._settings,
+            sizePage: taskbar.size,
+            appearancePage: taskbar.appearance,
+            settings,
             connectSettings,
-            createSettings: () => this.getSettings(),
+            createSettings,
             blurMyShellPanelBlurEnabled,
-            windowsXpThemeSwitch,
-            taskbarModeRow,
-            iconSizeRow,
-            iconSpacingRow,
-            iconEdgePaddingRow,
-            defaultGnomePanelRow,
-            dockModeRow,
-            dockPositionRow,
-            dockMaxLengthRow,
-            dockPanelModeSwitch,
-            appAlignmentRow,
-            combineAppButtonsRow,
-            syncLabelSensitivity,
+            iconSizeRow: icons.iconSizeRow,
+            iconSpacingRow: icons.iconSpacingRow,
+            iconEdgePaddingRow: icons.iconEdgePaddingRow,
+            appAlignmentRow: icons.appAlignmentRow,
+            combineAppButtonsRow: icons.combineAppButtonsRow,
+            syncLabelSensitivity: icons.syncLabelSensitivity,
         });
         blurMyShell.setPanelSyncs(
             panelAppearance.syncTransparency,
             panelAppearance.syncCustomColor
         );
 
-        addTaskbarBehaviorGroup({
-            page,
-            settings: window._settings,
+        const dockAppearance = addDockAppearanceGroup({
+            sizePage: dock.size,
+            appearancePage: dock.appearance,
+            settings,
             connectSettings,
-            isolateMonitorsSwitch,
+            createSettings,
+            blurMyShellPanelBlurEnabled,
+            blurMyShellDockBlurEnabled: blurMyShell.blurMyShellDockBlurEnabled,
+        });
+        blurMyShell.setDockPanelSyncs(
+            dockAppearance.syncTransparency,
+            dockAppearance.syncCustomColor
+        );
+
+        addTaskbarBehaviorGroup({
+            visibilityPage: taskbar.visibility,
+            behaviorPage: taskbar.behavior,
+            settings,
+            connectSettings,
+            isolateMonitorsSwitch: icons.isolateMonitorsSwitch,
+        });
+        addDockBehaviorGroup({
+            visibilityPage: dock.visibility,
+            behaviorPage: dock.behavior,
+            settings,
+            connectSettings,
         });
 
         addPanelItemsPage({
             window,
-            settings: window._settings,
+            settings,
             connectSettings,
-            page,
+            page: taskbar.items,
             panelPositions,
-            windowsStartMenuSwitch,
-            followAppAlignmentSwitch,
+            windowsStartMenuSwitch: startMenu.windowsStartMenuSwitch,
+            followAppAlignmentSwitch: startMenu.followAppAlignmentSwitch,
         });
-
         addDockItemsPage({
-            page: dockPage,
-            settings: window._settings,
+            page: dock.items,
+            settings,
             connectSettings,
             panelPositions,
         });
 
         addLocationsGroup({
-            page,
-            dockPage,
-            settings: window._settings,
+            page: taskbar.locations,
+            dockPage: dock.locations,
+            settings,
             connectSettings,
         });
 
-        addAboutPage(
-            window,
-            this.path,
-            window._settings,
-            () => this.getSettings()
-        );
+        addAboutPage(window, this.path);
     }
 }

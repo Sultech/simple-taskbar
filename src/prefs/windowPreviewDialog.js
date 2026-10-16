@@ -7,11 +7,11 @@ import GObject from 'gi://GObject';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 const WINDOW_PREVIEW_SETTINGS = [
     'show-window-previews-timeout',
@@ -50,11 +50,12 @@ class WindowPreviewOptionsDialog extends Adw.Window {
             description: _('Control when previews open and close'),
         });
         content.append(timingGroup);
-        addSpinRow(
+        addSliderRow(
             timingGroup,
             settings,
             {
                 key: 'show-window-previews-timeout',
+                unit: 'ms',
                 title: _('Time Before Showing'),
                 subtitle: _('Delay in milliseconds before opening a preview'),
                 lower: 0,
@@ -63,11 +64,12 @@ class WindowPreviewOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        addSpinRow(
+        addSliderRow(
             timingGroup,
             settings,
             {
                 key: 'leave-timeout',
+                unit: 'ms',
                 title: _('Time Before Hiding'),
                 subtitle: _('Delay in milliseconds before closing a preview'),
                 lower: 0,
@@ -97,11 +99,12 @@ class WindowPreviewOptionsDialog extends Adw.Window {
             title: _('Enable Window Peeking'),
             subtitle: _('Bring the hovered window to the front temporarily'),
         }));
-        addSpinRow(
+        addSliderRow(
             peekGroup,
             settings,
             {
                 key: 'enter-peek-mode-timeout',
+                unit: 'ms',
                 title: _('Time Before Peeking'),
                 subtitle: _('Delay in milliseconds before peeking'),
                 lower: 50,
@@ -110,11 +113,12 @@ class WindowPreviewOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        addSpinRow(
+        addSliderRow(
             peekGroup,
             settings,
             {
                 key: 'peek-mode-opacity',
+                format: value => `${Math.round(value / 255 * 100)}%`,
                 title: _('Other Window Opacity'),
                 subtitle: _('Opacity of other windows while peeking'),
                 lower: 0,

@@ -12,11 +12,11 @@ import {
 } from '../shared/progressBarSettings.js';
 import {
     addColorRow,
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 export function createProgressBarOptionsButton(settings) {
     return createPreferencesDialogButton(
@@ -75,7 +75,7 @@ class ProgressBarOptionsDialog extends Adw.Window {
             subtitle: _('Scale the thickness with the application icon size'),
         });
         thicknessGroup.add(automaticSwitch);
-        const thicknessRow = addSpinRow(
+        const thicknessRow = addSliderRow(
             thicknessGroup,
             settings,
             {

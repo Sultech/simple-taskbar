@@ -1198,15 +1198,6 @@
       <default>false</default>
       <summary>Use the Windows 10 taskbar style</summary>
     </key>
-    <key name="windows-xp-previous-mode" type="s">
-      <choices>
-        <choice value="taskbar"/>
-        <choice value="default-panel"/>
-        <choice value="dock"/>
-      </choices>
-      <default>'taskbar'</default>
-      <summary>Panel mode to restore after Windows XP or Windows 10 mode</summary>
-    </key>
     <key name="taskbar-mode-settings" type="a{sv}">
       <default>{}</default>
       <summary>Settings saved for Taskbar mode</summary>

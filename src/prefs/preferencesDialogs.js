@@ -74,6 +74,7 @@ export function confirmReset(window, createSettings) {
 export function addResetGroup(page, window, createSettings) {
     const resetGroup = new Adw.PreferencesGroup({
         title: _('Reset'),
+        description: _('Restore the default settings'),
     });
     page.add(resetGroup);
 

@@ -40,7 +40,6 @@ export const PANEL_AXIS_PROFILE_ENABLED_KEYS = Object.freeze({
     [PANEL_MODE_DOCK]: 'dock-axis-profiles-enabled',
 });
 
-const WINDOWS_THEME_PREVIOUS_DOCK_MODE = 'dock';
 const DEFAULT_TASKBAR_ICON_SPACING = 6;
 
 const PANEL_AXIS_HORIZONTAL = 'horizontal';
@@ -143,7 +142,6 @@ const MODE_SETTING_KEYS = new Set([
     'panel-profile-transition',
     'windows-xp-theme-enabled',
     'windows-10-theme-enabled',
-    'windows-xp-previous-mode',
     'start-menu-displaced-overlay-key',
     'start-menu-pinned-apps',
 ]);
@@ -167,7 +165,6 @@ export const PANEL_PROFILE_STATE_KEYS = Object.freeze([
     'panel-axis-profiles-initialized',
     'dock-axis-profiles-initialized',
     'dock-mode-initialized',
-    'windows-xp-previous-mode',
     ...[...PROFILE_KEYS.values(), ...AXIS_PROFILE_KEYS.values()]
         .flatMap(profile => [profile.settings, profile.saved]),
 ]);
@@ -214,15 +211,6 @@ function getRequestedPanelMode(settings) {
     if (settings.get_boolean('default-gnome-panel'))
         return PANEL_MODE_DEFAULT;
     return PANEL_MODE_TASKBAR;
-}
-
-function getModeBeforeWindowsTheme(settings) {
-    const mode = settings.get_string('active-panel-mode');
-    if (mode === PANEL_MODE_DEFAULT &&
-        settings.get_boolean('dock-mode')) {
-        return WINDOWS_THEME_PREVIOUS_DOCK_MODE;
-    }
-    return mode;
 }
 
 function savePanelModeSettings(settings, mode) {
@@ -404,13 +392,6 @@ export function setPanelMode(settings, mode) {
 
     const currentMode = settings.get_string('active-panel-mode');
     settings.set_boolean('panel-profile-transition', true);
-    if (WINDOWS_THEME_MODES.has(mode) &&
-        !WINDOWS_THEME_MODES.has(currentMode)) {
-        settings.set_string(
-            'windows-xp-previous-mode',
-            getModeBeforeWindowsTheme(settings)
-        );
-    }
     if (currentMode !== mode) {
         if (axisProfilesEnabled(settings, currentMode)) {
             savePanelAxisSettings(
@@ -432,17 +413,6 @@ export function setPanelMode(settings, mode) {
     }
     settings.set_boolean('panel-profile-transition', false);
     settings.set_boolean('panel-mode-profiles-initialized', true);
-}
-
-export function restorePanelModeAfterWindowsTheme(settings) {
-    const previousMode = settings.get_string('windows-xp-previous-mode');
-    if (previousMode === WINDOWS_THEME_PREVIOUS_DOCK_MODE) {
-        setPanelMode(settings, PANEL_MODE_DEFAULT);
-        settings.set_boolean('dock-mode', true);
-        return;
-    }
-
-    setPanelMode(settings, previousMode);
 }
 
 export function initializePanelModeProfiles(settings) {

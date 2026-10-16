@@ -1,26 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {getPanelScrollActionChoices} from './taskbarBehaviorGroup.js';
 import {
     addComboRow,
-    addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
-import {createBottomHotEdgeRow} from './bottomHotEdgeRow.js';
-import {addWindowDodgeRows} from './windowDodgeGroup.js';
+import {addWindowDodgeGroup} from './windowDodgeGroup.js';
+import {addSliderRow} from './sliderRow.js';
 
-export function addDockBehaviorGroup({page, settings, connectSettings}) {
-    const group = new Adw.PreferencesGroup({
-        title: _('Dock Behavior'),
-        description: _('Configure Dock interaction independently of the taskbar.'),
-    });
-    page.add(group);
-
+export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, connectSettings}) {
+    const dockAvailable = () => settings.get_boolean('dock-mode') &&
+        !settings.get_boolean('windows-xp-theme-enabled');
     const autoHideSwitch = createSwitchRow(settings, {
         key: 'dock-autohide-enabled',
         title: _('Auto-hide Dock'),
@@ -31,8 +25,8 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
         title: _('Limit Reveal to Dock Edge'),
         subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
     });
-    const dodgeWindows = addWindowDodgeRows(
-        group,
+    const dodgeWindows = addWindowDodgeGroup(
+        visibilityPage,
         settings,
         {
             enabledKey: 'dock-dodge-windows-enabled',
@@ -41,7 +35,7 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
             autohideKey: 'dock-autohide-enabled',
             autohideSwitch: autoHideSwitch,
             visibilityTitle: _('Dock Auto-hide and Window Dodge'),
-            visibilitySubtitle: _(
+            visibilityDescription: _(
                 'Choose when the Dock hides and how it is revealed'
             ),
             dodgeSubtitle: _(
@@ -64,62 +58,64 @@ export function addDockBehaviorGroup({page, settings, connectSettings}) {
                 ),
             },
             visibilityRows: [edgeRevealSwitch],
+            isAvailable: dockAvailable,
             connectSettings,
         }
     );
 
-    group.add(createBottomHotEdgeRow(settings, connectSettings));
-
-    const workspaceScrollRow = new Adw.ExpanderRow({
+    const workspaceScrollGroup = behaviorPage.addGroup({
         title: _('Dock Scroll'),
-        subtitle: _('Configure scrolling over empty Dock space'),
+        description: _('Configure scrolling over empty Dock space'),
     });
     const workspaceScrollActionRow = addComboRow(
-        workspaceScrollRow,
+        workspaceScrollGroup,
         settings,
         {
             key: 'dock-workspace-scroll-action',
             title: _('Scroll Action'),
             subtitle: _('Action used when scrolling over empty Dock space'),
             choices: getPanelScrollActionChoices(),
-            addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
     );
 
-    const workspaceScrollDelayRow = addSpinRow(
-        workspaceScrollRow,
+    const workspaceScrollDelayRow = addSliderRow(
+        workspaceScrollGroup,
         settings,
         {
             key: 'dock-workspace-scroll-delay',
+            unit: 'ms',
             title: _('Scroll Delay'),
             subtitle: _('Minimum delay between Dock scroll actions in milliseconds'),
             lower: 5,
             upper: 250,
             step: 5,
-            addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
     );
-    group.add(workspaceScrollRow);
-
+    const behaviorGroup = behaviorPage.addGroup({
+        title: _('Monitors'),
+        description: _('Choose which monitors show the Dock'),
+    });
     const multiMonitorSwitch = createSwitchRow(settings, {
         key: 'dock-multi-monitor-panels',
         title: _('Show Dock on All Monitors'),
         subtitle: _('Show the Dock on every connected monitor'),
     });
-    group.add(multiMonitorSwitch);
+    behaviorGroup.add(multiMonitorSwitch);
 
+    const groups = [dodgeWindows.group, workspaceScrollGroup, behaviorGroup];
     const syncWorkspaceScrollControls = () => {
-        workspaceScrollActionRow.sensitive = group.sensitive;
-        workspaceScrollDelayRow.sensitive = group.sensitive &&
+        const available = dockAvailable();
+        workspaceScrollActionRow.sensitive = available;
+        workspaceScrollDelayRow.sensitive = available &&
             settings.get_string('dock-workspace-scroll-action') !==
                 PANEL_SCROLL_ACTION.DO_NOTHING;
     };
     const syncAvailability = () => {
-        const available = settings.get_boolean('dock-mode') &&
-            !settings.get_boolean('windows-xp-theme-enabled');
-        group.sensitive = available;
+        const available = dockAvailable();
+        for (const group of groups)
+            group.sensitive = available;
         edgeRevealSwitch.sensitive = available &&
             !settings.get_boolean('dock-panel-mode');
         dodgeWindows.syncAvailability();

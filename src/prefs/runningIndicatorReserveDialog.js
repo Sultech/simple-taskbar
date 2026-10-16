@@ -11,11 +11,11 @@ import {
     RUNNING_INDICATOR_RESERVE_SETTINGS,
 } from '../shared/runningIndicatorSettings.js';
 import {
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 export function createRunningIndicatorReserveOptionsButton(settings) {
     return createPreferencesDialogButton(
@@ -58,7 +58,7 @@ class RunningIndicatorReserveDialog extends Adw.Window {
             subtitle: _('Add the same reserve to the opposite side'),
         });
         reserveGroup.add(symmetricalSwitch);
-        const reserveSizeRow = addSpinRow(
+        const reserveSizeRow = addSliderRow(
             reserveGroup,
             settings,
             {

@@ -8,8 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     addColorRow,
-    addComboRow,
-    addSpinRow,
+    addToggleChoiceRow,
     addSwitchRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
@@ -24,27 +23,109 @@ import {
     bindThicknessLowerBound,
     createPanelThicknessSizing,
 } from './panelThicknessSizing.js';
+import {
+    setDockPosition,
+    setPanelPosition,
+} from '../shared/panelModeProfiles.js';
+import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
+import {addChoiceCards, drawDockEdge, edgeChoices} from './choiceCards.js';
+import {addSliderRow} from './sliderRow.js';
 
 const DOCK_PANEL_HEIGHT_KEY = 'dock-panel-height';
 const DOCK_PANEL_HEIGHT_FOLLOW_KEY = 'dock-panel-height-follow-icon-size';
 
+function addDockPlacementRows(positionGroup, group, settings, connectSettings, createSettings) {
+    const syncPanelPositionConflict = () => {
+        if (!settings.get_boolean('dock-mode'))
+            return;
+
+        const panelPosition = settings.get_string('panel-position');
+        if (settings.get_string('dock-position') !== panelPosition)
+            return;
+
+        setDockPosition(
+            settings,
+            alternativePanelPosition(panelPosition)
+        );
+    };
+    const syncDockPositionConflict = () => {
+        if (!settings.get_boolean('dock-mode'))
+            return;
+
+        const dockPosition = settings.get_string('dock-position');
+        if (settings.get_string('panel-position') !== dockPosition)
+            return;
+
+        const panelSettings = createSettings();
+        panelSettings.delay();
+        setPanelPosition(
+            panelSettings,
+            alternativePanelPosition(dockPosition)
+        );
+        panelSettings.apply();
+    };
+    syncPanelPositionConflict();
+    const panelEdge = () => settings.get_string('panel-position');
+    const fullWidth = () => settings.get_boolean('dock-panel-mode');
+    const positionCards = addChoiceCards(positionGroup, {
+        choices: edgeChoices(edge => drawDockEdge(edge, panelEdge, fullWidth)),
+        onSelected: position => setDockPosition(settings, position),
+        connectSettings,
+    });
+    const syncPositionCards = () => {
+        positionCards.setActive(settings.get_string('dock-position'));
+    };
+    connectSettings(settings, 'changed::dock-position', syncPositionCards);
+    syncPositionCards();
+    for (const key of ['panel-position', 'dock-panel-mode'])
+        connectSettings(settings, `changed::${key}`, positionCards.redraw);
+    connectSettings(settings, 'changed::panel-position', syncPanelPositionConflict);
+    connectSettings(settings, 'changed::dock-mode', syncPanelPositionConflict);
+    connectSettings(settings, 'changed::dock-position', syncDockPositionConflict);
+
+    group.add(createSwitchRow(settings, {
+        key: 'dock-panel-mode',
+        title: _('Full-width Dock'),
+        subtitle: _('Extend the Dock fully to the monitor edge'),
+    }));
+    const dockMaxLengthRow = addSliderRow(
+        group,
+        settings,
+        {
+            key: 'dock-max-length',
+            unit: '%',
+            title: _('Maximum Dock Length'),
+            subtitle: _('Limit the Dock to this percentage of the monitor length'),
+            lower: 1,
+            upper: 90,
+        },
+        connectSettings
+    );
+    const syncMaxLength = () => {
+        dockMaxLengthRow.sensitive = !settings.get_boolean('dock-panel-mode');
+    };
+    connectSettings(settings, 'changed::dock-panel-mode', syncMaxLength);
+    syncMaxLength();
+}
+
 export function addDockAppearanceGroup({
-    page,
+    sizePage,
+    appearancePage,
     settings,
     connectSettings,
+    createSettings,
     blurMyShellPanelBlurEnabled,
     blurMyShellDockBlurEnabled,
-    dockModeGroup,
-    dockPositionRow,
-    dockMaxLengthRow,
 }) {
-    const group = new Adw.PreferencesGroup({
-        title: _('Dock Appearance'),
-        description: _('Configure the Dock independently of the taskbar.'),
+    const positionGroup = sizePage.addGroup({
+        title: _('Dock Position'),
+        description: _('Place the Dock at a different screen edge from the taskbar'),
     });
-    page.add(group);
-    dockModeGroup.remove(dockMaxLengthRow);
-    dockModeGroup.remove(dockPositionRow);
+    const group = sizePage.addGroup({
+        title: _('Size'),
+        description: _('Choose the Dock length and thickness'),
+    });
+    addDockPlacementRows(positionGroup, group, settings, connectSettings, createSettings);
 
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
         !settings.get_boolean('windows-xp-theme-enabled');
@@ -62,7 +143,7 @@ export function addDockAppearanceGroup({
     });
     group.add(dockPanelHeightFollowSwitch);
 
-    const dockPanelHeightRow = addSpinRow(
+    const dockPanelHeightRow = addSliderRow(
         group,
         settings,
         {
@@ -77,23 +158,20 @@ export function addDockAppearanceGroup({
         connectSettings
     );
     bindThicknessLowerBound(settings, connectSettings, dockPanelHeightRow);
-    group.add(dockMaxLengthRow);
-    group.add(dockPositionRow);
 
-    const themeExpander = new Adw.ExpanderRow({
+    const themeGroup = appearancePage.addGroup({
         title: _('Theme and Styling'),
-        subtitle: _(
+        description: _(
             'Choose the Dock theme, colours, gradient, corner radius, and text appearance'
         ),
     });
-    group.add(themeExpander);
 
     const followSystemThemeSwitch = new Adw.SwitchRow({
         title: _('Follow System Theme'),
         subtitle: _('Match the active GNOME Shell theme'),
         active: settings.get_boolean('dock-panel-theme-follow-system'),
     });
-    themeExpander.add_row(followSystemThemeSwitch);
+    themeGroup.add(followSystemThemeSwitch);
     settings.bind(
         'dock-panel-theme-follow-system',
         followSystemThemeSwitch,
@@ -101,8 +179,8 @@ export function addDockAppearanceGroup({
         Gio.SettingsBindFlags.DEFAULT
     );
 
-    const dockThemeRow = addComboRow(
-        themeExpander,
+    const dockThemeRow = addToggleChoiceRow(
+        themeGroup,
         settings,
         {
             key: 'dock-panel-theme',
@@ -112,13 +190,13 @@ export function addDockAppearanceGroup({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
-            addRow: row => themeExpander.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
 
-    addSpinRow(
-        themeExpander,
+    addSliderRow(
+        themeGroup,
         settings,
         {
             key: 'dock-corner-radius',
@@ -128,7 +206,7 @@ export function addDockAppearanceGroup({
             ),
             lower: 0,
             upper: 64,
-            addRow: row => themeExpander.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -162,18 +240,17 @@ export function addDockAppearanceGroup({
     };
     const dockBlurBlocksAppearance = () =>
         settings.get_boolean('dock-panel-blur-enabled') && dockBlurAvailable();
-    const transparencyExpander = new Adw.ExpanderRow({
+    const transparencyGroup = appearancePage.addGroup({
         title: _('Transparency and Blur'),
-        subtitle: _('Configure Dock transparency and Blur My Shell integration'),
+        description: _('Configure Dock transparency and Blur My Shell integration'),
     });
-    group.add(transparencyExpander);
 
     const transparencySwitch = new Adw.SwitchRow({
         title: _('Enable Transparency'),
         subtitle: transparencySwitchSubtitle,
         active: settings.get_boolean('dock-transparency-enabled'),
     });
-    transparencyExpander.add_row(transparencySwitch);
+    transparencyGroup.add(transparencySwitch);
     settings.bind(
         'dock-transparency-enabled',
         transparencySwitch,
@@ -185,21 +262,22 @@ export function addDockAppearanceGroup({
         title: _('Blur Dock with Blur My Shell'),
         subtitle: dockBlurSubtitles.panel.blur,
     });
-    transparencyExpander.add_row(dockPanelBlurSwitch);
+    transparencyGroup.add(dockPanelBlurSwitch);
 
     const transparencyRowSubtitle = _(
         '0% is opaque and 100% is fully transparent'
     );
-    const transparencyRow = addSpinRow(
-        transparencyExpander,
+    const transparencyRow = addSliderRow(
+        transparencyGroup,
         settings,
         {
             key: 'dock-transparency-level',
+            unit: '%',
             title: _('Transparency'),
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
-            addRow: row => transparencyExpander.add_row(row),
+            addRow: row => transparencyGroup.add(row),
         },
         connectSettings
     );
@@ -214,12 +292,12 @@ export function addDockAppearanceGroup({
     const {
         row: dynamicTransparencyRow,
         toggle: dynamicTransparencyToggle,
-    } = addSwitchRow(transparencyExpander, settings, {
+    } = addSwitchRow(transparencyGroup, settings, {
         key: 'dock-transparency-on-unmaximized',
         title: _('Dynamic Transparency'),
         subtitle: dynamicTransparencySubtitle,
         addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
-        addRow: row => transparencyExpander.add_row(row),
+        addRow: row => transparencyGroup.add(row),
     });
 
     const customPanelColorSubtitle = _(
@@ -230,7 +308,7 @@ export function addDockAppearanceGroup({
         subtitle: customPanelColorSubtitle,
         active: settings.get_boolean('dock-custom-panel-color-enabled'),
     });
-    themeExpander.add_row(customPanelColorSwitch);
+    themeGroup.add(customPanelColorSwitch);
     settings.bind(
         'dock-custom-panel-color-enabled',
         customPanelColorSwitch,
@@ -239,12 +317,12 @@ export function addDockAppearanceGroup({
     );
 
     const customPanelColorRow = addColorRow(
-        themeExpander,
+        themeGroup,
         settings,
         {
             key: 'dock-custom-panel-color',
             title: _('Dock Color'),
-            addRow: row => themeExpander.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -255,7 +333,7 @@ export function addDockAppearanceGroup({
             'dock-custom-panel-gradient-enabled'
         ),
     });
-    themeExpander.add_row(customPanelGradientSwitch);
+    themeGroup.add(customPanelGradientSwitch);
     settings.bind(
         'dock-custom-panel-gradient-enabled',
         customPanelGradientSwitch,
@@ -263,17 +341,17 @@ export function addDockAppearanceGroup({
         Gio.SettingsBindFlags.DEFAULT
     );
     const customPanelGradientColorRow = addColorRow(
-        themeExpander,
+        themeGroup,
         settings,
         {
             key: 'dock-custom-panel-gradient-color',
             title: _('Dock Gradient Color'),
-            addRow: row => themeExpander.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
-    const customPanelGradientDirectionRow = addComboRow(
-        themeExpander,
+    const customPanelGradientDirectionRow = addToggleChoiceRow(
+        themeGroup,
         settings,
         {
             key: 'dock-custom-panel-gradient-direction',
@@ -283,15 +361,15 @@ export function addDockAppearanceGroup({
                 {value: 'vertical', label: _('Vertical')},
                 {value: 'horizontal', label: _('Horizontal')},
             ],
-            addRow: row => themeExpander.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
     const customPanelTextColorSubtitle = _(
         'White text uses the dark Dock theme; black text uses the light Dock theme'
     );
-    const customPanelTextColorRow = addComboRow(
-        themeExpander,
+    const customPanelTextColorRow = addToggleChoiceRow(
+        themeGroup,
         settings,
         {
             key: 'dock-panel-theme',
@@ -301,23 +379,22 @@ export function addDockAppearanceGroup({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
-            addRow: row => themeExpander.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
 
-    const bordersExpander = new Adw.ExpanderRow({
+    const bordersGroup = appearancePage.addGroup({
         title: _('Borders'),
-        subtitle: _('Choose whether to show a border in light and dark themes'),
+        description: _('Choose whether to show a border in light and dark themes'),
     });
-    group.add(bordersExpander);
 
     const darkPanelBorderSwitch = new Adw.SwitchRow({
         title: _('Show Border in Dark Mode'),
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
         active: settings.get_boolean('dock-panel-border-enabled'),
     });
-    bordersExpander.add_row(darkPanelBorderSwitch);
+    bordersGroup.add(darkPanelBorderSwitch);
     settings.bind(
         'dock-panel-border-enabled',
         darkPanelBorderSwitch,
@@ -330,7 +407,7 @@ export function addDockAppearanceGroup({
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
         active: settings.get_boolean('dock-panel-border-light-enabled'),
     });
-    bordersExpander.add_row(lightPanelBorderSwitch);
+    bordersGroup.add(lightPanelBorderSwitch);
     settings.bind(
         'dock-panel-border-light-enabled',
         lightPanelBorderSwitch,
@@ -406,9 +483,11 @@ export function addDockAppearanceGroup({
             ? blockedSubtitle
             : customPanelTextColorSubtitle;
     };
+    const groups = [positionGroup, group, themeGroup, transparencyGroup, bordersGroup];
     const syncAvailability = () => {
         const available = dockAvailable();
-        group.sensitive = available;
+        for (const availableGroup of groups)
+            availableGroup.sensitive = available;
         const fullWidthDock = settings.get_boolean('dock-panel-mode');
         dockPanelHeightFollowSwitch.sensitive = fullWidthDock;
         dockPanelHeightRow.sensitive = fullWidthDock &&

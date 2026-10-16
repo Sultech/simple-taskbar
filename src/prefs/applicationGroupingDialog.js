@@ -8,11 +8,11 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     addComboRow,
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 const APPLICATION_GROUPING_SETTINGS = [
     'hide-app-labels',
@@ -60,7 +60,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
                 subtitle: _('Hide window titles beside application icons'),
             }));
         }
-        const labelFontSizeRow = addSpinRow(
+        const labelFontSizeRow = addSliderRow(
             behaviorGroup,
             settings,
             {
@@ -96,7 +96,7 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
         });
         content.append(widthGroup);
 
-        const labelMaxWidthRow = addSpinRow(
+        const labelMaxWidthRow = addSliderRow(
             widthGroup,
             settings,
             {

@@ -32,8 +32,10 @@ import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
 import {SCROLL_ACTION} from '../shared/applicationScrollActions.js';
 import {
     addComboRow,
+    addToggleChoiceRow,
     setButtonIcon,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 function getApplicationClickAnimationChoices() {
     return [
@@ -137,22 +139,29 @@ function getApplicationClickAnimationChoices() {
 }
 
 export function addApplicationInteractionGroup({
-    group,
+    page,
+    groups,
     settings,
     connectSettings,
 }) {
-    const windowInteractionRow = new Adw.ExpanderRow({
-        title: _('Application Interaction'),
-        subtitle: settings.isDefaultPanelWindows
-            ? _('Configure clicks, scrolling, hovering, previews, and animations for this panel')
-            : _('Configure clicks, scrolling, hovering, previews, and window effects'),
+    const clickGroup = page.addGroup({
+        title: _('Clicking'),
+        description: _('Choose what happens when an application icon is clicked'),
     });
-    group.add(windowInteractionRow);
+    const scrollGroup = page.addGroup({
+        title: _('Scrolling'),
+        description: _('Choose what happens when scrolling over an application icon'),
+    });
+    const hoverGroup = page.addGroup({
+        title: _('Hovering and Animations'),
+        description: _('Choose what happens when the pointer rests on an application icon'),
+    });
+    groups.push(clickGroup, scrollGroup, hoverGroup);
     const clickActionOptionsButton =
         createApplicationClickActionOptionsButton(settings);
     const previewOptionsButton = createWindowPreviewOptionsButton(settings);
     const clickActionRow = addComboRow(
-        windowInteractionRow,
+        clickGroup,
         settings,
         {
             key: 'application-click-action',
@@ -163,7 +172,6 @@ export function addApplicationInteractionGroup({
                 if (!settings.isDefaultPanelWindows)
                     row.add_suffix(clickActionOptionsButton);
             },
-            addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
     );
@@ -183,17 +191,16 @@ export function addApplicationInteractionGroup({
             activatable_widget: clickActionOptionsButton,
         });
         clickOptionsRow.add_suffix(clickActionOptionsButton);
-        windowInteractionRow.add_row(clickOptionsRow);
+        clickGroup.add(clickOptionsRow);
     }
     addComboRow(
-        windowInteractionRow,
+        clickGroup,
         settings,
         {
             key: 'application-click-animation',
             title: _('Click Animation'),
             subtitle: _('Choose the animation shown when an application is clicked'),
             choices: getApplicationClickAnimationChoices(),
-            addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
     );
@@ -236,20 +243,16 @@ export function addApplicationInteractionGroup({
     });
     connectSettings(settings, 'changed::scroll-icon-action', syncScrollAction);
     syncScrollAction();
-    const scrollDelayRow = Adw.SpinRow.new_with_range(5, 250, 5);
-    scrollDelayRow.title = _('Scroll Delay');
-    scrollDelayRow.subtitle = _(
-        'Minimum delay between app icon scrolls in milliseconds'
-    );
-    scrollDelayRow.set_value(settings.get_int('scroll-icon-delay'));
-    scrollDelayRow.connect('notify::value', widget => {
-        settings.set_int('scroll-icon-delay', Math.round(widget.get_value()));
-    });
-    connectSettings(settings, 'changed::scroll-icon-delay', () => {
-        const value = settings.get_int('scroll-icon-delay');
-        if (scrollDelayRow.get_value() !== value)
-            scrollDelayRow.set_value(value);
-    });
+    const scrollDelayRow = addSliderRow(null, settings, {
+        key: 'scroll-icon-delay',
+        title: _('Scroll Delay'),
+        subtitle: _('Minimum delay between app icon scrolls in milliseconds'),
+        lower: 5,
+        upper: 250,
+        step: 5,
+        unit: 'ms',
+        addRow: () => {},
+    }, connectSettings);
 
     const scrollDelayBox = new Gtk.Box({
         orientation: Gtk.Orientation.VERTICAL,
@@ -301,7 +304,7 @@ export function addApplicationInteractionGroup({
     scrollActionBox.append(scrollActionDropDown);
     scrollActionRow.add_suffix(scrollActionBox);
     scrollActionRow.activatable_widget = scrollActionDropDown;
-    windowInteractionRow.add_row(scrollActionRow);
+    scrollGroup.add(scrollActionRow);
     const syncFollowScrollDelayLabel = () => {
         followScrollDelayCheck.label = !settings.isDefaultPanelWindows && settings.get_boolean('dock-mode')
             ? _('Follow Dock Scroll Delay')
@@ -315,7 +318,7 @@ export function addApplicationInteractionGroup({
     followScrollDelayCheck.connect('notify::active', syncScrollDelayRow);
     syncScrollDelayRow();
     addComboRow(
-        windowInteractionRow,
+        hoverGroup,
         settings,
         {
             key: 'application-hover-action',
@@ -338,7 +341,6 @@ export function addApplicationInteractionGroup({
                 },
             ],
             addSuffix: row => row.add_suffix(previewOptionsButton),
-            addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
     );
@@ -374,7 +376,7 @@ export function addApplicationInteractionGroup({
         },
     ];
     const hoverAnimationTypeRow = addComboRow(
-        windowInteractionRow,
+        hoverGroup,
         settings,
         {
             key: 'animate-appicon-hover-animation-type',
@@ -391,34 +393,38 @@ export function addApplicationInteractionGroup({
                 ),
             choicesChangedKeys: APP_ICON_MAGNIFY_SETTING_KEYS,
             addSuffix: row => row.add_suffix(animationOptionsButton),
-            addRow: row => windowInteractionRow.add_row(row),
         },
         connectSettings
     );
-    const minimizeEffectRow = addComboRow(
-        windowInteractionRow,
-        settings,
-        {
-            key: 'window-minimize-effect',
-            title: _('Window Minimize Effect'),
-            subtitle: _(
-                'Choose the effect shown when a window is minimized or restored'
-            ),
-            choices: [
-                {
-                    value: WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT,
-                    label: _('GNOME Default'),
-                },
-                {
-                    value: WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP,
-                    label: _('Magic Lamp'),
-                },
-            ],
-            addRow: row => windowInteractionRow.add_row(row),
-        },
-        connectSettings
-    );
-    minimizeEffectRow.visible = !settings.isDefaultPanelWindows;
+    if (!settings.isDefaultPanelWindows) {
+        const effectsGroup = page.addGroup({
+            title: _('Window Effects'),
+            description: _('Choose the animation used when windows are minimized or restored'),
+        });
+        groups.push(effectsGroup);
+        addToggleChoiceRow(
+            effectsGroup,
+            settings,
+            {
+                key: 'window-minimize-effect',
+                title: _('Window Minimize Effect'),
+                subtitle: _(
+                    'Choose the effect shown when a window is minimized or restored'
+                ),
+                choices: [
+                    {
+                        value: WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT,
+                        label: _('GNOME Default'),
+                    },
+                    {
+                        value: WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP,
+                        label: _('Magic Lamp'),
+                    },
+                ],
+            },
+            connectSettings
+        );
+    }
     const syncAnimationOptionsSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         hoverAnimationTypeRow.sensitive = enabled;

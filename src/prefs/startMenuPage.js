@@ -15,13 +15,15 @@ import {
 import {axisPanelPositions} from './panelAxis.js';
 import {activePanelPosition} from '../shared/panelPositionUtils.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
+import {SettingsSubpage} from './settingsSubpage.js';
 import {
     addComboRow,
-    addSpinRow,
+    addToggleChoiceRow,
     createSwitchRow,
     setButtonIcon,
 } from './preferencesWidgets.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+import {addSliderRow} from './sliderRow.js';
 
 export function addStartMenuPage({
     window,
@@ -35,26 +37,26 @@ export function addStartMenuPage({
     blurMyShellPanelBlurEnabled,
     blurMyShellPopupBlurEnabled,
 }) {
-    const startButtonGroup = new Adw.PreferencesGroup({
+    const startButtonHubGroup = new Adw.PreferencesGroup({
         title: _('Start Button'),
-        description: _('Configure the Start button position and appearance.'),
     });
-    startMenuPage.add(startButtonGroup);
+    startMenuPage.add(startButtonHubGroup);
+    const startButtonSubpage = new SettingsSubpage(window, startButtonHubGroup, {
+        title: _('Start Button Options'),
+        subtitle: _('Alignment, padding, icon, and separator'),
+        iconName: 'start-here-symbolic',
+    });
 
-    const startMenuGroup = new Adw.PreferencesGroup({
+    const startMenuHubGroup = new Adw.PreferencesGroup({
         title: _('Eleven-style Start Menu'),
         description: _('Configure the optional Eleven-style application menu.'),
     });
-    startMenuPage.add(startMenuGroup);
-
-    const startMenuKeybindingsGroup = new Adw.PreferencesGroup({
-        title: _('Keyboard Shortcuts'),
-        description: _('Configure Start menu shortcuts.'),
-    });
-    startMenuPage.add(startMenuKeybindingsGroup);
+    startMenuPage.add(startMenuHubGroup);
 
     const showRequestedPage = () => {
         const target = settings.get_string('target-prefs-page');
+        if (target)
+            window.pop_subpage();
         if (target === 'start-menu')
             window.set_visible_page(startMenuPage);
         else if (target === 'taskbar')
@@ -72,13 +74,12 @@ export function addStartMenuPage({
     );
     showRequestedPage();
 
-    const startButtonPositionRow = new Adw.ExpanderRow({
+    const startButtonAlignmentGroup = startButtonSubpage.addGroup({
         title: _('Start Button Alignment'),
-        subtitle: _(
+        description: _(
             'Choose the Start button position or follow application alignment'
         ),
     });
-    startButtonGroup.add(startButtonPositionRow);
 
     const followAppAlignmentSwitch = new Adw.SwitchRow({
         title: _('Follow Application Alignment'),
@@ -87,7 +88,7 @@ export function addStartMenuPage({
             'start-button-follow-app-alignment'
         ),
     });
-    startButtonPositionRow.add_row(followAppAlignmentSwitch);
+    startButtonAlignmentGroup.add(followAppAlignmentSwitch);
     settings.bind(
         'start-button-follow-app-alignment',
         followAppAlignmentSwitch,
@@ -96,7 +97,7 @@ export function addStartMenuPage({
     );
 
     const startPositionRow = addComboRow(
-        startButtonPositionRow,
+        startButtonAlignmentGroup,
         settings,
         {
             key: 'start-button-position',
@@ -108,7 +109,7 @@ export function addStartMenuPage({
             choicesProvider: () =>
                 axisPanelPositions(activePanelPosition(settings), panelPositions),
             choicesChangedKeys: ['panel-position', 'dock-position', 'dock-mode'],
-            addRow: row => startButtonPositionRow.add_row(row),
+            addRow: row => startButtonAlignmentGroup.add(row),
         },
         connectSettings
     );
@@ -125,7 +126,7 @@ export function addStartMenuPage({
             (!dockMode || dockPanelMode);
         followAppAlignmentSwitch.sensitive =
             !defaultPanel && !windowsXpTheme;
-        startButtonPositionRow.sensitive =
+        startButtonAlignmentGroup.sensitive =
             !defaultPanel && !windowsXpTheme;
     };
     followAppAlignmentSwitch.connect(
@@ -150,14 +151,13 @@ export function addStartMenuPage({
     );
     updateStartPositionRow();
 
-    const startButtonAppearanceRow = new Adw.ExpanderRow({
-        title: _('Start Button Appearance and App Grid'),
-        subtitle: _('Configure padding, separators, icons, button visibility, and app grid size'),
+    const startButtonAppearanceGroup = startButtonSubpage.addGroup({
+        title: _('Start Button Appearance'),
+        description: _('Configure padding, separators, icons, and button visibility'),
     });
-    startButtonGroup.add(startButtonAppearanceRow);
 
-    const startButtonPaddingRow = addSpinRow(
-        startButtonAppearanceRow,
+    const startButtonPaddingRow = addSliderRow(
+        startButtonAppearanceGroup,
         settings,
         {
             key: 'start-button-padding',
@@ -167,7 +167,7 @@ export function addStartMenuPage({
             ),
             lower: 0,
             upper: 20,
-            addRow: row => startButtonAppearanceRow.add_row(row),
+            addRow: row => startButtonAppearanceGroup.add(row),
         },
         connectSettings
     );
@@ -227,8 +227,8 @@ export function addStartMenuPage({
     customIconRow.add_suffix(clearCustomIconButton);
     customIconRow.add_suffix(chooseCustomIconButton);
     customIconRow.activatable_widget = chooseCustomIconButton;
-    startButtonAppearanceRow.add_row(customIconRow);
-    startButtonAppearanceRow.add_row(startButtonSeparatorSwitch);
+    startButtonAppearanceGroup.add(customIconRow);
+    startButtonAppearanceGroup.add(startButtonSeparatorSwitch);
 
     const updateCustomIconRow = () => {
         const location = settings.get_string(
@@ -267,7 +267,7 @@ export function addStartMenuPage({
         updateStartButtonPaddingRow();
         startButtonSeparatorSwitch.sensitive = !enabled;
         customIconRow.sensitive = !enabled;
-        startButtonAppearanceRow.sensitive = !enabled;
+        startButtonAppearanceGroup.sensitive = !enabled;
     };
     connectSettings(
         settings,
@@ -281,7 +281,36 @@ export function addStartMenuPage({
         subtitle: _('Replace the GNOME app grid with an Eleven-style menu'),
         active: settings.get_boolean('windows-start-menu-enabled'),
     });
-    startMenuGroup.add(windowsStartMenuSwitch);
+    startMenuHubGroup.add(windowsStartMenuSwitch);
+    const menuOptionsSubpage = new SettingsSubpage(window, startMenuHubGroup, {
+        title: _('Start Menu Options'),
+        subtitle: _('Configure Start Menu content and behavior'),
+        iconName: 'view-grid-symbolic',
+    });
+    const menuAppearanceSubpage = new SettingsSubpage(window, startMenuHubGroup, {
+        title: _('Start Menu Appearance'),
+        subtitle: _('Configure the Start Menu theme and transparency'),
+        iconName: 'preferences-color-symbolic',
+    });
+    const foldersSubpage = new SettingsSubpage(window, startMenuHubGroup, {
+        title: _('Folder Shortcuts'),
+        subtitle: _('Choose which folders appear beside the Settings icon'),
+        iconName: 'folder-symbolic',
+    });
+    const contextMenuSubpage = new SettingsSubpage(window, startMenuHubGroup, {
+        title: _('Start Button Context Menu'),
+        subtitle: _('Choose which shortcuts appear in the Start button’s context menu'),
+        iconName: 'open-menu-symbolic',
+    });
+    const keyboardSubpage = new SettingsSubpage(window, startMenuHubGroup, {
+        title: _('Keyboard Shortcuts'),
+        subtitle: _('Configure Start menu shortcuts'),
+        iconName: 'preferences-desktop-keyboard-shortcuts-symbolic',
+    });
+    const startMenuKeybindingsGroup = keyboardSubpage.addGroup({
+        title: _('Keyboard Shortcuts'),
+        description: _('Configure Start menu shortcuts.'),
+    });
     settings.bind(
         'windows-start-menu-enabled',
         windowsStartMenuSwitch,
@@ -289,11 +318,10 @@ export function addStartMenuPage({
         Gio.SettingsBindFlags.DEFAULT
     );
 
-    const startMenuOptionsRow = new Adw.ExpanderRow({
+    const startMenuOptionsGroup = menuOptionsSubpage.addGroup({
         title: _('Start Menu Options'),
-        subtitle: _('Configure Start Menu content and behavior'),
+        description: _('Configure Start Menu content and behavior'),
     });
-    startMenuGroup.add(startMenuOptionsRow);
 
     const profilePictureSwitch = new Adw.SwitchRow({
         title: _('Show Profile Picture'),
@@ -404,12 +432,12 @@ export function addStartMenuPage({
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
-    startMenuOptionsRow.add_row(recommendedAppsSwitch);
-    startMenuOptionsRow.add_row(powerOptionsSwitch);
-    startMenuOptionsRow.add_row(openAllAppsSwitch);
-    startMenuOptionsRow.add_row(profilePictureSwitch);
-    startMenuOptionsRow.add_row(hidePinnedAppTitlesSwitch);
-    startMenuOptionsRow.add_row(runningIndicatorsSwitch);
+    startMenuOptionsGroup.add(recommendedAppsSwitch);
+    startMenuOptionsGroup.add(powerOptionsSwitch);
+    startMenuOptionsGroup.add(openAllAppsSwitch);
+    startMenuOptionsGroup.add(profilePictureSwitch);
+    startMenuOptionsGroup.add(hidePinnedAppTitlesSwitch);
+    startMenuOptionsGroup.add(runningIndicatorsSwitch);
     const updateRecommendedAppsSwitch = () => {
         const sensitive = windowsStartMenuSwitch.active &&
             !openAllAppsSwitch.active;
@@ -447,7 +475,7 @@ export function addStartMenuPage({
             'start-menu-app-categories'
         ),
     });
-    startMenuOptionsRow.add_row(appCategoriesSwitch);
+    startMenuOptionsGroup.add(appCategoriesSwitch);
     settings.bind(
         'start-menu-app-categories',
         appCategoriesSwitch,
@@ -468,7 +496,7 @@ export function addStartMenuPage({
         subtitle: _('Show a Start button that opens the GNOME app grid when the Eleven-style Start Menu is disabled'),
         active: settings.get_boolean('gnome-start-button-visible'),
     });
-    startButtonAppearanceRow.add_row(gnomeStartButtonVisibleSwitch);
+    startButtonAppearanceGroup.add(gnomeStartButtonVisibleSwitch);
     settings.bind(
         'gnome-start-button-visible',
         gnomeStartButtonVisibleSwitch,
@@ -485,65 +513,6 @@ export function addStartMenuPage({
     );
     updateGnomeStartButtonVisibleSwitch();
 
-    const appGridLayoutRow = addComboRow(
-        startButtonAppearanceRow,
-        settings,
-        {
-            key: 'app-grid-layout',
-            title: _('App Grid Layout'),
-            subtitle: _('Columns and rows of the GNOME app grid'),
-            choices: [
-                {value: 'auto', label: _('Automatic')},
-                {value: 'custom', label: _('Custom')},
-            ],
-            addRow: row => startButtonAppearanceRow.add_row(row),
-        },
-        connectSettings
-    );
-    const appGridColumnsRow = addSpinRow(
-        startButtonAppearanceRow,
-        settings,
-        {
-            key: 'app-grid-columns',
-            title: _('App Grid Columns'),
-            subtitle: _('Applications across each page'),
-            lower: 2,
-            upper: 12,
-            addRow: row => startButtonAppearanceRow.add_row(row),
-        },
-        connectSettings
-    );
-    const appGridRowsRow = addSpinRow(
-        startButtonAppearanceRow,
-        settings,
-        {
-            key: 'app-grid-rows',
-            title: _('App Grid Rows'),
-            subtitle: _('Applications down each page'),
-            lower: 2,
-            upper: 10,
-            addRow: row => startButtonAppearanceRow.add_row(row),
-        },
-        connectSettings
-    );
-    const updateAppGridLayoutRows = () => {
-        const available = !windowsStartMenuSwitch.active;
-        const custom = settings.get_string('app-grid-layout') === 'custom';
-        appGridLayoutRow.sensitive = available;
-        appGridColumnsRow.sensitive = available && custom;
-        appGridRowsRow.sensitive = available && custom;
-    };
-    connectSettings(
-        settings,
-        'changed::app-grid-layout',
-        updateAppGridLayoutRows
-    );
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateAppGridLayoutRows
-    );
-    updateAppGridLayoutRows();
-
     const followPanelThemeSwitch = new Adw.SwitchRow({
         title: _('Follow Taskbar/Dock Theme'),
         subtitle: _('Use the taskbar or Dock’s effective light or dark appearance'),
@@ -551,22 +520,21 @@ export function addStartMenuPage({
             'start-menu-follow-panel-theme'
         ),
     });
-    const startMenuAppearanceRow = new Adw.ExpanderRow({
+    const startMenuAppearanceGroup = menuAppearanceSubpage.addGroup({
         title: _('Start Menu Appearance'),
-        subtitle: _('Configure the Start Menu theme and transparency'),
+        description: _('Configure the Start Menu theme and transparency'),
     });
-    startMenuGroup.add(startMenuAppearanceRow);
 
-    const startMenuFoldersRow = new Adw.ExpanderRow({
+    const startMenuFoldersGroup = foldersSubpage.addGroup({
         title: _('Folder Shortcuts'),
-        subtitle: _('Choose which folders appear beside the Settings icon'),
+        description: _('Choose which folders appear beside the Settings icon'),
     });
     const startMenuLocationsSwitch = new Adw.SwitchRow({
         title: _('Show Folder Shortcuts'),
         subtitle: _('Show selected folders beside the Settings icon in the Start Menu'),
         active: settings.get_boolean('start-menu-show-locations'),
     });
-    startMenuFoldersRow.add_row(startMenuLocationsSwitch);
+    startMenuFoldersGroup.add(startMenuLocationsSwitch);
     settings.bind(
         'start-menu-show-locations',
         startMenuLocationsSwitch,
@@ -612,12 +580,11 @@ export function addStartMenuPage({
         },
     ]) {
         const row = createSwitchRow(settings, option);
-        startMenuFoldersRow.add_row(row);
+        startMenuFoldersGroup.add(row);
         startMenuFolderRows.push(row);
     }
-    startMenuGroup.add(startMenuFoldersRow);
     const updateStartMenuLocationControls = () => {
-        startMenuFoldersRow.sensitive = windowsStartMenuSwitch.active;
+        startMenuFoldersGroup.sensitive = windowsStartMenuSwitch.active;
         for (const row of startMenuFolderRows)
             row.sensitive = startMenuLocationsSwitch.active;
     };
@@ -704,9 +671,9 @@ export function addStartMenuPage({
             available: true,
         },
     ];
-    const startMenuContextMenuRow = new Adw.ExpanderRow({
+    const startMenuContextMenuGroup = contextMenuSubpage.addGroup({
         title: _('Start Button Context Menu'),
-        subtitle: _(
+        description: _(
             'Choose which shortcuts appear in the Start button’s context menu'
         ),
     });
@@ -715,19 +682,18 @@ export function addStartMenuPage({
         title: _('Show Context Menu Shortcuts'),
         subtitle: _('Add selected system shortcuts to the Start button context menu'),
     });
-    startMenuContextMenuRow.add_row(startMenuContextMenuSwitch);
+    startMenuContextMenuGroup.add(startMenuContextMenuSwitch);
     const startMenuContextMenuRows = [];
     for (const option of contextMenuOptions) {
         if (!option.available)
             continue;
 
         const row = createSwitchRow(settings, option);
-        startMenuContextMenuRow.add_row(row);
+        startMenuContextMenuGroup.add(row);
         startMenuContextMenuRows.push(row);
     }
-    startMenuGroup.add(startMenuContextMenuRow);
     const updateStartMenuContextMenuControls = () => {
-        startMenuContextMenuRow.sensitive = windowsStartMenuSwitch.active;
+        startMenuContextMenuGroup.sensitive = windowsStartMenuSwitch.active;
         const sensitive = windowsStartMenuSwitch.active &&
             startMenuContextMenuSwitch.active;
         for (const row of startMenuContextMenuRows)
@@ -743,7 +709,7 @@ export function addStartMenuPage({
     );
     updateStartMenuContextMenuControls();
 
-    startMenuAppearanceRow.add_row(followPanelThemeSwitch);
+    startMenuAppearanceGroup.add(followPanelThemeSwitch);
     settings.bind(
         'start-menu-follow-panel-theme',
         followPanelThemeSwitch,
@@ -751,8 +717,8 @@ export function addStartMenuPage({
         Gio.SettingsBindFlags.DEFAULT
     );
 
-    const startMenuThemeRow = addComboRow(
-        startMenuAppearanceRow,
+    const startMenuThemeRow = addToggleChoiceRow(
+        startMenuAppearanceGroup,
         settings,
         {
             key: 'start-menu-theme',
@@ -763,7 +729,7 @@ export function addStartMenuPage({
                 {value: 'light', label: _('Light')},
                 {value: 'shell', label: _('GNOME Shell')},
             ],
-            addRow: row => startMenuAppearanceRow.add_row(row),
+            addRow: row => startMenuAppearanceGroup.add(row),
         },
         connectSettings
     );
@@ -801,7 +767,7 @@ export function addStartMenuPage({
             'start-menu-follow-panel-transparency'
         ),
     });
-    startMenuAppearanceRow.add_row(followPanelTransparencySwitch);
+    startMenuAppearanceGroup.add(followPanelTransparencySwitch);
     settings.bind(
         'start-menu-follow-panel-transparency',
         followPanelTransparencySwitch,
@@ -850,7 +816,7 @@ export function addStartMenuPage({
         ),
         active: settings.get_boolean('start-menu-monitor-centered'),
     });
-    startMenuGroup.add(centerStartMenuRow);
+    startMenuOptionsGroup.add(centerStartMenuRow);
     settings.bind(
         'start-menu-monitor-centered',
         centerStartMenuRow,
@@ -1014,6 +980,18 @@ export function addStartMenuPage({
         updateCustomShortcutRow
     );
     updateCustomShortcutRow();
+
+    const syncStartMenuAvailability = () => {
+        const available = !isDefaultPanelWithoutDock(settings);
+        startButtonHubGroup.sensitive = available;
+        startMenuHubGroup.sensitive = available;
+        startMenuPage.description = available
+            ? ''
+            : _('The Start button and Start Menu are unavailable in Default GNOME Panel mode.');
+    };
+    for (const key of ['default-gnome-panel', 'dock-mode'])
+        connectSettings(settings, `changed::${key}`, syncStartMenuAvailability);
+    syncStartMenuAvailability();
 
     return {
         followAppAlignmentSwitch,

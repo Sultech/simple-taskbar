@@ -13,11 +13,11 @@ import {
 } from '../shared/autoHideSettings.js';
 import {
     addComboRow,
-    addSpinRow,
     createSwitchRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 export function createRevealOptionsButton(
     settings,
@@ -84,11 +84,12 @@ class RevealOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        const delayRow = addSpinRow(
+        const delayRow = addSliderRow(
             revealGroup,
             settings,
             {
                 key: AUTO_HIDE_SETTINGS.revealDelay,
+                unit: 'ms',
                 title: _('Reveal Delay'),
                 subtitle: _('How long the pointer rests on the edge, in milliseconds'),
                 lower: 50,
@@ -98,11 +99,12 @@ class RevealOptionsDialog extends Adw.Window {
             connectSettings
         );
 
-        const pressureRow = addSpinRow(
+        const pressureRow = addSliderRow(
             revealGroup,
             settings,
             {
                 key: AUTO_HIDE_SETTINGS.pressureThreshold,
+                unit: 'px',
                 title: _('Activation Pressure'),
                 subtitle: _('How far to push past the edge before revealing. Turns off the bottom hot edge.'),
                 lower: 0,
@@ -118,11 +120,12 @@ class RevealOptionsDialog extends Adw.Window {
         });
         content.append(hideGroup);
 
-        addSpinRow(
+        addSliderRow(
             hideGroup,
             settings,
             {
                 key: AUTO_HIDE_SETTINGS.hideDelay,
+                unit: 'ms',
                 title: _('Hide Delay'),
                 subtitle: descriptions.hideDelay,
                 lower: 0,

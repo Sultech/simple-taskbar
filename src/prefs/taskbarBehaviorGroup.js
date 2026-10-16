@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
@@ -11,15 +10,10 @@ import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {
     addComboRow,
-    addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
-import {addWindowDodgeRows} from './windowDodgeGroup.js';
-import {
-    AUTO_HIDE_REVEAL_MODE,
-    AUTO_HIDE_SETTINGS,
-} from '../shared/autoHideSettings.js';
-import {createBottomHotEdgeRow} from './bottomHotEdgeRow.js';
+import {addWindowDodgeGroup} from './windowDodgeGroup.js';
+import {addSliderRow} from './sliderRow.js';
 
 export function getPanelScrollActionChoices() {
     return [
@@ -43,23 +37,19 @@ export function getPanelScrollActionChoices() {
 }
 
 export function addTaskbarBehaviorGroup({
-    page,
+    visibilityPage,
+    behaviorPage,
     settings,
     connectSettings,
     isolateMonitorsSwitch,
 }) {
-    const behaviorGroup = new Adw.PreferencesGroup({
-        title: _('Taskbar Behavior'),
-    });
-    page.add(behaviorGroup);
-
     const panelAutoHideSwitch = createSwitchRow(settings, {
         key: 'panel-autohide-enabled',
         title: _('Auto-hide Taskbar'),
         subtitle: _('Reveal the taskbar when the pointer reaches its screen edge'),
     });
-    addWindowDodgeRows(
-        behaviorGroup,
+    addWindowDodgeGroup(
+        visibilityPage,
         settings,
         {
             enabledKey: 'panel-dodge-windows-enabled',
@@ -68,7 +58,7 @@ export function addTaskbarBehaviorGroup({
             autohideKey: 'panel-autohide-enabled',
             autohideSwitch: panelAutoHideSwitch,
             visibilityTitle: _('Taskbar Auto-hide and Window Dodge'),
-            visibilitySubtitle: _(
+            visibilityDescription: _(
                 'Choose when the taskbar hides and how it is revealed'
             ),
             dodgeSubtitle: _(
@@ -97,58 +87,36 @@ export function addTaskbarBehaviorGroup({
         }
     );
 
-    behaviorGroup.add(createBottomHotEdgeRow(settings, connectSettings));
-    const disablePressureWithHotEdge = () => {
-        if (!settings.get_boolean('hot-edge-overview-enabled'))
-            return;
-
-        if (settings.get_string(AUTO_HIDE_SETTINGS.revealMode) ===
-            AUTO_HIDE_REVEAL_MODE.PRESSURE) {
-            settings.set_string(
-                AUTO_HIDE_SETTINGS.revealMode,
-                AUTO_HIDE_REVEAL_MODE.INSTANT
-            );
-        }
-    };
-    connectSettings(
-        settings,
-        'changed::hot-edge-overview-enabled',
-        disablePressureWithHotEdge
-    );
-    disablePressureWithHotEdge();
-
-    const workspaceScrollRow = new Adw.ExpanderRow({
+    const workspaceScrollGroup = behaviorPage.addGroup({
         title: _('Taskbar Scroll'),
-        subtitle: _('Configure scrolling over empty taskbar space'),
+        description: _('Configure scrolling over empty taskbar space'),
     });
     const workspaceScrollActionRow = addComboRow(
-        workspaceScrollRow,
+        workspaceScrollGroup,
         settings,
         {
             key: 'workspace-scroll-action',
             title: _('Scroll Action'),
             subtitle: _('Action used when scrolling over empty taskbar space'),
             choices: getPanelScrollActionChoices(),
-            addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
     );
 
-    const workspaceScrollDelayRow = addSpinRow(
-        workspaceScrollRow,
+    const workspaceScrollDelayRow = addSliderRow(
+        workspaceScrollGroup,
         settings,
         {
             key: 'workspace-scroll-delay',
+            unit: 'ms',
             title: _('Scroll Delay'),
             subtitle: _('Minimum delay between taskbar scroll actions in milliseconds'),
             lower: 5,
             upper: 250,
             step: 5,
-            addRow: row => workspaceScrollRow.add_row(row),
         },
         connectSettings
     );
-    behaviorGroup.add(workspaceScrollRow);
     const syncWorkspaceScrollDelaySensitivity = () => {
         workspaceScrollDelayRow.sensitive =
             settings.get_string('workspace-scroll-action') !==
@@ -161,9 +129,9 @@ export function addTaskbarBehaviorGroup({
     );
     syncWorkspaceScrollDelaySensitivity();
 
-    const panelNotificationRow = new Adw.ExpanderRow({
+    const panelNotificationGroup = behaviorPage.addGroup({
         title: _('Taskbar Menus and Notifications'),
-        subtitle: _(
+        description: _(
             'Configure taskbar menu activation and notification banner placement'
         ),
     });
@@ -172,15 +140,19 @@ export function addTaskbarBehaviorGroup({
         title: _('Taskbar Menus Require Click'),
         subtitle: _('Switch between clock, system, and tray menus only when clicked'),
     });
-    panelNotificationRow.add_row(panelMenuClickOnlySwitch);
+    panelNotificationGroup.add(panelMenuClickOnlySwitch);
 
     const notificationBannerSwitch = createSwitchRow(settings, {
         key: 'notification-banner-bottom-end',
         title: _('Taskbar-aligned Notification Banners'),
         subtitle: _('Follow the taskbar edge and the clock position'),
     });
-    panelNotificationRow.add_row(notificationBannerSwitch);
-    behaviorGroup.add(panelNotificationRow);
+    panelNotificationGroup.add(notificationBannerSwitch);
+
+    const behaviorGroup = behaviorPage.addGroup({
+        title: _('Taskbar Behavior'),
+        description: _('Choose the task manager and which monitors show the taskbar'),
+    });
 
     const allTaskManagerApps = Gio.AppInfo.get_all();
     const taskManagerApps = allTaskManagerApps

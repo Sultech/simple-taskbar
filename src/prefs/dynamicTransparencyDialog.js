@@ -10,10 +10,10 @@ import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
 import {windowDodgeModeChoices} from './windowDodgeGroup.js';
 import {
     addComboRow,
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 export function createDynamicTransparencyOptionsButton(settings, keys) {
     return createPreferencesDialogButton(
@@ -75,11 +75,12 @@ class DynamicTransparencyOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        const distanceRow = addSpinRow(
+        const distanceRow = addSliderRow(
             optionsGroup,
             settings,
             {
                 key: this._keys.distance,
+                unit: 'px',
                 title: _('Window Trigger Distance'),
                 subtitle: _(
                     'Distance from the panel that restores its configured transparency'
@@ -89,11 +90,12 @@ class DynamicTransparencyOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        addSpinRow(
+        addSliderRow(
             optionsGroup,
             settings,
             {
                 key: this._keys.level,
+                unit: '%',
                 title: _('Transparency Without a Matching Window'),
                 subtitle: _(
                     '0% is opaque and 100% is fully transparent'
@@ -103,11 +105,12 @@ class DynamicTransparencyOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        addSpinRow(
+        addSliderRow(
             optionsGroup,
             settings,
             {
                 key: this._keys.animationTime,
+                unit: 'ms',
                 title: _('Transparency Animation Duration'),
                 subtitle: _('Transition time in milliseconds'),
                 lower: 0,

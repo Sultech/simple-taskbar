@@ -65,16 +65,18 @@ class OverviewBehaviorDialog extends Adw.Window {
         });
         content.append(overviewGroup);
 
-        overviewGroup.add(createSwitchRow(settings, {
+        const hideDashRow = createSwitchRow(settings, {
             key: keys.hideDash,
             title: _('Hide the Dash'),
             subtitle: _('Hide the Overview Dash while applications are shown on the taskbar or Dock'),
-        }));
-        overviewGroup.add(createSwitchRow(settings, {
+        });
+        overviewGroup.add(hideDashRow);
+        const launchToDesktopRow = createSwitchRow(settings, {
             key: keys.launchToDesktop,
             title: _('Launch to Desktop'),
             subtitle: _('Start the session on the desktop instead of the Overview; applies at the next login'),
-        }));
+        });
+        overviewGroup.add(launchToDesktopRow);
 
         if (axisProfile && axisProfile.mode === PANEL_MODE_DEFAULT) {
             const windowsGroup = new Adw.PreferencesGroup({
@@ -88,6 +90,13 @@ class OverviewBehaviorDialog extends Adw.Window {
                 subtitle: _('Show running windows with labels on horizontal default panels'),
                 addSuffix: row => row.add_suffix(labelOptionsButton),
             });
+            const syncOverviewOptions = () => {
+                const available = !settings.get_boolean('dock-mode');
+                hideDashRow.sensitive = available;
+                launchToDesktopRow.sensitive = available;
+            };
+            connectSettings(settings, 'changed::dock-mode', syncOverviewOptions);
+            syncOverviewOptions();
             const syncWindowsOptions = () => {
                 windowsRow.sensitive = settings.get_boolean('default-gnome-panel') &&
                     !panelIsVertical(settings);

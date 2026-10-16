@@ -405,3 +405,43 @@ export function addColorRow(group, settings, {
     addRow(row);
     return row;
 }
+
+export function addToggleChoiceRow(group, settings, {
+    key,
+    title,
+    subtitle = '',
+    choices,
+    setValue = value => settings.set_string(key, value),
+    addSuffix = () => {},
+    addRow = row => group.add(row),
+}, connectSettings) {
+    const box = new Gtk.Box({
+        valign: Gtk.Align.CENTER,
+        css_classes: ['linked'],
+    });
+    const buttons = new Map();
+    let firstButton = null;
+    let syncing = false;
+    for (const {value, label} of choices) {
+        const button = new Gtk.ToggleButton({label, group: firstButton});
+        firstButton ??= button;
+        button.connect('toggled', () => {
+            if (!syncing && button.active)
+                setValue(value);
+        });
+        buttons.set(value, button);
+        box.append(button);
+    }
+    const sync = () => {
+        syncing = true;
+        buttons.get(settings.get_string(key)).active = true;
+        syncing = false;
+    };
+    const row = new Adw.ActionRow({title, subtitle});
+    addSuffix(row);
+    row.add_suffix(box);
+    connectSettings(settings, `changed::${key}`, sync);
+    sync();
+    addRow(row);
+    return row;
+}

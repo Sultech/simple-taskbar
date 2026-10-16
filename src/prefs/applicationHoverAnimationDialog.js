@@ -4,7 +4,6 @@
 import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
-import Gtk from 'gi://Gtk';
 
 import {
     gettext as _,
@@ -17,17 +16,20 @@ import {
     createPreferencesDialogButton,
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
+import {createSliderRow} from './sliderRow.js';
+
+const SLIDER_WIDTH = 312;
 
 function controlDefinitions() {
     return [
         {
             property: 'duration',
+            unit: 'ms',
             key: APP_ICON_HOVER_ANIMATION_SETTINGS.duration,
             factor: 1,
             lower: 0,
             upper: 300,
             step: 1,
-            page: 5,
             digits: 0,
             integer: true,
             title: _('Duration'),
@@ -35,12 +37,12 @@ function controlDefinitions() {
         },
         {
             property: 'rotation',
+            unit: '°',
             key: APP_ICON_HOVER_ANIMATION_SETTINGS.rotation,
             factor: 1,
             lower: -30,
             upper: 30,
             step: 1,
-            page: 5,
             digits: 0,
             integer: true,
             title: _('Rotation'),
@@ -48,12 +50,12 @@ function controlDefinitions() {
         },
         {
             property: 'travel',
+            unit: '%',
             key: APP_ICON_HOVER_ANIMATION_SETTINGS.travel,
             factor: 100,
             lower: -100,
             upper: 100,
             step: 1,
-            page: 5,
             digits: 0,
             integer: false,
             title: _('Travel'),
@@ -63,12 +65,12 @@ function controlDefinitions() {
         },
         {
             property: 'zoom',
+            unit: '%',
             key: APP_ICON_HOVER_ANIMATION_SETTINGS.zoom,
             factor: 100,
             lower: 10,
             upper: 250,
             step: 1,
-            page: 5,
             digits: 0,
             integer: false,
             title: _('Zoom'),
@@ -81,7 +83,6 @@ function controlDefinitions() {
             lower: 0,
             upper: 3,
             step: 0.1,
-            page: 1,
             digits: 1,
             integer: false,
             title: _('Convexity'),
@@ -94,7 +95,6 @@ function controlDefinitions() {
             lower: 1,
             upper: 10,
             step: 1,
-            page: 1,
             digits: 0,
             integer: true,
             title: _('Extent'),
@@ -124,13 +124,13 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
 
         this._settings = settings;
         this._controlDefinitions = controlDefinitions();
-        this._scales = new Map();
+        this._sliders = new Map();
         this._syncing = false;
         const {content, connectSettings} = createPreferencesDialogContent(
             this,
             () => {
-                this._scales.clear();
-                this._scales = null;
+                this._sliders.clear();
+                this._sliders = null;
                 this._controlDefinitions = null;
             }
         );
@@ -143,20 +143,23 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
         content.append(optionsGroup);
 
         for (const definition of this._controlDefinitions) {
-            const scale = this._createScale(definition);
-            this._scales.set(definition.property, scale);
-            connectSettings(
-                scale,
-                'value-changed',
-                () => this._setValue(definition, scale)
-            );
-            const row = new Adw.ActionRow({
+            const slider = createSliderRow({
                 title: definition.title,
                 subtitle: definition.subtitle,
-            });
-            row.add_suffix(scale);
-            row.activatable_widget = scale;
-            optionsGroup.add(row);
+                lower: definition.lower,
+                upper: definition.upper,
+                step: definition.step,
+                digits: definition.digits,
+                unit: definition.unit,
+                width: SLIDER_WIDTH,
+            }, connectSettings);
+            this._sliders.set(definition.property, slider);
+            connectSettings(
+                slider.get_adjustment(),
+                'value-changed',
+                () => this._setValue(definition, slider)
+            );
+            optionsGroup.add(slider);
         }
 
         connectSettings(
@@ -174,32 +177,13 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
         this._sync();
     }
 
-    _createScale(definition) {
-        const adjustment = new Gtk.Adjustment({
-            lower: definition.lower,
-            upper: definition.upper,
-            step_increment: definition.step,
-            page_increment: definition.page,
-        });
-        return new Gtk.Scale({
-            adjustment,
-            digits: definition.digits,
-            draw_value: true,
-            hexpand: false,
-            round_digits: definition.digits,
-            valign: Gtk.Align.CENTER,
-            value_pos: Gtk.PositionType.RIGHT,
-            width_request: 300,
-        });
-    }
-
     _sync() {
         const type = this._settings.get_string(
             'animate-appicon-hover-animation-type'
         );
         this._syncing = true;
         for (const definition of this._controlDefinitions) {
-            const scale = this._scales.get(definition.property);
+            const slider = this._sliders.get(definition.property);
             const values = this._settings.get_value(
                 definition.key
             ).deepUnpack();
@@ -208,21 +192,14 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
             ).deepUnpack();
             const defaultValue = defaults[type];
             const value = values[type] ?? defaultValue ?? 0;
-            scale.sensitive = defaultValue !== undefined;
-            scale.set_value(value * definition.factor);
-            scale.clear_marks();
-            if (defaultValue !== undefined) {
-                scale.add_mark(
-                    defaultValue * definition.factor,
-                    Gtk.PositionType.TOP,
-                    String(defaultValue * definition.factor)
-                );
-            }
+            slider.sensitive = defaultValue !== undefined;
+            slider.set_value(value * definition.factor);
+            slider.set_mark(defaultValue === undefined ? null : defaultValue * definition.factor);
         }
         this._syncing = false;
     }
 
-    _setValue(definition, scale) {
+    _setValue(definition, slider) {
         if (this._syncing)
             return;
 
@@ -231,7 +208,7 @@ class ApplicationHoverAnimationDialog extends Adw.Window {
         );
         const variant = this._settings.get_value(definition.key);
         const values = variant.deepUnpack();
-        const rawValue = scale.get_value() / definition.factor;
+        const rawValue = slider.get_value() / definition.factor;
         const value = definition.integer ? Math.round(rawValue) : rawValue;
         if (values[type] === value)
             return;

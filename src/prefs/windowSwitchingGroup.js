@@ -1,29 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
-    addSpinRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
-export function addWindowSwitchingPage(window, settings, connectSettings) {
-    const page = new Adw.PreferencesPage({
-        title: _('Window Switching'),
-        icon_name: 'focus-windows-symbolic',
-    });
-    window.add(page);
-
-    const group = new Adw.PreferencesGroup({
+export function addWindowSwitchingGroup(page, settings, connectSettings) {
+    const group = page.addGroup({
         title: _('Grid Alt-Tab'),
         description: _(
             'Switch directly between open windows using live previews.'
         ),
     });
-    page.add(group);
 
     const enabledSwitch = createSwitchRow(settings, {
         key: 'grid-alt-tab-enabled',
@@ -34,7 +25,7 @@ export function addWindowSwitchingPage(window, settings, connectSettings) {
     });
     group.add(enabledSwitch);
 
-    const cardSizeRow = addSpinRow(group, settings, {
+    const cardSizeRow = addSliderRow(group, settings, {
         key: 'grid-alt-tab-max-card-size',
         title: _('Maximum Card Size'),
         subtitle: _(

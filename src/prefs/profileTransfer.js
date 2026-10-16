@@ -158,6 +158,7 @@ export function addProfileTransferGroup(
 ) {
     const group = new Adw.PreferencesGroup({
         title: _('Profiles'),
+        description: _('Save all settings to a file or load them from one'),
     });
     page.add(group);
 

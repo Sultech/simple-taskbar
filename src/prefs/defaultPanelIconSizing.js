@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
@@ -13,11 +11,10 @@ import {
     MIN_ICON_SIZE,
     MAX_ICON_SIZE,
 } from '../shared/panelSizing.js';
+import {createSliderRow} from './sliderRow.js';
 
 function createSizingRow(settings, connectSettings, {key, title, subtitle, minimum, maximum}) {
-    const row = Adw.SpinRow.new_with_range(minimum, maximum(), 1);
-    row.title = title;
-    row.subtitle = subtitle;
+    const row = createSliderRow({title, subtitle, lower: minimum, upper: maximum(), unit: 'px'}, connectSettings);
     let syncing = false;
     const sync = () => {
         syncing = true;
@@ -26,7 +23,7 @@ function createSizingRow(settings, connectSettings, {key, title, subtitle, minim
         row.set_value(Math.min(settings.get_int(key), upper));
         syncing = false;
     };
-    row.connect('notify::value', () => {
+    row.get_adjustment().connect('value-changed', () => {
         if (!syncing)
             settings.set_int(key, Math.round(row.get_value()));
     });

@@ -8,11 +8,11 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     addColorRow,
-    addSpinRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
+import {addSliderRow} from './sliderRow.js';
 
 const SHOW_DESKTOP_BUTTON_SETTINGS = [
     'show-desktop-button-width',
@@ -49,7 +49,7 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
         });
         content.append(appearanceGroup);
 
-        addSpinRow(
+        addSliderRow(
             appearanceGroup,
             settings,
             {

@@ -1,35 +1,32 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {createSwitchRow} from './preferencesWidgets.js';
 
-function createDriveOptionsRow(settings) {
-    const row = new Adw.ExpanderRow({
+function addDriveOptionsGroup(page, settings) {
+    const group = page.addGroup({
         title: _('Drive and Volume Options'),
-        subtitle: _('Choose which drives and network volumes appear'),
+        description: _('Choose which drives and network volumes appear'),
     });
-    row.add_row(createSwitchRow(settings, {
+    group.add(createSwitchRow(settings, {
         key: 'locations-show-mounted-only',
         title: _('Only Show Mounted Drives'),
         subtitle: _('Hide drives that are connected but not mounted'),
     }));
-    row.add_row(createSwitchRow(settings, {
+    group.add(createSwitchRow(settings, {
         key: 'locations-show-network',
         title: _('Include Network Volumes'),
         subtitle: _('Include network-mounted locations'),
     }));
-    return row;
+    return group;
 }
 
-function createCommonFoldersRow(settings) {
-    const row = new Adw.ExpanderRow({
+function addCommonFoldersGroup(page, settings) {
+    const group = page.addGroup({
         title: _('Common Folders'),
-        subtitle: _('Choose which common folders appear'),
+        description: _('Choose which common folders appear'),
     });
     for (const option of [
         {
@@ -68,27 +65,9 @@ function createCommonFoldersRow(settings) {
             subtitle: _('Add the Videos folder'),
         },
     ]) {
-        row.add_row(createSwitchRow(settings, option));
+        group.add(createSwitchRow(settings, option));
     }
-    return row;
-}
-
-function addFileManagerShortcuts(group, settings, subtitle) {
-    const placesRow = createSwitchRow(settings, {
-        key: 'nautilus-places-enabled',
-        title: _('Nautilus Folder Shortcuts'),
-        subtitle,
-    });
-    const superERow = createSwitchRow(settings, {
-        key: 'super-e-file-manager-enabled',
-        title: _('Super+E Opens File Manager'),
-        subtitle: _(
-            'Open your home folder with the system’s default file manager'
-        ),
-    });
-    group.add(placesRow);
-    group.add(superERow);
-    return {placesRow, superERow};
+    return group;
 }
 
 export function addLocationsGroup({
@@ -97,15 +76,9 @@ export function addLocationsGroup({
     settings,
     connectSettings,
 }) {
-    const group = new Adw.PreferencesGroup({
-        title: _('Locations'),
-        description: _('Configure taskbar locations and Files menu shortcuts.'),
-    });
-    page.add(group);
-
-    const taskbarRow = new Adw.ExpanderRow({
+    const taskbarLocationsGroup = page.addGroup({
         title: _('Taskbar Locations'),
-        subtitle: _(
+        description: _(
             'Choose which folders, drives, and Trash appear with taskbar applications'
         ),
     });
@@ -124,14 +97,15 @@ export function addLocationsGroup({
         title: _('Show Drives and Volumes'),
         subtitle: _('Add mounted or connected drives to the taskbar'),
     });
-    taskbarRow.add_row(taskbarLocationsRow);
-    taskbarRow.add_row(taskbarTrashRow);
-    taskbarRow.add_row(taskbarMountsRow);
-    group.add(taskbarRow);
+    taskbarLocationsGroup.add(taskbarLocationsRow);
+    taskbarLocationsGroup.add(taskbarTrashRow);
+    taskbarLocationsGroup.add(taskbarMountsRow);
+    const taskbarDriveOptionsGroup = addDriveOptionsGroup(page, settings);
+    const taskbarCommonFoldersGroup = addCommonFoldersGroup(page, settings);
 
-    const dockRow = new Adw.ExpanderRow({
+    const dockLocationsGroup = dockPage.addGroup({
         title: _('Dock Locations'),
-        subtitle: _(
+        description: _(
             'Choose which folders, drives, and Trash appear with Dock applications'
         ),
     });
@@ -150,58 +124,27 @@ export function addLocationsGroup({
         title: _('Show Drives and Volumes'),
         subtitle: _('Add mounted or connected drives to the Dock'),
     });
-    dockRow.add_row(dockLocationsRow);
-    dockRow.add_row(dockTrashRow);
-    dockRow.add_row(dockMountsRow);
-    const dockGroup = new Adw.PreferencesGroup({
-        title: _('Locations'),
-        description: _('Show Trash and connected drives in the Dock.'),
-    });
-    dockPage.add(dockGroup);
-    dockGroup.add(dockRow);
-
-    const taskbarDriveOptionsRow = createDriveOptionsRow(settings);
-    const taskbarCommonFoldersRow = createCommonFoldersRow(settings);
-    const dockDriveOptionsRow = createDriveOptionsRow(settings);
-    const dockCommonFoldersRow = createCommonFoldersRow(settings);
-    group.add(taskbarDriveOptionsRow);
-    group.add(taskbarCommonFoldersRow);
-
-    const taskbarFileManagerShortcuts = addFileManagerShortcuts(
-        group,
-        settings,
-        _('Show common folders in the Files taskbar menu')
-    );
-
-    dockGroup.add(dockDriveOptionsRow);
-    dockGroup.add(dockCommonFoldersRow);
-    const dockFileManagerShortcuts = addFileManagerShortcuts(
-        dockGroup,
-        settings,
-        _('Show common folders in the Files dock menu')
-    );
+    dockLocationsGroup.add(dockLocationsRow);
+    dockLocationsGroup.add(dockTrashRow);
+    dockLocationsGroup.add(dockMountsRow);
+    const dockDriveOptionsGroup = addDriveOptionsGroup(dockPage, settings);
+    const dockCommonFoldersGroup = addCommonFoldersGroup(dockPage, settings);
 
     const syncAvailability = () => {
         const xpEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        const dockMode = settings.get_boolean('dock-mode');
-        const defaultPanel = isDefaultPanelWithoutDock(settings);
-        taskbarFileManagerShortcuts.placesRow.sensitive = !defaultPanel &&
-            !dockMode;
-        dockFileManagerShortcuts.placesRow.sensitive = dockMode;
-        taskbarFileManagerShortcuts.superERow.sensitive = !dockMode;
-        dockFileManagerShortcuts.superERow.sensitive = dockMode;
+        const defaultPanel = settings.get_boolean('default-gnome-panel');
+        for (const group of [taskbarLocationsGroup, taskbarDriveOptionsGroup, taskbarCommonFoldersGroup])
+            group.visible = !defaultPanel;
         if (xpEnabled && taskbarLocationsRow.active)
             taskbarLocationsRow.active = false;
         taskbarLocationsRow.sensitive = !xpEnabled;
-        taskbarRow.sensitive = !settings.get_boolean(
-            'default-gnome-panel'
-        ) && !xpEnabled;
-        dockRow.sensitive = settings.get_boolean('dock-mode') && !xpEnabled;
-        const taskbarEnabled = taskbarRow.sensitive &&
+        taskbarLocationsGroup.sensitive = !defaultPanel && !xpEnabled;
+        dockLocationsGroup.sensitive = settings.get_boolean('dock-mode') && !xpEnabled;
+        const taskbarEnabled = taskbarLocationsGroup.sensitive &&
             taskbarLocationsRow.active;
-        const dockEnabled = dockRow.sensitive && dockLocationsRow.active;
+        const dockEnabled = dockLocationsGroup.sensitive && dockLocationsRow.active;
         taskbarTrashRow.sensitive = taskbarEnabled;
         taskbarMountsRow.sensitive = taskbarEnabled;
         dockTrashRow.sensitive = dockEnabled;
@@ -209,10 +152,10 @@ export function addLocationsGroup({
         const driveOptionsEnabled =
             (taskbarEnabled && taskbarMountsRow.active) ||
             (dockEnabled && dockMountsRow.active);
-        taskbarDriveOptionsRow.sensitive = driveOptionsEnabled;
-        dockDriveOptionsRow.sensitive = driveOptionsEnabled;
-        taskbarCommonFoldersRow.sensitive = taskbarEnabled;
-        dockCommonFoldersRow.sensitive = dockEnabled;
+        taskbarDriveOptionsGroup.sensitive = driveOptionsEnabled;
+        dockDriveOptionsGroup.sensitive = driveOptionsEnabled;
+        taskbarCommonFoldersGroup.sensitive = taskbarEnabled;
+        dockCommonFoldersGroup.sensitive = dockEnabled;
     };
     for (const row of [
         taskbarLocationsRow,

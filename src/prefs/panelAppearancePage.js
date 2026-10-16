@@ -15,64 +15,74 @@ import {
     applyWindowsXpThemeSettings,
     WINDOWS_XP_ICON_SPACING,
 } from '../shared/windowsXpTheme.js';
-import {
-    PANEL_MODE_WINDOWS_XP,
-    restorePanelModeAfterWindowsTheme,
-    setPanelMode,
-    setPanelPosition,
-} from '../shared/panelModeProfiles.js';
+import {setPanelPosition} from '../shared/panelModeProfiles.js';
 import {
     addColorRow,
-    addComboRow,
-    addSpinRow,
+    addToggleChoiceRow,
     addSwitchRow,
 } from './preferencesWidgets.js';
 import {
     createDynamicTransparencyOptionsButton,
 } from './dynamicTransparencyDialog.js';
 import {createPanelThicknessSizing} from './panelThicknessSizing.js';
+import {addChoiceCards, drawTaskbarEdge, edgeChoices} from './choiceCards.js';
+import {addSliderRow} from './sliderRow.js';
 
 const PANEL_HEIGHT_FOLLOW_KEY = 'panel-height-follow-icon-size';
 
 export function addPanelAppearancePage({
-    page,
+    sizePage,
+    appearancePage,
     settings,
     connectSettings,
     createSettings,
     blurMyShellPanelBlurEnabled,
-    windowsXpThemeSwitch,
-    taskbarModeRow,
     iconSizeRow,
     iconSpacingRow,
     iconEdgePaddingRow,
-    defaultGnomePanelRow,
-    dockModeRow,
-    dockPositionRow,
-    dockMaxLengthRow,
-    dockPanelModeSwitch,
     appAlignmentRow,
     combineAppButtonsRow,
     syncLabelSensitivity,
 }) {
-    const panelAppearanceGroup = new Adw.PreferencesGroup({
-        title: _('Taskbar Appearance'),
-        description: _('Change the taskbar height, colour scheme, and transparency.'),
+    const panelPositionGroup = sizePage.addGroup({
+        title: _('Taskbar Position'),
+        description: _('Place the taskbar at a screen edge'),
     });
-    page.add(panelAppearanceGroup);
+    const panelPositionCards = addChoiceCards(panelPositionGroup, {
+        choices: edgeChoices(drawTaskbarEdge),
+        onSelected: position => {
+            const positionSettings = createSettings();
+            positionSettings.delay();
+            setPanelPosition(positionSettings, position);
+            positionSettings.apply();
+        },
+        connectSettings,
+    });
+    const syncPanelPositionCards = () => {
+        panelPositionCards.setActive(settings.get_string('panel-position'));
+    };
+    connectSettings(settings, 'changed::panel-position', syncPanelPositionCards);
+    syncPanelPositionCards();
 
+    const panelAppearanceGroup = sizePage.addGroup({
+        title: _('Thickness'),
+        description: _('Choose how thick the taskbar is'),
+    });
+
+    const panelHeightFollowSubtitle = _('Keep the taskbar only as thick as its icons need');
     const {
         followSwitch: panelHeightFollowSwitch,
         followsIcons: panelHeightFollowsIcons,
     } = createPanelThicknessSizing(settings, connectSettings, {
         heightKey: 'panel-height',
         followKey: PANEL_HEIGHT_FOLLOW_KEY,
-        followSubtitle: _('Keep the taskbar only as thick as its icons need'),
+        followSubtitle: panelHeightFollowSubtitle,
         isActive: () => !settings.get_boolean('default-gnome-panel') &&
             !settings.get_boolean('windows-xp-theme-enabled'),
     });
     panelAppearanceGroup.add(panelHeightFollowSwitch);
 
-    const panelHeightRow = addSpinRow(
+    const panelHeightRow = addSliderRow(
         panelAppearanceGroup,
         settings,
         {
@@ -86,32 +96,6 @@ export function addPanelAppearancePage({
         },
         connectSettings
     );
-    const panelPositionRow = addComboRow(
-        panelAppearanceGroup,
-        settings,
-        {
-            key: 'panel-position',
-            title: _('Taskbar Position'),
-            subtitle: _(
-                'Place the taskbar at a screen edge'
-            ),
-            choices: [
-                {value: 'top', label: _('Top')},
-                {value: 'bottom', label: _('Bottom')},
-                {value: 'left', label: _('Left')},
-                {value: 'right', label: _('Right')},
-            ],
-            setValue: position => {
-                const settings = createSettings();
-                settings.delay();
-                setPanelPosition(settings, position);
-                settings.apply();
-            },
-        },
-        connectSettings
-    );
-
-    let syncingWindowsXpTheme = false;
     const syncWindowsXpTheme = () => {
         const enabled = settings.get_boolean(
             'windows-xp-theme-enabled'
@@ -125,8 +109,6 @@ export function addPanelAppearancePage({
             }
             applyWindowsXpThemeSettings(settings);
         }
-        syncingWindowsXpTheme = true;
-        windowsXpThemeSwitch.active = enabled;
         panelHeightRow.get_adjustment().set_lower(
             enabled || settings.get_boolean('default-gnome-panel')
                 ? MIN_PANEL_HEIGHT
@@ -141,49 +123,19 @@ export function addPanelAppearancePage({
         iconSizeRow.sensitive = !enabled;
         iconSpacingRow.sensitive = !enabled;
         iconEdgePaddingRow.sensitive = !enabled;
-        panelHeightFollowSwitch.sensitive = !enabled &&
-            !settings.get_boolean('default-gnome-panel');
+        const defaultPanel = settings.get_boolean('default-gnome-panel');
+        panelHeightFollowSwitch.sensitive = !enabled && !defaultPanel;
+        panelHeightFollowSwitch.subtitle = defaultPanel
+            ? _('Not available with the Default GNOME Panel: set the Taskbar Thickness below and the window icons resize to fit')
+            : panelHeightFollowSubtitle;
         panelHeightRow.sensitive = !enabled && !panelHeightFollowsIcons();
-        panelPositionRow.sensitive = !enabled;
-        taskbarModeRow.sensitive = true;
-        defaultGnomePanelRow.sensitive = true;
-        dockModeRow.sensitive = true;
-        dockPositionRow.sensitive = !enabled &&
-            settings.get_boolean('dock-mode');
-        dockPanelModeSwitch.sensitive = !enabled &&
-            settings.get_boolean('dock-mode');
-        dockMaxLengthRow.sensitive = !enabled &&
-            settings.get_boolean('dock-mode') &&
-            !dockPanelModeSwitch.active;
+        panelPositionGroup.sensitive = !enabled;
         appAlignmentRow.sensitive = !enabled &&
             (!settings.get_boolean('dock-mode') ||
                 settings.get_boolean('dock-panel-mode'));
         combineAppButtonsRow.sensitive = true;
         syncLabelSensitivity();
-        syncingWindowsXpTheme = false;
     };
-    const setWindowsXpTheme = enabled => {
-        const settings = createSettings();
-        settings.delay();
-        if (enabled)
-            setPanelMode(settings, PANEL_MODE_WINDOWS_XP);
-        else
-            restorePanelModeAfterWindowsTheme(settings);
-        settings.apply();
-    };
-    windowsXpThemeSwitch.connect('notify::active', () => {
-        if (syncingWindowsXpTheme)
-            return;
-
-        const enabled = windowsXpThemeSwitch.active;
-        if (enabled === settings.get_boolean(
-            'windows-xp-theme-enabled'
-        )) {
-            return;
-        }
-        setWindowsXpTheme(enabled);
-        syncWindowsXpTheme();
-    });
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
@@ -257,20 +209,19 @@ export function addPanelAppearancePage({
     );
     syncWindowsXpTheme();
 
-    const themeRow = new Adw.ExpanderRow({
+    const themeGroup = appearancePage.addGroup({
         title: _('Theme and Styling'),
-        subtitle: _(
+        description: _(
             'Choose the taskbar theme, colours, gradient, and text appearance'
         ),
     });
-    panelAppearanceGroup.add(themeRow);
 
     const followSystemThemeSwitch = new Adw.SwitchRow({
         title: _('Follow System Theme'),
         subtitle: _('Match the active GNOME Shell theme, independently of application colours'),
         active: settings.get_boolean('panel-theme-follow-system'),
     });
-    themeRow.add_row(followSystemThemeSwitch);
+    themeGroup.add(followSystemThemeSwitch);
     settings.bind(
         'panel-theme-follow-system',
         followSystemThemeSwitch,
@@ -278,8 +229,8 @@ export function addPanelAppearancePage({
         Gio.SettingsBindFlags.DEFAULT
     );
 
-    const panelThemeRow = addComboRow(
-        themeRow,
+    const panelThemeRow = addToggleChoiceRow(
+        themeGroup,
         settings,
         {
             key: 'panel-theme',
@@ -289,7 +240,7 @@ export function addPanelAppearancePage({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
-            addRow: row => themeRow.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -311,18 +262,17 @@ export function addPanelAppearancePage({
     const panelBlurTransparencySubtitle = _(
         'Disable Blur My Shell panel blur to use this option'
     );
-    const transparencyExpander = new Adw.ExpanderRow({
+    const transparencyGroup = appearancePage.addGroup({
         title: _('Transparency'),
-        subtitle: _('Control the taskbar background transparency'),
+        description: _('Control the taskbar background transparency'),
     });
-    panelAppearanceGroup.add(transparencyExpander);
 
     const transparencySwitch = new Adw.SwitchRow({
         title: _('Enable Transparency'),
         subtitle: transparencySwitchSubtitle,
         active: settings.get_boolean('transparency-enabled'),
     });
-    transparencyExpander.add_row(transparencySwitch);
+    transparencyGroup.add(transparencySwitch);
     settings.bind(
         'transparency-enabled',
         transparencySwitch,
@@ -333,16 +283,17 @@ export function addPanelAppearancePage({
     const transparencyRowSubtitle = _(
         '0% is opaque and 100% is fully transparent'
     );
-    const transparencyRow = addSpinRow(
-        transparencyExpander,
+    const transparencyRow = addSliderRow(
+        transparencyGroup,
         settings,
         {
             key: 'transparency-level',
+            unit: '%',
             title: _('Transparency'),
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
-            addRow: row => transparencyExpander.add_row(row),
+            addRow: row => transparencyGroup.add(row),
         },
         connectSettings
     );
@@ -357,19 +308,19 @@ export function addPanelAppearancePage({
     const {
         row: dynamicTransparencyRow,
         toggle: dynamicTransparencyToggle,
-    } = addSwitchRow(transparencyExpander, settings, {
+    } = addSwitchRow(transparencyGroup, settings, {
         key: 'transparency-on-unmaximized',
         title: _('Dynamic Transparency'),
         subtitle: dynamicTransparencySubtitle,
         addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
-        addRow: row => transparencyExpander.add_row(row),
+        addRow: row => transparencyGroup.add(row),
     });
     const updatePanelTransparencyControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
         const windowsXpThemeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        transparencyExpander.sensitive = !windowsXpThemeEnabled;
+        transparencyGroup.sensitive = !windowsXpThemeEnabled;
         transparencySwitch.sensitive = !blocked &&
             !windowsXpThemeEnabled;
         transparencySwitch.subtitle = blocked
@@ -414,7 +365,7 @@ export function addPanelAppearancePage({
             'custom-panel-color-enabled'
         ),
     });
-    themeRow.add_row(customPanelColorSwitch);
+    themeGroup.add(customPanelColorSwitch);
     settings.bind(
         'custom-panel-color-enabled',
         customPanelColorSwitch,
@@ -422,12 +373,12 @@ export function addPanelAppearancePage({
         Gio.SettingsBindFlags.DEFAULT
     );
     const customPanelColorRow = addColorRow(
-        themeRow,
+        themeGroup,
         settings,
         {
             key: 'custom-panel-color',
             title: _('Taskbar Color'),
-            addRow: row => themeRow.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -436,7 +387,7 @@ export function addPanelAppearancePage({
         subtitle: _('Blend the taskbar color with a second color'),
         active: settings.get_boolean('custom-panel-gradient-enabled'),
     });
-    themeRow.add_row(customPanelGradientSwitch);
+    themeGroup.add(customPanelGradientSwitch);
     settings.bind(
         'custom-panel-gradient-enabled',
         customPanelGradientSwitch,
@@ -444,17 +395,17 @@ export function addPanelAppearancePage({
         Gio.SettingsBindFlags.DEFAULT
     );
     const customPanelGradientColorRow = addColorRow(
-        themeRow,
+        themeGroup,
         settings,
         {
             key: 'custom-panel-gradient-color',
             title: _('Taskbar Gradient Color'),
-            addRow: row => themeRow.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
-    const customPanelGradientDirectionRow = addComboRow(
-        themeRow,
+    const customPanelGradientDirectionRow = addToggleChoiceRow(
+        themeGroup,
         settings,
         {
             key: 'custom-panel-gradient-direction',
@@ -464,15 +415,15 @@ export function addPanelAppearancePage({
                 {value: 'vertical', label: _('Vertical')},
                 {value: 'horizontal', label: _('Horizontal')},
             ],
-            addRow: row => themeRow.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
     const customPanelTextColorSubtitle = _(
         'White text uses the dark taskbar theme; black text uses the light taskbar theme'
     );
-    const customPanelTextColorRow = addComboRow(
-        themeRow,
+    const customPanelTextColorRow = addToggleChoiceRow(
+        themeGroup,
         settings,
         {
             key: 'panel-theme',
@@ -482,18 +433,10 @@ export function addPanelAppearancePage({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
-            addRow: row => themeRow.add_row(row),
+            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
-    customPanelTextColorRow.connect('notify::selected', () => {
-        if (settings.get_boolean('panel-theme-follow-system')) {
-            settings.set_boolean(
-                'panel-theme-follow-system',
-                false
-            );
-        }
-    });
     const updateCustomPanelColorControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
         if (blocked && settings.get_boolean('custom-panel-color-enabled'))
@@ -541,7 +484,7 @@ export function addPanelAppearancePage({
         const windowsXpThemeEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        themeRow.sensitive = !windowsXpThemeEnabled;
+        themeGroup.sensitive = !windowsXpThemeEnabled;
         followSystemThemeSwitch.sensitive = !windowsXpThemeEnabled;
         panelThemeRow.sensitive = !windowsXpThemeEnabled &&
             !followSystemThemeSwitch.active;
@@ -581,18 +524,17 @@ export function addPanelAppearancePage({
     );
     updateCustomPanelColorControls();
 
-    const bordersExpander = new Adw.ExpanderRow({
+    const bordersGroup = appearancePage.addGroup({
         title: _('Borders'),
-        subtitle: _('Choose whether to show a border in light and dark themes'),
+        description: _('Choose whether to show a border in light and dark themes'),
     });
-    panelAppearanceGroup.add(bordersExpander);
 
     const darkPanelBorderSwitch = new Adw.SwitchRow({
         title: _('Show Border in Dark Mode'),
         subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
         active: settings.get_boolean('panel-border-enabled'),
     });
-    bordersExpander.add_row(darkPanelBorderSwitch);
+    bordersGroup.add(darkPanelBorderSwitch);
     settings.bind(
         'panel-border-enabled',
         darkPanelBorderSwitch,
@@ -607,7 +549,7 @@ export function addPanelAppearancePage({
             'panel-border-light-enabled'
         ),
     });
-    bordersExpander.add_row(lightPanelBorderSwitch);
+    bordersGroup.add(lightPanelBorderSwitch);
     settings.bind(
         'panel-border-light-enabled',
         lightPanelBorderSwitch,
@@ -618,7 +560,7 @@ export function addPanelAppearancePage({
         const enabled = !settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        bordersExpander.sensitive = enabled;
+        bordersGroup.sensitive = enabled;
         darkPanelBorderSwitch.sensitive = enabled;
         lightPanelBorderSwitch.sensitive = enabled;
     };

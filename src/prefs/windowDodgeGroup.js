@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
@@ -34,8 +32,8 @@ export function windowDodgeModeChoices() {
     ];
 }
 
-export function addWindowDodgeRows(
-    group,
+export function addWindowDodgeGroup(
+    page,
     settings,
     {
         enabledKey,
@@ -44,36 +42,37 @@ export function addWindowDodgeRows(
         autohideKey,
         autohideSwitch,
         visibilityTitle,
-        visibilitySubtitle,
+        visibilityDescription,
         dodgeSubtitle,
         modeSubtitle,
         pointerRevealSubtitle,
         timingDescriptions,
         visibilityRows,
+        isAvailable = () => true,
         connectSettings,
     }
 ) {
-    const dodgeRow = new Adw.ExpanderRow({
+    const dodgeGroup = page.addGroup({
         title: visibilityTitle,
-        subtitle: visibilitySubtitle,
+        description: visibilityDescription,
     });
-    dodgeRow.add_row(autohideSwitch);
+    dodgeGroup.add(autohideSwitch);
     const dodgeSwitch = createSwitchRow(settings, {
         key: enabledKey,
         title: _('Enable Dodge Windows'),
         subtitle: dodgeSubtitle,
     });
-    dodgeRow.add_row(dodgeSwitch);
+    dodgeGroup.add(dodgeSwitch);
 
     const modeRow = addComboRow(
-        dodgeRow,
+        dodgeGroup,
         settings,
         {
             key: modeKey,
             title: _('Dodge Windows Mode'),
             subtitle: modeSubtitle,
             choices: windowDodgeModeChoices(),
-            addRow: row => dodgeRow.add_row(row),
+            addRow: row => dodgeGroup.add(row),
         },
         connectSettings
     );
@@ -92,11 +91,10 @@ export function addWindowDodgeRows(
         title: _('Reveal on Pointer'),
         subtitle: pointerRevealSubtitle,
         addSuffix: row => row.add_suffix(revealOptionsButton),
-        addRow: row => dodgeRow.add_row(row),
+        addRow: row => dodgeGroup.add(row),
     });
     for (const row of visibilityRows)
-        dodgeRow.add_row(row);
-    group.add(dodgeRow);
+        dodgeGroup.add(row);
 
     const disableAutoHideWhenDodgeEnabled = () => {
         if (settings.get_boolean(enabledKey) &&
@@ -123,8 +121,8 @@ export function addWindowDodgeRows(
     disableAutoHideWhenDodgeEnabled();
 
     const syncAvailability = () => {
-        const available = group.sensitive;
-        dodgeRow.sensitive = available;
+        const available = isAvailable();
+        dodgeGroup.sensitive = available;
         dodgeSwitch.sensitive = available;
         modeRow.sensitive = available && dodgeSwitch.active;
         const autoHideEnabled = settings.get_boolean(autohideKey);
@@ -139,5 +137,5 @@ export function addWindowDodgeRows(
     connectSettings(settings, `changed::${autohideKey}`, syncAvailability);
     syncAvailability();
 
-    return {syncAvailability};
+    return {group: dodgeGroup, syncAvailability};
 }
