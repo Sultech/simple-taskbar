@@ -177,7 +177,8 @@ export class WindowsXpModeController {
             return;
         }
         if (!this._windowsXpModeEnabled() &&
-            !this._settings.get_boolean('default-gnome-panel')) {
+            !this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('panel-height-follow-icon-size')) {
             fitIconSizeToPanelHeight(this._settings);
             if (this._settings.get_int('panel-height') !== panelHeight)
                 return;
