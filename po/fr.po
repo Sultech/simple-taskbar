@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 01:04+0100\n"
+"POT-Creation-Date: 2026-10-16 01:40+0100\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -251,7 +251,9 @@ msgstr "Afficher au-dessus des applications en plein écran"
 #: src/prefs/autoHideDialog.js:59
 msgid ""
 "Allow the pointer to reveal the taskbar or Dock over fullscreen applications"
-msgstr "Permettre au pointeur d’afficher la barre des tâches ou le Dock au-dessus des applications en plein écran"
+msgstr ""
+"Permettre au pointeur d’afficher la barre des tâches ou le Dock au-dessus "
+"des applications en plein écran"
 
 #: src/prefs/autoHideDialog.js:68
 msgid "Reveal Mode"
@@ -954,7 +956,8 @@ msgstr "Survol et animations"
 
 #: src/prefs/applicationInteractionGroup.js:157
 msgid "Choose what happens when the pointer rests on an application icon"
-msgstr "Choisir ce qui se passe lorsque le pointeur reste sur une icône d’application"
+msgstr ""
+"Choisir ce qui se passe lorsque le pointeur reste sur une icône d’application"
 
 #: src/prefs/applicationInteractionGroup.js:168
 msgid "Click Action"
@@ -1072,7 +1075,9 @@ msgstr "Effets des fenêtres"
 
 #: src/prefs/applicationInteractionGroup.js:402
 msgid "Choose the animation used when windows are minimized or restored"
-msgstr "Choisir l’animation utilisée lors de la minimisation ou de la restauration des fenêtres"
+msgstr ""
+"Choisir l’animation utilisée lors de la minimisation ou de la restauration "
+"des fenêtres"
 
 #: src/prefs/applicationInteractionGroup.js:410
 msgid "Window Minimize Effect"
@@ -1861,7 +1866,9 @@ msgstr ""
 msgid ""
 "Not available with the Default GNOME Panel: set the Taskbar Thickness below "
 "and the window icons resize to fit"
-msgstr "Indisponible avec le panneau GNOME par défaut : réglez l’épaisseur de la barre des tâches ci-dessous et les icônes des fenêtres s’adaptent"
+msgstr ""
+"Indisponible avec le panneau GNOME par défaut : réglez l’épaisseur de la "
+"barre des tâches ci-dessous et les icônes des fenêtres s’adaptent"
 
 #: src/prefs/panelAppearancePage.js:215
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
@@ -2104,7 +2111,7 @@ msgstr "Bouton de l’aperçu des espaces de travail GNOME"
 
 #: src/prefs/panelItemsPage.js:240 src/prefs/dockItemsPage.js:80
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Applications"
 msgstr "Applications"
 
@@ -2142,7 +2149,7 @@ msgstr "Paramètres rapides, volume, réseau et d’alimentation"
 msgid "Clock"
 msgstr "Horloge"
 
-#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:37
 msgid "Show Desktop Button"
 msgstr "Bouton Afficher le bureau"
 
@@ -2205,7 +2212,8 @@ msgstr "Options du mode barre des tâches"
 
 #: src/prefs/panelModeGroup.js:106
 msgid "Keep the GNOME panel and show applications in a separate Dock"
-msgstr "Garder le panneau GNOME et afficher les applications dans un Dock séparé"
+msgstr ""
+"Garder le panneau GNOME et afficher les applications dans un Dock séparé"
 
 #: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Options"
@@ -2256,7 +2264,9 @@ msgstr "Panneau GNOME"
 #: src/prefs/panelModeGroup.js:186
 msgid ""
 "Overview and running window options for the GNOME panel used with the Dock"
-msgstr "Options de l’aperçu et des fenêtres en cours d’exécution pour le panneau GNOME utilisé avec le Dock"
+msgstr ""
+"Options de l’aperçu et des fenêtres en cours d’exécution pour le panneau "
+"GNOME utilisé avec le Dock"
 
 #: src/prefs/panelThicknessSizing.js:41
 msgid "Match Thickness to Icon Size"
@@ -2390,7 +2400,9 @@ msgstr "Le profil n’a pas pu être exporté."
 
 #: src/prefs/profileTransfer.js:161
 msgid "Save all settings to a file or load them from one"
-msgstr "Enregistrer tous les réglages dans un fichier ou les charger depuis un fichier"
+msgstr ""
+"Enregistrer tous les réglages dans un fichier ou les charger depuis un "
+"fichier"
 
 #: src/prefs/profileTransfer.js:166
 msgid "Export and Import Profiles"
@@ -2489,33 +2501,49 @@ msgstr "Taille de l’espace"
 msgid "Reserve in pixels"
 msgstr "Espace en pixels"
 
-#: src/prefs/showDesktopButtonDialog.js:27
+#: src/prefs/showDesktopButtonDialog.js:28
 msgid "Show Desktop Button Options"
 msgstr "Options du bouton Afficher le bureau"
 
-#: src/prefs/showDesktopButtonDialog.js:47 src/prefs/panelSettingsHubs.js:21
+#: src/prefs/showDesktopButtonDialog.js:48 src/prefs/panelSettingsHubs.js:63
+msgid "Behavior"
+msgstr "Comportement"
+
+#: src/prefs/showDesktopButtonDialog.js:49
+msgid "Choose what the button does after you restore a window"
+msgstr "Choisir l’action du bouton après la restauration d’une fenêtre"
+
+#: src/prefs/showDesktopButtonDialog.js:54
+msgid "Cancel Show Desktop When a Window Is Restored"
+msgstr "Annuler « Afficher le bureau » lorsqu’une fenêtre est restaurée"
+
+#: src/prefs/showDesktopButtonDialog.js:56
+msgid "The next click hides visible windows instead of restoring the others."
+msgstr "Le clic suivant masque les fenêtres visibles au lieu de restaurer les autres."
+
+#: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
 msgstr "Apparence"
 
-#: src/prefs/showDesktopButtonDialog.js:48
+#: src/prefs/showDesktopButtonDialog.js:61
 msgid "Customize the Show Desktop button"
 msgstr "Personnaliser le bouton Afficher le bureau"
 
-#: src/prefs/showDesktopButtonDialog.js:57
+#: src/prefs/showDesktopButtonDialog.js:70
 msgid "Button Width"
 msgstr "Largeur du bouton"
 
-#: src/prefs/showDesktopButtonDialog.js:59
+#: src/prefs/showDesktopButtonDialog.js:72
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Largeur en pixels ; la hauteur est utilisée lorsque la barre des tâches ou "
 "le dock est vertical"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:82
 msgid "Invisible Button"
 msgstr "Bouton invisible"
 
-#: src/prefs/showDesktopButtonDialog.js:71
+#: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
 "Leave the button undrawn while it stays clickable and still highlights on "
 "hover"
@@ -2523,15 +2551,15 @@ msgstr ""
 "Ne pas dessiner le bouton, tout en le gardant cliquable et toujours mis en "
 "évidence au survol"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
 msgstr "Couleur personnalisée du séparateur"
 
-#: src/prefs/showDesktopButtonDialog.js:79
+#: src/prefs/showDesktopButtonDialog.js:92
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Utiliser une couleur choisie pour le séparateur Afficher le bureau"
 
-#: src/prefs/showDesktopButtonDialog.js:88
+#: src/prefs/showDesktopButtonDialog.js:101
 msgid "Separator Color"
 msgstr "Couleur du séparateur"
 
@@ -2592,7 +2620,8 @@ msgstr "Apparence du bouton démarrer"
 
 #: src/prefs/startMenuPage.js:156
 msgid "Configure padding, separators, icons, and button visibility"
-msgstr "Configurer la marge, les séparateurs, les icônes et la visibilité du bouton"
+msgstr ""
+"Configurer la marge, les séparateurs, les icônes et la visibilité du bouton"
 
 #: src/prefs/startMenuPage.js:164
 msgid "Start Button Padding"
@@ -2966,7 +2995,9 @@ msgstr ""
 #: src/prefs/startMenuPage.js:990
 msgid ""
 "The Start button and Start Menu are unavailable in Default GNOME Panel mode."
-msgstr "Le bouton démarrer et le menu démarrer sont indisponibles en mode panneau GNOME par défaut."
+msgstr ""
+"Le bouton démarrer et le menu démarrer sont indisponibles en mode panneau "
+"GNOME par défaut."
 
 #: src/prefs/taskbarBehaviorGroup.js:30
 msgid "Change Volume"
@@ -3076,7 +3107,9 @@ msgstr "Comportement de la barre des tâches"
 
 #: src/prefs/taskbarBehaviorGroup.js:154
 msgid "Choose the task manager and which monitors show the taskbar"
-msgstr "Choisir le gestionnaire de tâches et les moniteurs qui affichent la barre des tâches"
+msgstr ""
+"Choisir le gestionnaire de tâches et les moniteurs qui affichent la barre "
+"des tâches"
 
 #: src/prefs/taskbarBehaviorGroup.js:181
 msgid "Automatic Fallback"
@@ -3262,7 +3295,9 @@ msgstr "Colonnes et lignes de la grille d’applications GNOME"
 
 #: src/prefs/generalPage.js:37
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr "Pousser le pointeur contre le bord inférieur de l’écran pour basculer l’aperçu"
+msgstr ""
+"Pousser le pointeur contre le bord inférieur de l’écran pour basculer "
+"l’aperçu"
 
 #: src/prefs/generalPage.js:42 src/prefs/fileManagerGroup.js:11
 msgid "File Manager"
@@ -3278,7 +3313,8 @@ msgstr "Sélection des fenêtres"
 
 #: src/prefs/generalPage.js:49
 msgid "Switch directly between open windows using live previews"
-msgstr "Basculer directement entre les fenêtres ouvertes à l’aide d’aperçus en direct"
+msgstr ""
+"Basculer directement entre les fenêtres ouvertes à l’aide d’aperçus en direct"
 
 #: src/prefs/generalPage.js:54
 msgid "Backup"
@@ -3335,7 +3371,9 @@ msgstr "Raccourcis de dossiers de Nautilus"
 #: src/prefs/fileManagerGroup.js:17
 msgid ""
 "Show common folders in the menu of the Files icon on the taskbar or Dock"
-msgstr "Afficher les dossiers courants dans le menu de l’icône Fichiers de la barre des tâches ou du Dock"
+msgstr ""
+"Afficher les dossiers courants dans le menu de l’icône Fichiers de la barre "
+"des tâches ou du Dock"
 
 #: src/prefs/fileManagerGroup.js:22
 msgid "Super+E Opens File Manager"
@@ -3377,7 +3415,9 @@ msgstr "Clic, survol et animations"
 
 #: src/prefs/panelSettingsHubs.js:45
 msgid "Click and scroll actions, hover previews, magnify and other animations"
-msgstr "Actions de clic et de défilement, aperçus au survol, agrandissement et autres animations"
+msgstr ""
+"Actions de clic et de défilement, aperçus au survol, agrandissement et "
+"autres animations"
 
 #: src/prefs/panelSettingsHubs.js:51
 msgid "Position, style, size, and colours"
@@ -3390,10 +3430,6 @@ msgstr "Emplacements"
 #: src/prefs/panelSettingsHubs.js:57
 msgid "Folders, drives, and Trash"
 msgstr "Dossiers, lecteurs et Corbeille"
-
-#: src/prefs/panelSettingsHubs.js:63
-msgid "Behavior"
-msgstr "Comportement"
 
 #: src/prefs/panelSettingsHubs.js:67
 msgid "Auto-hide and Dodge"
@@ -3649,21 +3685,21 @@ msgstr "Corbeille"
 msgid "running"
 msgstr "En cours d’exécution"
 
-#: src/startMenu/startButtonController.js:586
+#: src/startMenu/startButtonController.js:584
 msgid "Start Menu Settings"
 msgstr "Paramètres du menu démarrer"
 
-#: src/startMenu/startButtonController.js:591
+#: src/startMenu/startButtonController.js:589
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr "Paramètres du Dock"
 
-#: src/startMenu/startButtonController.js:596
+#: src/startMenu/startButtonController.js:594
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr "Paramètres de la barre des tâches"
 
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Start"
 msgstr "Démarrer"
 
@@ -4018,9 +4054,6 @@ msgstr "Aucune application ne joue de l’audio"
 #~ msgstr ""
 #~ "Afficher le bouton de l’aperçu des espaces de travail GNOME sur la barre "
 #~ "des tâches"
-
-#~ msgid "Display a button that minimizes or restores all windows"
-#~ msgstr "Afficher un bouton qui réduit ou restaure toutes les fenêtres"
 
 #~ msgid "Collect Tray Icons"
 #~ msgstr "Regrouper les icônes de notification"

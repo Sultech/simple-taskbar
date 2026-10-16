@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 01:04+0100\n"
+"POT-Creation-Date: 2026-10-16 01:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1972,7 +1972,7 @@ msgstr ""
 
 #: src/prefs/panelItemsPage.js:240 src/prefs/dockItemsPage.js:80
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Applications"
 msgstr ""
 
@@ -2008,7 +2008,7 @@ msgstr ""
 msgid "Clock"
 msgstr ""
 
-#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:37
 msgid "Show Desktop Button"
 msgstr ""
 
@@ -2342,45 +2342,61 @@ msgstr ""
 msgid "Reserve in pixels"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:27
+#: src/prefs/showDesktopButtonDialog.js:28
 msgid "Show Desktop Button Options"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:47 src/prefs/panelSettingsHubs.js:21
+#: src/prefs/showDesktopButtonDialog.js:48 src/prefs/panelSettingsHubs.js:63
+msgid "Behavior"
+msgstr ""
+
+#: src/prefs/showDesktopButtonDialog.js:49
+msgid "Choose what the button does after you restore a window"
+msgstr ""
+
+#: src/prefs/showDesktopButtonDialog.js:54
+msgid "Cancel Show Desktop When a Window Is Restored"
+msgstr ""
+
+#: src/prefs/showDesktopButtonDialog.js:56
+msgid "The next click hides visible windows instead of restoring the others."
+msgstr ""
+
+#: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:48
+#: src/prefs/showDesktopButtonDialog.js:61
 msgid "Customize the Show Desktop button"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:57
+#: src/prefs/showDesktopButtonDialog.js:70
 msgid "Button Width"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:59
+#: src/prefs/showDesktopButtonDialog.js:72
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:82
 msgid "Invisible Button"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:71
+#: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
 "Leave the button undrawn while it stays clickable and still highlights on "
 "hover"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:79
+#: src/prefs/showDesktopButtonDialog.js:92
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr ""
 
-#: src/prefs/showDesktopButtonDialog.js:88
+#: src/prefs/showDesktopButtonDialog.js:101
 msgid "Separator Color"
 msgstr ""
 
@@ -3177,10 +3193,6 @@ msgstr ""
 msgid "Folders, drives, and Trash"
 msgstr ""
 
-#: src/prefs/panelSettingsHubs.js:63
-msgid "Behavior"
-msgstr ""
-
 #: src/prefs/panelSettingsHubs.js:67
 msgid "Auto-hide and Dodge"
 msgstr ""
@@ -3433,21 +3445,21 @@ msgstr ""
 msgid "running"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:586
+#: src/startMenu/startButtonController.js:584
 msgid "Start Menu Settings"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:591
+#: src/startMenu/startButtonController.js:589
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:596
+#: src/startMenu/startButtonController.js:594
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr ""
 
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Start"
 msgstr ""
 

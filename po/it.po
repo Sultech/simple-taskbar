@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 01:04+0100\n"
+"POT-Creation-Date: 2026-10-16 01:40+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Italian\n"
@@ -247,7 +247,9 @@ msgstr "Mostra sopra le applicazioni a schermo intero"
 #: src/prefs/autoHideDialog.js:59
 msgid ""
 "Allow the pointer to reveal the taskbar or Dock over fullscreen applications"
-msgstr "Consenti al puntatore di mostrare la barra delle applicazioni o il Dock sopra le applicazioni a schermo intero"
+msgstr ""
+"Consenti al puntatore di mostrare la barra delle applicazioni o il Dock "
+"sopra le applicazioni a schermo intero"
 
 #: src/prefs/autoHideDialog.js:68
 msgid "Reveal Mode"
@@ -939,7 +941,9 @@ msgstr "Passaggio del puntatore e animazioni"
 
 #: src/prefs/applicationInteractionGroup.js:157
 msgid "Choose what happens when the pointer rests on an application icon"
-msgstr "Scegli cosa succede quando il puntatore si ferma sull’icona di un’applicazione"
+msgstr ""
+"Scegli cosa succede quando il puntatore si ferma sull’icona di "
+"un’applicazione"
 
 #: src/prefs/applicationInteractionGroup.js:168
 msgid "Click Action"
@@ -1056,7 +1060,9 @@ msgstr "Effetti delle finestre"
 
 #: src/prefs/applicationInteractionGroup.js:402
 msgid "Choose the animation used when windows are minimized or restored"
-msgstr "Scegli l’animazione usata quando le finestre vengono minimizzate o ripristinate"
+msgstr ""
+"Scegli l’animazione usata quando le finestre vengono minimizzate o "
+"ripristinate"
 
 #: src/prefs/applicationInteractionGroup.js:410
 msgid "Window Minimize Effect"
@@ -1851,7 +1857,9 @@ msgstr ""
 msgid ""
 "Not available with the Default GNOME Panel: set the Taskbar Thickness below "
 "and the window icons resize to fit"
-msgstr "Non disponibile con il pannello GNOME predefinito: imposta lo spessore della barra delle applicazioni qui sotto e le icone delle finestre si adattano"
+msgstr ""
+"Non disponibile con il pannello GNOME predefinito: imposta lo spessore della "
+"barra delle applicazioni qui sotto e le icone delle finestre si adattano"
 
 #: src/prefs/panelAppearancePage.js:215
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
@@ -2094,7 +2102,7 @@ msgstr "Pulsante della panoramica degli spazi di lavoro di GNOME"
 
 #: src/prefs/panelItemsPage.js:240 src/prefs/dockItemsPage.js:80
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Applications"
 msgstr "Applicazioni"
 
@@ -2132,7 +2140,7 @@ msgstr "Impostazioni rapide, volume, rete e alimentazione"
 msgid "Clock"
 msgstr "Orologio"
 
-#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:37
 msgid "Show Desktop Button"
 msgstr "Pulsante Mostra scrivania"
 
@@ -2195,7 +2203,8 @@ msgstr "Opzioni della modalità barra delle applicazioni"
 
 #: src/prefs/panelModeGroup.js:106
 msgid "Keep the GNOME panel and show applications in a separate Dock"
-msgstr "Mantieni il pannello GNOME e mostra le applicazioni in un Dock separato"
+msgstr ""
+"Mantieni il pannello GNOME e mostra le applicazioni in un Dock separato"
 
 #: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Options"
@@ -2246,7 +2255,9 @@ msgstr "Pannello GNOME"
 #: src/prefs/panelModeGroup.js:186
 msgid ""
 "Overview and running window options for the GNOME panel used with the Dock"
-msgstr "Opzioni della Panoramica e delle finestre in esecuzione per il pannello GNOME usato con il Dock"
+msgstr ""
+"Opzioni della Panoramica e delle finestre in esecuzione per il pannello "
+"GNOME usato con il Dock"
 
 #: src/prefs/panelThicknessSizing.js:41
 msgid "Match Thickness to Icon Size"
@@ -2479,33 +2490,49 @@ msgstr "Dimensione spazio"
 msgid "Reserve in pixels"
 msgstr "Spazio in pixel"
 
-#: src/prefs/showDesktopButtonDialog.js:27
+#: src/prefs/showDesktopButtonDialog.js:28
 msgid "Show Desktop Button Options"
 msgstr "Opzioni pulsante Mostra scrivania"
 
-#: src/prefs/showDesktopButtonDialog.js:47 src/prefs/panelSettingsHubs.js:21
+#: src/prefs/showDesktopButtonDialog.js:48 src/prefs/panelSettingsHubs.js:63
+msgid "Behavior"
+msgstr "Comportamento"
+
+#: src/prefs/showDesktopButtonDialog.js:49
+msgid "Choose what the button does after you restore a window"
+msgstr "Scegli cosa fa il pulsante dopo il ripristino di una finestra"
+
+#: src/prefs/showDesktopButtonDialog.js:54
+msgid "Cancel Show Desktop When a Window Is Restored"
+msgstr "Annulla «Mostra desktop» quando viene ripristinata una finestra"
+
+#: src/prefs/showDesktopButtonDialog.js:56
+msgid "The next click hides visible windows instead of restoring the others."
+msgstr "Il clic successivo nasconde le finestre visibili invece di ripristinare le altre."
+
+#: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
 msgstr "Aspetto"
 
-#: src/prefs/showDesktopButtonDialog.js:48
+#: src/prefs/showDesktopButtonDialog.js:61
 msgid "Customize the Show Desktop button"
 msgstr "Personalizza il pulsante Mostra scrivania"
 
-#: src/prefs/showDesktopButtonDialog.js:57
+#: src/prefs/showDesktopButtonDialog.js:70
 msgid "Button Width"
 msgstr "Larghezza pulsante"
 
-#: src/prefs/showDesktopButtonDialog.js:59
+#: src/prefs/showDesktopButtonDialog.js:72
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Larghezza in pixel; viene usata l’altezza quando la barra delle applicazioni "
 "o il dock è verticale"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:82
 msgid "Invisible Button"
 msgstr "Pulsante invisibile"
 
-#: src/prefs/showDesktopButtonDialog.js:71
+#: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
 "Leave the button undrawn while it stays clickable and still highlights on "
 "hover"
@@ -2513,15 +2540,15 @@ msgstr ""
 "Non disegnare il pulsante, mantenendolo cliccabile e ancora evidenziato al "
 "passaggio del mouse"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
 msgstr "Colore separatore personalizzato"
 
-#: src/prefs/showDesktopButtonDialog.js:79
+#: src/prefs/showDesktopButtonDialog.js:92
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Usa un colore scelto per il separatore Mostra scrivania"
 
-#: src/prefs/showDesktopButtonDialog.js:88
+#: src/prefs/showDesktopButtonDialog.js:101
 msgid "Separator Color"
 msgstr "Colore separatore"
 
@@ -2947,7 +2974,9 @@ msgstr ""
 #: src/prefs/startMenuPage.js:990
 msgid ""
 "The Start button and Start Menu are unavailable in Default GNOME Panel mode."
-msgstr "Il pulsante Start e il menu Start non sono disponibili nella modalità pannello GNOME predefinito."
+msgstr ""
+"Il pulsante Start e il menu Start non sono disponibili nella modalità "
+"pannello GNOME predefinito."
 
 #: src/prefs/taskbarBehaviorGroup.js:30
 msgid "Change Volume"
@@ -3064,7 +3093,9 @@ msgstr "Comportamento della barra delle applicazioni"
 
 #: src/prefs/taskbarBehaviorGroup.js:154
 msgid "Choose the task manager and which monitors show the taskbar"
-msgstr "Scegli il gestore attività e i monitor che mostrano la barra delle applicazioni"
+msgstr ""
+"Scegli il gestore attività e i monitor che mostrano la barra delle "
+"applicazioni"
 
 #: src/prefs/taskbarBehaviorGroup.js:181
 msgid "Automatic Fallback"
@@ -3249,7 +3280,9 @@ msgstr "Colonne e righe della griglia applicazioni di GNOME"
 
 #: src/prefs/generalPage.js:37
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr "Spingi il puntatore contro il bordo inferiore dello schermo per attivare o disattivare la Panoramica"
+msgstr ""
+"Spingi il puntatore contro il bordo inferiore dello schermo per attivare o "
+"disattivare la Panoramica"
 
 #: src/prefs/generalPage.js:42 src/prefs/fileManagerGroup.js:11
 msgid "File Manager"
@@ -3322,7 +3355,9 @@ msgstr "Scorciatoie cartelle di Nautilus"
 #: src/prefs/fileManagerGroup.js:17
 msgid ""
 "Show common folders in the menu of the Files icon on the taskbar or Dock"
-msgstr "Mostra le cartelle comuni nel menu dell’icona File nella barra delle applicazioni o nel Dock"
+msgstr ""
+"Mostra le cartelle comuni nel menu dell’icona File nella barra delle "
+"applicazioni o nel Dock"
 
 #: src/prefs/fileManagerGroup.js:22
 msgid "Super+E Opens File Manager"
@@ -3362,7 +3397,9 @@ msgstr "Clic, passaggio del puntatore e animazioni"
 
 #: src/prefs/panelSettingsHubs.js:45
 msgid "Click and scroll actions, hover previews, magnify and other animations"
-msgstr "Azioni di clic e scorrimento, anteprime al passaggio, ingrandimento e altre animazioni"
+msgstr ""
+"Azioni di clic e scorrimento, anteprime al passaggio, ingrandimento e altre "
+"animazioni"
 
 #: src/prefs/panelSettingsHubs.js:51
 msgid "Position, style, size, and colours"
@@ -3375,10 +3412,6 @@ msgstr "Posizioni"
 #: src/prefs/panelSettingsHubs.js:57
 msgid "Folders, drives, and Trash"
 msgstr "Cartelle, unità e Cestino"
-
-#: src/prefs/panelSettingsHubs.js:63
-msgid "Behavior"
-msgstr "Comportamento"
 
 #: src/prefs/panelSettingsHubs.js:67
 msgid "Auto-hide and Dodge"
@@ -3632,21 +3665,21 @@ msgstr "Cestino"
 msgid "running"
 msgstr "in esecuzione"
 
-#: src/startMenu/startButtonController.js:586
+#: src/startMenu/startButtonController.js:584
 msgid "Start Menu Settings"
 msgstr "Impostazioni del menu Start"
 
-#: src/startMenu/startButtonController.js:591
+#: src/startMenu/startButtonController.js:589
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr "Impostazioni del Dock"
 
-#: src/startMenu/startButtonController.js:596
+#: src/startMenu/startButtonController.js:594
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr "Impostazioni della barra delle applicazioni"
 
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Start"
 msgstr "Start"
 
@@ -4001,9 +4034,6 @@ msgstr "Nessuna applicazione sta riproducendo audio"
 #~ msgstr ""
 #~ "Mostra il pulsante della panoramica degli spazi di lavoro di GNOME sulla "
 #~ "barra delle applicazioni"
-
-#~ msgid "Display a button that minimizes or restores all windows"
-#~ msgstr "Mostra un pulsante che minimizza o ripristina tutte le finestre"
 
 #~ msgid "Collect Tray Icons"
 #~ msgstr "Raccogli icone dell’area di notifica"

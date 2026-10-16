@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 01:04+0100\n"
+"POT-Creation-Date: 2026-10-16 01:40+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -246,7 +246,9 @@ msgstr "Megjelenítés teljes képernyős alkalmazások felett"
 #: src/prefs/autoHideDialog.js:59
 msgid ""
 "Allow the pointer to reveal the taskbar or Dock over fullscreen applications"
-msgstr "A mutató megjelenítheti a tálcát vagy a Dockot a teljes képernyős alkalmazások felett is"
+msgstr ""
+"A mutató megjelenítheti a tálcát vagy a Dockot a teljes képernyős "
+"alkalmazások felett is"
 
 #: src/prefs/autoHideDialog.js:68
 msgid "Reveal Mode"
@@ -1035,7 +1037,9 @@ msgstr "Ablakeffektusok"
 
 #: src/prefs/applicationInteractionGroup.js:402
 msgid "Choose the animation used when windows are minimized or restored"
-msgstr "Az ablakok kis méretre állításakor vagy visszaállításakor használt animáció kiválasztása"
+msgstr ""
+"Az ablakok kis méretre állításakor vagy visszaállításakor használt animáció "
+"kiválasztása"
 
 #: src/prefs/applicationInteractionGroup.js:410
 msgid "Window Minimize Effect"
@@ -1810,7 +1814,9 @@ msgstr ""
 msgid ""
 "Not available with the Default GNOME Panel: set the Taskbar Thickness below "
 "and the window icons resize to fit"
-msgstr "Az alapértelmezett GNOME panellel nem érhető el: állítsa be alább a tálca vastagságát, és az ablakikonok ahhoz igazodnak"
+msgstr ""
+"Az alapértelmezett GNOME panellel nem érhető el: állítsa be alább a tálca "
+"vastagságát, és az ablakikonok ahhoz igazodnak"
 
 #: src/prefs/panelAppearancePage.js:215
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
@@ -2043,7 +2049,7 @@ msgstr "GNOME munkaterület-áttekintő gomb"
 
 #: src/prefs/panelItemsPage.js:240 src/prefs/dockItemsPage.js:80
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Applications"
 msgstr "Alkalmazások"
 
@@ -2080,7 +2086,7 @@ msgstr "Gyorsbeállítások, hangerő, hálózat és kikapcsolás"
 msgid "Clock"
 msgstr "Óra"
 
-#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:37
 msgid "Show Desktop Button"
 msgstr "Asztal megjelenítése gomb"
 
@@ -2142,7 +2148,8 @@ msgstr "A tálcamód beállításai"
 
 #: src/prefs/panelModeGroup.js:106
 msgid "Keep the GNOME panel and show applications in a separate Dock"
-msgstr "A GNOME panel megtartása, az alkalmazások pedig külön Dockban jelennek meg"
+msgstr ""
+"A GNOME panel megtartása, az alkalmazások pedig külön Dockban jelennek meg"
 
 #: src/prefs/panelModeGroup.js:107
 msgid "Dock Mode Options"
@@ -2192,7 +2199,8 @@ msgstr "GNOME panel"
 #: src/prefs/panelModeGroup.js:186
 msgid ""
 "Overview and running window options for the GNOME panel used with the Dock"
-msgstr "Az áttekintés és a futó ablakok beállításai a Dockkal használt GNOME panelhez"
+msgstr ""
+"Az áttekintés és a futó ablakok beállításai a Dockkal használt GNOME panelhez"
 
 #: src/prefs/panelThicknessSizing.js:41
 msgid "Match Thickness to Icon Size"
@@ -2427,33 +2435,49 @@ msgstr "Térköz mérete"
 msgid "Reserve in pixels"
 msgstr "Térköz képpontban"
 
-#: src/prefs/showDesktopButtonDialog.js:27
+#: src/prefs/showDesktopButtonDialog.js:28
 msgid "Show Desktop Button Options"
 msgstr "Asztal megjelenítése gomb beállításai"
 
-#: src/prefs/showDesktopButtonDialog.js:47 src/prefs/panelSettingsHubs.js:21
+#: src/prefs/showDesktopButtonDialog.js:48 src/prefs/panelSettingsHubs.js:63
+msgid "Behavior"
+msgstr "Viselkedés"
+
+#: src/prefs/showDesktopButtonDialog.js:49
+msgid "Choose what the button does after you restore a window"
+msgstr "A gomb működésének kiválasztása egy ablak visszaállítása után"
+
+#: src/prefs/showDesktopButtonDialog.js:54
+msgid "Cancel Show Desktop When a Window Is Restored"
+msgstr "Az asztal megjelenítésének megszakítása egy ablak visszaállításakor"
+
+#: src/prefs/showDesktopButtonDialog.js:56
+msgid "The next click hides visible windows instead of restoring the others."
+msgstr "A következő kattintás elrejti a látható ablakokat a többi visszaállítása helyett."
+
+#: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
 msgstr "Megjelenés"
 
-#: src/prefs/showDesktopButtonDialog.js:48
+#: src/prefs/showDesktopButtonDialog.js:61
 msgid "Customize the Show Desktop button"
 msgstr "Az Asztal megjelenítése gomb személyre szabása"
 
-#: src/prefs/showDesktopButtonDialog.js:57
+#: src/prefs/showDesktopButtonDialog.js:70
 msgid "Button Width"
 msgstr "Gomb szélessége"
 
-#: src/prefs/showDesktopButtonDialog.js:59
+#: src/prefs/showDesktopButtonDialog.js:72
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Szélesség képpontban; függőleges tálca vagy dokk esetén a magasság van "
 "használatban"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:82
 msgid "Invisible Button"
 msgstr "Láthatatlan gomb"
 
-#: src/prefs/showDesktopButtonDialog.js:71
+#: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
 "Leave the button undrawn while it stays clickable and still highlights on "
 "hover"
@@ -2461,15 +2485,15 @@ msgstr ""
 "A gomb kirajzolásának mellőzése, miközben kattintható marad, és rámutatáskor "
 "továbbra is kiemelődik"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
 msgstr "Elválasztó egyéni színe"
 
-#: src/prefs/showDesktopButtonDialog.js:79
+#: src/prefs/showDesktopButtonDialog.js:92
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Egyéni szín használata az Asztal megjelenítése elválasztójához"
 
-#: src/prefs/showDesktopButtonDialog.js:88
+#: src/prefs/showDesktopButtonDialog.js:101
 msgid "Separator Color"
 msgstr "Elválasztó színe"
 
@@ -2897,7 +2921,9 @@ msgstr ""
 #: src/prefs/startMenuPage.js:990
 msgid ""
 "The Start button and Start Menu are unavailable in Default GNOME Panel mode."
-msgstr "A Start gomb és a Start menü nem érhető el az alapértelmezett GNOME panel módban."
+msgstr ""
+"A Start gomb és a Start menü nem érhető el az alapértelmezett GNOME panel "
+"módban."
 
 #: src/prefs/taskbarBehaviorGroup.js:30
 msgid "Change Volume"
@@ -3177,7 +3203,8 @@ msgstr "A GNOME alkalmazásrács oszlopai és sorai"
 
 #: src/prefs/generalPage.js:37
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr "Tolja a mutatót a képernyő alsó széléhez az Áttekintés be- és kikapcsolásához"
+msgstr ""
+"Tolja a mutatót a képernyő alsó széléhez az Áttekintés be- és kikapcsolásához"
 
 #: src/prefs/generalPage.js:42 src/prefs/fileManagerGroup.js:11
 msgid "File Manager"
@@ -3250,7 +3277,8 @@ msgstr "Nautilus mappa gyorslinkek"
 #: src/prefs/fileManagerGroup.js:17
 msgid ""
 "Show common folders in the menu of the Files icon on the taskbar or Dock"
-msgstr "Gyakori mappák megjelenítése a Fájlok ikon menüjében a tálcán vagy a Dockban"
+msgstr ""
+"Gyakori mappák megjelenítése a Fájlok ikon menüjében a tálcán vagy a Dockban"
 
 #: src/prefs/fileManagerGroup.js:22
 msgid "Super+E Opens File Manager"
@@ -3290,7 +3318,9 @@ msgstr "Kattintás, rámutatás és animációk"
 
 #: src/prefs/panelSettingsHubs.js:45
 msgid "Click and scroll actions, hover previews, magnify and other animations"
-msgstr "Kattintási és görgetési műveletek, előnézetek rámutatáskor, nagyítás és egyéb animációk"
+msgstr ""
+"Kattintási és görgetési műveletek, előnézetek rámutatáskor, nagyítás és "
+"egyéb animációk"
 
 #: src/prefs/panelSettingsHubs.js:51
 msgid "Position, style, size, and colours"
@@ -3303,10 +3333,6 @@ msgstr "Helyek"
 #: src/prefs/panelSettingsHubs.js:57
 msgid "Folders, drives, and Trash"
 msgstr "Mappák, meghajtók és Kuka"
-
-#: src/prefs/panelSettingsHubs.js:63
-msgid "Behavior"
-msgstr "Viselkedés"
 
 #: src/prefs/panelSettingsHubs.js:67
 msgid "Auto-hide and Dodge"
@@ -3562,21 +3588,21 @@ msgstr "Kuka"
 msgid "running"
 msgstr "fut"
 
-#: src/startMenu/startButtonController.js:586
+#: src/startMenu/startButtonController.js:584
 msgid "Start Menu Settings"
 msgstr "Start menü beállításai"
 
-#: src/startMenu/startButtonController.js:591
+#: src/startMenu/startButtonController.js:589
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr "Dock-beállítások"
 
-#: src/startMenu/startButtonController.js:596
+#: src/startMenu/startButtonController.js:594
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr "Tálca beállításai"
 
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Start"
 msgstr "Start"
 
@@ -3911,11 +3937,6 @@ msgstr "Egyetlen alkalmazás sem játszik le hangot"
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr "A GNOME munkaterület-áttekintő gombjának megjelenítése a tálcán"
-
-#~ msgid "Display a button that minimizes or restores all windows"
-#~ msgstr ""
-#~ "Minden ablakot kis méretűre kicsinyítő vagy visszaállító gomb "
-#~ "megjelenítése"
 
 #~ msgid "Collect Tray Icons"
 #~ msgstr "Tálcaikonok összegyűjtése"

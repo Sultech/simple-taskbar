@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 01:04+0100\n"
+"POT-Creation-Date: 2026-10-16 01:40+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -245,7 +245,9 @@ msgstr "Показывать поверх полноэкранных прило�
 #: src/prefs/autoHideDialog.js:59
 msgid ""
 "Allow the pointer to reveal the taskbar or Dock over fullscreen applications"
-msgstr "Разрешить указателю показывать панель задач или Dock поверх полноэкранных приложений"
+msgstr ""
+"Разрешить указателю показывать панель задач или Dock поверх полноэкранных "
+"приложений"
 
 #: src/prefs/autoHideDialog.js:68
 msgid "Reveal Mode"
@@ -1799,7 +1801,9 @@ msgstr "Крупные значки автоматически уменьшаю�
 msgid ""
 "Not available with the Default GNOME Panel: set the Taskbar Thickness below "
 "and the window icons resize to fit"
-msgstr "Недоступно со стандартной панелью GNOME: задайте толщину панели задач ниже, и значки окон подстроятся под неё"
+msgstr ""
+"Недоступно со стандартной панелью GNOME: задайте толщину панели задач ниже, "
+"и значки окон подстроятся под неё"
 
 #: src/prefs/panelAppearancePage.js:215
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
@@ -2029,7 +2033,7 @@ msgstr "Кнопка обзора рабочих столов GNOME"
 
 #: src/prefs/panelItemsPage.js:240 src/prefs/dockItemsPage.js:80
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Applications"
 msgstr "Приложения"
 
@@ -2066,7 +2070,7 @@ msgstr "Быстрые настройки, громкость, сеть и пи�
 msgid "Clock"
 msgstr "Часы"
 
-#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:37
 msgid "Show Desktop Button"
 msgstr "Кнопка «Показать рабочий стол»"
 
@@ -2178,7 +2182,9 @@ msgstr "Панель GNOME"
 #: src/prefs/panelModeGroup.js:186
 msgid ""
 "Overview and running window options for the GNOME panel used with the Dock"
-msgstr "Параметры обзора и запущенных окон для панели GNOME, используемой вместе с Dock"
+msgstr ""
+"Параметры обзора и запущенных окон для панели GNOME, используемой вместе с "
+"Dock"
 
 #: src/prefs/panelThicknessSizing.js:41
 msgid "Match Thickness to Icon Size"
@@ -2412,33 +2418,49 @@ msgstr "Размер отступа"
 msgid "Reserve in pixels"
 msgstr "Отступ в пикселях"
 
-#: src/prefs/showDesktopButtonDialog.js:27
+#: src/prefs/showDesktopButtonDialog.js:28
 msgid "Show Desktop Button Options"
 msgstr "Параметры кнопки «Показать рабочий стол»"
 
-#: src/prefs/showDesktopButtonDialog.js:47 src/prefs/panelSettingsHubs.js:21
+#: src/prefs/showDesktopButtonDialog.js:48 src/prefs/panelSettingsHubs.js:63
+msgid "Behavior"
+msgstr "Поведение"
+
+#: src/prefs/showDesktopButtonDialog.js:49
+msgid "Choose what the button does after you restore a window"
+msgstr "Выберите действие кнопки после восстановления окна"
+
+#: src/prefs/showDesktopButtonDialog.js:54
+msgid "Cancel Show Desktop When a Window Is Restored"
+msgstr "Отменять показ рабочего стола при восстановлении окна"
+
+#: src/prefs/showDesktopButtonDialog.js:56
+msgid "The next click hides visible windows instead of restoring the others."
+msgstr "Следующее нажатие скрывает видимые окна вместо восстановления остальных."
+
+#: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
 msgstr "Внешний вид"
 
-#: src/prefs/showDesktopButtonDialog.js:48
+#: src/prefs/showDesktopButtonDialog.js:61
 msgid "Customize the Show Desktop button"
 msgstr "Настройте кнопку «Показать рабочий стол»"
 
-#: src/prefs/showDesktopButtonDialog.js:57
+#: src/prefs/showDesktopButtonDialog.js:70
 msgid "Button Width"
 msgstr "Ширина кнопки"
 
-#: src/prefs/showDesktopButtonDialog.js:59
+#: src/prefs/showDesktopButtonDialog.js:72
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr ""
 "Ширина в пикселях; для вертикальной панели задач или док-панели используется "
 "высота"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:82
 msgid "Invisible Button"
 msgstr "Невидимая кнопка"
 
-#: src/prefs/showDesktopButtonDialog.js:71
+#: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
 "Leave the button undrawn while it stays clickable and still highlights on "
 "hover"
@@ -2446,15 +2468,15 @@ msgstr ""
 "Не отрисовывать кнопку, оставляя её доступной для нажатия и по-прежнему "
 "подсвечиваемой при наведении"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
 msgstr "Пользовательский цвет разделителя"
 
-#: src/prefs/showDesktopButtonDialog.js:79
+#: src/prefs/showDesktopButtonDialog.js:92
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "Использовать выбранный цвет для разделителя «Показать рабочий стол»"
 
-#: src/prefs/showDesktopButtonDialog.js:88
+#: src/prefs/showDesktopButtonDialog.js:101
 msgid "Separator Color"
 msgstr "Цвет разделителя"
 
@@ -2869,7 +2891,8 @@ msgstr "Выберите любое свободное сочетание кла
 #: src/prefs/startMenuPage.js:990
 msgid ""
 "The Start button and Start Menu are unavailable in Default GNOME Panel mode."
-msgstr "Кнопка «Пуск» и меню «Пуск» недоступны в режиме стандартной панели GNOME."
+msgstr ""
+"Кнопка «Пуск» и меню «Пуск» недоступны в режиме стандартной панели GNOME."
 
 #: src/prefs/taskbarBehaviorGroup.js:30
 msgid "Change Volume"
@@ -2967,7 +2990,8 @@ msgstr "Поведение панели задач"
 
 #: src/prefs/taskbarBehaviorGroup.js:154
 msgid "Choose the task manager and which monitors show the taskbar"
-msgstr "Выбор диспетчера задач и мониторов, на которых показывается панель задач"
+msgstr ""
+"Выбор диспетчера задач и мониторов, на которых показывается панель задач"
 
 #: src/prefs/taskbarBehaviorGroup.js:181
 msgid "Automatic Fallback"
@@ -3147,7 +3171,8 @@ msgstr "Столбцы и строки сетки приложений GNOME"
 
 #: src/prefs/generalPage.js:37
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr "Прижмите указатель к нижнему краю экрана, чтобы открыть или закрыть обзор"
+msgstr ""
+"Прижмите указатель к нижнему краю экрана, чтобы открыть или закрыть обзор"
 
 #: src/prefs/generalPage.js:42 src/prefs/fileManagerGroup.js:11
 msgid "File Manager"
@@ -3220,7 +3245,8 @@ msgstr "Ярлыки папок Nautilus"
 #: src/prefs/fileManagerGroup.js:17
 msgid ""
 "Show common folders in the menu of the Files icon on the taskbar or Dock"
-msgstr "Показывать общие папки в меню значка «Файлы» на панели задач или в Dock"
+msgstr ""
+"Показывать общие папки в меню значка «Файлы» на панели задач или в Dock"
 
 #: src/prefs/fileManagerGroup.js:22
 msgid "Super+E Opens File Manager"
@@ -3260,7 +3286,9 @@ msgstr "Щелчок, наведение и анимации"
 
 #: src/prefs/panelSettingsHubs.js:45
 msgid "Click and scroll actions, hover previews, magnify and other animations"
-msgstr "Действия по щелчку и прокрутке, эскизы при наведении, увеличение и другие анимации"
+msgstr ""
+"Действия по щелчку и прокрутке, эскизы при наведении, увеличение и другие "
+"анимации"
 
 #: src/prefs/panelSettingsHubs.js:51
 msgid "Position, style, size, and colours"
@@ -3273,10 +3301,6 @@ msgstr "Расположения"
 #: src/prefs/panelSettingsHubs.js:57
 msgid "Folders, drives, and Trash"
 msgstr "Папки, диски и корзина"
-
-#: src/prefs/panelSettingsHubs.js:63
-msgid "Behavior"
-msgstr "Поведение"
 
 #: src/prefs/panelSettingsHubs.js:67
 msgid "Auto-hide and Dodge"
@@ -3296,7 +3320,8 @@ msgstr "Элементы Dock"
 
 #: src/prefs/panelSettingsHubs.js:102
 msgid "Select Dock Mode in General to use these settings."
-msgstr "Чтобы использовать эти настройки, выберите режим Dock на вкладке «Общие»."
+msgstr ""
+"Чтобы использовать эти настройки, выберите режим Dock на вкладке «Общие»."
 
 #: src/startMenu/startMenuController.js:115
 msgid "Folder"
@@ -3532,21 +3557,21 @@ msgstr "Корзина"
 msgid "running"
 msgstr "запущено"
 
-#: src/startMenu/startButtonController.js:586
+#: src/startMenu/startButtonController.js:584
 msgid "Start Menu Settings"
 msgstr "Настройки меню «Пуск»"
 
-#: src/startMenu/startButtonController.js:591
+#: src/startMenu/startButtonController.js:589
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr "Параметры Dock"
 
-#: src/startMenu/startButtonController.js:596
+#: src/startMenu/startButtonController.js:594
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr "Настройки панели задач"
 
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Start"
 msgstr "Пуск"
 
@@ -3879,9 +3904,6 @@ msgstr "Нет приложений, воспроизводящих звук"
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr "Показывать кнопку обзора рабочих столов GNOME на панели задач"
-
-#~ msgid "Display a button that minimizes or restores all windows"
-#~ msgstr "Показывать кнопку, которая сворачивает или восстанавливает все окна"
 
 #~ msgid "Collect Tray Icons"
 #~ msgstr "Собирать значки уведомлений"

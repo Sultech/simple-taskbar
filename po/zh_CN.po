@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 01:04+0100\n"
+"POT-Creation-Date: 2026-10-16 01:40+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -1758,7 +1758,8 @@ msgstr "任务栏缩小时，过大的图标会自动缩小"
 msgid ""
 "Not available with the Default GNOME Panel: set the Taskbar Thickness below "
 "and the window icons resize to fit"
-msgstr "使用默认 GNOME 面板时不可用：请在下方设置任务栏厚度，窗口图标会自动适应"
+msgstr ""
+"使用默认 GNOME 面板时不可用：请在下方设置任务栏厚度，窗口图标会自动适应"
 
 #: src/prefs/panelAppearancePage.js:215
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
@@ -1978,7 +1979,7 @@ msgstr "GNOME 工作区概览按钮"
 
 #: src/prefs/panelItemsPage.js:240 src/prefs/dockItemsPage.js:80
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Applications"
 msgstr "应用程序"
 
@@ -2014,7 +2015,7 @@ msgstr "快速设置、音量、网络与电源"
 msgid "Clock"
 msgstr "时钟"
 
-#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:36
+#: src/prefs/panelItemsPage.js:274 src/prefs/showDesktopButtonDialog.js:37
 msgid "Show Desktop Button"
 msgstr "显示桌面按钮"
 
@@ -2350,45 +2351,61 @@ msgstr "留白大小"
 msgid "Reserve in pixels"
 msgstr "留白（像素）"
 
-#: src/prefs/showDesktopButtonDialog.js:27
+#: src/prefs/showDesktopButtonDialog.js:28
 msgid "Show Desktop Button Options"
 msgstr "显示桌面按钮选项"
 
-#: src/prefs/showDesktopButtonDialog.js:47 src/prefs/panelSettingsHubs.js:21
+#: src/prefs/showDesktopButtonDialog.js:48 src/prefs/panelSettingsHubs.js:63
+msgid "Behavior"
+msgstr "行为"
+
+#: src/prefs/showDesktopButtonDialog.js:49
+msgid "Choose what the button does after you restore a window"
+msgstr "选择恢复窗口后按钮的行为"
+
+#: src/prefs/showDesktopButtonDialog.js:54
+msgid "Cancel Show Desktop When a Window Is Restored"
+msgstr "恢复窗口时取消显示桌面"
+
+#: src/prefs/showDesktopButtonDialog.js:56
+msgid "The next click hides visible windows instead of restoring the others."
+msgstr "下次点击将隐藏可见窗口，而不是恢复其他窗口。"
+
+#: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
 msgstr "外观"
 
-#: src/prefs/showDesktopButtonDialog.js:48
+#: src/prefs/showDesktopButtonDialog.js:61
 msgid "Customize the Show Desktop button"
 msgstr "自定义显示桌面按钮"
 
-#: src/prefs/showDesktopButtonDialog.js:57
+#: src/prefs/showDesktopButtonDialog.js:70
 msgid "Button Width"
 msgstr "按钮宽度"
 
-#: src/prefs/showDesktopButtonDialog.js:59
+#: src/prefs/showDesktopButtonDialog.js:72
 msgid "Width in pixels; height is used when the taskbar or Dock is vertical"
 msgstr "宽度（像素）；任务栏或 Dock 垂直时使用高度"
 
-#: src/prefs/showDesktopButtonDialog.js:69
+#: src/prefs/showDesktopButtonDialog.js:82
 msgid "Invisible Button"
 msgstr "隐形按钮"
 
-#: src/prefs/showDesktopButtonDialog.js:71
+#: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
 "Leave the button undrawn while it stays clickable and still highlights on "
 "hover"
 msgstr "不绘制按钮，但仍可点击，并且在悬停时依然高亮"
 
-#: src/prefs/showDesktopButtonDialog.js:78
+#: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
 msgstr "自定义分隔线颜色"
 
-#: src/prefs/showDesktopButtonDialog.js:79
+#: src/prefs/showDesktopButtonDialog.js:92
 msgid "Use a chosen color for the Show Desktop separator"
 msgstr "为显示桌面分隔线使用所选颜色"
 
-#: src/prefs/showDesktopButtonDialog.js:88
+#: src/prefs/showDesktopButtonDialog.js:101
 msgid "Separator Color"
 msgstr "分隔线颜色"
 
@@ -3186,10 +3203,6 @@ msgstr "位置"
 msgid "Folders, drives, and Trash"
 msgstr "文件夹、驱动器和回收站"
 
-#: src/prefs/panelSettingsHubs.js:63
-msgid "Behavior"
-msgstr "行为"
-
 #: src/prefs/panelSettingsHubs.js:67
 msgid "Auto-hide and Dodge"
 msgstr "自动隐藏和躲避"
@@ -3442,21 +3455,21 @@ msgstr "回收站"
 msgid "running"
 msgstr "正在运行"
 
-#: src/startMenu/startButtonController.js:586
+#: src/startMenu/startButtonController.js:584
 msgid "Start Menu Settings"
 msgstr "开始菜单设置"
 
-#: src/startMenu/startButtonController.js:591
+#: src/startMenu/startButtonController.js:589
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr "Dock 设置"
 
-#: src/startMenu/startButtonController.js:596
+#: src/startMenu/startButtonController.js:594
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr "任务栏设置"
 
-#: src/startMenu/startButtonController.js:1054
+#: src/startMenu/startButtonController.js:1052
 msgid "Start"
 msgstr "开始"
 
@@ -3774,9 +3787,6 @@ msgstr "没有应用正在播放音频"
 
 #~ msgid "Display GNOME’s workspace overview button on the taskbar"
 #~ msgstr "在任务栏上展示 GNOME 的工作区概览按钮"
-
-#~ msgid "Display a button that minimizes or restores all windows"
-#~ msgstr "展示一个可最小化或恢复所有窗口的按钮"
 
 #~ msgid "Collect Tray Icons"
 #~ msgstr "收纳托盘图标"
