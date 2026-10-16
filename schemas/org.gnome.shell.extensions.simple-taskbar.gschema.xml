@@ -454,6 +454,11 @@
       <summary>Show Desktop button width</summary>
       <description>Customize the Show Desktop button width in pixels</description>
     </key>
+    <key name="show-desktop-cancel-on-restore" type="b">
+      <default>true</default>
+      <summary>Cancel Show Desktop when a window is restored</summary>
+      <description>Restoring any tracked window cancels Show Desktop instead of keeping the remaining hidden windows available to restore</description>
+    </key>
     <key name="show-desktop-button-invisible" type="b">
       <default>false</default>
       <summary>Hide the Show Desktop button separator</summary>

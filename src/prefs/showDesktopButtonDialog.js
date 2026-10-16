@@ -15,6 +15,7 @@ import {
 import {addSliderRow} from './sliderRow.js';
 
 const SHOW_DESKTOP_BUTTON_SETTINGS = [
+    'show-desktop-cancel-on-restore',
     'show-desktop-button-width',
     'show-desktop-button-invisible',
     'show-desktop-button-custom-line-color-enabled',
@@ -37,12 +38,24 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
             transient_for: parent,
             modal: true,
             default_width: 560,
-            default_height: 420,
+            default_height: 560,
         });
 
         this._settings = settings;
         const {content, connectSettings} =
             createPreferencesDialogContent(this);
+        const behaviorGroup = new Adw.PreferencesGroup({
+            title: _('Behavior'),
+            description: _('Choose what the button does after you restore a window'),
+        });
+        content.append(behaviorGroup);
+        behaviorGroup.add(createSwitchRow(settings, {
+            key: 'show-desktop-cancel-on-restore',
+            title: _('Cancel Show Desktop When a Window Is Restored'),
+            subtitle: _(
+                'The next click hides visible windows instead of restoring the others.'
+            ),
+        }));
         const appearanceGroup = new Adw.PreferencesGroup({
             title: _('Appearance'),
             description: _('Customize the Show Desktop button'),

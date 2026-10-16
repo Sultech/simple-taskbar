@@ -483,10 +483,23 @@ export class WindowController {
         for (const window of windows) {
             this._minimizedWindowSignals.set(
                 window,
-                window.connect(
-                    'unmanaged',
-                    () => this._onMinimizedWindowUnmanaged(workspace, window)
-                )
+                [
+                    window.connect(
+                        'unmanaged',
+                        () => this._removeMinimizedWindow(workspace, window)
+                    ),
+                    window.connect('notify::minimized', () => {
+                        if (window.minimized)
+                            return;
+
+                        if (this._settings.get_boolean('show-desktop-cancel-on-restore')) {
+                            this._forgetDesktopState(workspace);
+                            this._syncShowDesktopButton();
+                        } else {
+                            this._removeMinimizedWindow(workspace, window);
+                        }
+                    }),
+                ]
             );
             window.minimize();
         }
@@ -514,9 +527,8 @@ export class WindowController {
             this.restoreDesktop(workspace);
     }
 
-    _onMinimizedWindowUnmanaged(workspace, window) {
-        window.disconnect(this._minimizedWindowSignals.get(window));
-        this._minimizedWindowSignals.delete(window);
+    _removeMinimizedWindow(workspace, window) {
+        this._disconnectMinimizedWindow(window);
         const state = this._desktopStates.get(workspace);
         state.windows = state.windows.filter(
             candidate => candidate !== window
@@ -530,11 +542,15 @@ export class WindowController {
 
     _forgetDesktopState(workspace) {
         const state = this._desktopStates.get(workspace);
-        for (const window of state.windows) {
-            window.disconnect(this._minimizedWindowSignals.get(window));
-            this._minimizedWindowSignals.delete(window);
-        }
+        for (const window of state.windows)
+            this._disconnectMinimizedWindow(window);
         this._desktopStates.delete(workspace);
+    }
+
+    _disconnectMinimizedWindow(window) {
+        for (const id of this._minimizedWindowSignals.get(window))
+            window.disconnect(id);
+        this._minimizedWindowSignals.delete(window);
     }
 
     _dropRemovedWorkspaceStates() {
