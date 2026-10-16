@@ -420,11 +420,11 @@ export class StartButtonController {
         )
             ? this._settings.get_string('app-alignment')
             : this._settings.get_string('start-button-position');
-        const leadingMargin = !windowsXpTheme &&
+        const leadingPadding = !windowsXpTheme &&
             startButtonPosition === 'left'
             ? padding
             : 0;
-        const trailingMargin = !windowsXpTheme &&
+        const trailingPadding = !windowsXpTheme &&
             startButtonPosition === 'right'
             ? padding
             : 0;
@@ -432,10 +432,9 @@ export class StartButtonController {
             this._content.set_width(-1);
             this._content.set_height(width);
             this.actor.set_width(-1);
-            this.actor.set_height(width);
+            this.actor.set_height(width + leadingPadding + trailingPadding);
             this.actor.set_style(
-                `min-width: 0; padding: 0; margin-top: ${leadingMargin}px;` +
-                `margin-bottom: ${trailingMargin}px;` +
+                `min-width: 0; margin: 0; padding: ${leadingPadding}px 0 ${trailingPadding}px 0;` +
                 `margin-right: ${windowsXpTheme ? 6 : 0}px;`
             );
             this._syncSeparator(false);
@@ -447,12 +446,11 @@ export class StartButtonController {
         );
         this.actor.set_height(visualPanelHeight);
         this._content.set_width(width);
-        this.actor.set_width(width);
+        this.actor.set_width(width + leadingPadding + trailingPadding);
         const borderStyle = windowsXpTheme ? '' : ' border-width: 0;';
         this.actor.set_style(
-            `min-width: 0; padding: 0;${borderStyle}` +
-                ` margin-left: ${leadingMargin}px;` +
-                `margin-right: ${trailingMargin}px;`
+            `min-width: 0; margin: 0;${borderStyle}` +
+                ` padding: 0 ${trailingPadding}px 0 ${leadingPadding}px;`
         );
         this._syncSeparator(false);
     }
