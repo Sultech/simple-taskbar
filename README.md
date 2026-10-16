@@ -17,6 +17,8 @@
 Simple Taskbar gives GNOME a familiar taskbar, an optional Dock and a Start Menu.
 Pin your favourite apps, preview open windows and choose a layout that suits you,
 while keeping GNOME's clock, calendar, Quick Settings and extension icons.
+Bring your desktop to life with macOS-style icon magnification and the Magic
+Lamp animation when minimising and restoring windows.
 
 **Supports GNOME Shell 48, 49, 50 and 51.**
 
