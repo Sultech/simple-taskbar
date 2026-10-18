@@ -112,10 +112,7 @@ class SliderRow extends Adw.ActionRow {
         this.add_suffix(box);
 
         this._adjustment.connect('value-changed', () => this._sync());
-        this._adjustment.connect('changed', () => {
-            this.set_value(this.get_value());
-            this._sync();
-        });
+        this._adjustment.connect('changed', () => this._sync());
         this._sync();
     }
 
@@ -252,7 +249,7 @@ class SliderRow extends Adw.ActionRow {
         const alpha = area.is_sensitive() ? 1 : DISABLED_ALPHA;
         const lower = this._adjustment.get_lower();
         const range = this._adjustment.get_upper() - lower;
-        const ratio = range > 0 ? (this._displayValue() - lower) / range : 0;
+        const ratio = range > 0 ? Math.min(1, Math.max(0, (this._displayValue() - lower) / range)) : 0;
 
         const trackX = TRACK_PADDING;
         const trackWidth = width - TRACK_PADDING * 2;
@@ -339,16 +336,21 @@ export function addSliderRow(group, settings, {
     addRow = row => group.add(row),
 }, connectSettings) {
     const row = createSliderRow({title, subtitle, lower, upper, step, unit, format}, connectSettings);
+    let syncing = false;
     row.set_value(settings.get_int(key));
     row.get_adjustment().connect('value-changed', () => {
         const value = Math.round(row.get_value());
-        if (settings.get_int(key) !== value)
+        if (!syncing && settings.get_int(key) !== value)
             settings.set_int(key, value);
     });
     connectSettings(settings, `changed::${key}`, () => {
         const value = settings.get_int(key);
-        if (row.get_value() !== value)
-            row.set_value(value);
+        if (row.get_value() === value)
+            return;
+
+        syncing = true;
+        row.set_value(value);
+        syncing = false;
     });
     addRow(row);
     return row;
