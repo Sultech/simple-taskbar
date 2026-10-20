@@ -750,6 +750,12 @@ export class StartMenuController {
         this._appSystem = null;
         this._favorites = null;
         this._appliedTheme = null;
+        this._root = null;
+        this._scrollView = null;
+        this._content = null;
+        this._searchEntry = null;
+        this._header = null;
+        this._headerTitle = null;
     }
 
     _createSearchEntry() {
