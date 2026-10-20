@@ -5,7 +5,7 @@ import {
     dockFloatingPanelReserve,
     dockPanelModeHeight,
 } from '../shared/panelSizing.js';
-import {RemappedSettings} from '../shared/remappedSettings.js';
+import {CachedSettings} from '../shared/remappedSettings.js';
 
 const DOCK_SETTING_KEYS = new Map([
     ['panel-position', 'dock-position'],
@@ -79,22 +79,11 @@ const DOCK_COMPUTED_SETTING_KEYS = new Map([
     ],
 ]);
 
-export class DockPanelSettings extends RemappedSettings {
+export class DockPanelSettings extends CachedSettings {
     constructor(settings) {
         super(settings);
         this._runtimeIconSize = null;
-        this._cache = new Map();
-        this._changedId = settings.connect(
-            'changed',
-            () => this._cache.clear()
-        );
         this.isDock = true;
-    }
-
-    destroy() {
-        this._settings.disconnect(this._changedId);
-        this._changedId = 0;
-        this._cache.clear();
     }
 
     _settingKey(key) {
@@ -114,16 +103,6 @@ export class DockPanelSettings extends RemappedSettings {
         return sourceKeys.map(sourceKey => `changed::${sourceKey}`);
     }
 
-    _cached(type, key, compute) {
-        const cacheKey = `${type}:${key}`;
-        if (this._cache.has(cacheKey))
-            return this._cache.get(cacheKey);
-
-        const value = compute();
-        this._cache.set(cacheKey, value);
-        return value;
-    }
-
     getConfiguredIconSize() {
         return this._settings.get_int('icon-size');
     }
@@ -137,7 +116,7 @@ export class DockPanelSettings extends RemappedSettings {
         if (key === 'default-gnome-panel') {
             return false;
         }
-        return this._cached('boolean', key, () => super.get_boolean(key));
+        return super.get_boolean(key);
     }
 
     get_string(key) {
@@ -147,14 +126,14 @@ export class DockPanelSettings extends RemappedSettings {
             return 'center';
         }
 
-        return this._cached('string', key, () => super.get_string(key));
+        return super.get_string(key);
     }
 
     get_int(key) {
         if (key === 'icon-size' && this._runtimeIconSize !== null)
             return this._runtimeIconSize;
 
-        return this._cached('int', key, () => this._computeInt(key));
+        return super.get_int(key);
     }
 
     _computeInt(key) {
@@ -166,6 +145,6 @@ export class DockPanelSettings extends RemappedSettings {
             return dockPanelModeHeight(this._settings, iconSize);
         }
 
-        return super.get_int(key);
+        return super._computeInt(key);
     }
 }

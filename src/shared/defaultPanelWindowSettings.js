@@ -2,7 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {defaultPanelWindowsEnabled} from './defaultPanelWindows.js';
-import {RemappedSettings} from './remappedSettings.js';
+import {CachedSettings, RemappedSettings} from './remappedSettings.js';
 
 export const DEFAULT_PANEL_WINDOW_SETTING_KEYS = Object.freeze([
     'app-alignment',
@@ -88,8 +88,25 @@ export class DefaultPanelWindowSettings extends RemappedSettings {
     }
 }
 
+class CachedDefaultPanelWindowSettings extends CachedSettings {
+    constructor(settings) {
+        super(settings);
+        this.isDefaultPanelWindows = true;
+    }
+
+    _settingKey(key) {
+        return defaultPanelWindowSettingKey(key);
+    }
+}
+
 export function panelApplicationSettings(settings) {
     return !settings.isDock && defaultPanelWindowsEnabled(settings)
         ? new DefaultPanelWindowSettings(settings)
         : settings;
+}
+
+export function cachedPanelApplicationSettings(settings) {
+    return defaultPanelWindowsEnabled(settings)
+        ? new CachedDefaultPanelWindowSettings(settings)
+        : new CachedSettings(settings);
 }

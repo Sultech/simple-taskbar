@@ -8,7 +8,7 @@ import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
+import {cachedPanelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
 import {defaultPanelWindowsEnabled} from './src/shared/defaultPanelWindows.js';
 
 import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
@@ -125,7 +125,7 @@ export default class SimpleTaskbarExtension extends Extension {
             }
         );
         this._windowsXpModeController.applyInitialSettings();
-        this._applicationSettings = panelApplicationSettings(this._settings);
+        this._applicationSettings = cachedPanelApplicationSettings(this._settings);
         this._maximumIconSize = this._applicationSettings.get_int('icon-size');
         this._panelHeight = this._settings.get_int('panel-height');
         this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
@@ -425,6 +425,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._favorites = null;
         this._tracker = null;
         this._appSystem = null;
+        this._applicationSettings.destroy();
         this._applicationSettings = null;
         this._settings = null;
         this._maximumIconSize = null;

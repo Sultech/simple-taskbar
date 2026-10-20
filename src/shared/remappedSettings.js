@@ -113,3 +113,46 @@ export class RemappedSettings {
         this._settings.disconnectObject(owner);
     }
 }
+
+export class CachedSettings extends RemappedSettings {
+    constructor(settings) {
+        super(settings);
+        this._cache = new Map();
+        this._changeEventId = settings.connect('change-event', () => {
+            this._cache.clear();
+            return false;
+        });
+    }
+
+    destroy() {
+        this._settings.disconnect(this._changeEventId);
+        this._changeEventId = 0;
+        this._cache.clear();
+    }
+
+    _cached(type, key, compute) {
+        const cacheKey = `${type}:${key}`;
+        if (this._cache.has(cacheKey))
+            return this._cache.get(cacheKey);
+
+        const value = compute();
+        this._cache.set(cacheKey, value);
+        return value;
+    }
+
+    _computeInt(key) {
+        return this._settings.get_int(this._settingKey(key));
+    }
+
+    get_boolean(key) {
+        return this._cached('boolean', key, () => super.get_boolean(key));
+    }
+
+    get_string(key) {
+        return this._cached('string', key, () => super.get_string(key));
+    }
+
+    get_int(key) {
+        return this._cached('int', key, () => this._computeInt(key));
+    }
+}

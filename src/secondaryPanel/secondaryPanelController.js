@@ -12,7 +12,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
+import {cachedPanelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
 import {defaultPanelWindowsEnabled, panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
 
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
@@ -114,7 +114,11 @@ export class SecondaryPanelController {
         visiblePanelItemIds = null,
         mainPanelSettings = null,
     }) {
-        settings = panelApplicationSettings(settings);
+        this._applicationSettings = null;
+        if (!settings.isDock) {
+            this._applicationSettings = cachedPanelApplicationSettings(settings);
+            settings = this._applicationSettings;
+        }
         this._settings = settings;
         this._extensionDir = extensionDir;
         this._monitor = monitor;
@@ -539,6 +543,10 @@ export class SecondaryPanelController {
         this._extensionDir = null;
         this._openPreferencesCallback = null;
         this._visiblePanelItemIds = null;
+        if (this._applicationSettings) {
+            this._applicationSettings.destroy();
+            this._applicationSettings = null;
+        }
         this._settings = null;
     }
 
