@@ -248,11 +248,3 @@ export function fitPanelHeightToIconSize(settings, heightKey = 'panel-height') {
     if (settings.get_int(heightKey) < minimumPanelHeight)
         setInteger(settings, heightKey, minimumPanelHeight);
 }
-
-export function derivePanelHeightFromIconSize(settings, heightKey = 'panel-height') {
-    setInteger(
-        settings,
-        heightKey,
-        panelHeightForIconSize(settings, settings.get_int('icon-size'))
-    );
-}

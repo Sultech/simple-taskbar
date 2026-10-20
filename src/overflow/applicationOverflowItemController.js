@@ -28,7 +28,7 @@ export class ApplicationOverflowItemController {
     }
 
     createTaskbarItem(item) {
-        const panelHeight = this._settings.get_int('panel-height');
+        const panelHeight = this._taskbarController.getPanelHeight();
         const vertical = panelIsVertical(this._settings);
         const size = this._taskbarController.getItemLength(item);
         const source = item._taskbarIsShowDesktop
@@ -136,7 +136,7 @@ export class ApplicationOverflowItemController {
     }
 
     _createShowDesktopListItem(item) {
-        const panelHeight = this._settings.get_int('panel-height');
+        const panelHeight = this._taskbarController.getPanelHeight();
         const clone = new Clutter.Clone({source: item});
         const label = new St.Label({
             text: _('Show desktop'),

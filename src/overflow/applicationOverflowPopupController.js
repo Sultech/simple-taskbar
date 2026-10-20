@@ -22,6 +22,7 @@ export class ApplicationOverflowPopupController {
         itemController,
         dragController,
         getItemSizes,
+        getPanelHeight,
         close,
         syncGeometry,
     }) {
@@ -31,6 +32,7 @@ export class ApplicationOverflowPopupController {
         this._itemController = itemController;
         this._dragController = dragController;
         this._getItemSizes = getItemSizes;
+        this._getPanelHeight = getPanelHeight;
         this._close = close;
         this._syncGeometry = syncGeometry;
         this._overflowItems = [];
@@ -55,7 +57,7 @@ export class ApplicationOverflowPopupController {
         const style = this._settings.get_string(
             'application-overflow-style'
         );
-        const panelHeight = this._settings.get_int('panel-height');
+        const panelHeight = this._getPanelHeight();
         const layoutSignature =
             `${this._getItemSizes(items).join(':')}:${panelHeight}`;
         const matchesCurrent = style === this._style &&
@@ -131,6 +133,7 @@ export class ApplicationOverflowPopupController {
         this._syncGeometry = null;
         this._close = null;
         this._getItemSizes = null;
+        this._getPanelHeight = null;
         this._dragController = null;
         this._itemController = null;
         this._section = null;
@@ -268,7 +271,7 @@ export class ApplicationOverflowPopupController {
                 : scrollView.hadjustment;
             const increment = Math.max(
                 adjustment.step_increment,
-                this._settings.get_int('panel-height')
+                this._getPanelHeight()
             );
             const delta = getScrollDelta(event, increment);
             adjustment.set_value(adjustment.get_value() + delta);

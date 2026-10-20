@@ -4,7 +4,6 @@
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
-    derivePanelHeightFromIconSize,
     fitIconSizeToPanelHeight,
     fitPanelHeightToIconSize,
     standardMinimumPanelHeight,
@@ -20,13 +19,8 @@ export function createPanelThicknessSizing(settings, connectSettings, {
     const followsIcons = () => isActive() &&
         settings.get_boolean(followKey);
     const fitThicknessToIcons = () => {
-        if (!isActive())
+        if (!isActive() || followsIcons())
             return;
-
-        if (followsIcons()) {
-            derivePanelHeightFromIconSize(settings, heightKey);
-            return;
-        }
 
         fitPanelHeightToIconSize(settings, heightKey);
     };

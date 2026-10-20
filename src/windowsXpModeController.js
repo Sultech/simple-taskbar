@@ -119,10 +119,15 @@ export class WindowsXpModeController {
         return this._settings.get_boolean('windows-xp-theme-enabled');
     }
 
+    _fitPanelHeightToIconSize() {
+        if (!this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('panel-height-follow-icon-size'))
+            fitPanelHeightToIconSize(this._settings);
+    }
+
     _syncMode() {
         if (!this._windowsXpModeEnabled()) {
-            if (!this._settings.get_boolean('default-gnome-panel'))
-                fitPanelHeightToIconSize(this._settings);
+            this._fitPanelHeightToIconSize();
             return;
         }
 
@@ -137,9 +142,8 @@ export class WindowsXpModeController {
             this._settings.set_int('icon-size', WINDOWS_XP_ICON_SIZE);
             return;
         }
-        if (!this._settings.get_boolean('default-gnome-panel') &&
-            !this._windowsXpModeEnabled()) {
-            fitPanelHeightToIconSize(this._settings);
+        if (!this._windowsXpModeEnabled()) {
+            this._fitPanelHeightToIconSize();
             iconSize = this._settings.get_int('icon-size');
         }
         this._onIconSizeChanged(iconSize);
@@ -163,9 +167,7 @@ export class WindowsXpModeController {
         if (this._windowsXpModeEnabled())
             return;
 
-        if (!this._settings.get_boolean('default-gnome-panel'))
-            fitPanelHeightToIconSize(this._settings);
-
+        this._fitPanelHeightToIconSize();
         this._onIconEdgePaddingChanged();
     }
 

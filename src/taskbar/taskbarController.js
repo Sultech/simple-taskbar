@@ -890,6 +890,10 @@ export class TaskbarController {
         return this._iconSize;
     }
 
+    getPanelHeight() {
+        return this._panelHeight;
+    }
+
     crossAxisParityOffset() {
         return this._appearanceController.crossAxisParityOffset();
     }

@@ -340,7 +340,8 @@ export class SecondaryPanelController {
             this._syncQuickSettingsIndicators();
             this._activitiesController = new PanelActivitiesController(
                 this._settings,
-                activities
+                activities,
+                () => this._panelHeight
             );
             this._activitiesController.enable();
             this._clockController = new PanelClockController(
@@ -1079,6 +1080,8 @@ export class SecondaryPanelController {
         this._taskbarController.setPanelHeight(this._panelHeight);
         if (this._buttonPaddingController)
             this._buttonPaddingController.syncPanelHeight();
+        if (this._activitiesController)
+            this._activitiesController.sync();
         if (this._clockController)
             this._clockController.sync();
         if (this._dateMenuAlignment)

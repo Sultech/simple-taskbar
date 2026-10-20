@@ -3,10 +3,6 @@
 
 import Clutter from 'gi://Clutter';
 
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
-
 import {appendStyle} from '../shared/styleUtils.js';
 import {panelIsVertical} from './panelPosition.js';
 
@@ -14,20 +10,16 @@ const BASE_HPADDING = 12;
 const MAX_DOT_WIDTH = 25;
 
 export class PanelActivitiesController {
-    constructor(settings, activities) {
+    constructor(settings, activities, getPanelHeight) {
         this._settings = settings;
         this._activities = activities;
+        this._getPanelHeight = getPanelHeight;
         this._indicators = activities.get_first_child();
         this._orientation = this._indicators.orientation;
         this._originalStyle = activities.get_style();
-        this._signalHolder = new TransientSignalHolder();
     }
 
     enable() {
-        this._settings.connectObject(
-            'changed::panel-height', () => this.sync(),
-            this._signalHolder
-        );
         this.sync();
     }
 
@@ -45,7 +37,7 @@ export class PanelActivitiesController {
         const hpadding = Math.max(
             BASE_HPADDING,
             Math.round(
-                (this._settings.get_int('panel-height') - MAX_DOT_WIDTH) / 2
+                (this._getPanelHeight() - MAX_DOT_WIDTH) / 2
             )
         );
         const style = vertical && hpadding > BASE_HPADDING
@@ -61,13 +53,12 @@ export class PanelActivitiesController {
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
         this._activities.set_style(this._originalStyle);
         this._indicators.orientation = this._orientation;
         this._originalStyle = null;
         this._indicators = null;
         this._activities = null;
+        this._getPanelHeight = null;
         this._settings = null;
     }
 }

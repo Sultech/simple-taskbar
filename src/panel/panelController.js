@@ -175,7 +175,8 @@ export class PanelController {
         );
         this._activitiesController = new PanelActivitiesController(
             this._settings,
-            Main.panel.statusArea.activities
+            Main.panel.statusArea.activities,
+            () => this._panelHeight
         );
         this._activitiesController.enable();
         this._clockController = new PanelClockController(
@@ -270,6 +271,7 @@ export class PanelController {
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
         this._buttonPaddingController.syncPanelHeight();
+        this._activitiesController.sync();
         this.position();
         this._clockController.sync();
     }

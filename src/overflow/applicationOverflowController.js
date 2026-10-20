@@ -180,6 +180,7 @@ export class ApplicationOverflowController {
             itemController: this._itemController,
             dragController: this._dragController,
             getItemSizes: items => this._getItemSizes(items),
+            getPanelHeight: () => this._taskbarController.getPanelHeight(),
             close: () => this.close(),
             syncGeometry: () => this._syncPopupGeometry(),
         });
@@ -559,7 +560,7 @@ export class ApplicationOverflowController {
         const collapseStartSize = vertical
             ? this._viewport.height
             : this._viewport.width;
-        const panelHeight = this._settings.get_int('panel-height');
+        const panelHeight = this._taskbarController.getPanelHeight();
         const items = this._taskbarController.getOrderedApplicationItems();
         const previousVisibleCount = Math.max(
             0,
@@ -679,7 +680,7 @@ export class ApplicationOverflowController {
             return false;
 
         const vertical = panelIsVertical(this._settings);
-        const panelHeight = this._settings.get_int('panel-height');
+        const panelHeight = this._taskbarController.getPanelHeight();
         const mainProperty = vertical ? 'height' : 'width';
         const animate = St.Settings.get().enable_animations;
         this._overflowButtonTargetVisible = visible;
