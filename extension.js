@@ -217,6 +217,7 @@ export default class SimpleTaskbarExtension extends Extension {
             toggleDesktop: () => this._windowController.toggleDesktop(),
             toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
             switcherKeybindings: this._switcherKeybindings,
+            getMonitor: () => Main.layoutManager.primaryMonitor,
             onMenuOpenStateChanged: open => {
                 this._taskbarController.setStartMenuOpen(open);
                 this._panelController.setStartMenuOpen(open);

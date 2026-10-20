@@ -99,6 +99,7 @@ export class StartMenuController {
     constructor(sourceActor, settings, params = {}) {
         this._sourceActor = sourceActor;
         this._getPanelEdgeGap = params.getPanelEdgeGap;
+        this._getMonitor = params.getMonitor;
         this._getPanelHeight = params.getPanelHeight;
         this._settings = settings;
         this._onOpenStateChanged = params.onOpenStateChanged;
@@ -586,9 +587,10 @@ export class StartMenuController {
         const centerOnMonitor =
             this._settings.get_boolean('start-menu-monitor-centered') &&
             this._startButtonIsCentered();
-        const monitor = this._getSourceMonitor();
+        const monitor = this._getMonitor();
         const fixedPanelPosition = monitor &&
-            this._settings.get_boolean('panel-autohide-enabled');
+            (this._settings.get_boolean('panel-autohide-enabled') ||
+                this._settings.get_boolean('panel-dodge-windows-enabled'));
         const useDummySource = Boolean(
             monitor && (centerOnMonitor ||
                 (fixedPanelPosition && this._sourceActor.has_allocation()))
@@ -672,14 +674,6 @@ export class StartMenuController {
             : 'dark';
     }
 
-    _getSourceMonitor() {
-        if (!this._sourceActor.get_stage())
-            return Main.layoutManager.primaryMonitor;
-
-        return Main.layoutManager.findMonitorForActor(this._sourceActor) ??
-            Main.layoutManager.primaryMonitor;
-    }
-
     destroy() {
         this._sourcePress.destroy();
         this._sourcePress = null;
@@ -742,6 +736,7 @@ export class StartMenuController {
         this._body = null;
         this._sourceActor = null;
         this._getPanelEdgeGap = null;
+        this._getMonitor = null;
         this._getPanelHeight = null;
         this._powerGIcon = null;
         this._settingsGIcon = null;
@@ -1523,7 +1518,7 @@ export class StartMenuController {
     }
 
     _updateSize() {
-        const monitor = this._getSourceMonitor();
+        const monitor = this._getMonitor();
         if (!monitor)
             return;
         const width = Math.min(640, Math.max(420, monitor.width - 32));

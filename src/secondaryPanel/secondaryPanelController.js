@@ -213,6 +213,7 @@ export class SecondaryPanelController {
             getPanelEdgeGap: () => this._dockController
                 ? this._dockController.getPanelEdgeGap()
                 : 0,
+            getMonitor: () => this._monitor,
             openPreferences,
             closeApp: (app, timestamp) =>
                 this._taskbarController.closeApp(app, timestamp),

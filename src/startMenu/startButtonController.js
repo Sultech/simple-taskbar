@@ -81,6 +81,7 @@ export class StartButtonController {
         toggleDesktop,
         onMenuOpenStateChanged,
         getPanelEdgeGap = () => 0,
+        getMonitor,
     }) {
         this._extensionDir = extensionDir;
         this._settings = settings;
@@ -89,6 +90,7 @@ export class StartButtonController {
         this._closeApp = closeApp;
         this._getInterestingWindows = getInterestingWindows;
         this._getPanelEdgeGap = getPanelEdgeGap;
+        this._getMonitor = getMonitor;
         this._toggleFromShortcut = toggleFromShortcut;
         this._toggleDesktop = toggleDesktop;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
@@ -262,6 +264,7 @@ export class StartButtonController {
         this._closeApp = null;
         this._getInterestingWindows = null;
         this._toggleFromShortcut = null;
+        this._getMonitor = null;
         this._toggleDesktop = null;
         this._onMenuOpenStateChanged = null;
         this._settings = null;
@@ -561,6 +564,7 @@ export class StartButtonController {
                 powerGIcon: this._powerGIcon,
                 settingsGIcon: this._settingsGIcon,
                 getPanelEdgeGap: this._getPanelEdgeGap,
+                getMonitor: this._getMonitor,
                 getPanelHeight: () =>
                     taskbarPanelHeight(this._settings, this._icon.icon_size),
             }
