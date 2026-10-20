@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import Pango from 'gi://Pango';
+import St from 'gi://St';
 
 import {
     TransientSignalHolder,
@@ -10,11 +12,31 @@ import {
 
 import {panelIsVertical} from './panelPosition.js';
 
+const DIGITS = '0123456789';
+
+function clockMarkup(text, useTimeSeparator) {
+    if (!Array.isArray(text))
+        return text.trim();
+
+    const separator = `\n<span size="8192"> ${
+        useTimeSeparator ? '‧‧' : '—'
+    } </span>\n`;
+    return text.join(separator).trim();
+}
+
+function horizontalFrame(widget) {
+    const themeNode = widget.get_theme_node();
+    return themeNode.get_horizontal_padding() +
+        themeNode.get_border_width(St.Side.LEFT) +
+        themeNode.get_border_width(St.Side.RIGHT);
+}
+
 export class PanelClockController {
-    constructor(settings, dateMenu, getPanelThickness) {
+    constructor(settings, dateMenu, getPanelThickness, getMinimumPanelThickness) {
         this._settings = settings;
         this._dateMenu = dateMenu;
         this._getPanelThickness = getPanelThickness;
+        this._getMinimumPanelThickness = getMinimumPanelThickness;
         this._signalHolder = new TransientSignalHolder();
         this._desktopSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.interface',
@@ -57,21 +79,9 @@ export class PanelClockController {
         const clockText = this._dateMenu._clockDisplay.clutter_text;
         if (!this._formatted)
             this._captureClockText();
-        const setClockText = (text, useTimeSeparator = false) => {
-            const stacks = Array.isArray(text);
-            const separator = `\n<span size="8192"> ${
-                useTimeSeparator ? '‧‧' : '—'
-            } </span>\n`;
-            clockText.set_text(
-                (stacks ? text.join(separator) : text).trim()
-            );
-            clockText.set_use_markup(stacks);
-            clockText.get_allocation_box();
-            return !clockText.get_layout().is_ellipsized();
-        };
-
         if (clockText.ellipsize === Pango.EllipsizeMode.NONE)
             clockText.ellipsize = Pango.EllipsizeMode.END;
+        const textWidth = this._getMinimumPanelThickness() - this._clockTextInset();
         clockText.natural_width = this._getPanelThickness();
         this._formatted = true;
 
@@ -81,22 +91,87 @@ export class PanelClockController {
             datetimeParts = [datetimeParts.join(' '), time];
         }
 
-        const datetimeFits = setClockText(datetime);
-        const datetimePartsFit = !datetimeFits &&
-            setClockText(datetimeParts);
-        const timeFits = !datetimeFits &&
-            !datetimePartsFit &&
-            setClockText(time);
-        if (!datetimeFits && !datetimePartsFit && !timeFits) {
-            const timeSeparator = time.includes('∶') ? '∶' : ':';
-            const timeParts = time.split(timeSeparator);
-            this._clockFormat ??=
-                this._desktopSettings.get_string('clock-format');
-            if (this._clockFormat === '12h') {
-                timeParts.push(...timeParts.pop().split(' '));
+        const timeSeparator = time.includes('∶') ? '∶' : ':';
+        const timeParts = time.split(timeSeparator);
+        this._clockFormat ??=
+            this._desktopSettings.get_string('clock-format');
+        if (this._clockFormat === '12h')
+            timeParts.push(...timeParts.pop().split(' '));
+
+        const candidates = [
+            {text: datetime, useTimeSeparator: false},
+            {text: datetimeParts, useTimeSeparator: false},
+            {text: time, useTimeSeparator: false},
+        ];
+        const layout = clockText.get_layout().copy();
+        layout.set_width(-1);
+        layout.set_ellipsize(Pango.EllipsizeMode.NONE);
+        const widestDigit = this._widestDigit(layout);
+        const chosen = candidates.find(candidate =>
+            this._fits(layout, candidate, widestDigit, textWidth)
+        ) ?? {text: timeParts, useTimeSeparator: true};
+        clockText.set_text(clockMarkup(chosen.text, chosen.useTimeSeparator));
+        clockText.set_use_markup(Array.isArray(chosen.text));
+    }
+
+    _measure(layout, text, useMarkup) {
+        layout.set_attributes(null);
+        if (useMarkup)
+            layout.set_markup(text, -1);
+        else
+            layout.set_text(text, -1);
+        return layout.get_pixel_size()[0];
+    }
+
+    _widestDigit(layout) {
+        let widestDigit = DIGITS[0];
+        let widestWidth = -1;
+        for (const digit of DIGITS) {
+            const width = this._measure(layout, digit, false);
+            if (width > widestWidth) {
+                widestDigit = digit;
+                widestWidth = width;
             }
-            setClockText(timeParts, true);
         }
+        return widestDigit;
+    }
+
+    _fits(layout, {text, useTimeSeparator}, widestDigit, textWidth) {
+        const stacks = Array.isArray(text);
+        const sample = stacks
+            ? text.map(part => part.replace(/\d/g, widestDigit))
+            : text.replace(/\d/g, widestDigit);
+        return this._measure(
+            layout,
+            clockMarkup(sample, useTimeSeparator),
+            stacks
+        ) <= textWidth;
+    }
+
+    _clockTextInset() {
+        let inset = horizontalFrame(this._dateMenu);
+        for (let actor = this._dateMenu._clockDisplay;
+            actor !== this._dateMenu;
+            actor = actor.get_parent()) {
+            inset += horizontalFrame(actor) +
+                actor.margin_left + actor.margin_right;
+            const parent = actor.get_parent();
+            if (parent instanceof St.BoxLayout &&
+                parent.orientation === Clutter.Orientation.HORIZONTAL)
+                inset += this._siblingsWidth(parent, actor);
+        }
+        return inset;
+    }
+
+    _siblingsWidth(box, actor) {
+        const visibleChildren = box.get_children().filter(child => child.visible);
+        const siblingsWidth = visibleChildren
+            .filter(child => child !== actor)
+            .reduce((width, child) => width +
+                child.get_preferred_width(-1)[1] +
+                child.margin_left + child.margin_right, 0);
+        return siblingsWidth +
+            box.layout_manager.spacing * (visibleChildren.length - 1);
     }
 
     destroy() {
@@ -112,6 +187,7 @@ export class PanelClockController {
         this._settings = null;
         this._dateMenu = null;
         this._getPanelThickness = null;
+        this._getMinimumPanelThickness = null;
     }
 
     _syncPanelPosition() {

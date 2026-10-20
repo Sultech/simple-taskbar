@@ -49,6 +49,7 @@ import {
     constrainTaskbarSize,
 } from '../taskbar/taskbarLayout.js';
 import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
+import {minimumTaskbarPanelHeight} from '../shared/panelSizing.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const GNOME_PANEL_SIZE = 32;
@@ -180,7 +181,8 @@ export class PanelController {
         this._clockController = new PanelClockController(
             this._settings,
             Main.panel.statusArea.dateMenu,
-            () => this._panelHeight
+            () => this._panelHeight,
+            () => minimumTaskbarPanelHeight(this._settings)
         );
         this._clockController.enable();
         this._themeController = new PanelThemeController(

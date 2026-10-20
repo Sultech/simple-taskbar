@@ -86,7 +86,10 @@ import {
     applyTaskbarIconSize,
 } from '../taskbar/taskbarIconSize.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
-import {taskbarPanelHeight} from '../shared/panelSizing.js';
+import {
+    minimumTaskbarPanelHeight,
+    taskbarPanelHeight,
+} from '../shared/panelSizing.js';
 import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
 import {WindowController} from '../taskbar/windowController.js';
@@ -340,7 +343,8 @@ export class SecondaryPanelController {
             this._clockController = new PanelClockController(
                 this._settings,
                 dateMenu,
-                () => this._panelHeight
+                () => this._panelHeight,
+                () => minimumTaskbarPanelHeight(this._settings)
             );
             this._clockController.enable();
             this._volumeMixerController = new VolumeMixerController(
@@ -1063,6 +1067,8 @@ export class SecondaryPanelController {
         this._taskbarController.setPanelHeight(this._panelHeight);
         if (this._buttonPaddingController)
             this._buttonPaddingController.syncPanelHeight();
+        if (this._clockController)
+            this._clockController.sync();
     }
 
     _syncPanelHeight() {
