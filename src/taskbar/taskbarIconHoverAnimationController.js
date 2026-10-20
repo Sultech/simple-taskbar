@@ -185,9 +185,6 @@ export class TaskbarIconHoverAnimationController {
     }
 
     destroy() {
-        if (this._signalHolder)
-            this.disable();
-
         this._removeLaterSources();
         this._animator.destroy();
         this._animator = null;
