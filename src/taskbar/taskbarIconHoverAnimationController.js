@@ -270,6 +270,10 @@ export class TaskbarIconHoverAnimationController {
             'notify::allocation', () => this._updateCloneGeometry(item),
             this._signalHolder
         );
+        item._taskbarSlot.connectObject(
+            'notify::allocation', () => this._updateCloneGeometry(item),
+            this._signalHolder
+        );
     }
 
     _untrackItem(item) {
@@ -280,6 +284,8 @@ export class TaskbarIconHoverAnimationController {
             return;
 
         item.disconnectObject(this._signalHolder);
+        item._taskbarIconContainer.disconnectObject(this._signalHolder);
+        item._taskbarSlot.disconnectObject(this._signalHolder);
     }
 
     _queueMagnifyUpdate() {
