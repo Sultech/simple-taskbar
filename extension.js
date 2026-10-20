@@ -354,6 +354,10 @@ export default class SimpleTaskbarExtension extends Extension {
             GLib.Source.remove(this._rebuildId);
             this._rebuildId = 0;
         }
+        if (this._closingPrefsWindow) {
+            this._closingPrefsWindow.disconnectObject(this);
+            this._closingPrefsWindow = null;
+        }
         this._settings.disconnectObject(this);
         this._appGridLayout.destroy();
         this._appGridLayout = null;
@@ -454,9 +458,11 @@ export default class SimpleTaskbarExtension extends Extension {
             return;
         }
 
+        this._closingPrefsWindow = prefsWindow;
         prefsWindow.connectObject('unmanaged', () => {
-            super.openPreferences();
             prefsWindow.disconnectObject(this);
+            this._closingPrefsWindow = null;
+            super.openPreferences();
         }, this);
         prefsWindow.delete(global.get_current_time());
     }
