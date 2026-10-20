@@ -408,8 +408,6 @@ export class StartButtonController {
             )
             : 0;
         this._content.translation_x = this._parityOffset;
-        this._hover.translation_x = -this._parityOffset;
-        this._classicHover.translation_x = -this._parityOffset;
         this._icon.translation_x = vertical
             ? 0
             : runningIndicatorReserveOffset(leftReserve, rightReserve);
