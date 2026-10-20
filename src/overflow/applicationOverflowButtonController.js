@@ -43,11 +43,11 @@ export class ApplicationOverflowButtonController {
 
     restore() {
         this._cancelRestore();
-        if (this._buttonTranslationY === null)
-            return;
-        this._button.translation_y = this._buttonTranslationY;
-        this._icon.translation_y = this._iconTranslationY;
-        this._compensated = false;
+        if (this._buttonTranslationY !== null) {
+            this._button.translation_y = this._buttonTranslationY;
+            this._icon.translation_y = this._iconTranslationY;
+            this._compensated = false;
+        }
     }
 
     destroy() {
