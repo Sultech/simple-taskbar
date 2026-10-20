@@ -14,9 +14,7 @@ import {
     BLUR_MY_SHELL_PANEL_STYLES,
     BLUR_MY_SHELL_DOCK_STYLES,
     BLUR_MY_SHELL_DOCK_TRANSPARENT,
-    blurMyShellDockCornerRadius,
     blurMyShellDockStyle,
-    blurMyShellDockRoundedCorners,
 } from '../shared/blurMyShellUtils.js';
 import {
     dockBlurIsActive,
@@ -313,19 +311,11 @@ export class SecondaryPanelDockController {
         const dockFloating = !this._settings.get_boolean('dock-panel-mode');
         const dockBlurActive = dockBlurIsActive(this._actor);
         const panelBlurActive = panelBlurIsActive(this._actor);
-        const dockCornerRadius = dockBlurActive
-            ? blurMyShellDockCornerRadius()
-            : null;
         const cornerRadius = dockFloating
-            ? dockCornerRadius ?? this._settings.get_int('dock-corner-radius')
+            ? this._settings.get_int('dock-corner-radius')
             : 0;
-        const {top: roundTop, bottom: roundBottom} = dockBlurActive
-            ? blurMyShellDockRoundedCorners()
-            : {top: true, bottom: true};
-        const topRadius = roundTop ? cornerRadius : 0;
-        const bottomRadius = roundBottom ? cornerRadius : 0;
         const cornerRadiusStyle = dockFloating
-            ? `border-radius: ${topRadius}px ${topRadius}px ${bottomRadius}px ${bottomRadius}px;`
+            ? `border-radius: ${cornerRadius}px;`
             : '';
         const vertical = panelIsVertical(this._settings);
         const light = panelUsesLightTheme(this._settings);

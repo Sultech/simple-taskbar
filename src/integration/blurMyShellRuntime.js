@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
 import {
+    BLUR_MY_SHELL_UUID,
     blurMyShellBackgroundOnProximity,
     blurMyShellOverridesDockBackground,
     blurMyShellOverridesPanelBackground,
 } from '../shared/blurMyShellUtils.js';
 
 const BLUR_MY_SHELL_ROUNDED_PIPELINE = 'pipeline_default_rounded';
+const BLUR_MY_SHELL_DOCK_BLUR_VERSION = 76;
 const DOCK_BLUR_TARGET_NAME = 'SimpleTaskbarDock';
 const DOCK_PANEL_BLUR_NAME = 'panelBox';
 export const DOCK_BOX_NAME = 'simpleTaskbarDockBox';
@@ -78,10 +82,13 @@ export function getPanelBlur() {
     return panelBlur?.enabled ? panelBlur : null;
 }
 
+function blurMyShellVersion() {
+    return Main.extensionManager.lookup(BLUR_MY_SHELL_UUID).metadata.version;
+}
+
 export function panelBlurSuitsDock() {
-    const blurMyShell = global.blur_my_shell;
-    return Boolean(blurMyShell?._panel_blur) &&
-        typeof blurMyShell._dash_to_dock_blur.queue_discovery !== 'function';
+    return Boolean(global.blur_my_shell?._panel_blur) &&
+        blurMyShellVersion() < BLUR_MY_SHELL_DOCK_BLUR_VERSION;
 }
 
 export function blurMyShellDockMode() {
@@ -94,8 +101,7 @@ export function blurMyShellDockMode() {
 
 function blurMyShellSupportsDock() {
     return Boolean(global.blur_my_shell?._dash_to_dock_blur) &&
-        Boolean(global.blur_my_shell._panel_blur) &&
-        !panelBlurSuitsDock();
+        blurMyShellVersion() >= BLUR_MY_SHELL_DOCK_BLUR_VERSION;
 }
 
 function getDockBlur() {

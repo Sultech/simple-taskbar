@@ -141,25 +141,6 @@ export function blurMyShellDockStyle() {
     return dockSettings.get_int('style-dash-to-dock');
 }
 
-export function blurMyShellDockRoundedCorners() {
-    const dockSettings = blurMyShellDockSettings();
-    const corners = blurMyShellHasKey(dockSettings, 'rounded-corners')
-        ? dockSettings.get_int('rounded-corners')
-        : 0;
-    return {
-        top: corners === 0 || corners === 1,
-        bottom: corners === 0 || corners === 2,
-    };
-}
-
-export function blurMyShellDockCornerRadius() {
-    const dockSettings = blurMyShellDockSettings();
-    if (!blurMyShellHasKey(dockSettings, 'corner-radius'))
-        return null;
-
-    return dockSettings.get_int('corner-radius');
-}
-
 export function blurMyShellHasKey(settings, key) {
     return Boolean(
         settings && settings.settings_schema.list_keys().includes(key)

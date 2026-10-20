@@ -80,9 +80,7 @@ export class DockPanelManager extends PanelManagerBase {
             'dash-to-dock',
             [
                 'blur',
-                'corner-radius',
                 'override-background',
-                'rounded-corners',
                 'style-dash-to-dock',
             ],
             'blur'
