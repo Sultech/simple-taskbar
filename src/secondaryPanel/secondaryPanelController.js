@@ -40,6 +40,7 @@ import {
     PanelButtonPaddingController,
 } from '../panel/panelButtonPaddingController.js';
 import {PanelClockController} from '../panel/panelClockController.js';
+import {DateMenuAlignmentController} from '../panel/dateMenuAlignmentController.js';
 import {PanelInteractionController} from '../panel/panelInteractionController.js';
 import {
     PanelVerticalItemsController,
@@ -281,6 +282,7 @@ export class SecondaryPanelController {
         this._quickSettingsIndicatorsController = null;
         this._activitiesController = null;
         this._clockController = null;
+        this._dateMenuAlignment = null;
         this._verticalItemsController = new PanelVerticalItemsController(
             settings,
             [this._leftBox, this._centerBox, this._rightBox],
@@ -348,6 +350,11 @@ export class SecondaryPanelController {
                 () => minimumTaskbarPanelHeight(this._settings)
             );
             this._clockController.enable();
+            this._dateMenuAlignment = new DateMenuAlignmentController(
+                this._settings,
+                dateMenu,
+                this._panelHeight
+            );
             this._volumeMixerController = new VolumeMixerController(
                 this._settings,
                 quickSettings
@@ -497,6 +504,10 @@ export class SecondaryPanelController {
         if (this._activitiesController) {
             this._activitiesController.destroy();
             this._activitiesController = null;
+        }
+        if (this._dateMenuAlignment) {
+            this._dateMenuAlignment.destroy();
+            this._dateMenuAlignment = null;
         }
         if (this._clockController) {
             this._clockController.destroy();
@@ -1070,6 +1081,8 @@ export class SecondaryPanelController {
             this._buttonPaddingController.syncPanelHeight();
         if (this._clockController)
             this._clockController.sync();
+        if (this._dateMenuAlignment)
+            this._dateMenuAlignment.sync(this._panelHeight);
     }
 
     _syncPanelHeight() {

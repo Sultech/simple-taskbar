@@ -1,15 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Gio from 'gi://Gio';
-
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {panelIsVertical} from './panelPosition.js';
-
-const CLOCK_SHOW_DATE_SETTING = 'clock-show-date';
-const CLOCK_SHOW_SECONDS_SETTING = 'clock-show-seconds';
-const CLOCK_SHOW_WEEKDAY_SETTING = 'clock-show-weekday';
+import {DateMenuAlignmentController} from './dateMenuAlignmentController.js';
 
 export class PanelStateController {
     constructor({
@@ -30,16 +24,7 @@ export class PanelStateController {
         this._oldPanelGeometry = null;
         this._oldPanelStyle = null;
         this._activitiesWasVisible = null;
-        this._dateMenuIndicatorPad = null;
-        this._dateMenuIndicatorPadConstraints = [];
-        this._dateMenuDisplayBox = null;
-        this._dateMenuClockText = null;
-        this._dateMenuClockTextTranslationX = null;
-        this._dateMenuClockTextTranslationY = null;
-        this._desktopSettings = new Gio.Settings({
-            schema_id: 'org.gnome.desktop.interface',
-        });
-        this._clockShowDateChangedId = 0;
+        this._dateMenuAlignment = null;
     }
 
     get oldPanelStyle() {
@@ -47,10 +32,6 @@ export class PanelStateController {
     }
 
     enable() {
-        this._clockShowDateChangedId = this._desktopSettings.connect(
-            `changed::${CLOCK_SHOW_DATE_SETTING}`,
-            () => this.syncDateMenuVerticalAlignment(this._panelHeight)
-        );
         const panelBox = Main.layoutManager.panelBox;
         const activities = Main.panel.statusArea.activities.container;
         this._oldPanelGeometry = {
@@ -91,9 +72,10 @@ export class PanelStateController {
     }
 
     destroy(restoringUnlockPanel) {
-        this._desktopSettings.disconnect(this._clockShowDateChangedId);
-        this._restoreDateMenuIndicatorPadding();
-        this._restoreDateMenuVerticalAlignment();
+        if (this._dateMenuAlignment) {
+            this._dateMenuAlignment.destroy();
+            this._dateMenuAlignment = null;
+        }
 
         for (const actor of [
             this._startButton,
@@ -132,14 +114,6 @@ export class PanelStateController {
         this._oldPanelGeometry = null;
         this._oldPanelStyle = null;
         this._activitiesWasVisible = null;
-        this._dateMenuIndicatorPad = null;
-        this._dateMenuIndicatorPadConstraints = null;
-        this._dateMenuDisplayBox = null;
-        this._dateMenuClockText = null;
-        this._dateMenuClockTextTranslationX = null;
-        this._dateMenuClockTextTranslationY = null;
-        this._clockShowDateChangedId = 0;
-        this._desktopSettings = null;
         this._showDesktopButton = null;
         this._folderMenuButton = null;
         this._taskbarBin = null;
@@ -148,27 +122,11 @@ export class PanelStateController {
     }
 
     removeDateMenuIndicatorPadding() {
-        const dateMenu = Main.panel.statusArea.dateMenu;
-        const displayBox = dateMenu.get_first_child();
-        if (!displayBox)
-            return;
-        const indicatorPad = displayBox.get_first_child();
-        if (!indicatorPad)
-            return;
-
-        this._dateMenuDisplayBox = displayBox;
-        this._dateMenuClockText = dateMenu._clockDisplay.clutter_text;
-        this._dateMenuClockTextTranslationX =
-            this._dateMenuClockText.translation_x;
-        this._dateMenuClockTextTranslationY =
-            this._dateMenuClockText.translation_y;
-        this._dateMenuIndicatorPad = indicatorPad;
-        this._dateMenuIndicatorPadConstraints =
-            [...indicatorPad.get_constraints()];
-        indicatorPad.clear_constraints();
-        indicatorPad.queue_relayout();
-        dateMenu.queue_relayout();
-        this.syncDateMenuVerticalAlignment(this._panelHeight);
+        this._dateMenuAlignment = new DateMenuAlignmentController(
+            this._settings,
+            Main.panel.statusArea.dateMenu,
+            this._panelHeight
+        );
     }
 
     setShowDesktopButton(button) {
@@ -176,57 +134,14 @@ export class PanelStateController {
     }
 
     syncDateMenuVerticalAlignment(panelHeight) {
-        if (!this._dateMenuDisplayBox)
-            return;
-
         this._panelHeight = panelHeight;
-        if (panelIsVertical(this._settings)) {
-            const clockHasAdditionalText =
-                this._desktopSettings.get_boolean(CLOCK_SHOW_DATE_SETTING) ||
-                this._desktopSettings.get_boolean(CLOCK_SHOW_SECONDS_SETTING) ||
-                this._desktopSettings.get_boolean(CLOCK_SHOW_WEEKDAY_SETTING);
-            const parityOffset = clockHasAdditionalText &&
-                panelHeight % 2 === 0 ? 1 : 0;
-            this._dateMenuClockText.translation_x =
-                this._dateMenuClockTextTranslationX + parityOffset;
-            this._dateMenuClockText.translation_y =
-                this._dateMenuClockTextTranslationY;
-            return;
-        }
-        this._dateMenuClockText.translation_x =
-            this._dateMenuClockTextTranslationX;
-        const dateShown = this._desktopSettings.get_boolean(
-            CLOCK_SHOW_DATE_SETTING
-        );
-        const parityOffset = dateShown ? 0 : panelHeight % 2 === 0 ? 1 : 0;
-        this._dateMenuClockText.translation_y =
-            this._dateMenuClockTextTranslationY + parityOffset;
+        if (this._dateMenuAlignment)
+            this._dateMenuAlignment.sync(panelHeight);
     }
 
     syncActivitiesVisibility() {
         Main.panel.statusArea.activities.container.visible =
             this._settings.get_boolean('activities-button-visible');
-    }
-
-    _restoreDateMenuIndicatorPadding() {
-        const indicatorPad = this._dateMenuIndicatorPad;
-        if (!indicatorPad)
-            return;
-
-        for (const constraint of this._dateMenuIndicatorPadConstraints)
-            indicatorPad.add_constraint(constraint);
-        indicatorPad.queue_relayout();
-        Main.panel.statusArea.dateMenu.queue_relayout();
-    }
-
-    _restoreDateMenuVerticalAlignment() {
-        if (!this._dateMenuDisplayBox)
-            return;
-
-        this._dateMenuClockText.translation_x =
-            this._dateMenuClockTextTranslationX;
-        this._dateMenuClockText.translation_y =
-            this._dateMenuClockTextTranslationY;
     }
 
     _detachedPanelActors() {
