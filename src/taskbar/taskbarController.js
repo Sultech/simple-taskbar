@@ -159,6 +159,7 @@ export class TaskbarController {
         this._alignmentActor = null;
         this._signalHolder = new TransientSignalHolder();
         this._appSignals = new Map();
+        this._appWindows = new Map();
         this._appButtons = new Map();
         this._auxiliaryItems = new Set();
         this._pinnedSeparator = null;
@@ -332,7 +333,8 @@ export class TaskbarController {
                 this._syncLauncherIconPosition(item),
             updateItemGeometry: item => {
                 this._updateGlassGeometry(item);
-                this._queueRedisplay();
+                if (this._showAppLabels())
+                    this._queueRedisplay();
             },
         });
         this._iconHoverAnimationController =
@@ -780,6 +782,7 @@ export class TaskbarController {
         for (const [app, id] of this._appSignals)
             app.disconnect(id);
         this._appSignals.clear();
+        this._appWindows.clear();
         this._locationController.destroy();
         this._locationController = null;
 
@@ -1979,8 +1982,12 @@ export class TaskbarController {
         const signal = app._simpleTaskbarLocation
             ? 'changed'
             : 'windows-changed';
+        if (!app._simpleTaskbarLocation)
+            this._appWindows.set(app, this._interestingWindows(app));
         const id = app.connect(signal, () => {
             this._getPreviews().windowsChanged(app);
+            if (!app._simpleTaskbarLocation && !this._appWindowsChanged(app))
+                return;
             if (this._combineMode() === 'always' &&
                 !this._usePinnedAppLaunchers() &&
                 this._isPersistentPinned(app)) {
@@ -2001,6 +2008,15 @@ export class TaskbarController {
 
         app.disconnect(id);
         this._appSignals.delete(app);
+        this._appWindows.delete(app);
+    }
+
+    _appWindowsChanged(app) {
+        const windows = this._interestingWindows(app);
+        const previous = this._appWindows.get(app);
+        this._appWindows.set(app, windows);
+        return previous.length !== windows.length ||
+            windows.some(window => !previous.includes(window));
     }
 
     _updateGlassGeometry(item) {
