@@ -86,6 +86,7 @@ import {
     applyTaskbarIconSize,
 } from '../taskbar/taskbarIconSize.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
+import {taskbarPanelHeight} from '../shared/panelSizing.js';
 import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
 import {WindowController} from '../taskbar/windowController.js';
@@ -137,9 +138,9 @@ export class SecondaryPanelController {
         const configuredIconSize = isDock
             ? settings.getConfiguredIconSize()
             : settings.get_int('icon-size');
-        this._panelHeight = settings.get_int('panel-height');
         this._maximumIconSize = configuredIconSize;
         this._iconSize = panelTaskbarIconSize(settings, configuredIconSize);
+        this._panelHeight = taskbarPanelHeight(settings, this._iconSize);
 
         this._windowController = new WindowController(tracker, {
             settings,
@@ -261,7 +262,8 @@ export class SecondaryPanelController {
                 settings,
                 this.actor,
                 [this._leftBox, this._centerBox, this._rightBox],
-                () => this._quickSettingsIndicatorsController._indicators
+                () => this._quickSettingsIndicatorsController._indicators,
+                () => this._panelHeight
             );
         this._taskbarController.setAlignmentActor(this._centerBox);
         this._interactionController = null;
@@ -610,6 +612,8 @@ export class SecondaryPanelController {
             this._settings.connectObject(
                 'changed::dock-min-icon-size',
                 () => this._updateTaskbarWidth(),
+                'changed::panel-height-follow-icon-size',
+                () => this._syncPanelHeight(),
                 this._signalHolder
             );
             for (const key of [
@@ -627,8 +631,7 @@ export class SecondaryPanelController {
             }
         }
         this._settings.connectObject('changed::panel-height', () => {
-            this._panelHeight = this._settings.get_int('panel-height');
-            this._taskbarController.setPanelHeight(this._panelHeight);
+            this._applyPanelHeight();
             if (defaultPanelWindowsEnabled(this._settings))
                 this._resetTaskbarIconSize();
             this._position();
@@ -1044,6 +1047,7 @@ export class SecondaryPanelController {
         this._applyTaskbarIconSize();
         this._verticalItemsController.sync();
         this._applicationOverflowController.syncIconSizeChange();
+        this._syncPanelHeight();
     }
 
     _resetTaskbarIconSize() {
@@ -1051,6 +1055,22 @@ export class SecondaryPanelController {
         this._iconSize = panelTaskbarIconSize(this._settings, this._maximumIconSize);
         this._applyTaskbarIconSize();
         this._applicationOverflowController.sync();
+        this._syncPanelHeight();
+    }
+
+    _applyPanelHeight() {
+        this._panelHeight = taskbarPanelHeight(this._settings, this._iconSize);
+        this._taskbarController.setPanelHeight(this._panelHeight);
+        if (this._buttonPaddingController)
+            this._buttonPaddingController.syncPanelHeight();
+    }
+
+    _syncPanelHeight() {
+        if (taskbarPanelHeight(this._settings, this._iconSize) === this._panelHeight)
+            return;
+
+        this._applyPanelHeight();
+        this._position();
     }
 
     _applyTaskbarIconSize() {

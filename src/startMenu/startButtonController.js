@@ -36,6 +36,7 @@ import {
     taskbarHighlightLength,
     taskbarIconButtonWidth,
     taskbarCrossAxisParityOffset,
+    taskbarPanelHeight,
     taskbarVisualPanelHeight,
     taskbarVerticalItemExtent,
 } from '../shared/panelSizing.js';
@@ -338,7 +339,7 @@ export class StartButtonController {
             : taskbarIconButtonWidth(iconSize);
         const visualPanelHeight = taskbarVisualPanelHeight(
             this._settings,
-            this._settings.get_int('panel-height'),
+            taskbarPanelHeight(this._settings, iconSize),
             iconSize,
             floatingDock
         );
@@ -562,6 +563,8 @@ export class StartButtonController {
                 powerGIcon: this._powerGIcon,
                 settingsGIcon: this._settingsGIcon,
                 getPanelEdgeGap: this._getPanelEdgeGap,
+                getPanelHeight: () =>
+                    taskbarPanelHeight(this._settings, this._icon.icon_size),
             }
         );
         return this._startMenuController;

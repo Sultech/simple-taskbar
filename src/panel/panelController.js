@@ -152,7 +152,8 @@ export class PanelController {
                 Main.panel._centerBox,
                 Main.panel._rightBox,
             ],
-            () => Main.panel.statusArea.quickSettings._indicators
+            () => Main.panel.statusArea.quickSettings._indicators,
+            () => this._panelHeight
         );
     }
 
@@ -266,6 +267,7 @@ export class PanelController {
 
     setPanelHeight(panelHeight) {
         this._panelHeight = panelHeight;
+        this._buttonPaddingController.syncPanelHeight();
         this.position();
         this._clockController.sync();
     }

@@ -34,12 +34,14 @@ export class PanelButtonPaddingController {
         settings,
         panelActor,
         panelBoxes,
-        getQuickSettingsIndicators
+        getQuickSettingsIndicators,
+        getPanelHeight
     ) {
         this._settings = settings;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._getQuickSettingsIndicators = getQuickSettingsIndicators;
+        this._getPanelHeight = getPanelHeight;
         this._signalHolder = new TransientSignalHolder();
         this._styledActors = new Map();
         this._hoverInsetClass = null;
@@ -49,7 +51,6 @@ export class PanelButtonPaddingController {
     enable() {
         this._settings.connectObject(
             'changed::panel-button-padding', () => this.sync(),
-            'changed::panel-height', () => this._syncHoverInset(),
             this._signalHolder
         );
         Main.layoutManager.uiGroup.connectObject(
@@ -121,6 +122,7 @@ export class PanelButtonPaddingController {
         this._panelBoxes = null;
         this._panelActor = null;
         this._getQuickSettingsIndicators = null;
+        this._getPanelHeight = null;
         this._settings = null;
     }
 
@@ -133,12 +135,7 @@ export class PanelButtonPaddingController {
     }
 
     _syncHoverInset() {
-        if (this._hoverInsetClass) {
-            this._panelActor.remove_style_class_name(
-                this._hoverInsetClass
-            );
-        }
-        const panelHeight = this._settings.get_int('panel-height');
+        const panelHeight = this._getPanelHeight();
         const heightRange = REGULAR_PANEL_HEIGHT - MIN_PANEL_HEIGHT;
         const clampedHeight = Math.clamp(
             panelHeight,
@@ -151,7 +148,17 @@ export class PanelButtonPaddingController {
         const inset = Math.round(
             MINIMUM_HOVER_INSET + progress * insetRange
         );
-        this._hoverInsetClass = `${HOVER_INSET_CLASS_PREFIX}${inset}`;
+        const hoverInsetClass = `${HOVER_INSET_CLASS_PREFIX}${inset}`;
+        if (hoverInsetClass === this._hoverInsetClass &&
+            this._panelActor.has_style_class_name(hoverInsetClass))
+            return;
+
+        if (this._hoverInsetClass) {
+            this._panelActor.remove_style_class_name(
+                this._hoverInsetClass
+            );
+        }
+        this._hoverInsetClass = hoverInsetClass;
         this._panelActor.add_style_class_name(this._hoverInsetClass);
     }
 

@@ -199,6 +199,15 @@ export function panelHeightForIconSize(settings, iconSize) {
     return iconSize + iconEdgeReserve(settings);
 }
 
+export function taskbarPanelHeight(settings, iconSize) {
+    if (settings.isDock ||
+        settings.get_boolean('default-gnome-panel') ||
+        !settings.get_boolean('panel-height-follow-icon-size'))
+        return settings.get_int('panel-height');
+
+    return panelHeightForIconSize(settings, iconSize);
+}
+
 export function dockPanelModeHeight(settings, iconSize) {
     const derivedHeight = panelHeightForIconSize(settings, iconSize);
     if (settings.get_boolean('dock-panel-height-follow-icon-size'))

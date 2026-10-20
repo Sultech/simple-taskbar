@@ -10,6 +10,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {cachedPanelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
 import {defaultPanelWindowsEnabled} from './src/shared/defaultPanelWindows.js';
+import {taskbarPanelHeight} from './src/shared/panelSizing.js';
 
 import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
 import {FolderMenuController} from './src/folderMenuController.js';
@@ -102,6 +103,7 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._taskbarController.setIconSize(this._iconSize);
                     this._panelController.syncVerticalItems();
                     this._applicationOverflowController.sync();
+                    this._syncPanelHeight();
                     this._panelController.updateTaskbarWidth();
                 },
                 onIconSpacingChanged: () => this._applyTaskbarAppearance(),
@@ -114,11 +116,8 @@ export default class SimpleTaskbarExtension extends Extension {
                     this._panelController.refreshPanelItemSizes();
                     this._panelController.updateTaskbarWidth();
                 },
-                onPanelHeightChanged: panelHeight => {
-                    this._panelHeight = panelHeight;
-                    this._taskbarController.setPanelHeight(this._panelHeight);
-                    this._overviewIntegration.setPanelHeight(this._panelHeight);
-                    this._panelController.setPanelHeight(this._panelHeight);
+                onPanelHeightChanged: () => {
+                    this._applyPanelHeight();
                     if (defaultPanelWindowsEnabled(this._settings))
                         this._resetTaskbarIconSize();
                 },
@@ -127,8 +126,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._windowsXpModeController.applyInitialSettings();
         this._applicationSettings = cachedPanelApplicationSettings(this._settings);
         this._maximumIconSize = this._applicationSettings.get_int('icon-size');
-        this._panelHeight = this._settings.get_int('panel-height');
         this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
+        this._panelHeight = taskbarPanelHeight(this._settings, this._iconSize);
         this._overviewIntegration = new OverviewIntegration(
             this._panelHeight,
             this._settings
@@ -543,6 +542,11 @@ export default class SimpleTaskbarExtension extends Extension {
             () => this._panelController.updateTaskbarWidth(),
             this
         );
+        this._settings.connectObject(
+            'changed::panel-height-follow-icon-size',
+            () => this._syncPanelHeight(),
+            this
+        );
         this._settings.connectObject('changed::panel-position', () => {
             synchronizePanelPosition(this._settings);
             hidePanelBlur();
@@ -589,6 +593,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applyTaskbarIconSize();
         this._panelController.syncVerticalItems();
         this._applicationOverflowController.syncIconSizeChange();
+        this._syncPanelHeight();
         return true;
     }
 
@@ -597,6 +602,19 @@ export default class SimpleTaskbarExtension extends Extension {
         this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
         this._applyTaskbarIconSize();
         this._applicationOverflowController.sync();
+        this._syncPanelHeight();
+    }
+
+    _applyPanelHeight() {
+        this._panelHeight = taskbarPanelHeight(this._settings, this._iconSize);
+        this._taskbarController.setPanelHeight(this._panelHeight);
+        this._overviewIntegration.setPanelHeight(this._panelHeight);
+        this._panelController.setPanelHeight(this._panelHeight);
+    }
+
+    _syncPanelHeight() {
+        if (taskbarPanelHeight(this._settings, this._iconSize) !== this._panelHeight)
+            this._applyPanelHeight();
     }
 
     _applyTaskbarIconSize() {

@@ -99,6 +99,7 @@ export class StartMenuController {
     constructor(sourceActor, settings, params = {}) {
         this._sourceActor = sourceActor;
         this._getPanelEdgeGap = params.getPanelEdgeGap;
+        this._getPanelHeight = params.getPanelHeight;
         this._settings = settings;
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
@@ -597,7 +598,7 @@ export class StartMenuController {
             : this._sourceActor;
 
         if (useDummySource) {
-            const panelHeight = this._settings.get_int('panel-height');
+            const panelHeight = this._getPanelHeight();
             const vertical = panelIsVertical(this._settings);
             const geometry = panelGeometry(
                 this._settings,
@@ -740,6 +741,8 @@ export class StartMenuController {
         this._tooltipController = null;
         this._body = null;
         this._sourceActor = null;
+        this._getPanelEdgeGap = null;
+        this._getPanelHeight = null;
         this._powerGIcon = null;
         this._settingsGIcon = null;
         this._settings = null;

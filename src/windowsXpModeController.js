@@ -183,6 +183,6 @@ export class WindowsXpModeController {
             if (this._settings.get_int('panel-height') !== panelHeight)
                 return;
         }
-        this._onPanelHeightChanged(panelHeight);
+        this._onPanelHeightChanged();
     }
 }
