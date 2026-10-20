@@ -14,6 +14,7 @@ import {
     panelPosition,
     positionIsVertical,
 } from '../panel/panelPosition.js';
+import {appendStyle} from '../shared/styleUtils.js';
 
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 
@@ -28,6 +29,7 @@ export class NotificationBannerController {
         this._originalAlignmentX = null;
         this._originalAlignmentY = null;
         this._originalHideNotification = null;
+        this._originalStyle = null;
     }
 
     enable() {
@@ -38,6 +40,7 @@ export class NotificationBannerController {
         this._originalAlignmentY = this._bannerBin.get_y_align();
         this._originalHideNotification =
             this._messageTray._hideNotification;
+        this._originalStyle = this._bannerBin.get_style();
 
         this._settings.connectObject(
             'changed::notification-banner-bottom-end', () => this._sync(),
@@ -47,6 +50,7 @@ export class NotificationBannerController {
         this._bannerBin.connectObject(
             'notify::x-align', () => this._queueRepair(),
             'notify::y-align', () => this._queueRepair(),
+            'child-added', () => this._syncPanelClearance(),
             this._signalHolder
         );
         Main.extensionManager.connectObject(
@@ -68,7 +72,9 @@ export class NotificationBannerController {
         this._signalHolder.destroy();
         this._signalHolder = null;
         this._restore();
+        this._bannerBin.set_style(this._originalStyle);
 
+        this._originalStyle = null;
         this._originalHideNotification = null;
         this._originalAlignmentY = null;
         this._originalAlignmentX = null;
@@ -109,6 +115,48 @@ export class NotificationBannerController {
                 : this._createEdgeHideNotification('y', 1);
         }
         this._applied = true;
+    }
+
+    _syncPanelClearance() {
+        const monitor = Main.layoutManager.primaryMonitor;
+        const workArea = Main.layoutManager.getWorkAreaForMonitor(
+            Main.layoutManager.primaryIndex
+        );
+        const clearance = {top: 0, bottom: 0, left: 0, right: 0};
+        const panelBoxes = new Set([
+            Main.layoutManager.panelBox,
+            ...Main.uiGroup.get_children().filter(child =>
+                child._simpleTaskbarPanelBox),
+        ]);
+        for (const box of panelBoxes) {
+            if (!box.visible)
+                continue;
+
+            const [x, y] = box.get_transformed_position();
+            const [width, height] = box.get_transformed_size();
+            const left = Math.max(x, monitor.x);
+            const right = Math.min(x + width, monitor.x + monitor.width);
+            const top = Math.max(y, monitor.y);
+            const bottom = Math.min(y + height, monitor.y + monitor.height);
+            if (right <= left || bottom <= top)
+                continue;
+
+            if (width >= height) {
+                if (top - monitor.y < monitor.y + monitor.height - bottom)
+                    clearance.top = Math.max(clearance.top, bottom - workArea.y);
+                else
+                    clearance.bottom = Math.max(clearance.bottom, workArea.y + workArea.height - top);
+            } else if (left - monitor.x < monitor.x + monitor.width - right) {
+                clearance.left = Math.max(clearance.left, right - workArea.x);
+            } else {
+                clearance.right = Math.max(clearance.right, workArea.x + workArea.width - left);
+            }
+        }
+        const {top, right, bottom, left} = clearance;
+        this._bannerBin.set_style(appendStyle(
+            this._originalStyle,
+            `margin: ${Math.round(top)}px ${Math.round(right)}px ${Math.round(bottom)}px ${Math.round(left)}px;`
+        ));
     }
 
     _getClockAlignment() {
