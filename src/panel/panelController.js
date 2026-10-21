@@ -4,6 +4,7 @@
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -71,6 +72,7 @@ export class PanelController {
         taskbarBin,
         taskbarActor,
         showDesktopButton,
+        setShowDesktopPanelCorner,
         folderMenuButton,
         onAppAlignmentChanged,
         onTaskbarAvailableWidthChanged,
@@ -84,6 +86,7 @@ export class PanelController {
         this._taskbarBin = taskbarBin;
         this._taskbarActor = taskbarActor;
         this._showDesktopButton = showDesktopButton;
+        this._setShowDesktopPanelCorner = setShowDesktopPanelCorner;
         this._folderMenuButton = folderMenuButton;
         this._onAppAlignmentChanged = onAppAlignmentChanged;
         this._onTaskbarAvailableWidthChanged =
@@ -412,6 +415,7 @@ export class PanelController {
             this._autoHideController.syncPosition();
         this._windowDodgeController.sync();
         this._queueOverviewRelayout();
+        this._syncShowDesktopPanelCorner();
         if (updateWidth)
             this.updateTaskbarWidth();
     }
@@ -515,7 +519,39 @@ export class PanelController {
         );
         this._stateController.syncActivitiesVisibility();
         this._verticalItemsController.sync();
+        this._syncShowDesktopPanelCorner();
         this.updateTaskbarWidth();
+    }
+
+    _syncShowDesktopPanelCorner() {
+        this._setShowDesktopPanelCorner(this._showDesktopPanelCorner());
+    }
+
+    _showDesktopPanelCorner() {
+        if (!this._geometryController ||
+            this._settings.get_boolean('windows-xp-theme-enabled'))
+            return null;
+
+        const box = this._showDesktopButton.get_parent();
+        if (!box)
+            return null;
+
+        const visibleChildren = box.get_children().filter(child => child.visible);
+        let edge = null;
+        if (box === Main.panel._leftBox && visibleChildren[0] === this._showDesktopButton)
+            edge = 'start';
+        else if (box === Main.panel._rightBox && visibleChildren.at(-1) === this._showDesktopButton)
+            edge = 'end';
+        if (!edge)
+            return null;
+
+        const themeNode = Main.panel.get_theme_node();
+        return {
+            edge,
+            radius: themeNode.get_border_radius(St.Corner.TOPLEFT),
+            border: themeNode.get_border_width(St.Side.TOP),
+            thickness: this._panelHeight,
+        };
     }
 
     updateTaskbarWidth() {
@@ -725,6 +761,10 @@ export class PanelController {
         Main.layoutManager.connectObject('monitors-changed', () => {
             this.position();
         }, this._signalHolder);
+        if (this._geometryController) {
+            Main.panel.connectObject('notify::style',
+                () => this._syncShowDesktopPanelCorner(), this._signalHolder);
+        }
         if (Main.screenShield) {
             Main.screenShield.connectObject('locked-changed', () => {
                 if (!Main.screenShield.locked) {

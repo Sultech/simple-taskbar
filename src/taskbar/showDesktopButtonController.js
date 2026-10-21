@@ -18,6 +18,7 @@ export class ShowDesktopButtonController {
         this._onReplaced = onReplaced;
         this._button = null;
         this._visual = null;
+        this._panelCorner = null;
         this._createButton();
     }
 
@@ -42,6 +43,12 @@ export class ShowDesktopButtonController {
             () => this._syncStyle(),
             this
         );
+    }
+
+    setPanelCorner(corner) {
+        this._panelCorner = corner;
+        this._syncIcon();
+        this._syncStyle();
     }
 
     replace(button) {
@@ -119,6 +126,22 @@ export class ShowDesktopButtonController {
         this._visual.add_child(texture);
         this._visual.add_child(border);
         this._visual.add_child(iconHost);
+        this._cornerFill = new St.Widget({
+            style_class: 'simple-taskbar-show-desktop-fill',
+        });
+        this._cornerLine = new St.Widget({
+            style_class: 'simple-taskbar-show-desktop-line',
+        });
+        this._cornerVisual = new St.Widget({
+            layout_manager: new Clutter.FixedLayout(),
+            x_expand: true,
+            y_expand: true,
+            x_align: Clutter.ActorAlign.FILL,
+            y_align: Clutter.ActorAlign.FILL,
+            clip_to_allocation: true,
+        });
+        this._cornerVisual.add_child(this._cornerFill);
+        this._cornerVisual.add_child(this._cornerLine);
         this._button = new St.Button({
             style_class: 'panel-button simple-taskbar-show-desktop',
             reactive: true,
@@ -137,10 +160,10 @@ export class ShowDesktopButtonController {
     }
 
     _syncIcon() {
-        this._button.child =
-            this._settings.get_boolean('windows-xp-theme-enabled')
-                ? this._visual
-                : null;
+        if (this._settings.get_boolean('windows-xp-theme-enabled'))
+            this._button.child = this._visual;
+        else
+            this._button.child = this._panelCorner ? this._cornerVisual : null;
     }
 
     _syncStyle() {
@@ -162,15 +185,48 @@ export class ShowDesktopButtonController {
         const lineColor = this._settings.get_boolean(
             'show-desktop-button-invisible'
         )
-            ? ' border-color: transparent;'
+            ? 'transparent'
             : customLineColor
-                ? ` border-color: ${this._settings.get_string(
-                    'show-desktop-button-custom-line-color'
-                )};`
-                : '';
-        this._button.set_style(`${dimension}${lineColor}`);
+                ? this._settings.get_string('show-desktop-button-custom-line-color')
+                : null;
         this._button.x_expand = vertical;
         this._button.y_expand = !vertical;
+        if (this._panelCorner) {
+            this._button.set_style(`${dimension} border-width: 0; background-color: transparent;`);
+            this._syncCornerVisual(width, vertical, lineColor);
+            return;
+        }
+
+        this._button.set_style(`${dimension}${lineColor ? ` border-color: ${lineColor};` : ''}`);
+    }
+
+    _syncCornerVisual(width, vertical, lineColor) {
+        const {edge, radius, border, thickness} = this._panelCorner;
+        const cornerRadius = Math.max(0, Math.min(radius, thickness / 2) - border);
+        const extent = thickness - border * 2;
+        const start = edge === 'start';
+        const fillLength = Math.max(width, cornerRadius);
+        const lineInset = width >= cornerRadius ? 0
+            : Math.ceil(cornerRadius - Math.sqrt(cornerRadius ** 2 - (cornerRadius - width) ** 2));
+        const corners = vertical
+            ? [start, start, !start, !start]
+            : [start, !start, !start, start];
+        const radii = corners.map(rounded => `${rounded ? cornerRadius : 0}px`).join(' ');
+        const fillOffset = start ? 0 : width - fillLength;
+        const lineOffset = start ? width - 1 : 0;
+        if (vertical) {
+            this._cornerFill.set_position(0, fillOffset);
+            this._cornerFill.set_size(extent, fillLength);
+            this._cornerLine.set_position(lineInset, lineOffset);
+            this._cornerLine.set_size(extent - lineInset * 2, 1);
+        } else {
+            this._cornerFill.set_position(fillOffset, 0);
+            this._cornerFill.set_size(fillLength, extent);
+            this._cornerLine.set_position(lineOffset, lineInset);
+            this._cornerLine.set_size(1, extent - lineInset * 2);
+        }
+        this._cornerFill.set_style(`border-radius: ${radii};`);
+        this._cornerLine.set_style(lineColor ? `background-color: ${lineColor};` : null);
     }
 
     _destroyButton() {
@@ -178,6 +234,10 @@ export class ShowDesktopButtonController {
         this._button.child = null;
         this._visual.destroy();
         this._visual = null;
+        this._cornerVisual.destroy();
+        this._cornerVisual = null;
+        this._cornerFill = null;
+        this._cornerLine = null;
         this._button.destroy();
         this._button = null;
     }

@@ -255,6 +255,8 @@ export default class SimpleTaskbarExtension extends Extension {
             taskbarBin: this._taskbarBin,
             taskbarActor: this._taskbarController.actor,
             showDesktopButton: this._showDesktopButton,
+            setShowDesktopPanelCorner: corner =>
+                this._showDesktopButtonController.setPanelCorner(corner),
             folderMenuButton: this._folderMenuController.actor,
             onAppAlignmentChanged: () => this._applyTaskbarAppearance(),
             onTaskbarAvailableWidthChanged: width =>

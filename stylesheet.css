@@ -333,6 +333,18 @@
     background-color: rgba(46, 118, 191, 0.20);
 }
 
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop-line {
+    background-color: rgba(0, 0, 0, 0.26);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop:hover .simple-taskbar-show-desktop-fill {
+    background-color: rgba(0, 0, 0, 0.11);
+}
+
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-show-desktop:checked .simple-taskbar-show-desktop-fill {
+    background-color: rgba(46, 118, 191, 0.20);
+}
+
 /* Preserve GNOME's attention colours instead of applying the neutral light
  * hover treatment to recording and screen-sharing indicators. */
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.screen-recording-indicator {
@@ -962,6 +974,18 @@
 }
 
 .simple-taskbar-show-desktop:checked {
+    background-color: rgba(96, 174, 247, 0.25);
+}
+
+.simple-taskbar-show-desktop-line {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.simple-taskbar-show-desktop:hover .simple-taskbar-show-desktop-fill {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.simple-taskbar-show-desktop:checked .simple-taskbar-show-desktop-fill {
     background-color: rgba(96, 174, 247, 0.25);
 }
 
