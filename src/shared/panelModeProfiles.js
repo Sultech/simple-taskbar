@@ -130,6 +130,8 @@ const MODE_SETTING_KEYS = new Set([
     'dock-workspace-scroll-action',
     'dock-workspace-scroll-delay',
     'dock-panel-mode',
+    'dock-floating',
+    'dock-panel-mode-floating',
     'dock-panel-height',
     'dock-panel-height-follow-icon-size',
     'dock-position',

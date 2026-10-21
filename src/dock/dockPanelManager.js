@@ -45,6 +45,8 @@ export class DockPanelManager extends PanelManagerBase {
             'changed::dock-mode', () => this._queueRebuild(),
             'changed::dock-position', () => this._queueRebuild(),
             'changed::dock-panel-mode', () => this._queueRebuild(),
+            'changed::dock-floating', () => this._queueRebuild(),
+            'changed::dock-panel-mode-floating', () => this._queueRebuild(),
             'changed::dock-multi-monitor-panels',
             () => this._queueRebuild(),
             'changed::multi-monitor-panels',

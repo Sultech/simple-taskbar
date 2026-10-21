@@ -10,6 +10,7 @@ import {
     addColorRow,
     addToggleChoiceRow,
     addSwitchRow,
+    createKeySwitchingRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {
@@ -30,6 +31,7 @@ import {
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
 import {addChoiceCards, drawDockEdge, edgeChoices} from './choiceCards.js';
 import {addSliderRow} from './sliderRow.js';
+import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
 
 const DOCK_PANEL_HEIGHT_KEY = 'dock-panel-height';
 const DOCK_PANEL_HEIGHT_FOLLOW_KEY = 'dock-panel-height-follow-icon-size';
@@ -68,7 +70,7 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
     const panelEdge = () => settings.get_string('panel-position');
     const dockShape = () => ({
         short: !settings.get_boolean('dock-panel-mode'),
-        floating: !settings.get_boolean('dock-panel-mode'),
+        floating: dockFloatingEnabled(settings),
     });
     const positionCards = addChoiceCards(positionGroup, {
         choices: edgeChoices(edge => drawDockEdge(edge, panelEdge, dockShape)),
@@ -80,7 +82,7 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
     };
     connectSettings(settings, 'changed::dock-position', syncPositionCards);
     syncPositionCards();
-    for (const key of ['panel-position', 'dock-panel-mode'])
+    for (const key of ['panel-position', ...DOCK_FLOATING_KEYS])
         connectSettings(settings, `changed::${key}`, positionCards.redraw);
     connectSettings(settings, 'changed::panel-position', syncPanelPositionConflict);
     connectSettings(settings, 'changed::dock-mode', syncPanelPositionConflict);
@@ -91,6 +93,14 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
         title: _('Full-width Dock'),
         subtitle: _('Extend the Dock fully to the monitor edge'),
     }));
+    group.add(createKeySwitchingRow(settings, {
+        title: _('Floating Dock'),
+        subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
+        getKey: () => settings.get_boolean('dock-panel-mode')
+            ? 'dock-panel-mode-floating'
+            : 'dock-floating',
+        keyChangedKey: 'dock-panel-mode',
+    }, connectSettings));
     const dockMaxLengthRow = addSliderRow(
         group,
         settings,
@@ -198,7 +208,7 @@ export function addDockAppearanceGroup({
         connectSettings
     );
 
-    addSliderRow(
+    const cornerRadiusRow = addSliderRow(
         themeGroup,
         settings,
         {
@@ -213,6 +223,13 @@ export function addDockAppearanceGroup({
         },
         connectSettings
     );
+    const syncCornerRadiusRow = () => {
+        cornerRadiusRow.sensitive = !settings.get_boolean('dock-panel-mode') ||
+            dockFloatingEnabled(settings);
+    };
+    for (const key of DOCK_FLOATING_KEYS)
+        connectSettings(settings, `changed::${key}`, syncCornerRadiusRow);
+    syncCornerRadiusRow();
 
     const transparencySwitchSubtitle = _(
         'Make the Dock background transparent'

@@ -11,6 +11,7 @@ import {
 } from './preferencesWidgets.js';
 import {addWindowDodgeGroup} from './windowDodgeGroup.js';
 import {addSliderRow} from './sliderRow.js';
+import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
 
 export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, connectSettings}) {
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
@@ -117,13 +118,13 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
         for (const group of groups)
             group.sensitive = available;
         edgeRevealSwitch.sensitive = available &&
-            !settings.get_boolean('dock-panel-mode');
+            (!settings.get_boolean('dock-panel-mode') || dockFloatingEnabled(settings));
         dodgeWindows.syncAvailability();
         syncWorkspaceScrollControls();
     };
     for (const key of [
         'dock-mode',
-        'dock-panel-mode',
+        ...DOCK_FLOATING_KEYS,
         'windows-xp-theme-enabled',
     ]) {
         connectSettings(settings, `changed::${key}`, syncAvailability);

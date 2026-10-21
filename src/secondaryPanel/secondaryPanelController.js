@@ -53,6 +53,7 @@ import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
 import {floatingPanelCornerRadius} from '../panel/floatingPanelGeometry.js';
 import {TaskbarGeometryController} from '../panel/taskbarGeometryController.js';
 import {
+    dockFloatingEnabled,
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
     taskbarGeometryEnabled,
@@ -424,7 +425,8 @@ export class SecondaryPanelController {
         }
         Main.layoutManager.addChrome(this._panelBox, {
             affectsStruts: !this._dockController ||
-                this._settings.get_boolean('dock-panel-mode'),
+                this._settings.get_boolean('dock-panel-mode') &&
+                !dockFloatingEnabled(this._settings),
             trackFullscreen: true,
         });
         Main.uiGroup.set_child_below_sibling(
@@ -948,7 +950,7 @@ export class SecondaryPanelController {
             this._panelBox[geometry.vertical ? 'y' : 'x'] =
                 geometry.vertical ? geometry.y : geometry.x;
         }
-        if (this._geometryController && positionState.edgeGapChanged)
+        if (positionState && positionState.edgeGapChanged)
             this.syncTheme();
         if (this._dockController) {
             this._dockController.syncStrut();

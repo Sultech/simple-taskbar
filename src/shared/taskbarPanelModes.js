@@ -5,6 +5,12 @@ export const TASKBAR_GEOMETRY_KEYS = Object.freeze([
     'windows-xp-theme-enabled',
 ]);
 
+export const DOCK_FLOATING_KEYS = Object.freeze([
+    'dock-panel-mode',
+    'dock-floating',
+    'dock-panel-mode-floating',
+]);
+
 function panelGeometryModesAvailable(settings) {
     return !settings.isDock &&
         !settings.get_boolean('windows-xp-theme-enabled');
@@ -38,4 +44,10 @@ export function panelStartButtonPosition(settings) {
     return settings.get_boolean('start-button-follow-app-alignment')
         ? settings.get_string('app-alignment')
         : settings.get_string('start-button-position');
+}
+
+export function dockFloatingEnabled(settings) {
+    return settings.get_boolean(settings.get_boolean('dock-panel-mode')
+        ? 'dock-panel-mode-floating'
+        : 'dock-floating');
 }

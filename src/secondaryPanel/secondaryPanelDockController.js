@@ -29,6 +29,7 @@ import {
     syncPanelBlurClasses,
 } from '../panel/panelBlurClasses.js';
 import {floatingPanelEdgeGap} from '../panel/floatingPanelGeometry.js';
+import {dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
 import {FloatingPanelLayout} from '../panel/floatingPanelLayout.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
 import {
@@ -125,7 +126,8 @@ export class SecondaryPanelDockController {
     }
 
     enable() {
-        this._layout.enable(!this._settings.get_boolean('dock-panel-mode'));
+        this._layout.enable(!this._settings.get_boolean('dock-panel-mode') ||
+            dockFloatingEnabled(this._settings));
         this._connectSignals();
     }
 
@@ -168,22 +170,38 @@ export class SecondaryPanelDockController {
     }
 
     getPanelLengthOverride() {
-        if (this._settings.get_boolean('dock-panel-mode'))
+        if (!this._settings.get_boolean('dock-panel-mode'))
+            return this._layout.panelLength;
+        if (!dockFloatingEnabled(this._settings))
             return null;
 
-        return this._layout.panelLength;
+        const monitorLength = panelIsVertical(this._settings)
+            ? this._monitor.height : this._monitor.width;
+        return monitorLength - this.getPanelEdgeGap() * 2;
     }
 
     getPanelEdgeGap() {
-        if (this._settings.get_boolean('dock-panel-mode'))
-            return 0;
-
-        return floatingPanelEdgeGap(this._settings, this._monitor);
+        return dockFloatingEnabled(this._settings)
+            ? floatingPanelEdgeGap(this._settings, this._monitor) : 0;
     }
 
     getLimitRevealToPanel() {
-        return !this._settings.get_boolean('dock-panel-mode') &&
+        return this._isShorterThanEdge() &&
             this._settings.get_boolean('edge-reveal-enabled');
+    }
+
+    _isShorterThanEdge() {
+        return !this._settings.get_boolean('dock-panel-mode') ||
+            dockFloatingEnabled(this._settings);
+    }
+
+    _cornerRadius() {
+        if (!this._isShorterThanEdge())
+            return 0;
+        if (this._settings.get_boolean('dock-panel-mode') && this.getPanelEdgeGap() === 0)
+            return 0;
+
+        return this._settings.get_int('dock-corner-radius');
     }
 
     getGeometry() {
@@ -206,7 +224,8 @@ export class SecondaryPanelDockController {
             this._monitor,
             this._getPanelHeight(),
             0,
-            this.getPanelLengthPercentage()
+            this.getPanelLengthPercentage(),
+            this._settings.get_boolean('dock-panel-mode') ? this.getPanelLengthOverride() : null
         );
         this._connectToMainPanel(geometry);
         return geometry;
@@ -250,12 +269,10 @@ export class SecondaryPanelDockController {
     }
 
     syncTheme() {
-        const dockFloating = !this._settings.get_boolean('dock-panel-mode');
+        const dockFloating = this._isShorterThanEdge();
         const dockBlurActive = dockBlurIsActive(this._actor);
         const panelBlurActive = panelBlurIsActive(this._actor);
-        const cornerRadius = dockFloating
-            ? this._settings.get_int('dock-corner-radius')
-            : 0;
+        const cornerRadius = this._cornerRadius();
         const cornerRadiusStyle = dockFloating
             ? `border-radius: ${cornerRadius}px;`
             : '';
@@ -515,6 +532,7 @@ export class SecondaryPanelDockController {
             'panel-position'
         );
         const [mainPanelX, mainPanelY] = mainPanelBox.get_position();
+        const edgeGap = this.getPanelEdgeGap();
 
         if (geometry.vertical &&
             (mainPanelPosition === 'top' ||
@@ -525,10 +543,10 @@ export class SecondaryPanelDockController {
             const maximumLength = mainPanelPosition === 'top'
                 ? this._monitor.y + this._monitor.height - panelEdge
                 : panelEdge - this._monitor.y;
-            geometry.height = Math.min(geometry.height, maximumLength);
+            geometry.height = Math.min(geometry.height, maximumLength - edgeGap * 2);
             geometry.y = mainPanelPosition === 'top'
-                ? panelEdge
-                : panelEdge - geometry.height;
+                ? panelEdge + edgeGap
+                : panelEdge - edgeGap - geometry.height;
         } else if (!geometry.vertical &&
             positionIsVertical(mainPanelPosition)) {
             const panelEdge = mainPanelPosition === 'left'
@@ -537,10 +555,10 @@ export class SecondaryPanelDockController {
             const maximumLength = mainPanelPosition === 'left'
                 ? this._monitor.x + this._monitor.width - panelEdge
                 : panelEdge - this._monitor.x;
-            geometry.width = Math.min(geometry.width, maximumLength);
+            geometry.width = Math.min(geometry.width, maximumLength - edgeGap * 2);
             geometry.x = mainPanelPosition === 'left'
-                ? panelEdge
-                : panelEdge - geometry.width;
+                ? panelEdge + edgeGap
+                : panelEdge - edgeGap - geometry.width;
         }
     }
 }

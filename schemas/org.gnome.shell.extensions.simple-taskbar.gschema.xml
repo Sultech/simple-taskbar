@@ -1097,6 +1097,14 @@
       <default>false</default>
       <summary>Extend the Dock to the full monitor edge</summary>
     </key>
+    <key name="dock-floating" type="b">
+      <default>true</default>
+      <summary>Float the Dock away from the screen edge</summary>
+    </key>
+    <key name="dock-panel-mode-floating" type="b">
+      <default>false</default>
+      <summary>Float the full-width Dock away from the screen edge</summary>
+    </key>
     <key name="dock-panel-height" type="i">
       <range min="32" max="175"/>
       <default>67</default>
