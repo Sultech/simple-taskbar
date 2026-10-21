@@ -488,8 +488,8 @@ export class SecondaryPanelController {
                 ? () => geometryController.getPanelLengthOverride() : undefined,
             getPanelEdgeGap: geometryController
                 ? () => geometryController.getPanelEdgeGap() : undefined,
-            getLimitRevealToPanel: this._dockController
-                ? () => this._dockController.getLimitRevealToPanel() : undefined,
+            getLimitRevealToPanel: geometryController
+                ? () => geometryController.getLimitRevealToPanel() : undefined,
             isBlocked: () => this._autoHideIsBlocked(),
         });
         this._autoHideController.enable();

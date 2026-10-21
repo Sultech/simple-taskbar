@@ -87,6 +87,10 @@ export class TaskbarGeometryController {
             ? floatingPanelEdgeGap(this._settings, this._getMonitor()) : 0;
     }
 
+    getLimitRevealToPanel() {
+        return this._settings.get_boolean('edge-reveal-enabled');
+    }
+
     getGeometry() {
         return panelGeometry(this._settings, this._getMonitor(),
             this._getPanelHeight(), 0, this.getPanelLengthPercentage(),

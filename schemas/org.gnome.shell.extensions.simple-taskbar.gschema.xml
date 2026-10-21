@@ -1084,6 +1084,10 @@
       <default>90</default>
       <summary>Maximum dynamic taskbar length as a percentage of the monitor</summary>
     </key>
+    <key name="edge-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Limit dynamic or floating taskbar reveal to its edge</summary>
+    </key>
     <key name="taskbar-corner-radius" type="i">
       <range min="0" max="64"/>
       <default>22</default>

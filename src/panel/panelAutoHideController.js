@@ -158,6 +158,7 @@ export class PanelAutoHideController {
             'changed::panel-autohide-pressure-threshold',
             () => this._syncPressureBarrier(),
             'changed::panel-position', () => this._syncPressureBarrier(),
+            'changed::edge-reveal-enabled', () => this._syncPressureBarrier(),
             this._signalHolder
         );
         Main.overview.connectObject(

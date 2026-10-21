@@ -160,6 +160,8 @@ export class PanelController {
                 ? this._geometryController.getPanelLengthOverride() : null,
             getPanelEdgeGap: () => this._geometryController
                 ? this._geometryController.getPanelEdgeGap() : 0,
+            getLimitRevealToPanel: () => this._geometryController
+                ? this._geometryController.getLimitRevealToPanel() : true,
             isBlocked: () => this._isAutoHideBlocked(),
             getOutwardReserve: getHoverAnimationOutwardReserve,
             onPositionFrame: () => syncBlurGeometry(Main.panel),

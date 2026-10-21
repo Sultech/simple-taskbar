@@ -8,6 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
+import {TASKBAR_GEOMETRY_KEYS, taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
 import {
     addComboRow,
     createSwitchRow,
@@ -48,6 +49,17 @@ export function addTaskbarBehaviorGroup({
         title: _('Auto-hide Taskbar'),
         subtitle: _('Reveal the taskbar when the pointer reaches its screen edge'),
     });
+    const edgeRevealSwitch = createSwitchRow(settings, {
+        key: 'edge-reveal-enabled',
+        title: _('Limit Reveal to Taskbar Edge'),
+        subtitle: _('Only reveal a dynamic or floating taskbar when the pointer reaches its edge'),
+    });
+    const syncEdgeRevealSensitivity = () => {
+        edgeRevealSwitch.sensitive = taskbarGeometryEnabled(settings);
+    };
+    for (const key of TASKBAR_GEOMETRY_KEYS)
+        connectSettings(settings, `changed::${key}`, syncEdgeRevealSensitivity);
+    syncEdgeRevealSensitivity();
     addWindowDodgeGroup(
         visibilityPage,
         settings,
@@ -82,7 +94,7 @@ export function addTaskbarBehaviorGroup({
                     'How long the taskbar waits after the pointer leaves, in milliseconds'
                 ),
             },
-            visibilityRows: [],
+            visibilityRows: [edgeRevealSwitch],
             connectSettings,
         }
     );
