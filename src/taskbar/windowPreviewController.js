@@ -21,6 +21,7 @@ import {
     openPopupMenu,
 } from '../popupMenuUtils.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
+import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta} from '../scrollUtils.js';
 import {pointerButtonIsPressed} from '../pointerUtils.js';
@@ -523,7 +524,7 @@ export class WindowPreviewController {
         });
 
         openPopupMenu(menu);
-        this._positionPreviewAboveMagnification(menu);
+        this._positionPreview(menu, item);
     }
 
     hide(animate = false) {
@@ -559,7 +560,10 @@ export class WindowPreviewController {
         closePopupMenu(menu);
     }
 
-    _positionPreviewAboveMagnification(menu) {
+    _positionPreview(menu, item) {
+        if (dynamicTaskbarEnabled(this._settings))
+            menu._boxPointer.setPosition(item, 0.5);
+
         const outward = this._getHoverAnimationOutwardReserve();
         if (!outward)
             return;

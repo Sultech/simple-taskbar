@@ -16,6 +16,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 
 import {
     panelArrowSide,
@@ -47,7 +48,7 @@ import {
     ApplicationOverflowPopupController,
     TASKBAR_SCROLLBAR_CLASS,
 } from './applicationOverflowPopupController.js';
-import {closePopupMenu} from '../popupMenuUtils.js';
+import {closePopupMenu, togglePopupMenu} from '../popupMenuUtils.js';
 
 const POPUP_MARGIN = 32;
 const OVERFLOW_BUTTON_ANIMATION_TIME = 150;
@@ -508,7 +509,7 @@ export class ApplicationOverflowController {
             if (event.get_button() !== Clutter.BUTTON_PRIMARY)
                 return Clutter.EVENT_PROPAGATE;
 
-            this._menu.toggle();
+            togglePopupMenu(this._menu, this._button, dynamicTaskbarEnabled(this._settings));
             return Clutter.EVENT_STOP;
         });
     }

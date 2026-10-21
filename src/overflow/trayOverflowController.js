@@ -20,7 +20,13 @@ import {
     panelPosition,
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
-import {closePopupMenu, openPopupMenu} from '../popupMenuUtils.js';
+import {
+    closePopupMenu,
+    openPopupMenu,
+    openPopupMenuAtRestingPosition,
+    togglePopupMenu,
+} from '../popupMenuUtils.js';
+import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 
@@ -93,7 +99,10 @@ export class TrayOverflowController {
                 return;
 
             menu.close();
-            openPopupMenu(this._menu);
+            if (dynamicTaskbarEnabled(this._settings))
+                openPopupMenuAtRestingPosition(this._menu, this._button);
+            else
+                openPopupMenu(this._menu);
         }, this._signalHolder);
         this._menu.actor.connectObject(
             'captured-event',
@@ -250,7 +259,7 @@ export class TrayOverflowController {
         if (alignment === boxPointer._arrowAlignment)
             return;
 
-        boxPointer.setPosition(this._button, alignment);
+        boxPointer.setPosition(boxPointer._sourceActor, alignment);
     }
 
     _syncPanelPosition() {
@@ -293,7 +302,7 @@ export class TrayOverflowController {
         });
         this._button.add_child(this._icon);
         this._button.connect('button-press-event', () => {
-            this._menu.toggle();
+            togglePopupMenu(this._menu, this._button, dynamicTaskbarEnabled(this._settings));
             return Clutter.EVENT_STOP;
         });
         Main.panel.addToStatusArea(

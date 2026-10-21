@@ -9,6 +9,8 @@ import {
     removeXpPopupOffset,
     syncXpPopupOffset,
 } from './panelPosition.js';
+import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {pinnedPopupSource} from '../popupMenuUtils.js';
 
 export class PanelMenuPositioner {
     constructor(injectionManager, settings) {
@@ -64,14 +66,17 @@ export class PanelMenuPositioner {
             menu,
             userArrowSide,
             arrowSide,
+            arrowAlignment,
             removeTopPanelGap,
             destroyId,
         } of this._states.values()) {
             if (destroyId)
                 indicator.disconnect(destroyId);
+            this._injectionManager.restoreMethod(menu._boxPointer, 'setPosition');
             removeXpPopupOffset(menu);
             menu._boxPointer._userArrowSide = userArrowSide;
             menu._arrowSide = arrowSide;
+            menu._arrowAlignment = arrowAlignment;
             if (removeTopPanelGap)
                 menu.actor.remove_style_class_name('simple-taskbar-bottom-panel-menu');
         }
@@ -103,11 +108,13 @@ export class PanelMenuPositioner {
             menu,
             userArrowSide: boxPointer._userArrowSide,
             arrowSide: menu._arrowSide,
+            arrowAlignment: menu._arrowAlignment,
             removeTopPanelGap,
             destroyId: 0,
         };
         state.destroyId = indicator.connect('destroy', () => {
             state.destroyId = 0;
+            this._injectionManager.restoreMethod(boxPointer, 'setPosition');
             this._states.delete(indicator);
         });
         this._states.set(indicator, state);
@@ -115,6 +122,13 @@ export class PanelMenuPositioner {
         const side = panelArrowSide(this._settings);
         boxPointer._userArrowSide = side;
         menu._arrowSide = side;
+        if (dynamicTaskbarEnabled(this._settings)) {
+            menu._arrowAlignment = 0.5;
+            this._injectionManager.overrideMethod(boxPointer, 'setPosition', original => function (sourceActor, alignment) {
+                const pinned = sourceActor === menu.sourceActor && Main.panel.contains(sourceActor);
+                original.call(this, pinned ? pinnedPopupSource(sourceActor) : sourceActor, alignment);
+            });
+        }
         if (removeTopPanelGap && !panelIsTop(this._settings)) {
             menu.actor.add_style_class_name('simple-taskbar-bottom-panel-menu');
         }

@@ -11,6 +11,7 @@ import {
     normalizeLegacyMiddleClickAction,
 } from '../shared/applicationClickActions.js';
 import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
+import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../popupMenuUtils.js';
 
@@ -176,16 +177,21 @@ export class TaskbarItemInteractionController {
                 this.destroyButton(button);
             this._createLocationMenu(button, item._taskbarApp, item);
             const locationMenu = button._taskbarMenu;
-            syncMenuArrowSide(locationMenu, this._settings);
-            openPopupMenu(locationMenu);
+            this._openMenu(locationMenu, item, button);
             return;
         }
         if (!button._taskbarMenu)
             this._createMenu(button, item._taskbarApp, item);
 
         const menu = button._taskbarMenu;
+        this._openMenu(menu, item, button);
+    }
+
+    _openMenu(menu, item, button) {
         syncMenuArrowSide(menu, this._settings);
         openPopupMenu(menu);
+        if (dynamicTaskbarEnabled(this._settings) && button === item._taskbarButton)
+            menu._boxPointer.setPosition(item, 0.5);
     }
 
     syncFileManagerPlaces(items) {
