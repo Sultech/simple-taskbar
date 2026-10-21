@@ -43,3 +43,8 @@ export function applyTaskbarIconSize({
         settings.get_int('start-button-padding')
     );
 }
+
+export function prepareTaskbarIconSizeChange(taskbarController, startButtonController) {
+    startButtonController.preparePositionAnimation();
+    taskbarController.finishItemShowAnimations();
+}

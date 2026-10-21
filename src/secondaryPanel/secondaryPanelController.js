@@ -19,8 +19,7 @@ import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
     DOCK_BOX_NAME,
     panelBlurIsActive,
-    syncDockBlurGeometry,
-    syncPanelBlurGeometry,
+    syncBlurGeometry,
 } from '../integration/blurMyShellRuntime.js';
 import {panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
 import {
@@ -48,6 +47,7 @@ import {
 import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from '../panel/panelItems.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
+import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
 import {
     dynamicTransparencyStyle,
 } from '../panel/dynamicTransparency.js';
@@ -133,10 +133,8 @@ export class SecondaryPanelController {
         this._windowDodgeController = null;
         this._dockController = null;
         this._windowDragController = null;
-        this._dockHoverReserve = 0;
         this._blurActive = false;
         this._themeSyncLaterId = 0;
-        this._hoverAnimationExtents = [0, 0];
         this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
         const configuredIconSize = isDock
@@ -191,9 +189,9 @@ export class SecondaryPanelController {
                     ]
                 ),
             onHoverAnimationReserveChanged: () =>
-                this._onHoverAnimationReserveChanged(),
+                this._magnifyController.onReserveChanged(),
             onHoverAnimationExtentsChanged: (before, after) =>
-                this._onHoverAnimationExtentsChanged(before, after),
+                this._magnifyController.onExtentsChanged(before, after),
             isHoverAnimationBlocked: () =>
                 this._interactionIsBlocked(false) ||
                 this._autoHideController.hidden,
@@ -250,6 +248,22 @@ export class SecondaryPanelController {
         this._panelBox._simpleTaskbarMonitorIndex = monitor.index;
         this.actor = new SecondaryPanelActor();
         this._panelBox.add_child(this.actor);
+        this._magnifyController = new PanelMagnifyController({
+            actor: this.actor,
+            panelBox: this._panelBox,
+            getMonitor: () => this._monitor,
+            getVertical: () => panelIsVertical(this._settings),
+            getReserve: () => this._taskbarController.getHoverAnimationReserve(),
+            isEnabled: () => Boolean(this._dockController),
+            isDynamic: () => !this._settings.get_boolean('dock-panel-mode'),
+            getBaseLength: () => this._dockController.getBaseLength(),
+            updateWidth: () => this._updateTaskbarWidth(),
+            onGeometryChanged: (geometry, centerOffset) => {
+                this.actor.set_position(geometry.x, geometry.y);
+                this.actor.set_size(geometry.width, geometry.height);
+                this.actor.centerOffset = centerOffset;
+            },
+        });
         if (!isDock) {
             this._windowDragController =
                 new SecondaryPanelWindowDragController({
@@ -312,7 +326,7 @@ export class SecondaryPanelController {
                 onPosition: (updateTaskbarWidth, animateEdgeGap) =>
                     this._position(updateTaskbarWidth, animateEdgeGap),
                 isCentered: () => this._appsAreCentered(),
-                getHoverReserve: () => this._dockHoverReserve,
+                getHoverReserve: () => this._magnifyController.reserve,
             });
         }
     }
@@ -428,7 +442,7 @@ export class SecondaryPanelController {
             },
             getOutwardReserve: () =>
                 this._taskbarController.getHoverAnimationOutwardReserve(),
-            onPositionFrame: () => syncDockBlurGeometry(this.actor),
+            onPositionFrame: () => syncBlurGeometry(this.actor),
             strutActor: this._dockController
                 ? this._dockController.strutActor
                 : null,
@@ -492,6 +506,8 @@ export class SecondaryPanelController {
             this._dockController.destroy();
             this._dockController = null;
         }
+        this._magnifyController.destroy();
+        this._magnifyController = null;
         this._panelBox.remove_all_transitions();
         this.actor.remove_all_transitions();
         this._interactionController.destroy();
@@ -853,62 +869,6 @@ export class SecondaryPanelController {
         return this._settings.get_string('app-alignment') === 'center';
     }
 
-    _onHoverAnimationReserveChanged() {
-        const reserve = this._taskbarController.getHoverAnimationReserve();
-        const [before, after] = this._hoverAnimationExtents;
-        if (reserve > 0 || (before === 0 && after === 0))
-            this._dockHoverReserve = reserve;
-        this._updateTaskbarWidth();
-    }
-
-    _onHoverAnimationExtentsChanged(before, after) {
-        this._hoverAnimationExtents = [before, after];
-        if (!this._dockController)
-            return;
-
-        const reserve = this._taskbarController.getHoverAnimationReserve();
-        if (before === 0 && after === 0 && this._dockHoverReserve !== reserve) {
-            this._dockHoverReserve = reserve;
-            this._updateTaskbarWidth();
-            return;
-        }
-
-        this._syncDockMagnifyExtents(this.actor.vertical);
-    }
-
-    _syncDockMagnifyExtents(vertical) {
-        const lengthProperty = vertical ? 'height' : 'width';
-        const positionProperty = vertical ? 'y' : 'x';
-        const boxLength = this._panelBox[lengthProperty];
-        let start = 0;
-        let end = boxLength;
-        if (!this._settings.get_boolean('dock-panel-mode')) {
-            const [before, after] = this._hoverAnimationExtents;
-            const baseLength = Math.min(
-                this._dockController.getBaseLength() ?? boxLength,
-                boxLength
-            );
-            const baseStart = Math.floor((boxLength - baseLength) / 2);
-            start = Math.clamp(baseStart + before, 0, boxLength);
-            end = Math.clamp(
-                baseStart + baseLength + after,
-                start,
-                boxLength
-            );
-        }
-        const scale = this._monitor.geometry_scale;
-        const boxStart = this._panelBox[positionProperty];
-        start = Math.ceil((boxStart + start) * scale) / scale - boxStart;
-        end = Math.max(start, Math.floor((boxStart + end) * scale) / scale - boxStart);
-        this.actor[vertical ? 'x' : 'y'] = 0;
-        this.actor[positionProperty] = start;
-        this.actor[lengthProperty] = end - start;
-        this.actor.centerOffset = boxLength - start - end;
-        this.actor.queue_relayout();
-        syncPanelBlurGeometry(this.actor);
-        syncDockBlurGeometry(this.actor);
-    }
-
     _position(
         updateTaskbarWidth = true,
         animateEdgeGapRequested = false
@@ -946,10 +906,10 @@ export class SecondaryPanelController {
             }
         }
         if (this._dockController) {
-            this._syncDockMagnifyExtents(geometry.vertical);
             this._dockController.syncStrut();
         }
         this.actor.vertical = geometry.vertical;
+        this._magnifyController.sync();
         const orientation = geometry.vertical
             ? Clutter.Orientation.VERTICAL
             : Clutter.Orientation.HORIZONTAL;

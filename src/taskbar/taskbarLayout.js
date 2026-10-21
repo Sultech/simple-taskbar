@@ -5,6 +5,16 @@ import Clutter from 'gi://Clutter';
 
 export const PANEL_ITEM_GAP = 8;
 
+export function panelContentLength(boxes, crossSize, vertical) {
+    const contentLength = boxes.reduce((length, box) => {
+        box.queue_relayout();
+        return length + (vertical
+            ? box.get_preferred_height(crossSize)[1]
+            : box.get_preferred_width(crossSize)[1]);
+    }, 0);
+    return contentLength + PANEL_ITEM_GAP * 2;
+}
+
 function naturalLength(actor, crossSize, vertical) {
     if (!actor.visible)
         return 0;

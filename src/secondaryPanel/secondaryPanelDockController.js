@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Shell from 'gi://Shell';
 import St from 'gi://St';
 
-import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {
     TransientSignalHolder,
@@ -30,11 +28,9 @@ import {
     PANEL_BLUR_CLASSES,
     syncPanelBlurClasses,
 } from '../panel/panelBlurClasses.js';
-import {DOCK_EDGE_GAP} from '../shared/panelSizing.js';
+import {floatingPanelEdgeGap} from '../panel/floatingPanelGeometry.js';
+import {FloatingPanelLayout} from '../panel/floatingPanelLayout.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
-import {
-    hasMaximizedWindowOnMonitor,
-} from '../windowVisibility.js';
 import {
     dynamicTransparencyStyle,
 } from '../panel/dynamicTransparency.js';
@@ -43,14 +39,10 @@ import {
     panelPosition,
     positionIsVertical,
 } from '../panel/panelPosition.js';
-import {
-    constrainTaskbarSize,
-    PANEL_ITEM_GAP,
-} from '../taskbar/taskbarLayout.js';
-import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
+import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
+import {prepareTaskbarIconSizeChange} from '../taskbar/taskbarIconSize.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
-const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 const EXTERNAL_DOCK_STYLES = new Set(BLUR_MY_SHELL_DOCK_STYLES);
 const DOCK_BACKGROUND_CLASS = 'dash-background';
@@ -111,45 +103,37 @@ export class SecondaryPanelDockController {
         this._setPanelHeight = setPanelHeight;
         this._onPosition = onPosition;
         this._isCentered = isCentered;
-        this._getHoverReserve = getHoverReserve;
         this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = settings.getConfiguredIconSize();
-        this._dockPanelLength = null;
-        this._dockBaseLength = null;
-        this._taskbarWidthUpdater = new TaskbarWidthUpdater(
-            () => this._updateTaskbarWidthInternal()
-        );
-        this._dockStrutActor = null;
-        this._activeWorkspace = null;
-        this._workspaceWindows = new Set();
-        this._lastPanelEdgeGap = null;
+        this._layout = new FloatingPanelLayout({
+            settings,
+            getMonitor: () => this._monitor,
+            boxes: this._boxes,
+            getPanelHeight,
+            getHoverReserve,
+            getEdgeGap: () => this.getPanelEdgeGap(),
+            getGeometry: () => this.getGeometry(),
+            onPosition,
+            onContentChanged: () => this._updateTaskbarWidthInternal(),
+            strutName: 'simple-taskbar-dock-strut',
+        });
         this._mainPanelBox = null;
     }
 
     get strutActor() {
-        return this._dockStrutActor;
+        return this._layout.strutActor;
     }
 
     enable() {
-        this._syncWorkspaceWindows();
-        this._createStrutActor();
+        this._layout.enable(!this._settings.get_boolean('dock-panel-mode'));
         this._connectSignals();
     }
 
     destroy() {
-        this._taskbarWidthUpdater.destroy();
-        this._taskbarWidthUpdater = null;
-
+        this._layout.destroy();
+        this._layout = null;
         this._signalHolder.destroy();
         this._signalHolder = null;
-        this._workspaceWindows.clear();
-        this._activeWorkspace = null;
-
-        if (this._dockStrutActor) {
-            Main.layoutManager.removeChrome(this._dockStrutActor);
-            this._dockStrutActor.destroy();
-            this._dockStrutActor = null;
-        }
 
         this._settings = null;
         this._monitor = null;
@@ -170,9 +154,6 @@ export class SecondaryPanelDockController {
         this._onPosition = null;
         this._isCentered = null;
         this._configuredIconSize = 0;
-        this._dockPanelLength = null;
-        this._dockBaseLength = null;
-        this._getHoverReserve = null;
     }
 
     getPanelLengthPercentage() {
@@ -183,30 +164,21 @@ export class SecondaryPanelDockController {
     }
 
     getBaseLength() {
-        return this._dockBaseLength;
+        return this._layout.baseLength;
     }
 
     getPanelLengthOverride() {
         if (this._settings.get_boolean('dock-panel-mode'))
             return null;
 
-        return this._dockPanelLength;
+        return this._layout.panelLength;
     }
 
     getPanelEdgeGap() {
         if (this._settings.get_boolean('dock-panel-mode'))
             return 0;
 
-        if (Main.overview.visibleTarget)
-            return DOCK_EDGE_GAP;
-
-        if (!this._settings.get_boolean('panel-autohide-enabled') &&
-            !this._settings.get_boolean('panel-dodge-windows-enabled') &&
-            hasMaximizedWindowOnMonitor(this._monitor)) {
-            return 0;
-        }
-
-        return DOCK_EDGE_GAP;
+        return floatingPanelEdgeGap(this._settings, this._monitor);
     }
 
     getLimitRevealToPanel() {
@@ -241,49 +213,19 @@ export class SecondaryPanelDockController {
     }
 
     getPositionState(animateEdgeGapRequested) {
-        const edgeGap = this.getPanelEdgeGap();
-        const edgeGapChanged = this._lastPanelEdgeGap !== null &&
-            this._lastPanelEdgeGap !== edgeGap;
-        const animateEdgeGap = animateEdgeGapRequested &&
-            edgeGapChanged &&
-            !this._settings.get_boolean('panel-autohide-enabled');
-        this._lastPanelEdgeGap = edgeGap;
-        return {
-            geometry: this.getGeometry(),
-            edgeGapChanged,
-            animateEdgeGap,
-            shouldSyncAutoHide: !animateEdgeGapRequested || edgeGapChanged,
-        };
+        return this._layout.getPositionState(animateEdgeGapRequested);
     }
 
     syncStrut() {
-        if (!this._dockStrutActor)
-            return;
-
-        const strutGeometry = panelGeometry(
-            this._settings,
-            this._monitor,
-            this._getPanelHeight(),
-            0,
-            100
-        );
-        this._dockStrutActor.set_position(
-            strutGeometry.x,
-            strutGeometry.y
-        );
-        this._dockStrutActor.set_size(
-            strutGeometry.width,
-            strutGeometry.height
-        );
-        Main.layoutManager._queueUpdateRegions();
+        this._layout.syncStrut();
     }
 
     updateTaskbarWidth() {
-        this._taskbarWidthUpdater.update();
+        this._layout.updateContent();
     }
 
     queueTaskbarWidth() {
-        this._taskbarWidthUpdater.queue();
+        this._layout.queueContentUpdate();
     }
 
     resetIconSize() {
@@ -403,73 +345,8 @@ export class SecondaryPanelDockController {
         ));
     }
 
-    _createStrutActor() {
-        if (this._settings.get_boolean('dock-panel-mode'))
-            return;
-
-        const strutGeometry = panelGeometry(
-            this._settings,
-            this._monitor,
-            this._getPanelHeight(),
-            0,
-            100
-        );
-        this._dockStrutActor = new St.Widget({
-            name: 'simple-taskbar-dock-strut',
-            reactive: false,
-            opacity: 0,
-            x: strutGeometry.x,
-            y: strutGeometry.y,
-            width: strutGeometry.width,
-            height: strutGeometry.height,
-        });
-        Shell.util_set_hidden_from_pick(this._dockStrutActor, true);
-        const chromeParams = {
-            affectsStruts: true,
-            trackFullscreen: true,
-        };
-        if (SHELL_VERSION < 50)
-            chromeParams.affectsInputRegion = false;
-        Main.layoutManager.addChrome(this._dockStrutActor, chromeParams);
-    }
-
     _connectSignals() {
-        for (const box of this._boxes) {
-            box.connectObject(
-                'queue-relayout', () => {
-                    if (!this._taskbarWidthUpdater.isUpdating)
-                        this._taskbarWidthUpdater.queue();
-                },
-                this._signalHolder
-            );
-        }
-        global.workspace_manager.connectObject(
-            'active-workspace-changed',
-            () => {
-                this._syncWorkspaceWindows();
-                this._onPosition(true, true);
-            },
-            this._signalHolder
-        );
-        global.display.connectObject(
-            'notify::focus-window',
-            () => this._onPosition(true, true),
-            'window-entered-monitor',
-            () => this._onPosition(true, true),
-            'window-left-monitor',
-            () => this._onPosition(true, true),
-            this._signalHolder
-        );
-        Main.overview.connectObject(
-            'showing', () => this._onPosition(true, true),
-            'hiding', () => this._onPosition(true, true),
-            this._signalHolder
-        );
         this._settings.connectObject(
-            'changed::panel-autohide-enabled',
-            () => this._onPosition(),
-            'changed::panel-dodge-windows-enabled',
-            () => this._onPosition(),
             'changed::icon-size',
             () => {
                 this.resetIconSize();
@@ -519,7 +396,7 @@ export class SecondaryPanelDockController {
         this._settings.connectObject(
             'changed::dock-max-length',
             () => {
-                this._dockPanelLength = null;
+                this._layout.resetLength();
                 this.updateTaskbarWidth();
             },
             'changed::dock-min-icon-size',
@@ -548,7 +425,7 @@ export class SecondaryPanelDockController {
             if (!this._settings.get_boolean('windows-xp-theme-enabled') &&
                 this._syncIconSize(availableWidth)) {
                 this._onPosition(false);
-                this._taskbarWidthUpdater.queue();
+                this._layout.queueContentUpdate();
                 return;
             }
         }
@@ -556,19 +433,7 @@ export class SecondaryPanelDockController {
         if (this._settings.get_boolean('dock-panel-mode'))
             return;
 
-        const baseRequiredLength = this._panelContentLength(vertical, 0);
-        const maximumLength = vertical ? geometry.height : geometry.width;
-        this._dockBaseLength = Math.min(
-            maximumLength,
-            Math.max(1, Math.ceil(baseRequiredLength))
-        );
-        const panelLength = this._dockBaseLength + this._getHoverReserve();
-        if (panelLength === this._dockPanelLength)
-            return;
-
-        this._dockPanelLength = panelLength;
-        this._onPosition(false, false);
-        this._taskbarWidthUpdater.queue();
+        this._layout.updateLength(vertical ? geometry.height : geometry.width, vertical);
     }
 
     _syncIconSize(availableLength) {
@@ -588,8 +453,7 @@ export class SecondaryPanelDockController {
         if (iconSize === this._getIconSize())
             return false;
 
-        this._startButtonController.preparePositionAnimation();
-        this._taskbarController.finishItemShowAnimations();
+        prepareTaskbarIconSizeChange(this._taskbarController, this._startButtonController);
         this._settings.setRuntimeIconSize(iconSize);
         this._setIconSize(iconSize);
         this._setPanelHeight(this._settings.get_int('panel-height'));
@@ -602,72 +466,6 @@ export class SecondaryPanelDockController {
         this._verticalItemsController.sync();
         this._applicationOverflowController.syncIconSizeChange();
         return true;
-    }
-
-    _syncWorkspaceWindows() {
-        const workspace = global.workspace_manager.get_active_workspace();
-        if (workspace === this._activeWorkspace)
-            return;
-
-        if (this._activeWorkspace)
-            this._activeWorkspace.disconnectObject(this._signalHolder);
-        for (const window of this._workspaceWindows)
-            window.disconnectObject(this._signalHolder);
-        this._workspaceWindows.clear();
-        this._activeWorkspace = workspace;
-        workspace.connectObject(
-            'window-added',
-            (_workspace, window) => {
-                this._trackWorkspaceWindow(window);
-                this._onPosition(true, true);
-            },
-            'window-removed',
-            (_workspace, window) => {
-                this._untrackWorkspaceWindow(window);
-                this._onPosition(true, true);
-            },
-            this._signalHolder
-        );
-        for (const window of workspace.list_windows())
-            this._trackWorkspaceWindow(window);
-    }
-
-    _trackWorkspaceWindow(window) {
-        if (this._workspaceWindows.has(window))
-            return;
-
-        this._workspaceWindows.add(window);
-        window.connectObject(
-            'notify::maximized-horizontally',
-            () => this._onPosition(true, true),
-            'notify::maximized-vertically',
-            () => this._onPosition(true, true),
-            'notify::minimized',
-            () => this._onPosition(true, true),
-            this._signalHolder
-        );
-    }
-
-    _untrackWorkspaceWindow(window) {
-        if (!this._workspaceWindows.delete(window))
-            return;
-
-        window.disconnectObject(this._signalHolder);
-    }
-
-    _panelContentLength(
-        vertical,
-        hoverReserve = this._taskbarController.getHoverAnimationReserve()
-    ) {
-        const crossSize = this._getPanelHeight();
-        const contentLength = this._boxes.reduce((length, box) => {
-            box.queue_relayout();
-            return length + (vertical
-                ? box.get_preferred_height(crossSize)[1]
-                : box.get_preferred_width(crossSize)[1]);
-        }, 0);
-        return contentLength + PANEL_ITEM_GAP * 2 +
-            hoverReserve;
     }
 
     _findMainPanelBox() {
