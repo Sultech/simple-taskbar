@@ -567,6 +567,7 @@ export default class SimpleTaskbarExtension extends Extension {
         );
         this._taskbarController.applyAppearance();
         this._panelController.syncVerticalItems();
+        this._syncPanelHeight();
         this._panelController.updateTaskbarWidth();
     }
 

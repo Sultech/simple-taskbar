@@ -657,6 +657,7 @@ export class SecondaryPanelController {
             if (defaultPanelWindowsEnabled(this._settings))
                 this._resetTaskbarIconSize();
             this._applyAppearance();
+            this._syncPanelHeight();
             this._updateTaskbarWidth();
         };
         this._settings.connectObject(
