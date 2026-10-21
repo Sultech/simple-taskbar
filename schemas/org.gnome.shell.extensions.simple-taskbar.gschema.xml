@@ -1067,6 +1067,28 @@
       <default>32</default>
       <summary>Minimum application icon size when space is limited</summary>
     </key>
+    <key name="taskbar-dynamic" type="b">
+      <default>false</default>
+      <summary>Size the taskbar dynamically to its contents</summary>
+    </key>
+    <key name="taskbar-dynamic-floating" type="b">
+      <default>true</default>
+      <summary>Float the dynamic taskbar away from the screen edge</summary>
+    </key>
+    <key name="taskbar-floating" type="b">
+      <default>false</default>
+      <summary>Float the taskbar away from the screen edge</summary>
+    </key>
+    <key name="taskbar-max-length" type="i">
+      <range min="1" max="90"/>
+      <default>90</default>
+      <summary>Maximum dynamic taskbar length as a percentage of the monitor</summary>
+    </key>
+    <key name="taskbar-corner-radius" type="i">
+      <range min="0" max="64"/>
+      <default>22</default>
+      <summary>Dynamic or floating taskbar corner radius</summary>
+    </key>
     <key name="dock-panel-mode" type="b">
       <default>false</default>
       <summary>Extend the Dock to the full monitor edge</summary>

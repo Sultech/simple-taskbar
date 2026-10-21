@@ -13,6 +13,7 @@ import {
     HIGHLIGHT_SIZE_SETTINGS,
 } from './classicHighlightSettings.js';
 import {panelIsVertical} from './panelPositionUtils.js';
+import {dynamicTaskbarEnabled} from './taskbarPanelModes.js';
 
 export const MIN_PANEL_HEIGHT = 30;
 export const MAX_PANEL_HEIGHT = 175;
@@ -202,7 +203,8 @@ export function panelHeightForIconSize(settings, iconSize) {
 export function taskbarPanelHeight(settings, iconSize) {
     if (settings.isDock ||
         settings.get_boolean('default-gnome-panel') ||
-        !settings.get_boolean('panel-height-follow-icon-size'))
+        !settings.get_boolean('panel-height-follow-icon-size') &&
+        !dynamicTaskbarEnabled(settings))
         return settings.get_int('panel-height');
 
     return panelHeightForIconSize(settings, iconSize);

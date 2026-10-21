@@ -313,6 +313,10 @@ export class PanelAutoHideController {
         }
     }
 
+    setStrutActor(actor) {
+        this._strutActor = actor;
+    }
+
     syncPosition(animate = false) {
         const monitor = this._getMonitor();
         const actor = this._positionActor;

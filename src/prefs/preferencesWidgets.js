@@ -113,6 +113,22 @@ export function createSwitchRow(settings, {
     return row;
 }
 
+export function createKeySwitchingRow(settings, {
+    title,
+    subtitle = '',
+    getKey,
+    keyChangedKey,
+}, connectSettings) {
+    const row = new Adw.SwitchRow({title, subtitle});
+    const bindKey = () => {
+        Gio.Settings.unbind(row, 'active');
+        settings.bind(getKey(), row, 'active', Gio.SettingsBindFlags.DEFAULT);
+    };
+    connectSettings(settings, `changed::${keyChangedKey}`, bindKey);
+    bindKey();
+    return row;
+}
+
 export function addSwitchRow(group, settings, {
     key,
     title,
@@ -310,6 +326,7 @@ export function addComboRow(group, settings, {
     subtitle = '',
     choices,
     initialValue = null,
+    getValue = () => settings.get_string(key),
     choicesProvider = () => choices,
     choicesChangedKey = null,
     choicesChangedKeys = choicesChangedKey ? [choicesChangedKey] : [],
@@ -336,7 +353,7 @@ export function addComboRow(group, settings, {
     row.add_suffix(dropDown);
     row.activatable_widget = dropDown;
     configureDropDown(dropDown);
-    const currentValue = initialValue ?? settings.get_string(key);
+    const currentValue = initialValue ?? getValue();
     const selected = currentChoices.findIndex(
         choice => choice.value === currentValue
     );
@@ -350,19 +367,22 @@ export function addComboRow(group, settings, {
             setValue(choice.value);
     });
     connectSettings(settings, `changed::${key}`, () => {
-        const value = settings.get_string(key);
+        const value = getValue();
         const index = currentChoices.findIndex(
             choice => choice.value === value
         );
-        if (index >= 0 && dropDown.selected !== index)
+        if (index >= 0 && dropDown.selected !== index) {
+            syncingChoices = true;
             dropDown.selected = index;
+            syncingChoices = false;
+        }
     });
     for (const changedKey of choicesChangedKeys) {
         connectSettings(settings, `changed::${changedKey}`, () => {
             currentChoices = choicesProvider();
             syncingChoices = true;
             dropDown.set_model(createModel(currentChoices));
-            const value = settings.get_string(key);
+            const value = getValue();
             const index = currentChoices.findIndex(
                 choice => choice.value === value
             );

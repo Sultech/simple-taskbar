@@ -66,9 +66,12 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
     };
     syncPanelPositionConflict();
     const panelEdge = () => settings.get_string('panel-position');
-    const fullWidth = () => settings.get_boolean('dock-panel-mode');
+    const dockShape = () => ({
+        short: !settings.get_boolean('dock-panel-mode'),
+        floating: !settings.get_boolean('dock-panel-mode'),
+    });
     const positionCards = addChoiceCards(positionGroup, {
-        choices: edgeChoices(edge => drawDockEdge(edge, panelEdge, fullWidth)),
+        choices: edgeChoices(edge => drawDockEdge(edge, panelEdge, dockShape)),
         onSelected: position => setDockPosition(settings, position),
         connectSettings,
     });

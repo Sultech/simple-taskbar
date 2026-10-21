@@ -280,6 +280,7 @@ export class SecondaryPanelDockController {
                 !EXTERNAL_PANEL_STYLES.has(style) &&
                 !EXTERNAL_DOCK_STYLES.has(style) &&
                 style !== DOCK_BACKGROUND_CLASS &&
+                style !== 'simple-taskbar-floating' &&
                 !OWN_BLUR_CLASSES.has(style));
         if (dockBlurActive)
             classes.push(DOCK_BACKGROUND_CLASS, ...this._externalStyles(EXTERNAL_DOCK_STYLES));

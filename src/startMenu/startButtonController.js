@@ -65,6 +65,7 @@ import {
 import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
 import {bundledStartIconFile, isBundledStartIcon} from '../shared/startIcons.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
+import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
 
 export class StartButtonController {
     constructor({
@@ -417,11 +418,7 @@ export class StartButtonController {
         this._icon.translation_y = vertical
             ? runningIndicatorVerticalOffset(this._settings, indicatorPosition)
             : 0;
-        const startButtonPosition = this._settings.get_boolean(
-            'start-button-follow-app-alignment'
-        )
-            ? this._settings.get_string('app-alignment')
-            : this._settings.get_string('start-button-position');
+        const startButtonPosition = panelStartButtonPosition(this._settings);
         const leadingPadding = !windowsXpTheme &&
             startButtonPosition === 'left'
             ? padding
@@ -1034,12 +1031,8 @@ export class StartButtonController {
     }
 
     _separatorFollowsButton() {
-        const startPosition = this._settings.get_boolean(
-            'start-button-follow-app-alignment'
-        )
-            ? this._settings.get_string('app-alignment')
-            : this._settings.get_string('start-button-position');
-        const appPosition = this._settings.get_string('app-alignment');
+        const startPosition = panelStartButtonPosition(this._settings);
+        const appPosition = panelApplicationAlignment(this._settings);
         if (startPosition !== appPosition) {
             const positions = ['left', 'center', 'right'];
             return positions.indexOf(startPosition) <

@@ -10,6 +10,7 @@ import {DefaultPanelWindowSettings} from '../shared/defaultPanelWindowSettings.j
 import {defaultPanelWindowsEnabled} from '../shared/defaultPanelWindows.js';
 import {createDefaultPanelIconSizingRows} from './defaultPanelIconSizing.js';
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+import {panelApplicationAlignment} from '../shared/taskbarPanelModes.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {
     activePanelPosition,
@@ -176,6 +177,7 @@ function addApplicationIconControls({
         settings,
         {
             key: 'app-alignment',
+            getValue: () => panelApplicationAlignment(settings),
             title: _('Icon Alignment'),
             subtitle: _('Choose the application icon alignment'),
             choices: panelPositions.slice(0, 2),
@@ -183,7 +185,7 @@ function addApplicationIconControls({
                 settings.get_string(positionKey),
                 panelPositions
             ).slice(0, 2),
-            choicesChangedKey: positionKey,
+            choicesChangedKeys: [positionKey, 'taskbar-dynamic', 'windows-xp-theme-enabled'],
         },
         connectSettings
     );

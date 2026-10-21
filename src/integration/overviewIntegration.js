@@ -28,6 +28,7 @@ import {
     dockPanelModeHeight,
     panelHeightForIconSize,
 } from '../shared/panelSizing.js';
+import {floatingTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const OVERVIEW_LABEL_MARGIN = 60;
@@ -407,12 +408,12 @@ export class OverviewIntegration {
                 );
                 if (position === 'bottom') {
                     const inset = panelAutohide
-                        ? integration._panelHeight * Math.clamp(
+                        ? integration._panelOverviewInset() * Math.clamp(
                             controls._stateAdjustment.value,
                             0,
                             1
                         )
-                        : integration._panelHeight;
+                        : integration._panelOverviewInset();
                     box.y2 -= inset;
                 } else if (panelAutohide || panelDodge) {
                     const progress = Math.clamp(
@@ -420,7 +421,7 @@ export class OverviewIntegration {
                         0,
                         1
                     );
-                    const inset = integration._panelHeight * progress;
+                    const inset = integration._panelOverviewInset() * progress;
                     if (position === 'top')
                         box.y1 += inset;
                     else if (position === 'left')
@@ -452,7 +453,7 @@ export class OverviewIntegration {
                         0,
                         1
                     );
-                    const inset = integration._panelHeight * progress;
+                    const inset = integration._panelOverviewInset() * progress;
                     const position = panelPosition(integration._settings);
                     if (position === 'top')
                         box.y1 += inset;
@@ -471,6 +472,12 @@ export class OverviewIntegration {
                 originalAllocate.call(this, box);
             }
         );
+    }
+
+    _panelOverviewInset() {
+        return floatingTaskbarEnabled(this._settings)
+            ? this._panelHeight + DOCK_EDGE_GAP
+            : this._panelHeight;
     }
 
     _reserveDockSpace(box, overviewAdjustment, primaryMonitor) {

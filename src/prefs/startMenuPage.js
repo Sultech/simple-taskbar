@@ -8,6 +8,7 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+import {dynamicTaskbarEnabled, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
 import {
     getStartIconDisplayName,
     StartIconChooserDialog,
@@ -101,6 +102,8 @@ export function addStartMenuPage({
         settings,
         {
             key: 'start-button-position',
+            getValue: () => dynamicTaskbarEnabled(settings)
+                ? 'center' : settings.get_string('start-button-position'),
             title: _('Manual Alignment'),
             subtitle: _(
                 'Used when the Start button does not follow applications'
@@ -108,7 +111,7 @@ export function addStartMenuPage({
             choices: panelPositions,
             choicesProvider: () =>
                 axisPanelPositions(activePanelPosition(settings), panelPositions),
-            choicesChangedKeys: ['panel-position', 'dock-position', 'dock-mode'],
+            choicesChangedKeys: ['panel-position', 'dock-position', 'dock-mode', 'taskbar-dynamic'],
             addRow: row => startButtonAlignmentGroup.add(row),
         },
         connectSettings
@@ -121,11 +124,11 @@ export function addStartMenuPage({
         const dockMode = settings.get_boolean('dock-mode');
         const dockPanelMode = settings.get_boolean('dock-panel-mode');
         startPositionRow.sensitive =
-            !defaultPanel && !windowsXpTheme &&
+            !defaultPanel && !windowsXpTheme && !dynamicTaskbarEnabled(settings) &&
             !followAppAlignmentSwitch.active &&
             (!dockMode || dockPanelMode);
         followAppAlignmentSwitch.sensitive =
-            !defaultPanel && !windowsXpTheme;
+            !defaultPanel && !windowsXpTheme && !dynamicTaskbarEnabled(settings);
         startButtonAlignmentGroup.sensitive =
             !defaultPanel && !windowsXpTheme;
     };
@@ -138,6 +141,7 @@ export function addStartMenuPage({
         'changed::default-gnome-panel',
         updateStartPositionRow
     );
+    connectSettings(settings, 'changed::taskbar-dynamic', updateStartPositionRow);
     connectSettings(settings, 'changed::dock-mode', updateStartPositionRow);
     connectSettings(
         settings,
@@ -178,9 +182,7 @@ export function addStartMenuPage({
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        const startButtonPosition = followAppAlignmentSwitch.active
-            ? settings.get_string('app-alignment')
-            : settings.get_string('start-button-position');
+        const startButtonPosition = panelStartButtonPosition(settings);
         const available = (startButtonPosition === 'left' ||
             startButtonPosition === 'right') &&
             (!dockMode || dockPanelMode);
@@ -192,6 +194,7 @@ export function addStartMenuPage({
         updateStartButtonPaddingRow
     );
     for (const key of [
+        'taskbar-dynamic',
         'app-alignment',
         'start-button-position',
         'dock-mode',
@@ -825,10 +828,7 @@ export function addStartMenuPage({
     );
 
     const updateCenterStartMenuRow = () => {
-        let centered = followAppAlignmentSwitch.active
-            ? settings.get_string('app-alignment') === 'center'
-            : settings.get_string('start-button-position') ===
-                'center';
+        let centered = panelStartButtonPosition(settings) === 'center';
         if (settings.get_boolean('dock-mode') &&
             !settings.get_boolean('dock-panel-mode')) {
             centered = true;
@@ -836,6 +836,7 @@ export function addStartMenuPage({
         centerStartMenuRow.sensitive =
             windowsStartMenuSwitch.active && centered;
     };
+    connectSettings(settings, 'changed::taskbar-dynamic', updateCenterStartMenuRow);
     connectSettings(
         settings,
         'changed::start-button-position',

@@ -12,6 +12,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionIsActive} from '../extensionState.js';
+import {syncBlurGeometry} from '../integration/blurMyShellRuntime.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelWindowDodgeController,
@@ -28,6 +29,10 @@ import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelGeometry} from './panelGeometry.js';
+import {PanelMagnifyController} from './panelMagnifyController.js';
+import {DynamicPanelBoxLayout} from './dynamicPanelBoxLayout.js';
+import {TaskbarGeometryController} from './taskbarGeometryController.js';
+import {dynamicTaskbarEnabled, taskbarGeometryEnabled, panelApplicationAlignment} from '../shared/taskbarPanelModes.js';
 import {panelIsVertical} from './panelPosition.js';
 import {
     QuickSettingsIndicatorsController,
@@ -45,6 +50,7 @@ import {NotificationAreaController} from '../integration/notificationAreaControl
 import {TRAY_OVERFLOW_ROLE} from '../overflow/trayOverflowController.js';
 import {
     allocateAdaptivePanel,
+    allocateDynamicPanel,
     allocateExpandedSidePanel,
     constrainTaskbarSize,
 } from '../taskbar/taskbarLayout.js';
@@ -60,6 +66,7 @@ export class PanelController {
         panelHeight,
         onPanelHidden,
         getHoverAnimationOutwardReserve,
+        getHoverAnimationReserve,
         startButton,
         taskbarBin,
         taskbarActor,
@@ -114,24 +121,54 @@ export class PanelController {
             () => this._panelHeight,
             () => this._buttonPaddingController.effectivePadding()
         );
+        this._geometryController = taskbarGeometryEnabled(settings)
+            ? new TaskbarGeometryController({
+                settings,
+                getMonitor: () => Main.layoutManager.primaryMonitor,
+                panelBox: Main.layoutManager.panelBox,
+                panel: Main.panel,
+                boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
+                getPanelHeight: () => this._panelHeight,
+                onPosition: (updateWidth, animateGap) => this.position(updateWidth, animateGap),
+                onContentChanged: () => this.updateTaskbarWidth(),
+                getHoverReserve: () => this._magnifyController.reserve,
+            })
+            : null;
+        this._oldPanelBoxLayout = null;
+        this._panelBoxLayout = null;
+        this._magnifyController = new PanelMagnifyController({
+            actor: Main.panel,
+            panelBox: Main.layoutManager.panelBox,
+            getMonitor: () => Main.layoutManager.primaryMonitor,
+            getVertical: () => panelIsVertical(this._settings),
+            getReserve: getHoverAnimationReserve,
+            isEnabled: () => dynamicTaskbarEnabled(this._settings),
+            isDynamic: () => dynamicTaskbarEnabled(this._settings),
+            getBaseLength: () => this._geometryController.getBaseLength(),
+            updateWidth: () => this.updateTaskbarWidth(),
+            onGeometryChanged: geometry => this._panelBoxLayout.setPanelGeometry(geometry),
+        });
         this._autoHideController = new PanelAutoHideController({
             settings,
             panelActor: Main.panel,
             positionActor: Main.layoutManager.panelBox,
             getMonitor: () => Main.layoutManager.primaryMonitor,
             getPanelHeight: () => this._panelHeight,
+            getPanelLengthPercentage: () => this._geometryController
+                ? this._geometryController.getPanelLengthPercentage() : null,
+            getPanelLengthOverride: () => this._geometryController
+                ? this._geometryController.getPanelLengthOverride() : null,
+            getPanelEdgeGap: () => this._geometryController
+                ? this._geometryController.getPanelEdgeGap() : 0,
             isBlocked: () => this._isAutoHideBlocked(),
             getOutwardReserve: getHoverAnimationOutwardReserve,
+            onPositionFrame: () => syncBlurGeometry(Main.panel),
             onHidden: onPanelHidden,
         });
         this._windowDodgeController = new PanelWindowDodgeController({
             settings,
             getMonitor: () => Main.layoutManager.primaryMonitor,
-            getGeometry: monitor => panelGeometry(
-                this._settings,
-                monitor,
-                this._panelHeight
-            ),
+            getGeometry: monitor => this._panelGeometry(monitor),
             onDodgeStateChanged: (enabled, active, pointerReveal) =>
                 this._autoHideController.setDodgeState(
                     enabled,
@@ -170,6 +207,20 @@ export class PanelController {
             showDesktopButton: this._showDesktopButton,
         });
         this._stateController.enable();
+        if (dynamicTaskbarEnabled(this._settings)) {
+            this._oldPanelBoxLayout = Main.layoutManager.panelBox.layout_manager;
+            this._panelBoxLayout = new DynamicPanelBoxLayout(Main.panel, {
+                x: 0,
+                y: 0,
+                width: Main.layoutManager.panelBox.width,
+                height: Main.layoutManager.panelBox.height,
+            });
+            Main.layoutManager.panelBox.layout_manager = this._panelBoxLayout;
+        }
+        if (this._geometryController) {
+            this._geometryController.enable();
+            this._autoHideController.setStrutActor(this._geometryController.strutActor);
+        }
         this._activitiesDotWidthOverride = new ActivitiesDotWidthOverride(
             Main.panel.statusArea.activities
         );
@@ -189,11 +240,7 @@ export class PanelController {
         this._themeController = new PanelThemeController(
             this._settings,
             this._stateController.oldPanelStyle,
-            monitor => panelGeometry(
-                this._settings,
-                monitor,
-                this._panelHeight
-            )
+            monitor => this._panelGeometry(monitor)
         );
         this._configureAdaptivePanelAllocation();
         this._configureHotCornerSizing();
@@ -227,6 +274,17 @@ export class PanelController {
         this._windowDodgeController = null;
         this._autoHideController.destroy();
         this._autoHideController = null;
+        this._magnifyController.destroy();
+        this._magnifyController = null;
+        if (this._panelBoxLayout) {
+            Main.layoutManager.panelBox.layout_manager = this._oldPanelBoxLayout;
+            this._panelBoxLayout = null;
+            this._oldPanelBoxLayout = null;
+        }
+        if (this._geometryController) {
+            this._geometryController.destroy();
+            this._geometryController = null;
+        }
         this._buttonPaddingController.destroy();
         this._buttonPaddingController = null;
         this._verticalItemsController.destroy();
@@ -289,17 +347,34 @@ export class PanelController {
         this._stateController.setShowDesktopButton(button);
     }
 
-    position() {
+    _panelGeometry(monitor) {
+        return this._geometryController
+            ? this._geometryController.getGeometry()
+            : panelGeometry(this._settings, monitor, this._panelHeight);
+    }
+
+    onHoverAnimationReserveChanged() {
+        this._magnifyController.onReserveChanged();
+    }
+
+    onHoverAnimationExtentsChanged(before, after) {
+        this._magnifyController.onExtentsChanged(before, after);
+    }
+
+    getPanelEdgeGap() {
+        return this._geometryController
+            ? this._geometryController.getPanelEdgeGap() : 0;
+    }
+
+    position(updateWidth = true, animateGapRequested = false) {
         const monitor = Main.layoutManager.primaryMonitor;
         if (!monitor)
             return;
 
-        const geometry = panelGeometry(
-            this._settings,
-            monitor,
-            this._panelHeight
-        );
-        if (geometry.vertical)
+        const state = this._geometryController
+            ? this._geometryController.getPositionState(animateGapRequested) : null;
+        const geometry = state ? state.geometry : this._panelGeometry(monitor);
+        if (geometry.vertical || this._geometryController)
             Main.panel.set_size(geometry.width, geometry.height);
         else {
             Main.panel.set_width(-1);
@@ -309,17 +384,34 @@ export class PanelController {
             geometry.width,
             geometry.height
         );
-        Main.layoutManager.panelBox.set_position(geometry.x, geometry.y);
+        const panelBox = Main.layoutManager.panelBox;
+        const placeEdge = !animateGapRequested || !state ||
+            state.edgeGapChanged && !state.animateEdgeGap;
+        if (placeEdge && !panelBox.get_transition(geometry.vertical ? 'x' : 'y'))
+            panelBox.set_position(geometry.x, geometry.y);
+        else if (geometry.vertical)
+            panelBox.y = geometry.y;
+        else
+            panelBox.x = geometry.x;
+        if (state && state.edgeGapChanged)
+            this._themeController.applyTransparency();
+        if (this._geometryController)
+            this._geometryController.syncStrut();
         Main.layoutManager._updateHotCorners();
         this._syncPanelOrientation();
+        this._magnifyController.sync();
         this._verticalItemsController.sync();
         this._stateController.syncDateMenuVerticalAlignment(
             this._panelHeight
         );
-        this._autoHideController.syncPosition();
+        if (state && state.animateEdgeGap)
+            this._autoHideController.syncPosition(true);
+        else if (!state || state.shouldSyncAutoHide)
+            this._autoHideController.syncPosition();
         this._windowDodgeController.sync();
         this._queueOverviewRelayout();
-        this.updateTaskbarWidth();
+        if (updateWidth)
+            this.updateTaskbarWidth();
     }
 
     applyLayout() {
@@ -446,7 +538,9 @@ export class PanelController {
             leftBox,
             centerBox,
             rightBox,
-            panelLength: vertical ? monitor.height : monitor.width,
+            panelLength: this._geometryController
+                ? this._geometryController.getMaximumLength()
+                : vertical ? monitor.height : monitor.width,
             panelThickness: this._panelHeight,
             centered: this.appsAreCentered(),
             vertical,
@@ -454,7 +548,10 @@ export class PanelController {
         if (availableWidth !== undefined &&
             this._onTaskbarAvailableWidthChanged(availableWidth)) {
             this.updateTaskbarWidth();
+            return;
         }
+        if (this._geometryController)
+            this._geometryController.updateLength();
     }
 
     syncVerticalItems() {
@@ -474,7 +571,7 @@ export class PanelController {
     }
 
     appsAreCentered() {
-        return this._settings.get_string('app-alignment') === 'center';
+        return panelApplicationAlignment(this._settings) === 'center';
     }
 
     _configurePanelMenuSwitching() {
@@ -497,6 +594,12 @@ export class PanelController {
             'vfunc_allocate',
             originalAllocate => function (box) {
                 const vertical = panelIsVertical(controller._settings);
+                if (dynamicTaskbarEnabled(controller._settings)) {
+                    allocateDynamicPanel(this, box, this._leftBox, this._centerBox,
+                        this._rightBox, controller._magnifyController.contentStart,
+                        controller._magnifyController.contentLength, vertical);
+                    return;
+                }
                 const visible = controller._taskbarBin.visible;
                 const skip = visible
                     ? !controller._taskbarBin.get_parent()

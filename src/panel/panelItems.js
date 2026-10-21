@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
 import {panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
 
 export function createPanelItems({
@@ -11,11 +12,7 @@ export function createPanelItems({
     includeShowDesktop,
     isSecondary,
 }) {
-    const startButtonPosition = settings.get_boolean(
-        'start-button-follow-app-alignment'
-    )
-        ? settings.get_string('app-alignment')
-        : settings.get_string('start-button-position');
+    const startButtonPosition = panelStartButtonPosition(settings);
     const startButtonVisible =
         !settings.get_boolean('default-gnome-panel') &&
         (settings.get_boolean('windows-start-menu-enabled') ||
@@ -37,7 +34,7 @@ export function createPanelItems({
         {
             id: 'applications',
             actor: actors.taskbar,
-            position: settings.get_string('app-alignment'),
+            position: panelApplicationAlignment(settings),
             visible: applicationsVisible,
         },
         {

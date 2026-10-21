@@ -31,6 +31,25 @@ export function panelBlurIsActive(panel) {
         !blurMyShellBackgroundOnProximity();
 }
 
+export function preservePanelBlurRadiusStyle(panel, style) {
+    const actors = getPanelBlur().actors_list.find(
+        actors => actors.widgets.panel === panel
+    );
+    const radiusStyle = actors.radius_style ?? '';
+    const baseStyle = style.replaceAll(radiusStyle, '').replace(/[\s;]+$/, '');
+    return [baseStyle, radiusStyle].filter(Boolean).join('; ') || null;
+}
+
+export function removePanelBlurRadiusStyle(panel, style) {
+    const panelBlur = getPanelBlur();
+    const actors = panelBlur?.actors_list.find(actors => actors.widgets.panel === panel);
+    if (!actors?.radius_style || !style)
+        return style;
+
+    const radiusStyle = actors.radius_style.replace(/[\s;]+$/, '');
+    return style.replaceAll(radiusStyle, '').replace(/^[\s;]+|[\s;]+$/g, '') || null;
+}
+
 export function syncPanelBlurCornerRadius(panel, radius) {
     const panelBlur = getPanelBlur();
     if (!panelBlur)

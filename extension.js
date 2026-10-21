@@ -45,7 +45,9 @@ import {
     adaptiveTaskbarIconSize,
     panelTaskbarIconSize,
     applyTaskbarIconSize,
+    prepareTaskbarIconSizeChange,
 } from './src/taskbar/taskbarIconSize.js';
+import {dynamicTaskbarEnabled} from './src/shared/taskbarPanelModes.js';
 import {
     getTaskbarHoverAnimationNeighbours,
 } from './src/taskbar/taskbarHoverAnimationUtils.js';
@@ -178,7 +180,9 @@ export default class SimpleTaskbarExtension extends Extension {
                     ]
                 ),
             onHoverAnimationReserveChanged: () =>
-                this._panelController.updateTaskbarWidth(),
+                this._panelController.onHoverAnimationReserveChanged(),
+            onHoverAnimationExtentsChanged: (before, after) =>
+                this._panelController.onHoverAnimationExtentsChanged(before, after),
             isHoverAnimationBlocked: () =>
                 this._panelInteractionIsBlocked(false) ||
                 this._panelController.autoHideHidden,
@@ -205,6 +209,7 @@ export default class SimpleTaskbarExtension extends Extension {
             () => this._taskbarController.isPointerInMagnifyBounds()
         );
         this._startButtonController = new StartButtonController({
+            getPanelEdgeGap: () => this._panelController.getPanelEdgeGap(),
             extensionDir: this.dir,
             settings: this._settings,
             iconSize: this._iconSize,
@@ -242,6 +247,8 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._taskbarController.dropHoverAnimations();
                 this._windowPreviews.hideTooltip(false);
             },
+            getHoverAnimationReserve: () =>
+                this._taskbarController.getHoverAnimationReserve(),
             getHoverAnimationOutwardReserve: () =>
                 this._taskbarController.getHoverAnimationOutwardReserve(),
             startButton: this._startButtonController.panelActor,
@@ -522,6 +529,12 @@ export default class SimpleTaskbarExtension extends Extension {
             this._panelController.updateTaskbarWidth();
         }, this);
         this._settings.connectObject(
+            'changed::taskbar-dynamic',
+            () => this._queueRebuild(),
+            'changed::taskbar-floating',
+            () => this._queueRebuild(),
+            'changed::taskbar-dynamic-floating',
+            () => this._queueRebuild(),
             'changed::default-panel-show-running-windows',
             () => this._queueRebuild(),
             this
@@ -591,6 +604,8 @@ export default class SimpleTaskbarExtension extends Extension {
         if (iconSize === this._iconSize)
             return false;
 
+        if (dynamicTaskbarEnabled(this._settings))
+            prepareTaskbarIconSizeChange(this._taskbarController, this._startButtonController);
         this._iconSize = iconSize;
         this._applyTaskbarIconSize();
         this._panelController.syncVerticalItems();

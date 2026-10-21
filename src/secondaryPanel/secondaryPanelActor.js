@@ -7,6 +7,7 @@ import St from 'gi://St';
 
 import {
     allocateAdaptivePanel,
+    allocateDynamicPanel,
     allocateExpandedSidePanel,
 } from '../taskbar/taskbarLayout.js';
 
@@ -36,6 +37,7 @@ class SecondaryPanelActor extends St.Widget {
         this.add_child(this.leftBox);
         this.add_child(this.centerBox);
         this.add_child(this.rightBox);
+        this.dynamicContent = null;
         this.adaptiveCenter = false;
         this.expandedSide = false;
         this.centerOffset = 0;
@@ -44,6 +46,12 @@ class SecondaryPanelActor extends St.Widget {
     }
 
     vfunc_allocate(box) {
+        if (this.dynamicContent !== null) {
+            allocateDynamicPanel(this, box, this.leftBox, this.centerBox,
+                this.rightBox, this.dynamicContent.start,
+                this.dynamicContent.length, this.vertical);
+            return;
+        }
         if (this.adaptiveCenter) {
             allocateAdaptivePanel(
                 this,

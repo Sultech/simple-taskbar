@@ -12,8 +12,8 @@ const SCREEN_INSET = 2;
 const SCREEN_RADIUS = 6;
 const BAR_THICKNESS = 8;
 const PANEL_THICKNESS = 5;
-const DOCK_LENGTH_RATIO = 0.5;
-const DOCK_GAP = 4;
+const SHORT_BAR_LENGTH_RATIO = 0.5;
+const FLOATING_GAP = 4;
 const CARD_SPACING = 12;
 const WINDOWS_XP_BLUE = [0.14, 0.37, 0.86];
 const WINDOWS_XP_GREEN = [0.24, 0.6, 0.24];
@@ -60,6 +60,17 @@ function edgeRectangle(screen, edge, thickness, lengthRatio = 1, gap = 0) {
     return {x: screen.x + screen.width - thickness - gap, y: screen.y + offset, width: thickness, height: length};
 }
 
+function barRectangle(screen, edge, {short, floating}) {
+    const gap = floating ? FLOATING_GAP : 0;
+    const bar = edgeRectangle(screen, edge, BAR_THICKNESS, short ? SHORT_BAR_LENGTH_RATIO : 1, gap);
+    if (short || !floating)
+        return bar;
+
+    if (edge === 'top' || edge === 'bottom')
+        return {...bar, x: bar.x + gap, width: bar.width - gap * 2};
+    return {...bar, y: bar.y + gap, height: bar.height - gap * 2};
+}
+
 function fillRectangle(cr, {x, y, width, height}, color, alpha = 1, radius = 0) {
     setColor(cr, color, alpha);
     if (radius > 0)
@@ -90,28 +101,23 @@ function drawScreen(cr, width, height, palette, drawContent) {
     cr.stroke();
 }
 
-export function drawTaskbarEdge(edge) {
+function drawBar(cr, screen, edge, color, shape) {
+    const rounded = shape.short || shape.floating;
+    fillRectangle(cr, barRectangle(screen, edge, shape), color, 1, rounded ? BAR_THICKNESS / 2 : 0);
+}
+
+export function drawTaskbarEdge(edge, getShape = () => ({short: false, floating: false})) {
     return (cr, width, height, palette) => drawScreen(cr, width, height, palette, (screen, _foreground, accent) => {
-        fillRectangle(cr, edgeRectangle(screen, edge, BAR_THICKNESS), accent);
+        drawBar(cr, screen, edge, accent, getShape());
     });
 }
 
-export function drawDockEdge(edge, panelEdge, fullWidth) {
+export function drawDockEdge(edge, panelEdge, getShape) {
     return (cr, width, height, palette) => drawScreen(cr, width, height, palette, (screen, foreground, accent) => {
         const panel = panelEdge();
         if (panel !== edge)
             fillRectangle(cr, edgeRectangle(screen, panel, PANEL_THICKNESS), foreground, 0.3);
-        if (fullWidth()) {
-            fillRectangle(cr, edgeRectangle(screen, edge, BAR_THICKNESS), accent);
-            return;
-        }
-        fillRectangle(
-            cr,
-            edgeRectangle(screen, edge, BAR_THICKNESS, DOCK_LENGTH_RATIO, DOCK_GAP),
-            accent,
-            1,
-            BAR_THICKNESS / 2
-        );
+        drawBar(cr, screen, edge, accent, getShape());
     });
 }
 
@@ -129,7 +135,7 @@ export function drawTaskbarMode(cr, width, height, palette) {
 }
 
 export function drawDockMode(cr, width, height, palette) {
-    drawDockEdge('bottom', () => 'top', () => false)(cr, width, height, palette);
+    drawDockEdge('bottom', () => 'top', () => ({short: true, floating: true}))(cr, width, height, palette);
 }
 
 export function drawDefaultPanelMode(cr, width, height, palette) {

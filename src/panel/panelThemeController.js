@@ -23,7 +23,9 @@ import {
 import {
     getPanelBlur,
     panelBlurIsActive,
+    preservePanelBlurRadiusStyle,
     refreshPanelBlurVisibility,
+    syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
 import {
     BLUR_MY_SHELL_ACTIVE_CLASS,
@@ -33,7 +35,9 @@ import {
     syncPanelBlurClasses,
 } from './panelBlurClasses.js';
 import {panelPosition} from './panelPosition.js';
-import {panelBackgroundStyle} from './panelBackgroundStyle.js';
+import {panelBackgroundStyle, panelBorderStyle} from './panelBackgroundStyle.js';
+import {taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
+import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {dynamicTransparencyStyle} from './dynamicTransparency.js';
 
@@ -96,6 +100,7 @@ export class PanelThemeController {
             );
         }
         this._settings.connectObject(
+            'changed::taskbar-corner-radius', () => this.applyTransparency(),
             'changed::transparency-enabled', () => this.applyTransparency(),
             'changed::transparency-level', () => this.applyTransparency(),
             'changed::transparency-on-unmaximized',
@@ -188,7 +193,19 @@ export class PanelThemeController {
         if (this._applyingTransparency)
             return;
 
-        const originalStyle = this._oldPanelStyle?.trim() ?? '';
+        const floating = taskbarGeometryEnabled(this._settings);
+        const radius = floating
+            ? floatingPanelCornerRadius(this._settings, Main.layoutManager.primaryMonitor) : 0;
+        const cornerStyle = floating ? `border-radius: ${radius}px;` : '';
+        const savedStyle = this._oldPanelStyle ?? '';
+        const baseStyle = floating
+            ? savedStyle.replace(/border-radius\s*:[^;]+;?/g, '').replace(/^[\s;]+|[\s;]+$/g, '')
+            : savedStyle.trim();
+        const originalStyle = [baseStyle, cornerStyle].filter(Boolean).join('; ');
+        if (floating)
+            Main.panel.add_style_class_name('simple-taskbar-floating');
+        else
+            Main.panel.remove_style_class_name('simple-taskbar-floating');
         const windowsXpThemeEnabled = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -196,8 +213,13 @@ export class PanelThemeController {
             panelBlurIsActive(Main.panel);
         const light = this._usesLightTheme();
         syncPanelBlurClasses(Main.panel, externalPanelStyle, light);
+        if (floating)
+            syncPanelBlurCornerRadius(Main.panel, radius);
         if (externalPanelStyle) {
-            this._setPanelStyle(originalStyle);
+            this._setPanelStyle(floating
+                ? [baseStyle, `border-radius: ${radius}px !important; ${panelBorderStyle(this._settings, light,
+                    this._panelBorderEnabled(), true, true)}`].filter(Boolean).join('; ')
+                : preservePanelBlurRadiusStyle(Main.panel, baseStyle));
             return;
         }
         const monitor = Main.layoutManager.primaryMonitor;
@@ -214,7 +236,7 @@ export class PanelThemeController {
             light,
             this._panelBorderEnabled(),
             originalStyle,
-            false,
+            floating,
             dynamicOpacity,
             transitionDuration
         ));
@@ -236,6 +258,9 @@ export class PanelThemeController {
 
     restore() {
         Main.panel.remove_style_class_name('simple-taskbar-panel');
+        if (Main.panel.has_style_class_name('simple-taskbar-floating'))
+            syncPanelBlurCornerRadius(Main.panel, 0);
+        Main.panel.remove_style_class_name('simple-taskbar-floating');
         Main.panel.remove_style_class_name('simple-taskbar-theme-light');
         Main.panel.remove_style_class_name('simple-taskbar-theme-dark');
         Main.panel.remove_style_class_name('simple-taskbar-panel-top');

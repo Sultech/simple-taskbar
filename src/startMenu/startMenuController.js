@@ -21,6 +21,7 @@ import {
     syncMenuArrowSide,
 } from '../panel/panelPosition.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
+import {panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
 import {
     closePopupMenu,
     openPopupMenu,
@@ -645,11 +646,7 @@ export class StartMenuController {
     }
 
     _startButtonIsCentered() {
-        return this._settings.get_boolean(
-            'start-button-follow-app-alignment'
-        )
-            ? this._settings.get_string('app-alignment') === 'center'
-            : this._settings.get_string('start-button-position') === 'center';
+        return panelStartButtonPosition(this._settings) === 'center';
     }
 
     _syncShellButtonClasses(actor) {

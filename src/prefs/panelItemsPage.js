@@ -11,6 +11,7 @@ import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js'
 import {defaultPanelWindowsEnabled, panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+import {dynamicTaskbarEnabled, panelApplicationAlignment} from '../shared/taskbarPanelModes.js';
 import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
@@ -231,9 +232,9 @@ export function addPanelItemsPage({
         ['applications', {
             key: 'app-alignment',
             positionState: {
-                get: () => panelApplicationSettings(settings).get_string('app-alignment'),
+                get: () => panelApplicationAlignment(panelApplicationSettings(settings)),
                 set: value => panelApplicationSettings(settings).set_string('app-alignment', value),
-                changedKeys: ['app-alignment', 'default-panel-window-app-alignment',
+                changedKeys: ['taskbar-dynamic', 'app-alignment', 'default-panel-window-app-alignment',
                     'default-gnome-panel', 'default-panel-show-running-windows', 'panel-position'],
             },
             visibleState: applicationsVisibility,
@@ -358,6 +359,10 @@ export function addPanelItemsPage({
     syncShowDesktopOptionsButton();
 
     const getPanelItemPosition = id => {
+        if (dynamicTaskbarEnabled(settings) &&
+            (id === 'applications' || id === 'start-button')) {
+            return 'center';
+        }
         const definition = panelOrderDefinitions.get(id);
         if (definition.fixedPosition)
             return definition.fixedPosition;
@@ -521,11 +526,12 @@ export function addPanelItemsPage({
         panelOrderRows.get('start-button').row.sensitive = !dockMode;
         panelOrderRows.get('applications').row.sensitive = !dockMode || runningWindows;
         panelOrderRows.get('start-button').positionDropDown.sensitive =
-            !defaultPanel && !windowsXpTheme &&
+            !defaultPanel && !windowsXpTheme && !dynamicTaskbarEnabled(settings) &&
             !followAppAlignmentSwitch.active &&
             startButtonVisibility.get();
         panelOrderRows.get('applications').positionDropDown.sensitive =
-            (!defaultPanel || runningWindows) && !windowsXpTheme && applicationsAreVisible();
+            (!defaultPanel || runningWindows) && !windowsXpTheme &&
+            !dynamicTaskbarEnabled(settings) && applicationsAreVisible();
         panelOrderRows.get('system-menu').positionDropDown.sensitive =
             !windowsXpTheme && systemMenuVisibility.get();
         panelOrderRows.get('clock').positionDropDown.sensitive =
@@ -551,6 +557,10 @@ export function addPanelItemsPage({
                 'show-desktop-button-visible'
             );
     };
+    connectSettings(settings, 'changed::taskbar-dynamic', () => {
+        syncPanelPositionSensitivity();
+        syncPanelItemOrder();
+    });
     followAppAlignmentSwitch.connect(
         'notify::active',
         () => {

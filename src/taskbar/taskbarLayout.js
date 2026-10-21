@@ -40,58 +40,49 @@ function allocatePanelBoxes(
     centerBox,
     rightBox,
     resolveCenter,
-    vertical
+    vertical,
+    contentStart = 0,
+    contentLength = null
 ) {
     panel.set_allocation(box);
 
     const width = box.x2 - box.x1;
     const height = box.y2 - box.y1;
     const crossSize = vertical ? width : height;
-    const length = vertical ? height : width;
+    const length = contentLength ?? (vertical ? height : width);
     const leftNatural = naturalLength(leftBox, crossSize, vertical);
     const centerNatural = naturalLength(centerBox, crossSize, vertical);
     const rightNatural = naturalLength(rightBox, crossSize, vertical);
     const rtl = !vertical &&
         panel.get_text_direction() === Clutter.TextDirection.RTL;
-    const childBox = new Clutter.ActorBox();
+    const allocateChild = (actor, start, extent) => {
+        const childBox = new Clutter.ActorBox();
+        if (vertical) {
+            childBox.x1 = 0;
+            childBox.x2 = width;
+            childBox.y1 = contentStart + start;
+            childBox.y2 = childBox.y1 + extent;
+        } else {
+            childBox.y1 = 0;
+            childBox.y2 = height;
+            childBox.x1 = contentStart + start;
+            childBox.x2 = childBox.x1 + extent;
+        }
+        actor.allocate(childBox);
+    };
+    allocateChild(leftBox, rtl ? Math.max(length - leftNatural, 0) : 0,
+        Math.min(leftNatural, length));
+    allocateChild(centerBox,
+        resolveCenter(length, centerNatural, leftNatural, rightNatural, rtl),
+        centerNatural);
+    allocateChild(rightBox, rtl ? 0 : Math.max(length - rightNatural, 0),
+        Math.min(rightNatural, length));
+}
 
-    if (vertical) {
-        childBox.x1 = 0;
-        childBox.x2 = width;
-        childBox.y1 = 0;
-        childBox.y2 = Math.min(leftNatural, height);
-    } else {
-        childBox.y1 = 0;
-        childBox.y2 = height;
-        childBox.x1 = rtl ? Math.max(width - leftNatural, 0) : 0;
-        childBox.x2 = rtl ? width : Math.min(leftNatural, width);
-    }
-    leftBox.allocate(childBox);
-
-    const centerStart = resolveCenter(
-        length,
-        centerNatural,
-        leftNatural,
-        rightNatural,
-        rtl
-    );
-    if (vertical) {
-        childBox.y1 = centerStart;
-        childBox.y2 = centerStart + centerNatural;
-    } else {
-        childBox.x1 = centerStart;
-        childBox.x2 = centerStart + centerNatural;
-    }
-    centerBox.allocate(childBox);
-
-    if (vertical) {
-        childBox.y1 = Math.max(height - rightNatural, 0);
-        childBox.y2 = height;
-    } else {
-        childBox.x1 = rtl ? 0 : Math.max(width - rightNatural, 0);
-        childBox.x2 = rtl ? Math.min(rightNatural, width) : width;
-    }
-    rightBox.allocate(childBox);
+export function allocateDynamicPanel(panel, box, leftBox, centerBox, rightBox,
+    contentStart, contentLength, vertical) {
+    allocateAdaptivePanel(panel, box, leftBox, centerBox, rightBox,
+        0, vertical, false, contentStart, contentLength);
 }
 
 export function allocateAdaptivePanel(
@@ -102,7 +93,9 @@ export function allocateAdaptivePanel(
     rightBox,
     centerOffset = 0,
     vertical = false,
-    preserveStart = false
+    preserveStart = false,
+    contentStart = 0,
+    contentLength = null
 ) {
     allocatePanelBoxes(
         panel,
@@ -132,7 +125,9 @@ export function allocateAdaptivePanel(
                 Math.max(minimum, maximum)
             ));
         },
-        vertical
+        vertical,
+        contentStart,
+        contentLength
     );
 }
 

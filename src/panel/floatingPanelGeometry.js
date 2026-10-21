@@ -1,6 +1,7 @@
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {DOCK_EDGE_GAP} from '../shared/panelSizing.js';
+import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 import {hasMaximizedWindowOnMonitor} from '../windowVisibility.js';
 
 export function floatingPanelEdgeGap(settings, monitor) {
@@ -14,4 +15,11 @@ export function floatingPanelEdgeGap(settings, monitor) {
     }
 
     return DOCK_EDGE_GAP;
+}
+
+export function floatingPanelCornerRadius(settings, monitor) {
+    if (!dynamicTaskbarEnabled(settings) && floatingPanelEdgeGap(settings, monitor) === 0)
+        return 0;
+
+    return settings.get_int('taskbar-corner-radius');
 }

@@ -17,9 +17,16 @@ import {
 } from '../shared/windowsXpTheme.js';
 import {setPanelPosition} from '../shared/panelModeProfiles.js';
 import {
+    TASKBAR_GEOMETRY_KEYS,
+    dynamicTaskbarEnabled,
+    floatingTaskbarEnabled,
+} from '../shared/taskbarPanelModes.js';
+import {
     addColorRow,
     addToggleChoiceRow,
     addSwitchRow,
+    createKeySwitchingRow,
+    createSwitchRow,
 } from './preferencesWidgets.js';
 import {
     createDynamicTransparencyOptionsButton,
@@ -49,7 +56,10 @@ export function addPanelAppearancePage({
         description: _('Place the taskbar at a screen edge'),
     });
     const panelPositionCards = addChoiceCards(panelPositionGroup, {
-        choices: edgeChoices(drawTaskbarEdge),
+        choices: edgeChoices(edge => drawTaskbarEdge(edge, () => ({
+            short: dynamicTaskbarEnabled(settings),
+            floating: floatingTaskbarEnabled(settings),
+        }))),
         onSelected: position => {
             const positionSettings = createSettings();
             positionSettings.delay();
@@ -63,6 +73,51 @@ export function addPanelAppearancePage({
     };
     connectSettings(settings, 'changed::panel-position', syncPanelPositionCards);
     syncPanelPositionCards();
+    for (const key of TASKBAR_GEOMETRY_KEYS)
+        connectSettings(settings, `changed::${key}`, panelPositionCards.redraw);
+
+    const floatingGroup = sizePage.addGroup({
+        title: _('Panel Layout'),
+        description: _('Choose dynamic sizing and floating independently'),
+    });
+    const dynamicSwitch = createSwitchRow(settings, {
+        key: 'taskbar-dynamic',
+        title: _('Dynamic Panel Mode'),
+        subtitle: _('Size the taskbar to its contents and expand as items are added'),
+    });
+    floatingGroup.add(dynamicSwitch);
+    const floatingSwitch = createKeySwitchingRow(settings, {
+        title: _('Floating Panel Mode'),
+        subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
+        getKey: () => settings.get_boolean('taskbar-dynamic')
+            ? 'taskbar-dynamic-floating'
+            : 'taskbar-floating',
+        keyChangedKey: 'taskbar-dynamic',
+    }, connectSettings);
+    floatingGroup.add(floatingSwitch);
+    const maximumLengthRow = addSliderRow(floatingGroup, settings, {
+        key: 'taskbar-max-length',
+        unit: '%',
+        title: _('Maximum Taskbar Length'),
+        subtitle: _('Limit the dynamic taskbar to this percentage of the monitor length'),
+        lower: 1,
+        upper: 90,
+    }, connectSettings);
+    const cornerRadiusRow = addSliderRow(floatingGroup, settings, {
+        key: 'taskbar-corner-radius',
+        title: _('Corner Radius'),
+        subtitle: _('Round the corners of the dynamic or floating taskbar'),
+        lower: 0,
+        upper: 64,
+    }, connectSettings);
+    const syncFloatingControls = () => {
+        floatingGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
+        maximumLengthRow.sensitive = dynamicSwitch.active;
+        cornerRadiusRow.sensitive = dynamicSwitch.active || floatingSwitch.active;
+    };
+    for (const key of TASKBAR_GEOMETRY_KEYS)
+        connectSettings(settings, `changed::${key}`, syncFloatingControls);
+    syncFloatingControls();
 
     const panelAppearanceGroup = sizePage.addGroup({
         title: _('Thickness'),
@@ -78,7 +133,8 @@ export function addPanelAppearancePage({
         followKey: PANEL_HEIGHT_FOLLOW_KEY,
         followSubtitle: panelHeightFollowSubtitle,
         isActive: () => !settings.get_boolean('default-gnome-panel') &&
-            !settings.get_boolean('windows-xp-theme-enabled'),
+            !settings.get_boolean('windows-xp-theme-enabled') &&
+            !dynamicTaskbarEnabled(settings),
     });
     panelAppearanceGroup.add(panelHeightFollowSwitch);
 
@@ -124,13 +180,17 @@ export function addPanelAppearancePage({
         iconSpacingRow.sensitive = !enabled;
         iconEdgePaddingRow.sensitive = !enabled;
         const defaultPanel = settings.get_boolean('default-gnome-panel');
-        panelHeightFollowSwitch.sensitive = !enabled && !defaultPanel;
-        panelHeightFollowSwitch.subtitle = defaultPanel
-            ? _('Not available with the Default GNOME Panel: set the Taskbar Thickness below and the window icons resize to fit')
-            : panelHeightFollowSubtitle;
-        panelHeightRow.sensitive = !enabled && !panelHeightFollowsIcons();
+        const dynamic = dynamicTaskbarEnabled(settings);
+        panelHeightFollowSwitch.sensitive = !enabled && !defaultPanel && !dynamic;
+        if (defaultPanel)
+            panelHeightFollowSwitch.subtitle = _('Not available with the Default GNOME Panel: set the Taskbar Thickness below and the window icons resize to fit');
+        else if (dynamic)
+            panelHeightFollowSwitch.subtitle = _('Dynamic Panel Mode always matches the thickness to the icon size');
+        else
+            panelHeightFollowSwitch.subtitle = panelHeightFollowSubtitle;
+        panelHeightRow.sensitive = !enabled && !dynamic && !panelHeightFollowsIcons();
         panelPositionGroup.sensitive = !enabled;
-        appAlignmentRow.sensitive = !enabled &&
+        appAlignmentRow.sensitive = !enabled && !dynamicTaskbarEnabled(settings) &&
             (!settings.get_boolean('dock-mode') ||
                 settings.get_boolean('dock-panel-mode'));
         combineAppButtonsRow.sensitive = true;
@@ -141,6 +201,7 @@ export function addPanelAppearancePage({
         'changed::windows-xp-theme-enabled',
         syncWindowsXpTheme
     );
+    connectSettings(settings, 'changed::taskbar-dynamic', syncWindowsXpTheme);
     connectSettings(settings, 'changed::dock-mode', syncWindowsXpTheme);
     connectSettings(
         settings,
