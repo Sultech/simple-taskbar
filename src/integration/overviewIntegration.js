@@ -29,6 +29,7 @@ import {
     panelHeightForIconSize,
 } from '../shared/panelSizing.js';
 import {dockFloatingEnabled, floatingTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {CachedSettings} from '../shared/remappedSettings.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const OVERVIEW_LABEL_MARGIN = 60;
@@ -41,7 +42,7 @@ const DESKTOP_DOCK_UUIDS = [
 export class OverviewIntegration {
     constructor(panelHeight, settings) {
         this._panelHeight = panelHeight;
-        this._settings = settings;
+        this._settings = new CachedSettings(settings);
         this._dashState = null;
         this._dashVisibilityRepairId = 0;
         this._injectionManager = new InjectionManager();
@@ -150,6 +151,7 @@ export class OverviewIntegration {
         this.queueRelayout();
         this._maximizedWindowDrag = null;
         this._tracker = null;
+        this._settings.destroy();
         this._settings = null;
     }
 
