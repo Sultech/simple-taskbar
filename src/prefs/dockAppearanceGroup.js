@@ -134,9 +134,13 @@ export function addDockAppearanceGroup({
         title: _('Dock Position'),
         description: _('Place the Dock at a different screen edge from the taskbar'),
     });
+    const thicknessGroup = sizePage.addGroup({
+        title: _('Thickness'),
+        description: _('Choose how thick the full-width Dock is'),
+    });
     const group = sizePage.addGroup({
-        title: _('Size'),
-        description: _('Choose the Dock length and thickness'),
+        title: _('Dock Layout'),
+        description: _('Choose the Dock length, floating and corners'),
     });
     addDockPlacementRows(positionGroup, group, settings, connectSettings, createSettings);
 
@@ -154,10 +158,10 @@ export function addDockAppearanceGroup({
         ),
         isActive: () => settings.get_boolean('dock-mode'),
     });
-    group.add(dockPanelHeightFollowSwitch);
+    thicknessGroup.add(dockPanelHeightFollowSwitch);
 
     const dockPanelHeightRow = addSliderRow(
-        group,
+        thicknessGroup,
         settings,
         {
             key: DOCK_PANEL_HEIGHT_KEY,
@@ -175,7 +179,7 @@ export function addDockAppearanceGroup({
     const themeGroup = appearancePage.addGroup({
         title: _('Theme and Styling'),
         description: _(
-            'Choose the Dock theme, colours, gradient, corner radius, and text appearance'
+            'Choose the Dock theme, colours, gradient, and text appearance'
         ),
     });
 
@@ -209,7 +213,7 @@ export function addDockAppearanceGroup({
     );
 
     const cornerRadiusRow = addSliderRow(
-        themeGroup,
+        group,
         settings,
         {
             key: 'dock-corner-radius',
@@ -219,7 +223,6 @@ export function addDockAppearanceGroup({
             ),
             lower: 0,
             upper: 64,
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -503,7 +506,7 @@ export function addDockAppearanceGroup({
             ? blockedSubtitle
             : customPanelTextColorSubtitle;
     };
-    const groups = [positionGroup, group, themeGroup, transparencyGroup, bordersGroup];
+    const groups = [positionGroup, thicknessGroup, group, themeGroup, transparencyGroup, bordersGroup];
     const syncAvailability = () => {
         const available = dockAvailable();
         for (const availableGroup of groups)

@@ -76,6 +76,10 @@ export function addPanelAppearancePage({
     for (const key of TASKBAR_GEOMETRY_KEYS)
         connectSettings(settings, `changed::${key}`, panelPositionCards.redraw);
 
+    const panelAppearanceGroup = sizePage.addGroup({
+        title: _('Thickness'),
+        description: _('Choose how thick the taskbar is'),
+    });
     const floatingGroup = sizePage.addGroup({
         title: _('Panel Layout'),
         description: _('Choose dynamic sizing and floating independently'),
@@ -118,11 +122,6 @@ export function addPanelAppearancePage({
     for (const key of TASKBAR_GEOMETRY_KEYS)
         connectSettings(settings, `changed::${key}`, syncFloatingControls);
     syncFloatingControls();
-
-    const panelAppearanceGroup = sizePage.addGroup({
-        title: _('Thickness'),
-        description: _('Choose how thick the taskbar is'),
-    });
 
     const panelHeightFollowSubtitle = _('Keep the taskbar only as thick as its icons need');
     const {
