@@ -48,6 +48,8 @@ const BLUR_MY_SHELL_PANEL_KEYS = [
     'override-background-dynamically-mode',
     'style-panel',
     'gradient-panel',
+    'corner-radius',
+    'rounded-corners',
 ];
 const BORDER_DISABLED_CLASS =
     'simple-taskbar-border-disabled';

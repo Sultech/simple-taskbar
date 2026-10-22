@@ -3,7 +3,12 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {BLUR_MY_SHELL_UUID} from '../shared/blurMyShellUtils.js';
+import {
+    BLUR_MY_SHELL_UUID,
+    blurMyShellHasKey,
+    getBlurMyShellChildSettings,
+    getBlurMyShellSettings,
+} from '../shared/blurMyShellUtils.js';
 import {
     getPanelBlur,
     refreshPanelBlurVisibility,
@@ -29,6 +34,19 @@ export class SecondaryPanelManager extends PanelManagerBase {
             },
             this._signalHolder
         );
+        const panelBlurSettings = getBlurMyShellChildSettings(
+            getBlurMyShellSettings(),
+            'panel'
+        );
+        for (const key of ['corner-radius', 'rounded-corners']) {
+            if (!blurMyShellHasKey(panelBlurSettings, key))
+                continue;
+
+            panelBlurSettings.connectObject(
+                `changed::${key}`, () => this._queueBlurMyShellSync(),
+                this._signalHolder
+            );
+        }
         this._rebuild();
     }
 
