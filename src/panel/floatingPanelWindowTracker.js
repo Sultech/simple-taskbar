@@ -1,6 +1,12 @@
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {TransientSignalHolder} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
+function fillAppGridIfEmpty() {
+    const appDisplay = Main.overview._overview.controls._appDisplay;
+    if (appDisplay._orderedItems.length === 0)
+        appDisplay._redisplay();
+}
+
 export class FloatingPanelWindowTracker {
     constructor(onPosition) {
         this._onPosition = onPosition;
@@ -24,7 +30,10 @@ export class FloatingPanelWindowTracker {
             this._signalHolder
         );
         Main.overview.connectObject(
-            'showing', () => this._onPosition(true, true),
+            'showing', () => {
+                fillAppGridIfEmpty();
+                this._onPosition(true, true);
+            },
             'hiding', () => this._onPosition(true, true),
             this._signalHolder
         );
