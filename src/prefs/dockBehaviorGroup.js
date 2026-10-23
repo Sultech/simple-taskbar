@@ -3,6 +3,7 @@
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {DOCK_AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {getPanelScrollActionChoices} from './taskbarBehaviorGroup.js';
 import {
@@ -21,11 +22,6 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
         title: _('Auto-hide Dock'),
         subtitle: _('Reveal the Dock when the pointer reaches its screen edge'),
     });
-    const edgeRevealSwitch = createSwitchRow(settings, {
-        key: 'dock-edge-reveal-enabled',
-        title: _('Limit Reveal to Dock Edge'),
-        subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
-    });
     const dodgeWindows = addWindowDodgeGroup(
         visibilityPage,
         settings,
@@ -34,6 +30,8 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
             modeKey: 'dock-dodge-windows-mode',
             pointerRevealKey: 'dock-dodge-pointer-reveal-enabled',
             autohideKey: 'dock-autohide-enabled',
+            autoHideKeys: DOCK_AUTO_HIDE_SETTINGS,
+            positionKey: 'dock-position',
             autohideSwitch: autoHideSwitch,
             visibilityTitle: _('Dock Auto-hide and Window Dodge'),
             visibilityDescription: _(
@@ -58,7 +56,13 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
                     'How long the Dock waits after the pointer leaves, in milliseconds'
                 ),
             },
-            visibilityRows: [edgeRevealSwitch],
+            edgeReveal: {
+                key: 'dock-edge-reveal-enabled',
+                title: _('Limit Reveal to Dock Edge'),
+                subtitle: _('Only reveal a floating Dock when the pointer reaches its edge'),
+                isAvailable: () => !settings.get_boolean('dock-panel-mode') || dockFloatingEnabled(settings),
+                changedKeys: DOCK_FLOATING_KEYS,
+            },
             isAvailable: dockAvailable,
             connectSettings,
         }
@@ -117,8 +121,6 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
         const available = dockAvailable();
         for (const group of groups)
             group.sensitive = available;
-        edgeRevealSwitch.sensitive = available &&
-            (!settings.get_boolean('dock-panel-mode') || dockFloatingEnabled(settings));
         dodgeWindows.syncAvailability();
         syncWorkspaceScrollControls();
     };

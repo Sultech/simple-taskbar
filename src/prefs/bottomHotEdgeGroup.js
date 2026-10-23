@@ -6,6 +6,8 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     AUTO_HIDE_REVEAL_MODE,
     AUTO_HIDE_SETTINGS,
+    DOCK_AUTO_HIDE_SETTINGS,
+    pressureRevealAtBottom,
 } from '../shared/autoHideSettings.js';
 import {
     createSwitchRow,
@@ -60,18 +62,15 @@ export function addBottomHotEdgeGroup(page, settings, connectSettings) {
         if (!settings.get_boolean('hot-edge-overview-enabled'))
             return;
 
-        if (settings.get_string(AUTO_HIDE_SETTINGS.revealMode) ===
-            AUTO_HIDE_REVEAL_MODE.PRESSURE) {
-            settings.set_string(
-                AUTO_HIDE_SETTINGS.revealMode,
-                AUTO_HIDE_REVEAL_MODE.INSTANT
-            );
+        for (const [modeKey, positionKey] of [
+            [AUTO_HIDE_SETTINGS.revealMode, 'panel-position'],
+            [DOCK_AUTO_HIDE_SETTINGS.revealMode, 'dock-position'],
+        ]) {
+            if (pressureRevealAtBottom(settings, modeKey, positionKey))
+                settings.set_string(modeKey, AUTO_HIDE_REVEAL_MODE.INSTANT);
         }
     };
-    connectSettings(
-        settings,
-        'changed::hot-edge-overview-enabled',
-        disablePressureWithHotEdge
-    );
+    for (const key of ['hot-edge-overview-enabled', 'panel-position', 'dock-position'])
+        connectSettings(settings, `changed::${key}`, disablePressureWithHotEdge);
     disablePressureWithHotEdge();
 }

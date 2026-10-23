@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Adw from 'gi://Adw';
+
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
 import {
     addComboRow,
-    addSwitchRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
-import {createRevealOptionsButton} from './autoHideDialog.js';
+import {createIntellihideOptionsButton} from './autoHideDialog.js';
 
 export function windowDodgeModeChoices() {
     return [
@@ -40,6 +41,8 @@ export function addWindowDodgeGroup(
         modeKey,
         pointerRevealKey,
         autohideKey,
+        autoHideKeys,
+        positionKey,
         autohideSwitch,
         visibilityTitle,
         visibilityDescription,
@@ -47,7 +50,7 @@ export function addWindowDodgeGroup(
         modeSubtitle,
         pointerRevealSubtitle,
         timingDescriptions,
-        visibilityRows,
+        edgeReveal,
         isAvailable = () => true,
         connectSettings,
     }
@@ -77,24 +80,22 @@ export function addWindowDodgeGroup(
         connectSettings
     );
 
-    const revealOptionsButton =
-        createRevealOptionsButton(
-            settings,
-            pointerRevealKey,
-            timingDescriptions
-        );
-    const {
-        row: pointerRevealRow,
-        toggle: pointerRevealSwitch,
-    } = addSwitchRow(null, settings, {
-        key: pointerRevealKey,
-        title: _('Reveal on Pointer'),
-        subtitle: pointerRevealSubtitle,
-        addSuffix: row => row.add_suffix(revealOptionsButton),
-        addRow: row => dodgeGroup.add(row),
+    const intellihideOptionsButton = createIntellihideOptionsButton(
+        settings,
+        pointerRevealKey,
+        autohideKey,
+        autoHideKeys,
+        positionKey,
+        edgeReveal,
+        {...timingDescriptions, pointerReveal: pointerRevealSubtitle}
+    );
+    const intellihideOptionsRow = new Adw.ActionRow({
+        title: _('Intellihide Options'),
+        subtitle: _('Pointer reveal, timing and Overview behaviour for auto-hide and dodge windows'),
+        activatable_widget: intellihideOptionsButton,
     });
-    for (const row of visibilityRows)
-        dodgeGroup.add(row);
+    intellihideOptionsRow.add_suffix(intellihideOptionsButton);
+    dodgeGroup.add(intellihideOptionsRow);
 
     const disableAutoHideWhenDodgeEnabled = () => {
         if (settings.get_boolean(enabledKey) &&
@@ -125,15 +126,10 @@ export function addWindowDodgeGroup(
         dodgeGroup.sensitive = available;
         dodgeSwitch.sensitive = available;
         modeRow.sensitive = available && dodgeSwitch.active;
-        const autoHideEnabled = settings.get_boolean(autohideKey);
-        const revealable = available &&
-            (dodgeSwitch.active || autoHideEnabled);
-        pointerRevealRow.sensitive = revealable;
-        revealOptionsButton.sensitive = revealable &&
-            (autoHideEnabled || pointerRevealSwitch.active);
+        intellihideOptionsRow.sensitive = available &&
+            (dodgeSwitch.active || settings.get_boolean(autohideKey));
     };
     dodgeSwitch.connect('notify::active', syncAvailability);
-    pointerRevealSwitch.connect('notify::active', syncAvailability);
     connectSettings(settings, `changed::${autohideKey}`, syncAvailability);
     syncAvailability();
 

@@ -58,6 +58,10 @@
       <default>false</default>
       <summary>Allow pointer reveal over fullscreen applications</summary>
     </key>
+    <key name="panel-autohide-reveal-overview" type="b">
+      <default>true</default>
+      <summary>Reveal the auto-hidden taskbar or Dock while the Overview is open</summary>
+    </key>
     <key name="panel-autohide-reveal-delay" type="i">
       <range min="50" max="2000"/>
       <default>250</default>
@@ -1030,6 +1034,38 @@
     <key name="dock-autohide-enabled" type="b">
       <default>false</default>
       <summary>Hide the Dock until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="dock-autohide-reveal-mode" type="s">
+      <choices>
+        <choice value="instant"/>
+        <choice value="delay"/>
+        <choice value="pressure"/>
+      </choices>
+      <default>'instant'</default>
+      <summary>Whether the pointer reveals the Dock at once or after a delay</summary>
+    </key>
+    <key name="dock-autohide-reveal-fullscreen" type="b">
+      <default>false</default>
+      <summary>Allow pointer reveal of the Dock over fullscreen applications</summary>
+    </key>
+    <key name="dock-autohide-reveal-overview" type="b">
+      <default>true</default>
+      <summary>Reveal the auto-hidden Dock while the Overview is open</summary>
+    </key>
+    <key name="dock-autohide-reveal-delay" type="i">
+      <range min="50" max="2000"/>
+      <default>250</default>
+      <summary>How long the pointer must rest on the screen edge before revealing the Dock</summary>
+    </key>
+    <key name="dock-autohide-pressure-threshold" type="i">
+      <range min="0" max="500"/>
+      <default>100</default>
+      <summary>How hard the pointer must push against the edge before revealing the Dock</summary>
+    </key>
+    <key name="dock-autohide-hide-delay" type="i">
+      <range min="0" max="2000"/>
+      <default>450</default>
+      <summary>How long the Dock waits after the pointer leaves before hiding</summary>
     </key>
     <key name="dock-dodge-windows-enabled" type="b">
       <default>true</default>

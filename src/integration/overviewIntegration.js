@@ -30,6 +30,7 @@ import {
 } from '../shared/panelSizing.js';
 import {dockFloatingEnabled, floatingTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 import {CachedSettings} from '../shared/remappedSettings.js';
+import {DOCK_AUTO_HIDE_SETTINGS, autoHideRevealsInOverview} from '../shared/autoHideSettings.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const OVERVIEW_LABEL_MARGIN = 60;
@@ -89,6 +90,8 @@ export class OverviewIntegration {
                 this.queueRelayout(),
             'changed::icon-size', () => this.queueRelayout(),
             'changed::panel-autohide-enabled', () => this.queueRelayout(),
+            'changed::panel-autohide-reveal-overview', () => this.queueRelayout(),
+            `changed::${DOCK_AUTO_HIDE_SETTINGS.revealOverview}`, () => this.queueRelayout(),
             'changed::panel-dodge-windows-enabled', () =>
                 this.queueRelayout(),
             this._signalHolder
@@ -410,7 +413,9 @@ export class OverviewIntegration {
                 const panelDodge = integration._settings.get_boolean(
                     'panel-dodge-windows-enabled'
                 );
-                if (position === 'bottom') {
+                const panelHiddenInOverview = panelAutohide &&
+                    !autoHideRevealsInOverview(integration._settings);
+                if (!panelHiddenInOverview && position === 'bottom') {
                     const inset = panelAutohide
                         ? integration._panelOverviewInset() * Math.clamp(
                             controls._stateAdjustment.value,
@@ -419,7 +424,7 @@ export class OverviewIntegration {
                         )
                         : integration._panelOverviewInset();
                     box.y2 -= inset;
-                } else if (panelAutohide || panelDodge) {
+                } else if (!panelHiddenInOverview && (panelAutohide || panelDodge)) {
                     const progress = Math.clamp(
                         controls._stateAdjustment.value,
                         0,
@@ -451,7 +456,8 @@ export class OverviewIntegration {
                 const panelDodge = integration._settings.get_boolean(
                     'panel-dodge-windows-enabled'
                 );
-                if (panelAutohide || panelDodge) {
+                if ((panelAutohide && autoHideRevealsInOverview(integration._settings)) ||
+                    panelDodge) {
                     const progress = Math.clamp(
                         this._overviewAdjustment.value,
                         0,
@@ -498,6 +504,9 @@ export class OverviewIntegration {
         const dockDodge = this._settings.get_boolean(
             'dock-dodge-windows-enabled'
         );
+        if (dockAutohide && !this._settings.get_boolean(DOCK_AUTO_HIDE_SETTINGS.revealOverview))
+            return;
+
         const iconSize = this._settings.get_int('icon-size');
         const dockThickness = this._settings.get_boolean('dock-panel-mode')
             ? dockPanelModeHeight(this._settings, iconSize)

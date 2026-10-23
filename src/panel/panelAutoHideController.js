@@ -26,6 +26,7 @@ import {
     AUTO_HIDE_SETTINGS,
     autoHideHideDelay,
     autoHideRevealDelay,
+    autoHideRevealsInOverview,
     autoHideUsesPressure,
 } from '../shared/autoHideSettings.js';
 import {hasWindowCoveringMonitor} from '../windowVisibility.js';
@@ -172,7 +173,8 @@ export class PanelAutoHideController {
             this._signalHolder
         );
 
-        this._overviewSuspended = Main.overview.visibleTarget;
+        this._overviewSuspended = Main.overview.visibleTarget &&
+            !this._overviewKeepsHidden();
         this._overviewEdgeRevealBlocked =
             Main.overview.animationInProgress;
         this._captureStrutTracking();
@@ -375,6 +377,10 @@ export class PanelAutoHideController {
 
     _enabled() {
         return this._settings.get_boolean('panel-autohide-enabled');
+    }
+
+    _overviewKeepsHidden() {
+        return this._enabled() && !autoHideRevealsInOverview(this._settings);
     }
 
     _syncEnabled() {
@@ -684,8 +690,11 @@ export class PanelAutoHideController {
     }
 
     _suspendForOverview() {
-        this._overviewSuspended = true;
         this._overviewEdgeRevealBlocked = true;
+        if (this._overviewKeepsHidden())
+            return;
+
+        this._overviewSuspended = true;
         this._clearHideTimeout();
         if (!this._enabled() && !this._dodgeActive)
             return;
@@ -936,10 +945,8 @@ export class PanelAutoHideController {
             return;
         if (this._fullscreenBlocksReveal())
             return;
-        if (Main.overview.visibleTarget ||
-            Main.overview.animationInProgress) {
+        if (Main.overview.animationInProgress)
             return;
-        }
 
         this.show();
     }

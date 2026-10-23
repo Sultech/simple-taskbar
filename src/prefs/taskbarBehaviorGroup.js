@@ -7,6 +7,7 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
+import {AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
 import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
 import {TASKBAR_GEOMETRY_KEYS, taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
 import {
@@ -49,17 +50,6 @@ export function addTaskbarBehaviorGroup({
         title: _('Auto-hide Taskbar'),
         subtitle: _('Reveal the taskbar when the pointer reaches its screen edge'),
     });
-    const edgeRevealSwitch = createSwitchRow(settings, {
-        key: 'edge-reveal-enabled',
-        title: _('Limit Reveal to Taskbar Edge'),
-        subtitle: _('Only reveal a dynamic or floating taskbar when the pointer reaches its edge'),
-    });
-    const syncEdgeRevealSensitivity = () => {
-        edgeRevealSwitch.sensitive = taskbarGeometryEnabled(settings);
-    };
-    for (const key of TASKBAR_GEOMETRY_KEYS)
-        connectSettings(settings, `changed::${key}`, syncEdgeRevealSensitivity);
-    syncEdgeRevealSensitivity();
     addWindowDodgeGroup(
         visibilityPage,
         settings,
@@ -68,6 +58,8 @@ export function addTaskbarBehaviorGroup({
             modeKey: 'panel-dodge-windows-mode',
             pointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
             autohideKey: 'panel-autohide-enabled',
+            autoHideKeys: AUTO_HIDE_SETTINGS,
+            positionKey: 'panel-position',
             autohideSwitch: panelAutoHideSwitch,
             visibilityTitle: _('Taskbar Auto-hide and Window Dodge'),
             visibilityDescription: _(
@@ -94,7 +86,13 @@ export function addTaskbarBehaviorGroup({
                     'How long the taskbar waits after the pointer leaves, in milliseconds'
                 ),
             },
-            visibilityRows: [edgeRevealSwitch],
+            edgeReveal: {
+                key: 'edge-reveal-enabled',
+                title: _('Limit Reveal to Taskbar Edge'),
+                subtitle: _('Only reveal a dynamic or floating taskbar when the pointer reaches its edge'),
+                isAvailable: () => taskbarGeometryEnabled(settings),
+                changedKeys: TASKBAR_GEOMETRY_KEYS,
+            },
             connectSettings,
         }
     );

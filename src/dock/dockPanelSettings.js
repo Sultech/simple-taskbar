@@ -5,6 +5,7 @@ import {
     dockFloatingPanelReserve,
     dockPanelModeHeight,
 } from '../shared/panelSizing.js';
+import {AUTO_HIDE_SETTINGS, DOCK_AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
 import {CachedSettings} from '../shared/remappedSettings.js';
 
 const DOCK_SETTING_KEYS = new Map([
@@ -66,6 +67,8 @@ const DOCK_SETTING_KEYS = new Map([
         'panel-dodge-pointer-reveal-enabled',
         'dock-dodge-pointer-reveal-enabled',
     ],
+    ...Object.keys(AUTO_HIDE_SETTINGS).map(name =>
+        [AUTO_HIDE_SETTINGS[name], DOCK_AUTO_HIDE_SETTINGS[name]]),
 ]);
 
 const DOCK_COMPUTED_SETTING_KEYS = new Map([

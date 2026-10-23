@@ -3,6 +3,7 @@
 
 import GLib from 'gi://GLib';
 
+import {DOCK_AUTO_HIDE_SETTINGS} from './autoHideSettings.js';
 import {DEFAULT_PANEL_WINDOW_SETTING_KEYS, defaultPanelWindowSettingKey} from './defaultPanelWindowSettings.js';
 import {normalizePanelItemOrder} from './panelItemOrder.js';
 import {positionIsVertical} from './panelPositionUtils.js';
@@ -101,6 +102,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-mode',
     'dock-mode-initialized',
     'dock-autohide-enabled',
+    ...Object.values(DOCK_AUTO_HIDE_SETTINGS),
     'dock-dodge-windows-enabled',
     'dock-dodge-windows-mode',
     'dock-dodge-pointer-reveal-enabled',
