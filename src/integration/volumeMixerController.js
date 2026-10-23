@@ -2,11 +2,13 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {
@@ -27,6 +29,8 @@ function normalizeAppIdentifier(value) {
 }
 
 const VOLUME_ROW_ANIMATION_TIME = 150;
+const ALLOW_AMPLIFIED_VOLUME_KEY = 'allow-volume-above-100-percent';
+const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
 const GENERIC_STREAM_NAMES = new Set([
     'audiostream',
@@ -72,7 +76,7 @@ function findStreamApp(stream, appSystem) {
 
 const ApplicationVolumeRow = GObject.registerClass(
 class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
-    _init(stream, control, appSystem) {
+    _init(stream, control, appSystem, maximumLevel) {
         super._init({
             reactive: false,
             can_focus: false,
@@ -129,6 +133,7 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
         titleBox.add_child(this._windowLabel);
 
         this.slider = new Slider(0);
+        this._setSliderMaximum(maximumLevel);
         this.slider.accessible_name =
             _('%s volume').replace('%s', name);
         const sliderBin = new St.Bin({
@@ -218,6 +223,21 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
         });
     }
 
+    setMaximumLevel(level) {
+        this._setSliderMaximum(level);
+        this._sync();
+    }
+
+    _setSliderMaximum(level) {
+        this.slider.maximum_value = level;
+        if (SHELL_VERSION < 50)
+            return;
+
+        this.slider.clearMarks();
+        if (level > 1)
+            this.slider.addMark(1);
+    }
+
     setAppStreamCount(count) {
         if (count === this._appStreamCount)
             return;
@@ -279,7 +299,7 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
         const normalVolume = this._control.get_vol_max_norm();
         const value = this._stream.is_muted
             ? 0
-            : Math.clamp(this._stream.volume / normalVolume, 0, 1);
+            : this._stream.volume / normalVolume;
 
         this.slider.block_signal_handler(this._sliderChangedId);
         this.slider.value = value;
@@ -342,6 +362,14 @@ class VolumeMixerToggle extends QuickMenuToggle {
         this.menu.addMenuItem(this._streamSection);
 
         this.connect('clicked', openSoundSettings);
+        this._soundSettings = new Gio.Settings({
+            schema_id: 'org.gnome.desktop.sound',
+        });
+        this._soundSettings.connectObject(
+            `changed::${ALLOW_AMPLIFIED_VOLUME_KEY}`,
+            this._syncMaximumLevel.bind(this),
+            this
+        );
         control.connectObject(
             'state-changed', this._syncStreams.bind(this),
             'stream-added', this._syncStreams.bind(this),
@@ -349,6 +377,20 @@ class VolumeMixerToggle extends QuickMenuToggle {
             this
         );
         this._syncStreams();
+    }
+
+    _getMaximumLevel() {
+        if (!this._soundSettings.get_boolean(ALLOW_AMPLIFIED_VOLUME_KEY))
+            return 1;
+
+        return this._control.get_vol_max_amplified() /
+            this._control.get_vol_max_norm();
+    }
+
+    _syncMaximumLevel() {
+        const maximumLevel = this._getMaximumLevel();
+        for (const row of this._streamRows.values())
+            row.setMaximumLevel(maximumLevel);
     }
 
     _syncStreams() {
@@ -382,7 +424,8 @@ class VolumeMixerToggle extends QuickMenuToggle {
             const row = new ApplicationVolumeRow(
                 stream,
                 this._control,
-                this._appSystem
+                this._appSystem,
+                this._getMaximumLevel()
             );
             this._streamSection.addMenuItem(row);
             this._streamRows.set(id, row);
@@ -424,6 +467,7 @@ class VolumeMixerToggle extends QuickMenuToggle {
     }
 
     destroy() {
+        this._soundSettings.disconnectObject(this);
         this._control.disconnectObject(this);
         for (const row of this._streamRows.values())
             row.destroy();
@@ -439,6 +483,7 @@ class VolumeMixerToggle extends QuickMenuToggle {
         this._streamSection.destroy();
         this._streamSection = null;
         this._exitingRows = null;
+        this._soundSettings = null;
         this._control = null;
         this._appSystem = null;
         super.destroy();
