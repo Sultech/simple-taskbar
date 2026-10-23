@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import {panelApplicationsEnabled} from './defaultPanelWindows.js';
 import {positionIsVertical} from './panelPositionUtils.js';
 
 export const RUNNING_INDICATOR_STYLES = [
@@ -58,6 +59,7 @@ export function runningIndicatorReserveIsPossible(
 
 function runningIndicatorReserveSize(settings) {
     if (settings.get_boolean('windows-xp-theme-enabled') ||
+        !panelApplicationsEnabled(settings) ||
         !settings.get_boolean(RUNNING_INDICATOR_RESERVE_SETTINGS.enabled)) {
         return 0;
     }
