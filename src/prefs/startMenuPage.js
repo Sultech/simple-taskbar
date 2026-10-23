@@ -7,8 +7,15 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
-import {dynamicTaskbarEnabled, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
+import {
+    START_BUTTON_LOCATION_KEY,
+    dynamicTaskbarEnabled,
+    panelStartButtonPosition,
+    startButtonAlignmentKey,
+    startButtonInPanel,
+} from '../shared/taskbarPanelModes.js';
 import {
     getStartIconDisplayName,
     StartIconChooserDialog,
@@ -82,20 +89,45 @@ export function addStartMenuPage({
         ),
     });
 
+    const followAppAlignmentKey = () =>
+        startButtonAlignmentKey(settings, 'start-button-follow-app-alignment');
+    const startPositionKey = () =>
+        startButtonAlignmentKey(settings, 'start-button-position');
+    const effectiveStartButtonPosition = () => panelStartButtonPosition(
+        startButtonInPanel(settings) ? panelApplicationSettings(settings) : settings
+    );
+    const startButtonPositionKeys = [
+        'taskbar-dynamic',
+        'app-alignment',
+        'start-button-position',
+        'default-panel-start-button-position',
+        'default-panel-window-app-alignment',
+        'default-panel-show-running-windows',
+        'dock-mode',
+        'dock-panel-mode',
+        'default-gnome-panel',
+        START_BUTTON_LOCATION_KEY,
+    ];
     const followAppAlignmentSwitch = new Adw.SwitchRow({
         title: _('Follow Application Alignment'),
         subtitle: _('Move the Start button with the application icons'),
-        active: settings.get_boolean(
-            'start-button-follow-app-alignment'
-        ),
+        active: settings.get_boolean(followAppAlignmentKey()),
     });
     startButtonAlignmentGroup.add(followAppAlignmentSwitch);
-    settings.bind(
+    followAppAlignmentSwitch.connect('notify::active', widget => {
+        if (settings.get_boolean(followAppAlignmentKey()) !== widget.active)
+            settings.set_boolean(followAppAlignmentKey(), widget.active);
+    });
+    for (const key of [
         'start-button-follow-app-alignment',
-        followAppAlignmentSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
+        'default-panel-start-button-follow-app-alignment',
+        START_BUTTON_LOCATION_KEY,
+        'default-gnome-panel',
+    ]) {
+        connectSettings(settings, `changed::${key}`, () => {
+            followAppAlignmentSwitch.active = settings.get_boolean(followAppAlignmentKey());
+        });
+    }
 
     const startPositionRow = addComboRow(
         startButtonAlignmentGroup,
@@ -103,15 +135,47 @@ export function addStartMenuPage({
         {
             key: 'start-button-position',
             getValue: () => dynamicTaskbarEnabled(settings)
-                ? 'center' : settings.get_string('start-button-position'),
+                ? 'center' : settings.get_string(startPositionKey()),
+            setValue: value => settings.set_string(startPositionKey(), value),
             title: _('Manual Alignment'),
             subtitle: _(
                 'Used when the Start button does not follow applications'
             ),
             choices: panelPositions,
-            choicesProvider: () =>
-                axisPanelPositions(activePanelPosition(settings), panelPositions),
-            choicesChangedKeys: ['panel-position', 'dock-position', 'dock-mode', 'taskbar-dynamic'],
+            choicesProvider: () => axisPanelPositions(
+                startButtonInPanel(settings)
+                    ? settings.get_string('panel-position')
+                    : activePanelPosition(settings),
+                panelPositions
+            ),
+            choicesChangedKeys: [
+                'panel-position',
+                'dock-position',
+                'dock-mode',
+                'taskbar-dynamic',
+                'default-gnome-panel',
+                START_BUTTON_LOCATION_KEY,
+                'default-panel-start-button-position',
+            ],
+            addRow: row => startButtonAlignmentGroup.add(row),
+        },
+        connectSettings
+    );
+    const startLocationRow = addComboRow(
+        startButtonAlignmentGroup,
+        settings,
+        {
+            key: START_BUTTON_LOCATION_KEY,
+            title: _('Location'),
+            choices: [],
+            choicesProvider: () => [
+                {
+                    value: 'dock',
+                    label: settings.get_boolean('dock-mode') ? _('Dock') : _('Hidden'),
+                },
+                {value: 'panel', label: _('Panel')},
+            ],
+            choicesChangedKeys: ['dock-mode'],
             addRow: row => startButtonAlignmentGroup.add(row),
         },
         connectSettings
@@ -123,14 +187,18 @@ export function addStartMenuPage({
         );
         const dockMode = settings.get_boolean('dock-mode');
         const dockPanelMode = settings.get_boolean('dock-panel-mode');
+        const inPanel = startButtonInPanel(settings);
         startPositionRow.sensitive =
-            !defaultPanel && !windowsXpTheme && !dynamicTaskbarEnabled(settings) &&
+            !windowsXpTheme && !dynamicTaskbarEnabled(settings) &&
             !followAppAlignmentSwitch.active &&
-            (!dockMode || dockPanelMode);
+            (inPanel || (!defaultPanel && (!dockMode || dockPanelMode)));
         followAppAlignmentSwitch.sensitive =
-            !defaultPanel && !windowsXpTheme && !dynamicTaskbarEnabled(settings);
-        startButtonAlignmentGroup.sensitive =
-            !defaultPanel && !windowsXpTheme;
+            (inPanel || !defaultPanel) && !windowsXpTheme && !dynamicTaskbarEnabled(settings);
+        startLocationRow.sensitive = settings.get_boolean('default-gnome-panel');
+        startLocationRow.subtitle = dockMode
+            ? _('Place the Start button in the Dock or the panel in Default Panel mode')
+            : _('The Dock is off, so the Start button is hidden unless it is in the panel');
+        startButtonAlignmentGroup.sensitive = !windowsXpTheme;
     };
     followAppAlignmentSwitch.connect(
         'notify::active',
@@ -143,6 +211,7 @@ export function addStartMenuPage({
     );
     connectSettings(settings, 'changed::taskbar-dynamic', updateStartPositionRow);
     connectSettings(settings, 'changed::dock-mode', updateStartPositionRow);
+    connectSettings(settings, `changed::${START_BUTTON_LOCATION_KEY}`, updateStartPositionRow);
     connectSettings(
         settings,
         'changed::dock-panel-mode',
@@ -182,25 +251,19 @@ export function addStartMenuPage({
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        const startButtonPosition = panelStartButtonPosition(settings);
+        const inPanel = startButtonInPanel(settings);
+        const startButtonPosition = effectiveStartButtonPosition();
         const available = (startButtonPosition === 'left' ||
             startButtonPosition === 'right') &&
-            (!dockMode || dockPanelMode);
+            (inPanel || !dockMode || dockPanelMode);
         startButtonPaddingRow.sensitive =
-            !defaultPanel && !windowsXpTheme && available;
+            (inPanel || !defaultPanel) && !windowsXpTheme && available;
     };
     followAppAlignmentSwitch.connect(
         'notify::active',
         updateStartButtonPaddingRow
     );
-    for (const key of [
-        'taskbar-dynamic',
-        'app-alignment',
-        'start-button-position',
-        'dock-mode',
-        'dock-panel-mode',
-        'default-gnome-panel',
-    ]) {
+    for (const key of startButtonPositionKeys) {
         connectSettings(
             settings,
             `changed::${key}`,
@@ -828,37 +891,19 @@ export function addStartMenuPage({
     );
 
     const updateCenterStartMenuRow = () => {
-        let centered = panelStartButtonPosition(settings) === 'center';
+        let centered = effectiveStartButtonPosition() === 'center';
         if (settings.get_boolean('dock-mode') &&
-            !settings.get_boolean('dock-panel-mode')) {
+            !settings.get_boolean('dock-panel-mode') &&
+            !startButtonInPanel(settings)) {
             centered = true;
         }
         centerStartMenuRow.sensitive =
             windowsStartMenuSwitch.active && centered;
     };
-    connectSettings(settings, 'changed::taskbar-dynamic', updateCenterStartMenuRow);
-    connectSettings(
-        settings,
-        'changed::start-button-position',
-        updateCenterStartMenuRow
-    );
+    for (const key of startButtonPositionKeys)
+        connectSettings(settings, `changed::${key}`, updateCenterStartMenuRow);
     followAppAlignmentSwitch.connect(
         'notify::active',
-        updateCenterStartMenuRow
-    );
-    connectSettings(
-        settings,
-        'changed::app-alignment',
-        updateCenterStartMenuRow
-    );
-    connectSettings(
-        settings,
-        'changed::dock-mode',
-        updateCenterStartMenuRow
-    );
-    connectSettings(
-        settings,
-        'changed::dock-panel-mode',
         updateCenterStartMenuRow
     );
     windowsStartMenuSwitch.connect(
@@ -983,14 +1028,13 @@ export function addStartMenuPage({
     updateCustomShortcutRow();
 
     const syncStartMenuAvailability = () => {
-        const available = !isDefaultPanelWithoutDock(settings);
-        startButtonHubGroup.sensitive = available;
+        const available = !isDefaultPanelWithoutDock(settings) || startButtonInPanel(settings);
         startMenuHubGroup.sensitive = available;
         startMenuPage.description = available
             ? ''
-            : _('The Start button and Start Menu are unavailable in Default GNOME Panel mode.');
+            : _('Set the Start button location to Panel to use the Start Menu in Default GNOME Panel mode.');
     };
-    for (const key of ['default-gnome-panel', 'dock-mode'])
+    for (const key of ['default-gnome-panel', 'dock-mode', START_BUTTON_LOCATION_KEY])
         connectSettings(settings, `changed::${key}`, syncStartMenuAvailability);
     syncStartMenuAvailability();
 

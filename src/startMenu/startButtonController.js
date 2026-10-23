@@ -63,9 +63,15 @@ import {
     syncSeparatorVisibility,
 } from '../taskbar/taskbarSeparator.js';
 import {REFLOW_ANIMATION_TIME} from '../taskbar/reflowAnimation.js';
+import {startButtonVisible} from '../shared/startButtonLocation.js';
 import {bundledStartIconFile, isBundledStartIcon} from '../shared/startIcons.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
-import {dynamicTaskbarEnabled, panelApplicationAlignment, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
+import {
+    START_BUTTON_LOCATION_KEY,
+    dynamicTaskbarEnabled,
+    panelApplicationAlignment,
+    panelStartButtonPosition,
+} from '../shared/taskbarPanelModes.js';
 
 export class StartButtonController {
     constructor({
@@ -671,6 +677,8 @@ export class StartButtonController {
             'changed::app-alignment', syncAppearance,
             'changed::start-button-position', syncAppearance,
             'changed::start-button-follow-app-alignment', syncAppearance,
+            'changed::default-panel-start-button-position', syncAppearance,
+            'changed::default-panel-start-button-follow-app-alignment', syncAppearance,
             'changed::panel-item-order', syncAppearance,
             'changed::panel-position', syncAppearance,
             'changed::panel-height', syncAppearance,
@@ -737,12 +745,14 @@ export class StartButtonController {
         this._settings.connectObject('changed::gnome-start-button-visible', () => {
             this._syncVisibility();
         }, this._signalHolder);
-        this._settings.connectObject('changed::default-gnome-panel', () => {
-            this._startMenuController?.close();
-            this._contextMenu.close();
-            this._syncVisibility();
-            this._keybindings?.sync();
-        }, this._signalHolder);
+        for (const key of ['default-gnome-panel', START_BUTTON_LOCATION_KEY]) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                this._startMenuController?.close();
+                this._contextMenu.close();
+                this._syncVisibility();
+                this._keybindings?.sync();
+            }, this._signalHolder);
+        }
         this._settings.connectObject(
             'changed::dock-mode',
             () => this._keybindings?.sync(),
@@ -990,10 +1000,7 @@ export class StartButtonController {
     }
 
     _syncVisibility() {
-        this.actor.visible =
-            !this._settings.get_boolean('default-gnome-panel') &&
-            (this._windowsModeEnabled() ||
-                this._settings.get_boolean('gnome-start-button-visible'));
+        this.actor.visible = startButtonVisible(this._settings);
         this.panelActor.visible = this.actor.visible;
         this._syncSeparator(false);
     }

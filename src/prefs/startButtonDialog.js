@@ -8,15 +8,15 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {
+    START_BUTTON_LOCATION_KEY,
+    startButtonAlignmentKey,
+    startButtonInPanel,
+} from '../shared/taskbarPanelModes.js';
+import {
     createPreferencesDialogButton,
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
-
-const START_BUTTON_SETTINGS = [
-    'start-button-follow-app-alignment',
-    'windows-start-menu-enabled',
-];
 
 export function createStartButtonOptionsButton(settings) {
     return createPreferencesDialogButton(
@@ -38,6 +38,8 @@ class StartButtonOptionsDialog extends Adw.Window {
         });
 
         this._settings = settings;
+        this._followAppAlignmentKey =
+            startButtonAlignmentKey(settings, 'start-button-follow-app-alignment');
         const {content, connectSettings} =
             createPreferencesDialogContent(this);
         const alignmentGroup = new Adw.PreferencesGroup({
@@ -46,7 +48,7 @@ class StartButtonOptionsDialog extends Adw.Window {
         content.append(alignmentGroup);
 
         const followAppAlignmentSwitch = createSwitchRow(settings, {
-            key: 'start-button-follow-app-alignment',
+            key: this._followAppAlignmentKey,
             title: _('Follow Application Alignment'),
             subtitle: _('Move the Start button with the application icons'),
         });
@@ -65,20 +67,21 @@ class StartButtonOptionsDialog extends Adw.Window {
                 'windows-xp-theme-enabled'
             );
             followAppAlignmentSwitch.sensitive =
-                !defaultPanel && !windowsXpTheme;
+                (startButtonInPanel(settings) || !defaultPanel) && !windowsXpTheme;
             windowsStartMenuSwitch.sensitive = !windowsXpTheme;
         };
         for (const key of [
             'default-gnome-panel',
             'dock-mode',
             'windows-xp-theme-enabled',
+            START_BUTTON_LOCATION_KEY,
         ])
             connectSettings(settings, `changed::${key}`, syncSensitivity);
         syncSensitivity();
     }
 
     _reset() {
-        for (const key of START_BUTTON_SETTINGS)
+        for (const key of [this._followAppAlignmentKey, 'windows-start-menu-enabled'])
             this._settings.reset(key);
     }
 }

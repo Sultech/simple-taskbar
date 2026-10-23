@@ -1,3 +1,5 @@
+export const START_BUTTON_LOCATION_KEY = 'default-panel-start-button-location';
+
 export const TASKBAR_GEOMETRY_KEYS = Object.freeze([
     'taskbar-dynamic',
     'taskbar-floating',
@@ -37,13 +39,23 @@ export function panelApplicationAlignment(settings) {
         ? 'center' : settings.get_string('app-alignment');
 }
 
+export function startButtonInPanel(settings) {
+    return settings.get_boolean('default-gnome-panel') &&
+        settings.get_string(START_BUTTON_LOCATION_KEY) === 'panel';
+}
+
+export function startButtonAlignmentKey(settings, key) {
+    return !settings.isDock && startButtonInPanel(settings)
+        ? `default-panel-${key}` : key;
+}
+
 export function panelStartButtonPosition(settings) {
     if (dynamicTaskbarEnabled(settings))
         return 'center';
 
-    return settings.get_boolean('start-button-follow-app-alignment')
+    return settings.get_boolean(startButtonAlignmentKey(settings, 'start-button-follow-app-alignment'))
         ? settings.get_string('app-alignment')
-        : settings.get_string('start-button-position');
+        : settings.get_string(startButtonAlignmentKey(settings, 'start-button-position'));
 }
 
 export function dockFloatingEnabled(settings) {

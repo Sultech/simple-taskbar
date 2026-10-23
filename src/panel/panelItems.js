@@ -3,6 +3,7 @@
 
 import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
 import {panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
+import {startButtonVisible} from '../shared/startButtonLocation.js';
 
 export function createPanelItems({
     settings,
@@ -13,17 +14,13 @@ export function createPanelItems({
     isSecondary,
 }) {
     const startButtonPosition = panelStartButtonPosition(settings);
-    const startButtonVisible =
-        !settings.get_boolean('default-gnome-panel') &&
-        (settings.get_boolean('windows-start-menu-enabled') ||
-            settings.get_boolean('gnome-start-button-visible'));
     const applicationsVisible = panelApplicationsVisible(settings, isSecondary);
     const items = [
         {
             id: 'start-button',
             actor: actors.startButton,
             position: startButtonPosition,
-            visible: startButtonVisible,
+            visible: startButtonVisible(settings),
         },
         {
             id: 'activities',

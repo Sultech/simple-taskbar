@@ -1678,6 +1678,27 @@
       <default>'center'</default>
       <summary>Start button position</summary>
     </key>
+    <key name="default-panel-start-button-location" type="s">
+      <choices>
+        <choice value="dock"/>
+        <choice value="panel"/>
+      </choices>
+      <default>'dock'</default>
+      <summary>Place the Start button in the Dock or the panel in Default Panel mode</summary>
+    </key>
+    <key name="default-panel-start-button-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'left'</default>
+      <summary>Start button position when it is in the panel in Default Panel mode</summary>
+    </key>
+    <key name="default-panel-start-button-follow-app-alignment" type="b">
+      <default>false</default>
+      <summary>Move the Start button with the application icon alignment when it is in the panel in Default Panel mode</summary>
+    </key>
     <key name="start-button-follow-app-alignment" type="b">
       <default>true</default>
       <summary>Move the Start button with the application icon alignment</summary>

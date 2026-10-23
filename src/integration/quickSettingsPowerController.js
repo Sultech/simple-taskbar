@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+import {startMenuAvailable} from '../shared/startButtonLocation.js';
+import {START_BUTTON_LOCATION_KEY} from '../shared/taskbarPanelModes.js';
 
 export class QuickSettingsPowerController {
     constructor(settings, quickSettings) {
@@ -24,6 +25,8 @@ export class QuickSettingsPowerController {
             'changed::default-gnome-panel',
             this._sync.bind(this),
             'changed::dock-mode',
+            this._sync.bind(this),
+            `changed::${START_BUTTON_LOCATION_KEY}`,
             this._sync.bind(this),
             this
         );
@@ -145,8 +148,6 @@ export class QuickSettingsPowerController {
         const powerOptionsEnabled = this._settings.get_boolean(
             'start-menu-power-options-enabled'
         );
-        return powerOptionsEnabled &&
-            this._settings.get_boolean('windows-start-menu-enabled') &&
-            !isDefaultPanelWithoutDock(this._settings);
+        return powerOptionsEnabled && startMenuAvailable(this._settings);
     }
 }

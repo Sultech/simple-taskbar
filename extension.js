@@ -9,7 +9,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {cachedPanelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
-import {defaultPanelWindowsEnabled} from './src/shared/defaultPanelWindows.js';
+import {panelApplicationsEnabled} from './src/shared/defaultPanelWindows.js';
 import {taskbarPanelHeight} from './src/shared/panelSizing.js';
 
 import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
@@ -47,7 +47,7 @@ import {
     applyTaskbarIconSize,
     prepareTaskbarIconSizeChange,
 } from './src/taskbar/taskbarIconSize.js';
-import {dynamicTaskbarEnabled} from './src/shared/taskbarPanelModes.js';
+import {dynamicTaskbarEnabled, startButtonInPanel} from './src/shared/taskbarPanelModes.js';
 import {
     getTaskbarHoverAnimationNeighbours,
 } from './src/taskbar/taskbarHoverAnimationUtils.js';
@@ -120,7 +120,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 },
                 onPanelHeightChanged: () => {
                     this._applyPanelHeight();
-                    if (defaultPanelWindowsEnabled(this._settings))
+                    if (this._settings.get_boolean('default-gnome-panel'))
                         this._resetTaskbarIconSize();
                 },
             }
@@ -262,6 +262,7 @@ export default class SimpleTaskbarExtension extends Extension {
             onTaskbarAvailableWidthChanged: width =>
                 this._syncTaskbarIconSize(width),
             isTaskbarAdaptive: () =>
+                panelApplicationsEnabled(this._settings) &&
                 this._iconSize < this._maximumIconSize,
             queueOverviewRelayout: () =>
                 this._overviewIntegration.queueRelayout(),
@@ -572,7 +573,7 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     _applyTaskbarAppearance() {
-        if (defaultPanelWindowsEnabled(this._settings)) {
+        if (this._settings.get_boolean('default-gnome-panel')) {
             this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
             this._taskbarController.setIconSize(this._iconSize);
         }
@@ -673,7 +674,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._dockPanelManager.closePanelMenus();
 
         const [x, y] = global.get_pointer();
-        if (this._dockPanelManager.hasPanelAt(x, y)) {
+        if (this._dockPanelManager.hasPanelAt(x, y) &&
+            !startButtonInPanel(this._settings)) {
             this._startButtonController.closeMenus();
             this._secondaryPanelManager.closeStartMenus();
             this._dockPanelManager.toggleStartMenuAt(x, y);

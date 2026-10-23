@@ -8,7 +8,7 @@ import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
+import {startMenuAvailable} from '../shared/startButtonLocation.js';
 import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 
 const SUPER_KEY_SETTING = 'start-menu-super-key';
@@ -110,8 +110,7 @@ export class StartMenuKeybindings {
     }
 
     _startMenuAvailable() {
-        return this._settings.get_boolean('windows-start-menu-enabled') &&
-            !isDefaultPanelWithoutDock(this._settings);
+        return startMenuAvailable(this._settings);
     }
 
     _syncFileManager() {

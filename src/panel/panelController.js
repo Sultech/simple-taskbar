@@ -33,7 +33,12 @@ import {panelGeometry} from './panelGeometry.js';
 import {PanelMagnifyController} from './panelMagnifyController.js';
 import {DynamicPanelBoxLayout} from './dynamicPanelBoxLayout.js';
 import {TaskbarGeometryController} from './taskbarGeometryController.js';
-import {dynamicTaskbarEnabled, taskbarGeometryEnabled, panelApplicationAlignment} from '../shared/taskbarPanelModes.js';
+import {
+    START_BUTTON_LOCATION_KEY,
+    dynamicTaskbarEnabled,
+    taskbarGeometryEnabled,
+    panelApplicationAlignment,
+} from '../shared/taskbarPanelModes.js';
 import {panelIsVertical} from './panelPosition.js';
 import {
     QuickSettingsIndicatorsController,
@@ -844,17 +849,20 @@ export class PanelController {
             this._onAppAlignmentChanged();
             this.applyLayout();
         }, this._signalHolder);
-        this._settings.connectObject('changed::start-button-position', () => {
-            this.applyLayout();
-        }, this._signalHolder);
-        this._settings.connectObject(
-            'changed::start-button-follow-app-alignment',
-            () => this.applyLayout(),
-            this._signalHolder
-        );
+        for (const key of [
+            'start-button-position',
+            'start-button-follow-app-alignment',
+            'default-panel-start-button-position',
+            'default-panel-start-button-follow-app-alignment',
+        ]) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                this.applyLayout();
+            }, this._signalHolder);
+        }
         for (const key of [
             'windows-start-menu-enabled',
             'gnome-start-button-visible',
+            START_BUTTON_LOCATION_KEY,
             'system-menu-visible',
             'clock-visible',
             'hide-pinned-taskbar-apps',

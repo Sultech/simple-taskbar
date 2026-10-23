@@ -13,7 +13,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {cachedPanelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
-import {defaultPanelWindowsEnabled, panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
 
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
@@ -53,6 +53,7 @@ import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
 import {floatingPanelCornerRadius} from '../panel/floatingPanelGeometry.js';
 import {TaskbarGeometryController} from '../panel/taskbarGeometryController.js';
 import {
+    START_BUTTON_LOCATION_KEY,
     dockFloatingEnabled,
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
@@ -701,12 +702,12 @@ export class SecondaryPanelController {
         }
         this._settings.connectObject('changed::panel-height', () => {
             this._applyPanelHeight();
-            if (defaultPanelWindowsEnabled(this._settings))
+            if (this._settings.get_boolean('default-gnome-panel'))
                 this._resetTaskbarIconSize();
             this._position();
         }, this._signalHolder);
         const syncIconMetrics = () => {
-            if (defaultPanelWindowsEnabled(this._settings))
+            if (this._settings.get_boolean('default-gnome-panel'))
                 this._resetTaskbarIconSize();
             this._applyAppearance();
             this._syncPanelHeight();
@@ -736,17 +737,20 @@ export class SecondaryPanelController {
             this._applyAppearance();
             this._applyLayout();
         }, this._signalHolder);
-        this._settings.connectObject('changed::start-button-position', () => {
-            this._applyLayout();
-        }, this._signalHolder);
-        this._settings.connectObject(
-            'changed::start-button-follow-app-alignment',
-            () => this._applyLayout(),
-            this._signalHolder
-        );
+        for (const key of [
+            'start-button-position',
+            'start-button-follow-app-alignment',
+            'default-panel-start-button-position',
+            'default-panel-start-button-follow-app-alignment',
+        ]) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                this._applyLayout();
+            }, this._signalHolder);
+        }
         for (const key of [
             'windows-start-menu-enabled',
             'gnome-start-button-visible',
+            START_BUTTON_LOCATION_KEY,
             'system-menu-visible',
             'clock-visible',
             'hide-pinned-taskbar-apps',
@@ -1119,7 +1123,8 @@ export class SecondaryPanelController {
     }
 
     _applyTaskbarIconSize() {
-        this.actor.preserveStart = this._iconSize < this._maximumIconSize;
+        this.actor.preserveStart = panelApplicationsEnabled(this._settings) &&
+            this._iconSize < this._maximumIconSize;
         applyTaskbarIconSize({
             settings: this._settings,
             taskbarController: this._taskbarController,

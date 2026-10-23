@@ -11,7 +11,14 @@ import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js'
 import {defaultPanelWindowsEnabled, panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
-import {dynamicTaskbarEnabled, panelApplicationAlignment} from '../shared/taskbarPanelModes.js';
+import {startButtonVisible} from '../shared/startButtonLocation.js';
+import {
+    START_BUTTON_LOCATION_KEY,
+    dynamicTaskbarEnabled,
+    panelApplicationAlignment,
+    startButtonAlignmentKey,
+    startButtonInPanel,
+} from '../shared/taskbarPanelModes.js';
 import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
@@ -132,9 +139,7 @@ export function addPanelItemsPage({
 
     const applicationsAreVisible = () => panelApplicationsVisible(settings, false);
     const startButtonVisibility = {
-        get: () => !settings.get_boolean('default-gnome-panel') &&
-            (settings.get_boolean('windows-start-menu-enabled') ||
-                settings.get_boolean('gnome-start-button-visible')),
+        get: () => startButtonVisible(settings),
         set: visible => settings.set_boolean(
             'gnome-start-button-visible',
             visible
@@ -143,6 +148,7 @@ export function addPanelItemsPage({
             'default-gnome-panel',
             'windows-start-menu-enabled',
             'gnome-start-button-visible',
+            START_BUTTON_LOCATION_KEY,
         ],
     };
     const applicationsVisibility = {
@@ -216,6 +222,12 @@ export function addPanelItemsPage({
         }],
         ['start-button', {
             key: 'start-button-position',
+            positionState: {
+                get: () => settings.get_string(startButtonAlignmentKey(settings, 'start-button-position')),
+                set: value => settings.set_string(startButtonAlignmentKey(settings, 'start-button-position'), value),
+                changedKeys: ['start-button-position', 'default-panel-start-button-position',
+                    START_BUTTON_LOCATION_KEY, 'default-gnome-panel'],
+            },
             visibleState: startButtonVisibility,
             title: _('Start Button'),
             subtitle: _('Eleven-style or original GNOME Start button'),
@@ -369,7 +381,7 @@ export function addPanelItemsPage({
 
         if (id === 'start-button' &&
             followAppAlignmentSwitch.active) {
-            return settings.get_string('app-alignment');
+            return getPanelItemPosition('applications');
         }
 
         return definition.positionState
@@ -390,6 +402,8 @@ export function addPanelItemsPage({
             ].includes(id);
         }
         if (id === 'applications' && defaultPanelWindowsEnabled(settings))
+            return false;
+        if (id === 'start-button' && startButtonInPanel(settings))
             return false;
         if (settings.get_boolean('dock-mode'))
             return id === 'start-button' || id === 'applications';
@@ -522,11 +536,12 @@ export function addPanelItemsPage({
         );
         const dockMode = settings.get_boolean('dock-mode');
         const runningWindows = defaultPanelWindowsEnabled(settings);
+        const startInPanel = startButtonInPanel(settings);
         windowsStartMenuSwitch.sensitive = !windowsXpTheme;
-        panelOrderRows.get('start-button').row.sensitive = !dockMode;
+        panelOrderRows.get('start-button').row.sensitive = !dockMode || startInPanel;
         panelOrderRows.get('applications').row.sensitive = !dockMode || runningWindows;
         panelOrderRows.get('start-button').positionDropDown.sensitive =
-            !defaultPanel && !windowsXpTheme && !dynamicTaskbarEnabled(settings) &&
+            (startInPanel || !defaultPanel) && !windowsXpTheme && !dynamicTaskbarEnabled(settings) &&
             !followAppAlignmentSwitch.active &&
             startButtonVisibility.get();
         panelOrderRows.get('applications').positionDropDown.sensitive =
@@ -537,7 +552,7 @@ export function addPanelItemsPage({
         panelOrderRows.get('clock').positionDropDown.sensitive =
             !windowsXpTheme && settings.get_boolean('clock-visible');
         panelOrderRows.get('start-button').visibleButton.sensitive =
-            !dockMode && !defaultPanel &&
+            (startInPanel || (!dockMode && !defaultPanel)) &&
             !settings.get_boolean('windows-start-menu-enabled');
         startButtonOptionsButton.sensitive = !windowsXpTheme;
         panelOrderRows.get('applications').visibleButton.sensitive =
@@ -586,7 +601,13 @@ export function addPanelItemsPage({
             syncPanelPositionSensitivity
         );
     }
-    for (const key of ['default-panel-show-running-windows', 'default-panel-window-app-alignment', 'panel-position']) {
+    for (const key of [
+        'default-panel-show-running-windows',
+        'default-panel-window-app-alignment',
+        'panel-position',
+        START_BUTTON_LOCATION_KEY,
+        'default-panel-start-button-position',
+    ]) {
         connectSettings(settings, `changed::${key}`, () => {
             syncPanelItemOrder();
             syncPanelPositionSensitivity();

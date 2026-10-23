@@ -11,6 +11,7 @@ import {
 } from '../shared/panelItemOrder.js';
 import {axisPanelPositions} from './panelAxis.js';
 import {positionIsVertical} from '../shared/panelPositionUtils.js';
+import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from '../shared/taskbarPanelModes.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
 import {
     createStartButtonOptionsButton,
@@ -176,6 +177,7 @@ export function addDockItemsPage({
             !settings.get_boolean('windows-xp-theme-enabled');
         for (const group of groups.values())
             group.sensitive = enabled;
+        rows.get('start-button').row.sensitive = !startButtonInPanel(settings);
         rows.get('start-button').positionDropDown.sensitive = enabled &&
             settings.get_boolean('dock-panel-mode') &&
             !settings.get_boolean('start-button-follow-app-alignment') &&
@@ -241,6 +243,7 @@ export function addDockItemsPage({
         'start-button-position',
         'windows-start-menu-enabled',
         'windows-xp-theme-enabled',
+        START_BUTTON_LOCATION_KEY,
     ]) {
         connectSettings(settings, `changed::${key}`, () => {
             syncDockItemAxis();
