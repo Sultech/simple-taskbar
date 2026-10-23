@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 20:20+0100\n"
+"POT-Creation-Date: 2026-10-23 22:29+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -232,65 +232,80 @@ msgid "Choose what happens when Shift+Middle-Clicking an application"
 msgstr "Válassza ki, mi történjen egy alkalmazásra Shift+középső kattintáskor"
 
 #: src/prefs/autoHideDialog.js:29 src/prefs/autoHideDialog.js:39
-msgid "Timing Options"
-msgstr "Időzítési beállítások"
+#: src/prefs/windowDodgeGroup.js:93
+msgid "Intellihide Options"
+msgstr "Intelligens elrejtés beállításai"
 
-#: src/prefs/autoHideDialog.js:51
+#: src/prefs/autoHideDialog.js:54
 msgid "Reveal"
 msgstr "Megjelenítés"
 
-#: src/prefs/autoHideDialog.js:58
+#: src/prefs/autoHideDialog.js:61
+msgid "Reveal in Overview"
+msgstr "Megjelenítés az áttekintésben"
+
+#: src/prefs/autoHideDialog.js:62
+msgid "Show the auto-hidden taskbar or Dock while the Overview is open"
+msgstr ""
+"Az automatikusan elrejtett tálca vagy Dock megjelenítése, amíg az áttekintés "
+"nyitva van"
+
+#: src/prefs/autoHideDialog.js:68
+msgid "Reveal on Pointer"
+msgstr "Megjelenítés mutatóra"
+
+#: src/prefs/autoHideDialog.js:81
 msgid "Reveal Over Fullscreen Apps"
 msgstr "Megjelenítés teljes képernyős alkalmazások felett"
 
-#: src/prefs/autoHideDialog.js:59
+#: src/prefs/autoHideDialog.js:82
 msgid ""
 "Allow the pointer to reveal the taskbar or Dock over fullscreen applications"
 msgstr ""
 "A mutató megjelenítheti a tálcát vagy a Dockot a teljes képernyős "
 "alkalmazások felett is"
 
-#: src/prefs/autoHideDialog.js:68
+#: src/prefs/autoHideDialog.js:91
 msgid "Reveal Mode"
 msgstr "Megjelenítési mód"
 
-#: src/prefs/autoHideDialog.js:73
+#: src/prefs/autoHideDialog.js:96
 msgid "Instant"
 msgstr "Azonnal"
 
-#: src/prefs/autoHideDialog.js:77
+#: src/prefs/autoHideDialog.js:100
 msgid "After a Delay"
 msgstr "Késleltetés után"
 
-#: src/prefs/autoHideDialog.js:81
+#: src/prefs/autoHideDialog.js:104
 msgid "After Pushing Against the Edge"
 msgstr "A szélnek nyomás után"
 
-#: src/prefs/autoHideDialog.js:93
+#: src/prefs/autoHideDialog.js:116
 msgid "Reveal Delay"
 msgstr "Megjelenítési késleltetés"
 
-#: src/prefs/autoHideDialog.js:94
+#: src/prefs/autoHideDialog.js:117
 msgid "How long the pointer rests on the edge, in milliseconds"
 msgstr "Meddig időzzön az egérmutató a szélen, ezredmásodpercben"
 
-#: src/prefs/autoHideDialog.js:108 src/prefs/bottomHotEdgeGroup.js:35
+#: src/prefs/autoHideDialog.js:131 src/prefs/bottomHotEdgeGroup.js:37
 msgid "Activation Pressure"
 msgstr "Aktiválási nyomás"
 
-#: src/prefs/autoHideDialog.js:109
+#: src/prefs/autoHideDialog.js:132
 msgid ""
 "How far to push past the edge before revealing. Turns off the bottom hot "
-"edge."
+"edge when placed at the bottom."
 msgstr ""
 "Mennyire kell a szélen túlnyomni a megjelenítéshez. Kikapcsolja az alsó "
-"forró élt."
+"forró élt, ha alul helyezkedik el."
 
-#: src/prefs/autoHideDialog.js:118
+#: src/prefs/autoHideDialog.js:141
 msgid "Hide"
 msgstr "Elrejtés"
 
-#: src/prefs/autoHideDialog.js:129
+#: src/prefs/autoHideDialog.js:152
 msgid "Hide Delay"
 msgstr "Elrejtési késleltetés"
 
@@ -953,18 +968,18 @@ msgid "Choose the animation shown when an application is clicked"
 msgstr "Válassza ki az alkalmazásra kattintáskor megjelenő animációt"
 
 #: src/prefs/applicationInteractionGroup.js:210
-#: src/prefs/taskbarBehaviorGroup.js:23
+#: src/prefs/taskbarBehaviorGroup.js:24
 msgid "Switch Workspace"
 msgstr "Munkaterület váltása"
 
 #: src/prefs/applicationInteractionGroup.js:214
-#: src/prefs/taskbarBehaviorGroup.js:27
+#: src/prefs/taskbarBehaviorGroup.js:28
 msgid "Cycle Windows"
 msgstr "Ablakok léptetése"
 
 #: src/prefs/applicationInteractionGroup.js:218
 #: src/prefs/applicationInteractionGroup.js:340
-#: src/prefs/taskbarBehaviorGroup.js:35
+#: src/prefs/taskbarBehaviorGroup.js:36
 msgid "Do Nothing"
 msgstr "Ne történjen semmi"
 
@@ -973,7 +988,7 @@ msgid "Scroll App/Icon Action"
 msgstr "Alkalmazás-/ikongörgetési művelet"
 
 #: src/prefs/applicationInteractionGroup.js:248
-#: src/prefs/dockBehaviorGroup.js:89 src/prefs/taskbarBehaviorGroup.js:124
+#: src/prefs/dockBehaviorGroup.js:93 src/prefs/taskbarBehaviorGroup.js:122
 msgid "Scroll Delay"
 msgstr "Görgetési késleltetés"
 
@@ -1521,108 +1536,108 @@ msgstr "Az átlátszósági animáció időtartama"
 msgid "Transition time in milliseconds"
 msgstr "Átmenet időtartama ezredmásodpercben"
 
-#: src/prefs/dockBehaviorGroup.js:21
+#: src/prefs/dockBehaviorGroup.js:22
 msgid "Auto-hide Dock"
 msgstr "Dock automatikus elrejtése"
 
-#: src/prefs/dockBehaviorGroup.js:22
+#: src/prefs/dockBehaviorGroup.js:23
 msgid "Reveal the Dock when the pointer reaches its screen edge"
 msgstr "A Dock megjelenítése, amikor a mutató eléri a képernyő szélét"
 
-#: src/prefs/dockBehaviorGroup.js:26
-msgid "Limit Reveal to Dock Edge"
-msgstr "Megjelenítés korlátozása a Dock szélére"
-
-#: src/prefs/dockBehaviorGroup.js:27
-msgid "Only reveal a floating Dock when the pointer reaches its edge"
-msgstr "Lebegő Dock megjelenítése csak akkor, amikor a mutató eléri a szélét"
-
-#: src/prefs/dockBehaviorGroup.js:38
+#: src/prefs/dockBehaviorGroup.js:36
 msgid "Dock Auto-hide and Window Dodge"
 msgstr "A Dock automatikus elrejtése és ablakkerülése"
 
-#: src/prefs/dockBehaviorGroup.js:40 src/prefs/panelSettingsHubs.js:94
+#: src/prefs/dockBehaviorGroup.js:38 src/prefs/panelSettingsHubs.js:94
 msgid "Choose when the Dock hides and how it is revealed"
 msgstr "Válassza ki, mikor rejtse el a Dockot, és hogyan jelenjen meg"
 
-#: src/prefs/dockBehaviorGroup.js:43
+#: src/prefs/dockBehaviorGroup.js:41
 msgid "Hide the Dock when a qualifying window overlaps it"
 msgstr "A Dock elrejtése, ha egy megfelelő ablak átfedi"
 
-#: src/prefs/dockBehaviorGroup.js:45
+#: src/prefs/dockBehaviorGroup.js:43
 msgid "Choose which windows make the Dock hide"
 msgstr "Válassza ki, mely ablakok rejtsék el a Dockot"
 
-#: src/prefs/dockBehaviorGroup.js:47
+#: src/prefs/dockBehaviorGroup.js:45
 msgid "Let the pointer reveal the hidden Dock at its screen edge"
 msgstr "Az elrejtett Dock megjelenítése az egérmutatóval a képernyő szélén"
 
-#: src/prefs/dockBehaviorGroup.js:51
+#: src/prefs/dockBehaviorGroup.js:49
 msgid "Choose how quickly the pointer brings the Dock back"
 msgstr "Válassza ki, milyen gyorsan hozza vissza az egérmutató a Dockát"
 
-#: src/prefs/dockBehaviorGroup.js:54
+#: src/prefs/dockBehaviorGroup.js:52
 msgid "Choose when the Dock appears at the screen edge"
 msgstr "Válassza ki, mikor jelenjen meg a Dock a képernyő szélén"
 
-#: src/prefs/dockBehaviorGroup.js:56
+#: src/prefs/dockBehaviorGroup.js:54
 msgid "Choose how soon the Dock hides again"
 msgstr "Válassza ki, milyen hamar rejtőzzön el újra a Dock"
 
-#: src/prefs/dockBehaviorGroup.js:58
+#: src/prefs/dockBehaviorGroup.js:56
 msgid "How long the Dock waits after the pointer leaves, in milliseconds"
 msgstr "Meddig várjon a Dock, miután az egérmutató elhagyja, ezredmásodpercben"
 
-#: src/prefs/dockBehaviorGroup.js:68
+#: src/prefs/dockBehaviorGroup.js:61
+msgid "Limit Reveal to Dock Edge"
+msgstr "Megjelenítés korlátozása a Dock szélére"
+
+#: src/prefs/dockBehaviorGroup.js:62
+msgid "Only reveal a floating Dock when the pointer reaches its edge"
+msgstr "Lebegő Dock megjelenítése csak akkor, amikor a mutató eléri a szélét"
+
+#: src/prefs/dockBehaviorGroup.js:72
 msgid "Dock Scroll"
 msgstr "Görgetés a Dockban"
 
-#: src/prefs/dockBehaviorGroup.js:69
+#: src/prefs/dockBehaviorGroup.js:73
 msgid "Configure scrolling over empty Dock space"
 msgstr "A Dock üres területén történő görgetés beállítása"
 
-#: src/prefs/dockBehaviorGroup.js:76 src/prefs/taskbarBehaviorGroup.js:111
+#: src/prefs/dockBehaviorGroup.js:80 src/prefs/taskbarBehaviorGroup.js:109
 msgid "Scroll Action"
 msgstr "Görgetési művelet"
 
-#: src/prefs/dockBehaviorGroup.js:77
+#: src/prefs/dockBehaviorGroup.js:81
 msgid "Action used when scrolling over empty Dock space"
 msgstr "A Dock üres területén történő görgetéskor használt művelet"
 
-#: src/prefs/dockBehaviorGroup.js:90
+#: src/prefs/dockBehaviorGroup.js:94
 msgid "Minimum delay between Dock scroll actions in milliseconds"
 msgstr ""
 "A Dock görgetési műveletei közötti minimális késleltetés ezredmásodpercben"
 
-#: src/prefs/dockBehaviorGroup.js:98
+#: src/prefs/dockBehaviorGroup.js:102
 msgid "Monitors"
 msgstr "Monitorok"
 
-#: src/prefs/dockBehaviorGroup.js:99
+#: src/prefs/dockBehaviorGroup.js:103
 msgid "Choose which monitors show the Dock"
 msgstr "A Dockot megjelenítő monitorok kiválasztása"
 
-#: src/prefs/dockBehaviorGroup.js:103
+#: src/prefs/dockBehaviorGroup.js:107
 msgid "Show Dock on All Monitors"
 msgstr "Dock megjelenítése minden monitoron"
 
-#: src/prefs/dockBehaviorGroup.js:104
+#: src/prefs/dockBehaviorGroup.js:108
 msgid "Show the Dock on every connected monitor"
 msgstr "A Dock megjelenítése minden csatlakoztatott monitoron"
 
-#: src/prefs/bottomHotEdgeGroup.js:17 src/prefs/generalPage.js:36
+#: src/prefs/bottomHotEdgeGroup.js:19 src/prefs/generalPage.js:36
 msgid "Bottom Hot Edge"
 msgstr "Alsó forró él"
 
-#: src/prefs/bottomHotEdgeGroup.js:18 src/prefs/overviewBehaviorDialog.js:64
+#: src/prefs/bottomHotEdgeGroup.js:20 src/prefs/overviewBehaviorDialog.js:64
 msgid "These options apply to the mode that is currently active"
 msgstr "Ezek a beállítások a jelenleg aktív módra vonatkoznak"
 
-#: src/prefs/bottomHotEdgeGroup.js:22
+#: src/prefs/bottomHotEdgeGroup.js:24
 msgid "Enable Bottom Hot Edge"
 msgstr "Alsó forró szél engedélyezése"
 
-#: src/prefs/bottomHotEdgeGroup.js:24
+#: src/prefs/bottomHotEdgeGroup.js:26
 msgid ""
 "Push the pointer against the bottom screen edge to toggle Overview. Turns "
 "off pressure reveal."
@@ -1630,18 +1645,18 @@ msgstr ""
 "Nyomja az egérmutatót a képernyő alsó széléhez az Áttekintés váltásához. "
 "Kikapcsolja a nyomásra megjelenítést."
 
-#: src/prefs/bottomHotEdgeGroup.js:37
+#: src/prefs/bottomHotEdgeGroup.js:39
 msgid ""
 "Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr ""
 "A képpontok száma, amennyit a mutatónak el kell mozdulnia az alsó szélén túl "
 "az Áttekintés aktiválásához"
 
-#: src/prefs/bottomHotEdgeGroup.js:48
+#: src/prefs/bottomHotEdgeGroup.js:50
 msgid "Hot Edge Animation"
 msgstr "Forró él animáció"
 
-#: src/prefs/bottomHotEdgeGroup.js:49
+#: src/prefs/bottomHotEdgeGroup.js:51
 msgid "Show a ripple when the bottom hot edge activates"
 msgstr "Hullámeffektus megjelenítése az alsó forró él aktiválásakor"
 
@@ -3007,133 +3022,133 @@ msgstr ""
 "A Start menü alapértelmezett GNOME panel módban való használatához állítsa a "
 "Start gomb helyét Panelre."
 
-#: src/prefs/taskbarBehaviorGroup.js:31
+#: src/prefs/taskbarBehaviorGroup.js:32
 msgid "Change Volume"
 msgstr "Hangerő módosítása"
 
-#: src/prefs/taskbarBehaviorGroup.js:49
+#: src/prefs/taskbarBehaviorGroup.js:50
 msgid "Auto-hide Taskbar"
 msgstr "A tálca automatikus elrejtése"
 
-#: src/prefs/taskbarBehaviorGroup.js:50
+#: src/prefs/taskbarBehaviorGroup.js:51
 msgid "Reveal the taskbar when the pointer reaches its screen edge"
 msgstr "Tálca megjelenítése, ha az egérmutató eléri a képernyő szélét"
 
-#: src/prefs/taskbarBehaviorGroup.js:54
+#: src/prefs/taskbarBehaviorGroup.js:64
+msgid "Taskbar Auto-hide and Window Dodge"
+msgstr "A tálca automatikus elrejtése és ablakkerülése"
+
+#: src/prefs/taskbarBehaviorGroup.js:66 src/prefs/panelSettingsHubs.js:86
+msgid "Choose when the taskbar hides and how it is revealed"
+msgstr "Válassza ki, mikor rejtse el a tálcát, és hogyan jelenjen meg"
+
+#: src/prefs/taskbarBehaviorGroup.js:69
+msgid "Hide the taskbar when a qualifying window overlaps it"
+msgstr "A tálca elrejtése, ha egy megfelelő ablak átfedi"
+
+#: src/prefs/taskbarBehaviorGroup.js:72
+msgid "Choose which windows make the taskbar hide"
+msgstr "Válassza ki, mely ablakok rejtsék el a tálcát"
+
+#: src/prefs/taskbarBehaviorGroup.js:75
+msgid "Let the pointer reveal the hidden taskbar at its screen edge"
+msgstr "Az elrejtett tálca megjelenítése az egérmutatóval a képernyő szélén"
+
+#: src/prefs/taskbarBehaviorGroup.js:79
+msgid "Choose how quickly the pointer brings the taskbar back"
+msgstr "Válassza ki, milyen gyorsan hozza vissza az egérmutató a tálcaát"
+
+#: src/prefs/taskbarBehaviorGroup.js:82
+msgid "Choose when the taskbar appears at the screen edge"
+msgstr "Válassza ki, mikor jelenjen meg a tálca a képernyő szélén"
+
+#: src/prefs/taskbarBehaviorGroup.js:84
+msgid "Choose how soon the taskbar hides again"
+msgstr "Válassza ki, milyen hamar rejtőzzön el újra a tálca"
+
+#: src/prefs/taskbarBehaviorGroup.js:86
+msgid "How long the taskbar waits after the pointer leaves, in milliseconds"
+msgstr ""
+"Meddig várjon a tálca, miután az egérmutató elhagyja, ezredmásodpercben"
+
+#: src/prefs/taskbarBehaviorGroup.js:91
 msgid "Limit Reveal to Taskbar Edge"
 msgstr "Megjelenítés korlátozása a tálca szélére"
 
-#: src/prefs/taskbarBehaviorGroup.js:55
+#: src/prefs/taskbarBehaviorGroup.js:92
 msgid ""
 "Only reveal a dynamic or floating taskbar when the pointer reaches its edge"
 msgstr ""
 "Dinamikus vagy lebegő tálca megjelenítése csak akkor, amikor a mutató eléri "
 "a szélét"
 
-#: src/prefs/taskbarBehaviorGroup.js:72
-msgid "Taskbar Auto-hide and Window Dodge"
-msgstr "A tálca automatikus elrejtése és ablakkerülése"
-
-#: src/prefs/taskbarBehaviorGroup.js:74 src/prefs/panelSettingsHubs.js:86
-msgid "Choose when the taskbar hides and how it is revealed"
-msgstr "Válassza ki, mikor rejtse el a tálcát, és hogyan jelenjen meg"
-
-#: src/prefs/taskbarBehaviorGroup.js:77
-msgid "Hide the taskbar when a qualifying window overlaps it"
-msgstr "A tálca elrejtése, ha egy megfelelő ablak átfedi"
-
-#: src/prefs/taskbarBehaviorGroup.js:80
-msgid "Choose which windows make the taskbar hide"
-msgstr "Válassza ki, mely ablakok rejtsék el a tálcát"
-
-#: src/prefs/taskbarBehaviorGroup.js:83
-msgid "Let the pointer reveal the hidden taskbar at its screen edge"
-msgstr "Az elrejtett tálca megjelenítése az egérmutatóval a képernyő szélén"
-
-#: src/prefs/taskbarBehaviorGroup.js:87
-msgid "Choose how quickly the pointer brings the taskbar back"
-msgstr "Válassza ki, milyen gyorsan hozza vissza az egérmutató a tálcaát"
-
-#: src/prefs/taskbarBehaviorGroup.js:90
-msgid "Choose when the taskbar appears at the screen edge"
-msgstr "Válassza ki, mikor jelenjen meg a tálca a képernyő szélén"
-
-#: src/prefs/taskbarBehaviorGroup.js:92
-msgid "Choose how soon the taskbar hides again"
-msgstr "Válassza ki, milyen hamar rejtőzzön el újra a tálca"
-
-#: src/prefs/taskbarBehaviorGroup.js:94
-msgid "How long the taskbar waits after the pointer leaves, in milliseconds"
-msgstr ""
-"Meddig várjon a tálca, miután az egérmutató elhagyja, ezredmásodpercben"
-
-#: src/prefs/taskbarBehaviorGroup.js:103
+#: src/prefs/taskbarBehaviorGroup.js:101
 msgid "Taskbar Scroll"
 msgstr "Görgetés a tálcán"
 
-#: src/prefs/taskbarBehaviorGroup.js:104
+#: src/prefs/taskbarBehaviorGroup.js:102
 msgid "Configure scrolling over empty taskbar space"
 msgstr "A tálca üres területén történő görgetés beállítása"
 
-#: src/prefs/taskbarBehaviorGroup.js:112
+#: src/prefs/taskbarBehaviorGroup.js:110
 msgid "Action used when scrolling over empty taskbar space"
 msgstr "A tálca üres területén történő görgetéskor használt művelet"
 
-#: src/prefs/taskbarBehaviorGroup.js:125
+#: src/prefs/taskbarBehaviorGroup.js:123
 msgid "Minimum delay between taskbar scroll actions in milliseconds"
 msgstr ""
 "A tálca görgetési műveletei közötti minimális késleltetés ezredmásodpercben"
 
-#: src/prefs/taskbarBehaviorGroup.js:145
+#: src/prefs/taskbarBehaviorGroup.js:143
 msgid "Taskbar Menus and Notifications"
 msgstr "Tálcamenük és értesítések"
 
-#: src/prefs/taskbarBehaviorGroup.js:147
+#: src/prefs/taskbarBehaviorGroup.js:145
 msgid "Configure taskbar menu activation and notification banner placement"
 msgstr ""
 "A tálcamenük aktiválásának és az értesítési sávok elhelyezésének beállítása"
 
-#: src/prefs/taskbarBehaviorGroup.js:152
+#: src/prefs/taskbarBehaviorGroup.js:150
 msgid "Taskbar Menus Require Click"
 msgstr "A tálcamenükhöz kattintás szükséges"
 
-#: src/prefs/taskbarBehaviorGroup.js:153
+#: src/prefs/taskbarBehaviorGroup.js:151
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr "Váltás az óra-, rendszer- és tálcamenük között csak kattintásra"
 
-#: src/prefs/taskbarBehaviorGroup.js:159
+#: src/prefs/taskbarBehaviorGroup.js:157
 msgid "Taskbar-aligned Notification Banners"
 msgstr "Tálcához igazított értesítési sávok"
 
-#: src/prefs/taskbarBehaviorGroup.js:160
+#: src/prefs/taskbarBehaviorGroup.js:158
 msgid "Follow the taskbar edge and the clock position"
 msgstr "A tálca szélének és az óra helyzetének követése"
 
-#: src/prefs/taskbarBehaviorGroup.js:165
+#: src/prefs/taskbarBehaviorGroup.js:163
 msgid "Taskbar Behavior"
 msgstr "Tálca viselkedése"
 
-#: src/prefs/taskbarBehaviorGroup.js:166
+#: src/prefs/taskbarBehaviorGroup.js:164
 msgid "Choose the task manager and which monitors show the taskbar"
 msgstr "A feladatkezelő és a tálcát megjelenítő monitorok kiválasztása"
 
-#: src/prefs/taskbarBehaviorGroup.js:193
+#: src/prefs/taskbarBehaviorGroup.js:191
 msgid "Automatic Fallback"
 msgstr "Automatikus tartalék"
 
-#: src/prefs/taskbarBehaviorGroup.js:201
+#: src/prefs/taskbarBehaviorGroup.js:199
 msgid "Task Manager Application"
 msgstr "Feladatkezelő alkalmazás"
 
-#: src/prefs/taskbarBehaviorGroup.js:202
+#: src/prefs/taskbarBehaviorGroup.js:200
 msgid "Application opened from the taskbar context menu"
 msgstr "A tálca helyi menüjéből megnyitott alkalmazás"
 
-#: src/prefs/taskbarBehaviorGroup.js:221
+#: src/prefs/taskbarBehaviorGroup.js:219
 msgid "Show Taskbar on All Monitors"
 msgstr "Tálca megjelenítése az összes monitoron"
 
-#: src/prefs/taskbarBehaviorGroup.js:222
+#: src/prefs/taskbarBehaviorGroup.js:220
 msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
 "Tevékenységek, alkalmazások, óra és rendszermenü megjelenítése minden "
@@ -3211,33 +3226,36 @@ msgstr "Többi ablak átlátszatlansága"
 msgid "Opacity of other windows while peeking"
 msgstr "A többi ablak átlátszatlansága az ideiglenes előtérbe hozás alatt"
 
-#: src/prefs/windowDodgeGroup.js:18
+#: src/prefs/windowDodgeGroup.js:19
 msgid "All windows"
 msgstr "Minden ablak"
 
-#: src/prefs/windowDodgeGroup.js:22
+#: src/prefs/windowDodgeGroup.js:23
 msgid "Only focused application’s windows"
 msgstr "Csak a fókuszban lévő alkalmazás ablakai"
 
-#: src/prefs/windowDodgeGroup.js:26
+#: src/prefs/windowDodgeGroup.js:27
 msgid "Only focused window"
 msgstr "Csak a fókuszban lévő ablak"
 
-#: src/prefs/windowDodgeGroup.js:30
+#: src/prefs/windowDodgeGroup.js:31
 msgid "Only maximized windows"
 msgstr "Csak maximalizált ablakok"
 
-#: src/prefs/windowDodgeGroup.js:62
+#: src/prefs/windowDodgeGroup.js:65
 msgid "Enable Dodge Windows"
 msgstr "Ablakok kikerülésének engedélyezése"
 
-#: src/prefs/windowDodgeGroup.js:72
+#: src/prefs/windowDodgeGroup.js:75
 msgid "Dodge Windows Mode"
 msgstr "Ablakkerülési mód"
 
-#: src/prefs/windowDodgeGroup.js:91
-msgid "Reveal on Pointer"
-msgstr "Megjelenítés mutatóra"
+#: src/prefs/windowDodgeGroup.js:94
+msgid ""
+"Pointer reveal, timing and Overview behaviour for auto-hide and dodge windows"
+msgstr ""
+"Mutatós megjelenítés, időzítés és áttekintésbeli viselkedés az automatikus "
+"elrejtéshez és az ablakok kikerüléséhez"
 
 #: src/prefs/windowSwitchingGroup.js:13
 msgid "Grid Alt-Tab"
@@ -3807,6 +3825,9 @@ msgstr "Alkalmazás hangereje"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Egyetlen alkalmazás sem játszik le hangot"
+
+#~ msgid "Timing Options"
+#~ msgstr "Időzítési beállítások"
 
 #~ msgid "Size"
 #~ msgstr "Méret"
