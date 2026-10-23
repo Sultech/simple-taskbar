@@ -211,7 +211,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._startButtonController = new StartButtonController({
             getPanelEdgeGap: () => this._panelController.getPanelEdgeGap(),
             extensionDir: this.dir,
-            settings: this._settings,
+            settings: this._applicationSettings,
+            keybindingSettings: this._settings,
             iconSize: this._iconSize,
             previewController: this._windowPreviews,
             openPreferences: () => this.openPreferences(),

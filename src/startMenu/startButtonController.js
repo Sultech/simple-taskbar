@@ -77,6 +77,7 @@ export class StartButtonController {
     constructor({
         extensionDir,
         settings,
+        keybindingSettings = settings,
         iconSize,
         previewController,
         openPreferences,
@@ -212,7 +213,7 @@ export class StartButtonController {
 
         this._keybindings = manageKeybindings
             ? new StartMenuKeybindings(
-                settings,
+                keybindingSettings,
                 () => this._toggleApplicationsFromShortcut(),
                 () => this._toggleOverviewFromShortcut(),
                 () => this._openFileManager(),
