@@ -160,11 +160,10 @@ export class PanelInteractionController {
         menu.addAction(
             isDock ? _('Dock Settings') : _('Taskbar Settings'),
             () => {
-                if (isDock)
-                    this._settings.set_string(
-                        'target-prefs-page',
-                        'dock'
-                    );
+                this._settings.set_string(
+                    'target-prefs-page',
+                    isDock ? 'dock' : 'taskbar'
+                );
                 this._openPreferences();
             }
         );
