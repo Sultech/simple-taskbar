@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 22:29+0100\n"
+"POT-Creation-Date: 2026-10-24 04:24+0100\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -26,30 +26,30 @@ msgstr "Показать рабочий стол"
 msgid "Application overflow"
 msgstr "Переполнение приложений"
 
-#: prefs.js:43 src/prefs/applicationIconsGroup.js:397
+#: prefs.js:44 src/prefs/applicationIconsGroup.js:397
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "Слева"
 
-#: prefs.js:44
+#: prefs.js:45
 msgid "Center"
 msgstr "По центру"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:398
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:398
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "Справа"
 
-#: prefs.js:51 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
+#: prefs.js:52 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
 msgid "Taskbar"
 msgstr "Панель задач"
 
-#: prefs.js:58 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
+#: prefs.js:59 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
 #: src/prefs/panelSettingsHubs.js:92
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:65 src/prefs/dockItemsPage.js:74
+#: prefs.js:66 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "Меню «Пуск»"
 
@@ -3442,43 +3442,47 @@ msgstr "Папка"
 msgid "Remove folder"
 msgstr "Удалить папку"
 
-#: src/startMenu/startMenuController.js:759
+#: src/startMenu/startMenuController.js:133
+msgid "Open All"
+msgstr "Открыть все"
+
+#: src/startMenu/startMenuController.js:762
 msgid "Type here to search"
 msgstr "Введите текст для поиска"
 
-#: src/startMenu/startMenuController.js:853
-#: src/startMenu/startMenuController.js:961
+#: src/startMenu/startMenuController.js:856
+#: src/startMenu/startMenuController.js:964
 msgid "Pinned"
 msgstr "Закреплённые"
 
-#: src/startMenu/startMenuController.js:858
-#: src/startMenu/startMenuController.js:1140
+#: src/startMenu/startMenuController.js:861
+#: src/startMenu/startMenuController.js:1143
 msgid "All apps"
 msgstr "Все приложения"
 
-#: src/startMenu/startMenuController.js:872
+#: src/startMenu/startMenuController.js:875
 msgid "Back"
 msgstr "Назад"
 
-#: src/startMenu/startMenuController.js:1033
+#: src/startMenu/startMenuController.js:1036
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Выберите «Все», затем нажмите правой кнопкой на приложение, чтобы закрепить "
 "его"
 
-#: src/startMenu/startMenuController.js:1041
+#: src/startMenu/startMenuController.js:1044
 msgid "Recommended"
 msgstr "Рекомендуемые"
 
-#: src/startMenu/startMenuController.js:1085 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1088 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Эта папка пуста"
 
-#: src/startMenu/startMenuController.js:1172
+#: src/startMenu/startMenuController.js:1175
 msgid "Search results"
 msgstr "Результаты поиска"
 
-#: src/startMenu/startMenuController.js:1197
+#: src/startMenu/startMenuController.js:1200
 msgid "No results found"
 msgstr "Результаты не найдены"
 

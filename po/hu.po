@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 22:29+0100\n"
+"POT-Creation-Date: 2026-10-24 04:24+0100\n"
 "PO-Revision-Date: 2026-08-10 16:41+0200\n"
 "Last-Translator: Kazmer GECZI-KULCSAR <info@szabad.eu>\n"
 "Language-Team: Hungarian\n"
@@ -25,30 +25,30 @@ msgstr "Asztal megjelenítése"
 msgid "Application overflow"
 msgstr "Alkalmazások túlfolyása"
 
-#: prefs.js:43 src/prefs/applicationIconsGroup.js:397
+#: prefs.js:44 src/prefs/applicationIconsGroup.js:397
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "Bal"
 
-#: prefs.js:44
+#: prefs.js:45
 msgid "Center"
 msgstr "Közép"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:398
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:398
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "Jobb"
 
-#: prefs.js:51 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
+#: prefs.js:52 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
 msgid "Taskbar"
 msgstr "Tálca"
 
-#: prefs.js:58 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
+#: prefs.js:59 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
 #: src/prefs/panelSettingsHubs.js:92
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:65 src/prefs/dockItemsPage.js:74
+#: prefs.js:66 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "Start menü"
 
@@ -3473,43 +3473,47 @@ msgstr "Mappa"
 msgid "Remove folder"
 msgstr "Mappa eltávolítása"
 
-#: src/startMenu/startMenuController.js:759
+#: src/startMenu/startMenuController.js:133
+msgid "Open All"
+msgstr "Összes megnyitása"
+
+#: src/startMenu/startMenuController.js:762
 msgid "Type here to search"
 msgstr "Gépeljen ide a kereséshez"
 
-#: src/startMenu/startMenuController.js:853
-#: src/startMenu/startMenuController.js:961
+#: src/startMenu/startMenuController.js:856
+#: src/startMenu/startMenuController.js:964
 msgid "Pinned"
 msgstr "Rögzítve"
 
-#: src/startMenu/startMenuController.js:858
-#: src/startMenu/startMenuController.js:1140
+#: src/startMenu/startMenuController.js:861
+#: src/startMenu/startMenuController.js:1143
 msgid "All apps"
 msgstr "Minden alkalmazás"
 
-#: src/startMenu/startMenuController.js:872
+#: src/startMenu/startMenuController.js:875
 msgid "Back"
 msgstr "Vissza"
 
-#: src/startMenu/startMenuController.js:1033
+#: src/startMenu/startMenuController.js:1036
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Válassza az Összes elemet, majd kattintson jobb gombbal egy alkalmazásra a "
 "rögzítéshez"
 
-#: src/startMenu/startMenuController.js:1041
+#: src/startMenu/startMenuController.js:1044
 msgid "Recommended"
 msgstr "Ajánlott"
 
-#: src/startMenu/startMenuController.js:1085 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1088 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Ez a mappa üres"
 
-#: src/startMenu/startMenuController.js:1172
+#: src/startMenu/startMenuController.js:1175
 msgid "Search results"
 msgstr "Keresési eredmények"
 
-#: src/startMenu/startMenuController.js:1197
+#: src/startMenu/startMenuController.js:1200
 msgid "No results found"
 msgstr "Nincs találat"
 

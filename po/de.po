@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 22:29+0100\n"
+"POT-Creation-Date: 2026-10-24 04:24+0100\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -26,30 +26,30 @@ msgstr "Desktop anzeigen"
 msgid "Application overflow"
 msgstr "Anwendungsüberlauf"
 
-#: prefs.js:43 src/prefs/applicationIconsGroup.js:397
+#: prefs.js:44 src/prefs/applicationIconsGroup.js:397
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "Links"
 
-#: prefs.js:44
+#: prefs.js:45
 msgid "Center"
 msgstr "Mitte"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:398
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:398
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "Rechts"
 
-#: prefs.js:51 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
+#: prefs.js:52 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
 msgid "Taskbar"
 msgstr "Taskleiste"
 
-#: prefs.js:58 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
+#: prefs.js:59 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
 #: src/prefs/panelSettingsHubs.js:92
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:65 src/prefs/dockItemsPage.js:74
+#: prefs.js:66 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "Startmenü"
 
@@ -3539,43 +3539,47 @@ msgstr "Ordner"
 msgid "Remove folder"
 msgstr "Ordner entfernen"
 
-#: src/startMenu/startMenuController.js:759
+#: src/startMenu/startMenuController.js:133
+msgid "Open All"
+msgstr "Alle öffnen"
+
+#: src/startMenu/startMenuController.js:762
 msgid "Type here to search"
 msgstr "Hier tippen, um zu suchen"
 
-#: src/startMenu/startMenuController.js:853
-#: src/startMenu/startMenuController.js:961
+#: src/startMenu/startMenuController.js:856
+#: src/startMenu/startMenuController.js:964
 msgid "Pinned"
 msgstr "Angeheftet"
 
-#: src/startMenu/startMenuController.js:858
-#: src/startMenu/startMenuController.js:1140
+#: src/startMenu/startMenuController.js:861
+#: src/startMenu/startMenuController.js:1143
 msgid "All apps"
 msgstr "Alle Apps"
 
-#: src/startMenu/startMenuController.js:872
+#: src/startMenu/startMenuController.js:875
 msgid "Back"
 msgstr "Zurück"
 
-#: src/startMenu/startMenuController.js:1033
+#: src/startMenu/startMenuController.js:1036
 msgid "Choose All, then right-click an app to pin it"
 msgstr ""
 "Wählen Sie Alle und klicken Sie dann mit der rechten Maustaste auf eine App, "
 "um sie anzuheften"
 
-#: src/startMenu/startMenuController.js:1041
+#: src/startMenu/startMenuController.js:1044
 msgid "Recommended"
 msgstr "Empfohlen"
 
-#: src/startMenu/startMenuController.js:1085 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1088 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "Dieser Ordner ist leer"
 
-#: src/startMenu/startMenuController.js:1172
+#: src/startMenu/startMenuController.js:1175
 msgid "Search results"
 msgstr "Suchergebnisse"
 
-#: src/startMenu/startMenuController.js:1197
+#: src/startMenu/startMenuController.js:1200
 msgid "No results found"
 msgstr "Keine Ergebnisse gefunden"
 

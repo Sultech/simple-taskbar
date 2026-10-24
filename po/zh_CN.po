@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 22:29+0100\n"
+"POT-Creation-Date: 2026-10-24 04:24+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -26,30 +26,30 @@ msgstr "展示桌面"
 msgid "Application overflow"
 msgstr "应用溢出"
 
-#: prefs.js:43 src/prefs/applicationIconsGroup.js:397
+#: prefs.js:44 src/prefs/applicationIconsGroup.js:397
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "左侧"
 
-#: prefs.js:44
+#: prefs.js:45
 msgid "Center"
 msgstr "居中"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:398
+#: prefs.js:46 src/prefs/applicationIconsGroup.js:398
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "右侧"
 
-#: prefs.js:51 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
+#: prefs.js:52 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
 msgid "Taskbar"
 msgstr "任务栏"
 
-#: prefs.js:58 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
+#: prefs.js:59 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
 #: src/prefs/panelSettingsHubs.js:92
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:65 src/prefs/dockItemsPage.js:74
+#: prefs.js:66 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "开始菜单"
 
@@ -3328,41 +3328,45 @@ msgstr "文件夹"
 msgid "Remove folder"
 msgstr "移除文件夹"
 
-#: src/startMenu/startMenuController.js:759
+#: src/startMenu/startMenuController.js:133
+msgid "Open All"
+msgstr "全部打开"
+
+#: src/startMenu/startMenuController.js:762
 msgid "Type here to search"
 msgstr "在此输入以搜索"
 
-#: src/startMenu/startMenuController.js:853
-#: src/startMenu/startMenuController.js:961
+#: src/startMenu/startMenuController.js:856
+#: src/startMenu/startMenuController.js:964
 msgid "Pinned"
 msgstr "已固定"
 
-#: src/startMenu/startMenuController.js:858
-#: src/startMenu/startMenuController.js:1140
+#: src/startMenu/startMenuController.js:861
+#: src/startMenu/startMenuController.js:1143
 msgid "All apps"
 msgstr "所有应用"
 
-#: src/startMenu/startMenuController.js:872
+#: src/startMenu/startMenuController.js:875
 msgid "Back"
 msgstr "返回"
 
-#: src/startMenu/startMenuController.js:1033
+#: src/startMenu/startMenuController.js:1036
 msgid "Choose All, then right-click an app to pin it"
 msgstr "选择“所有”，然后右键点击应用以将其固定"
 
-#: src/startMenu/startMenuController.js:1041
+#: src/startMenu/startMenuController.js:1044
 msgid "Recommended"
 msgstr "推荐的应用"
 
-#: src/startMenu/startMenuController.js:1085 src/folderMenuController.js:258
+#: src/startMenu/startMenuController.js:1088 src/folderMenuController.js:258
 msgid "This folder is empty"
 msgstr "此文件夹为空"
 
-#: src/startMenu/startMenuController.js:1172
+#: src/startMenu/startMenuController.js:1175
 msgid "Search results"
 msgstr "搜索结果"
 
-#: src/startMenu/startMenuController.js:1197
+#: src/startMenu/startMenuController.js:1200
 msgid "No results found"
 msgstr "未找到结果"
 
