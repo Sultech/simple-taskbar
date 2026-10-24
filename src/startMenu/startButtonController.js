@@ -765,9 +765,11 @@ export class StartButtonController {
         this._settings.connectObject('changed::start-menu-super-tab', () => {
             this._keybindings?.sync();
         }, this._signalHolder);
-        this._settings.connectObject('changed::start-menu-custom-hotkey', () => {
-            this._keybindings?.customAcceleratorChanged();
-        }, this._signalHolder);
+        for (const key of ['start-menu-custom-hotkey', 'overview-custom-hotkey']) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                this._keybindings?.customAcceleratorChanged(key);
+            }, this._signalHolder);
+        }
         this._settings.connectObject(
             'changed::super-e-file-manager-enabled',
             () => this._keybindings?.sync(),

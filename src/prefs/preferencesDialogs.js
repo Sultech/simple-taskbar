@@ -95,7 +95,7 @@ export function addResetGroup(page, window, createSettings) {
     resetGroup.add(resetRow);
 }
 
-export function openCustomShortcutDialog(window) {
+export function openCustomShortcutDialog(window, key) {
     const dialog = new Adw.Window({
         title: _('Set Custom Shortcut'),
         transient_for: window,
@@ -130,7 +130,7 @@ export function openCustomShortcutDialog(window) {
                 return Gdk.EVENT_STOP;
             }
             if (keyval === Gdk.KEY_BackSpace && modifiers === 0) {
-                window._settings.set_strv('start-menu-custom-hotkey', []);
+                window._settings.set_strv(key, []);
                 dialog.close();
                 return Gdk.EVENT_STOP;
             }
@@ -170,10 +170,7 @@ export function openCustomShortcutDialog(window) {
                 return Gdk.EVENT_STOP;
             }
 
-            window._settings.set_strv(
-                'start-menu-custom-hotkey',
-                [accelerator]
-            );
+            window._settings.set_strv(key, [accelerator]);
             dialog.close();
             return Gdk.EVENT_STOP;
         }

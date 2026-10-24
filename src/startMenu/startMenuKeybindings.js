@@ -14,6 +14,7 @@ import {normalizeAccelerator} from '../shared/keybindingUtils.js';
 const SUPER_KEY_SETTING = 'start-menu-super-key';
 const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';
 const CUSTOM_KEYBINDING = 'start-menu-custom-hotkey';
+const OVERVIEW_KEYBINDING = 'overview-custom-hotkey';
 const FILE_MANAGER_SETTING = 'super-e-file-manager-enabled';
 const FILE_MANAGER_KEYBINDING = 'super-e-file-manager-hotkey';
 const DISPLACED_OVERLAY_KEY = 'start-menu-displaced-overlay-key';
@@ -42,7 +43,7 @@ export class StartMenuKeybindings {
         });
         this._superTabMode = null;
         this._superTabAction = Meta.KeyBindingAction.NONE;
-        this._customEnabled = false;
+        this._customBindings = new Set();
         this._fileManagerEnabled = false;
         this._overlayEnabled = false;
         this._overlayHandlerId = 0;
@@ -59,32 +60,41 @@ export class StartMenuKeybindings {
         }
 
         if (this._settings.get_boolean(SUPER_KEY_SETTING)) {
-            this._disableCustom();
-            if (!this._enableSuperTab('overview') ||
-                !this._enableOverlayKey()) {
+            this._disableCustom(CUSTOM_KEYBINDING);
+            if (!this._enableOverlayKey()) {
                 this._disableSuperTab();
+                this._disableCustom(OVERVIEW_KEYBINDING);
                 this._disableOverlayKey();
                 this._disableSuperKeySetting();
+                return;
+            }
+            if (this._settings.get_strv(OVERVIEW_KEYBINDING).length > 0) {
+                this._disableSuperTab();
+                this._enableCustom(OVERVIEW_KEYBINDING, () => this._toggleOverview(), 'Overview');
+            } else {
+                this._disableCustom(OVERVIEW_KEYBINDING);
+                this._enableSuperTab('overview');
             }
             return;
         }
 
         this._disableOverlayKey();
+        this._disableCustom(OVERVIEW_KEYBINDING);
         if (this._settings.get_boolean('start-menu-super-tab')) {
-            this._disableCustom();
+            this._disableCustom(CUSTOM_KEYBINDING);
             this._enableSuperTab('start-menu');
             return;
         }
 
         this._disableSuperTab();
         if (this._settings.get_strv(CUSTOM_KEYBINDING).length > 0)
-            this._enableCustom();
+            this._enableCustom(CUSTOM_KEYBINDING, () => this._toggleMenu(), 'Start menu');
         else
-            this._disableCustom();
+            this._disableCustom(CUSTOM_KEYBINDING);
     }
 
-    customAcceleratorChanged() {
-        this._disableCustom();
+    customAcceleratorChanged(key) {
+        this._disableCustom(key);
         this.sync();
     }
 
@@ -106,7 +116,8 @@ export class StartMenuKeybindings {
     _disableStartMenuBindings() {
         this._disableSuperTab();
         this._disableOverlayKey();
-        this._disableCustom();
+        this._disableCustom(CUSTOM_KEYBINDING);
+        this._disableCustom(OVERVIEW_KEYBINDING);
     }
 
     _startMenuAvailable() {
@@ -146,7 +157,7 @@ export class StartMenuKeybindings {
 
     _enableSuperTab(mode) {
         if (this._superTabMode === mode)
-            return true;
+            return;
 
         this._disableSuperTab();
         this._superTabMode = mode;
@@ -160,7 +171,6 @@ export class StartMenuKeybindings {
             ACTION_MODES,
             () => this._activateSuperTab()
         );
-        return true;
     }
 
     _disableSuperTab() {
@@ -318,39 +328,37 @@ export class StartMenuKeybindings {
             this._settings.set_boolean(SUPER_KEY_SETTING, false);
     }
 
-    _enableCustom() {
-        const accelerators = this._settings.get_strv(CUSTOM_KEYBINDING);
+    _enableCustom(key, handler, label) {
+        const accelerators = this._settings.get_strv(key);
         if (this._customConflictsWithManagedShortcut(accelerators)) {
-            this._disableCustom();
+            this._disableCustom(key);
             this._reportFailure(
-                'Custom Start menu shortcut conflicts with another Simple Taskbar shortcut'
+                `Custom ${label} shortcut conflicts with another Simple Taskbar shortcut`
             );
             return;
         }
-        if (this._customEnabled)
+        if (this._customBindings.has(key))
             return;
 
         const action = Main.wm.addKeybinding(
-            CUSTOM_KEYBINDING,
+            key,
             this._settings,
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
             ACTION_MODES,
-            () => this._toggleMenu()
+            handler
         );
-        this._customEnabled = action !== Meta.KeyBindingAction.NONE;
-        if (!this._customEnabled) {
-            this._reportFailure(
-                'Custom Start menu shortcut could not be registered'
-            );
+        if (action === Meta.KeyBindingAction.NONE) {
+            this._reportFailure(`Custom ${label} shortcut could not be registered`);
+            return;
         }
+        this._customBindings.add(key);
     }
 
-    _disableCustom() {
-        if (!this._customEnabled)
+    _disableCustom(key) {
+        if (!this._customBindings.delete(key))
             return;
 
-        Main.wm.removeKeybinding(CUSTOM_KEYBINDING);
-        this._customEnabled = false;
+        Main.wm.removeKeybinding(key);
     }
 
     _customConflictsWithManagedShortcut(accelerators) {

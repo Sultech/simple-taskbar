@@ -1934,6 +1934,10 @@
       <default>[]</default>
       <summary>Custom shortcut for the Eleven-style Start Menu</summary>
     </key>
+    <key name="overview-custom-hotkey" type="as">
+      <default>[]</default>
+      <summary>Shortcut that opens the Overview instead of Super+Tab while Super opens the Eleven-style Start Menu</summary>
+    </key>
     <key name="super-e-file-manager-enabled" type="b">
       <default>true</default>
       <summary>Open the default file manager with Super+E</summary>

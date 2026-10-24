@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 04:24+0100\n"
+"POT-Creation-Date: 2026-10-24 04:35+0100\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -26,30 +26,30 @@ msgstr "展示桌面"
 msgid "Application overflow"
 msgstr "应用溢出"
 
-#: prefs.js:44 src/prefs/applicationIconsGroup.js:397
+#: prefs.js:43 src/prefs/applicationIconsGroup.js:397
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "左侧"
 
-#: prefs.js:45
+#: prefs.js:44
 msgid "Center"
 msgstr "居中"
 
-#: prefs.js:46 src/prefs/applicationIconsGroup.js:398
+#: prefs.js:45 src/prefs/applicationIconsGroup.js:398
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "右侧"
 
-#: prefs.js:52 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
+#: prefs.js:51 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:84
 msgid "Taskbar"
 msgstr "任务栏"
 
-#: prefs.js:59 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:174
+#: prefs.js:58 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:206
 #: src/prefs/panelSettingsHubs.js:92
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:66 src/prefs/dockItemsPage.js:74
+#: prefs.js:65 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "开始菜单"
 
@@ -1294,12 +1294,12 @@ msgid "Choose the colour scheme when system matching is off"
 msgstr "当系统捕获关闭时选择配色方案"
 
 #: src/prefs/dockAppearanceGroup.js:207 src/prefs/panelAppearancePage.js:300
-#: src/prefs/startMenuPage.js:795
+#: src/prefs/startMenuPage.js:827
 msgid "Light"
 msgstr "浅色"
 
 #: src/prefs/dockAppearanceGroup.js:208 src/prefs/panelAppearancePage.js:301
-#: src/prefs/startMenuPage.js:794
+#: src/prefs/startMenuPage.js:826
 msgid "Dark"
 msgstr "深色"
 
@@ -1324,7 +1324,7 @@ msgid "Apply Blur My Shell panel blur to the Dock"
 msgstr "将 Blur My Shell 的面板模糊应用到 Dock"
 
 #: src/prefs/dockAppearanceGroup.js:246 src/prefs/panelAppearancePage.js:323
-#: src/prefs/startMenuPage.js:821
+#: src/prefs/startMenuPage.js:853
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的面板模糊"
 
@@ -1637,68 +1637,68 @@ msgstr "常用文件夹"
 msgid "Choose which common folders appear"
 msgstr "选择要显示的常用文件夹"
 
-#: src/prefs/locationsGroup.js:34 src/prefs/startMenuPage.js:614
+#: src/prefs/locationsGroup.js:34 src/prefs/startMenuPage.js:646
 #: src/integration/fileManagerPlacesSection.js:25
 msgid "Home"
 msgstr "主目录"
 
-#: src/prefs/locationsGroup.js:35 src/prefs/startMenuPage.js:615
+#: src/prefs/locationsGroup.js:35 src/prefs/startMenuPage.js:647
 msgid "Add the Home folder"
 msgstr "添加主文件夹"
 
-#: src/prefs/locationsGroup.js:39 src/prefs/startMenuPage.js:619
-#: src/prefs/startMenuPage.js:735
+#: src/prefs/locationsGroup.js:39 src/prefs/startMenuPage.js:651
+#: src/prefs/startMenuPage.js:767
 #: src/startMenu/startButtonContextMenuController.js:142
 #: src/integration/fileManagerPlacesSection.js:30
 msgid "Desktop"
 msgstr "桌面"
 
-#: src/prefs/locationsGroup.js:40 src/prefs/startMenuPage.js:620
+#: src/prefs/locationsGroup.js:40 src/prefs/startMenuPage.js:652
 msgid "Add the Desktop folder"
 msgstr "添加桌面文件夹"
 
-#: src/prefs/locationsGroup.js:44 src/prefs/startMenuPage.js:624
+#: src/prefs/locationsGroup.js:44 src/prefs/startMenuPage.js:656
 #: src/integration/fileManagerPlacesSection.js:35
 msgid "Documents"
 msgstr "文档"
 
-#: src/prefs/locationsGroup.js:45 src/prefs/startMenuPage.js:625
+#: src/prefs/locationsGroup.js:45 src/prefs/startMenuPage.js:657
 msgid "Add the Documents folder"
 msgstr "添加文档文件夹"
 
-#: src/prefs/locationsGroup.js:49 src/prefs/startMenuPage.js:629
+#: src/prefs/locationsGroup.js:49 src/prefs/startMenuPage.js:661
 #: src/integration/fileManagerPlacesSection.js:40
 msgid "Downloads"
 msgstr "下载"
 
-#: src/prefs/locationsGroup.js:50 src/prefs/startMenuPage.js:630
+#: src/prefs/locationsGroup.js:50 src/prefs/startMenuPage.js:662
 msgid "Add the Downloads folder"
 msgstr "添加下载文件夹"
 
-#: src/prefs/locationsGroup.js:54 src/prefs/startMenuPage.js:634
+#: src/prefs/locationsGroup.js:54 src/prefs/startMenuPage.js:666
 #: src/integration/fileManagerPlacesSection.js:45
 msgid "Music"
 msgstr "音乐"
 
-#: src/prefs/locationsGroup.js:55 src/prefs/startMenuPage.js:635
+#: src/prefs/locationsGroup.js:55 src/prefs/startMenuPage.js:667
 msgid "Add the Music folder"
 msgstr "添加音乐文件夹"
 
-#: src/prefs/locationsGroup.js:59 src/prefs/startMenuPage.js:639
+#: src/prefs/locationsGroup.js:59 src/prefs/startMenuPage.js:671
 #: src/integration/fileManagerPlacesSection.js:50
 msgid "Pictures"
 msgstr "图片"
 
-#: src/prefs/locationsGroup.js:60 src/prefs/startMenuPage.js:640
+#: src/prefs/locationsGroup.js:60 src/prefs/startMenuPage.js:672
 msgid "Add the Pictures folder"
 msgstr "添加图片文件夹"
 
-#: src/prefs/locationsGroup.js:64 src/prefs/startMenuPage.js:644
+#: src/prefs/locationsGroup.js:64 src/prefs/startMenuPage.js:676
 #: src/integration/fileManagerPlacesSection.js:55
 msgid "Videos"
 msgstr "视频"
 
-#: src/prefs/locationsGroup.js:65 src/prefs/startMenuPage.js:645
+#: src/prefs/locationsGroup.js:65 src/prefs/startMenuPage.js:677
 msgid "Add the Videos folder"
 msgstr "添加视频文件夹"
 
@@ -1981,7 +1981,7 @@ msgstr "在快速设置中添加一个按应用区分的音量控制器"
 msgid "Folder Menu Location"
 msgstr "文件夹菜单位置"
 
-#: src/prefs/panelItemsPage.js:107 src/prefs/startMenuPage.js:290
+#: src/prefs/panelItemsPage.js:107 src/prefs/startMenuPage.js:322
 msgid "Choose…"
 msgstr "选择…"
 
@@ -2026,7 +2026,7 @@ msgid "Right Box"
 msgstr "右侧框"
 
 #: src/prefs/panelItemsPage.js:232 src/prefs/startButtonDialog.js:33
-#: src/prefs/startMenuPage.js:49
+#: src/prefs/startMenuPage.js:81
 msgid "Start Button"
 msgstr "开始按钮"
 
@@ -2044,7 +2044,7 @@ msgstr "GNOME 工作区概览按钮"
 
 #: src/prefs/panelItemsPage.js:253 src/prefs/dockItemsPage.js:81
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1061
+#: src/startMenu/startButtonController.js:1063
 msgid "Applications"
 msgstr "应用程序"
 
@@ -2254,7 +2254,7 @@ msgstr "该快捷键需要包含修饰键。请尝试其他快捷键。"
 msgid "That shortcut is already in use. Press a different shortcut."
 msgstr "该快捷键已被使用。请尝试其他快捷键。"
 
-#: src/prefs/preferencesDialogs.js:186
+#: src/prefs/preferencesDialogs.js:183
 msgid "Choose a Folder"
 msgstr "选择一个文件夹"
 
@@ -2474,7 +2474,7 @@ msgstr "为显示桌面分隔线使用所选颜色"
 msgid "Separator Color"
 msgstr "分隔线颜色"
 
-#: src/prefs/startButtonDialog.js:24 src/prefs/startMenuPage.js:53
+#: src/prefs/startButtonDialog.js:24 src/prefs/startMenuPage.js:85
 msgid "Start Button Options"
 msgstr "开始按钮选项"
 
@@ -2482,412 +2482,428 @@ msgstr "开始按钮选项"
 msgid "Alignment and Menu"
 msgstr "对齐与菜单"
 
-#: src/prefs/startButtonDialog.js:52 src/prefs/startMenuPage.js:112
+#: src/prefs/startButtonDialog.js:52 src/prefs/startMenuPage.js:144
 msgid "Follow Application Alignment"
 msgstr "跟随应用对齐方式"
 
-#: src/prefs/startButtonDialog.js:53 src/prefs/startMenuPage.js:113
+#: src/prefs/startButtonDialog.js:53 src/prefs/startMenuPage.js:145
 msgid "Move the Start button with the application icons"
 msgstr "使开始按钮与应用图标一同移动"
 
-#: src/prefs/startButtonDialog.js:59 src/prefs/startMenuPage.js:59
-#: src/prefs/startMenuPage.js:346
+#: src/prefs/startButtonDialog.js:59 src/prefs/startMenuPage.js:91
+#: src/prefs/startMenuPage.js:378
 msgid "Eleven-style Start Menu"
 msgstr "11 风格开始菜单"
 
-#: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:347
+#: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:379
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "用 11 风格菜单替换 GNOME 应用网格"
 
-#: src/prefs/startMenuPage.js:54
+#: src/prefs/startMenuPage.js:38
+msgid "Not set"
+msgstr "未设置"
+
+#: src/prefs/startMenuPage.js:42
+msgid "Set custom shortcut"
+msgstr "设置自定义快捷键"
+
+#: src/prefs/startMenuPage.js:47
+msgid "Clear custom shortcut"
+msgstr "清除自定义快捷键"
+
+#: src/prefs/startMenuPage.js:86
 msgid "Alignment, padding, icon, and separator"
 msgstr "对齐、间距、图标和分隔线"
 
-#: src/prefs/startMenuPage.js:60
+#: src/prefs/startMenuPage.js:92
 msgid "Configure the optional Eleven-style application menu."
 msgstr "配置可选的 11 风格应用程序菜单。"
 
-#: src/prefs/startMenuPage.js:86
+#: src/prefs/startMenuPage.js:118
 msgid "Start Button Alignment"
 msgstr "开始按钮对齐方式"
 
-#: src/prefs/startMenuPage.js:88
+#: src/prefs/startMenuPage.js:120
 msgid "Choose the Start button position or follow application alignment"
 msgstr "选择开始按钮的位置，或跟随应用对齐方式"
 
-#: src/prefs/startMenuPage.js:140
+#: src/prefs/startMenuPage.js:172
 msgid "Manual Alignment"
 msgstr "手动对齐"
 
-#: src/prefs/startMenuPage.js:142
+#: src/prefs/startMenuPage.js:174
 msgid "Used when the Start button does not follow applications"
 msgstr "当开始按钮不跟随应用时使用"
 
-#: src/prefs/startMenuPage.js:169
+#: src/prefs/startMenuPage.js:201
 msgid "Location"
 msgstr "位置"
 
-#: src/prefs/startMenuPage.js:174
+#: src/prefs/startMenuPage.js:206
 msgid "Hidden"
 msgstr "隐藏"
 
-#: src/prefs/startMenuPage.js:176
+#: src/prefs/startMenuPage.js:208
 msgid "Panel"
 msgstr "面板"
 
-#: src/prefs/startMenuPage.js:199
+#: src/prefs/startMenuPage.js:231
 msgid "Place the Start button in the Dock or the panel in Default Panel mode"
 msgstr "在默认 GNOME 面板模式下将开始按钮放在 Dock 或面板中"
 
-#: src/prefs/startMenuPage.js:200
+#: src/prefs/startMenuPage.js:232
 msgid ""
 "The Dock is off, so the Start button is hidden unless it is in the panel"
 msgstr "Dock 已关闭，因此除非开始按钮位于面板中，否则它会被隐藏"
 
-#: src/prefs/startMenuPage.js:228
+#: src/prefs/startMenuPage.js:260
 msgid "Start Button Appearance"
 msgstr "开始按钮外观"
 
-#: src/prefs/startMenuPage.js:229
+#: src/prefs/startMenuPage.js:261
 msgid "Configure padding, separators, icons, and button visibility"
 msgstr "配置间距、分隔线、图标和按钮可见性"
 
-#: src/prefs/startMenuPage.js:237
+#: src/prefs/startMenuPage.js:269
 msgid "Start Button Padding"
 msgstr "开始按钮内边距"
 
-#: src/prefs/startMenuPage.js:239
+#: src/prefs/startMenuPage.js:271
 msgid ""
 "Space between the Start icon and the panel edge in pixels when positioned at "
 "either end"
 msgstr "当“开始”图标位于任一端时，其与面板边缘之间的间距（像素）"
 
-#: src/prefs/startMenuPage.js:277
+#: src/prefs/startMenuPage.js:309
 msgid "Show Start Button Separator"
 msgstr "显示开始按钮分隔线"
 
-#: src/prefs/startMenuPage.js:278
+#: src/prefs/startMenuPage.js:310
 msgid "Show a line between the Start button and applications"
 msgstr "在开始按钮和应用之间显示分隔线"
 
-#: src/prefs/startMenuPage.js:282
+#: src/prefs/startMenuPage.js:314
 msgid "Custom Start Button Icon"
 msgstr "自定义开始按钮图标"
 
-#: src/prefs/startMenuPage.js:285
+#: src/prefs/startMenuPage.js:317
 msgid "Use the built-in icon"
 msgstr "使用内置图标"
 
-#: src/prefs/startMenuPage.js:307
+#: src/prefs/startMenuPage.js:339
 msgid "Using the built-in icon"
 msgstr "正在使用内置图标"
 
-#: src/prefs/startMenuPage.js:352 src/prefs/startMenuPage.js:388
+#: src/prefs/startMenuPage.js:384 src/prefs/startMenuPage.js:420
 msgid "Start Menu Options"
 msgstr "开始菜单选项"
 
-#: src/prefs/startMenuPage.js:353 src/prefs/startMenuPage.js:389
+#: src/prefs/startMenuPage.js:385 src/prefs/startMenuPage.js:421
 msgid "Configure Start Menu content and behavior"
 msgstr "配置开始菜单内容和行为"
 
-#: src/prefs/startMenuPage.js:357 src/prefs/startMenuPage.js:590
+#: src/prefs/startMenuPage.js:389 src/prefs/startMenuPage.js:622
 msgid "Start Menu Appearance"
 msgstr "开始菜单外观"
 
-#: src/prefs/startMenuPage.js:358 src/prefs/startMenuPage.js:591
+#: src/prefs/startMenuPage.js:390 src/prefs/startMenuPage.js:623
 msgid "Configure the Start Menu theme and transparency"
 msgstr "配置开始菜单主题和透明度"
 
-#: src/prefs/startMenuPage.js:362 src/prefs/startMenuPage.js:595
+#: src/prefs/startMenuPage.js:394 src/prefs/startMenuPage.js:627
 msgid "Folder Shortcuts"
 msgstr "文件夹快捷方式"
 
-#: src/prefs/startMenuPage.js:363 src/prefs/startMenuPage.js:596
+#: src/prefs/startMenuPage.js:395 src/prefs/startMenuPage.js:628
 msgid "Choose which folders appear beside the Settings icon"
 msgstr "选择要显示在设置图标旁边的文件夹"
 
-#: src/prefs/startMenuPage.js:367 src/prefs/startMenuPage.js:741
+#: src/prefs/startMenuPage.js:399 src/prefs/startMenuPage.js:773
 msgid "Start Button Context Menu"
 msgstr "开始按钮上下文菜单"
 
-#: src/prefs/startMenuPage.js:368 src/prefs/startMenuPage.js:743
+#: src/prefs/startMenuPage.js:400 src/prefs/startMenuPage.js:775
 msgid "Choose which shortcuts appear in the Start button’s context menu"
 msgstr "选择开始按钮上下文菜单中显示的快捷方式"
 
-#: src/prefs/startMenuPage.js:372 src/prefs/startMenuPage.js:377
+#: src/prefs/startMenuPage.js:404 src/prefs/startMenuPage.js:409
 msgid "Keyboard Shortcuts"
 msgstr "键盘快捷键"
 
-#: src/prefs/startMenuPage.js:373
+#: src/prefs/startMenuPage.js:405
 msgid "Configure Start menu shortcuts"
 msgstr "配置开始菜单快捷键"
 
-#: src/prefs/startMenuPage.js:378
+#: src/prefs/startMenuPage.js:410
 msgid "Configure Start menu shortcuts."
 msgstr "配置开始菜单快捷键。"
 
-#: src/prefs/startMenuPage.js:393
+#: src/prefs/startMenuPage.js:425
 msgid "Show Profile Picture"
 msgstr "展示头像"
 
-#: src/prefs/startMenuPage.js:394
+#: src/prefs/startMenuPage.js:426
 msgid "Use your account picture in the Start Menu"
 msgstr "在开始菜单中使用您的账户头像"
 
-#: src/prefs/startMenuPage.js:415
+#: src/prefs/startMenuPage.js:447
 msgid "Power Options in Start Menu"
 msgstr "开始菜单中的电源选项"
 
-#: src/prefs/startMenuPage.js:417
+#: src/prefs/startMenuPage.js:449
 msgid "Show power actions here instead of in Quick Settings"
 msgstr "在此处而不是在快速设置中展示电源操作"
 
-#: src/prefs/startMenuPage.js:439
+#: src/prefs/startMenuPage.js:471
 msgid "Open All Apps by Default"
 msgstr "默认打开“所有应用”"
 
-#: src/prefs/startMenuPage.js:440
+#: src/prefs/startMenuPage.js:472
 msgid "Skip Pinned and open directly to applications and categories"
 msgstr "跳过“已固定”，直接打开应用与类别"
 
-#: src/prefs/startMenuPage.js:461
+#: src/prefs/startMenuPage.js:493
 msgid "Show Recommended Apps"
 msgstr "展示推荐应用"
 
-#: src/prefs/startMenuPage.js:462
+#: src/prefs/startMenuPage.js:494
 msgid "Display frequently used applications below pinned apps"
 msgstr "在已固定的应用下方展示常用的应用"
 
-#: src/prefs/startMenuPage.js:474
+#: src/prefs/startMenuPage.js:506
 msgid "Hide Pinned App Titles"
 msgstr "隐藏已固定的应用的标题"
 
-#: src/prefs/startMenuPage.js:476
+#: src/prefs/startMenuPage.js:508
 msgid ""
 "Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr "隐藏已固定的图标下方的名称，并在悬停时通过提示框显示"
 
-#: src/prefs/startMenuPage.js:489
+#: src/prefs/startMenuPage.js:521
 msgid "Show Running App Indicators"
 msgstr "显示运行中应用指示器"
 
-#: src/prefs/startMenuPage.js:490
+#: src/prefs/startMenuPage.js:522
 msgid "Show taskbar-style indicators below running application icons"
 msgstr "在运行中应用图标下方显示任务栏样式的指示器"
 
-#: src/prefs/startMenuPage.js:538
+#: src/prefs/startMenuPage.js:570
 msgid "Organize All Apps into Categories"
 msgstr "按类别整理所有应用"
 
-#: src/prefs/startMenuPage.js:539
+#: src/prefs/startMenuPage.js:571
 msgid "Browse applications by category in the Start menu"
 msgstr "在开始菜单中按类别浏览应用"
 
-#: src/prefs/startMenuPage.js:561
+#: src/prefs/startMenuPage.js:593
 msgid "Show App Grid Button"
 msgstr "显示应用程序网格按钮"
 
-#: src/prefs/startMenuPage.js:562
+#: src/prefs/startMenuPage.js:594
 msgid ""
 "Show a Start button that opens the GNOME app grid when the Eleven-style "
 "Start Menu is disabled"
 msgstr ""
 "在禁用 Eleven 风格开始菜单时，显示一个可打开 GNOME 应用程序网格的开始按钮"
 
-#: src/prefs/startMenuPage.js:583
+#: src/prefs/startMenuPage.js:615
 msgid "Follow Taskbar/Dock Theme"
 msgstr "跟随任务栏/Dock 主题"
 
-#: src/prefs/startMenuPage.js:584
+#: src/prefs/startMenuPage.js:616
 msgid "Use the taskbar or Dock’s effective light or dark appearance"
 msgstr "使用任务栏或 Dock 当前实际的浅色或深色外观"
 
-#: src/prefs/startMenuPage.js:599
+#: src/prefs/startMenuPage.js:631
 msgid "Show Folder Shortcuts"
 msgstr "显示文件夹快捷方式"
 
-#: src/prefs/startMenuPage.js:600
+#: src/prefs/startMenuPage.js:632
 msgid "Show selected folders beside the Settings icon in the Start Menu"
 msgstr "在开始菜单的设置图标旁边显示所选文件夹"
 
-#: src/prefs/startMenuPage.js:681
+#: src/prefs/startMenuPage.js:713
 #: src/startMenu/startButtonContextMenuController.js:76
 msgid "Installed Apps"
 msgstr "已安装的应用"
 
-#: src/prefs/startMenuPage.js:682
+#: src/prefs/startMenuPage.js:714
 msgid "Open installed applications in Settings"
 msgstr "在设置中打开已安装的应用"
 
-#: src/prefs/startMenuPage.js:687
+#: src/prefs/startMenuPage.js:719
 #: src/startMenu/startButtonContextMenuController.js:84
 msgid "Event Viewer"
 msgstr "事件查看器"
 
-#: src/prefs/startMenuPage.js:688
+#: src/prefs/startMenuPage.js:720
 msgid "Open system logs"
 msgstr "打开系统日志"
 
-#: src/prefs/startMenuPage.js:693 src/startMenu/startMenuAppModel.js:51
+#: src/prefs/startMenuPage.js:725 src/startMenu/startMenuAppModel.js:51
 #: src/startMenu/startButtonContextMenuController.js:91
 msgid "System"
 msgstr "系统"
 
-#: src/prefs/startMenuPage.js:694
+#: src/prefs/startMenuPage.js:726
 msgid "Open system information in Settings"
 msgstr "在设置中打开系统信息"
 
-#: src/prefs/startMenuPage.js:699
+#: src/prefs/startMenuPage.js:731
 #: src/startMenu/startButtonContextMenuController.js:97
 msgid "Network Connections"
 msgstr "网络连接"
 
-#: src/prefs/startMenuPage.js:700
+#: src/prefs/startMenuPage.js:732
 msgid "Open network settings"
 msgstr "打开网络设置"
 
-#: src/prefs/startMenuPage.js:705
+#: src/prefs/startMenuPage.js:737
 #: src/startMenu/startButtonContextMenuController.js:105
 msgid "Disk Management"
 msgstr "磁盘管理"
 
-#: src/prefs/startMenuPage.js:706
+#: src/prefs/startMenuPage.js:738
 msgid "Open GNOME Disks"
 msgstr "打开 GNOME 磁盘"
 
-#: src/prefs/startMenuPage.js:711
+#: src/prefs/startMenuPage.js:743
 #: src/startMenu/startButtonContextMenuController.js:110
 msgid "Terminal"
 msgstr "终端"
 
-#: src/prefs/startMenuPage.js:712
+#: src/prefs/startMenuPage.js:744
 msgid "Open the available terminal application"
 msgstr "打开可用的终端应用"
 
-#: src/prefs/startMenuPage.js:717
+#: src/prefs/startMenuPage.js:749
 #: src/startMenu/startButtonContextMenuController.js:120
 #: src/panel/panelInteractionController.js:121
 msgid "Task Manager"
 msgstr "任务管理器"
 
-#: src/prefs/startMenuPage.js:718
+#: src/prefs/startMenuPage.js:750
 msgid "Open the configured task manager"
 msgstr "打开已配置的任务管理器"
 
-#: src/prefs/startMenuPage.js:723
+#: src/prefs/startMenuPage.js:755
 #: src/startMenu/startButtonContextMenuController.js:129
 msgid "File Explorer"
 msgstr "文件管理器"
 
-#: src/prefs/startMenuPage.js:724
+#: src/prefs/startMenuPage.js:756
 msgid "Open the default file manager"
 msgstr "打开默认文件管理器"
 
-#: src/prefs/startMenuPage.js:729
+#: src/prefs/startMenuPage.js:761
 #: src/startMenu/startButtonContextMenuController.js:136
 msgid "Run"
 msgstr "运行"
 
-#: src/prefs/startMenuPage.js:730
+#: src/prefs/startMenuPage.js:762
 msgid "Open the Run Command dialog"
 msgstr "打开“运行命令”对话框"
 
-#: src/prefs/startMenuPage.js:736
+#: src/prefs/startMenuPage.js:768
 msgid "Show the desktop"
 msgstr "显示桌面"
 
-#: src/prefs/startMenuPage.js:748
+#: src/prefs/startMenuPage.js:780
 msgid "Show Context Menu Shortcuts"
 msgstr "显示上下文菜单快捷方式"
 
-#: src/prefs/startMenuPage.js:749
+#: src/prefs/startMenuPage.js:781
 msgid "Add selected system shortcuts to the Start button context menu"
 msgstr "将所选系统快捷方式添加到开始按钮的上下文菜单"
 
-#: src/prefs/startMenuPage.js:791
+#: src/prefs/startMenuPage.js:823
 msgid "Start Menu Theme"
 msgstr "开始菜单主题"
 
-#: src/prefs/startMenuPage.js:792
+#: src/prefs/startMenuPage.js:824
 msgid "Use a custom appearance or follow the GNOME Shell theme"
 msgstr "使用自定义外观或跟随 GNOME Shell 主题"
 
-#: src/prefs/startMenuPage.js:796
+#: src/prefs/startMenuPage.js:828
 msgid "GNOME Shell"
 msgstr "GNOME Shell"
 
-#: src/prefs/startMenuPage.js:818
+#: src/prefs/startMenuPage.js:850
 msgid "Use the taskbar’s configured transparency level"
 msgstr "使用任务栏配置的透明度级别"
 
-#: src/prefs/startMenuPage.js:824
+#: src/prefs/startMenuPage.js:856
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的弹出窗口模糊"
 
-#: src/prefs/startMenuPage.js:827
+#: src/prefs/startMenuPage.js:859
 msgid "Disable Blur My Shell panel and popup blur to use this option"
 msgstr "要使用此选项，请禁用 Blur My Shell 的面板与弹出窗口模糊"
 
-#: src/prefs/startMenuPage.js:830
+#: src/prefs/startMenuPage.js:862
 msgid "Follow Taskbar Transparency"
 msgstr "跟随任务栏透明度"
 
-#: src/prefs/startMenuPage.js:879
+#: src/prefs/startMenuPage.js:911
 msgid "Center Start Menu on Monitor"
 msgstr "在显示器上居中展示开始菜单"
 
-#: src/prefs/startMenuPage.js:881
+#: src/prefs/startMenuPage.js:913
 msgid ""
 "Place the menu at the true horizontal center instead of over the Start button"
 msgstr "将菜单放置在真正的水平中心，而不是开始按钮上方"
 
-#: src/prefs/startMenuPage.js:916
+#: src/prefs/startMenuPage.js:948
 msgid "Super Opens Start Menu"
 msgstr "按 Super 键以打开开始菜单"
 
-#: src/prefs/startMenuPage.js:917
-msgid "Use Super for the Start Menu and move Overview to Super+Tab"
-msgstr "使用 Super 键打开开始菜单，并将概览移到 Super+Tab"
+#: src/prefs/startMenuPage.js:949
+msgid ""
+"Use Super for the Start Menu and move the Overview to Super+Tab or your own "
+"shortcut"
+msgstr "使用 Super 键打开开始菜单，并将概览移到 Super+Tab 或自定义快捷键"
 
-#: src/prefs/startMenuPage.js:929
+#: src/prefs/startMenuPage.js:961
+msgid "Overview Shortcut"
+msgstr "概览快捷键"
+
+#: src/prefs/startMenuPage.js:968
 msgid "Super+Tab Opens Start Menu"
 msgstr "按 Super+Tab 以打开开始菜单"
 
-#: src/prefs/startMenuPage.js:931
+#: src/prefs/startMenuPage.js:970
 msgid ""
 "Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
 "while it is enabled"
 msgstr "启用后，使用 GNOME 的应用切换快捷键（Super）打开 11 风格开始菜单"
 
-#: src/prefs/startMenuPage.js:968
-msgid "Not set"
-msgstr "未设置"
+#: src/prefs/startMenuPage.js:990
+msgid ""
+"Opens the Overview while Super opens the Start Menu; clear it to use "
+"Super+Tab"
+msgstr "在 Super 键打开开始菜单时打开概览；清除后使用 Super+Tab"
 
-#: src/prefs/startMenuPage.js:972
-msgid "Set custom shortcut"
-msgstr "设置自定义快捷键"
+#: src/prefs/startMenuPage.js:991
+msgid "Turn on the Super shortcut to change the Overview shortcut"
+msgstr "要更改概览快捷键，请开启 Super 快捷键"
 
-#: src/prefs/startMenuPage.js:977
-msgid "Clear custom shortcut"
-msgstr "清除自定义快捷键"
-
-#: src/prefs/startMenuPage.js:982
+#: src/prefs/startMenuPage.js:1014
 msgid "Custom Start Menu Shortcut"
 msgstr "自定义开始菜单快捷键"
 
-#: src/prefs/startMenuPage.js:1001
+#: src/prefs/startMenuPage.js:1025
 msgid "Turn off the Super shortcut to use a custom shortcut"
 msgstr "要使用自定义快捷键，请关闭 Super 快捷键"
 
-#: src/prefs/startMenuPage.js:1004
+#: src/prefs/startMenuPage.js:1028
 msgid "Turn off Super+Tab to use a custom shortcut"
 msgstr "要使用自定义快捷键，请关闭 Super+Tab"
 
-#: src/prefs/startMenuPage.js:1007
+#: src/prefs/startMenuPage.js:1031
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr "选择任意的一个未使用的键盘快捷键，默认不分配任何快捷键"
 
-#: src/prefs/startMenuPage.js:1035
+#: src/prefs/startMenuPage.js:1048
 msgid ""
 "Set the Start button location to Panel to use the Start Menu in Default "
 "GNOME Panel mode."
@@ -3570,7 +3586,7 @@ msgstr "Dock 设置"
 msgid "Taskbar Settings"
 msgstr "任务栏设置"
 
-#: src/startMenu/startButtonController.js:1061
+#: src/startMenu/startButtonController.js:1063
 msgid "Start"
 msgstr "开始"
 
@@ -3795,9 +3811,6 @@ msgstr "没有应用正在播放音频"
 
 #~ msgid "Dock Mode Overview Behavior"
 #~ msgstr "Dock 模式的概览行为"
-
-#~ msgid "Overview Behavior"
-#~ msgstr "概览行为"
 
 #~ msgid "Taskbar Mode Overview Behavior"
 #~ msgstr "任务栏模式的概览行为"

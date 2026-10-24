@@ -33,6 +33,38 @@ import {
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 import {addSliderRow} from './sliderRow.js';
 
+function createShortcutRow(window, settings, connectSettings, {title, key, fallbackAccelerator = ''}) {
+    const label = new Gtk.ShortcutLabel({
+        disabled_text: _('Not set'),
+        valign: Gtk.Align.CENTER,
+    });
+    const editButton = new Gtk.Button({
+        tooltip_text: _('Set custom shortcut'),
+        valign: Gtk.Align.CENTER,
+    });
+    setButtonIcon(editButton, 'document-edit-symbolic');
+    const clearButton = new Gtk.Button({
+        tooltip_text: _('Clear custom shortcut'),
+        valign: Gtk.Align.CENTER,
+    });
+    setButtonIcon(clearButton, 'edit-clear-symbolic');
+    const row = new Adw.ActionRow({title, activatable_widget: editButton});
+    row.add_suffix(label);
+    row.add_suffix(clearButton);
+    row.add_suffix(editButton);
+
+    const syncShortcut = () => {
+        const [accelerator] = settings.get_strv(key);
+        label.accelerator = accelerator ?? fallbackAccelerator;
+        clearButton.visible = Boolean(accelerator);
+    };
+    editButton.connect('clicked', () => openCustomShortcutDialog(window, key));
+    clearButton.connect('clicked', () => settings.set_strv(key, []));
+    connectSettings(settings, `changed::${key}`, syncShortcut);
+    syncShortcut();
+    return row;
+}
+
 export function addStartMenuPage({
     window,
     page: startMenuPage,
@@ -914,7 +946,7 @@ export function addStartMenuPage({
 
     const superKeyRow = new Adw.SwitchRow({
         title: _('Super Opens Start Menu'),
-        subtitle: _('Use Super for the Start Menu and move Overview to Super+Tab'),
+        subtitle: _('Use Super for the Start Menu and move the Overview to Super+Tab or your own shortcut'),
         active: settings.get_boolean('start-menu-super-key'),
     });
     startMenuKeybindingsGroup.add(superKeyRow);
@@ -924,6 +956,13 @@ export function addStartMenuPage({
         'active',
         Gio.SettingsBindFlags.DEFAULT
     );
+
+    const overviewShortcutRow = createShortcutRow(window, settings, connectSettings, {
+        title: _('Overview Shortcut'),
+        key: 'overview-custom-hotkey',
+        fallbackAccelerator: '<Super>Tab',
+    });
+    startMenuKeybindingsGroup.add(overviewShortcutRow);
 
     const superTabRow = new Adw.SwitchRow({
         title: _('Super+Tab Opens Start Menu'),
@@ -945,13 +984,20 @@ export function addStartMenuPage({
         );
         superKeyRow.sensitive = windowsStartMenuSwitch.active &&
             !windowsXpTheme;
-        superTabRow.sensitive = windowsStartMenuSwitch.active &&
-            !superKeyRow.active;
+        superTabRow.sensitive = windowsStartMenuSwitch.active;
+        overviewShortcutRow.sensitive = superKeyRow.sensitive && superKeyRow.active;
+        overviewShortcutRow.subtitle = superKeyRow.active
+            ? _('Opens the Overview while Super opens the Start Menu; clear it to use Super+Tab')
+            : _('Turn on the Super shortcut to change the Overview shortcut');
     };
     superKeyRow.connect('notify::active', () => {
         if (superKeyRow.active && superTabRow.active)
             settings.set_boolean('start-menu-super-tab', false);
         updateSuperTabRow();
+    });
+    superTabRow.connect('notify::active', () => {
+        if (superTabRow.active && superKeyRow.active)
+            settings.set_boolean('start-menu-super-key', false);
     });
     windowsStartMenuSwitch.connect(
         'notify::active',
@@ -964,35 +1010,13 @@ export function addStartMenuPage({
     );
     updateSuperTabRow();
 
-    const customShortcutLabel = new Gtk.ShortcutLabel({
-        disabled_text: _('Not set'),
-        valign: Gtk.Align.CENTER,
-    });
-    const editCustomShortcutButton = new Gtk.Button({
-        tooltip_text: _('Set custom shortcut'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(editCustomShortcutButton, 'document-edit-symbolic');
-    const clearCustomShortcutButton = new Gtk.Button({
-        tooltip_text: _('Clear custom shortcut'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(clearCustomShortcutButton, 'edit-clear-symbolic');
-    const customShortcutRow = new Adw.ActionRow({
+    const customShortcutRow = createShortcutRow(window, settings, connectSettings, {
         title: _('Custom Start Menu Shortcut'),
-        activatable_widget: editCustomShortcutButton,
+        key: 'start-menu-custom-hotkey',
     });
-    customShortcutRow.add_suffix(customShortcutLabel);
-    customShortcutRow.add_suffix(clearCustomShortcutButton);
-    customShortcutRow.add_suffix(editCustomShortcutButton);
     startMenuKeybindingsGroup.add(customShortcutRow);
 
     const updateCustomShortcutRow = () => {
-        const [accelerator] = settings.get_strv(
-            'start-menu-custom-hotkey'
-        );
-        customShortcutLabel.accelerator = accelerator ?? '';
-        clearCustomShortcutButton.visible = Boolean(accelerator);
         customShortcutRow.sensitive =
             windowsStartMenuSwitch.active && !superTabRow.active &&
             !superKeyRow.active;
@@ -1008,17 +1032,6 @@ export function addStartMenuPage({
         }
     };
 
-    editCustomShortcutButton.connect('clicked', () => {
-        openCustomShortcutDialog(window);
-    });
-    clearCustomShortcutButton.connect('clicked', () => {
-        settings.set_strv('start-menu-custom-hotkey', []);
-    });
-    connectSettings(
-        settings,
-        'changed::start-menu-custom-hotkey',
-        updateCustomShortcutRow
-    );
     superKeyRow.connect('notify::active', updateCustomShortcutRow);
     superTabRow.connect('notify::active', updateCustomShortcutRow);
     windowsStartMenuSwitch.connect(
