@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -45,12 +46,18 @@ export class PanelButtonPaddingController {
         this._signalHolder = new TransientSignalHolder();
         this._styledActors = new Map();
         this._hoverInsetClass = null;
+        this._hoverInset = MINIMUM_HOVER_INSET;
         this._appliedVertical = null;
+        this._edgeBoxStyles = new Map();
     }
 
     enable() {
         this._settings.connectObject(
             'changed::panel-button-padding', () => this.sync(),
+            'changed::windows-xp-theme-enabled', () => {
+                this._restoreAll();
+                this.sync();
+            },
             this._signalHolder
         );
         Main.layoutManager.uiGroup.connectObject(
@@ -90,6 +97,7 @@ export class PanelButtonPaddingController {
         this._panelActor.remove_style_class_name(
             DEFAULT_BUTTON_PADDING_CLASS
         );
+        this.syncEdgePadding();
         if (padding === null) {
             this._restoreAll();
             return;
@@ -118,6 +126,9 @@ export class PanelButtonPaddingController {
             this._hoverInsetClass = null;
         }
         this._restoreAll();
+        for (const [box, style] of this._edgeBoxStyles)
+            box.set_style(style);
+        this._edgeBoxStyles.clear();
 
         this._panelBoxes = null;
         this._panelActor = null;
@@ -148,6 +159,7 @@ export class PanelButtonPaddingController {
         const inset = Math.round(
             MINIMUM_HOVER_INSET + progress * insetRange
         );
+        this._hoverInset = inset;
         const hoverInsetClass = `${HOVER_INSET_CLASS_PREFIX}${inset}`;
         if (hoverInsetClass === this._hoverInsetClass &&
             this._panelActor.has_style_class_name(hoverInsetClass))
@@ -181,6 +193,8 @@ export class PanelButtonPaddingController {
                     this._restoreButton(actor);
                 else
                     this._applyToActor(target, padding, vertical);
+            } else if (this._padsClockLabel(vertical) && this._isClockLabel(actor)) {
+                this._applyToActor(actor, padding, vertical);
             } else if (actor.has_style_class_name(STATUS_ICON_CLASS) &&
                 !this._isPaddingTarget(actor, vertical)) {
                 this._normalizeIconSpacing(actor, vertical);
@@ -204,6 +218,29 @@ export class PanelButtonPaddingController {
         return child === this._getQuickSettingsIndicators()
             ? null
             : child;
+    }
+
+    _isClockLabel(actor) {
+        const parent = actor.get_parent();
+        return actor.has_style_class_name('clock') &&
+            parent instanceof St.Widget &&
+            parent.has_style_class_name('clock-display-box');
+    }
+
+    _padsClockLabel(vertical) {
+        return !vertical && !this._settings.get_boolean('windows-xp-theme-enabled');
+    }
+
+    _paddingStyle(actor, padding, vertical) {
+        if (vertical)
+            return `padding-top: ${padding}px; padding-bottom: ${padding}px;`;
+        if (!this._padsClockLabel(vertical))
+            return `-natural-hpadding: ${padding}px; -minimum-hpadding: ${padding}px;`;
+        if (actor.has_style_class_name('clock-display'))
+            return '-natural-hpadding: 0; -minimum-hpadding: 0;';
+        if (this._isClockLabel(actor))
+            return `padding-left: ${padding}px; padding-right: ${padding}px;`;
+        return `-natural-hpadding: ${padding}px; -minimum-hpadding: ${padding}px;`;
     }
 
     _isPaddingTarget(actor, vertical) {
@@ -293,6 +330,38 @@ export class PanelButtonPaddingController {
 
     syncPanelHeight() {
         this._syncHoverInset();
+        this.syncEdgePadding();
+    }
+
+    syncEdgePadding() {
+        const vertical = panelIsVertical(this._settings);
+        const [startBox, , endBox] = this._panelBoxes;
+        const rtl = startBox.get_text_direction() === Clutter.TextDirection.RTL;
+        const startSide = vertical ? 'top' : rtl ? 'right' : 'left';
+        const endSide = vertical ? 'bottom' : rtl ? 'left' : 'right';
+        const visibleChildren = box => box.get_children().filter(child => child.visible);
+        this._setEdgePadding(startBox, startSide, visibleChildren(startBox)[0]);
+        this._setEdgePadding(endBox, endSide, visibleChildren(endBox).at(-1));
+    }
+
+    _setEdgePadding(box, side, edgeItem) {
+        if (!this._edgeBoxStyles.has(box))
+            this._edgeBoxStyles.set(box, box.get_style());
+        const clockAtEdge = Boolean(edgeItem) &&
+            !this._settings.get_boolean('windows-xp-theme-enabled') &&
+            this._hasEdgeClass(edgeItem, 'clock-display');
+        const style = appendStyle(
+            this._edgeBoxStyles.get(box) ?? '',
+            `padding-${side}: ${clockAtEdge ? this._hoverInset : 0}px;`
+        );
+        if (box.get_style() !== style)
+            box.set_style(style);
+    }
+
+    _hasEdgeClass(actor, styleClass) {
+        return [actor, actor.get_first_child()].some(candidate =>
+            candidate instanceof St.Widget &&
+            candidate.has_style_class_name(styleClass));
     }
 
     _applyToActor(actor, padding, vertical) {
@@ -318,11 +387,10 @@ export class PanelButtonPaddingController {
         state.appliedPadding = padding;
         state.appliedVertical = vertical;
 
-        const paddingStyle = vertical
-            ? `padding-top: ${padding}px; padding-bottom: ${padding}px;`
-            : `-natural-hpadding: ${padding}px; ` +
-                `-minimum-hpadding: ${padding}px;`;
-        state.appliedStyle = appendStyle(state.originalStyle, paddingStyle);
+        state.appliedStyle = appendStyle(
+            state.originalStyle,
+            this._paddingStyle(actor, padding, vertical)
+        );
         this._styledActors.set(actor, state);
         actor.set_style(state.appliedStyle);
         actor.queue_relayout();

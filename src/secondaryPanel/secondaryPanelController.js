@@ -895,6 +895,8 @@ export class SecondaryPanelController {
             items,
             this._settings.get_strv('panel-item-order')
         );
+        if (this._buttonPaddingController)
+            this._buttonPaddingController.syncEdgePadding();
         this._notificationAreaController.syncRightBoxActors(
             this._rightBox,
             new Set(items.map(item => item.actor)),
