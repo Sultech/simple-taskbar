@@ -25,6 +25,8 @@ export class StartMenuContextMenuController {
         pinnedModel,
         refreshAfterPinChange,
         removeFolderLabel,
+        openFolderAppsLabel,
+        openFolderApps,
     }) {
         this._settings = settings;
         this._closeApp = closeApp;
@@ -34,6 +36,8 @@ export class StartMenuContextMenuController {
         this._refreshAfterPinChange = refreshAfterPinChange;
         this._defaultFolderName = defaultFolderName;
         this._removeFolderLabel = removeFolderLabel;
+        this._openFolderAppsLabel = openFolderAppsLabel;
+        this._openFolderApps = openFolderApps;
         this._pinnedModel = pinnedModel;
         this._transientMenu = new StartMenuTransientMenu(applyTheme);
         this._actionCloseIdleId = 0;
@@ -150,6 +154,7 @@ export class StartMenuContextMenuController {
         renameItem.add_child(renameEntry);
         renameItem.add_child(saveButton);
         menu.addMenuItem(renameItem);
+        menu.addAction(this._openFolderAppsLabel, () => this._openFolderApps(folderId));
         const removeItem = new PopupMenu.PopupMenuItem(
             this._removeFolderLabel
         );
@@ -185,8 +190,6 @@ export class StartMenuContextMenuController {
                 this._refreshAfterPinChange(pinChange);
         });
         openPopupMenu(menu);
-        renameEntry.grab_key_focus();
-        renameEntry.clutter_text.set_selection(0, -1);
     }
 
     syncTheme() {
@@ -209,6 +212,8 @@ export class StartMenuContextMenuController {
         this._cursor = null;
         this._refreshAfterPinChange = null;
         this._removeFolderLabel = null;
+        this._openFolderAppsLabel = null;
+        this._openFolderApps = null;
         this._defaultFolderName = null;
         this._hideTooltip = null;
         this._getInterestingWindows = null;

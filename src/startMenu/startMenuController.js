@@ -130,6 +130,8 @@ export class StartMenuController {
                 pinnedModel: this._pinnedModel,
                 defaultFolderName,
                 removeFolderLabel: _('Remove folder'),
+                openFolderAppsLabel: _('Open All'),
+                openFolderApps: folderId => this._openFolderApps(folderId, null),
                 refreshAfterPinChange: change =>
                     this._animatePinnedMutation(change),
             }
@@ -250,6 +252,7 @@ export class StartMenuController {
                 this._runningIndicatorController.createIconStack(app, icon),
             launchApp: (app, actor) => this._launchApp(app, actor),
             showFolder: folderId => this._showPinnedFolder(folderId, true),
+            openFolderApps: (folderId, actor) => this._openFolderApps(folderId, actor),
             syncButtonClasses: actor => this._syncShellButtonClasses(actor),
         });
         this._listViewBuilder = new StartMenuListViewBuilder({
@@ -1332,6 +1335,16 @@ export class StartMenuController {
             animateStartMenuLaunch(actor);
         this.close();
         app.open_new_window(-1);
+    }
+
+    _openFolderApps(folderId, actor) {
+        const apps = this._resolveFolder(this._pinnedModel.getFolder(folderId)).apps
+            .filter(app => app.get_state() === Shell.AppState.STOPPED);
+        if (actor)
+            animateStartMenuLaunch(actor);
+        this.close();
+        for (const app of apps)
+            app.open_new_window(-1);
     }
 
     _activateSearchResult(result, actor) {

@@ -22,6 +22,7 @@ export class StartMenuPinnedViewBuilder {
         this._createRunningIndicator = params.createRunningIndicator;
         this._launchApp = params.launchApp;
         this._showFolder = params.showFolder;
+        this._openFolderApps = params.openFolderApps;
         this._syncButtonClasses = params.syncButtonClasses;
     }
 
@@ -46,6 +47,7 @@ export class StartMenuPinnedViewBuilder {
     destroy() {
         this._syncButtonClasses = null;
         this._showFolder = null;
+        this._openFolderApps = null;
         this._launchApp = null;
         this._createRunningIndicator = null;
         this._pinnedDragController = null;
@@ -158,6 +160,7 @@ export class StartMenuPinnedViewBuilder {
         });
         const button = new St.Button({
             style_class: 'simple-taskbar-windows-start-app-tile simple-taskbar-windows-start-folder-tile',
+            button_mask: St.ButtonMask.ONE | St.ButtonMask.TWO,
             reactive: true,
             can_focus: true,
             track_hover: true,
@@ -168,7 +171,12 @@ export class StartMenuPinnedViewBuilder {
         button._startMenuFolderId = folder.id;
         this._navigationController.enable(button);
         this._tooltipController.addText(button, folder.name);
-        button.connect('clicked', () => this._showFolder(folder.id));
+        button.connect('clicked', (_button, clickedButton) => {
+            if (clickedButton === Clutter.BUTTON_MIDDLE)
+                this._openFolderApps(folder.id, preview);
+            else
+                this._showFolder(folder.id);
+        });
         this._contextMenuController.addFolderHandler(button, folder.id);
         this._pinnedDragController.makeFolderDraggable(
             button,
