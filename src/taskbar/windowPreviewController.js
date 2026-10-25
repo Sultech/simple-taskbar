@@ -30,6 +30,7 @@ import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 const PREVIEW_WIDTH = 260;
 const PREVIEW_HEIGHT = 146;
 const PREVIEW_PEEK_DURATION = 250;
+const PREVIEW_CLOSE_RECHECK_INTERVAL = 50;
 const APP_TOOLTIP_DELAY = 300;
 const APP_TOOLTIP_SHOW_TIME = 150;
 const APP_TOOLTIP_HIDE_TIME = 100;
@@ -215,22 +216,26 @@ export class WindowPreviewController {
         );
     }
 
-    scheduleClose() {
+    scheduleClose(delay = this._settings.get_int('leave-timeout')) {
         this._clearTimeout('_previewOpenId');
         if (!this._previewItem || this._previewCloseId)
             return;
         this._previewCloseId = GLib.timeout_add(
             GLib.PRIORITY_DEFAULT,
-            this._settings.get_int('leave-timeout'),
+            delay,
             () => {
-                if (this._pointerIsOverPreview(this._previewItem)) {
-                    this._previewCloseId = 0;
+                this._previewCloseId = 0;
+                if (this._pointerIsOverPreview(this._previewItem))
+                    return GLib.SOURCE_REMOVE;
+                if (pointerButtonIsPressed()) {
+                    this.scheduleClose(PREVIEW_CLOSE_RECHECK_INTERVAL);
                     return GLib.SOURCE_REMOVE;
                 }
                 if (this.isPointerInMagnifyBounds() &&
-                    this._taskbarItemAtPointer() === this._previewItem)
-                    return GLib.SOURCE_CONTINUE;
-                this._previewCloseId = 0;
+                    this._taskbarItemAtPointer() === this._previewItem) {
+                    this.scheduleClose();
+                    return GLib.SOURCE_REMOVE;
+                }
                 this.hide(true);
                 return GLib.SOURCE_REMOVE;
             }
@@ -480,8 +485,7 @@ export class WindowPreviewController {
                 this._clearTimeout('_previewCloseId');
             else {
                 this._restorePeek();
-                if (!item.hover && !pointerButtonIsPressed())
-                    this.scheduleClose();
+                this.scheduleClose();
             }
         });
         menu.actor.connect('captured-event', (_actor, event) => {
