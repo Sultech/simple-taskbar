@@ -4,6 +4,7 @@
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -272,7 +273,7 @@ export class PanelController {
     destroy() {
         const restoringUnlockPanel = Main.sessionMode.isLocked;
         if (this._layoutRepairId) {
-            GLib.Source.remove(this._layoutRepairId);
+            global.compositor.get_laters().remove(this._layoutRepairId);
             this._layoutRepairId = 0;
         }
         this._taskbarWidthUpdater.destroy();
@@ -924,8 +925,8 @@ export class PanelController {
         if (this._applyingLayout || this._layoutRepairId)
             return;
 
-        this._layoutRepairId = GLib.idle_add(
-            GLib.PRIORITY_DEFAULT_IDLE,
+        this._layoutRepairId = global.compositor.get_laters().add(
+            Meta.LaterType.BEFORE_REDRAW,
             () => {
                 this._layoutRepairId = 0;
                 this.applyLayout();
