@@ -5,7 +5,7 @@ import {syncBlurGeometry} from '../integration/blurMyShellRuntime.js';
 
 export class PanelMagnifyController {
     constructor({actor, panelBox, getMonitor, getVertical, getReserve, isEnabled,
-        isDynamic, getBaseLength, updateWidth, onGeometryChanged = () => {}}) {
+        isDynamic, getBaseLength, updateWidth, onGeometryChanged}) {
         this._actor = actor;
         this._panelBox = panelBox;
         this._getMonitor = getMonitor;
