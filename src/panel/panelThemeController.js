@@ -35,7 +35,7 @@ import {
     syncPanelBlurClasses,
 } from './panelBlurClasses.js';
 import {panelPosition} from './panelPosition.js';
-import {panelBackgroundStyle, panelBorderStyle} from './panelBackgroundStyle.js';
+import {floatingBlurPanelStyle, panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
 import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
@@ -219,8 +219,8 @@ export class PanelThemeController {
             syncPanelBlurCornerRadius(Main.panel, radius);
         if (externalPanelStyle) {
             this._setPanelStyle(floating
-                ? [baseStyle, `border-radius: ${radius}px !important; ${panelBorderStyle(this._settings, light,
-                    this._panelBorderEnabled(), true, true)}`].filter(Boolean).join('; ')
+                ? [baseStyle, floatingBlurPanelStyle(this._settings, light, this._panelBorderEnabled(), radius)]
+                    .filter(Boolean).join('; ')
                 : preservePanelBlurRadiusStyle(Main.panel, baseStyle));
             return;
         }

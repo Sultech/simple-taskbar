@@ -60,6 +60,10 @@ export function panelBorderStyle(settings, light, borderEnabled,
     return borderStyle;
 }
 
+export function floatingBlurPanelStyle(settings, light, borderEnabled, radius) {
+    return `border-radius: ${radius}px !important; ${panelBorderStyle(settings, light, borderEnabled, true, true)}`;
+}
+
 export function panelBackgroundStyle(settings, light, borderEnabled,
     originalStyle = '', fullBorder = false, dynamicOpacity = null,
     transitionDuration = 0, borderWidth = 1) {

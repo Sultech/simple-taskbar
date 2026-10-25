@@ -23,7 +23,7 @@ import {
     syncBlurGeometry,
     syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
-import {panelBackgroundStyle, panelBorderStyle} from '../panel/panelBackgroundStyle.js';
+import {floatingBlurPanelStyle, panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
 import {
     PANEL_BLUR_CLASSES,
     syncPanelBlurClasses,
@@ -1205,8 +1205,7 @@ export class SecondaryPanelController {
             syncPanelBlurCornerRadius(this.actor, radius);
         if (blurActive) {
             this.actor.set_style(floating
-                ? `border-radius: ${radius}px !important; ${panelBorderStyle(this._settings, light,
-                    borderEnabled, true, true)}`
+                ? floatingBlurPanelStyle(this._settings, light, borderEnabled, radius)
                 : preservePanelBlurRadiusStyle(this.actor, ''));
             return;
         }
