@@ -18,7 +18,7 @@ import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
 import {StartButtonContextMenuController} from './startButtonContextMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
-import {openPopupMenu, openPopupMenuAtRestingPosition} from '../popupMenuUtils.js';
+import {openPanelPopupMenu} from '../popupMenuUtils.js';
 import {TaskbarItemContainer} from '../taskbar/taskbarItemContainer.js';
 import {
     BLUR_MY_SHELL_UUID,
@@ -831,10 +831,7 @@ export class StartButtonController {
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
         this._contextMenuController.sync();
-        if (dynamicTaskbarEnabled(this._settings))
-            openPopupMenuAtRestingPosition(this._contextMenu, this.actor);
-        else
-            openPopupMenu(this._contextMenu);
+        openPanelPopupMenu(this._contextMenu, this.actor, dynamicTaskbarEnabled(this._settings));
     }
 
     _notifyMenuOpenStateChanged() {

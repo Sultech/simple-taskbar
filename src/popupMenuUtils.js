@@ -43,6 +43,13 @@ export function openPopupMenuAtRestingPosition(menu, actor) {
     menu._boxPointer.setPosition(pinnedPopupSource(actor), 0.5);
 }
 
+export function openPanelPopupMenu(menu, actor, pinned) {
+    if (pinned)
+        openPopupMenuAtRestingPosition(menu, actor);
+    else
+        openPopupMenu(menu);
+}
+
 export function togglePopupMenu(menu, actor, pinned) {
     if (pinned && !menu.isOpen)
         openPopupMenuAtRestingPosition(menu, actor);

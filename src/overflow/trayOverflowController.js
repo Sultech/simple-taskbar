@@ -22,8 +22,8 @@ import {
 } from '../panel/panelPosition.js';
 import {
     closePopupMenu,
+    openPanelPopupMenu,
     openPopupMenu,
-    openPopupMenuAtRestingPosition,
     togglePopupMenu,
 } from '../popupMenuUtils.js';
 import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
@@ -99,10 +99,7 @@ export class TrayOverflowController {
                 return;
 
             menu.close();
-            if (dynamicTaskbarEnabled(this._settings))
-                openPopupMenuAtRestingPosition(this._menu, this._button);
-            else
-                openPopupMenu(this._menu);
+            openPanelPopupMenu(this._menu, this._button, dynamicTaskbarEnabled(this._settings));
         }, this._signalHolder);
         this._menu.actor.connectObject(
             'captured-event',
