@@ -55,13 +55,13 @@ export class TaskbarGeometryController {
     }
 
     destroy() {
+        this._layout.destroy();
+        this._layout = null;
         this._settings.disconnectObject(this);
         this._injectionManager.clear();
         this._injectionManager = null;
         this._panelActorData.affectsStruts = this._originalAffectsStruts;
         this._panelActorData = null;
-        this._layout.destroy();
-        this._layout = null;
         this._settings = null;
         this._getMonitor = null;
         this._panelBox = null;
