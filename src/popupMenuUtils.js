@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -55,6 +57,17 @@ export function togglePopupMenu(menu, actor, pinned) {
         openPopupMenuAtRestingPosition(menu, actor);
     else
         menu.toggle();
+}
+
+export function isPrimaryPressOrTouch(event) {
+    const type = event.type();
+    return type === Clutter.EventType.TOUCH_BEGIN ||
+        (type === Clutter.EventType.BUTTON_PRESS &&
+            event.get_button() === Clutter.BUTTON_PRIMARY);
+}
+
+export function clickCameFromKeyboard() {
+    return Clutter.get_current_event().type() === Clutter.EventType.KEY_RELEASE;
 }
 
 export function closePopupMenu(menu, animate = true) {

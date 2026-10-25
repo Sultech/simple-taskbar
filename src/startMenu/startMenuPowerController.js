@@ -10,7 +10,6 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelArrowSide} from '../panel/panelPosition.js';
 import {openPopupMenu} from '../popupMenuUtils.js';
-import {SourcePressGuard} from './sourcePressGuard.js';
 import {StartMenuTransientMenu} from './startMenuTransientMenu.js';
 
 class StartMenuPowerMenu extends PopupMenu.PopupMenu {
@@ -40,15 +39,6 @@ export class StartMenuPowerController {
         this._button = null;
         this._transientMenu = new StartMenuTransientMenu(applyTheme);
         this._actionIdleId = 0;
-        this._sourcePress = new SourcePressGuard();
-    }
-
-    get button() {
-        return this._button;
-    }
-
-    get isOpen() {
-        return this._transientMenu.isOpen;
     }
 
     setButton(button) {
@@ -57,21 +47,12 @@ export class StartMenuPowerController {
     }
 
     toggle() {
-        if (this._sourcePress.consume()) {
-            this.close();
-            return;
-        }
-
         if (this._transientMenu.isOpen) {
             this.close();
             return;
         }
 
         this._open();
-    }
-
-    markSourcePress() {
-        this._sourcePress.mark();
     }
 
     syncVisibility() {
@@ -92,8 +73,6 @@ export class StartMenuPowerController {
     }
 
     destroy() {
-        this._sourcePress.destroy();
-        this._sourcePress = null;
         if (this._actionIdleId) {
             GLib.Source.remove(this._actionIdleId);
             this._actionIdleId = 0;

@@ -11,6 +11,7 @@ import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {TaskbarLocationsController} from '../taskbar/taskbarLocationsController.js';
+import {clickCameFromKeyboard, isPrimaryPressOrTouch} from '../popupMenuUtils.js';
 import {openSettingsPanel} from '../shared/settingsPanel.js';
 
 export class StartMenuFooterController {
@@ -108,6 +109,7 @@ export class StartMenuFooterController {
             {
                 iconStyleClass:
                     'simple-taskbar-windows-start-power-icon',
+                activateOnPress: true,
             }
         );
         this.actor.add_child(userButton);
@@ -200,7 +202,19 @@ export class StartMenuFooterController {
             }),
         });
         this._enableNavigation(button);
-        button.connect('clicked', callback);
+        if (params.activateOnPress) {
+            button.connect('captured-event', (_actor, event) => {
+                if (isPrimaryPressOrTouch(event))
+                    callback();
+                return Clutter.EVENT_PROPAGATE;
+            });
+            button.connect('clicked', () => {
+                if (clickCameFromKeyboard())
+                    callback();
+            });
+        } else {
+            button.connect('clicked', callback);
+        }
         this._syncButtonClasses(button);
         return button;
     }

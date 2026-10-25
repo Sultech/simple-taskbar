@@ -18,7 +18,7 @@ import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
 import {StartButtonContextMenuController} from './startButtonContextMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
-import {openPanelPopupMenu} from '../popupMenuUtils.js';
+import {clickCameFromKeyboard, isPrimaryPressOrTouch, openPanelPopupMenu} from '../popupMenuUtils.js';
 import {TaskbarItemContainer} from '../taskbar/taskbarItemContainer.js';
 import {
     BLUR_MY_SHELL_UUID,
@@ -180,7 +180,6 @@ export class StartButtonController {
             reactive: true,
             can_focus: true,
             track_hover: true,
-            toggle_mode: true,
             accessible_name: this._accessibleName(),
             child: this._settings.get_boolean('windows-xp-theme-enabled')
                 ? this._windowsXpStartButton.actor
@@ -201,7 +200,11 @@ export class StartButtonController {
             this._signalHolder
         );
         this.actor.connectObject(
-            'clicked', () => this._toggleApplications(),
+            'captured-event', (_actor, event) => this._onButtonEvent(event),
+            'clicked', () => {
+                if (clickCameFromKeyboard())
+                    this._activate();
+            },
             'notify::hover', () => this._syncClassicHighlight(),
             'notify::pressed', () => this._syncClassicHighlight(),
             'notify::checked', () => this._syncClassicHighlight(),
@@ -840,6 +843,17 @@ export class StartButtonController {
             ? this.menuIsOpen
             : shellShowAppsButton.checked;
         this._onMenuOpenStateChanged(open);
+    }
+
+    _onButtonEvent(event) {
+        if (isPrimaryPressOrTouch(event))
+            this._activate();
+        return Clutter.EVENT_PROPAGATE;
+    }
+
+    _activate() {
+        this.actor.checked = !this.actor.checked;
+        this._toggleApplications();
     }
 
     _toggleApplications() {

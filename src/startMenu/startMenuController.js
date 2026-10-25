@@ -367,16 +367,8 @@ export class StartMenuController {
                 const insideSource = target &&
                     (target === this._sourceActor ||
                         this._sourceActor.contains(target));
-                const powerButton = this._powerController.button;
-                const insidePowerSource = target && powerButton &&
-                    (target === powerButton || powerButton.contains(target));
-
-                if ((isButtonPress || isTouchBegin) && insideSource) {
+                if (insideSource)
                     this._sourcePress.mark();
-                } else if ((isButtonPress || isTouchBegin) &&
-                    insidePowerSource && this._powerController.isOpen) {
-                    this._powerController.markSourcePress();
-                }
                 return Clutter.EVENT_PROPAGATE;
             }
         );
