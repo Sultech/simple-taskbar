@@ -189,7 +189,6 @@ export function addStartMenuPage({
                 START_BUTTON_LOCATION_KEY,
                 'default-panel-start-button-position',
             ],
-            addRow: row => startButtonAlignmentGroup.add(row),
         },
         connectSettings
     );
@@ -208,7 +207,6 @@ export function addStartMenuPage({
                 {value: 'panel', label: _('Panel')},
             ],
             choicesChangedKeys: ['dock-mode'],
-            addRow: row => startButtonAlignmentGroup.add(row),
         },
         connectSettings
     );
@@ -272,7 +270,6 @@ export function addStartMenuPage({
             ),
             lower: 0,
             upper: 20,
-            addRow: row => startButtonAppearanceGroup.add(row),
         },
         connectSettings
     );
@@ -374,10 +371,10 @@ export function addStartMenuPage({
     );
     syncXpStartButtonControls();
 
-    const windowsStartMenuSwitch = new Adw.SwitchRow({
+    const windowsStartMenuSwitch = createSwitchRow(settings, {
+        key: 'windows-start-menu-enabled',
         title: _('Eleven-style Start Menu'),
         subtitle: _('Replace the GNOME app grid with an Eleven-style menu'),
-        active: settings.get_boolean('windows-start-menu-enabled'),
     });
     startMenuHubGroup.add(windowsStartMenuSwitch);
     const menuOptionsSubpage = new SettingsSubpage(window, startMenuHubGroup, {
@@ -409,31 +406,17 @@ export function addStartMenuPage({
         title: _('Keyboard Shortcuts'),
         description: _('Configure Start menu shortcuts.'),
     });
-    settings.bind(
-        'windows-start-menu-enabled',
-        windowsStartMenuSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const startMenuOptionsGroup = menuOptionsSubpage.addGroup({
         title: _('Start Menu Options'),
         description: _('Configure Start Menu content and behavior'),
     });
 
-    const profilePictureSwitch = new Adw.SwitchRow({
+    const profilePictureSwitch = createSwitchRow(settings, {
+        key: 'start-menu-show-profile-picture',
         title: _('Show Profile Picture'),
         subtitle: _('Use your account picture in the Start Menu'),
-        active: settings.get_boolean(
-            'start-menu-show-profile-picture'
-        ),
     });
-    settings.bind(
-        'start-menu-show-profile-picture',
-        profilePictureSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateProfilePictureSwitch = () => {
         profilePictureSwitch.sensitive = windowsStartMenuSwitch.active;
     };
@@ -443,21 +426,13 @@ export function addStartMenuPage({
     );
     updateProfilePictureSwitch();
 
-    const powerOptionsSwitch = new Adw.SwitchRow({
+    const powerOptionsSwitch = createSwitchRow(settings, {
+        key: 'start-menu-power-options-enabled',
         title: _('Power Options in Start Menu'),
         subtitle: _(
             'Show power actions here instead of in Quick Settings'
         ),
-        active: settings.get_boolean(
-            'start-menu-power-options-enabled'
-        ),
     });
-    settings.bind(
-        'start-menu-power-options-enabled',
-        powerOptionsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updatePowerOptionsSwitch = () => {
         powerOptionsSwitch.sensitive = windowsStartMenuSwitch.active;
     };
@@ -467,19 +442,11 @@ export function addStartMenuPage({
     );
     updatePowerOptionsSwitch();
 
-    const openAllAppsSwitch = new Adw.SwitchRow({
+    const openAllAppsSwitch = createSwitchRow(settings, {
+        key: 'start-menu-open-all-apps',
         title: _('Open All Apps by Default'),
         subtitle: _('Skip Pinned and open directly to applications and categories'),
-        active: settings.get_boolean(
-            'start-menu-open-all-apps'
-        ),
     });
-    settings.bind(
-        'start-menu-open-all-apps',
-        openAllAppsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateOpenAllAppsSwitch = () => {
         openAllAppsSwitch.sensitive = windowsStartMenuSwitch.active;
     };
@@ -489,47 +456,23 @@ export function addStartMenuPage({
     );
     updateOpenAllAppsSwitch();
 
-    const recommendedAppsSwitch = new Adw.SwitchRow({
+    const recommendedAppsSwitch = createSwitchRow(settings, {
+        key: 'start-menu-recommended-apps',
         title: _('Show Recommended Apps'),
         subtitle: _('Display frequently used applications below pinned apps'),
-        active: settings.get_boolean(
-            'start-menu-recommended-apps'
-        ),
     });
-    settings.bind(
-        'start-menu-recommended-apps',
-        recommendedAppsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-    const hidePinnedAppTitlesSwitch = new Adw.SwitchRow({
+    const hidePinnedAppTitlesSwitch = createSwitchRow(settings, {
+        key: 'start-menu-hide-pinned-app-titles',
         title: _('Hide Pinned App Titles'),
         subtitle: _(
             'Hide the names below pinned icons and show them in a tooltip when hovered'
         ),
-        active: settings.get_boolean(
-            'start-menu-hide-pinned-app-titles'
-        ),
     });
-    settings.bind(
-        'start-menu-hide-pinned-app-titles',
-        hidePinnedAppTitlesSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-    const runningIndicatorsSwitch = new Adw.SwitchRow({
+    const runningIndicatorsSwitch = createSwitchRow(settings, {
+        key: 'start-menu-running-indicators',
         title: _('Show Running App Indicators'),
         subtitle: _('Show taskbar-style indicators below running application icons'),
-        active: settings.get_boolean(
-            'start-menu-running-indicators'
-        ),
     });
-    settings.bind(
-        'start-menu-running-indicators',
-        runningIndicatorsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     startMenuOptionsGroup.add(recommendedAppsSwitch);
     startMenuOptionsGroup.add(powerOptionsSwitch);
     startMenuOptionsGroup.add(openAllAppsSwitch);
@@ -566,20 +509,12 @@ export function addStartMenuPage({
     );
     updateRunningIndicatorsSwitch();
 
-    const appCategoriesSwitch = new Adw.SwitchRow({
+    const appCategoriesSwitch = createSwitchRow(settings, {
+        key: 'start-menu-app-categories',
         title: _('Organize All Apps into Categories'),
         subtitle: _('Browse applications by category in the Start menu'),
-        active: settings.get_boolean(
-            'start-menu-app-categories'
-        ),
     });
     startMenuOptionsGroup.add(appCategoriesSwitch);
-    settings.bind(
-        'start-menu-app-categories',
-        appCategoriesSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateAppCategoriesSwitch = () => {
         appCategoriesSwitch.sensitive = windowsStartMenuSwitch.active;
     };
@@ -589,18 +524,12 @@ export function addStartMenuPage({
     );
     updateAppCategoriesSwitch();
 
-    const gnomeStartButtonVisibleSwitch = new Adw.SwitchRow({
+    const gnomeStartButtonVisibleSwitch = createSwitchRow(settings, {
+        key: 'gnome-start-button-visible',
         title: _('Show App Grid Button'),
         subtitle: _('Show a Start button that opens the GNOME app grid when the Eleven-style Start Menu is disabled'),
-        active: settings.get_boolean('gnome-start-button-visible'),
     });
     startButtonAppearanceGroup.add(gnomeStartButtonVisibleSwitch);
-    settings.bind(
-        'gnome-start-button-visible',
-        gnomeStartButtonVisibleSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateGnomeStartButtonVisibleSwitch = () => {
         gnomeStartButtonVisibleSwitch.sensitive =
             !windowsStartMenuSwitch.active;
@@ -611,12 +540,10 @@ export function addStartMenuPage({
     );
     updateGnomeStartButtonVisibleSwitch();
 
-    const followPanelThemeSwitch = new Adw.SwitchRow({
+    const followPanelThemeSwitch = createSwitchRow(settings, {
+        key: 'start-menu-follow-panel-theme',
         title: _('Follow Taskbar/Dock Theme'),
         subtitle: _('Use the taskbar or Dock’s effective light or dark appearance'),
-        active: settings.get_boolean(
-            'start-menu-follow-panel-theme'
-        ),
     });
     const startMenuAppearanceGroup = menuAppearanceSubpage.addGroup({
         title: _('Start Menu Appearance'),
@@ -627,18 +554,12 @@ export function addStartMenuPage({
         title: _('Folder Shortcuts'),
         description: _('Choose which folders appear beside the Settings icon'),
     });
-    const startMenuLocationsSwitch = new Adw.SwitchRow({
+    const startMenuLocationsSwitch = createSwitchRow(settings, {
+        key: 'start-menu-show-locations',
         title: _('Show Folder Shortcuts'),
         subtitle: _('Show selected folders beside the Settings icon in the Start Menu'),
-        active: settings.get_boolean('start-menu-show-locations'),
     });
     startMenuFoldersGroup.add(startMenuLocationsSwitch);
-    settings.bind(
-        'start-menu-show-locations',
-        startMenuLocationsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const startMenuFolderRows = [];
     for (const option of [
         {
@@ -808,12 +729,6 @@ export function addStartMenuPage({
     updateStartMenuContextMenuControls();
 
     startMenuAppearanceGroup.add(followPanelThemeSwitch);
-    settings.bind(
-        'start-menu-follow-panel-theme',
-        followPanelThemeSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const startMenuThemeRow = addToggleChoiceRow(
         startMenuAppearanceGroup,
@@ -827,7 +742,6 @@ export function addStartMenuPage({
                 {value: 'light', label: _('Light')},
                 {value: 'shell', label: _('GNOME Shell')},
             ],
-            addRow: row => startMenuAppearanceGroup.add(row),
         },
         connectSettings
     );
@@ -858,20 +772,12 @@ export function addStartMenuPage({
     const panelAndPopupBlurStartMenuTransparencySubtitle = _(
         'Disable Blur My Shell panel and popup blur to use this option'
     );
-    const followPanelTransparencySwitch = new Adw.SwitchRow({
+    const followPanelTransparencySwitch = createSwitchRow(settings, {
+        key: 'start-menu-follow-panel-transparency',
         title: _('Follow Taskbar Transparency'),
         subtitle: followPanelTransparencySubtitle,
-        active: settings.get_boolean(
-            'start-menu-follow-panel-transparency'
-        ),
     });
     startMenuAppearanceGroup.add(followPanelTransparencySwitch);
-    settings.bind(
-        'start-menu-follow-panel-transparency',
-        followPanelTransparencySwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateStartMenuTransparencyRow = () => {
         const panelBlur = blurMyShellPanelBlurEnabled();
         const popupBlur = blurMyShellPopupBlurEnabled();
@@ -907,20 +813,14 @@ export function addStartMenuPage({
     );
     updateStartMenuTransparencyRow();
 
-    const centerStartMenuRow = new Adw.SwitchRow({
+    const centerStartMenuRow = createSwitchRow(settings, {
+        key: 'start-menu-monitor-centered',
         title: _('Center Start Menu on Monitor'),
         subtitle: _(
             'Place the menu at the true horizontal center instead of over the Start button'
         ),
-        active: settings.get_boolean('start-menu-monitor-centered'),
     });
     startMenuOptionsGroup.add(centerStartMenuRow);
-    settings.bind(
-        'start-menu-monitor-centered',
-        centerStartMenuRow,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const updateCenterStartMenuRow = () => {
         let centered = effectiveStartButtonPosition() === 'center';
@@ -944,18 +844,12 @@ export function addStartMenuPage({
     );
     updateCenterStartMenuRow();
 
-    const superKeyRow = new Adw.SwitchRow({
+    const superKeyRow = createSwitchRow(settings, {
+        key: 'start-menu-super-key',
         title: _('Super Opens Start Menu'),
         subtitle: _('Use Super for the Start Menu and move the Overview to Super+Tab or your own shortcut'),
-        active: settings.get_boolean('start-menu-super-key'),
     });
     startMenuKeybindingsGroup.add(superKeyRow);
-    settings.bind(
-        'start-menu-super-key',
-        superKeyRow,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const overviewShortcutRow = createShortcutRow(window, settings, connectSettings, {
         title: _('Overview Shortcut'),
@@ -964,20 +858,14 @@ export function addStartMenuPage({
     });
     startMenuKeybindingsGroup.add(overviewShortcutRow);
 
-    const superTabRow = new Adw.SwitchRow({
+    const superTabRow = createSwitchRow(settings, {
+        key: 'start-menu-super-tab',
         title: _('Super+Tab Opens Start Menu'),
         subtitle: _(
             'Use GNOME’s application-switch shortcut for the Eleven-style Start Menu while it is enabled'
         ),
-        active: settings.get_boolean('start-menu-super-tab'),
     });
     startMenuKeybindingsGroup.add(superTabRow);
-    settings.bind(
-        'start-menu-super-tab',
-        superTabRow,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const updateSuperTabRow = () => {
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'

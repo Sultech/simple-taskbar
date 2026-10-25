@@ -78,12 +78,6 @@ export class StartMenuPinnedModel {
         ) ?? null;
     }
 
-    getPinnedAppIds() {
-        return this.getItems().flatMap(item =>
-            item.type === 'app' ? [item.appId] : item.appIds
-        );
-    }
-
     isPinned(appId) {
         return this.getItems().some(item =>
             item.type === 'app'

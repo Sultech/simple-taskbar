@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
@@ -276,18 +273,12 @@ export function addPanelAppearancePage({
         ),
     });
 
-    const followSystemThemeSwitch = new Adw.SwitchRow({
+    const followSystemThemeSwitch = createSwitchRow(settings, {
+        key: 'panel-theme-follow-system',
         title: _('Follow System Theme'),
         subtitle: _('Match the active GNOME Shell theme, independently of application colours'),
-        active: settings.get_boolean('panel-theme-follow-system'),
     });
     themeGroup.add(followSystemThemeSwitch);
-    settings.bind(
-        'panel-theme-follow-system',
-        followSystemThemeSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const panelThemeRow = addToggleChoiceRow(
         themeGroup,
@@ -300,7 +291,6 @@ export function addPanelAppearancePage({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -327,18 +317,12 @@ export function addPanelAppearancePage({
         description: _('Control the taskbar background transparency'),
     });
 
-    const transparencySwitch = new Adw.SwitchRow({
+    const transparencySwitch = createSwitchRow(settings, {
+        key: 'transparency-enabled',
         title: _('Enable Transparency'),
         subtitle: transparencySwitchSubtitle,
-        active: settings.get_boolean('transparency-enabled'),
     });
     transparencyGroup.add(transparencySwitch);
-    settings.bind(
-        'transparency-enabled',
-        transparencySwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const transparencyRowSubtitle = _(
         '0% is opaque and 100% is fully transparent'
@@ -353,7 +337,6 @@ export function addPanelAppearancePage({
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
-            addRow: row => transparencyGroup.add(row),
         },
         connectSettings
     );
@@ -373,7 +356,6 @@ export function addPanelAppearancePage({
         title: _('Dynamic Transparency'),
         subtitle: dynamicTransparencySubtitle,
         addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
-        addRow: row => transparencyGroup.add(row),
     });
     const updatePanelTransparencyControls = () => {
         const blocked = blurMyShellPanelBlurEnabled();
@@ -418,49 +400,33 @@ export function addPanelAppearancePage({
     const customPanelColorSubtitle = _(
         'Use a chosen color instead of the light or dark theme color'
     );
-    const customPanelColorSwitch = new Adw.SwitchRow({
+    const customPanelColorSwitch = createSwitchRow(settings, {
+        key: 'custom-panel-color-enabled',
         title: _('Custom Taskbar Color'),
         subtitle: customPanelColorSubtitle,
-        active: settings.get_boolean(
-            'custom-panel-color-enabled'
-        ),
     });
     themeGroup.add(customPanelColorSwitch);
-    settings.bind(
-        'custom-panel-color-enabled',
-        customPanelColorSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const customPanelColorRow = addColorRow(
         themeGroup,
         settings,
         {
             key: 'custom-panel-color',
             title: _('Taskbar Color'),
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
-    const customPanelGradientSwitch = new Adw.SwitchRow({
+    const customPanelGradientSwitch = createSwitchRow(settings, {
+        key: 'custom-panel-gradient-enabled',
         title: _('Use Taskbar Gradient'),
         subtitle: _('Blend the taskbar color with a second color'),
-        active: settings.get_boolean('custom-panel-gradient-enabled'),
     });
     themeGroup.add(customPanelGradientSwitch);
-    settings.bind(
-        'custom-panel-gradient-enabled',
-        customPanelGradientSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const customPanelGradientColorRow = addColorRow(
         themeGroup,
         settings,
         {
             key: 'custom-panel-gradient-color',
             title: _('Taskbar Gradient Color'),
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -475,7 +441,6 @@ export function addPanelAppearancePage({
                 {value: 'vertical', label: _('Vertical')},
                 {value: 'horizontal', label: _('Horizontal')},
             ],
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -493,7 +458,6 @@ export function addPanelAppearancePage({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -589,33 +553,19 @@ export function addPanelAppearancePage({
         description: _('Choose whether to show a border in light and dark themes'),
     });
 
-    const darkPanelBorderSwitch = new Adw.SwitchRow({
+    const darkPanelBorderSwitch = createSwitchRow(settings, {
+        key: 'panel-border-enabled',
         title: _('Show Border in Dark Mode'),
         subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
-        active: settings.get_boolean('panel-border-enabled'),
     });
     bordersGroup.add(darkPanelBorderSwitch);
-    settings.bind(
-        'panel-border-enabled',
-        darkPanelBorderSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const lightPanelBorderSwitch = new Adw.SwitchRow({
+    const lightPanelBorderSwitch = createSwitchRow(settings, {
+        key: 'panel-border-light-enabled',
         title: _('Show Border in Light Mode'),
         subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
-        active: settings.get_boolean(
-            'panel-border-light-enabled'
-        ),
     });
     bordersGroup.add(lightPanelBorderSwitch);
-    settings.bind(
-        'panel-border-light-enabled',
-        lightPanelBorderSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const syncPanelBorderControls = () => {
         const enabled = !settings.get_boolean(
             'windows-xp-theme-enabled'

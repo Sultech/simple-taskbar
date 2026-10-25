@@ -75,7 +75,6 @@ export function addWindowDodgeGroup(
             title: _('Dodge Windows Mode'),
             subtitle: modeSubtitle,
             choices: windowDodgeModeChoices(),
-            addRow: row => dodgeGroup.add(row),
         },
         connectSettings
     );

@@ -565,6 +565,7 @@ export class TaskbarController {
             for (const pinnedKey of [
                 'hide-pinned-taskbar-apps',
                 'hide-pinned-secondary-monitors',
+                'hide-unpinned-taskbar-apps',
             ]) {
                 this._settings.connectObject(
                     `changed::${pinnedKey}`,
@@ -576,15 +577,6 @@ export class TaskbarController {
                     this._signalHolder
                 );
             }
-            this._settings.connectObject(
-                'changed::hide-unpinned-taskbar-apps',
-                () => {
-                    this._entryModel.resetSessionOrder();
-                    this._queueRedisplay();
-                    this._syncDragEnabled(true);
-                },
-                this._signalHolder
-            );
             const rebuildPinnedEntries = () => {
                 this._getPreviews().hideTooltip(false);
                 this._getPreviews().hide();
@@ -1650,10 +1642,6 @@ export class TaskbarController {
 
     _combineMode() {
         return this._settings.get_string('combine-app-buttons-mode');
-    }
-
-    _combineAppButtons() {
-        return this._combineMode() === 'always';
     }
 
     _syncCombineWhenFull() {

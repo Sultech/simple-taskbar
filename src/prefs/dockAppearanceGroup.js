@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
@@ -183,18 +180,12 @@ export function addDockAppearanceGroup({
         ),
     });
 
-    const followSystemThemeSwitch = new Adw.SwitchRow({
+    const followSystemThemeSwitch = createSwitchRow(settings, {
+        key: 'dock-panel-theme-follow-system',
         title: _('Follow System Theme'),
         subtitle: _('Match the active GNOME Shell theme'),
-        active: settings.get_boolean('dock-panel-theme-follow-system'),
     });
     themeGroup.add(followSystemThemeSwitch);
-    settings.bind(
-        'dock-panel-theme-follow-system',
-        followSystemThemeSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const dockThemeRow = addToggleChoiceRow(
         themeGroup,
@@ -207,7 +198,6 @@ export function addDockAppearanceGroup({
                 {value: 'light', label: _('Light')},
                 {value: 'dark', label: _('Dark')},
             ],
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -268,18 +258,12 @@ export function addDockAppearanceGroup({
         description: _('Configure Dock transparency and Blur My Shell integration'),
     });
 
-    const transparencySwitch = new Adw.SwitchRow({
+    const transparencySwitch = createSwitchRow(settings, {
+        key: 'dock-transparency-enabled',
         title: _('Enable Transparency'),
         subtitle: transparencySwitchSubtitle,
-        active: settings.get_boolean('dock-transparency-enabled'),
     });
     transparencyGroup.add(transparencySwitch);
-    settings.bind(
-        'dock-transparency-enabled',
-        transparencySwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const dockPanelBlurSwitch = createSwitchRow(settings, {
         key: 'dock-panel-blur-enabled',
         title: _('Blur Dock with Blur My Shell'),
@@ -300,7 +284,6 @@ export function addDockAppearanceGroup({
             subtitle: transparencyRowSubtitle,
             lower: 0,
             upper: 100,
-            addRow: row => transparencyGroup.add(row),
         },
         connectSettings
     );
@@ -320,24 +303,17 @@ export function addDockAppearanceGroup({
         title: _('Dynamic Transparency'),
         subtitle: dynamicTransparencySubtitle,
         addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
-        addRow: row => transparencyGroup.add(row),
     });
 
     const customPanelColorSubtitle = _(
         'Use a chosen color instead of the light or dark theme color'
     );
-    const customPanelColorSwitch = new Adw.SwitchRow({
+    const customPanelColorSwitch = createSwitchRow(settings, {
+        key: 'dock-custom-panel-color-enabled',
         title: _('Custom Dock Color'),
         subtitle: customPanelColorSubtitle,
-        active: settings.get_boolean('dock-custom-panel-color-enabled'),
     });
     themeGroup.add(customPanelColorSwitch);
-    settings.bind(
-        'dock-custom-panel-color-enabled',
-        customPanelColorSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const customPanelColorRow = addColorRow(
         themeGroup,
@@ -345,31 +321,21 @@ export function addDockAppearanceGroup({
         {
             key: 'dock-custom-panel-color',
             title: _('Dock Color'),
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
-    const customPanelGradientSwitch = new Adw.SwitchRow({
+    const customPanelGradientSwitch = createSwitchRow(settings, {
+        key: 'dock-custom-panel-gradient-enabled',
         title: _('Use Dock Gradient'),
         subtitle: _('Blend the Dock color with a second color'),
-        active: settings.get_boolean(
-            'dock-custom-panel-gradient-enabled'
-        ),
     });
     themeGroup.add(customPanelGradientSwitch);
-    settings.bind(
-        'dock-custom-panel-gradient-enabled',
-        customPanelGradientSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const customPanelGradientColorRow = addColorRow(
         themeGroup,
         settings,
         {
             key: 'dock-custom-panel-gradient-color',
             title: _('Dock Gradient Color'),
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -384,7 +350,6 @@ export function addDockAppearanceGroup({
                 {value: 'vertical', label: _('Vertical')},
                 {value: 'horizontal', label: _('Horizontal')},
             ],
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -402,7 +367,6 @@ export function addDockAppearanceGroup({
                 {value: 'dark', label: _('White')},
                 {value: 'light', label: _('Black')},
             ],
-            addRow: row => themeGroup.add(row),
         },
         connectSettings
     );
@@ -412,31 +376,19 @@ export function addDockAppearanceGroup({
         description: _('Choose whether to show a border in light and dark themes'),
     });
 
-    const darkPanelBorderSwitch = new Adw.SwitchRow({
+    const darkPanelBorderSwitch = createSwitchRow(settings, {
+        key: 'dock-panel-border-enabled',
         title: _('Show Border in Dark Mode'),
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
-        active: settings.get_boolean('dock-panel-border-enabled'),
     });
     bordersGroup.add(darkPanelBorderSwitch);
-    settings.bind(
-        'dock-panel-border-enabled',
-        darkPanelBorderSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
-    const lightPanelBorderSwitch = new Adw.SwitchRow({
+    const lightPanelBorderSwitch = createSwitchRow(settings, {
+        key: 'dock-panel-border-light-enabled',
         title: _('Show Border in Light Mode'),
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
-        active: settings.get_boolean('dock-panel-border-light-enabled'),
     });
     bordersGroup.add(lightPanelBorderSwitch);
-    settings.bind(
-        'dock-panel-border-light-enabled',
-        lightPanelBorderSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
 
     const syncThemeControls = () => {
         const available = dockAvailable();

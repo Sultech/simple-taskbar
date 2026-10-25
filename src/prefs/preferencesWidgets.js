@@ -134,7 +134,6 @@ export function addSwitchRow(group, settings, {
     title,
     subtitle = '',
     addSuffix = () => {},
-    addRow = row => group.add(row),
 }) {
     const toggle = new Gtk.Switch({
         valign: Gtk.Align.CENTER,
@@ -144,7 +143,7 @@ export function addSwitchRow(group, settings, {
     addSuffix(row);
     row.add_suffix(toggle);
     row.activatable_widget = toggle;
-    addRow(row);
+    group.add(row);
     settings.bind(key, toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
     return {row, toggle};
 }
@@ -156,7 +155,6 @@ export function addSpinRow(group, settings, {
     lower,
     upper,
     step = 1,
-    addRow = row => group.add(row),
 }, connectSettings) {
     const row = Adw.SpinRow.new_with_range(lower, upper, step);
     row.title = title;
@@ -170,7 +168,7 @@ export function addSpinRow(group, settings, {
         if (row.get_value() !== value)
             row.set_value(value);
     });
-    addRow(row);
+    group.add(row);
     return row;
 }
 
@@ -333,7 +331,6 @@ export function addComboRow(group, settings, {
     setValue = value => settings.set_string(key, value),
     configureDropDown = () => {},
     addSuffix = () => {},
-    addRow = row => group.add(row),
 }, connectSettings) {
     const createModel = availableChoices => {
         const model = new Gtk.StringList();
@@ -390,14 +387,13 @@ export function addComboRow(group, settings, {
             syncingChoices = false;
         });
     }
-    addRow(row);
+    group.add(row);
     return row;
 }
 
 export function addColorRow(group, settings, {
     key,
     title,
-    addRow = row => group.add(row),
 }, connectSettings) {
     const dialog = new Gtk.ColorDialog({title});
     const button = new Gtk.ColorDialogButton({
@@ -422,7 +418,7 @@ export function addColorRow(group, settings, {
     });
     connectSettings(settings, `changed::${key}`, syncColor);
     syncColor();
-    addRow(row);
+    group.add(row);
     return row;
 }
 
@@ -433,7 +429,6 @@ export function addToggleChoiceRow(group, settings, {
     choices,
     setValue = value => settings.set_string(key, value),
     addSuffix = () => {},
-    addRow = row => group.add(row),
 }, connectSettings) {
     const box = new Gtk.Box({
         valign: Gtk.Align.CENTER,
@@ -462,6 +457,6 @@ export function addToggleChoiceRow(group, settings, {
     row.add_suffix(box);
     connectSettings(settings, `changed::${key}`, sync);
     sync();
-    addRow(row);
+    group.add(row);
     return row;
 }

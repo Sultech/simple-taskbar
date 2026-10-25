@@ -713,16 +713,17 @@ export class StartButtonController {
             () => this._syncSeparator(true),
             this._signalHolder
         );
-        this._settings.connectObject(
-            'changed::start-menu-recommended-apps',
-            () => this._startMenuController?.refresh(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::start-menu-hide-pinned-app-titles',
-            () => this._startMenuController?.refresh(),
-            this._signalHolder
-        );
+        for (const key of [
+            'start-menu-recommended-apps',
+            'start-menu-hide-pinned-app-titles',
+            'start-menu-app-categories',
+        ]) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this._startMenuController?.refresh(),
+                this._signalHolder
+            );
+        }
         this._settings.connectObject(
             'changed::start-menu-power-options-enabled',
             () => this._startMenuController?.syncPowerOptions(),
@@ -736,11 +737,6 @@ export class StartButtonController {
         this._settings.connectObject(
             'changed::start-menu-open-all-apps',
             () => this._startMenuController?.refreshDefaultView(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::start-menu-app-categories',
-            () => this._startMenuController?.refresh(),
             this._signalHolder
         );
         this._settings.connectObject('changed::start-button-custom-icon', () => {
@@ -757,32 +753,24 @@ export class StartButtonController {
                 this._keybindings?.sync();
             }, this._signalHolder);
         }
-        this._settings.connectObject(
-            'changed::dock-mode',
-            () => this._keybindings?.sync(),
-            this._signalHolder
-        );
-        this._settings.connectObject('changed::start-menu-super-key', () => {
-            this._keybindings?.sync();
-        }, this._signalHolder);
-        this._settings.connectObject('changed::start-menu-super-tab', () => {
-            this._keybindings?.sync();
-        }, this._signalHolder);
+        for (const key of [
+            'dock-mode',
+            'start-menu-super-key',
+            'start-menu-super-tab',
+            'super-e-file-manager-enabled',
+            'grid-alt-tab-enabled',
+        ]) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this._keybindings?.sync(),
+                this._signalHolder
+            );
+        }
         for (const key of ['start-menu-custom-hotkey', 'overview-custom-hotkey']) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._keybindings?.customAcceleratorChanged(key);
             }, this._signalHolder);
         }
-        this._settings.connectObject(
-            'changed::super-e-file-manager-enabled',
-            () => this._keybindings?.sync(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::grid-alt-tab-enabled',
-            () => this._keybindings?.sync(),
-            this._signalHolder
-        );
         const syncStartMenuTheme = () => {
             this._startMenuController?.syncTheme();
         };
@@ -796,21 +784,17 @@ export class StartButtonController {
             () => this._startMenuController?.syncTheme(true),
             this._signalHolder
         );
-        this._settings.connectObject(
-            'changed::start-menu-follow-panel-transparency',
-            () => this._startMenuController?.syncTransparency(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::transparency-enabled',
-            () => this._startMenuController?.syncTransparency(),
-            this._signalHolder
-        );
-        this._settings.connectObject(
-            'changed::transparency-level',
-            () => this._startMenuController?.syncTransparency(),
-            this._signalHolder
-        );
+        for (const key of [
+            'start-menu-follow-panel-transparency',
+            'transparency-enabled',
+            'transparency-level',
+        ]) {
+            this._settings.connectObject(
+                `changed::${key}`,
+                () => this._startMenuController?.syncTransparency(),
+                this._signalHolder
+            );
+        }
         Main.panel.connectObject('notify::style-class', () => {
             if (this._settings.get_boolean(
                 'start-menu-follow-panel-theme'

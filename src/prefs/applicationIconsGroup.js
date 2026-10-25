@@ -2,7 +2,6 @@
 // Copyright (C) 2026 sultech
 
 import Adw from 'gi://Adw';
-import Gio from 'gi://Gio';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
@@ -82,7 +81,6 @@ function addApplicationIconControls({
             subtitle: _('The panel grows automatically when larger icons need more room'),
             lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
-            addRow: row => group.add(row),
         },
         connectSettings
     );
@@ -99,7 +97,6 @@ function addApplicationIconControls({
             ),
             lower: MIN_ICON_SIZE,
             upper: MAX_ICON_SIZE,
-            addRow: row => group.add(row),
         },
         connectSettings
     );
@@ -112,7 +109,6 @@ function addApplicationIconControls({
             subtitle: _('Space between application icons'),
             lower: 0,
             upper: 16,
-            addRow: row => group.add(row),
         },
         connectSettings
     );
@@ -125,7 +121,6 @@ function addApplicationIconControls({
             subtitle: edgePaddingSubtitle,
             lower: MIN_ICON_EDGE_PADDING,
             upper: MAX_ICON_EDGE_PADDING,
-            addRow: row => group.add(row),
         },
         connectSettings
     );
@@ -150,7 +145,6 @@ function addApplicationIconControls({
                 },
             ],
             addSuffix: row => row.add_suffix(classicOptionsButton),
-            addRow: row => group.add(row),
         },
         connectSettings
     );
@@ -292,7 +286,6 @@ function addApplicationLayoutControls({
                 if (!settings.isDefaultPanelWindows)
                     row.add_suffix(combineOptionsButton);
             },
-            addRow: row => layoutGroup.add(row),
         },
         connectSettings
     );
@@ -303,7 +296,6 @@ function addApplicationLayoutControls({
         title: _('Show Progress Bars'),
         subtitle: _('Display file transfer and install progress on application icons'),
         addSuffix: row => row.add_suffix(progressBarOptionsButton),
-        addRow: row => layoutGroup.add(row),
     });
     const syncProgressBarOptionsSensitivity = () => {
         progressBarOptionsButton.sensitive =
@@ -422,7 +414,6 @@ function addIndicatorControls({
                 label: positionLabels[value],
             })),
             addSuffix: row => row.add_suffix(reserveOptionsButton),
-            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -439,7 +430,6 @@ function addIndicatorControls({
                 value,
                 label: styleLabels[value],
             })),
-            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -452,7 +442,6 @@ function addIndicatorControls({
             subtitle: _('Choose the indicator thickness in pixels'),
             lower: 1,
             upper: 5,
-            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -464,41 +453,26 @@ function addIndicatorControls({
         ),
     });
     indicatorGroup.add(indicatorFullLengthSwitch);
-    const customIndicatorColorsSwitch = new Adw.SwitchRow({
+    const customIndicatorColorsSwitch = createSwitchRow(settings, {
+        key: 'custom-indicator-colors-enabled',
         title: _('Custom Indicator Colors'),
         subtitle: _('Choose colors for running application indicators'),
-        active: settings.get_boolean(
-            'custom-indicator-colors-enabled'
-        ),
     });
     indicatorGroup.add(customIndicatorColorsSwitch);
-    settings.bind(
-        'custom-indicator-colors-enabled',
-        customIndicatorColorsSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
-    const matchIconColorSwitch = new Adw.SwitchRow({
+    const matchIconColorSwitch = createSwitchRow(settings, {
+        key: 'match-icon-color',
         title: _('Match Icon Color'),
         subtitle: _(
             'Color the focused indicator from the application icon'
         ),
-        active: settings.get_boolean('match-icon-color'),
     });
     indicatorGroup.add(matchIconColorSwitch);
-    settings.bind(
-        'match-icon-color',
-        matchIconColorSwitch,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
     const focusedIndicatorColorRow = addColorRow(
         indicatorGroup,
         settings,
         {
             key: 'focused-indicator-color',
             title: _('Focused Indicator Color'),
-            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -508,7 +482,6 @@ function addIndicatorControls({
         {
             key: 'unfocused-indicator-color',
             title: _('Unfocused Indicator Color'),
-            addRow: row => indicatorGroup.add(row),
         },
         connectSettings
     );
@@ -598,7 +571,6 @@ function addApplicationOverflowControls({
                 {value: 'taskbar', label: _('Taskbar Flyout')},
                 {value: 'list', label: _('Application List')},
             ],
-            addRow: row => applicationOverflowGroup.add(row),
         },
         connectSettings
     );

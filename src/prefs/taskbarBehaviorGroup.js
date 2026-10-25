@@ -101,7 +101,7 @@ export function addTaskbarBehaviorGroup({
         title: _('Taskbar Scroll'),
         description: _('Configure scrolling over empty taskbar space'),
     });
-    const workspaceScrollActionRow = addComboRow(
+    addComboRow(
         workspaceScrollGroup,
         settings,
         {
@@ -191,7 +191,7 @@ export function addTaskbarBehaviorGroup({
             label: _('Automatic Fallback'),
         });
     }
-    const taskManagerAppRow = addComboRow(
+    addComboRow(
         behaviorGroup,
         settings,
         {
