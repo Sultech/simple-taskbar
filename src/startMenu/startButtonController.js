@@ -686,6 +686,7 @@ export class StartButtonController {
             'changed::panel-item-order', syncAppearance,
             'changed::panel-position', syncAppearance,
             'changed::panel-height', syncAppearance,
+            'changed::panel-height-follow-icon-size', syncAppearance,
             'changed::dock-panel-mode', syncAppearance,
             'changed::running-indicator-position', syncAppearance,
             this._signalHolder
