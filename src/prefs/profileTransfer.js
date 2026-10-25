@@ -23,6 +23,7 @@ const PROFILE_FORMAT_VERSION = 1;
 const PINNED_APPS_KEY = 'start-menu-pinned-apps';
 const EXCLUDED_KEYS = new Set([
     'panel-profile-transition',
+    'start-menu-displaced-overlay-key',
     'target-prefs-page',
 ]);
 

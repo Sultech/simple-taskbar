@@ -204,6 +204,7 @@ export class StartMenuKeybindings {
             this._startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
                 () => {
+                    Main.layoutManager.disconnect(this._startupCompleteId);
                     this._startupCompleteId = 0;
                     if (this._overlayEnabled && !this._installOverlayHandler())
                         this._overlayInstallationFailed();
