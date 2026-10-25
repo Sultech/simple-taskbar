@@ -23,15 +23,16 @@ import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
 import {addGeneralPage} from './src/prefs/generalPage.js';
 import {addDockHub, addTaskbarHub} from './src/prefs/panelSettingsHubs.js';
 import {addAboutPage} from './src/prefs/aboutPage.js';
+import {createRoutedSettings} from './src/shared/routedSettings.js';
 export default class SimpleTaskbarPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         Gtk.IconTheme.get_for_display(window.get_display()).add_search_path(
             `${this.path}/icons/scalable/actions`
         );
         window.set_default_size(640, 740);
-        window._settings = this.getSettings();
+        const createSettings = () => createRoutedSettings(this.getSettings());
+        window._settings = createSettings();
         const settings = window._settings;
-        const createSettings = () => this.getSettings();
         const settingsSignalTracker = new SettingsSignalTracker();
         window.connect('close-request', () => settingsSignalTracker.destroy());
         const connectSettings = (object, signal, callback) =>

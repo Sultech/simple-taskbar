@@ -134,7 +134,7 @@ export class StartMenuKeybindings {
 
         const action = Main.wm.addKeybinding(
             FILE_MANAGER_KEYBINDING,
-            this._settings,
+            this._settings.mainSettings,
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
             ACTION_MODES,
             () => this._openFileManager()
@@ -166,7 +166,7 @@ export class StartMenuKeybindings {
         );
         this._superTabAction = Main.wm.addKeybinding(
             SUPER_TAB_KEYBINDING,
-            this._settings,
+            this._settings.mainSettings,
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
             ACTION_MODES,
             () => this._activateSuperTab()
@@ -342,7 +342,7 @@ export class StartMenuKeybindings {
 
         const action = Main.wm.addKeybinding(
             key,
-            this._settings,
+            this._settings.mainSettings,
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT,
             ACTION_MODES,
             handler

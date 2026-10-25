@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.simple-taskbar.dock">
+    <key name="dock-mode" type="b">
+      <default>false</default>
+      <summary>Enable Dock mode</summary>
+    </key>
+    <key name="dock-hide-dash-enabled" type="b">
+      <default>true</default>
+      <summary>Hide the Overview Dash in Dock mode</summary>
+    </key>
+    <key name="dock-launch-to-desktop-enabled" type="b">
+      <default>true</default>
+      <summary>Start the session on the desktop instead of the Overview in Dock mode</summary>
+    </key>
+    <key name="dock-item-order" type="as">
+      <default>['start-button', 'applications']</default>
+      <summary>Dock item order</summary>
+    </key>
+    <key name="dock-show-locations" type="b">
+      <default>true</default>
+      <summary>Show locations in the Dock</summary>
+    </key>
+    <key name="dock-show-trash" type="b">
+      <default>true</default>
+      <summary>Show Trash in the Dock</summary>
+    </key>
+    <key name="dock-show-mounts" type="b">
+      <default>false</default>
+      <summary>Show drives and volumes in the Dock</summary>
+    </key>
+    <key name="dock-position" type="s">
+      <choices>
+        <choice value="top"/>
+        <choice value="bottom"/>
+        <choice value="left"/>
+        <choice value="right"/>
+      </choices>
+      <default>'bottom'</default>
+      <summary>Dock screen edge</summary>
+    </key>
+    <key name="dock-mode-initialized" type="b">
+      <default>false</default>
+      <summary>Whether Dock mode defaults have been initialized</summary>
+    </key>
+    <key name="dock-autohide-enabled" type="b">
+      <default>false</default>
+      <summary>Hide the Dock until the pointer reaches its screen edge</summary>
+    </key>
+    <key name="dock-autohide-reveal-mode" type="s">
+      <choices>
+        <choice value="instant"/>
+        <choice value="delay"/>
+        <choice value="pressure"/>
+      </choices>
+      <default>'instant'</default>
+      <summary>Whether the pointer reveals the Dock at once or after a delay</summary>
+    </key>
+    <key name="dock-autohide-reveal-fullscreen" type="b">
+      <default>false</default>
+      <summary>Allow pointer reveal of the Dock over fullscreen applications</summary>
+    </key>
+    <key name="dock-autohide-reveal-overview" type="b">
+      <default>true</default>
+      <summary>Reveal the auto-hidden Dock while the Overview is open</summary>
+    </key>
+    <key name="dock-autohide-reveal-delay" type="i">
+      <range min="50" max="2000"/>
+      <default>250</default>
+      <summary>How long the pointer must rest on the screen edge before revealing the Dock</summary>
+    </key>
+    <key name="dock-autohide-pressure-threshold" type="i">
+      <range min="0" max="500"/>
+      <default>100</default>
+      <summary>How hard the pointer must push against the edge before revealing the Dock</summary>
+    </key>
+    <key name="dock-autohide-hide-delay" type="i">
+      <range min="0" max="2000"/>
+      <default>450</default>
+      <summary>How long the Dock waits after the pointer leaves before hiding</summary>
+    </key>
+    <key name="dock-dodge-windows-enabled" type="b">
+      <default>true</default>
+      <summary>Hide the Dock when selected windows overlap it</summary>
+    </key>
+    <key name="dock-dodge-windows-mode" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="focused-window"/>
+        <choice value="maximized-windows"/>
+      </choices>
+      <default>'focused-window'</default>
+      <summary>Windows that make the Dock hide</summary>
+    </key>
+    <key name="dock-dodge-pointer-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Reveal the Dock when the pointer reaches its edge</summary>
+    </key>
+    <key name="dock-edge-reveal-enabled" type="b">
+      <default>true</default>
+      <summary>Limit Dock reveal to its floating edge</summary>
+    </key>
+    <key name="dock-multi-monitor-panels" type="b">
+      <default>true</default>
+      <summary>Show the Dock on every connected monitor</summary>
+    </key>
+    <key name="dock-max-length" type="i">
+      <range min="1" max="90"/>
+      <default>90</default>
+      <summary>Maximum Dock length as a percentage of the monitor</summary>
+    </key>
+    <key name="dock-min-icon-size" type="i">
+      <range min="13" max="128"/>
+      <default>32</default>
+      <summary>Minimum application icon size when space is limited</summary>
+    </key>
+    <key name="dock-panel-mode" type="b">
+      <default>false</default>
+      <summary>Extend the Dock to the full monitor edge</summary>
+    </key>
+    <key name="dock-floating" type="b">
+      <default>true</default>
+      <summary>Float the Dock away from the screen edge</summary>
+    </key>
+    <key name="dock-panel-mode-floating" type="b">
+      <default>false</default>
+      <summary>Float the full-width Dock away from the screen edge</summary>
+    </key>
+    <key name="dock-panel-height" type="i">
+      <range min="32" max="175"/>
+      <default>67</default>
+      <summary>Full-width Dock thickness</summary>
+    </key>
+    <key name="dock-panel-height-follow-icon-size" type="b">
+      <default>false</default>
+      <summary>Derive the full-width Dock thickness from the application icon size</summary>
+    </key>
+    <key name="dock-corner-radius" type="i">
+      <range min="0" max="64"/>
+      <default>22</default>
+      <summary>Floating Dock corner radius</summary>
+    </key>
+    <key name="dock-transparency-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Dock transparency</summary>
+    </key>
+    <key name="dock-panel-blur-enabled" type="b">
+      <default>true</default>
+      <summary>Blur the Dock with Blur My Shell</summary>
+    </key>
+    <key name="dock-transparency-level" type="i">
+      <range min="0" max="100"/>
+      <default>20</default>
+      <summary>Dock background transparency percentage</summary>
+    </key>
+    <key name="dock-transparency-on-unmaximized" type="b">
+      <default>false</default>
+      <summary>Enable dynamic Dock transparency</summary>
+    </key>
+    <key name="dock-transparency-dynamic-behavior" type="s">
+      <choices>
+        <choice value="all-windows"/>
+        <choice value="focused-application"/>
+        <choice value="focused-window"/>
+        <choice value="maximized-windows"/>
+      </choices>
+      <default>'maximized-windows'</default>
+      <summary>Windows that restore Dock transparency</summary>
+    </key>
+    <key name="dock-transparency-dynamic-distance" type="i">
+      <range min="0" max="200"/>
+      <default>20</default>
+      <summary>Dynamic Dock transparency trigger distance</summary>
+    </key>
+    <key name="dock-transparency-dynamic-level" type="i">
+      <range min="0" max="100"/>
+      <default>100</default>
+      <summary>Dock transparency without a matching window</summary>
+    </key>
+    <key name="dock-transparency-dynamic-animation-time" type="i">
+      <range min="0" max="2000"/>
+      <default>300</default>
+      <summary>Dock transparency animation duration</summary>
+    </key>
+    <key name="dock-custom-panel-color-enabled" type="b">
+      <default>false</default>
+      <summary>Use a custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-color" type="s">
+      <default>'#18181b'</default>
+      <summary>Custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-gradient-enabled" type="b">
+      <default>false</default>
+      <summary>Use a gradient for the custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-gradient-color" type="s">
+      <default>'#333333'</default>
+      <summary>Secondary custom Dock color</summary>
+    </key>
+    <key name="dock-custom-panel-gradient-direction" type="s">
+      <choices>
+        <choice value="vertical"/>
+        <choice value="horizontal"/>
+      </choices>
+      <default>'vertical'</default>
+      <summary>Custom Dock gradient direction</summary>
+    </key>
+    <key name="dock-panel-theme-follow-system" type="b">
+      <default>false</default>
+      <summary>Match the Dock to the active GNOME Shell theme</summary>
+    </key>
+    <key name="dock-panel-theme" type="s">
+      <choices>
+        <choice value="light"/>
+        <choice value="dark"/>
+      </choices>
+      <default>'dark'</default>
+      <summary>Dock colour scheme when not following the system</summary>
+    </key>
+    <key name="dock-panel-border-enabled" type="b">
+      <default>true</default>
+      <summary>Show the Dock border in dark mode</summary>
+    </key>
+    <key name="dock-panel-border-light-enabled" type="b">
+      <default>false</default>
+      <summary>Show the Dock border in light mode</summary>
+    </key>
+    <key name="dock-workspace-scroll-action" type="s">
+      <choices>
+        <choice value="switch-workspace"/>
+        <choice value="cycle-windows"/>
+        <choice value="change-volume"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'switch-workspace'</default>
+      <summary>Action when scrolling over empty Dock space</summary>
+    </key>
+    <key name="dock-workspace-scroll-delay" type="i">
+      <range min="5" max="250"/>
+      <default>5</default>
+      <summary>Minimum delay between Dock scroll actions in milliseconds</summary>
+    </key>
+    <key name="dock-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Dock</summary>
+    </key>
+    <key name="dock-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Dock settings are saved</summary>
+    </key>
+    <key name="dock-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Dock</summary>
+    </key>
+    <key name="dock-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Dock settings are saved</summary>
+    </key>
+    <key name="dock-axis-profiles-enabled" type="b">
+      <default>true</default>
+      <summary>Keep separate horizontal and vertical Dock settings</summary>
+    </key>
+    <key name="dock-axis-profiles-initialized" type="b">
+      <default>false</default>
+      <summary>Whether Dock axis profiles have been initialized</summary>
+    </key>
+    <key name="blur-my-shell-dock-mode" type="s">
+      <choices>
+        <choice value="panel"/>
+        <choice value="dock"/>
+        <choice value="none"/>
+      </choices>
+      <default>'panel'</default>
+      <summary>Which Blur My Shell blur the running version can apply to the Dock</summary>
+    </key>
+    <key name="active-dock-axis" type="s">
+      <choices>
+        <choice value="horizontal"/>
+        <choice value="vertical"/>
+      </choices>
+      <default>'horizontal'</default>
+      <summary>Dock axis whose settings are currently active</summary>
+    </key>
+  </schema>
+</schemalist>

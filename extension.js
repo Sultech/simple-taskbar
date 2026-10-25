@@ -11,6 +11,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {cachedPanelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
 import {panelApplicationsEnabled} from './src/shared/defaultPanelWindows.js';
 import {taskbarPanelHeight} from './src/shared/panelSizing.js';
+import {createRoutedSettings} from './src/shared/routedSettings.js';
 
 import {ExtensionConflictController} from './src/integration/extensionConflictController.js';
 import {FolderMenuController} from './src/folderMenuController.js';
@@ -78,7 +79,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
-        this._settings = this.getSettings();
+        this._settings = createRoutedSettings(this.getSettings());
         restoreOverlayKey(this._settings);
         clearInterruptedProfileTransition(this._settings);
         this._switcherKeybindings = new SwitcherKeybindingRouter();
@@ -341,7 +342,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._hotEdgeController.enable();
         this._gridAltTabController =
             new GridAltTabController(
-                this._settings,
+                this._settings.mainSettings,
                 this._switcherKeybindings
             );
         this._gridAltTabController.enable();

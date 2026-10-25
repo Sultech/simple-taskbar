@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.simple-taskbar.default-panel">
+    <key name="default-panel-window-app-alignment" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+      </choices>
+      <default>'left'</default>
+      <summary>Default panel windows: Application icon alignment</summary>
+    </key>
+    <key name="default-panel-window-icon-size" type="i">
+      <range min="13" max="128" />
+      <default>16</default>
+      <summary>Default panel windows: Application icon size</summary>
+    </key>
+    <key name="default-panel-window-icon-spacing" type="i">
+      <range min="-5" max="16" />
+      <default>6</default>
+      <summary>Default panel windows: Space between application icons</summary>
+    </key>
+    <key name="default-panel-window-icon-edge-padding" type="i">
+      <range min="3" max="20" />
+      <default>7</default>
+      <summary>Default panel windows: Space between application icons and the taskbar edges</summary>
+    </key>
+    <key name="default-panel-window-group-apps-label-font-size" type="i">
+      <range min="6" max="24" />
+      <default>14</default>
+      <summary>Default panel windows: Application title font size</summary>
+      <description>Font size for window title labels on uncombined applications</description>
+    </key>
+    <key name="default-panel-window-group-apps-label-font-weight" type="s">
+      <choices>
+        <choice value="inherit" />
+        <choice value="normal" />
+        <choice value="lighter" />
+        <choice value="bold" />
+        <choice value="bolder" />
+      </choices>
+      <default>'inherit'</default>
+      <summary>Default panel windows: Application title font weight</summary>
+      <description>Font weight for window title labels on uncombined applications</description>
+    </key>
+    <key name="default-panel-window-group-apps-label-max-width" type="i">
+      <range min="30" max="1000"/>
+      <default>160</default>
+      <summary>Default panel windows: Application title maximum width</summary>
+      <description>Maximum width in pixels for window title labels on uncombined applications</description>
+    </key>
+    <key name="default-panel-window-group-apps-use-fixed-width" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Use a fixed application title width</summary>
+      <description>Use the maximum label width for every uncombined application</description>
+    </key>
+    <key name="default-panel-window-combine-app-buttons-mode" type="s">
+      <choices>
+        <choice value="never"/>
+        <choice value="when-full"/>
+      </choices>
+      <default>'never'</default>
+      <summary>Choose when running windows in the default panel are combined</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-position" type="s">
+      <choices>
+        <choice value="top" />
+        <choice value="bottom" />
+        <choice value="left"/>
+        <choice value="right" />
+      </choices>
+      <default>'bottom'</default>
+      <summary>Default panel windows: Running application indicator position</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-style" type="s">
+      <choices>
+        <choice value="rounded" />
+        <choice value="dots" />
+        <choice value="squares" />
+        <choice value="dashes" />
+        <choice value="segmented" />
+        <choice value="solid" />
+        <choice value="ciliora" />
+        <choice value="metro" />
+      </choices>
+      <default>'rounded'</default>
+      <summary>Default panel windows: Running application indicator style</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-size" type="i">
+      <range min="1" max="5" />
+      <default>4</default>
+      <summary>Default panel windows: Running application indicator thickness</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-full-length" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Stretch running indicators across the application icon</summary>
+    </key>
+    <key name="default-panel-window-custom-indicator-colors-enabled" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Use custom running indicator colors</summary>
+    </key>
+    <key name="default-panel-window-match-icon-color" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Match the running indicator to the application icon color</summary>
+    </key>
+    <key name="default-panel-window-focused-indicator-color" type="s">
+      <default>'#60aef7'</default>
+      <summary>Default panel windows: Focused application indicator color</summary>
+    </key>
+    <key name="default-panel-window-unfocused-indicator-color" type="s">
+      <default>'#8d8d8d'</default>
+      <summary>Default panel windows: Unfocused application indicator color</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-reserve-enabled" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Add space beside running indicators</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-reserve-symmetrical" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Add matching space opposite running indicators</summary>
+    </key>
+    <key name="default-panel-window-running-indicator-reserve-size" type="i">
+      <range min="1" max="20" />
+      <default>3</default>
+      <summary>Default panel windows: Running indicator reserve size</summary>
+    </key>
+    <key name="default-panel-window-taskbar-highlight-style" type="s">
+      <choices>
+        <choice value="glass" />
+        <choice value="classic" />
+      </choices>
+      <default>'glass'</default>
+      <summary>Default panel windows: Application hover and focus effect</summary>
+    </key>
+    <key name="default-panel-window-taskbar-highlight-size-enabled" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Use a custom hover and focus effect size</summary>
+    </key>
+    <key name="default-panel-window-taskbar-highlight-size" type="i">
+      <range min="8" max="176" />
+      <default>32</default>
+      <summary>Default panel windows: Hover and focus effect size across the panel</summary>
+    </key>
+    <key name="default-panel-window-classic-highlight-appicon-hover" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Highlight hovering application icons</summary>
+    </key>
+    <key name="default-panel-window-classic-highlight-appicon-hover-background-color" type="s">
+      <default>'rgba(238, 238, 236, 0.1)'</default>
+      <summary>Default panel windows: Hover highlight color</summary>
+    </key>
+    <key name="default-panel-window-classic-highlight-appicon-pressed-background-color" type="s">
+      <default>'rgba(238, 238, 236, 0.18)'</default>
+      <summary>Default panel windows: Pressed highlight color</summary>
+    </key>
+    <key name="default-panel-window-classic-highlight-appicon-hover-border-radius" type="i">
+      <range min="0" max="10" />
+      <default>8</default>
+      <summary>Default panel windows: Hover highlight border radius</summary>
+    </key>
+    <key name="default-panel-window-classic-focus-highlight" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Highlight the focused application</summary>
+    </key>
+    <key name="default-panel-window-classic-focus-highlight-dominant" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Use the focused application's dominant icon color</summary>
+    </key>
+    <key name="default-panel-window-classic-focus-highlight-color" type="s">
+      <default>'#EEEEEE'</default>
+      <summary>Default panel windows: Focused application highlight color</summary>
+    </key>
+    <key name="default-panel-window-classic-focus-highlight-opacity" type="i">
+      <range min="5" max="100" />
+      <default>25</default>
+      <summary>Default panel windows: Focused application highlight opacity</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-type" type="s">
+      <choices>
+        <choice value="none" />
+        <choice value="simple" />
+        <choice value="ripple" />
+        <choice value="magnify" />
+      </choices>
+      <default>'none'</default>
+      <summary>Default panel windows: Application icon hover animation type</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-duration" type="a{su}">
+      <default>{'simple':160,'ripple':130,'magnify':80}</default>
+      <summary>Default panel windows: Application icon hover animation duration</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-rotation" type="a{si}">
+      <default>{'simple':0,'ripple':10,'magnify':0}</default>
+      <summary>Default panel windows: Application icon hover animation rotation</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-travel" type="a{sd}">
+      <default>{'simple':0.30,'ripple':0.40,'magnify':0}</default>
+      <summary>Default panel windows: Application icon hover animation travel</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-zoom" type="a{sd}">
+      <default>{'simple':1,'ripple':1.25,'magnify':2}</default>
+      <summary>Default panel windows: Application icon hover animation zoom</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-convexity" type="a{sd}">
+      <default>{'ripple':2,'magnify':1}</default>
+      <summary>Default panel windows: Application icon hover animation curve convexity</summary>
+    </key>
+    <key name="default-panel-window-animate-appicon-hover-animation-extent" type="a{si}">
+      <default>{'ripple':4,'magnify':7}</default>
+      <summary>Default panel windows: Application icon hover animation extent</summary>
+    </key>
+    <key name="default-panel-window-application-click-action" type="s">
+      <choices>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="cycle-windows"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="toggle-windows"/>
+        <choice value="raise-windows"/>
+        <choice value="launch-new-instance"/>
+      </choices>
+      <default>'toggle-spread'</default>
+      <summary>Action when a running application is clicked</summary>
+    </key>
+    <key name="default-panel-window-application-click-animation" type="s">
+      <choices>
+        <choice value="none" />
+        <choice value="gnome-zoom-out" />
+        <choice value="bounce" />
+        <choice value="jump" />
+        <choice value="heartbeat" />
+        <choice value="squish" />
+        <choice value="jelly" />
+        <choice value="spin" />
+        <choice value="spin_3d" />
+        <choice value="flip" />
+        <choice value="roll" />
+        <choice value="zoom_fade" />
+        <choice value="squeeze" />
+        <choice value="glow" />
+        <choice value="dim" />
+        <choice value="tada" />
+        <choice value="swing" />
+        <choice value="shake" />
+        <choice value="move_up" />
+        <choice value="move_down" />
+        <choice value="move_left" />
+        <choice value="move_right" />
+        <choice value="enlarge" />
+        <choice value="shrink" />
+      </choices>
+      <default>'gnome-zoom-out'</default>
+      <summary>Default panel windows: Application click animation</summary>
+    </key>
+    <key name="default-panel-window-show-notification-badges" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Show notification badges</summary>
+      <description>Show unread notification counts on application icons</description>
+    </key>
+    <key name="default-panel-window-show-progress-bars" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Show progress bars</summary>
+      <description>Show operation progress on application icons for applications that report it</description>
+    </key>
+    <key name="default-panel-window-progress-bar-follow-indicator-colors" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Progress bars follow running indicator colors</summary>
+      <description>Use the running indicator color settings for the progress bar fill</description>
+    </key>
+    <key name="default-panel-window-progress-bar-color" type="s">
+      <default>'#3584e4'</default>
+      <summary>Default panel windows: Progress bar color</summary>
+      <description>Custom fill color used when progress bars do not follow the running indicator colors</description>
+    </key>
+    <key name="default-panel-window-progress-bar-automatic-thickness" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Automatic progress bar thickness</summary>
+      <description>Derive the progress bar thickness from the application icon size</description>
+    </key>
+    <key name="default-panel-window-progress-bar-thickness" type="i">
+      <range min="1" max="8" />
+      <default>2</default>
+      <summary>Default panel windows: Progress bar thickness</summary>
+      <description>Progress bar fill thickness in pixels</description>
+    </key>
+    <key name="default-panel-window-application-overflow-enabled" type="b">
+      <default>true</default>
+      <summary>Default panel windows: Show applications that do not fit in an overflow popup</summary>
+    </key>
+    <key name="default-panel-window-application-overflow-style" type="s">
+      <choices>
+        <choice value="taskbar" />
+        <choice value="list" />
+      </choices>
+      <default>'taskbar'</default>
+      <summary>Default panel windows: Application overflow popup style</summary>
+    </key>
+    <key name="default-panel-window-shift-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+      </choices>
+      <default>'minimize-window'</default>
+      <summary>Action when Shift-clicking a running application</summary>
+    </key>
+    <key name="default-panel-window-ctrl-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+      </choices>
+      <default>'launch-new-instance'</default>
+      <summary>Action when Ctrl-clicking a running application</summary>
+    </key>
+    <key name="default-panel-window-middle-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+        <choice value="open-new-window"/>
+        <choice value="close-applications"/>
+      </choices>
+      <default>'launch-new-instance'</default>
+      <summary>Action when middle-clicking a running application</summary>
+    </key>
+    <key name="default-panel-window-shift-middle-click-action" type="s">
+      <choices>
+        <choice value="raise-windows"/>
+        <choice value="minimize-window"/>
+        <choice value="launch-new-instance"/>
+        <choice value="cycle-windows"/>
+        <choice value="cycle-windows-minimize"/>
+        <choice value="toggle-show-preview"/>
+        <choice value="toggle-cycle"/>
+        <choice value="toggle-spread"/>
+        <choice value="quit-applications"/>
+      </choices>
+      <default>'launch-new-instance'</default>
+      <summary>Action when Shift-middle-clicking a running application</summary>
+    </key>
+    <key name="default-panel-window-scroll-icon-action" type="s">
+      <choices>
+        <choice value="switch-workspace"/>
+        <choice value="cycle-windows"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'switch-workspace'</default>
+      <summary>Action when scrolling over an application icon</summary>
+    </key>
+    <key name="default-panel-window-scroll-icon-delay" type="i">
+      <range min="5" max="250"/>
+      <default>5</default>
+      <summary>Minimum delay between application icon scrolls in milliseconds</summary>
+    </key>
+    <key name="default-panel-window-scroll-icon-follow-panel-delay" type="b">
+      <default>true</default>
+      <summary>Use the active taskbar or Dock scroll delay for application icon scrolling</summary>
+    </key>
+    <key name="default-panel-window-application-hover-action" type="s">
+      <choices>
+        <choice value="show-previews"/>
+        <choice value="show-tooltip"/>
+        <choice value="do-nothing"/>
+      </choices>
+      <default>'show-previews'</default>
+      <summary>Action when hovering over an application icon</summary>
+    </key>
+    <key name="default-panel-window-show-window-previews-timeout" type="i">
+      <range min="0" max="2000"/>
+      <default>320</default>
+      <summary>Delay before showing window previews</summary>
+    </key>
+    <key name="default-panel-window-leave-timeout" type="i">
+      <range min="0" max="2000"/>
+      <default>300</default>
+      <summary>Delay before hiding window previews</summary>
+    </key>
+    <key name="default-panel-window-peek-mode" type="b">
+      <default>true</default>
+      <summary>Enable window preview peeking</summary>
+    </key>
+    <key name="default-panel-window-enter-peek-mode-timeout" type="i">
+      <range min="50" max="2000"/>
+      <default>50</default>
+      <summary>Delay before window preview peeking</summary>
+    </key>
+    <key name="default-panel-window-peek-mode-opacity" type="i">
+      <range min="0" max="255"/>
+      <default>40</default>
+      <summary>Opacity of other windows while peeking</summary>
+    </key>
+    <key name="default-panel-window-preview-middle-click-close" type="b">
+      <default>true</default>
+      <summary>Close a window when its preview is middle-clicked</summary>
+    </key>
+    <key name="default-panel-window-isolate-workspaces" type="b">
+      <default>false</default>
+      <summary>Show running applications from the active workspace only</summary>
+    </key>
+    <key name="default-panel-window-isolate-monitors" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Show running applications only on the taskbar for their monitor</summary>
+    </key>
+    <key name="default-panel-show-running-windows" type="b">
+      <default>false</default>
+      <summary>Show running windows in the Default GNOME Panel</summary>
+      <description>Show running windows with labels on horizontal default panels, independently of Dock grouping</description>
+    </key>
+    <key name="default-panel-mode-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for Default GNOME Panel mode</summary>
+    </key>
+    <key name="default-panel-mode-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether Default GNOME Panel mode settings are saved</summary>
+    </key>
+    <key name="default-panel-horizontal-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a horizontal Default GNOME Panel</summary>
+    </key>
+    <key name="default-panel-horizontal-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether horizontal Default GNOME Panel settings are saved</summary>
+    </key>
+    <key name="default-panel-vertical-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Settings saved for a vertical Default GNOME Panel</summary>
+    </key>
+    <key name="default-panel-vertical-settings-saved" type="b">
+      <default>false</default>
+      <summary>Whether vertical Default GNOME Panel settings are saved</summary>
+    </key>
+    <key name="default-panel-axis-profiles-enabled" type="b">
+      <default>true</default>
+      <summary>Keep separate horizontal and vertical Default GNOME Panel settings</summary>
+    </key>
+    <key name="default-panel-start-button-location" type="s">
+      <choices>
+        <choice value="dock"/>
+        <choice value="panel"/>
+      </choices>
+      <default>'dock'</default>
+      <summary>Place the Start button in the Dock or the panel in Default Panel mode</summary>
+    </key>
+    <key name="default-panel-start-button-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'left'</default>
+      <summary>Start button position when it is in the panel in Default Panel mode</summary>
+    </key>
+    <key name="default-panel-start-button-follow-app-alignment" type="b">
+      <default>false</default>
+      <summary>Move the Start button with the application icon alignment when it is in the panel in Default Panel mode</summary>
+    </key>
+  </schema>
+</schemalist>
