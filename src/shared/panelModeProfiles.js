@@ -101,6 +101,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-item-order',
     'dock-mode',
     'dock-mode-initialized',
+    'blur-my-shell-dock-mode',
     'dock-autohide-enabled',
     ...Object.values(DOCK_AUTO_HIDE_SETTINGS),
     'dock-dodge-windows-enabled',
@@ -172,6 +173,36 @@ export const PANEL_PROFILE_STATE_KEYS = Object.freeze([
     ...[...PROFILE_KEYS.values(), ...AXIS_PROFILE_KEYS.values()]
         .flatMap(profile => [profile.settings, profile.saved]),
 ]);
+
+const DOCK_AXIS_SHARED_SETTING_KEYS = new Set([
+    ...DEFAULT_PANEL_WINDOW_SETTING_KEYS,
+    'taskbar-highlight-length-enabled',
+    'taskbar-highlight-length',
+    'hide-app-labels',
+    'taskbar-locked',
+    'hide-pinned-taskbar-apps',
+    'hide-pinned-secondary-monitors',
+    'hide-unpinned-taskbar-apps',
+    'use-pinned-apps-as-launchers',
+    'keep-pinned-app-windows-together',
+    'show-pinned-app-separator',
+    'show-location-separator',
+    'show-start-button-separator',
+    'start-button-position',
+    'start-button-follow-app-alignment',
+    'start-button-padding',
+    'start-button-custom-icon',
+    'gnome-start-button-visible',
+    'windows-start-menu-enabled',
+]);
+
+const DOCK_AXIS_EXCLUDED_SETTING_KEYS = new Set([
+    ...PANEL_PROFILE_STATE_KEYS,
+    'dock-mode',
+    'dock-position',
+    'dock-axis-profiles-enabled',
+]);
+const DOCK_AXIS_PROFILE_VERSION_KEY = 'dock-axis-profile-version';
 
 const PANEL_AXIS_DOMAIN = Object.freeze({
     positionKey: 'panel-position',
@@ -259,12 +290,25 @@ function resetPanelModeSettings(settings) {
     }
 }
 
+function panelAxisSettingKeys(settings, mode) {
+    return settings.settings_schema.list_keys().filter(key => {
+        if (mode === PANEL_MODE_DOCK) {
+            return DOCK_AXIS_SHARED_SETTING_KEYS.has(key) ||
+                key.startsWith('locations-') ||
+                (key.startsWith('dock-') && !DOCK_AXIS_EXCLUDED_SETTING_KEYS.has(key));
+        }
+
+        return !MODE_SETTING_KEYS.has(key) && key !== 'panel-position' &&
+            !key.startsWith('dock-');
+    });
+}
+
 function savePanelAxisSettings(settings, mode, axis) {
     const profile = axisProfile(mode, axis);
     const values = {};
-    for (const key of settings.settings_schema.list_keys()) {
-        if (MODE_SETTING_KEYS.has(key) || key === 'panel-position')
-            continue;
+    if (mode === PANEL_MODE_DOCK)
+        values[DOCK_AXIS_PROFILE_VERSION_KEY] = new GLib.Variant('u', 1);
+    for (const key of panelAxisSettingKeys(settings, mode)) {
         const value = settings.get_user_value(key);
         if (value)
             values[key] = value;
@@ -279,8 +323,9 @@ function restorePanelAxisSettings(settings, mode, axis) {
         return false;
 
     const values = settings.get_value(profile.settings).deepUnpack();
-    for (const key of settings.settings_schema.list_keys()) {
-        if (MODE_SETTING_KEYS.has(key) || key === 'panel-position')
+    const legacyDockProfile = mode === PANEL_MODE_DOCK && !values[DOCK_AXIS_PROFILE_VERSION_KEY];
+    for (const key of panelAxisSettingKeys(settings, mode)) {
+        if (legacyDockProfile && !values[key])
             continue;
         restoreSettingValue(settings, key, values[key]);
     }
