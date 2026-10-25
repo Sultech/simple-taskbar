@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 sultech
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {TransientSignalHolder} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 

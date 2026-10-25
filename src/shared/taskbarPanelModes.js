@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 sultech
+
 export const START_BUTTON_LOCATION_KEY = 'default-panel-start-button-location';
 
 export const TASKBAR_GEOMETRY_KEYS = Object.freeze([

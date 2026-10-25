@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 sultech
+
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
