@@ -41,6 +41,7 @@ export class FloatingPanelLayout {
         this._settings.connectObject(
             'changed::panel-autohide-enabled', () => this._onPosition(),
             'changed::panel-dodge-windows-enabled', () => this._onPosition(),
+            'changed::taskbar-floating-gap', () => this._onPosition(),
             this
         );
         for (const box of this._boxes) {

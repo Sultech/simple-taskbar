@@ -98,6 +98,25 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
             : 'dock-floating',
         keyChangedKey: 'dock-panel-mode',
     }, connectSettings));
+    const dockFloatingGapRow = addSliderRow(
+        group,
+        settings,
+        {
+            key: 'dock-floating-gap',
+            unit: 'px',
+            title: _('Floating Gap'),
+            subtitle: _('Distance between the floating Dock and the screen edge'),
+            lower: 1,
+            upper: 32,
+        },
+        connectSettings
+    );
+    const syncFloatingGap = () => {
+        dockFloatingGapRow.sensitive = dockFloatingEnabled(settings);
+    };
+    for (const key of DOCK_FLOATING_KEYS)
+        connectSettings(settings, `changed::${key}`, syncFloatingGap);
+    syncFloatingGap();
     const dockMaxLengthRow = addSliderRow(
         group,
         settings,

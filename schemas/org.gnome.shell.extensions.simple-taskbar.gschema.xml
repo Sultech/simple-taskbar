@@ -577,6 +577,11 @@
       <default>false</default>
       <summary>Float the taskbar away from the screen edge</summary>
     </key>
+    <key name="taskbar-floating-gap" type="i">
+      <range min="1" max="32"/>
+      <default>4</default>
+      <summary>Gap between the floating taskbar and the screen edge</summary>
+    </key>
     <key name="taskbar-max-length" type="i">
       <range min="1" max="90"/>
       <default>90</default>

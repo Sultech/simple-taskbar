@@ -128,6 +128,11 @@
       <default>false</default>
       <summary>Float the full-width Dock away from the screen edge</summary>
     </key>
+    <key name="dock-floating-gap" type="i">
+      <range min="1" max="32"/>
+      <default>4</default>
+      <summary>Gap between the floating Dock and the screen edge</summary>
+    </key>
     <key name="dock-panel-height" type="i">
       <range min="32" max="175"/>
       <default>67</default>

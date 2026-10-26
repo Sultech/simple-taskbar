@@ -45,6 +45,7 @@ const DOCK_SETTING_KEYS = new Map([
     ['panel-border-light-enabled', 'dock-panel-border-light-enabled'],
     ['panel-autohide-enabled', 'dock-autohide-enabled'],
     ['edge-reveal-enabled', 'dock-edge-reveal-enabled'],
+    ['taskbar-floating-gap', 'dock-floating-gap'],
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],
     ['workspace-scroll-action', 'dock-workspace-scroll-action'],
     ['workspace-scroll-delay', 'dock-workspace-scroll-delay'],

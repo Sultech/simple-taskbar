@@ -24,7 +24,6 @@ import {
     positionIsVertical,
 } from '../panel/panelPosition.js';
 import {
-    DOCK_EDGE_GAP,
     dockPanelModeHeight,
     panelHeightForIconSize,
 } from '../shared/panelSizing.js';
@@ -84,6 +83,7 @@ export class OverviewIntegration {
             'changed::dock-panel-mode', () => this.queueRelayout(),
             'changed::dock-floating', () => this.queueRelayout(),
             'changed::dock-panel-mode-floating', () => this.queueRelayout(),
+            'changed::dock-floating-gap', () => this.queueRelayout(),
             'changed::dock-multi-monitor-panels', () => this.queueRelayout(),
             'changed::dock-autohide-enabled', () => this.queueRelayout(),
             'changed::dock-dodge-windows-enabled', () =>
@@ -486,7 +486,7 @@ export class OverviewIntegration {
 
     _panelOverviewInset() {
         return floatingTaskbarEnabled(this._settings)
-            ? this._panelHeight + DOCK_EDGE_GAP
+            ? this._panelHeight + this._settings.get_int('taskbar-floating-gap')
             : this._panelHeight;
     }
 
@@ -512,7 +512,7 @@ export class OverviewIntegration {
             ? dockPanelModeHeight(this._settings, iconSize)
             : panelHeightForIconSize(this._settings, iconSize);
         const dockHeight = dockThickness +
-            (dockFloatingEnabled(this._settings) ? DOCK_EDGE_GAP : 0);
+            (dockFloatingEnabled(this._settings) ? this._settings.get_int('dock-floating-gap') : 0);
         const position = this._settings.get_string('dock-position');
         if (!dockAutohide && !dockDodge &&
             (!primaryMonitor || position !== 'bottom')) {

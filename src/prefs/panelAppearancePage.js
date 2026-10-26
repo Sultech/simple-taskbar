@@ -96,6 +96,14 @@ export function addPanelAppearancePage({
         keyChangedKey: 'taskbar-dynamic',
     }, connectSettings);
     floatingGroup.add(floatingSwitch);
+    const floatingGapRow = addSliderRow(floatingGroup, settings, {
+        key: 'taskbar-floating-gap',
+        unit: 'px',
+        title: _('Floating Gap'),
+        subtitle: _('Distance between the floating taskbar and the screen edge'),
+        lower: 1,
+        upper: 32,
+    }, connectSettings);
     const maximumLengthRow = addSliderRow(floatingGroup, settings, {
         key: 'taskbar-max-length',
         unit: '%',
@@ -114,6 +122,7 @@ export function addPanelAppearancePage({
     const syncFloatingControls = () => {
         floatingGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
         maximumLengthRow.sensitive = dynamicSwitch.active;
+        floatingGapRow.sensitive = floatingSwitch.active;
         cornerRadiusRow.sensitive = dynamicSwitch.active || floatingSwitch.active;
     };
     for (const key of TASKBAR_GEOMETRY_KEYS)

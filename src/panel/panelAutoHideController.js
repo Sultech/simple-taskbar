@@ -160,6 +160,7 @@ export class PanelAutoHideController {
             () => this._syncPressureBarrier(),
             'changed::panel-position', () => this._syncPressureBarrier(),
             'changed::edge-reveal-enabled', () => this._syncPressureBarrier(),
+            'changed::taskbar-floating-gap', () => this._syncPressureBarrier(),
             this._signalHolder
         );
         Main.overview.connectObject(

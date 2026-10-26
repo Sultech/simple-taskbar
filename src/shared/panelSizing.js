@@ -24,7 +24,6 @@ export const MAX_ICON_EDGE_PADDING = 20;
 export const DEFAULT_ICON_EDGE_PADDING = 7;
 export const RUNNING_INDICATOR_CLEARANCE = 5;
 export const DOCK_FLOATING_CHROME_RESERVE = 5;
-export const DOCK_EDGE_GAP = 4;
 export const GLASS_VERTICAL_INSET = 3;
 
 export const MIN_HIGHLIGHT_SIZE = 8;
