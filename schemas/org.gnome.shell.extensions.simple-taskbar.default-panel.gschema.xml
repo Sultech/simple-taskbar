@@ -2,6 +2,14 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.simple-taskbar.default-panel"
           path="/org/gnome/shell/extensions/simple-taskbar/default-panel/">
+    <key name="default-panel-clock-style" type="s">
+      <choices>
+        <choice value="gnome"/>
+        <choice value="windows"/>
+      </choices>
+      <default>'gnome'</default>
+      <summary>Default panel: Show the time above the date when the panel has room</summary>
+    </key>
     <key name="default-panel-window-app-alignment" type="s">
       <choices>
         <choice value="left"/>

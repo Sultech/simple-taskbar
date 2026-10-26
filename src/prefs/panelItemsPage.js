@@ -29,6 +29,7 @@ import {axisPanelPositions} from './panelAxis.js';
 import {
     createShowDesktopButtonOptionsButton,
 } from './showDesktopButtonDialog.js';
+import {createClockOptionsButton} from './clockDialog.js';
 import {
     createStartButtonOptionsButton,
 } from './startButtonDialog.js';
@@ -201,6 +202,7 @@ export function addPanelItemsPage({
         createShowDesktopButtonOptionsButton(settings);
     const startButtonOptionsButton =
         createStartButtonOptionsButton(settings);
+    const clockOptionsButton = createClockOptionsButton(settings);
     const panelOrderDefinitions = new Map([
         ['left-box', {
             title: _('Left Box'),
@@ -280,6 +282,7 @@ export function addPanelItemsPage({
             visibleKey: 'clock-visible',
             title: _('Clock'),
             choices: initialPositions,
+            optionsButton: clockOptionsButton,
         }],
         ['show-desktop', {
             key: 'show-desktop-button-position',
@@ -549,8 +552,9 @@ export function addPanelItemsPage({
             !dynamicTaskbarEnabled(settings) && applicationsAreVisible();
         panelOrderRows.get('system-menu').positionDropDown.sensitive =
             !windowsXpTheme && systemMenuVisibility.get();
-        panelOrderRows.get('clock').positionDropDown.sensitive =
-            !windowsXpTheme && settings.get_boolean('clock-visible');
+        const clockActive = !windowsXpTheme && settings.get_boolean('clock-visible');
+        panelOrderRows.get('clock').positionDropDown.sensitive = clockActive;
+        clockOptionsButton.sensitive = clockActive;
         panelOrderRows.get('start-button').visibleButton.sensitive =
             (startInPanel || (!dockMode && !defaultPanel)) &&
             !settings.get_boolean('windows-start-menu-enabled');

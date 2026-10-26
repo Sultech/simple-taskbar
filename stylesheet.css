@@ -48,6 +48,10 @@
     text-align: center;
 }
 
+.simple-taskbar-clock-windows {
+    text-align: center;
+}
+
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
     .panel-button .system-status-icon,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical

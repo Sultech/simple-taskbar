@@ -149,6 +149,9 @@ const MODE_SETTING_KEYS = new Set([
     'windows-10-theme-enabled',
     'start-menu-displaced-overlay-key',
     'start-menu-pinned-apps',
+    'clock-style',
+    'default-panel-clock-style',
+    'clock-date-order',
 ]);
 for (const key of DEFAULT_PANEL_WINDOW_SETTING_KEYS)
     MODE_SETTING_KEYS.add(defaultPanelWindowSettingKey(key));

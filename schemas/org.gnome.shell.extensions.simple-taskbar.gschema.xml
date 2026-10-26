@@ -1016,6 +1016,23 @@
       <default>true</default>
       <summary>Show the clock</summary>
     </key>
+    <key name="clock-style" type="s">
+      <choices>
+        <choice value="gnome"/>
+        <choice value="windows"/>
+      </choices>
+      <default>'windows'</default>
+      <summary>Show the time above the date when the taskbar has room</summary>
+    </key>
+    <key name="clock-date-order" type="s">
+      <choices>
+        <choice value="day-month-year"/>
+        <choice value="month-day-year"/>
+        <choice value="year-month-day"/>
+      </choices>
+      <default>'day-month-year'</default>
+      <summary>Date order in the Windows-style clock</summary>
+    </key>
     <key name="windows-start-menu-enabled" type="b">
       <default>true</default>
       <summary>Replace the GNOME applications view with an Eleven-style Start Menu</summary>

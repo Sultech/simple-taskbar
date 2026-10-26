@@ -52,6 +52,16 @@ export function startButtonAlignmentKey(settings, key) {
         ? `default-panel-${key}` : key;
 }
 
+export function clockStyleKey(settings) {
+    return settings.get_boolean('default-gnome-panel')
+        ? 'default-panel-clock-style' : 'clock-style';
+}
+
+export function windowsClockEnabled(settings) {
+    return !settings.get_boolean('windows-xp-theme-enabled') &&
+        settings.get_string(clockStyleKey(settings)) === 'windows';
+}
+
 export function panelStartButtonPosition(settings) {
     if (dynamicTaskbarEnabled(settings))
         return 'center';
