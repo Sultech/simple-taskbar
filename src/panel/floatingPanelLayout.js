@@ -6,7 +6,6 @@ import St from 'gi://St';
 
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {TransientSignalHolder} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelGeometry} from './panelGeometry.js';
 import {FloatingPanelWindowTracker} from './floatingPanelWindowTracker.js';
@@ -29,7 +28,6 @@ export class FloatingPanelLayout {
         this._strutName = strutName;
         this._widthUpdater = new TaskbarWidthUpdater(onContentChanged);
         this._windowTracker = new FloatingPanelWindowTracker(onPosition);
-        this._signalHolder = new TransientSignalHolder();
         this._lastEdgeGap = null;
         this._baseLength = null;
         this._panelLength = null;
@@ -43,13 +41,13 @@ export class FloatingPanelLayout {
         this._settings.connectObject(
             'changed::panel-autohide-enabled', () => this._onPosition(),
             'changed::panel-dodge-windows-enabled', () => this._onPosition(),
-            this._signalHolder
+            this
         );
         for (const box of this._boxes) {
             box.connectObject('queue-relayout', () => {
                 if (!this._widthUpdater.isUpdating)
                     this._widthUpdater.queue();
-            }, this._signalHolder);
+            }, this);
         }
     }
 
@@ -58,8 +56,9 @@ export class FloatingPanelLayout {
         this._widthUpdater = null;
         this._windowTracker.destroy();
         this._windowTracker = null;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        for (const box of this._boxes)
+            box.disconnectObject(this);
         if (this.strutActor) {
             Main.layoutManager.removeChrome(this.strutActor);
             this.strutActor.destroy();

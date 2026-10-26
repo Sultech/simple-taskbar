@@ -2,7 +2,6 @@
 // Copyright (C) 2026 sultech
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {TransientSignalHolder} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 function fillAppGridIfEmpty() {
     const appDisplay = Main.overview._overview.controls._appDisplay;
@@ -13,7 +12,6 @@ function fillAppGridIfEmpty() {
 export class FloatingPanelWindowTracker {
     constructor(onPosition) {
         this._onPosition = onPosition;
-        this._signalHolder = new TransientSignalHolder();
         this._workspaceWindows = new Set();
         this._activeWorkspace = null;
     }
@@ -24,13 +22,13 @@ export class FloatingPanelWindowTracker {
             'active-workspace-changed', () => {
                 this._syncWorkspaceWindows();
                 this._onPosition(true, true);
-            }, this._signalHolder
+            }, this
         );
         global.display.connectObject(
             'notify::focus-window', () => this._onPosition(true, true),
             'window-entered-monitor', () => this._onPosition(true, true),
             'window-left-monitor', () => this._onPosition(true, true),
-            this._signalHolder
+            this
         );
         Main.overview.connectObject(
             'showing', () => {
@@ -38,13 +36,18 @@ export class FloatingPanelWindowTracker {
                 this._onPosition(true, true);
             },
             'hiding', () => this._onPosition(true, true),
-            this._signalHolder
+            this
         );
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        global.workspace_manager.disconnectObject(this);
+        global.display.disconnectObject(this);
+        Main.overview.disconnectObject(this);
+        if (this._activeWorkspace)
+            this._activeWorkspace.disconnectObject(this);
+        for (const window of this._workspaceWindows)
+            window.disconnectObject(this);
         this._workspaceWindows.clear();
         this._activeWorkspace = null;
         this._onPosition = null;
@@ -56,9 +59,9 @@ export class FloatingPanelWindowTracker {
             return;
 
         if (this._activeWorkspace)
-            this._activeWorkspace.disconnectObject(this._signalHolder);
+            this._activeWorkspace.disconnectObject(this);
         for (const window of this._workspaceWindows)
-            window.disconnectObject(this._signalHolder);
+            window.disconnectObject(this);
         this._workspaceWindows.clear();
         this._activeWorkspace = workspace;
         workspace.connectObject(
@@ -72,7 +75,7 @@ export class FloatingPanelWindowTracker {
                 this._untrackWorkspaceWindow(window);
                 this._onPosition(true, true);
             },
-            this._signalHolder
+            this
         );
         for (const window of workspace.list_windows())
             this._trackWorkspaceWindow(window);
@@ -90,7 +93,7 @@ export class FloatingPanelWindowTracker {
             () => this._onPosition(true, true),
             'notify::minimized',
             () => this._onPosition(true, true),
-            this._signalHolder
+            this
         );
     }
 
@@ -98,6 +101,6 @@ export class FloatingPanelWindowTracker {
         if (!this._workspaceWindows.delete(window))
             return;
 
-        window.disconnectObject(this._signalHolder);
+        window.disconnectObject(this);
     }
 }
