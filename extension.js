@@ -79,7 +79,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
         this._favorites = AppFavorites.getAppFavorites();
-        this._settings = createRoutedSettings(this.getSettings());
+        this._settings = createRoutedSettings(this.getSettings(),
+            this.getSettings(`${this.metadata['settings-schema']}.legacy`));
         restoreOverlayKey(this._settings);
         clearInterruptedProfileTransition(this._settings);
         this._switcherKeybindings = new SwitcherKeybindingRouter();

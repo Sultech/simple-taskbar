@@ -30,7 +30,8 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             `${this.path}/icons/scalable/actions`
         );
         window.set_default_size(640, 740);
-        const createSettings = () => createRoutedSettings(this.getSettings());
+        const createSettings = () => createRoutedSettings(this.getSettings(),
+            this.getSettings(`${this.metadata['settings-schema']}.legacy`));
         window._settings = createSettings();
         const settings = window._settings;
         const settingsSignalTracker = new SettingsSignalTracker();

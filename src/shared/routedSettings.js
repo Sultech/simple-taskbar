@@ -1,37 +1,31 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Gio from 'gi://Gio';
-
 const SETTINGS_ROUTES = Object.freeze([
     {schema: 'dock', prefix: 'dock-', keys: ['active-dock-axis', 'blur-my-shell-dock-mode']},
     {schema: 'default-panel', prefix: 'default-panel-', keys: []},
 ]);
 
-function moveLegacyValues(mainSettings, childSettings) {
-    const legacySettings = new Gio.Settings({
-        settings_schema: childSettings.settings_schema,
-        path: mainSettings.path,
-    });
-    for (const key of childSettings.settings_schema.list_keys()) {
+function moveLegacyValues(legacySettings, routedSettings) {
+    for (const key of legacySettings.settings_schema.list_keys()) {
         const value = legacySettings.get_user_value(key);
         if (!value)
             continue;
 
-        if (childSettings.get_user_value(key) === null)
-            childSettings.set_value(key, value);
+        if (routedSettings.get_user_value(key) === null)
+            routedSettings.set_value(key, value);
         legacySettings.reset(key);
     }
 }
 
-export function createRoutedSettings(mainSettings) {
+export function createRoutedSettings(mainSettings, legacySettings) {
     const routes = SETTINGS_ROUTES.map(route => ({
         ...route,
         settings: mainSettings.get_child(route.schema),
     }));
-    for (const route of routes)
-        moveLegacyValues(mainSettings, route.settings);
-    return new RoutedSettings(mainSettings, routes);
+    const routedSettings = new RoutedSettings(mainSettings, routes);
+    moveLegacyValues(legacySettings, routedSettings);
+    return routedSettings;
 }
 
 class RoutedSettings {

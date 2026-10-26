@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.simple-taskbar.default-panel">
+  <schema id="org.gnome.shell.extensions.simple-taskbar.default-panel"
+          path="/org/gnome/shell/extensions/simple-taskbar/default-panel/">
     <key name="default-panel-window-app-alignment" type="s">
       <choices>
         <choice value="left"/>

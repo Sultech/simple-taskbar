@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.simple-taskbar.dock">
+  <schema id="org.gnome.shell.extensions.simple-taskbar.dock"
+          path="/org/gnome/shell/extensions/simple-taskbar/dock/">
     <key name="dock-mode" type="b">
       <default>false</default>
       <summary>Enable Dock mode</summary>
