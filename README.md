@@ -66,7 +66,7 @@ Lamp animation when minimising and restoring windows.
 
 | Mode | What you get |
 | --- | --- |
-| **Taskbar** | Pinned apps and open windows together on the panel. |
+| **Taskbar** | Pinned apps and open windows together on the panel, full width or sized to its contents and floating. |
 | **Dock** | A separate app Dock alongside the GNOME panel. |
 | **Windows XP** | A classic taskbar with Windows XP-inspired artwork and styling. |
 | **Windows 10** | A Windows 10-inspired taskbar with rectangular highlights. |
@@ -162,7 +162,7 @@ there too and preserves taskbar favourites and Start Menu pins.
 
 | Shortcut | Action |
 | --- | --- |
-| **Super** | Opens the Start Menu, moving Overview to **Super+Tab** |
+| **Super** | Opens the Start Menu, moving Overview to **Super+Tab** or a shortcut of your choice |
 | **Super+Tab** | Opens the Start Menu instead, when the Super shortcut is off |
 | **Super+E** | Opens the home folder in the default file manager |
 | **Super+1** … **Super+9** | Activates that pinned application; pressing it again on the focused one minimises it |
@@ -238,6 +238,9 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 - **Thickness** up to 175px, with a 30px minimum in Default GNOME Panel mode; the minimum in taskbar mode depends on icon edge padding
 - **Match thickness to icon size**, or set the thickness manually and let oversized icons shrink to fit
 - **Position** on the top, bottom, left or right edge
+- **Dynamic Panel Mode** sizes the taskbar to its contents and expands as items are added, up to 1–90% of the monitor
+- **Floating Panel Mode** adds a small gap from the screen edge that closes for maximized windows;
+  it works on its own or with Dynamic Panel Mode, with a corner radius up to 64px
 - **Themes** — light, dark, or follow GNOME Shell
 - **Custom colours**, gradients, gradient direction, and light or dark panel text
 - **Transparency** and separate borders per light and dark theme
@@ -250,12 +253,13 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 
 - **Auto-hide** with animation on every panel, revealed at the screen edge
 - **Dodge windows** — hide for all windows, the focused application's windows, only the focused window, or only maximized windows, with an optional pointer reveal
-- **Reveal options** — instant, delayed or pressure-based edge reveal, adjustable hide delay, and optional pointer reveal over fullscreen applications
+- **Intellihide options** — instant, delayed or pressure-based edge reveal, adjustable hide delay, optional pointer reveal over fullscreen applications,
+  reveal while the Overview is open, and an option to limit reveal to a dynamic or floating taskbar's own edge
 - **Hot edge** at the bottom that toggles Overview, with adjustable activation pressure and an optional ripple
 - **App Grid layout** — automatic sizing or custom dimensions of 2–12 columns and 2–10 rows,
   available under **General → App Grid**
 - **Scroll over empty space** to switch workspace, cycle windows or change volume, with an adjustable delay
-- **Application volume mixer** in Quick Settings for individual streams
+- **Application volume mixer** in Quick Settings for individual streams, going above 100% when GNOME's over-amplification is on
 - **Tray icons** gathered behind a panel arrow, positioned where you want it
 - **Task Manager** entry in the panel menu — any installed application, defaulting to
   Resources and falling back to GNOME System Monitor or Mission Center when it is missing
@@ -300,7 +304,9 @@ copy of the icon, effect, indicator, overflow and isolation settings.
 - **Corner radius** up to 64px, plus independent themes, transparency, gradients, text
   colour, borders and Blur My Shell
 - **Full-width Dock thickness** can follow icon size or be set manually
-- **Auto-hide** with the same window-dodge modes, plus edge reveal and an option to limit reveal to the Dock's own edge
+- **Floating** option for both the Dock and the full-width Dock, keeping a small gap from the screen edge
+- **Auto-hide** with the same window-dodge modes, its own reveal and hide timings, reveal in Overview,
+  and an option to limit reveal to the Dock's own edge
 - **Scroll** over empty Dock space to switch workspace, cycle windows or change volume
 - Shown on every connected monitor, with its own item order and locations
 
@@ -309,8 +315,8 @@ copy of the icon, effect, indicator, overflow and isolation settings.
 The Eleven-style Start Menu is enabled by default.
 
 - **Pinned grid** with drag-and-drop ordering and optional titles under icons
-- **Folders** created by dragging one pinned application onto another, with renaming and a
-  *Move out of folder* action
+- **Folders** created by dragging one pinned application onto another, with renaming, a
+  *Move out of folder* action, and *Open All* from the folder's menu or with middle-click
 - **Global search** through GNOME, including compatible system and extension providers
 - **All Apps** view with selectable categories or one alphabetical list, and the option to open there by default
 - **Application menus** — open windows, launcher actions, App Details, Quit, Pin to Start, Pin to Taskbar or Dock, and desktop shortcuts when a supported desktop-icons extension is active
@@ -325,7 +331,8 @@ The Eleven-style Start Menu is enabled by default.
 The Start button can be the Eleven-style button or GNOME's original
 Applications button. It follows application alignment or takes a manual
 position, with custom padding, an optional separator and a bundled or personal
-icon. Padding stays inside the clickable button so it can reach the screen edge;
+icon. In Default GNOME Panel mode it can sit in the Dock or in the panel, with
+its own position. Padding stays inside the clickable button so it can reach the screen edge;
 either button can be hidden, and right-clicking the Eleven-style button
 opens its settings. Its context menu can offer Installed Apps, Event Viewer,
 System, Network Connections, Disk Management, Terminal, Task Manager, File
