@@ -25,6 +25,7 @@ export class TaskbarHoverAnimationCloneController {
     constructor({
         geometry,
         dragController,
+        stackAbovePositionActor,
         getAnimationType,
         getMonitor,
         getVertical,
@@ -37,6 +38,7 @@ export class TaskbarHoverAnimationCloneController {
     }) {
         this._geometry = geometry;
         this._dragController = dragController;
+        this._stackAbovePositionActor = stackAbovePositionActor;
         this._smoothing = smoothing;
         this._getAnimationType = getAnimationType;
         this._getMonitor = getMonitor;
@@ -96,9 +98,10 @@ export class TaskbarHoverAnimationCloneController {
         if (!geometry)
             return null;
 
+        const startButton = this._geometry.isStartButton(item);
         const interactive =
             this._getAnimationType() === APP_ICON_HOVER_ANIMATION.MAGNIFY &&
-            Boolean(item._taskbarApp);
+            (Boolean(item._taskbarApp) || startButton);
         const stretchProperty = this._getVertical()
             ? 'translation_y'
             : 'translation_x';
@@ -111,9 +114,12 @@ export class TaskbarHoverAnimationCloneController {
             reactive: interactive,
             pivot_point: this._geometry.getClonePivot(),
         });
-        const inputSignalIds = interactive
-            ? this._connectInput(item, clone)
-            : [];
+        let inputSignalIds = [];
+        if (interactive) {
+            inputSignalIds = startButton
+                ? this._connectForwardedInput(item, clone)
+                : this._connectInput(item, clone);
+        }
         const cloneContainer = new St.Bin({
             child: clone,
             width: geometry.width,
@@ -130,6 +136,8 @@ export class TaskbarHoverAnimationCloneController {
         const sourceOpacity = source.opacity;
         source.opacity = 0;
         this._updateHostClip();
+        if (this._stackAbovePositionActor)
+            Main.uiGroup.set_child_above_sibling(this._host, this._geometry.getPositionActor());
         this._host.add_child(cloneContainer);
         this._geometry.positionCloneContainer(
             cloneContainer,
@@ -364,6 +372,26 @@ export class TaskbarHoverAnimationCloneController {
         ));
         this._dragController.makeCloneDraggable(item, clone);
         return signalIds;
+    }
+
+    _connectForwardedInput(item, clone) {
+        const forward = (_actor, event) => {
+            item.event(event, true);
+            item.event(event, false);
+            return Clutter.EVENT_STOP;
+        };
+        return [
+            clone.connect('button-press-event', forward),
+            clone.connect('touch-event', forward),
+            clone.connect('enter-event', () => {
+                this._setCloneHover(item, true);
+                return Clutter.EVENT_PROPAGATE;
+            }),
+            clone.connect('leave-event', () => {
+                this._setCloneHover(item, false);
+                return Clutter.EVENT_PROPAGATE;
+            }),
+        ];
     }
 
     _setCloneHover(item, hovering) {

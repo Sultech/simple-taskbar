@@ -13,7 +13,7 @@ export function getTaskbarHoverAnimationNeighbours(
 ) {
     const neighbours = [
         ...taskbarBin.get_children(),
-        startButtonActor,
+        ...startButtonActor.get_children(),
     ].filter(actor => actor !== taskbarViewport && actor.visible);
     for (const box of panelBoxes) {
         for (const child of box.get_children()) {

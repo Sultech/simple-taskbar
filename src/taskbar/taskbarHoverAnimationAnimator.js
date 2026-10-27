@@ -262,18 +262,22 @@ export class TaskbarHoverAnimationAnimator {
             if (!geometry)
                 continue;
 
-            entries.push({
+            entries.push(this._rowEntry(
                 item,
-                magnifies: Boolean(item._taskbarApp),
-                length: vertical ? geometry.height : geometry.width,
-                center: vertical
-                    ? geometry.y + geometry.height / 2
-                    : geometry.x + geometry.width / 2,
-            });
+                geometry,
+                Boolean(item._taskbarApp) || this._geometry.isStartButton(item),
+                vertical
+            ));
         }
 
         if (!entries.length)
             return;
+
+        const outsideNeighbours = this._addEnclosedNeighbours(
+            entries,
+            getStretchEntry,
+            vertical
+        );
 
         this._beginSmoothingPass();
         const rowItems = new Set(entries.map(entry => entry.item));
@@ -323,7 +327,7 @@ export class TaskbarHoverAnimationAnimator {
 
         const first = entries[0];
         const last = entries[entries.length - 1];
-        this._displaceNeighbours({
+        this._displaceNeighbours(outsideNeighbours, {
             before: Math.min(0, first.translation - first.growth / 2),
             after: Math.max(0, last.translation + last.growth / 2),
             rowStart: first.center - first.length / 2,
@@ -332,6 +336,43 @@ export class TaskbarHoverAnimationAnimator {
             vertical,
         });
         this._syncVisualExtents();
+    }
+
+    _rowEntry(item, geometry, magnifies, vertical) {
+        return {
+            item,
+            magnifies,
+            length: vertical ? geometry.height : geometry.width,
+            center: vertical
+                ? geometry.y + geometry.height / 2
+                : geometry.x + geometry.width / 2,
+        };
+    }
+
+    _addEnclosedNeighbours(entries, getStretchEntry, vertical) {
+        const centers = entries.map(entry => entry.center);
+        const rowStart = Math.min(...centers);
+        const rowEnd = Math.max(...centers);
+        const rowItems = entries.map(entry => entry.item);
+        const outside = [];
+        for (const actor of this._getNeighbourActors()) {
+            if (rowItems.some(item => item === actor || actor.contains(item)))
+                continue;
+
+            const geometry = this._geometry.getRowItemBaseGeometry(
+                actor,
+                getStretchEntry
+            );
+            if (!geometry)
+                continue;
+
+            const entry = this._rowEntry(actor, geometry, false, vertical);
+            if (entry.center > rowStart && entry.center < rowEnd)
+                entries.push(entry);
+            else
+                outside.push(actor);
+        }
+        return outside;
     }
 
     _syncVisualExtents() {
@@ -377,7 +418,7 @@ export class TaskbarHoverAnimationAnimator {
         return Math.min(Math.max(offset, minimum), maximum);
     }
 
-    _displaceNeighbours({
+    _displaceNeighbours(neighbours, {
         before,
         after,
         rowStart,
@@ -387,7 +428,7 @@ export class TaskbarHoverAnimationAnimator {
     }) {
         const leading = [];
         const trailing = [];
-        for (const actor of this._getNeighbourActors()) {
+        for (const actor of neighbours) {
             const geometry = this._geometry.getActorGeometry(actor);
             if (!geometry)
                 continue;
@@ -450,7 +491,8 @@ export class TaskbarHoverAnimationAnimator {
         const profile = this.getAnimationProfile(type);
         if (type === APP_ICON_HOVER_ANIMATION.MAGNIFY) {
             this._stretch(item, rowTranslation ?? 0, 0);
-            if (!item._taskbarApp && !item._taskbarIsPinnedSeparator)
+            if (!item._taskbarApp && !item._taskbarIsPinnedSeparator &&
+                !this._geometry.isStartButton(item))
                 return;
         }
 

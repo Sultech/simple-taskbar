@@ -198,6 +198,7 @@ export class SecondaryPanelController {
                         this._rightBox,
                     ]
                 ),
+            getHoverAnimationStartButton: () => this._startButtonController.actor,
             onHoverAnimationReserveChanged: () =>
                 this._magnifyController.onReserveChanged(),
             onHoverAnimationExtentsChanged: (before, after) =>
@@ -235,7 +236,8 @@ export class SecondaryPanelController {
                 this._taskbarController.setStartMenuOpen(open);
                 this._autoHideController.setMenuOpen(open);
                 if (open) {
-                    this._taskbarController.dropHoverAnimations();
+                    if (this._startButtonController.menuIsOpen)
+                        this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
                 }
             },

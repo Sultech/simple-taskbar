@@ -181,6 +181,7 @@ export default class SimpleTaskbarExtension extends Extension {
                         Main.panel._rightBox,
                     ]
                 ),
+            getHoverAnimationStartButton: () => this._startButtonController.actor,
             onHoverAnimationReserveChanged: () =>
                 this._panelController.onHoverAnimationReserveChanged(),
             onHoverAnimationExtentsChanged: (before, after) =>
@@ -230,7 +231,8 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._taskbarController.setStartMenuOpen(open);
                 this._panelController.setStartMenuOpen(open);
                 if (open) {
-                    this._taskbarController.dropHoverAnimations();
+                    if (this._startButtonController.menuIsOpen)
+                        this._taskbarController.dropHoverAnimations();
                     this._applicationOverflowController.close();
                     this._trayOverflowController.close();
                 }

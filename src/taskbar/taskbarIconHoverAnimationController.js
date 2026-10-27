@@ -6,10 +6,6 @@ import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 
 import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
-
-import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
 } from '../shared/applicationHoverAnimation.js';
@@ -36,6 +32,8 @@ export class TaskbarIconHoverAnimationController {
     constructor({
         settings,
         taskbarActor,
+        getLocationActor,
+        getStartButton,
         dragController,
         getIconSize,
         getPanelThickness,
@@ -54,8 +52,9 @@ export class TaskbarIconHoverAnimationController {
     }) {
         this._settings = settings;
         this._taskbarActor = taskbarActor;
+        this._getLocationActor = getLocationActor;
+        this._getStartButton = getStartButton;
         this._getPositionActor = getPositionActor;
-        this._signalHolder = new TransientSignalHolder();
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._trackedItems = new Set();
         this._viewport = null;
@@ -72,6 +71,8 @@ export class TaskbarIconHoverAnimationController {
         });
         this._geometry = new TaskbarHoverAnimationGeometry({
             taskbarActor,
+            getLocationActor,
+            getStartButton,
             getVertical,
             getAnimationType: () =>
                 this._settingsController.getAnimationType(),
@@ -82,6 +83,7 @@ export class TaskbarIconHoverAnimationController {
         this._cloneController = new TaskbarHoverAnimationCloneController({
             geometry: this._geometry,
             dragController,
+            stackAbovePositionActor: Boolean(settings.isDock),
             getAnimationType: () =>
                 this._settingsController.getAnimationType(),
             getMonitor,
@@ -117,19 +119,19 @@ export class TaskbarIconHoverAnimationController {
             'motion-event', (_actor, event) => this._onMotionEvent(event),
             'leave-event', actor => this._onLeaveEvent(actor),
             'notify::allocation', () => this._updateCloneGeometry(),
-            this._signalHolder
+            this
         );
         this._cursorTracker.connectObject(
             'position-invalidated', () => this._onPointerPositionInvalidated(),
-            this._signalHolder
+            this
         );
         this._viewport.hadjustment.connectObject(
             'notify::value', () => this._updateCloneGeometry(),
-            this._signalHolder
+            this
         );
         this._viewport.vadjustment.connectObject(
             'notify::value', () => this._updateCloneGeometry(),
-            this._signalHolder
+            this
         );
         this._positionActor = this._getPositionActor();
         this._geometry.setPositionActor(this._positionActor);
@@ -139,14 +141,28 @@ export class TaskbarIconHoverAnimationController {
             'notify::translation-x', () => this._updateCloneGeometry(),
             'notify::translation-y', () => this._updateCloneGeometry(),
             'notify::allocation', () => this._updateCloneGeometry(),
-            this._signalHolder
+            this
         );
         this._taskbarActor.connectObject(
             'child-added', (_actor, child) => this._trackItem(child),
             'child-removed', (_actor, child) => this._untrackItem(child),
             'notify::allocation', () => this._queueMagnifyUpdate(),
-            this._signalHolder
+            this
         );
+        const locationActor = this._getLocationActor();
+        locationActor.connectObject(
+            'child-added', (_actor, child) => this._trackItem(child),
+            'child-removed', (_actor, child) => this._untrackItem(child),
+            'notify::allocation', () => this._queueMagnifyUpdate(),
+            this
+        );
+        for (const actor of [locationActor, this._getStartButton()]) {
+            actor.connectObject(
+                'motion-event', (_actor, event) => this._onMotionEvent(event),
+                'leave-event', target => this._onLeaveEvent(target),
+                this
+            );
+        }
         this._settings.connectObject(
             'changed::animate-appicon-hover-animation-type',
             () => this._onAnimationTypeChanged(),
@@ -162,24 +178,36 @@ export class TaskbarIconHoverAnimationController {
             () => this._onAnimationTypeChanged(),
             'changed::application-click-animation',
             () => this._onClickAnimationChanged(),
-            this._signalHolder
+            this
         );
         for (const key of Object.values(APP_ICON_HOVER_ANIMATION_SETTINGS)) {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this._onAnimationSettingsChanged(),
-                this._signalHolder
+                this
             );
         }
 
-        for (const child of this._taskbarActor.get_children())
+        for (const child of [
+            ...this._taskbarActor.get_children(),
+            ...locationActor.get_children(),
+        ])
             this._trackItem(child);
     }
 
     disable() {
         this._removeLaterSources();
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._viewport.disconnectObject(this);
+        this._cursorTracker.disconnectObject(this);
+        this._viewport.hadjustment.disconnectObject(this);
+        this._viewport.vadjustment.disconnectObject(this);
+        this._positionActor.disconnectObject(this);
+        this._taskbarActor.disconnectObject(this);
+        this._getLocationActor().disconnectObject(this);
+        this._getStartButton().disconnectObject(this);
+        this._settings.disconnectObject(this);
+        for (const item of this._trackedItems)
+            this._disconnectItem(item);
         this._animator.resetAnimations();
         this._trackedItems.clear();
     }
@@ -200,6 +228,8 @@ export class TaskbarIconHoverAnimationController {
         this._viewport = null;
         this._positionActor = null;
         this._getPositionActor = null;
+        this._getStartButton = null;
+        this._getLocationActor = null;
         this._taskbarActor = null;
         this._settings = null;
     }
@@ -261,15 +291,15 @@ export class TaskbarIconHoverAnimationController {
             'notify::translation-y', () => this._updateCloneGeometry(item),
             'notify::scale-x', () => this._updateCloneGeometry(item),
             'notify::scale-y', () => this._updateCloneGeometry(item),
-            this._signalHolder
+            this
         );
         item._taskbarIconContainer.connectObject(
             'notify::allocation', () => this._updateCloneGeometry(item),
-            this._signalHolder
+            this
         );
         item._taskbarSlot.connectObject(
             'notify::allocation', () => this._updateCloneGeometry(item),
-            this._signalHolder
+            this
         );
     }
 
@@ -280,9 +310,13 @@ export class TaskbarIconHoverAnimationController {
         if (!this._trackedItems.delete(item))
             return;
 
-        item.disconnectObject(this._signalHolder);
-        item._taskbarIconContainer.disconnectObject(this._signalHolder);
-        item._taskbarSlot.disconnectObject(this._signalHolder);
+        this._disconnectItem(item);
+    }
+
+    _disconnectItem(item) {
+        item.disconnectObject(this);
+        item._taskbarIconContainer.disconnectObject(this);
+        item._taskbarSlot.disconnectObject(this);
     }
 
     _queueMagnifyUpdate() {

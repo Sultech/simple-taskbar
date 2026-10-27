@@ -10,9 +10,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as OverviewControls from 'resource:///org/gnome/shell/ui/overviewControls.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
@@ -67,6 +64,11 @@ import {startButtonVisible} from '../shared/startButtonLocation.js';
 import {bundledStartIconFile, isBundledStartIcon} from '../shared/startIcons.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 import {
+    applyIconRenderScale,
+    hoverRenderScale,
+    iconRenderScale,
+} from '../shared/applicationHoverAnimation.js';
+import {
     START_BUTTON_LOCATION_KEY,
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
@@ -102,7 +104,7 @@ export class StartButtonController {
         this._toggleFromShortcut = toggleFromShortcut;
         this._toggleDesktop = toggleDesktop;
         this._onMenuOpenStateChanged = onMenuOpenStateChanged;
-        this._signalHolder = new TransientSignalHolder();
+        this._blurMyShellComponentSettings = [];
         this._startOpenedOverview = false;
         this._startMenuController = null;
         this._openAfterOverviewIdleId = 0;
@@ -134,6 +136,7 @@ export class StartButtonController {
             name: 'view-app-grid-symbolic',
         });
         this._windowsXpStartButton = new WindowsXpStartButton();
+        this._iconSize = iconSize;
         this._icon = new St.Icon({
             gicon: this._currentGIcon(),
             icon_size: iconSize,
@@ -159,21 +162,22 @@ export class StartButtonController {
         this._hover = new St.Widget({
             style_class: 'simple-taskbar-start-hover',
             reactive: false,
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.FILL,
-            y_expand: true,
         });
         this._classicHover = new St.Widget({
             style_class: 'simple-taskbar-start-classic-hover',
             reactive: false,
             visible: false,
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.FILL,
-            y_expand: true,
         });
-        this._classicHover.set_pivot_point(0, 0);
-        this._content.add_child(this._hover);
-        this._content.add_child(this._classicHover);
+        this._highlightRenderScale = 1;
+        this._highlightHost = new St.Widget({
+            layout_manager: new Clutter.FixedLayout(),
+            reactive: false,
+            x_align: Clutter.ActorAlign.CENTER,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        this._highlightHost.add_child(this._hover);
+        this._highlightHost.add_child(this._classicHover);
+        this._content.add_child(this._highlightHost);
         this._content.add_child(this._icon);
         this.actor = new St.Button({
             style_class: 'panel-button simple-taskbar-start',
@@ -197,7 +201,7 @@ export class StartButtonController {
         this.panelActor.add_child(this._separator);
         this.panelActor.connectObject(
             'notify::allocation', () => this._animatePosition(),
-            this._signalHolder
+            this
         );
         this.actor.connectObject(
             'captured-event', (_actor, event) => this._onButtonEvent(event),
@@ -209,7 +213,7 @@ export class StartButtonController {
             'notify::pressed', () => this._syncClassicHighlight(),
             'notify::checked', () => this._syncClassicHighlight(),
             'notify::pseudo-class', () => this._syncClassicHighlight(),
-            this._signalHolder
+            this
         );
         this._syncWindowsXpStartButton();
         this._syncVisibility();
@@ -224,7 +228,6 @@ export class StartButtonController {
             )
             : null;
         this.applyAppearance(iconSize, settings.get_int('start-button-padding'));
-        this._syncClassicHighlight();
     }
 
     enable() {
@@ -238,8 +241,20 @@ export class StartButtonController {
 
     destroy() {
         this._cancelStartMenuAfterOverview();
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        this.actor.disconnectObject(this);
+        this.panelActor.disconnectObject(this);
+        this._contextMenu.disconnectObject(this);
+        Main.overview.disconnectObject(this);
+        Main.overview.dash.showAppsButton.disconnectObject(this);
+        Main.uiGroup.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
+        Main.panel.disconnectObject(this);
+        St.ThemeContext.get_for_stage(global.stage).disconnectObject(this);
+        St.Settings.get().disconnectObject(this);
+        for (const componentSettings of this._blurMyShellComponentSettings)
+            componentSettings.disconnectObject(this);
+        this._blurMyShellComponentSettings = null;
         this._setActivitiesOverviewState(Main.overview._shown);
 
         this._keybindings?.destroy();
@@ -262,6 +277,7 @@ export class StartButtonController {
         this._separatorVertical = null;
         this._hover = null;
         this._classicHover = null;
+        this._highlightHost = null;
         this._contentContainer = null;
         this._content = null;
         this._icon = null;
@@ -341,7 +357,8 @@ export class StartButtonController {
     }
 
     applyAppearance(iconSize, padding) {
-        this._icon.icon_size = iconSize;
+        this._iconSize = iconSize;
+        applyIconRenderScale(this._icon, iconSize, iconRenderScale(this._settings));
         const windowsXpTheme = this._settings.get_boolean(
             'windows-xp-theme-enabled'
         );
@@ -394,26 +411,19 @@ export class StartButtonController {
         const width = windowsXpTheme
             ? this._windowsXpStartButton.width
             : glassMainExtent + iconSpacing;
-        this._hover.set_width(vertical ? glassCrossExtent : glassMainExtent);
-        this._hover.set_height(vertical ? glassMainExtent : glassCrossExtent);
-        this._classicHover.set_width(
-            vertical ? glassCrossExtent : glassMainExtent
-        );
-        this._classicHover.set_height(
-            vertical ? glassMainExtent : glassCrossExtent
-        );
-        if (vertical) {
-            this._hover.translation_y = 0;
-            this._hover.y_align = Clutter.ActorAlign.CENTER;
-            this._hover.y_expand = false;
-        } else {
-            this._hover.translation_y = 0;
-            this._hover.y_align = Clutter.ActorAlign.CENTER;
-            this._hover.y_expand = false;
+        const highlightWidth = vertical ? glassCrossExtent : glassMainExtent;
+        const highlightHeight = vertical ? glassMainExtent : glassCrossExtent;
+        this._highlightRenderScale = hoverRenderScale(this._settings);
+        this._highlightHost.set_size(highlightWidth, highlightHeight);
+        for (const layer of [this._hover, this._classicHover]) {
+            layer.set_position(0, 0);
+            layer.set_size(
+                highlightWidth * this._highlightRenderScale,
+                highlightHeight * this._highlightRenderScale
+            );
+            layer.set_scale(1 / this._highlightRenderScale, 1 / this._highlightRenderScale);
         }
-        this._classicHover.translation_y = 0;
-        this._classicHover.y_align = Clutter.ActorAlign.CENTER;
-        this._classicHover.y_expand = false;
+        this._syncClassicHighlight();
         this._parityOffset = vertical
             ? taskbarCrossAxisParityOffset(
                 this._settings,
@@ -504,14 +514,14 @@ export class StartButtonController {
     _connectBlurMyShellSignals() {
         Main.uiGroup.connectObject('notify::style-class', () => {
             this._startMenuController?.queueTransparencySync();
-        }, this._signalHolder);
+        }, this);
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this._startMenuController?.queueTransparencySync();
             },
-            this._signalHolder
+            this
         );
 
         const settings = getBlurMyShellSettings();
@@ -520,6 +530,8 @@ export class StartButtonController {
 
         const popupSettings = getBlurMyShellChildSettings(settings, 'popup');
         const panelSettings = getBlurMyShellChildSettings(settings, 'panel');
+        this._blurMyShellComponentSettings = [popupSettings, panelSettings]
+            .filter(componentSettings => componentSettings);
         for (const [componentSettings, key] of [
             [popupSettings, 'blur'],
             [popupSettings, 'override-background'],
@@ -534,7 +546,7 @@ export class StartButtonController {
             componentSettings.connectObject(
                 `changed::${key}`,
                 () => this._startMenuController?.queueTransparencySync(),
-                this._signalHolder
+                this
             );
         }
     }
@@ -573,7 +585,7 @@ export class StartButtonController {
                 getPanelEdgeGap: this._getPanelEdgeGap,
                 getMonitor: this._getMonitor,
                 getPanelHeight: () =>
-                    taskbarPanelHeight(this._settings, this._icon.icon_size),
+                    taskbarPanelHeight(this._settings, this._iconSize),
             }
         );
         return this._startMenuController;
@@ -614,7 +626,7 @@ export class StartButtonController {
         this._contextMenu = menu;
         menu.connectObject('open-state-changed', () => {
             this._notifyMenuOpenStateChanged();
-        }, this._signalHolder);
+        }, this);
 
         this.actor.connectObject('event', (_actor, event) => {
             if (event.type() !== Clutter.EventType.BUTTON_PRESS ||
@@ -623,11 +635,11 @@ export class StartButtonController {
 
             this._openContextMenu();
             return Clutter.EVENT_STOP;
-        }, this._signalHolder);
+        }, this);
         this.actor.connectObject('popup-menu', () => {
             this._openContextMenu();
             return Clutter.EVENT_STOP;
-        }, this._signalHolder);
+        }, this);
     }
 
     _connectStateSignals() {
@@ -635,11 +647,11 @@ export class StartButtonController {
         shellShowAppsButton.connectObject('notify::checked', () => {
             this._syncState();
             this._notifyMenuOpenStateChanged();
-        }, this._signalHolder);
+        }, this);
         Main.overview.connectObject('showing', () => {
             if (shellShowAppsButton.checked)
                 this._setActivitiesOverviewState(false);
-        }, this._signalHolder);
+        }, this);
         Main.overview.connectObject('hidden', () => {
             this.actor.checked = this._windowsModeEnabled()
                 ? Boolean(this._startMenuController?.isOpen)
@@ -647,7 +659,7 @@ export class StartButtonController {
             this._startOpenedOverview = false;
             this._setActivitiesOverviewState(false);
             this._notifyMenuOpenStateChanged();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::windows-start-menu-enabled', () => {
             this._startMenuController?.close();
             if (this._windowsModeEnabled())
@@ -660,21 +672,21 @@ export class StartButtonController {
             this._syncState();
             this._notifyMenuOpenStateChanged();
             this._keybindings?.sync();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::windows-xp-theme-enabled', () => {
             this._startMenuController?.close();
             this._contextMenu.close();
             this._syncWindowsXpStartButton();
             this.applyAppearance(
-                this._icon.icon_size,
+                this._iconSize,
                 this._settings.get_int('start-button-padding')
             );
             this._syncVisibility();
             this._syncState();
             this._notifyMenuOpenStateChanged();
-        }, this._signalHolder);
+        }, this);
         const syncAppearance = () => this.applyAppearance(
-            this._icon.icon_size,
+            this._iconSize,
             this._settings.get_int('start-button-padding')
         );
         this._settings.connectObject(
@@ -689,7 +701,7 @@ export class StartButtonController {
             'changed::panel-height-follow-icon-size', syncAppearance,
             'changed::dock-panel-mode', syncAppearance,
             'changed::running-indicator-position', syncAppearance,
-            this._signalHolder
+            this
         );
         for (const key of [
             ...RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
@@ -699,20 +711,20 @@ export class StartButtonController {
             this._settings.connectObject(
                 `changed::${key}`,
                 syncAppearance,
-                this._signalHolder
+                this
             );
         }
         for (const key of TASKBAR_HIGHLIGHT_SETTING_KEYS) {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this._syncClassicHighlight(),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
             'changed::show-start-button-separator',
             () => this._syncSeparator(true),
-            this._signalHolder
+            this
         );
         for (const key of [
             'start-menu-recommended-apps',
@@ -722,37 +734,42 @@ export class StartButtonController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this._startMenuController?.refresh(),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
             'changed::start-menu-power-options-enabled',
             () => this._startMenuController?.syncPowerOptions(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::start-menu-show-profile-picture',
             () => this._startMenuController?.syncUserAvatar(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::start-menu-open-all-apps',
             () => this._startMenuController?.refreshDefaultView(),
-            this._signalHolder
+            this
+        );
+        this._settings.connectObject(
+            'changed::animate-appicon-hover-animation-type', syncAppearance,
+            'changed::application-click-animation', syncAppearance,
+            this
         );
         this._settings.connectObject('changed::start-button-custom-icon', () => {
             this._icon.gicon = this._currentGIcon();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::gnome-start-button-visible', () => {
             this._syncVisibility();
-        }, this._signalHolder);
+        }, this);
         for (const key of ['default-gnome-panel', START_BUTTON_LOCATION_KEY]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._startMenuController?.close();
                 this._contextMenu.close();
                 this._syncVisibility();
                 this._keybindings?.sync();
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of [
             'dock-mode',
@@ -764,13 +781,13 @@ export class StartButtonController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this._keybindings?.sync(),
-                this._signalHolder
+                this
             );
         }
         for (const key of ['start-menu-custom-hotkey', 'overview-custom-hotkey']) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._keybindings?.customAcceleratorChanged(key);
-            }, this._signalHolder);
+            }, this);
         }
         const syncStartMenuTheme = () => {
             this._startMenuController?.syncTheme();
@@ -783,7 +800,7 @@ export class StartButtonController {
             'changed::panel-theme', syncStartMenuTheme,
             'changed::windows-10-theme-enabled',
             () => this._startMenuController?.syncTheme(true),
-            this._signalHolder
+            this
         );
         for (const key of [
             'start-menu-follow-panel-transparency',
@@ -793,7 +810,7 @@ export class StartButtonController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this._startMenuController?.syncTransparency(),
-                this._signalHolder
+                this
             );
         }
         Main.panel.connectObject('notify::style-class', () => {
@@ -802,14 +819,14 @@ export class StartButtonController {
             )) {
                 syncStartMenuTheme();
             }
-        }, this._signalHolder);
+        }, this);
         St.ThemeContext.get_for_stage(global.stage).connectObject(
             'changed', syncStartMenuTheme,
-            this._signalHolder
+            this
         );
         St.Settings.get().connectObject(
             'notify::color-scheme', syncStartMenuTheme,
-            this._signalHolder
+            this
         );
     }
 
@@ -941,7 +958,7 @@ export class StartButtonController {
         this._classicHover.opacity = 0;
         const radius = this._settings.get_int(
             CLASSIC_HIGHLIGHT_SETTINGS.borderRadius
-        );
+        ) * this._highlightRenderScale;
         const pressed = this.actor.pressed || this.actor.checked;
         const colorKey = pressed
             ? CLASSIC_HIGHLIGHT_SETTINGS.pressedColor
@@ -959,7 +976,7 @@ export class StartButtonController {
         const hoverEnabled = this._settings.get_boolean(
             CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
         );
-        this._hover.set_style(`border-radius: ${radius}px;`);
+        this._hover.set_style(`border-radius: ${radius}px; border-width: ${this._highlightRenderScale}px;`);
         this._hover.opacity = !hoverEnabled && (hovered || pressed) ? 0 : 255;
         if (windowsXpTheme)
             return;
@@ -1023,7 +1040,7 @@ export class StartButtonController {
             this._separator,
             this._separatorLine,
             vertical,
-            this._icon.icon_size,
+            this._iconSize,
             this._parityOffset
         );
         if (orientationChanged)

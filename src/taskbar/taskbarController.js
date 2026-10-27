@@ -125,6 +125,7 @@ export class TaskbarController {
         getHoverAnimationMonitor,
         getPanelInteractionController,
         getHoverAnimationNeighbours,
+        getHoverAnimationStartButton,
         onHoverAnimationReserveChanged,
         onHoverAnimationExtentsChanged = () => {},
         isHoverAnimationBlocked,
@@ -150,6 +151,7 @@ export class TaskbarController {
         this._getHoverAnimationMonitor = getHoverAnimationMonitor;
         this._getPanelInteractionController = getPanelInteractionController;
         this._getHoverAnimationNeighbours = getHoverAnimationNeighbours;
+        this._getHoverAnimationStartButton = getHoverAnimationStartButton;
         this._onHoverAnimationReserveChanged = onHoverAnimationReserveChanged;
         this._onHoverAnimationExtentsChanged = onHoverAnimationExtentsChanged;
         this._isHoverAnimationBlocked = isHoverAnimationBlocked;
@@ -341,6 +343,8 @@ export class TaskbarController {
             new TaskbarIconHoverAnimationController({
                 settings: this._settings,
                 taskbarActor: this.actor,
+                getLocationActor: () => this._locationActor,
+                getStartButton: () => this._getHoverAnimationStartButton(),
                 dragController: this._dragController,
                 getIconSize: () => this._iconSize,
                 getPanelThickness: () => this._panelHeight,
@@ -829,6 +833,7 @@ export class TaskbarController {
         this._getHoverAnimationMonitor = null;
         this._getPanelInteractionController = null;
         this._getHoverAnimationNeighbours = null;
+        this._getHoverAnimationStartButton = null;
         this._onHoverAnimationReserveChanged = null;
         this._onHoverAnimationExtentsChanged = null;
         this._isHoverAnimationBlocked = null;

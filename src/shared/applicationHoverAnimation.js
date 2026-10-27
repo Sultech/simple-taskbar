@@ -52,6 +52,16 @@ export function hoverRenderScale(settings) {
         : APP_ICON_HOVER_RENDER_SCALE;
 }
 
+export function applyIconRenderScale(icon, iconSize, renderScale) {
+    if (renderScale === APP_ICON_HOVER_RENDER_SCALE) {
+        icon.icon_size = iconSize * APP_ICON_HOVER_RENDER_SCALE;
+        icon.set_size(iconSize, iconSize);
+    } else {
+        icon.icon_size = iconSize;
+        icon.set_size(-1, -1);
+    }
+}
+
 export function iconRenderScale(settings) {
     if (hoverRenderScale(settings) === APP_ICON_HOVER_RENDER_SCALE)
         return APP_ICON_HOVER_RENDER_SCALE;
