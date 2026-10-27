@@ -73,6 +73,7 @@ export class TaskbarIconHoverAnimationController {
             taskbarActor,
             getLocationActor,
             getStartButton,
+            getStretchEntry: item => this._cloneController.getStretchEntry(item),
             getVertical,
             getAnimationType: () =>
                 this._settingsController.getAnimationType(),
@@ -262,7 +263,7 @@ export class TaskbarIconHoverAnimationController {
             pointerX,
             pointerY,
             this._animator.getOutwardReserve(),
-            this._animator.getReserve()
+            this._animator.getVisualExtents()
         );
     }
 
@@ -428,7 +429,7 @@ export class TaskbarIconHoverAnimationController {
             pointerX,
             pointerY,
             this._animator.getOutwardReserve(),
-            this._animator.getReserve()
+            this._animator.getVisualExtents()
         )) {
             this._animator.dropAnimations();
             return;

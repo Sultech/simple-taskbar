@@ -12,6 +12,7 @@ export class TaskbarHoverAnimationGeometry {
         taskbarActor,
         getLocationActor,
         getStartButton,
+        getStretchEntry,
         getVertical,
         getAnimationType,
         getPanelPosition,
@@ -20,12 +21,14 @@ export class TaskbarHoverAnimationGeometry {
         this._taskbarActor = taskbarActor;
         this._getLocationActor = getLocationActor;
         this._getStartButton = getStartButton;
+        this._getStretchEntry = getStretchEntry;
         this._getVertical = getVertical;
         this._getAnimationType = getAnimationType;
         this._getPanelPosition = getPanelPosition;
         this._getMonitor = getMonitor;
         this._viewport = null;
         this._positionActor = null;
+        this._startButtonInRow = true;
     }
 
     setViewport(viewport) {
@@ -78,6 +81,10 @@ export class TaskbarHoverAnimationGeometry {
         return item === this._getStartButton();
     }
 
+    setStartButtonInRow(inRow) {
+        this._startButtonInRow = inRow;
+    }
+
     getRowItemBaseGeometry(item, getStretchEntry) {
         const actor = this._getAnimationType() ===
             APP_ICON_HOVER_ANIMATION.MAGNIFY
@@ -100,26 +107,25 @@ export class TaskbarHoverAnimationGeometry {
         return geometry;
     }
 
-    isPointerInMagnifyBounds(pointerX, pointerY, outward, reserve) {
+    isPointerInMagnifyBounds(pointerX, pointerY, outward, extents) {
         const geometry = this._magnifyArea();
         if (!geometry)
             return false;
 
-        const along = reserve / 2;
         const panelPosition = this._getPanelPosition();
         let {x, y, width, height} = geometry;
         if (this._getVertical()) {
             if (panelPosition === 'right')
                 x -= outward;
             width += outward;
-            y -= along;
-            height += along * 2;
+            y += extents.before;
+            height += extents.after - extents.before;
         } else {
             if (panelPosition === 'bottom')
                 y -= outward;
             height += outward;
-            x -= along;
-            width += along * 2;
+            x += extents.before;
+            width += extents.after - extents.before;
         }
 
         const monitor = this._getMonitor();
@@ -219,6 +225,7 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     destroy() {
+        this._getStretchEntry = null;
         this._getStartButton = null;
         this._getLocationActor = null;
         this._positionActor = null;
@@ -239,7 +246,8 @@ export class TaskbarHoverAnimationGeometry {
 
     _magnifyArea() {
         const areas = [this._viewport, ...this._externalRowItems()]
-            .map(actor => this.getActorGeometry(actor))
+            .filter(actor => this._startButtonInRow || !this.isStartButton(actor))
+            .map(actor => this._restingGeometry(actor, this._getStretchEntry))
             .filter(geometry => geometry);
         if (!areas.length)
             return null;
@@ -289,9 +297,16 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     _isRowItemInViewport(item, span, getStretchEntry) {
+        return this._isGeometryInViewport(
+            this._restingGeometry(item, getStretchEntry),
+            span
+        );
+    }
+
+    _restingGeometry(item, getStretchEntry) {
         const geometry = this.getActorGeometry(item);
         if (!geometry)
-            return false;
+            return null;
 
         const entry = getStretchEntry(item);
         if (entry && entry.actor === item) {
@@ -302,7 +317,7 @@ export class TaskbarHoverAnimationGeometry {
                 geometry.y -= offset;
         }
 
-        return this._isGeometryInViewport(geometry, span);
+        return geometry;
     }
 
     _isGeometryInViewport(geometry, span) {

@@ -49,6 +49,10 @@ export class TaskbarHoverAnimationAnimator {
         return this._reserve;
     }
 
+    getVisualExtents() {
+        return {before: this._extentBefore, after: this._extentAfter};
+    }
+
     getOutwardReserve() {
         const type = this.getAnimationType();
         if (!type)
@@ -270,6 +274,15 @@ export class TaskbarHoverAnimationAnimator {
             ));
         }
 
+        const detachedStartButton = this._detachedStartButton(
+            entries,
+            getStretchEntry,
+            vertical
+        );
+        this._geometry.setStartButtonInRow(!detachedStartButton);
+        if (detachedStartButton)
+            entries.splice(entries.indexOf(detachedStartButton), 1);
+
         if (!entries.length)
             return;
 
@@ -347,6 +360,46 @@ export class TaskbarHoverAnimationAnimator {
                 ? geometry.y + geometry.height / 2
                 : geometry.x + geometry.width / 2,
         };
+    }
+
+    _detachedStartButton(entries, getStretchEntry, vertical) {
+        const start = entries.find(entry => this._geometry.isStartButton(entry.item));
+        if (!start)
+            return null;
+
+        const others = entries.filter(entry => entry !== start);
+        if (!others.length)
+            return start;
+
+        const edgeGap = entry => Math.max(
+            Math.abs(entry.center - start.center) - (entry.length + start.length) / 2,
+            0
+        );
+        const nearest = others.reduce((best, entry) =>
+            edgeGap(entry) < edgeGap(best) ? entry : best);
+        if (edgeGap(nearest) > this._getIconSize())
+            return start;
+
+        const low = Math.min(start.center, nearest.center);
+        const high = Math.max(start.center, nearest.center);
+        const startParent = start.item.get_parent();
+        for (const actor of this._getNeighbourActors()) {
+            if (actor === start.item || actor.get_parent() === startParent ||
+                others.some(entry => actor.contains(entry.item)))
+                continue;
+
+            const geometry = this._geometry.getRowItemBaseGeometry(
+                actor,
+                getStretchEntry
+            );
+            if (!geometry)
+                continue;
+
+            const {center} = this._rowEntry(actor, geometry, false, vertical);
+            if (center > low && center < high)
+                return start;
+        }
+        return null;
     }
 
     _addEnclosedNeighbours(entries, getStretchEntry, vertical) {
