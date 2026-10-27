@@ -399,64 +399,176 @@
     -minimum-hpadding: 3px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
-#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-3 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
+.simple-taskbar-panel-button-hover-inset-3 .panel-button,
+.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-3 .simple-taskbar-start,
+.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
     border-top-width: 3px;
     border-bottom-width: 3px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
-#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-4 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
+.simple-taskbar-panel-button-hover-inset-4 .panel-button,
+.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-4 .simple-taskbar-start,
+.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
     border-top-width: 4px;
     border-bottom-width: 4px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
-#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-5 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
+.simple-taskbar-panel-button-hover-inset-5 .panel-button,
+.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-5 .simple-taskbar-start,
+.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
     border-top-width: 5px;
     border-bottom-width: 5px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button:not(.simple-taskbar-show-desktop):not(.simple-taskbar-start),
-#panel.simple-taskbar-panel.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-6 .simple-taskbar-start,
-#panel.simple-taskbar-panel.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
+.simple-taskbar-panel-button-hover-inset-6 .panel-button,
+.simple-taskbar-windows-xp-theme.simple-taskbar-panel-button-hover-inset-6 .simple-taskbar-start,
+.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
     border-top-width: 6px;
     border-bottom-width: 6px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .panel-button,
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-3 .panel-button.clock-display .clock {
+    border-top-width: 3px;
+    border-bottom-width: 3px;
     border-left-width: 3px;
     border-right-width: 3px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .panel-button,
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-4 .panel-button.clock-display .clock {
+    border-top-width: 3px;
+    border-bottom-width: 3px;
     border-left-width: 4px;
     border-right-width: 4px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .panel-button,
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-5 .panel-button.clock-display .clock {
+    border-top-width: 3px;
+    border-bottom-width: 3px;
     border-left-width: 5px;
     border-right-width: 5px;
 }
 
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .panel-button:not(.simple-taskbar-show-desktop),
-#panel.simple-taskbar-panel.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
-    border-top-width: 0;
-    border-bottom-width: 0;
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .panel-button,
+.simple-taskbar-panel-vertical.simple-taskbar-panel-button-hover-inset-6 .panel-button.clock-display .clock {
+    border-top-width: 3px;
+    border-bottom-width: 3px;
     border-left-width: 6px;
     border-right-width: 6px;
+}
+
+#panel.simple-taskbar-panel .panel-button.clock-display {
+    border-width: 0;
+}
+
+.simple-taskbar-panel-button-radius-3 .panel-button,
+.simple-taskbar-panel-button-radius-3 .panel-button.clock-display .clock {
+    border-radius: 3px;
+}
+
+.simple-taskbar-panel-button-radius-4 .panel-button,
+.simple-taskbar-panel-button-radius-4 .panel-button.clock-display .clock {
+    border-radius: 4px;
+}
+
+.simple-taskbar-panel-button-radius-5 .panel-button,
+.simple-taskbar-panel-button-radius-5 .panel-button.clock-display .clock {
+    border-radius: 5px;
+}
+
+.simple-taskbar-panel-button-radius-6 .panel-button,
+.simple-taskbar-panel-button-radius-6 .panel-button.clock-display .clock {
+    border-radius: 6px;
+}
+
+.simple-taskbar-panel-button-radius-7 .panel-button,
+.simple-taskbar-panel-button-radius-7 .panel-button.clock-display .clock {
+    border-radius: 7px;
+}
+
+.simple-taskbar-panel-button-radius-8 .panel-button,
+.simple-taskbar-panel-button-radius-8 .panel-button.clock-display .clock {
+    border-radius: 8px;
+}
+
+.simple-taskbar-panel-button-radius-9 .panel-button,
+.simple-taskbar-panel-button-radius-9 .panel-button.clock-display .clock {
+    border-radius: 9px;
+}
+
+.simple-taskbar-panel-button-radius-10 .panel-button,
+.simple-taskbar-panel-button-radius-10 .panel-button.clock-display .clock {
+    border-radius: 10px;
+}
+
+.simple-taskbar-panel-button-radius-11 .panel-button,
+.simple-taskbar-panel-button-radius-11 .panel-button.clock-display .clock {
+    border-radius: 11px;
+}
+
+.simple-taskbar-panel-button-radius-12 .panel-button,
+.simple-taskbar-panel-button-radius-12 .panel-button.clock-display .clock {
+    border-radius: 12px;
+}
+
+.simple-taskbar-panel-button-radius-13 .panel-button,
+.simple-taskbar-panel-button-radius-13 .panel-button.clock-display .clock {
+    border-radius: 13px;
+}
+
+.simple-taskbar-panel-button-radius-14 .panel-button,
+.simple-taskbar-panel-button-radius-14 .panel-button.clock-display .clock {
+    border-radius: 14px;
+}
+
+.simple-taskbar-panel-button-radius-15 .panel-button,
+.simple-taskbar-panel-button-radius-15 .panel-button.clock-display .clock {
+    border-radius: 15px;
+}
+
+.simple-taskbar-panel-button-radius-16 .panel-button,
+.simple-taskbar-panel-button-radius-16 .panel-button.clock-display .clock {
+    border-radius: 16px;
+}
+
+.simple-taskbar-panel-button-radius-17 .panel-button,
+.simple-taskbar-panel-button-radius-17 .panel-button.clock-display .clock {
+    border-radius: 17px;
+}
+
+.simple-taskbar-panel-button-radius-18 .panel-button,
+.simple-taskbar-panel-button-radius-18 .panel-button.clock-display .clock {
+    border-radius: 18px;
+}
+
+.simple-taskbar-panel-button-radius-19 .panel-button,
+.simple-taskbar-panel-button-radius-19 .panel-button.clock-display .clock {
+    border-radius: 19px;
+}
+
+.simple-taskbar-panel-button-radius-20 .panel-button,
+.simple-taskbar-panel-button-radius-20 .panel-button.clock-display .clock {
+    border-radius: 20px;
+}
+
+.simple-taskbar-panel-button-radius-21 .panel-button,
+.simple-taskbar-panel-button-radius-21 .panel-button.clock-display .clock {
+    border-radius: 21px;
+}
+
+.simple-taskbar-panel-button-radius-22 .panel-button,
+.simple-taskbar-panel-button-radius-22 .panel-button.clock-display .clock {
+    border-radius: 22px;
+}
+
+.simple-taskbar-panel-button-radius .panel-button.simple-taskbar-start {
+    border-radius: 999px;
+}
+
+.simple-taskbar-panel-button-radius .panel-button.simple-taskbar-show-desktop {
+    border-radius: 0;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical .simple-taskbar-start {
@@ -962,12 +1074,14 @@
     min-height: 12px;
     margin: 5px 0 0;
     border-left-width: 0;
+    border-right-width: 0;
     border-top-width: 1px;
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
     .simple-taskbar-show-desktop.simple-taskbar-show-desktop-left {
     margin: 0 0 5px;
+    border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
     border-bottom-width: 1px;

@@ -5,13 +5,11 @@ import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 import {appendStyle} from '../shared/styleUtils.js';
 import {panelIsVertical} from './panelPosition.js';
+import {panelButtonCornerRadiusKey} from '../shared/taskbarPanelModes.js';
 
 const AUTOMATIC_PADDING = -1;
 const AUTOMATIC_FALLBACK_PADDING = 3;
@@ -22,6 +20,8 @@ const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const HOVER_INSET_CLASS_PREFIX =
     'simple-taskbar-panel-button-hover-inset-';
+const CORNER_RADIUS_CLASS = 'simple-taskbar-panel-button-radius';
+const THEME_CORNER_RADIUS = -1;
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
     'just-perfection-api-panel-button-padding-size';
 const ICON_HORIZONTAL_PADDING_STYLE =
@@ -43,10 +43,10 @@ export class PanelButtonPaddingController {
         this._panelBoxes = panelBoxes;
         this._getQuickSettingsIndicators = getQuickSettingsIndicators;
         this._getPanelHeight = getPanelHeight;
-        this._signalHolder = new TransientSignalHolder();
         this._styledActors = new Map();
         this._hoverInsetClass = null;
         this._hoverInset = MINIMUM_HOVER_INSET;
+        this._cornerRadiusClass = null;
         this._appliedVertical = null;
         this._edgeBoxStyles = new Map();
     }
@@ -54,15 +54,19 @@ export class PanelButtonPaddingController {
     enable() {
         this._settings.connectObject(
             'changed::panel-button-padding', () => this.sync(),
+            'changed::panel-button-corner-radius', () => this._syncCornerRadius(),
+            'changed::default-panel-button-corner-radius', () => this._syncCornerRadius(),
+            'changed::default-gnome-panel', () => this._syncCornerRadius(),
             'changed::windows-xp-theme-enabled', () => {
                 this._restoreAll();
                 this.sync();
+                this._syncCornerRadius();
             },
-            this._signalHolder
+            this
         );
         Main.layoutManager.uiGroup.connectObject(
             'notify::style-class', () => this.sync(),
-            this._signalHolder
+            this
         );
         for (const box of this._panelBoxes) {
             box.connectObject(
@@ -77,7 +81,7 @@ export class PanelButtonPaddingController {
                     }
                 },
                 'child-removed', (_box, actor) => this._restoreSubtree(actor),
-                this._signalHolder
+                this
             );
         }
         this._syncHoverInset();
@@ -113,8 +117,10 @@ export class PanelButtonPaddingController {
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        Main.layoutManager.uiGroup.disconnectObject(this);
+        for (const box of this._panelBoxes)
+            box.disconnectObject(this);
 
         this._panelActor.remove_style_class_name(
             DEFAULT_BUTTON_PADDING_CLASS
@@ -124,6 +130,11 @@ export class PanelButtonPaddingController {
                 this._hoverInsetClass
             );
             this._hoverInsetClass = null;
+        }
+        if (this._cornerRadiusClass) {
+            this._panelActor.remove_style_class_name(CORNER_RADIUS_CLASS);
+            this._panelActor.remove_style_class_name(this._cornerRadiusClass);
+            this._cornerRadiusClass = null;
         }
         this._restoreAll();
         for (const [box, style] of this._edgeBoxStyles)
@@ -160,6 +171,7 @@ export class PanelButtonPaddingController {
             MINIMUM_HOVER_INSET + progress * insetRange
         );
         this._hoverInset = inset;
+        this._syncCornerRadius();
         const hoverInsetClass = `${HOVER_INSET_CLASS_PREFIX}${inset}`;
         if (hoverInsetClass === this._hoverInsetClass &&
             this._panelActor.has_style_class_name(hoverInsetClass))
@@ -172,6 +184,26 @@ export class PanelButtonPaddingController {
         }
         this._hoverInsetClass = hoverInsetClass;
         this._panelActor.add_style_class_name(this._hoverInsetClass);
+    }
+
+    _syncCornerRadius() {
+        const radius = this._settings.get_int(panelButtonCornerRadiusKey(this._settings));
+        const cornerRadiusClass = radius === THEME_CORNER_RADIUS ||
+            this._settings.get_boolean('windows-xp-theme-enabled')
+            ? null
+            : `${CORNER_RADIUS_CLASS}-${radius + this._hoverInset}`;
+        if (cornerRadiusClass === this._cornerRadiusClass)
+            return;
+
+        if (this._cornerRadiusClass)
+            this._panelActor.remove_style_class_name(this._cornerRadiusClass);
+        this._cornerRadiusClass = cornerRadiusClass;
+        if (cornerRadiusClass) {
+            this._panelActor.add_style_class_name(CORNER_RADIUS_CLASS);
+            this._panelActor.add_style_class_name(cornerRadiusClass);
+        } else {
+            this._panelActor.remove_style_class_name(CORNER_RADIUS_CLASS);
+        }
     }
 
     effectivePadding() {

@@ -2,6 +2,12 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.simple-taskbar.default-panel"
           path="/org/gnome/shell/extensions/simple-taskbar/default-panel/">
+    <key name="default-panel-button-corner-radius" type="i">
+      <range min="-1" max="16"/>
+      <default>-1</default>
+      <summary>Default panel: Corner radius of panel item highlights</summary>
+      <description>Use -1 for the theme default or 0 through 16 for an explicit pixel value</description>
+    </key>
     <key name="default-panel-clock-style" type="s">
       <choices>
         <choice value="gnome"/>

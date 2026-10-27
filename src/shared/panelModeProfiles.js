@@ -152,6 +152,8 @@ const MODE_SETTING_KEYS = new Set([
     'clock-style',
     'default-panel-clock-style',
     'clock-date-order',
+    'panel-button-corner-radius',
+    'default-panel-button-corner-radius',
 ]);
 for (const key of DEFAULT_PANEL_WINDOW_SETTING_KEYS)
     MODE_SETTING_KEYS.add(defaultPanelWindowSettingKey(key));

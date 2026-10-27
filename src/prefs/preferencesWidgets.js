@@ -150,6 +150,8 @@ export function addSwitchRow(group, settings, {
 
 export function addSpinRow(group, settings, {
     key,
+    getKey = () => key,
+    changedKeys = [key],
     title,
     subtitle,
     lower,
@@ -159,15 +161,19 @@ export function addSpinRow(group, settings, {
     const row = Adw.SpinRow.new_with_range(lower, upper, step);
     row.title = title;
     row.subtitle = subtitle;
-    row.set_value(settings.get_int(key));
+    row.set_value(settings.get_int(getKey()));
     row.connect('notify::value', widget => {
-        settings.set_int(key, Math.round(widget.get_value()));
+        const value = Math.round(widget.get_value());
+        if (value !== settings.get_int(getKey()))
+            settings.set_int(getKey(), value);
     });
-    connectSettings(settings, `changed::${key}`, () => {
-        const value = settings.get_int(key);
+    const syncValue = () => {
+        const value = settings.get_int(getKey());
         if (row.get_value() !== value)
             row.set_value(value);
-    });
+    };
+    for (const changedKey of changedKeys)
+        connectSettings(settings, `changed::${changedKey}`, syncValue);
     group.add(row);
     return row;
 }

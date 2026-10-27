@@ -52,9 +52,16 @@ export function startButtonAlignmentKey(settings, key) {
         ? `default-panel-${key}` : key;
 }
 
+function defaultPanelTwinKey(settings, key, defaultPanelKey) {
+    return settings.get_boolean('default-gnome-panel') ? defaultPanelKey : key;
+}
+
 export function clockStyleKey(settings) {
-    return settings.get_boolean('default-gnome-panel')
-        ? 'default-panel-clock-style' : 'clock-style';
+    return defaultPanelTwinKey(settings, 'clock-style', 'default-panel-clock-style');
+}
+
+export function panelButtonCornerRadiusKey(settings) {
+    return defaultPanelTwinKey(settings, 'panel-button-corner-radius', 'default-panel-button-corner-radius');
 }
 
 export function windowsClockEnabled(settings) {

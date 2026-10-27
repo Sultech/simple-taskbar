@@ -16,6 +16,7 @@ import {
     START_BUTTON_LOCATION_KEY,
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
+    panelButtonCornerRadiusKey,
     startButtonAlignmentKey,
     startButtonInPanel,
 } from '../shared/taskbarPanelModes.js';
@@ -82,10 +83,30 @@ export function addPanelItemsPage({
         },
         connectSettings
     );
+    const panelButtonCornerRadiusRow = addSpinRow(
+        panelGroup,
+        settings,
+        {
+            getKey: () => panelButtonCornerRadiusKey(settings),
+            changedKeys: [
+                'panel-button-corner-radius',
+                'default-panel-button-corner-radius',
+                'default-gnome-panel',
+            ],
+            title: _('Taskbar Item Corner Radius'),
+            subtitle: _(
+                'Rounding of the clock, Quick Settings and other taskbar item highlights. Use -1 for the theme default'
+            ),
+            lower: -1,
+            upper: 16,
+        },
+        connectSettings
+    );
     const syncPanelButtonPaddingSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         panelButtonPaddingRow.sensitive = enabled;
         quickSettingsIconSpacingRow.sensitive = enabled;
+        panelButtonCornerRadiusRow.sensitive = enabled;
     };
     connectSettings(
         settings,
