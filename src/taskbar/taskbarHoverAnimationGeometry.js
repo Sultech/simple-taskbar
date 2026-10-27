@@ -7,6 +7,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 
+const FLUSH_EDGE_TOLERANCE = 0.5;
+
 export class TaskbarHoverAnimationGeometry {
     constructor({
         taskbarActor,
@@ -49,10 +51,24 @@ export class TaskbarHoverAnimationGeometry {
             return null;
 
         const vertical = this._getVertical();
-        const bounds = vertical
-            ? {start: geometry.y, end: geometry.y + geometry.height}
-            : {start: geometry.x, end: geometry.x + geometry.width};
-        return this._excludeReservedSpace(bounds, vertical);
+        return this._excludeReservedSpace(this._axisSpan(geometry, vertical), vertical);
+    }
+
+    getFlushEdges() {
+        const geometry = this.getActorGeometry(this._positionActor);
+        if (!geometry)
+            return {start: null, end: null};
+
+        const vertical = this._getVertical();
+        const bar = this._axisSpan(geometry, vertical);
+        const monitorSpan = this._axisSpan(this._getMonitor(), vertical);
+        const workSpan = this._workAreaSpan(vertical);
+        const flush = (edge, ...limits) =>
+            limits.some(limit => Math.abs(edge - limit) <= FLUSH_EDGE_TOLERANCE);
+        return {
+            start: flush(bar.start, workSpan.start, monitorSpan.start) ? bar.start : null,
+            end: flush(bar.end, workSpan.end, monitorSpan.end) ? bar.end : null,
+        };
     }
 
     getTaskbarItems() {
@@ -269,16 +285,24 @@ export class TaskbarHoverAnimationGeometry {
             return bounds;
         }
 
-        const workArea = Main.layoutManager.getWorkAreaForMonitor(
-            monitor.index
-        );
-        const workStart = vertical ? workArea.y : workArea.x;
-        const workEnd = workStart +
-            (vertical ? workArea.height : workArea.width);
+        const workSpan = this._workAreaSpan(vertical);
         return {
-            start: Math.max(bounds.start, workStart),
-            end: Math.min(bounds.end, workEnd),
+            start: Math.max(bounds.start, workSpan.start),
+            end: Math.min(bounds.end, workSpan.end),
         };
+    }
+
+    _workAreaSpan(vertical) {
+        return this._axisSpan(
+            Main.layoutManager.getWorkAreaForMonitor(this._getMonitor().index),
+            vertical
+        );
+    }
+
+    _axisSpan(rect, vertical) {
+        return vertical
+            ? {start: rect.y, end: rect.y + rect.height}
+            : {start: rect.x, end: rect.x + rect.width};
     }
 
     _visibleSpan() {
@@ -286,9 +310,7 @@ export class TaskbarHoverAnimationGeometry {
         if (!geometry)
             return null;
 
-        return this._getVertical()
-            ? {start: geometry.y, end: geometry.y + geometry.height}
-            : {start: geometry.x, end: geometry.x + geometry.width};
+        return this._axisSpan(geometry, this._getVertical());
     }
 
     _isItemInViewport(item, span) {

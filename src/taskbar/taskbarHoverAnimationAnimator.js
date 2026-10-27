@@ -282,6 +282,7 @@ export class TaskbarHoverAnimationAnimator {
         this._geometry.setStartButtonInRow(!detachedStartButton);
         if (detachedStartButton)
             entries.splice(entries.indexOf(detachedStartButton), 1);
+        this._pinFlushEnds(entries);
 
         if (!entries.length)
             return;
@@ -308,13 +309,14 @@ export class TaskbarHoverAnimationAnimator {
 
         const radius = this._getIconSize() * profile.extent / 2;
         const cursor = vertical ? pointerY : pointerX;
+        const attenuation = this._pinnedEndAttenuation(entries, cursor);
         for (const entry of entries) {
             const distance = Math.abs(cursor - entry.center);
             entry.level = entry.magnifies && distance < radius
                 ? Math.pow(
                     (Math.cos(distance * Math.PI / radius) + 1) / 2,
                     profile.convexity
-                )
+                ) * attenuation
                 : 0;
             entry.growth = entry.length * (profile.zoom - 1) * entry.level;
         }
@@ -328,8 +330,9 @@ export class TaskbarHoverAnimationAnimator {
                 (previous.growth + current.growth) / 2;
         }
 
+        const growingEntries = entries.filter(entry => !entry.pinned);
         const offset = this._clampRowOffset(
-            entries,
+            growingEntries.length ? growingEntries : entries,
             cursor - this._mapCursorToMagnifiedRow(entries, cursor)
         );
         for (const entry of entries) {
@@ -360,6 +363,35 @@ export class TaskbarHoverAnimationAnimator {
                 ? geometry.y + geometry.height / 2
                 : geometry.x + geometry.width / 2,
         };
+    }
+
+    _pinFlushEnds(entries) {
+        const edges = this._geometry.getFlushEdges();
+        const tolerance = this._getIconSize() / 2;
+        for (const entry of entries) {
+            const start = entry.center - entry.length / 2;
+            const end = entry.center + entry.length / 2;
+            if (edges.start !== null && start - edges.start <= tolerance ||
+                edges.end !== null && edges.end - end <= tolerance) {
+                entry.magnifies = false;
+                entry.pinned = true;
+            }
+        }
+    }
+
+    _pinnedEndAttenuation(entries, cursor) {
+        const middle = (entries[0].center + entries[entries.length - 1].center) / 2;
+        let attenuation = 1;
+        for (const entry of entries) {
+            if (!entry.pinned)
+                continue;
+
+            const inward = entry.center < middle ? -1 : 1;
+            const innerEdge = entry.center - inward * entry.length / 2;
+            const progress = 0.5 + inward * (cursor - innerEdge) * 2 / entry.length;
+            attenuation = Math.min(attenuation, 1 - Math.min(Math.max(progress, 0), 1));
+        }
+        return attenuation;
     }
 
     _detachedStartButton(entries, getStretchEntry, vertical) {
