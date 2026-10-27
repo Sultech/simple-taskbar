@@ -88,7 +88,7 @@
       <summary>Reveal the panel when the pointer reaches its edge</summary>
     </key>
     <key name="hot-edge-overview-enabled" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Push against the bottom screen edge to toggle Overview</summary>
     </key>
     <key name="hot-edge-pressure-threshold" type="i">
