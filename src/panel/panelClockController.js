@@ -11,26 +11,25 @@ import {panelIsVertical} from './panelPosition.js';
 import {windowsClockEnabled} from '../shared/taskbarPanelModes.js';
 
 const DIGITS = '0123456789';
-const WINDOWS_CLOCK_CLASS = 'simple-taskbar-clock-windows';
+const CLOCK_LAYOUT_CLASS = 'simple-taskbar-clock-layout';
 const WINDOWS_DATE_FORMATS = {
     'day-month-year': '%d/%m/%Y',
     'month-day-year': '%m/%d/%Y',
     'year-month-day': '%Y/%m/%d',
 };
+const GNOME_DATE_FORMAT = '%b %-e';
+const WINDOWS_STACKED_FONT = 'size="9.75pt" weight="500" font_features="tnum"';
+const WINDOWS_SINGLE_LINE_FONT = 'size="10.5pt" weight="600" font_features="tnum"';
+const TIME_PART_SEPARATOR_ATTRIBUTES = 'size="small" line_height="0.5"';
+const TIME_PART_SEPARATOR_TEXT = '‥';
 
-function clockMarkup(text, useTimeSeparator) {
-    if (!Array.isArray(text))
-        return text.trim();
-
-    const separator = `\n<span size="8192"> ${
-        useTimeSeparator ? '‧‧' : '—'
-    } </span>\n`;
-    return text.join(separator).trim();
+function isMarkupLine(line) {
+    return line.includes('<');
 }
 
-function windowsClockMarkup({lines, singleLine}) {
-    const font = singleLine ? 'size="10.5pt" weight="600"' : 'size="9.75pt" weight="500"';
-    return `<span ${font} font_features="tnum">${lines.join('\n')}</span>`;
+function clockLayoutMarkup({lines, font}) {
+    const text = lines.join('\n');
+    return font ? `<span ${font}>${text}</span>` : text;
 }
 
 function verticalFrame(widget) {
@@ -48,19 +47,16 @@ function horizontalFrame(widget) {
 }
 
 export class PanelClockController {
-    constructor(settings, dateMenu, getPanelThickness, getMinimumPanelThickness) {
+    constructor(settings, dateMenu, getPanelThickness) {
         this._settings = settings;
         this._dateMenu = dateMenu;
         this._getPanelThickness = getPanelThickness;
-        this._getMinimumPanelThickness = getMinimumPanelThickness;
         this._desktopSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.interface',
         });
-        this._originalEllipsize = null;
-        this._originalNaturalWidth = null;
-        this._originalNaturalWidthSet = null;
         this._originalUseMarkup = null;
-        this._clockFormat = null;
+        this._originalLabelXExpand = null;
+        this._originalTextXAlign = null;
         this._formatted = false;
         this._vertical = null;
         this._clockAfterUpdateId = 0;
@@ -72,10 +68,7 @@ export class PanelClockController {
             this
         );
         this._desktopSettings.connectObject(
-            'changed::clock-format', () => {
-                this._clockFormat = null;
-                this.sync();
-            },
+            'changed::clock-format', () => this.sync(),
             this
         );
         this._settings.connectObject(
@@ -90,82 +83,53 @@ export class PanelClockController {
     }
 
     sync() {
-        if (this._syncWindowsClock())
-            return;
-
-        if (!panelIsVertical(this._settings)) {
+        const clockLayout = this._chooseClockLayout();
+        if (!clockLayout) {
             if (this._formatted)
                 this._restoreClockText();
             return;
         }
 
-        const datetime = this._dateMenu._clock.clock;
-        let datetimeParts = datetime.split(' ');
-        let time = datetimeParts[1];
-        const clockText = this._dateMenu._clockDisplay.clutter_text;
-        if (!this._formatted)
-            this._captureClockText();
-        if (clockText.ellipsize === Pango.EllipsizeMode.NONE)
-            clockText.ellipsize = Pango.EllipsizeMode.END;
-        const textWidth = this._getMinimumPanelThickness() - this._clockTextInset();
-        clockText.natural_width = this._getPanelThickness();
-        this._formatted = true;
-
-        if (!time) {
-            datetimeParts = datetime.split(' ');
-            time = datetimeParts.pop();
-            datetimeParts = [datetimeParts.join(' '), time];
-        }
-
-        const timeSeparator = time.includes('∶') ? '∶' : ':';
-        const timeParts = time.split(timeSeparator);
-        this._clockFormat ??=
-            this._desktopSettings.get_string('clock-format');
-        if (this._clockFormat === '12h')
-            timeParts.push(...timeParts.pop().split(' '));
-
-        const candidates = [
-            {text: datetime, useTimeSeparator: false},
-            {text: datetimeParts, useTimeSeparator: false},
-            {text: time, useTimeSeparator: false},
-        ];
-        const layout = this._measureLayout();
-        const widestDigit = this._widestDigit(layout);
-        const chosen = candidates.find(candidate =>
-            this._fits(layout, candidate, widestDigit, textWidth)
-        ) ?? {text: timeParts, useTimeSeparator: true};
-        clockText.set_text(clockMarkup(chosen.text, chosen.useTimeSeparator));
-        clockText.set_use_markup(Array.isArray(chosen.text));
-    }
-
-    _syncWindowsClock() {
         const clockDisplay = this._dateMenu._clockDisplay;
-        const windowsLayout = windowsClockEnabled(this._settings)
-            ? this._windowsClockLayouts().find(candidate => this._windowsClockFits(candidate))
-            : undefined;
-        if (!windowsLayout) {
-            clockDisplay.remove_style_class_name(WINDOWS_CLOCK_CLASS);
-            return false;
+        if (!this._formatted) {
+            this._originalUseMarkup = clockDisplay.clutter_text.get_use_markup();
+            this._originalLabelXExpand = clockDisplay.x_expand;
+            this._originalTextXAlign = clockDisplay.clutter_text.x_align;
         }
-
-        if (!this._formatted)
-            this._captureClockText();
         this._formatted = true;
-        clockDisplay.add_style_class_name(WINDOWS_CLOCK_CLASS);
-        clockDisplay.clutter_text.set_text(windowsClockMarkup(windowsLayout));
+        if (panelIsVertical(this._settings)) {
+            clockDisplay.x_expand = true;
+            clockDisplay.clutter_text.x_align = Clutter.ActorAlign.CENTER;
+        }
+        clockDisplay.add_style_class_name(CLOCK_LAYOUT_CLASS);
+        clockDisplay.clutter_text.set_text(clockLayoutMarkup(clockLayout));
         clockDisplay.clutter_text.set_use_markup(true);
-        return true;
     }
 
-    _windowsClockLayouts() {
+    _chooseClockLayout() {
+        const vertical = panelIsVertical(this._settings);
+        const windows = windowsClockEnabled(this._settings);
+        if (!vertical && !windows)
+            return null;
+
+        const clockLayouts = this._clockLayouts(windows, vertical);
+        return clockLayouts.find(candidate => this._clockLayoutFits(candidate)) ??
+            (vertical ? clockLayouts.at(-1) : null);
+    }
+
+    _clockLayouts(windows, vertical) {
         const now = GLib.DateTime.new_now_local();
-        const seconds = this._desktopSettings.get_boolean('clock-show-seconds') ? ':%S' : '';
-        const time = now.format(this._desktopSettings.get_string('clock-format') === '12h'
-            ? `%l:%M${seconds} %p` : `%R${seconds}`).trim();
+        const twelveHour = this._desktopSettings.get_string('clock-format') === '12h';
+        const showSeconds = this._desktopSettings.get_boolean('clock-show-seconds');
+        const seconds = showSeconds ? ':%S' : '';
+        const time = now.format(twelveHour ? `%l:%M${seconds} %p` : `%R${seconds}`).trim();
         const weekday = this._desktopSettings.get_boolean('clock-show-weekday')
             ? now.format('%a') : null;
+        const dateFormat = windows
+            ? WINDOWS_DATE_FORMATS[this._settings.get_string('clock-date-order')]
+            : GNOME_DATE_FORMAT;
         const date = this._desktopSettings.get_boolean('clock-show-date')
-            ? now.format(WINDOWS_DATE_FORMATS[this._settings.get_string('clock-date-order')]) : null;
+            ? now.format(dateFormat) : null;
         const details = [];
         if (weekday && date)
             details.push(`${weekday} ${date}`);
@@ -174,28 +138,57 @@ export class PanelClockController {
         if (weekday)
             details.push(weekday);
 
-        return [
+        const stackedFont = windows ? WINDOWS_STACKED_FONT : '';
+        const singleLineFont = windows ? WINDOWS_SINGLE_LINE_FONT : '';
+        const clockLayouts = [
             ...details.flatMap(detail => [
-                {lines: [time, detail], singleLine: false},
-                {lines: [`${detail} ${time}`], singleLine: true},
+                {lines: [time, detail], font: stackedFont},
+                {lines: [`${detail} ${time}`], font: singleLineFont},
             ]),
-            {lines: [time], singleLine: true},
+            {lines: [time], font: singleLineFont},
         ];
+        if (vertical) {
+            const timeParts = [now.format(twelveHour ? '%l' : '%H').trim(), now.format('%M')];
+            if (showSeconds)
+                timeParts.push(now.format('%S'));
+            const separator = this._timePartSeparator(stackedFont);
+            const lines = timeParts.flatMap((part, index) =>
+                index === 0 ? [part] : [separator, part]);
+            if (twelveHour)
+                lines.push(now.format('%p'));
+            clockLayouts.push({lines, font: stackedFont});
+        }
+        return clockLayouts;
     }
 
-    _windowsClockFits({lines, singleLine}) {
+    _clockLayoutFits({lines, font}) {
         const layout = this._measureLayout();
         if (!panelIsVertical(this._settings)) {
-            const [, height] = this._measure(layout, windowsClockMarkup({lines, singleLine}), true);
+            const [, height] = this._measure(layout, clockLayoutMarkup({lines, font}), true);
             return height <= this._getPanelThickness() - this._clockTextVerticalInset();
         }
 
         const widestDigit = this._widestDigit(layout);
-        const [width] = this._measure(layout, windowsClockMarkup({
-            lines: lines.map(line => line.replace(/\d/g, widestDigit)),
-            singleLine,
+        const [width] = this._measure(layout, clockLayoutMarkup({
+            lines: lines.map(line => isMarkupLine(line) ? line : line.replace(/\d/g, widestDigit)),
+            font,
         }), true);
         return width <= this._getPanelThickness() - this._clockTextInset();
+    }
+
+    _timePartSeparator(font) {
+        const separator = `<span ${TIME_PART_SEPARATOR_ATTRIBUTES}>${TIME_PART_SEPARATOR_TEXT}</span>`;
+        const layout = this._measureLayout();
+        layout.set_attributes(null);
+        layout.set_markup(clockLayoutMarkup({lines: ['0', separator, '0'], font}), -1);
+        const lineInk = [];
+        const iter = layout.get_iter();
+        do
+            lineInk.push(iter.get_line_extents()[0]);
+        while (iter.next_line());
+        const gapAbove = lineInk[1].y - (lineInk[0].y + lineInk[0].height);
+        const gapBelow = lineInk[2].y - (lineInk[1].y + lineInk[1].height);
+        return `<span ${TIME_PART_SEPARATOR_ATTRIBUTES} rise="${gapAbove - gapBelow}">${TIME_PART_SEPARATOR_TEXT}</span>`;
     }
 
     _measureLayout() {
@@ -225,19 +218,6 @@ export class PanelClockController {
             }
         }
         return widestDigit;
-    }
-
-    _fits(layout, {text, useTimeSeparator}, widestDigit, textWidth) {
-        const stacks = Array.isArray(text);
-        const sample = stacks
-            ? text.map(part => part.replace(/\d/g, widestDigit))
-            : text.replace(/\d/g, widestDigit);
-        const [width] = this._measure(
-            layout,
-            clockMarkup(sample, useTimeSeparator),
-            stacks
-        );
-        return width <= textWidth;
     }
 
     _clockTextVerticalInset() {
@@ -289,7 +269,6 @@ export class PanelClockController {
         this._settings = null;
         this._dateMenu = null;
         this._getPanelThickness = null;
-        this._getMinimumPanelThickness = null;
     }
 
     _syncPanelPosition() {
@@ -314,21 +293,11 @@ export class PanelClockController {
 
     _restoreClockText() {
         const clockDisplay = this._dateMenu._clockDisplay;
-        clockDisplay.remove_style_class_name(WINDOWS_CLOCK_CLASS);
-        const clockText = clockDisplay.clutter_text;
-        clockText.set_use_markup(this._originalUseMarkup);
-        clockText.set_text(this._dateMenu._clock.clock);
-        clockText.ellipsize = this._originalEllipsize;
-        clockText.natural_width = this._originalNaturalWidth;
-        clockText.natural_width_set = this._originalNaturalWidthSet;
+        clockDisplay.remove_style_class_name(CLOCK_LAYOUT_CLASS);
+        clockDisplay.x_expand = this._originalLabelXExpand;
+        clockDisplay.clutter_text.x_align = this._originalTextXAlign;
+        clockDisplay.clutter_text.set_use_markup(this._originalUseMarkup);
+        clockDisplay.clutter_text.set_text(this._dateMenu._clock.clock);
         this._formatted = false;
-    }
-
-    _captureClockText() {
-        const clockText = this._dateMenu._clockDisplay.clutter_text;
-        this._originalEllipsize = clockText.ellipsize;
-        this._originalNaturalWidth = clockText.natural_width;
-        this._originalNaturalWidthSet = clockText.natural_width_set;
-        this._originalUseMarkup = clockText.get_use_markup();
     }
 }

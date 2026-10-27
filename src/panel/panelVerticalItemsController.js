@@ -7,6 +7,7 @@ import St from 'gi://St';
 import {panelIsVertical} from './panelPosition.js';
 
 const SELF_SIZED_BUTTON_CLASS = 'simple-taskbar-start';
+const CLOCK_BUTTON_CLASS = 'clock-display';
 
 export class PanelVerticalItemsController {
     constructor(settings, boxes, getPanelThickness, getButtonPadding) {
@@ -54,7 +55,9 @@ export class PanelVerticalItemsController {
                         !actor.has_style_class_name(SELF_SIZED_BUTTON_CLASS)) {
                         state.childXAlign = state.child.x_align;
                         state.childXExpand = state.child.x_expand;
-                        state.child.x_align = Clutter.ActorAlign.CENTER;
+                        state.child.x_align = actor.has_style_class_name(CLOCK_BUTTON_CLASS)
+                            ? Clutter.ActorAlign.FILL
+                            : Clutter.ActorAlign.CENTER;
                         state.child.x_expand = false;
                         if (padding !== null) {
                             state.childYAlign = state.child.y_align;

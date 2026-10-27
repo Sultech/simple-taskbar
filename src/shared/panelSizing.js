@@ -209,16 +209,6 @@ export function taskbarPanelHeight(settings, iconSize) {
     return panelHeightForIconSize(settings, iconSize);
 }
 
-export function minimumTaskbarPanelHeight(settings) {
-    return taskbarPanelHeight(
-        settings,
-        Math.min(
-            settings.get_int('dock-min-icon-size'),
-            settings.get_int('icon-size')
-        )
-    );
-}
-
 export function dockPanelModeHeight(settings, iconSize) {
     const derivedHeight = panelHeightForIconSize(settings, iconSize);
     if (settings.get_boolean('dock-panel-height-follow-icon-size'))
