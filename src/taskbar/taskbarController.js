@@ -125,6 +125,7 @@ export class TaskbarController {
         getHoverAnimationMonitor,
         getPanelInteractionController,
         getHoverAnimationNeighbours,
+        getHoverAnimationEdgeActor = () => null,
         getHoverAnimationStartButton,
         onHoverAnimationReserveChanged,
         onHoverAnimationExtentsChanged = () => {},
@@ -151,6 +152,7 @@ export class TaskbarController {
         this._getHoverAnimationMonitor = getHoverAnimationMonitor;
         this._getPanelInteractionController = getPanelInteractionController;
         this._getHoverAnimationNeighbours = getHoverAnimationNeighbours;
+        this._getHoverAnimationEdgeActor = getHoverAnimationEdgeActor;
         this._getHoverAnimationStartButton = getHoverAnimationStartButton;
         this._onHoverAnimationReserveChanged = onHoverAnimationReserveChanged;
         this._onHoverAnimationExtentsChanged = onHoverAnimationExtentsChanged;
@@ -355,6 +357,7 @@ export class TaskbarController {
                 getPositionActor: () => this._getPositionActor(),
                 getNeighbourActors: () =>
                     this._getHoverAnimationNeighbours(),
+                getEdgeActor: () => this._getHoverAnimationEdgeActor(),
                 raiseOverlays: () => this._getPreviews().raiseOverlays(),
                 onReserveChanged: () =>
                     this._onHoverAnimationReserveChanged(),
@@ -833,6 +836,7 @@ export class TaskbarController {
         this._getHoverAnimationMonitor = null;
         this._getPanelInteractionController = null;
         this._getHoverAnimationNeighbours = null;
+        this._getHoverAnimationEdgeActor = null;
         this._getHoverAnimationStartButton = null;
         this._onHoverAnimationReserveChanged = null;
         this._onHoverAnimationExtentsChanged = null;

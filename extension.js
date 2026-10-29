@@ -181,6 +181,8 @@ export default class SimpleTaskbarExtension extends Extension {
                         Main.panel._rightBox,
                     ]
                 ),
+            getHoverAnimationEdgeActor: () =>
+                dynamicTaskbarEnabled(this._settings) ? this._showDesktopButton : null,
             getHoverAnimationStartButton: () => this._startButtonController.actor,
             onHoverAnimationReserveChanged: () =>
                 this._panelController.onHoverAnimationReserveChanged(),

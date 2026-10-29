@@ -20,6 +20,7 @@ export class TaskbarHoverAnimationAnimator {
         isDragging,
         isBlocked,
         getNeighbourActors,
+        getEdgeActor,
         onReserveChanged,
         onExtentsChanged,
         queueMagnifyFrames,
@@ -34,6 +35,7 @@ export class TaskbarHoverAnimationAnimator {
         this._isDragging = isDragging;
         this._isBlocked = isBlocked;
         this._getNeighbourActors = getNeighbourActors;
+        this._getEdgeActor = getEdgeActor;
         this._onReserveChanged = onReserveChanged;
         this._onExtentsChanged = onExtentsChanged;
         this._queueMagnifyFrames = queueMagnifyFrames;
@@ -203,6 +205,7 @@ export class TaskbarHoverAnimationAnimator {
         this._onReserveChanged = null;
         this._onExtentsChanged = null;
         this._getNeighbourActors = null;
+        this._getEdgeActor = null;
         this._isBlocked = null;
         this._isDragging = null;
         this._getVertical = null;
@@ -531,10 +534,12 @@ export class TaskbarHoverAnimationAnimator {
                 trailing.push({actor, start, end});
         }
 
+        const edgeActor = this._getEdgeActor();
         leading.sort((left, right) => right.end - left.end);
         let edge = rowStart + before;
         for (const item of leading) {
-            const push = Math.min(0, edge - item.end);
+            const push = Math.min(0, edge - item.end,
+                item.actor === edgeActor ? before : 0);
             this._stretch(item.actor, push, duration);
             edge = item.start + push;
         }
@@ -542,7 +547,8 @@ export class TaskbarHoverAnimationAnimator {
         trailing.sort((left, right) => left.start - right.start);
         edge = rowEnd + after;
         for (const item of trailing) {
-            const push = Math.max(0, edge - item.start);
+            const push = Math.max(0, edge - item.start,
+                item.actor === edgeActor ? after : 0);
             this._stretch(item.actor, push, duration);
             edge = item.end + push;
         }
