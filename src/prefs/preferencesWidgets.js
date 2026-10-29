@@ -113,18 +113,23 @@ export function createSwitchRow(settings, {
     return row;
 }
 
-export function createKeySwitchingRow(settings, {
+export function createSwitchExpanderRow(settings, {
     title,
     subtitle = '',
     getKey,
-    keyChangedKey,
+    keyChangedKey = null,
+    inverted = false,
 }, connectSettings) {
-    const row = new Adw.SwitchRow({title, subtitle});
+    const row = new Adw.ExpanderRow({title, subtitle, show_enable_switch: true});
+    const flags = inverted
+        ? Gio.SettingsBindFlags.DEFAULT | Gio.SettingsBindFlags.INVERT_BOOLEAN
+        : Gio.SettingsBindFlags.DEFAULT;
     const bindKey = () => {
-        Gio.Settings.unbind(row, 'active');
-        settings.bind(getKey(), row, 'active', Gio.SettingsBindFlags.DEFAULT);
+        Gio.Settings.unbind(row, 'enable-expansion');
+        settings.bind(getKey(), row, 'enable-expansion', flags);
     };
-    connectSettings(settings, `changed::${keyChangedKey}`, bindKey);
+    if (keyChangedKey)
+        connectSettings(settings, `changed::${keyChangedKey}`, bindKey);
     bindKey();
     return row;
 }

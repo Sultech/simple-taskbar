@@ -7,7 +7,7 @@ import {
     addColorRow,
     addToggleChoiceRow,
     addSwitchRow,
-    createKeySwitchingRow,
+    createSwitchExpanderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {
@@ -85,40 +85,16 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
     connectSettings(settings, 'changed::dock-mode', syncPanelPositionConflict);
     connectSettings(settings, 'changed::dock-position', syncDockPositionConflict);
 
-    group.add(createSwitchRow(settings, {
-        key: 'dock-panel-mode',
-        title: _('Full-width Dock'),
-        subtitle: _('Extend the Dock fully to the monitor edge'),
-    }));
-    group.add(createKeySwitchingRow(settings, {
-        title: _('Floating Dock'),
-        subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
-        getKey: () => settings.get_boolean('dock-panel-mode')
-            ? 'dock-panel-mode-floating'
-            : 'dock-floating',
-        keyChangedKey: 'dock-panel-mode',
-    }, connectSettings));
-    const dockFloatingGapRow = addSliderRow(
-        group,
-        settings,
-        {
-            key: 'dock-floating-gap',
-            unit: 'px',
-            title: _('Floating Gap'),
-            subtitle: _('Distance between the floating Dock and the screen edge'),
-            lower: 1,
-            upper: 32,
-        },
-        connectSettings
-    );
-    const syncFloatingGap = () => {
-        dockFloatingGapRow.sensitive = dockFloatingEnabled(settings);
-    };
-    for (const key of DOCK_FLOATING_KEYS)
-        connectSettings(settings, `changed::${key}`, syncFloatingGap);
-    syncFloatingGap();
-    const dockMaxLengthRow = addSliderRow(
-        group,
+    const dockShapeExpander = createSwitchExpanderRow(settings, {
+        title: _('Dynamic Dock'),
+        subtitle: _('Size the Dock to its contents; turn off for a full-width Dock'),
+        getKey: () => 'dock-panel-mode',
+        inverted: true,
+    }, connectSettings);
+    group.add(dockShapeExpander);
+    const addDockShapeRow = row => dockShapeExpander.add_row(row);
+    addSliderRow(
+        null,
         settings,
         {
             key: 'dock-max-length',
@@ -127,11 +103,12 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
             subtitle: _('Limit the Dock to this percentage of the monitor length'),
             lower: 1,
             upper: 90,
+            addRow: addDockShapeRow,
         },
         connectSettings
     );
-    const dockSidePaddingRow = addSliderRow(
-        group,
+    addSliderRow(
+        null,
         settings,
         {
             key: 'dock-side-padding',
@@ -140,11 +117,12 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
             subtitle: _('Space inside both ends of the Dock'),
             lower: 0,
             upper: 64,
+            addRow: addDockShapeRow,
         },
         connectSettings
     );
-    const dockHighlightEdgeGapRow = addSliderRow(
-        group,
+    addSliderRow(
+        null,
         settings,
         {
             key: 'dock-highlight-edge-gap',
@@ -153,16 +131,34 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
             subtitle: _('Space between the highlight and the edges of the Dock'),
             lower: 0,
             upper: 16,
+            addRow: addDockShapeRow,
         },
         connectSettings
     );
-    const syncMaxLength = () => {
-        dockMaxLengthRow.sensitive = !settings.get_boolean('dock-panel-mode');
-        dockSidePaddingRow.sensitive = !settings.get_boolean('dock-panel-mode');
-        dockHighlightEdgeGapRow.sensitive = !settings.get_boolean('dock-panel-mode');
-    };
-    connectSettings(settings, 'changed::dock-panel-mode', syncMaxLength);
-    syncMaxLength();
+
+    const floatingExpander = createSwitchExpanderRow(settings, {
+        title: _('Floating Dock'),
+        subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
+        getKey: () => settings.get_boolean('dock-panel-mode')
+            ? 'dock-panel-mode-floating'
+            : 'dock-floating',
+        keyChangedKey: 'dock-panel-mode',
+    }, connectSettings);
+    group.add(floatingExpander);
+    addSliderRow(
+        null,
+        settings,
+        {
+            key: 'dock-floating-gap',
+            unit: 'px',
+            title: _('Floating Gap'),
+            subtitle: _('Distance between the floating Dock and the screen edge'),
+            lower: 1,
+            upper: 32,
+            addRow: row => floatingExpander.add_row(row),
+        },
+        connectSettings
+    );
 }
 
 export function addDockAppearanceGroup({
@@ -180,7 +176,7 @@ export function addDockAppearanceGroup({
     });
     const thicknessGroup = sizePage.addGroup({
         title: _('Thickness'),
-        description: _('Choose how thick the full-width Dock is'),
+        description: _('Choose how thick the Dock is when Dynamic Dock is off'),
     });
     const group = sizePage.addGroup({
         title: _('Dock Layout'),
@@ -198,7 +194,7 @@ export function addDockAppearanceGroup({
         heightKey: DOCK_PANEL_HEIGHT_KEY,
         followKey: DOCK_PANEL_HEIGHT_FOLLOW_KEY,
         followSubtitle: _(
-            'Keep the full-width Dock only as thick as its icons need'
+            'Keep the Dock only as thick as its icons need'
         ),
         isActive: () => settings.get_boolean('dock-mode'),
     });
@@ -211,7 +207,7 @@ export function addDockAppearanceGroup({
             key: DOCK_PANEL_HEIGHT_KEY,
             title: _('Dock Thickness'),
             subtitle: _(
-                'Oversized icons shrink automatically when the full-width Dock is reduced'
+                'Oversized icons shrink automatically when the Dock is made thinner'
             ),
             lower: MIN_PANEL_HEIGHT,
             upper: MAX_PANEL_HEIGHT,

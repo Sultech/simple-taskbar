@@ -26,6 +26,7 @@ import {
     addColorRow,
     createPreferencesDialogButton,
     createPreferencesDialogContent,
+    createSwitchExpanderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -50,14 +51,14 @@ function addHighlightExtentRows(group, settings, connectSettings, {
     if (!locked && aligned !== stored)
         settings.set_int(keys.size, aligned);
 
-    const toggle = createSwitchRow(settings, {
-        key: keys.enabled,
+    const toggle = createSwitchExpanderRow(settings, {
         title: switchTitle,
         subtitle: switchSubtitle,
-    });
+        getKey: () => keys.enabled,
+    }, connectSettings);
     group.add(toggle);
     const row = addSliderRow(
-        group,
+        null,
         settings,
         {
             key: keys.size,
@@ -66,15 +67,11 @@ function addHighlightExtentRows(group, settings, connectSettings, {
             lower,
             upper,
             step: 2,
+            addRow: sliderRow => toggle.add_row(sliderRow),
         },
         connectSettings
     );
-    const syncSensitivity = () => {
-        toggle.sensitive = available && !locked;
-        row.sensitive = available && !locked && toggle.active;
-    };
-    toggle.connect('notify::active', syncSensitivity);
-    syncSensitivity();
+    toggle.sensitive = available && !locked;
     return {toggle, row};
 }
 
@@ -156,9 +153,9 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         );
         const syncFollowIconSwitch = () => {
             followIconSwitch.sensitive = !windows10Theme &&
-                !customThicknessSwitch.active;
+                !customThicknessSwitch.enable_expansion;
         };
-        customThicknessSwitch.connect('notify::active', syncFollowIconSwitch);
+        customThicknessSwitch.connect('notify::enable-expansion', syncFollowIconSwitch);
         syncFollowIconSwitch();
         if (!settings.isDefaultPanelWindows) {
             addHighlightExtentRows(
@@ -188,13 +185,14 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         });
         content.append(hoverGroup);
 
-        const hoverSwitch = createSwitchRow(settings, {
-            key: CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled,
+        const hoverExpander = createSwitchExpanderRow(settings, {
             title: _('Highlight Hovering Application Icons'),
-        });
-        hoverGroup.add(hoverSwitch);
+            getKey: () => CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled,
+        }, connectSettings);
+        hoverGroup.add(hoverExpander);
+        const hoverRows = {add: row => hoverExpander.add_row(row)};
         const hoverColorRow = addColorRow(
-            hoverGroup,
+            hoverRows,
             settings,
             {
                 key: CLASSIC_HIGHLIGHT_SETTINGS.hoverColor,
@@ -203,7 +201,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             connectSettings
         );
         const pressedColorRow = addColorRow(
-            hoverGroup,
+            hoverRows,
             settings,
             {
                 key: CLASSIC_HIGHLIGHT_SETTINGS.pressedColor,
@@ -218,18 +216,19 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         });
         content.append(focusGroup);
 
-        const focusSwitch = createSwitchRow(settings, {
-            key: CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled,
+        const focusExpander = createSwitchExpanderRow(settings, {
             title: _('Highlight the Focused Application'),
-        });
-        focusGroup.add(focusSwitch);
+            getKey: () => CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled,
+        }, connectSettings);
+        focusGroup.add(focusExpander);
+        const focusRows = {add: row => focusExpander.add_row(row)};
         const focusDominantSwitch = createSwitchRow(settings, {
             key: CLASSIC_HIGHLIGHT_SETTINGS.focusDominant,
             title: _('Use Icon Dominant Color'),
         });
-        focusGroup.add(focusDominantSwitch);
+        focusRows.add(focusDominantSwitch);
         const focusColorRow = addColorRow(
-            focusGroup,
+            focusRows,
             settings,
             {
                 key: CLASSIC_HIGHLIGHT_SETTINGS.focusColor,
@@ -238,7 +237,7 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             connectSettings
         );
         const focusOpacityRow = addSliderRow(
-            focusGroup,
+            focusRows,
             settings,
             {
                 key: CLASSIC_HIGHLIGHT_SETTINGS.focusOpacity,
@@ -252,12 +251,23 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             connectSettings
         );
 
+        if (!isClassic) {
+            for (const row of [
+                hoverColorRow,
+                pressedColorRow,
+                focusDominantSwitch,
+                focusColorRow,
+                focusOpacityRow,
+            ])
+                row.subtitle = _('Switch to the Classic highlight style to use this setting');
+        }
+
         const syncHoverSensitivity = () => {
             const sensitive = settings.get_boolean(
                 CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled
             );
-            hoverColorRow.sensitive = isClassic && sensitive;
-            pressedColorRow.sensitive = isClassic && sensitive;
+            hoverColorRow.sensitive = isClassic;
+            pressedColorRow.sensitive = isClassic;
             borderRadiusRow.sensitive = !windows10Theme && (sensitive ||
                 settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled));
         };
@@ -274,21 +284,13 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         syncHoverSensitivity();
 
         const syncFocusSensitivity = () => {
-            const enabled = settings.get_boolean(
-                CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled
-            );
             const dominant = settings.get_boolean(
                 CLASSIC_HIGHLIGHT_SETTINGS.focusDominant
             );
-            focusDominantSwitch.sensitive = isClassic && enabled;
-            focusColorRow.sensitive = isClassic && enabled && !dominant;
-            focusOpacityRow.sensitive = isClassic && enabled;
+            focusDominantSwitch.sensitive = isClassic;
+            focusColorRow.sensitive = isClassic && !dominant;
+            focusOpacityRow.sensitive = isClassic;
         };
-        connectSettings(
-            settings,
-            `changed::${CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled}`,
-            syncFocusSensitivity
-        );
         connectSettings(
             settings,
             `changed::${CLASSIC_HIGHLIGHT_SETTINGS.focusDominant}`,

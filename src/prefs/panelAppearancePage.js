@@ -22,7 +22,7 @@ import {
     addColorRow,
     addToggleChoiceRow,
     addSwitchRow,
-    createKeySwitchingRow,
+    createSwitchExpanderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {
@@ -77,17 +77,45 @@ export function addPanelAppearancePage({
         title: _('Thickness'),
         description: _('Choose how thick the taskbar is'),
     });
-    const floatingGroup = sizePage.addGroup({
+    const layoutGroup = sizePage.addGroup({
         title: _('Panel Layout'),
         description: _('Choose dynamic sizing and floating independently'),
     });
-    const dynamicSwitch = createSwitchRow(settings, {
-        key: 'taskbar-dynamic',
+    const dynamicExpander = createSwitchExpanderRow(settings, {
         title: _('Dynamic Panel Mode'),
         subtitle: _('Size the taskbar to its contents and expand as items are added'),
-    });
-    floatingGroup.add(dynamicSwitch);
-    const floatingSwitch = createKeySwitchingRow(settings, {
+        getKey: () => 'taskbar-dynamic',
+    }, connectSettings);
+    layoutGroup.add(dynamicExpander);
+    const addDynamicRow = row => dynamicExpander.add_row(row);
+    addSliderRow(null, settings, {
+        key: 'taskbar-max-length',
+        unit: '%',
+        title: _('Maximum Taskbar Length'),
+        subtitle: _('Limit the dynamic taskbar to this percentage of the monitor length'),
+        lower: 1,
+        upper: 90,
+        addRow: addDynamicRow,
+    }, connectSettings);
+    addSliderRow(null, settings, {
+        key: 'taskbar-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the dynamic taskbar'),
+        lower: 0,
+        upper: 64,
+        addRow: addDynamicRow,
+    }, connectSettings);
+    addSliderRow(null, settings, {
+        key: 'taskbar-highlight-edge-gap',
+        unit: 'px',
+        title: _('Highlight Edge Gap'),
+        subtitle: _('Space between the highlight and the edges of the dynamic taskbar'),
+        lower: 0,
+        upper: 16,
+        addRow: addDynamicRow,
+    }, connectSettings);
+    const floatingExpander = createSwitchExpanderRow(settings, {
         title: _('Floating Panel Mode'),
         subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
         getKey: () => settings.get_boolean('taskbar-dynamic')
@@ -95,40 +123,17 @@ export function addPanelAppearancePage({
             : 'taskbar-floating',
         keyChangedKey: 'taskbar-dynamic',
     }, connectSettings);
-    floatingGroup.add(floatingSwitch);
-    const floatingGapRow = addSliderRow(floatingGroup, settings, {
+    layoutGroup.add(floatingExpander);
+    addSliderRow(null, settings, {
         key: 'taskbar-floating-gap',
         unit: 'px',
         title: _('Floating Gap'),
         subtitle: _('Distance between the floating taskbar and the screen edge'),
         lower: 1,
         upper: 32,
+        addRow: row => floatingExpander.add_row(row),
     }, connectSettings);
-    const maximumLengthRow = addSliderRow(floatingGroup, settings, {
-        key: 'taskbar-max-length',
-        unit: '%',
-        title: _('Maximum Taskbar Length'),
-        subtitle: _('Limit the dynamic taskbar to this percentage of the monitor length'),
-        lower: 1,
-        upper: 90,
-    }, connectSettings);
-    const sidePaddingRow = addSliderRow(floatingGroup, settings, {
-        key: 'taskbar-side-padding',
-        unit: 'px',
-        title: _('Side Padding'),
-        subtitle: _('Space inside both ends of the dynamic taskbar'),
-        lower: 0,
-        upper: 64,
-    }, connectSettings);
-    const highlightEdgeGapRow = addSliderRow(floatingGroup, settings, {
-        key: 'taskbar-highlight-edge-gap',
-        unit: 'px',
-        title: _('Highlight Edge Gap'),
-        subtitle: _('Space between the highlight and the edges of the dynamic taskbar'),
-        lower: 0,
-        upper: 16,
-    }, connectSettings);
-    const cornerRadiusRow = addSliderRow(floatingGroup, settings, {
+    const cornerRadiusRow = addSliderRow(layoutGroup, settings, {
         key: 'taskbar-corner-radius',
         title: _('Corner Radius'),
         subtitle: _('Round the corners of the dynamic or floating taskbar'),
@@ -136,12 +141,9 @@ export function addPanelAppearancePage({
         upper: 64,
     }, connectSettings);
     const syncFloatingControls = () => {
-        floatingGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
-        maximumLengthRow.sensitive = dynamicSwitch.active;
-        sidePaddingRow.sensitive = dynamicSwitch.active;
-        highlightEdgeGapRow.sensitive = dynamicSwitch.active;
-        floatingGapRow.sensitive = floatingSwitch.active;
-        cornerRadiusRow.sensitive = dynamicSwitch.active || floatingSwitch.active;
+        layoutGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
+        cornerRadiusRow.sensitive = dynamicTaskbarEnabled(settings) ||
+            floatingTaskbarEnabled(settings);
     };
     for (const key of TASKBAR_GEOMETRY_KEYS)
         connectSettings(settings, `changed::${key}`, syncFloatingControls);
