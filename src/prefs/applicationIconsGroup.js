@@ -323,22 +323,13 @@ function addApplicationLayoutControls({
         subtitle: _('Show a line between pinned and running applications'),
     });
     layoutGroup.add(pinnedAppSeparatorSwitch);
-
-    const locationSeparatorSwitch = createSwitchRow(settings, {
-        key: 'show-location-separator',
-        title: _('Show Location Separator'),
-        subtitle: _('Show a line between applications and locations'),
-    });
-    layoutGroup.add(locationSeparatorSwitch);
     pinnedAppSeparatorSwitch.visible = !settings.isDefaultPanelWindows;
-    locationSeparatorSwitch.visible = !settings.isDefaultPanelWindows;
 
     const syncSeparatorSensitivity = () => {
         const enabled = !settings.get_boolean(
             'windows-xp-theme-enabled'
         );
         pinnedAppSeparatorSwitch.sensitive = enabled;
-        locationSeparatorSwitch.sensitive = enabled;
     };
     connectSettings(
         settings,

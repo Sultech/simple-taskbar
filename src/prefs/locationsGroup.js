@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Adw from 'gi://Adw';
+
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {createSwitchRow} from './preferencesWidgets.js';
@@ -23,10 +25,10 @@ function addDriveOptionsGroup(page, settings) {
     return group;
 }
 
-function addCommonFoldersGroup(page, settings) {
-    const group = page.addGroup({
+function createCommonFoldersRow(settings) {
+    const row = new Adw.ExpanderRow({
         title: _('Common Folders'),
-        description: _('Choose which common folders appear'),
+        subtitle: _('Choose which common folders appear'),
     });
     for (const option of [
         {
@@ -65,9 +67,17 @@ function addCommonFoldersGroup(page, settings) {
             subtitle: _('Add the Videos folder'),
         },
     ]) {
-        group.add(createSwitchRow(settings, option));
+        row.add_row(createSwitchRow(settings, option));
     }
-    return group;
+    return row;
+}
+
+function createLocationSeparatorRow(settings) {
+    return createSwitchRow(settings, {
+        key: 'show-location-separator',
+        title: _('Show Location Separator'),
+        subtitle: _('Show a line between applications and locations'),
+    });
 }
 
 export function addLocationsGroup({
@@ -97,11 +107,14 @@ export function addLocationsGroup({
         title: _('Show Drives and Volumes'),
         subtitle: _('Add mounted or connected drives to the taskbar'),
     });
+    const taskbarSeparatorRow = createLocationSeparatorRow(settings);
+    const taskbarCommonFoldersRow = createCommonFoldersRow(settings);
     taskbarLocationsGroup.add(taskbarLocationsRow);
+    taskbarLocationsGroup.add(taskbarSeparatorRow);
     taskbarLocationsGroup.add(taskbarTrashRow);
     taskbarLocationsGroup.add(taskbarMountsRow);
+    taskbarLocationsGroup.add(taskbarCommonFoldersRow);
     const taskbarDriveOptionsGroup = addDriveOptionsGroup(page, settings);
-    const taskbarCommonFoldersGroup = addCommonFoldersGroup(page, settings);
 
     const dockLocationsGroup = dockPage.addGroup({
         title: _('Dock Locations'),
@@ -124,18 +137,21 @@ export function addLocationsGroup({
         title: _('Show Drives and Volumes'),
         subtitle: _('Add mounted or connected drives to the Dock'),
     });
+    const dockSeparatorRow = createLocationSeparatorRow(settings);
+    const dockCommonFoldersRow = createCommonFoldersRow(settings);
     dockLocationsGroup.add(dockLocationsRow);
+    dockLocationsGroup.add(dockSeparatorRow);
     dockLocationsGroup.add(dockTrashRow);
     dockLocationsGroup.add(dockMountsRow);
+    dockLocationsGroup.add(dockCommonFoldersRow);
     const dockDriveOptionsGroup = addDriveOptionsGroup(dockPage, settings);
-    const dockCommonFoldersGroup = addCommonFoldersGroup(dockPage, settings);
 
     const syncAvailability = () => {
         const xpEnabled = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
         const defaultPanel = settings.get_boolean('default-gnome-panel');
-        for (const group of [taskbarLocationsGroup, taskbarDriveOptionsGroup, taskbarCommonFoldersGroup])
+        for (const group of [taskbarLocationsGroup, taskbarDriveOptionsGroup])
             group.visible = !defaultPanel;
         if (xpEnabled && taskbarLocationsRow.active)
             taskbarLocationsRow.active = false;
@@ -145,17 +161,15 @@ export function addLocationsGroup({
         const taskbarEnabled = taskbarLocationsGroup.sensitive &&
             taskbarLocationsRow.active;
         const dockEnabled = dockLocationsGroup.sensitive && dockLocationsRow.active;
-        taskbarTrashRow.sensitive = taskbarEnabled;
-        taskbarMountsRow.sensitive = taskbarEnabled;
-        dockTrashRow.sensitive = dockEnabled;
-        dockMountsRow.sensitive = dockEnabled;
+        for (const row of [taskbarSeparatorRow, taskbarTrashRow, taskbarMountsRow, taskbarCommonFoldersRow])
+            row.sensitive = taskbarEnabled;
+        for (const row of [dockSeparatorRow, dockTrashRow, dockMountsRow, dockCommonFoldersRow])
+            row.sensitive = dockEnabled;
         const driveOptionsEnabled =
             (taskbarEnabled && taskbarMountsRow.active) ||
             (dockEnabled && dockMountsRow.active);
         taskbarDriveOptionsGroup.sensitive = driveOptionsEnabled;
         dockDriveOptionsGroup.sensitive = driveOptionsEnabled;
-        taskbarCommonFoldersGroup.sensitive = taskbarEnabled;
-        dockCommonFoldersGroup.sensitive = dockEnabled;
     };
     for (const row of [
         taskbarLocationsRow,
