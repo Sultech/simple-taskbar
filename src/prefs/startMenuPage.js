@@ -402,6 +402,18 @@ export function addStartMenuPage({
         subtitle: _('Configure Start menu shortcuts'),
         iconName: 'preferences-desktop-keyboard-shortcuts-symbolic',
     });
+    const syncStartMenuSubpages = () => {
+        for (const subpage of [
+            menuOptionsSubpage,
+            menuAppearanceSubpage,
+            foldersSubpage,
+            contextMenuSubpage,
+            keyboardSubpage,
+        ])
+            subpage.row.sensitive = windowsStartMenuSwitch.active;
+    };
+    windowsStartMenuSwitch.connect('notify::active', syncStartMenuSubpages);
+    syncStartMenuSubpages();
     const startMenuKeybindingsGroup = keyboardSubpage.addGroup({
         title: _('Keyboard Shortcuts'),
         description: _('Configure Start menu shortcuts.'),
