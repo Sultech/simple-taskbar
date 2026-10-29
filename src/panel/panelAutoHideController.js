@@ -8,9 +8,6 @@ import Shell from 'gi://Shell';
 
 import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelGeometry} from './panelGeometry.js';
 import {
@@ -74,7 +71,6 @@ export class PanelAutoHideController {
         this._getOutwardReserve = getOutwardReserve;
         this._onHidden = onHidden;
         this._onPositionFrame = onPositionFrame;
-        this._signalHolder = new TransientSignalHolder();
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._cursorPositionInvalidatedId = 0;
         this._hideTimeoutId = 0;
@@ -118,14 +114,14 @@ export class PanelAutoHideController {
                 this._scheduleHide();
                 return Clutter.EVENT_PROPAGATE;
             },
-            this._signalHolder
+            this
         );
         this._positionActor.connectObject(
             'notify::x', () => this._syncMonitorClip(),
             'notify::y', () => this._syncMonitorClip(),
             'notify::width', () => this._syncMonitorClip(),
             'notify::height', () => this._syncMonitorClip(),
-            this._signalHolder
+            this
         );
         global.stage.connectObject(
             'captured-event', (_stage, event) => {
@@ -142,7 +138,7 @@ export class PanelAutoHideController {
                 else
                     this._scheduleHide();
             },
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::panel-autohide-enabled', () => this._syncEnabled(),
@@ -160,7 +156,7 @@ export class PanelAutoHideController {
             () => this._syncPressureBarrier(),
             'changed::panel-position', () => this._syncPressureBarrier(),
             'changed::edge-reveal-enabled', () => this._syncPressureBarrier(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::taskbar-floating-gap', () => this._syncPressureBarrier(),
@@ -170,11 +166,11 @@ export class PanelAutoHideController {
             'showing', () => this._suspendForOverview(),
             'hiding', () => this._hideForOverview(),
             'hidden', () => this._resumeAfterOverview(),
-            this._signalHolder
+            this
         );
         global.display.connectObject(
             'in-fullscreen-changed', () => this._fullscreenChanged(),
-            this._signalHolder
+            this
         );
 
         this._overviewSuspended = Main.overview.visibleTarget &&
@@ -199,9 +195,12 @@ export class PanelAutoHideController {
         if (this._cursorPositionInvalidatedId)
             this._cursorTracker.disconnect(this._cursorPositionInvalidatedId);
         this._cursorPositionInvalidatedId = 0;
+        this._panelActor.disconnectObject(this);
+        this._positionActor.disconnectObject(this);
+        global.stage.disconnectObject(this);
         this._settings.disconnectObject(this);
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        Main.overview.disconnectObject(this);
+        global.display.disconnectObject(this);
 
         this._restoreFullscreenVisibilityState();
         this._hidden = false;

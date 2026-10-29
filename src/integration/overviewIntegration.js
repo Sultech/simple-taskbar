@@ -14,9 +14,6 @@ import {
     SecondaryMonitorDisplay,
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionWillBeActive} from '../extensionState.js';
 import {
@@ -50,7 +47,6 @@ export class OverviewIntegration {
         this._spreadApp = null;
         this._spreadHiddenId = 0;
         this._oldHasWorkspaces = null;
-        this._signalHolder = new TransientSignalHolder();
         this._tracker = Shell.WindowTracker.get_default();
         this._startupState = null;
         this._startupOverviewId = 0;
@@ -93,7 +89,7 @@ export class OverviewIntegration {
             `changed::${DOCK_AUTO_HIDE_SETTINGS.revealOverview}`, () => this.queueRelayout(),
             'changed::panel-dodge-windows-enabled', () =>
                 this.queueRelayout(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::dock-floating-gap', () => this.queueRelayout(),
@@ -107,7 +103,7 @@ export class OverviewIntegration {
             (_overview, window) => this._endMaximizedWindowDrag(window),
             'window-drag-cancelled',
             (_overview, window) => this._cancelMaximizedWindowDrag(window),
-            this._signalHolder
+            this
         );
         Main.extensionManager.connectObject(
             'extension-state-changed',
@@ -119,7 +115,7 @@ export class OverviewIntegration {
                 if (this._desktopDockIsEnabled())
                     this._cancelStartupOverview();
             },
-            this._signalHolder
+            this
         );
         if (Main.layoutManager._startingUp) {
             Main.layoutManager.connectObject('startup-complete', () => {
@@ -133,7 +129,7 @@ export class OverviewIntegration {
                     else
                         Main.overview.hide();
                 }
-            }, this._signalHolder);
+            }, this);
         }
         this._syncStartupOverview();
         this._syncDashVisibility();
@@ -147,8 +143,10 @@ export class OverviewIntegration {
         this._cancelDashVisibilityRepair();
         this._disconnectAppSpreadSignal();
         this._settings.disconnectObject(this);
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        Main.overview.disconnectObject(this);
+        Main.overview.dash.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
+        Main.layoutManager.disconnectObject(this);
         this._restoreAppSpreadState(true);
         this._spreadInjectionManager.clear();
         this._spreadInjectionManager = null;
@@ -331,7 +329,7 @@ export class OverviewIntegration {
         dash.connectObject('notify::visible', () => {
             if (dash.visible)
                 this._queueDashVisibilityRepair();
-        }, this._signalHolder);
+        }, this);
     }
 
     _queueDashVisibilityRepair() {
