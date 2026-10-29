@@ -60,6 +60,17 @@ export function clockStyleKey(settings) {
     return defaultPanelTwinKey(settings, 'clock-style', 'default-panel-clock-style');
 }
 
+export const PANEL_BUTTON_PADDING_KEYS = Object.freeze([
+    'panel-button-padding',
+    'taskbar-dynamic-panel-button-padding',
+]);
+
+export function panelButtonPaddingKey(settings) {
+    return dynamicTaskbarEnabled(settings)
+        ? 'taskbar-dynamic-panel-button-padding'
+        : 'panel-button-padding';
+}
+
 export function panelButtonCornerRadiusKey(settings) {
     return defaultPanelTwinKey(settings, 'panel-button-corner-radius', 'default-panel-button-corner-radius');
 }

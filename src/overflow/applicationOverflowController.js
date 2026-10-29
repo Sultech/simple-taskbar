@@ -16,7 +16,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
-import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {PANEL_BUTTON_PADDING_KEYS, dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 
 import {
     panelArrowSide,
@@ -232,9 +232,11 @@ export class ApplicationOverflowController {
         this._settings.connectObject('changed::icon-spacing', () => {
             this._queueSync();
         }, this._signalHolder);
-        this._settings.connectObject('changed::panel-button-padding', () => {
-            this._queueSync();
-        }, this._signalHolder);
+        for (const key of PANEL_BUTTON_PADDING_KEYS) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                this._queueSync();
+            }, this._signalHolder);
+        }
         this._settings.connectObject('changed::transparency-enabled', () => {
             this._themeController.sync();
         }, this._signalHolder);

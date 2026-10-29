@@ -27,6 +27,12 @@
       <summary>Horizontal padding around panel buttons</summary>
       <description>Use -1 for automatic padding or 0 through 20 for an explicit pixel value</description>
     </key>
+    <key name="taskbar-dynamic-panel-button-padding" type="i">
+      <range min="-1" max="20"/>
+      <default>6</default>
+      <summary>Horizontal padding around panel buttons in dynamic panel mode</summary>
+      <description>Use -1 for automatic padding or 0 through 20 for an explicit pixel value</description>
+    </key>
     <key name="panel-button-corner-radius" type="i">
       <range min="-1" max="16"/>
       <default>10</default>

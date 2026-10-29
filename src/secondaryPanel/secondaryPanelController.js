@@ -53,6 +53,7 @@ import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
 import {floatingPanelCornerRadius} from '../panel/floatingPanelGeometry.js';
 import {TaskbarGeometryController} from '../panel/taskbarGeometryController.js';
 import {
+    PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
     dockFloatingEnabled,
     dynamicTaskbarEnabled,
@@ -800,14 +801,16 @@ export class SecondaryPanelController {
             this._updateTaskbarWidth();
         }, this._signalHolder);
         if (!this._dockController) {
-            this._settings.connectObject(
-                'changed::panel-button-padding',
-                () => {
-                    this._syncQuickSettingsIndicators();
-                    this._updateTaskbarWidth();
-                },
-                this._signalHolder
-            );
+            for (const key of PANEL_BUTTON_PADDING_KEYS) {
+                this._settings.connectObject(
+                    `changed::${key}`,
+                    () => {
+                        this._syncQuickSettingsIndicators();
+                        this._updateTaskbarWidth();
+                    },
+                    this._signalHolder
+                );
+            }
         }
         this._settings.connectObject(
             'changed::quick-settings-icon-spacing',

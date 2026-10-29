@@ -13,10 +13,12 @@ import {defaultPanelWindowsEnabled, panelApplicationsVisible} from '../shared/de
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {startButtonVisible} from '../shared/startButtonLocation.js';
 import {
+    PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
     panelButtonCornerRadiusKey,
+    panelButtonPaddingKey,
     startButtonAlignmentKey,
     startButtonInPanel,
 } from '../shared/taskbarPanelModes.js';
@@ -59,7 +61,11 @@ export function addPanelItemsPage({
         panelGroup,
         settings,
         {
-            key: 'panel-button-padding',
+            getKey: () => panelButtonPaddingKey(settings),
+            changedKeys: [
+                ...PANEL_BUTTON_PADDING_KEYS,
+                'taskbar-dynamic',
+            ],
             title: _('Taskbar Button Padding'),
             subtitle: _(
                 'Space between taskbar buttons. Use -1 for automatic: Just Perfection’s value when it is configured, otherwise 3 px'

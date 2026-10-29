@@ -35,6 +35,7 @@ import {PanelMagnifyController} from './panelMagnifyController.js';
 import {DynamicPanelBoxLayout} from './dynamicPanelBoxLayout.js';
 import {TaskbarGeometryController} from './taskbarGeometryController.js';
 import {
+    PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
     dynamicTaskbarEnabled,
     taskbarGeometryEnabled,
@@ -807,11 +808,13 @@ export class PanelController {
         this._settings.connectObject('changed::hide-app-labels', () => {
             this.updateTaskbarWidth();
         }, this._signalHolder);
-        this._settings.connectObject('changed::panel-button-padding', () => {
-            this._syncPanelOrientation();
-            this._verticalItemsController.sync();
-            this.updateTaskbarWidth();
-        }, this._signalHolder);
+        for (const key of PANEL_BUTTON_PADDING_KEYS) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                this._syncPanelOrientation();
+                this._verticalItemsController.sync();
+                this.updateTaskbarWidth();
+            }, this._signalHolder);
+        }
         this._settings.connectObject(
             'changed::quick-settings-icon-spacing',
             () => this._syncPanelOrientation(),

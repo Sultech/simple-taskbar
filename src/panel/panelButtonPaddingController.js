@@ -8,7 +8,11 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 import {appendStyle} from '../shared/styleUtils.js';
 import {panelEdgeSides, panelIsVertical} from './panelPosition.js';
-import {dynamicTaskbarEnabled, panelButtonCornerRadiusKey} from '../shared/taskbarPanelModes.js';
+import {
+    dynamicTaskbarEnabled,
+    panelButtonCornerRadiusKey,
+    panelButtonPaddingKey,
+} from '../shared/taskbarPanelModes.js';
 
 const AUTOMATIC_PADDING = -1;
 const AUTOMATIC_FALLBACK_PADDING = 3;
@@ -54,6 +58,7 @@ export class PanelButtonPaddingController {
     enable() {
         this._settings.connectObject(
             'changed::panel-button-padding', () => this.sync(),
+            'changed::taskbar-dynamic-panel-button-padding', () => this.sync(),
             'changed::panel-button-corner-radius', () => this._syncCornerRadius(),
             'changed::default-panel-button-corner-radius', () => this._syncCornerRadius(),
             'changed::default-gnome-panel', () => this._syncCornerRadius(),
@@ -91,7 +96,7 @@ export class PanelButtonPaddingController {
 
     sync() {
         const automatic =
-            this._settings.get_int('panel-button-padding') ===
+            this._settings.get_int(panelButtonPaddingKey(this._settings)) ===
             AUTOMATIC_PADDING;
         const padding = this.effectivePadding();
         const vertical = panelIsVertical(this._settings);
@@ -210,7 +215,7 @@ export class PanelButtonPaddingController {
     }
 
     effectivePadding() {
-        const configured = this._settings.get_int('panel-button-padding');
+        const configured = this._settings.get_int(panelButtonPaddingKey(this._settings));
         if (configured !== AUTOMATIC_PADDING)
             return configured;
         if (this._externalPaddingIsActive())
