@@ -26,6 +26,7 @@ export const DEFAULT_PANEL_WINDOW_SETTING_KEYS = Object.freeze([
     'running-indicator-reserve-symmetrical',
     'running-indicator-reserve-size',
     'taskbar-highlight-style',
+    'taskbar-highlight-size-follow-icon',
     'taskbar-highlight-size-enabled',
     'taskbar-highlight-size',
     'classic-highlight-appicon-hover',

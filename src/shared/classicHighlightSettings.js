@@ -7,6 +7,7 @@ export const TASKBAR_HIGHLIGHT_STYLE = Object.freeze({
 });
 
 export const HIGHLIGHT_SIZE_SETTINGS = Object.freeze({
+    followIcon: 'taskbar-highlight-size-follow-icon',
     enabled: 'taskbar-highlight-size-enabled',
     size: 'taskbar-highlight-size',
 });

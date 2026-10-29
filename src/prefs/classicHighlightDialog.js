@@ -127,7 +127,15 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-        addHighlightExtentRows(
+        const followIconSwitch = createSwitchRow(settings, {
+            key: HIGHLIGHT_SIZE_SETTINGS.followIcon,
+            title: _('Fit Highlight to Icon'),
+            subtitle: _(
+                'Keep the highlight around the icon and running indicator instead of following the panel thickness'
+            ),
+        });
+        sizeGroup.add(followIconSwitch);
+        const {toggle: customThicknessSwitch} = addHighlightExtentRows(
             sizeGroup,
             settings,
             connectSettings,
@@ -146,6 +154,12 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
                 locked: windows10Theme,
             }
         );
+        const syncFollowIconSwitch = () => {
+            followIconSwitch.sensitive = !windows10Theme &&
+                !customThicknessSwitch.active;
+        };
+        customThicknessSwitch.connect('notify::active', syncFollowIconSwitch);
+        syncFollowIconSwitch();
         if (!settings.isDefaultPanelWindows) {
             addHighlightExtentRows(
                 sizeGroup,

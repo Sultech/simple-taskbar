@@ -154,9 +154,15 @@ export function taskbarGlassHeight(
     const centreOnIcon = panelIsVertical(settings);
     const insetExtent = Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2);
     if (!settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.enabled)) {
-        return centreOnIcon
-            ? matchHighlightSizeParity(insetExtent, iconSize)
+        const extent = settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.followIcon)
+            ? Math.min(insetExtent, raiseToIconParity(
+                Math.max(1, panelHeightForIconSize(settings, iconSize) - GLASS_VERTICAL_INSET * 2),
+                iconSize
+            ))
             : insetExtent;
+        return centreOnIcon
+            ? matchHighlightSizeParity(extent, iconSize)
+            : extent;
     }
 
     const requested = settings.get_int(HIGHLIGHT_SIZE_SETTINGS.size);

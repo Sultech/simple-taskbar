@@ -146,6 +146,10 @@
       <default>'glass'</default>
       <summary>Default panel windows: Application hover and focus effect</summary>
     </key>
+    <key name="default-panel-window-taskbar-highlight-size-follow-icon" type="b">
+      <default>false</default>
+      <summary>Default panel windows: Keep the hover and focus effect around the icon and running indicator</summary>
+    </key>
     <key name="default-panel-window-taskbar-highlight-size-enabled" type="b">
       <default>false</default>
       <summary>Default panel windows: Use a custom hover and focus effect size</summary>
