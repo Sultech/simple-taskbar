@@ -23,7 +23,6 @@ export const MIN_ICON_EDGE_PADDING = 3;
 export const MAX_ICON_EDGE_PADDING = 20;
 export const DEFAULT_ICON_EDGE_PADDING = 7;
 export const RUNNING_INDICATOR_CLEARANCE = 5;
-export const DOCK_FLOATING_CHROME_RESERVE = 5;
 export const GLASS_VERTICAL_INSET = 3;
 
 export const MIN_HIGHLIGHT_SIZE = 8;
@@ -136,8 +135,8 @@ export function highlightEdgeGap(settings) {
 }
 
 export function dockFloatingPanelReserve(settings) {
-    return iconEdgeReserve(settings) + DOCK_FLOATING_CHROME_RESERVE +
-        highlightEdgeGap(settings) * 2;
+    const reserve = iconEdgeReserve(settings);
+    return reserve + reserve % 2 + highlightEdgeGap(settings) * 2;
 }
 
 export function taskbarVisualPanelHeight(

@@ -605,7 +605,7 @@
     </key>
     <key name="taskbar-highlight-edge-gap" type="i">
       <range min="0" max="16"/>
-      <default>1</default>
+      <default>3</default>
       <summary>Space between the highlight and the edges of the dynamic taskbar</summary>
     </key>
     <key name="taskbar-max-length" type="i">
