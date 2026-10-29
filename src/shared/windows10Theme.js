@@ -14,7 +14,7 @@ import {
     setString,
 } from './settingsUtils.js';
 
-export const WINDOWS_10_PANEL_HEIGHT = 40;
+export const WINDOWS_10_PANEL_HEIGHT = 44;
 export const WINDOWS_10_ICON_SIZE = 24;
 export const WINDOWS_10_ICON_SPACING = 1;
 export const WINDOWS_10_ICON_EDGE_PADDING = 5;
