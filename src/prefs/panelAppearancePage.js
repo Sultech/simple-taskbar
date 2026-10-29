@@ -106,7 +106,7 @@ export function addPanelAppearancePage({
         upper: 64,
         addRow: addDynamicRow,
     }, connectSettings);
-    addSliderRow(null, settings, {
+    const highlightEdgeGapRow = addSliderRow(null, settings, {
         key: 'taskbar-highlight-edge-gap',
         unit: 'px',
         title: _('Highlight Edge Gap'),
@@ -115,6 +115,15 @@ export function addPanelAppearancePage({
         upper: 16,
         addRow: addDynamicRow,
     }, connectSettings);
+    const syncHighlightEdgeGapRow = () => {
+        const defaultPanel = settings.get_boolean('default-gnome-panel');
+        highlightEdgeGapRow.sensitive = !defaultPanel;
+        highlightEdgeGapRow.subtitle = defaultPanel
+            ? _('Not used in Default GNOME Panel mode, where Panel Height sets the thickness')
+            : _('Space between the highlight and the edges of the dynamic taskbar');
+    };
+    connectSettings(settings, 'changed::default-gnome-panel', syncHighlightEdgeGapRow);
+    syncHighlightEdgeGapRow();
     const floatingExpander = createSwitchExpanderRow(settings, {
         title: _('Floating Panel Mode'),
         subtitle: _('Add a small screen-edge gap that closes for maximized windows'),

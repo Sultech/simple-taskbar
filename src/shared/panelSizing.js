@@ -130,7 +130,8 @@ export function highlightEdgeGap(settings) {
             ? 0 : settings.get_int('taskbar-highlight-edge-gap');
     }
 
-    return dynamicTaskbarEnabled(settings)
+    return dynamicTaskbarEnabled(settings) &&
+        !settings.get_boolean('default-gnome-panel')
         ? settings.get_int('taskbar-highlight-edge-gap') : 0;
 }
 
