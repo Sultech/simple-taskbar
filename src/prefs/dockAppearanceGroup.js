@@ -93,48 +93,33 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
     }, connectSettings);
     group.add(dockShapeExpander);
     const addDockShapeRow = row => dockShapeExpander.add_row(row);
-    addSliderRow(
-        null,
-        settings,
-        {
-            key: 'dock-max-length',
-            unit: '%',
-            title: _('Maximum Dock Length'),
-            subtitle: _('Limit the Dock to this percentage of the monitor length'),
-            lower: 1,
-            upper: 90,
-            addRow: addDockShapeRow,
-        },
-        connectSettings
-    );
-    addSliderRow(
-        null,
-        settings,
-        {
-            key: 'dock-side-padding',
-            unit: 'px',
-            title: _('Side Padding'),
-            subtitle: _('Space inside both ends of the Dock'),
-            lower: 0,
-            upper: 64,
-            addRow: addDockShapeRow,
-        },
-        connectSettings
-    );
-    addSliderRow(
-        null,
-        settings,
-        {
-            key: 'dock-highlight-edge-gap',
-            unit: 'px',
-            title: _('Highlight Edge Gap'),
-            subtitle: _('Space between the highlight and the edges of the Dock'),
-            lower: 0,
-            upper: 16,
-            addRow: addDockShapeRow,
-        },
-        connectSettings
-    );
+    addSliderRow(null, settings, {
+        key: 'dock-max-length',
+        unit: '%',
+        title: _('Maximum Dock Length'),
+        subtitle: _('Limit the Dock to this percentage of the monitor length'),
+        lower: 1,
+        upper: 90,
+        addRow: addDockShapeRow,
+    }, connectSettings);
+    addSliderRow(null, settings, {
+        key: 'dock-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the Dock'),
+        lower: 0,
+        upper: 64,
+        addRow: addDockShapeRow,
+    }, connectSettings);
+    addSliderRow(null, settings, {
+        key: 'dock-highlight-edge-gap',
+        unit: 'px',
+        title: _('Highlight Edge Gap'),
+        subtitle: _('Space between the highlight and the edges of the Dock'),
+        lower: 0,
+        upper: 16,
+        addRow: addDockShapeRow,
+    }, connectSettings);
 
     const floatingExpander = createSwitchExpanderRow(settings, {
         title: _('Floating Dock'),
@@ -145,20 +130,15 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
         keyChangedKey: 'dock-panel-mode',
     }, connectSettings);
     group.add(floatingExpander);
-    addSliderRow(
-        null,
-        settings,
-        {
-            key: 'dock-floating-gap',
-            unit: 'px',
-            title: _('Floating Gap'),
-            subtitle: _('Distance between the floating Dock and the screen edge'),
-            lower: 1,
-            upper: 32,
-            addRow: row => floatingExpander.add_row(row),
-        },
-        connectSettings
-    );
+    addSliderRow(null, settings, {
+        key: 'dock-floating-gap',
+        unit: 'px',
+        title: _('Floating Gap'),
+        subtitle: _('Distance between the floating Dock and the screen edge'),
+        lower: 1,
+        upper: 32,
+        addRow: row => floatingExpander.add_row(row),
+    }, connectSettings);
 }
 
 export function addDockAppearanceGroup({
