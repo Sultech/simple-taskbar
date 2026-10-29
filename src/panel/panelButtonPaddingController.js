@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 import {appendStyle} from '../shared/styleUtils.js';
-import {panelIsVertical} from './panelPosition.js';
-import {panelButtonCornerRadiusKey} from '../shared/taskbarPanelModes.js';
+import {panelEdgeSides, panelIsVertical} from './panelPosition.js';
+import {dynamicTaskbarEnabled, panelButtonCornerRadiusKey} from '../shared/taskbarPanelModes.js';
 
 const AUTOMATIC_PADDING = -1;
 const AUTOMATIC_FALLBACK_PADDING = 3;
@@ -49,6 +48,7 @@ export class PanelButtonPaddingController {
         this._cornerRadiusClass = null;
         this._appliedVertical = null;
         this._edgeBoxStyles = new Map();
+        this._edgeShiftedActors = new Map();
     }
 
     enable() {
@@ -57,6 +57,7 @@ export class PanelButtonPaddingController {
             'changed::panel-button-corner-radius', () => this._syncCornerRadius(),
             'changed::default-panel-button-corner-radius', () => this._syncCornerRadius(),
             'changed::default-gnome-panel', () => this._syncCornerRadius(),
+            'changed::taskbar-side-padding', () => this.syncEdgePadding(),
             'changed::windows-xp-theme-enabled', () => {
                 this._restoreAll();
                 this.sync();
@@ -140,6 +141,8 @@ export class PanelButtonPaddingController {
         for (const [box, style] of this._edgeBoxStyles)
             box.set_style(style);
         this._edgeBoxStyles.clear();
+        for (const box of [...this._edgeShiftedActors.keys()])
+            this._shiftEdgeActor(box, null);
 
         this._panelBoxes = null;
         this._panelActor = null;
@@ -366,28 +369,50 @@ export class PanelButtonPaddingController {
     }
 
     syncEdgePadding() {
-        const vertical = panelIsVertical(this._settings);
         const [startBox, , endBox] = this._panelBoxes;
-        const rtl = startBox.get_text_direction() === Clutter.TextDirection.RTL;
-        const startSide = vertical ? 'top' : rtl ? 'right' : 'left';
-        const endSide = vertical ? 'bottom' : rtl ? 'left' : 'right';
+        const [startSide, endSide] = panelEdgeSides(startBox, panelIsVertical(this._settings));
+        const sidePadding = dynamicTaskbarEnabled(this._settings)
+            ? this._settings.get_int('taskbar-side-padding') : 0;
         const visibleChildren = box => box.get_children().filter(child => child.visible);
-        this._setEdgePadding(startBox, startSide, visibleChildren(startBox)[0]);
-        this._setEdgePadding(endBox, endSide, visibleChildren(endBox).at(-1));
+        this._setEdgePadding(startBox, startSide, visibleChildren(startBox)[0], sidePadding);
+        this._setEdgePadding(endBox, endSide, visibleChildren(endBox).at(-1), sidePadding);
     }
 
-    _setEdgePadding(box, side, edgeItem) {
+    _setEdgePadding(box, side, edgeItem, sidePadding) {
         if (!this._edgeBoxStyles.has(box))
             this._edgeBoxStyles.set(box, box.get_style());
         const clockAtEdge = Boolean(edgeItem) &&
             !this._settings.get_boolean('windows-xp-theme-enabled') &&
             this._hasEdgeClass(edgeItem, 'clock-display');
+        const showDesktopAtEdge = Boolean(edgeItem) &&
+            this._hasEdgeClass(edgeItem, SHOW_DESKTOP_CLASS);
+        this._shiftEdgeActor(box, showDesktopAtEdge ? edgeItem : null, side, sidePadding);
         const style = appendStyle(
             this._edgeBoxStyles.get(box) ?? '',
-            `padding-${side}: ${clockAtEdge ? this._hoverInset : 0}px;`
+            `padding-${side}: ${(clockAtEdge ? this._hoverInset : 0) + sidePadding}px;`
         );
         if (box.get_style() !== style)
             box.set_style(style);
+    }
+
+    _shiftEdgeActor(box, actor, side, offset) {
+        const shiftedActor = this._edgeShiftedActors.get(box);
+        if (shiftedActor && shiftedActor !== actor) {
+            shiftedActor.disconnectObject(this);
+            shiftedActor.translation_x = 0;
+            shiftedActor.translation_y = 0;
+            this._edgeShiftedActors.delete(box);
+        }
+        if (!actor)
+            return;
+
+        if (shiftedActor !== actor) {
+            actor.connectObject('destroy', () => this._edgeShiftedActors.delete(box), this);
+            this._edgeShiftedActors.set(box, actor);
+        }
+        const shift = side === 'right' || side === 'bottom' ? offset : -offset;
+        actor.translation_x = side === 'left' || side === 'right' ? shift : 0;
+        actor.translation_y = side === 'top' || side === 'bottom' ? shift : 0;
     }
 
     _hasEdgeClass(actor, styleClass) {

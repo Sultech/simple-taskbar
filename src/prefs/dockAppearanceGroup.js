@@ -130,8 +130,22 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
         },
         connectSettings
     );
+    const dockSidePaddingRow = addSliderRow(
+        group,
+        settings,
+        {
+            key: 'dock-side-padding',
+            unit: 'px',
+            title: _('Side Padding'),
+            subtitle: _('Space inside both ends of the Dock'),
+            lower: 0,
+            upper: 64,
+        },
+        connectSettings
+    );
     const syncMaxLength = () => {
         dockMaxLengthRow.sensitive = !settings.get_boolean('dock-panel-mode');
+        dockSidePaddingRow.sensitive = !settings.get_boolean('dock-panel-mode');
     };
     connectSettings(settings, 'changed::dock-panel-mode', syncMaxLength);
     syncMaxLength();

@@ -4,9 +4,6 @@
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     BLUR_MY_SHELL_PANEL_STYLES,
@@ -36,6 +33,7 @@ import {
     dynamicTransparencyStyle,
 } from '../panel/dynamicTransparency.js';
 import {
+    panelEdgeSides,
     panelIsVertical,
     panelPosition,
     positionIsVertical,
@@ -104,7 +102,6 @@ export class SecondaryPanelDockController {
         this._setPanelHeight = setPanelHeight;
         this._onPosition = onPosition;
         this._isCentered = isCentered;
-        this._signalHolder = new TransientSignalHolder();
         this._configuredIconSize = settings.getConfiguredIconSize();
         this._layout = new FloatingPanelLayout({
             settings,
@@ -129,13 +126,17 @@ export class SecondaryPanelDockController {
         this._layout.enable(!this._settings.get_boolean('dock-panel-mode') ||
             dockFloatingEnabled(this._settings));
         this._connectSignals();
+        this._syncSidePadding();
     }
 
     destroy() {
         this._layout.destroy();
         this._layout = null;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        St.ThemeContext.get_for_stage(global.stage).disconnectObject(this);
+        St.Settings.get().disconnectObject(this);
+        if (this._mainPanelBox)
+            this._mainPanelBox.disconnectObject(this);
 
         this._settings = null;
         this._monitor = null;
@@ -237,6 +238,15 @@ export class SecondaryPanelDockController {
 
     syncStrut() {
         this._layout.syncStrut();
+    }
+
+    _syncSidePadding() {
+        const padding = this._settings.get_boolean('dock-panel-mode')
+            ? 0 : this._settings.get_int('taskbar-side-padding');
+        const [startBox, , endBox] = this._boxes;
+        const [startSide, endSide] = panelEdgeSides(startBox, panelIsVertical(this._settings));
+        startBox.set_style(`padding-${startSide}: ${padding}px;`);
+        endBox.set_style(`padding-${endSide}: ${padding}px;`);
     }
 
     updateTaskbarWidth() {
@@ -372,7 +382,7 @@ export class SecondaryPanelDockController {
             },
             'changed::windows-xp-theme-enabled',
             () => this.resetIconSize(),
-            this._signalHolder
+            this
         );
         for (const key of [
             'transparency-enabled',
@@ -396,22 +406,24 @@ export class SecondaryPanelDockController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this.syncTheme(),
-                this._signalHolder
+                this
             );
         }
         const themeContext = St.ThemeContext.get_for_stage(global.stage);
         themeContext.connectObject(
             'changed',
             () => this.syncTheme(),
-            this._signalHolder
+            this
         );
         const stSettings = St.Settings.get();
         stSettings.connectObject(
             'notify::color-scheme',
             () => this.syncTheme(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
+            'changed::taskbar-side-padding',
+            () => this._syncSidePadding(),
             'changed::dock-max-length',
             () => {
                 this._layout.resetLength();
@@ -421,7 +433,7 @@ export class SecondaryPanelDockController {
             () => {
                 this.updateTaskbarWidth();
             },
-            this._signalHolder
+            this
         );
     }
 
@@ -508,12 +520,15 @@ export class SecondaryPanelDockController {
             return panelBox;
 
         if (this._mainPanelBox)
-            this._mainPanelBox.disconnectObject(this._signalHolder);
+            this._mainPanelBox.disconnectObject(this);
         this._mainPanelBox = panelBox;
         if (panelBox) {
             panelBox.connectObject(
                 'notify::allocation', () => this._onPosition(),
-                this._signalHolder
+                'destroy', () => {
+                    this._mainPanelBox = null;
+                },
+                this
             );
         }
 

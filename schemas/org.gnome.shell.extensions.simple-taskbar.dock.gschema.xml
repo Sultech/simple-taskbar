@@ -133,6 +133,11 @@
       <default>4</default>
       <summary>Gap between the floating Dock and the screen edge</summary>
     </key>
+    <key name="dock-side-padding" type="i">
+      <range min="0" max="64"/>
+      <default>5</default>
+      <summary>Padding inside both ends of the Dock</summary>
+    </key>
     <key name="dock-panel-height" type="i">
       <range min="32" max="175"/>
       <default>67</default>

@@ -24,6 +24,13 @@ function naturalLength(actor, crossSize, vertical) {
         : actor.get_preferred_width(crossSize)[1];
 }
 
+function boxEdgePadding(box, vertical) {
+    const themeNode = box.get_theme_node();
+    return vertical
+        ? themeNode.get_vertical_padding()
+        : themeNode.get_horizontal_padding();
+}
+
 function childrenNaturalLength(box, excludedActor, crossSize, vertical) {
     return box.get_children().reduce((length, actor) => {
         if (actor === excludedActor)
@@ -168,6 +175,7 @@ export function constrainTaskbarSize({
         return;
     }
 
+    panelLength -= boxEdgePadding(leftBox, vertical) + boxEdgePadding(rightBox, vertical);
     let availableLength;
     if (centered) {
         const leftLength = childrenNaturalLength(

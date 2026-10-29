@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import {
@@ -15,6 +16,15 @@ export {
     panelPosition,
     positionIsVertical,
 } from '../shared/panelPositionUtils.js';
+
+export function panelEdgeSides(box, vertical) {
+    if (vertical)
+        return ['top', 'bottom'];
+
+    return box.get_text_direction() === Clutter.TextDirection.RTL
+        ? ['right', 'left']
+        : ['left', 'right'];
+}
 
 const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
 const BOTTOM_PANEL_MENU_CLASS = 'simple-taskbar-bottom-panel-menu';

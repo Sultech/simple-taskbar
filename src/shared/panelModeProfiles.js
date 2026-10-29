@@ -112,6 +112,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-launch-to-desktop-enabled',
     'dock-multi-monitor-panels',
     'dock-max-length',
+    'dock-side-padding',
     'dock-min-icon-size',
     'dock-transparency-enabled',
     'dock-transparency-level',

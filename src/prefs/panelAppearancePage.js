@@ -112,6 +112,14 @@ export function addPanelAppearancePage({
         lower: 1,
         upper: 90,
     }, connectSettings);
+    const sidePaddingRow = addSliderRow(floatingGroup, settings, {
+        key: 'taskbar-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the dynamic taskbar'),
+        lower: 0,
+        upper: 64,
+    }, connectSettings);
     const cornerRadiusRow = addSliderRow(floatingGroup, settings, {
         key: 'taskbar-corner-radius',
         title: _('Corner Radius'),
@@ -122,6 +130,7 @@ export function addPanelAppearancePage({
     const syncFloatingControls = () => {
         floatingGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
         maximumLengthRow.sensitive = dynamicSwitch.active;
+        sidePaddingRow.sensitive = dynamicSwitch.active;
         floatingGapRow.sensitive = floatingSwitch.active;
         cornerRadiusRow.sensitive = dynamicSwitch.active || floatingSwitch.active;
     };

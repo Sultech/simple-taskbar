@@ -588,6 +588,11 @@
       <default>4</default>
       <summary>Gap between the floating taskbar and the screen edge</summary>
     </key>
+    <key name="taskbar-side-padding" type="i">
+      <range min="0" max="64"/>
+      <default>5</default>
+      <summary>Padding inside both ends of the dynamic taskbar</summary>
+    </key>
     <key name="taskbar-max-length" type="i">
       <range min="1" max="90"/>
       <default>90</default>
