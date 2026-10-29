@@ -569,6 +569,8 @@ export default class SimpleTaskbarExtension extends Extension {
         this._settings.connectObject(
             'changed::panel-height-follow-icon-size',
             () => this._syncPanelHeight(),
+            'changed::taskbar-highlight-edge-gap',
+            () => this._syncPanelHeight(),
             this
         );
         this._settings.connectObject('changed::panel-position', () => {

@@ -143,9 +143,23 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
         },
         connectSettings
     );
+    const dockHighlightEdgeGapRow = addSliderRow(
+        group,
+        settings,
+        {
+            key: 'dock-highlight-edge-gap',
+            unit: 'px',
+            title: _('Highlight Edge Gap'),
+            subtitle: _('Space between the highlight and the edges of the Dock'),
+            lower: 0,
+            upper: 16,
+        },
+        connectSettings
+    );
     const syncMaxLength = () => {
         dockMaxLengthRow.sensitive = !settings.get_boolean('dock-panel-mode');
         dockSidePaddingRow.sensitive = !settings.get_boolean('dock-panel-mode');
+        dockHighlightEdgeGapRow.sensitive = !settings.get_boolean('dock-panel-mode');
     };
     connectSettings(settings, 'changed::dock-panel-mode', syncMaxLength);
     syncMaxLength();

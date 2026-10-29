@@ -682,6 +682,8 @@ export class SecondaryPanelController {
                 () => this._updateTaskbarWidth(),
                 'changed::panel-height-follow-icon-size',
                 () => this._syncPanelHeight(),
+                'changed::taskbar-highlight-edge-gap',
+                () => this._syncPanelHeight(),
                 this._signalHolder
             );
             for (const key of [

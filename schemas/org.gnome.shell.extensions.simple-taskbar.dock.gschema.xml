@@ -138,6 +138,11 @@
       <default>5</default>
       <summary>Padding inside both ends of the Dock</summary>
     </key>
+    <key name="dock-highlight-edge-gap" type="i">
+      <range min="0" max="16"/>
+      <default>1</default>
+      <summary>Space between the highlight and the edges of the Dock</summary>
+    </key>
     <key name="dock-panel-height" type="i">
       <range min="32" max="175"/>
       <default>67</default>

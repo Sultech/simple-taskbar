@@ -597,6 +597,11 @@
       <default>5</default>
       <summary>Padding inside both ends of the dynamic taskbar</summary>
     </key>
+    <key name="taskbar-highlight-edge-gap" type="i">
+      <range min="0" max="16"/>
+      <default>1</default>
+      <summary>Space between the highlight and the edges of the dynamic taskbar</summary>
+    </key>
     <key name="taskbar-max-length" type="i">
       <range min="1" max="90"/>
       <default>90</default>

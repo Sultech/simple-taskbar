@@ -47,6 +47,7 @@ const DOCK_SETTING_KEYS = new Map([
     ['edge-reveal-enabled', 'dock-edge-reveal-enabled'],
     ['taskbar-floating-gap', 'dock-floating-gap'],
     ['taskbar-side-padding', 'dock-side-padding'],
+    ['taskbar-highlight-edge-gap', 'dock-highlight-edge-gap'],
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],
     ['workspace-scroll-action', 'dock-workspace-scroll-action'],
     ['workspace-scroll-delay', 'dock-workspace-scroll-delay'],
@@ -80,6 +81,7 @@ const DOCK_COMPUTED_SETTING_KEYS = new Map([
             'dock-panel-height',
             'dock-panel-height-follow-icon-size',
             'icon-edge-padding',
+            'dock-highlight-edge-gap',
         ],
     ],
 ]);

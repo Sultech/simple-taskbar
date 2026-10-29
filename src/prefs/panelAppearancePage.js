@@ -120,6 +120,14 @@ export function addPanelAppearancePage({
         lower: 0,
         upper: 64,
     }, connectSettings);
+    const highlightEdgeGapRow = addSliderRow(floatingGroup, settings, {
+        key: 'taskbar-highlight-edge-gap',
+        unit: 'px',
+        title: _('Highlight Edge Gap'),
+        subtitle: _('Space between the highlight and the edges of the dynamic taskbar'),
+        lower: 0,
+        upper: 16,
+    }, connectSettings);
     const cornerRadiusRow = addSliderRow(floatingGroup, settings, {
         key: 'taskbar-corner-radius',
         title: _('Corner Radius'),
@@ -131,6 +139,7 @@ export function addPanelAppearancePage({
         floatingGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
         maximumLengthRow.sensitive = dynamicSwitch.active;
         sidePaddingRow.sensitive = dynamicSwitch.active;
+        highlightEdgeGapRow.sensitive = dynamicSwitch.active;
         floatingGapRow.sensitive = floatingSwitch.active;
         cornerRadiusRow.sensitive = dynamicSwitch.active || floatingSwitch.active;
     };

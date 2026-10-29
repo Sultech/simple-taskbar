@@ -84,6 +84,7 @@ export class OverviewIntegration {
             'changed::dock-floating', () => this.queueRelayout(),
             'changed::dock-panel-mode-floating', () => this.queueRelayout(),
             'changed::dock-floating-gap', () => this.queueRelayout(),
+            'changed::dock-highlight-edge-gap', () => this.queueRelayout(),
             'changed::dock-multi-monitor-panels', () => this.queueRelayout(),
             'changed::dock-autohide-enabled', () => this.queueRelayout(),
             'changed::dock-dodge-windows-enabled', () =>
@@ -510,7 +511,8 @@ export class OverviewIntegration {
         const iconSize = this._settings.get_int('icon-size');
         const dockThickness = this._settings.get_boolean('dock-panel-mode')
             ? dockPanelModeHeight(this._settings, iconSize)
-            : panelHeightForIconSize(this._settings, iconSize);
+            : panelHeightForIconSize(this._settings, iconSize) +
+                this._settings.get_int('dock-highlight-edge-gap') * 2;
         const dockHeight = dockThickness +
             (dockFloatingEnabled(this._settings) ? this._settings.get_int('dock-floating-gap') : 0);
         const position = this._settings.get_string('dock-position');

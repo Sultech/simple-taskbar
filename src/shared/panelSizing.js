@@ -125,8 +125,19 @@ export function standardMinimumPanelHeight(settings) {
     );
 }
 
+export function highlightEdgeGap(settings) {
+    if (settings.isDock) {
+        return settings.get_boolean('dock-panel-mode')
+            ? 0 : settings.get_int('taskbar-highlight-edge-gap');
+    }
+
+    return dynamicTaskbarEnabled(settings)
+        ? settings.get_int('taskbar-highlight-edge-gap') : 0;
+}
+
 export function dockFloatingPanelReserve(settings) {
-    return iconEdgeReserve(settings) + DOCK_FLOATING_CHROME_RESERVE;
+    return iconEdgeReserve(settings) + DOCK_FLOATING_CHROME_RESERVE +
+        highlightEdgeGap(settings) * 2;
 }
 
 export function taskbarVisualPanelHeight(
@@ -139,7 +150,7 @@ export function taskbarVisualPanelHeight(
         return panelHeight;
 
     const reserve = iconEdgeReserve(settings);
-    return iconSize + reserve + reserve % 2;
+    return iconSize + reserve + reserve % 2 + highlightEdgeGap(settings) * 2;
 }
 
 export function taskbarGlassHeight(
@@ -152,7 +163,8 @@ export function taskbarGlassHeight(
         return panelHeight - 5;
 
     const centreOnIcon = panelIsVertical(settings);
-    const insetExtent = Math.max(1, panelHeight - GLASS_VERTICAL_INSET * 2);
+    const insetExtent = Math.max(1,
+        panelHeight - (GLASS_VERTICAL_INSET + highlightEdgeGap(settings)) * 2);
     if (!settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.enabled)) {
         const extent = settings.get_boolean(HIGHLIGHT_SIZE_SETTINGS.followIcon)
             ? Math.min(insetExtent, raiseToIconParity(
@@ -212,7 +224,7 @@ export function taskbarPanelHeight(settings, iconSize) {
         !dynamicTaskbarEnabled(settings))
         return settings.get_int('panel-height');
 
-    return panelHeightForIconSize(settings, iconSize);
+    return panelHeightForIconSize(settings, iconSize) + highlightEdgeGap(settings) * 2;
 }
 
 export function dockPanelModeHeight(settings, iconSize) {

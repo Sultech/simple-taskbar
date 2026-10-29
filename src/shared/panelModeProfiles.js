@@ -113,6 +113,7 @@ const MODE_SETTING_KEYS = new Set([
     'dock-multi-monitor-panels',
     'dock-max-length',
     'dock-side-padding',
+    'dock-highlight-edge-gap',
     'dock-min-icon-size',
     'dock-transparency-enabled',
     'dock-transparency-level',
