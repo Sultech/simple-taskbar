@@ -627,7 +627,8 @@ export class TaskbarHoverAnimationAnimator {
                 this._smoothing.getFactor(),
                 MAGNIFY_EPSILON
             );
-            if (settled && level === 0 && !rowTranslation)
+            if (settled && level === 0 && !rowTranslation &&
+                this._clones.isStretchSettled(item))
                 this._clones.remove(item);
             return;
         }

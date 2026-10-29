@@ -76,6 +76,11 @@ export class TaskbarHoverAnimationCloneController {
         return false;
     }
 
+    isStretchSettled(item) {
+        const entry = this._stretchActors.get(item);
+        return !entry || entry.actor[entry.property] === entry.base;
+    }
+
     get(item) {
         return this._clones.get(item);
     }
