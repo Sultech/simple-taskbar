@@ -50,6 +50,7 @@ import {
     addComboRow,
     addToggleChoiceRow,
     addSwitchRow,
+    createSwitchExpanderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 
@@ -547,15 +548,14 @@ function addApplicationOverflowControls({
     });
     groups.push(applicationOverflowGroup);
 
-    const applicationOverflowSwitch = createSwitchRow(settings, {
-        key: 'application-overflow-enabled',
+    const applicationOverflowSwitch = createSwitchExpanderRow(settings, {
         title: _('Enable Application Overflow'),
         subtitle: switchSubtitle,
-    });
+        getKey: () => 'application-overflow-enabled',
+    }, connectSettings);
     applicationOverflowGroup.add(applicationOverflowSwitch);
-
-    const applicationOverflowStyleRow = addToggleChoiceRow(
-        applicationOverflowGroup,
+    addToggleChoiceRow(
+        {add: row => applicationOverflowSwitch.add_row(row)},
         settings,
         {
             key: 'application-overflow-style',
@@ -567,11 +567,6 @@ function addApplicationOverflowControls({
         },
         connectSettings
     );
-    applicationOverflowStyleRow.sensitive =
-        applicationOverflowSwitch.active;
-    applicationOverflowSwitch.connect('notify::active', widget => {
-        applicationOverflowStyleRow.sensitive = widget.active;
-    });
     const syncApplicationOverflowSensitivity = () => {
         applicationOverflowSwitch.sensitive =
             !settings.get_boolean('windows-xp-theme-enabled');
