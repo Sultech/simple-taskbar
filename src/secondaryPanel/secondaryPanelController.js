@@ -527,6 +527,7 @@ export class SecondaryPanelController {
             this._windowDragController.destroy();
             this._windowDragController = null;
         }
+        this._settings.disconnectObject(this);
         this._signalHolder.destroy();
         this._signalHolder = null;
 
@@ -683,9 +684,12 @@ export class SecondaryPanelController {
                 () => this._updateTaskbarWidth(),
                 'changed::panel-height-follow-icon-size',
                 () => this._syncPanelHeight(),
+                this._signalHolder
+            );
+            this._settings.connectObject(
                 'changed::taskbar-highlight-edge-gap',
                 () => this._syncPanelHeight(),
-                this._signalHolder
+                this
             );
             for (const key of [
                 'transparency-on-unmaximized',
@@ -808,7 +812,7 @@ export class SecondaryPanelController {
                         this._syncQuickSettingsIndicators();
                         this._updateTaskbarWidth();
                     },
-                    this._signalHolder
+                    this
                 );
             }
         }

@@ -235,7 +235,7 @@ export class ApplicationOverflowController {
         for (const key of PANEL_BUTTON_PADDING_KEYS) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._queueSync();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject('changed::transparency-enabled', () => {
             this._themeController.sync();
@@ -393,6 +393,7 @@ export class ApplicationOverflowController {
             );
             this._dragEndListenerRegistered = false;
         }
+        this._settings.disconnectObject(this);
         this._signalHolder.destroy();
         this._signalHolder = null;
         if (this._grab) {

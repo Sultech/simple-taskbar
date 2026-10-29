@@ -83,8 +83,6 @@ export class OverviewIntegration {
             'changed::dock-panel-mode', () => this.queueRelayout(),
             'changed::dock-floating', () => this.queueRelayout(),
             'changed::dock-panel-mode-floating', () => this.queueRelayout(),
-            'changed::dock-floating-gap', () => this.queueRelayout(),
-            'changed::dock-highlight-edge-gap', () => this.queueRelayout(),
             'changed::dock-multi-monitor-panels', () => this.queueRelayout(),
             'changed::dock-autohide-enabled', () => this.queueRelayout(),
             'changed::dock-dodge-windows-enabled', () =>
@@ -96,6 +94,11 @@ export class OverviewIntegration {
             'changed::panel-dodge-windows-enabled', () =>
                 this.queueRelayout(),
             this._signalHolder
+        );
+        this._settings.connectObject(
+            'changed::dock-floating-gap', () => this.queueRelayout(),
+            'changed::dock-highlight-edge-gap', () => this.queueRelayout(),
+            this
         );
         Main.overview.connectObject(
             'window-drag-begin',
@@ -143,6 +146,7 @@ export class OverviewIntegration {
         this._cancelStartupOverview();
         this._cancelDashVisibilityRepair();
         this._disconnectAppSpreadSignal();
+        this._settings.disconnectObject(this);
         this._signalHolder.destroy();
         this._signalHolder = null;
         this._restoreAppSpreadState(true);

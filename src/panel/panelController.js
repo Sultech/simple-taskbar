@@ -277,6 +277,7 @@ export class PanelController {
         }
         this._taskbarWidthUpdater.destroy();
         this._taskbarWidthUpdater = null;
+        this._settings.disconnectObject(this);
         this._signalHolder.destroy();
         this._signalHolder = null;
 
@@ -813,7 +814,7 @@ export class PanelController {
                 this._syncPanelOrientation();
                 this._verticalItemsController.sync();
                 this.updateTaskbarWidth();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject(
             'changed::quick-settings-icon-spacing',

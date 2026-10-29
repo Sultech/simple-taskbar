@@ -160,8 +160,11 @@ export class PanelAutoHideController {
             () => this._syncPressureBarrier(),
             'changed::panel-position', () => this._syncPressureBarrier(),
             'changed::edge-reveal-enabled', () => this._syncPressureBarrier(),
-            'changed::taskbar-floating-gap', () => this._syncPressureBarrier(),
             this._signalHolder
+        );
+        this._settings.connectObject(
+            'changed::taskbar-floating-gap', () => this._syncPressureBarrier(),
+            this
         );
         Main.overview.connectObject(
             'showing', () => this._suspendForOverview(),
@@ -196,6 +199,7 @@ export class PanelAutoHideController {
         if (this._cursorPositionInvalidatedId)
             this._cursorTracker.disconnect(this._cursorPositionInvalidatedId);
         this._cursorPositionInvalidatedId = 0;
+        this._settings.disconnectObject(this);
         this._signalHolder.destroy();
         this._signalHolder = null;
 
