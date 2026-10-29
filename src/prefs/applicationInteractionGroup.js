@@ -140,6 +140,7 @@ function getApplicationClickAnimationChoices() {
 
 export function addApplicationInteractionGroup({
     page,
+    animationsPage,
     groups,
     settings,
     connectSettings,
@@ -153,10 +154,14 @@ export function addApplicationInteractionGroup({
         description: _('Choose what happens when scrolling over an application icon'),
     });
     const hoverGroup = page.addGroup({
-        title: _('Hovering and Animations'),
+        title: _('Hovering'),
         description: _('Choose what happens when the pointer rests on an application icon'),
     });
-    groups.push(clickGroup, scrollGroup, hoverGroup);
+    const animationGroup = animationsPage.addGroup({
+        title: _('Application Animations'),
+        description: _('Choose how application icons animate when clicked or hovered'),
+    });
+    groups.push(clickGroup, scrollGroup, hoverGroup, animationGroup);
     const clickActionOptionsButton =
         createApplicationClickActionOptionsButton(settings);
     const previewOptionsButton = createWindowPreviewOptionsButton(settings);
@@ -194,7 +199,7 @@ export function addApplicationInteractionGroup({
         clickGroup.add(clickOptionsRow);
     }
     addComboRow(
-        clickGroup,
+        animationGroup,
         settings,
         {
             key: 'application-click-animation',
@@ -376,7 +381,7 @@ export function addApplicationInteractionGroup({
         },
     ];
     const hoverAnimationTypeRow = addComboRow(
-        hoverGroup,
+        animationGroup,
         settings,
         {
             key: 'animate-appicon-hover-animation-type',
@@ -397,7 +402,7 @@ export function addApplicationInteractionGroup({
         connectSettings
     );
     if (!settings.isDefaultPanelWindows) {
-        const effectsGroup = page.addGroup({
+        const effectsGroup = animationsPage.addGroup({
             title: _('Window Effects'),
             description: _('Choose the animation used when windows are minimized or restored'),
         });

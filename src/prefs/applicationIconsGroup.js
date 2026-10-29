@@ -56,6 +56,7 @@ import {
 function addApplicationIconControls({
     page,
     interactionPage,
+    animationsPage,
     groups,
     settings,
     connectSettings,
@@ -186,6 +187,7 @@ function addApplicationIconControls({
 
     addApplicationInteractionGroup({
         page: interactionPage,
+        animationsPage,
         groups,
         settings,
         connectSettings,
@@ -634,6 +636,7 @@ function addApplicationSections({
     const controls = addApplicationIconControls({
         page: pages.icons,
         interactionPage: pages.interaction,
+        animationsPage: pages.animations,
         groups,
         settings,
         connectSettings,

@@ -41,9 +41,15 @@ function panelHubSections({panelTitle, itemsTitle, autoHideSubtitle}) {
                 },
                 {
                     id: 'interaction',
-                    title: _('Clicking, Hovering and Animations'),
-                    subtitle: _('Click and scroll actions, hover previews, magnify and other animations'),
+                    title: _('Clicking, Scrolling and Hovering'),
+                    subtitle: _('Click, scroll and hover actions for application icons, and window previews'),
                     iconName: 'input-mouse-symbolic',
+                },
+                {
+                    id: 'animations',
+                    title: _('Animations'),
+                    subtitle: _('Click, hover and window minimize animations'),
+                    iconName: 'starred-symbolic',
                 },
                 {
                     id: 'indicators',
