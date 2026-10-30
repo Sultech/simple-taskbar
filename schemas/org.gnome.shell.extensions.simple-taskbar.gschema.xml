@@ -35,7 +35,7 @@
     </key>
     <key name="panel-button-corner-radius" type="i">
       <range min="-1" max="16"/>
-      <default>10</default>
+      <default>8</default>
       <summary>Corner radius of panel item highlights</summary>
       <description>Use -1 for the theme default or 0 through 16 for an explicit pixel value</description>
     </key>
