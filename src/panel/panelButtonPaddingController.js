@@ -8,9 +8,9 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 import {appendStyle} from '../shared/styleUtils.js';
 import {panelEdgeSides, panelIsVertical} from './panelPosition.js';
+import {PanelButtonCornerRadiusController} from './panelButtonCornerRadiusController.js';
 import {
     dynamicTaskbarEnabled,
-    panelButtonCornerRadiusKey,
     panelButtonPaddingKey,
 } from '../shared/taskbarPanelModes.js';
 
@@ -23,8 +23,6 @@ const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const HOVER_INSET_CLASS_PREFIX =
     'simple-taskbar-panel-button-hover-inset-';
-const CORNER_RADIUS_CLASS = 'simple-taskbar-panel-button-radius';
-const THEME_CORNER_RADIUS = -1;
 const JUST_PERFECTION_BUTTON_PADDING_PREFIX =
     'just-perfection-api-panel-button-padding-size';
 const ICON_HORIZONTAL_PADDING_STYLE =
@@ -32,6 +30,12 @@ const ICON_HORIZONTAL_PADDING_STYLE =
 const REGULAR_PANEL_HEIGHT = 49;
 const MINIMUM_HOVER_INSET = 3;
 const REGULAR_HOVER_INSET = 6;
+
+export function panelButtonHoverInset(panelHeight) {
+    const heightRange = REGULAR_PANEL_HEIGHT - MIN_PANEL_HEIGHT;
+    const progress = (Math.clamp(panelHeight, MIN_PANEL_HEIGHT, REGULAR_PANEL_HEIGHT) - MIN_PANEL_HEIGHT) / heightRange;
+    return Math.round(MINIMUM_HOVER_INSET + progress * (REGULAR_HOVER_INSET - MINIMUM_HOVER_INSET));
+}
 
 export function syncPanelSidePadding(boxes, startButtonController, vertical, padding, applyPadding) {
     const [startBox, , endBox] = boxes;
@@ -67,7 +71,9 @@ export class PanelButtonPaddingController {
         this._styledActors = new Map();
         this._hoverInsetClass = null;
         this._hoverInset = MINIMUM_HOVER_INSET;
-        this._cornerRadiusClass = null;
+        this._cornerRadiusController = new PanelButtonCornerRadiusController(
+            settings, panelBoxes, () => panelButtonHoverInset(this._getPanelHeight())
+        );
         this._appliedVertical = null;
         this._edgeBoxStyles = new Map();
         this._edgeShiftedActors = new Map();
@@ -77,14 +83,10 @@ export class PanelButtonPaddingController {
         this._settings.connectObject(
             'changed::panel-button-padding', () => this.sync(),
             'changed::taskbar-dynamic-panel-button-padding', () => this.sync(),
-            'changed::panel-button-corner-radius', () => this._syncCornerRadius(),
-            'changed::default-panel-button-corner-radius', () => this._syncCornerRadius(),
-            'changed::default-gnome-panel', () => this._syncCornerRadius(),
             'changed::taskbar-side-padding', () => this.syncEdgePadding(),
             'changed::windows-xp-theme-enabled', () => {
                 this._restoreAll();
                 this.sync();
-                this._syncCornerRadius();
             },
             this
         );
@@ -109,6 +111,7 @@ export class PanelButtonPaddingController {
             );
         }
         this._syncHoverInset();
+        this._cornerRadiusController.enable();
         this.sync();
     }
 
@@ -122,20 +125,17 @@ export class PanelButtonPaddingController {
             this._appliedVertical !== vertical)
             this._restoreAll();
         this._appliedVertical = vertical;
-        this._panelActor.remove_style_class_name(
-            DEFAULT_BUTTON_PADDING_CLASS
-        );
+        this._cornerRadiusController.sync();
+        if (padding !== null && automatic && !vertical)
+            this._panelActor.add_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
+        else
+            this._panelActor.remove_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
         this.syncEdgePadding();
         if (padding === null) {
             this._restoreAll();
             return;
         }
 
-        if (automatic && !vertical) {
-            this._panelActor.add_style_class_name(
-                DEFAULT_BUTTON_PADDING_CLASS
-            );
-        }
         for (const box of this._panelBoxes)
             this._applyToSubtree(box, padding, vertical);
     }
@@ -155,11 +155,8 @@ export class PanelButtonPaddingController {
             );
             this._hoverInsetClass = null;
         }
-        if (this._cornerRadiusClass) {
-            this._panelActor.remove_style_class_name(CORNER_RADIUS_CLASS);
-            this._panelActor.remove_style_class_name(this._cornerRadiusClass);
-            this._cornerRadiusClass = null;
-        }
+        this._cornerRadiusController.destroy();
+        this._cornerRadiusController = null;
         this._restoreAll();
         for (const [box, style] of this._edgeBoxStyles)
             box.set_style(style);
@@ -185,21 +182,8 @@ export class PanelButtonPaddingController {
     }
 
     _syncHoverInset() {
-        const panelHeight = this._getPanelHeight();
-        const heightRange = REGULAR_PANEL_HEIGHT - MIN_PANEL_HEIGHT;
-        const clampedHeight = Math.clamp(
-            panelHeight,
-            MIN_PANEL_HEIGHT,
-            REGULAR_PANEL_HEIGHT
-        );
-        const progress =
-            (clampedHeight - MIN_PANEL_HEIGHT) / heightRange;
-        const insetRange = REGULAR_HOVER_INSET - MINIMUM_HOVER_INSET;
-        const inset = Math.round(
-            MINIMUM_HOVER_INSET + progress * insetRange
-        );
+        const inset = panelButtonHoverInset(this._getPanelHeight());
         this._hoverInset = inset;
-        this._syncCornerRadius();
         const hoverInsetClass = `${HOVER_INSET_CLASS_PREFIX}${inset}`;
         if (hoverInsetClass === this._hoverInsetClass &&
             this._panelActor.has_style_class_name(hoverInsetClass))
@@ -212,26 +196,6 @@ export class PanelButtonPaddingController {
         }
         this._hoverInsetClass = hoverInsetClass;
         this._panelActor.add_style_class_name(this._hoverInsetClass);
-    }
-
-    _syncCornerRadius() {
-        const radius = this._settings.get_int(panelButtonCornerRadiusKey(this._settings));
-        const cornerRadiusClass = radius === THEME_CORNER_RADIUS ||
-            this._settings.get_boolean('windows-xp-theme-enabled')
-            ? null
-            : `${CORNER_RADIUS_CLASS}-${radius + this._hoverInset}`;
-        if (cornerRadiusClass === this._cornerRadiusClass)
-            return;
-
-        if (this._cornerRadiusClass)
-            this._panelActor.remove_style_class_name(this._cornerRadiusClass);
-        this._cornerRadiusClass = cornerRadiusClass;
-        if (cornerRadiusClass) {
-            this._panelActor.add_style_class_name(CORNER_RADIUS_CLASS);
-            this._panelActor.add_style_class_name(cornerRadiusClass);
-        } else {
-            this._panelActor.remove_style_class_name(CORNER_RADIUS_CLASS);
-        }
     }
 
     effectivePadding() {
@@ -390,6 +354,7 @@ export class PanelButtonPaddingController {
 
     syncPanelHeight() {
         this._syncHoverInset();
+        this._cornerRadiusController.sync();
         this.syncEdgePadding();
     }
 

@@ -463,111 +463,111 @@
     border-width: 0;
 }
 
-.simple-taskbar-panel-button-radius-3 .panel-button,
-.simple-taskbar-panel-button-radius-3 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-3,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-3 .clock {
     border-radius: 3px;
 }
 
-.simple-taskbar-panel-button-radius-4 .panel-button,
-.simple-taskbar-panel-button-radius-4 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-4,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-4 .clock {
     border-radius: 4px;
 }
 
-.simple-taskbar-panel-button-radius-5 .panel-button,
-.simple-taskbar-panel-button-radius-5 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-5,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-5 .clock {
     border-radius: 5px;
 }
 
-.simple-taskbar-panel-button-radius-6 .panel-button,
-.simple-taskbar-panel-button-radius-6 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-6,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-6 .clock {
     border-radius: 6px;
 }
 
-.simple-taskbar-panel-button-radius-7 .panel-button,
-.simple-taskbar-panel-button-radius-7 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-7,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-7 .clock {
     border-radius: 7px;
 }
 
-.simple-taskbar-panel-button-radius-8 .panel-button,
-.simple-taskbar-panel-button-radius-8 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-8,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-8 .clock {
     border-radius: 8px;
 }
 
-.simple-taskbar-panel-button-radius-9 .panel-button,
-.simple-taskbar-panel-button-radius-9 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-9,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-9 .clock {
     border-radius: 9px;
 }
 
-.simple-taskbar-panel-button-radius-10 .panel-button,
-.simple-taskbar-panel-button-radius-10 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-10,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-10 .clock {
     border-radius: 10px;
 }
 
-.simple-taskbar-panel-button-radius-11 .panel-button,
-.simple-taskbar-panel-button-radius-11 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-11,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-11 .clock {
     border-radius: 11px;
 }
 
-.simple-taskbar-panel-button-radius-12 .panel-button,
-.simple-taskbar-panel-button-radius-12 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-12,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-12 .clock {
     border-radius: 12px;
 }
 
-.simple-taskbar-panel-button-radius-13 .panel-button,
-.simple-taskbar-panel-button-radius-13 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-13,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-13 .clock {
     border-radius: 13px;
 }
 
-.simple-taskbar-panel-button-radius-14 .panel-button,
-.simple-taskbar-panel-button-radius-14 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-14,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-14 .clock {
     border-radius: 14px;
 }
 
-.simple-taskbar-panel-button-radius-15 .panel-button,
-.simple-taskbar-panel-button-radius-15 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-15,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-15 .clock {
     border-radius: 15px;
 }
 
-.simple-taskbar-panel-button-radius-16 .panel-button,
-.simple-taskbar-panel-button-radius-16 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-16,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-16 .clock {
     border-radius: 16px;
 }
 
-.simple-taskbar-panel-button-radius-17 .panel-button,
-.simple-taskbar-panel-button-radius-17 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-17,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-17 .clock {
     border-radius: 17px;
 }
 
-.simple-taskbar-panel-button-radius-18 .panel-button,
-.simple-taskbar-panel-button-radius-18 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-18,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-18 .clock {
     border-radius: 18px;
 }
 
-.simple-taskbar-panel-button-radius-19 .panel-button,
-.simple-taskbar-panel-button-radius-19 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-19,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-19 .clock {
     border-radius: 19px;
 }
 
-.simple-taskbar-panel-button-radius-20 .panel-button,
-.simple-taskbar-panel-button-radius-20 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-20,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-20 .clock {
     border-radius: 20px;
 }
 
-.simple-taskbar-panel-button-radius-21 .panel-button,
-.simple-taskbar-panel-button-radius-21 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-21,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-21 .clock {
     border-radius: 21px;
 }
 
-.simple-taskbar-panel-button-radius-22 .panel-button,
-.simple-taskbar-panel-button-radius-22 .panel-button.clock-display .clock {
+.panel-button.simple-taskbar-panel-button-radius-22,
+.panel-button.clock-display.simple-taskbar-panel-button-radius-22 .clock {
     border-radius: 22px;
 }
 
-.simple-taskbar-panel-button-radius .panel-button.simple-taskbar-start {
+.panel-button.simple-taskbar-start.simple-taskbar-panel-button-radius {
     border-radius: 999px;
 }
 
-.simple-taskbar-panel-button-radius .panel-button.simple-taskbar-show-desktop {
+.panel-button.simple-taskbar-show-desktop.simple-taskbar-panel-button-radius {
     border-radius: 0;
 }
 

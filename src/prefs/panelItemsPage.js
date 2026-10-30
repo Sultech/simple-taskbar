@@ -99,7 +99,7 @@ export function addPanelItemsPage({
                 'default-panel-button-corner-radius',
                 'default-gnome-panel',
             ],
-            title: _('Taskbar Item Corner Radius'),
+            title: _('Taskbar Buttons Corner Radius'),
             subtitle: _(
                 'Rounding of the clock, Quick Settings and other taskbar item highlights. Use -1 for the theme default'
             ),

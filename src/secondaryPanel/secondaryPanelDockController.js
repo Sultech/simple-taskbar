@@ -37,7 +37,8 @@ import {
     panelPosition,
     positionIsVertical,
 } from '../panel/panelPosition.js';
-import {syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
+import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
+import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
 import {prepareTaskbarIconSizeChange} from '../taskbar/taskbarIconSize.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
@@ -91,6 +92,11 @@ export class SecondaryPanelDockController {
         this._actor = actor;
         this._panelBox = panelBox;
         this._boxes = [leftBox, centerBox, rightBox];
+        this._cornerRadiusController = new PanelButtonCornerRadiusController(
+            mainPanelSettings, this._boxes, () => panelButtonHoverInset(
+                panelIsVertical(this._mainPanelSettings) ? Main.panel.width : Main.panel.height
+            )
+        );
         this._taskbarBin = taskbarBin;
         this._taskbarController = taskbarController;
         this._startButtonController = startButtonController;
@@ -123,6 +129,9 @@ export class SecondaryPanelDockController {
     }
 
     enable() {
+        this._cornerRadiusController.enable();
+        const thicknessProperty = panelIsVertical(this._mainPanelSettings) ? 'width' : 'height';
+        Main.panel.connectObject(`notify::${thicknessProperty}`, () => this._cornerRadiusController.sync(), this);
         this._layout.enable(!this._settings.get_boolean('dock-panel-mode') ||
             dockFloatingEnabled(this._settings));
         this._connectSignals();
@@ -130,6 +139,9 @@ export class SecondaryPanelDockController {
     }
 
     destroy() {
+        Main.panel.disconnectObject(this);
+        this._cornerRadiusController.destroy();
+        this._cornerRadiusController = null;
         this._layout.destroy();
         this._layout = null;
         this._settings.disconnectObject(this);
