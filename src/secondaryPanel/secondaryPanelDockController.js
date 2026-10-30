@@ -233,7 +233,10 @@ export class SecondaryPanelDockController {
     }
 
     getPositionState(animateEdgeGapRequested) {
-        return this._layout.getPositionState(animateEdgeGapRequested);
+        const state = this._layout.getPositionState(animateEdgeGapRequested);
+        if (state.edgeGapChanged)
+            this._syncSidePadding();
+        return state;
     }
 
     syncStrut() {
@@ -241,8 +244,8 @@ export class SecondaryPanelDockController {
     }
 
     _syncSidePadding() {
-        const padding = this._settings.get_boolean('dock-panel-mode')
-            ? 0 : this._settings.get_int('taskbar-side-padding');
+        const padding = !this._settings.get_boolean('dock-panel-mode') || this.getPanelEdgeGap() > 0
+            ? this._settings.get_int('taskbar-side-padding') : 0;
         const [startBox, , endBox] = this._boxes;
         const [startSide, endSide] = panelEdgeSides(startBox, panelIsVertical(this._settings));
         startBox.set_style(`padding-${startSide}: ${padding}px;`);

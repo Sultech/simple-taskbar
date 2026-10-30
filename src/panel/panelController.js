@@ -202,7 +202,8 @@ export class PanelController {
                 Main.panel._rightBox,
             ],
             () => Main.panel.statusArea.quickSettings._indicators,
-            () => this._panelHeight
+            () => this._panelHeight,
+            () => this.getPanelEdgeGap()
         );
     }
 
@@ -404,8 +405,10 @@ export class PanelController {
             panelBox.y = geometry.y;
         else
             panelBox.x = geometry.x;
-        if (state && state.edgeGapChanged)
+        if (state && state.edgeGapChanged) {
+            this._buttonPaddingController.syncEdgePadding();
             this._themeController.applyTransparency();
+        }
         if (this._geometryController)
             this._geometryController.syncStrut();
         Main.layoutManager._updateHotCorners();

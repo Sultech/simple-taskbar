@@ -103,15 +103,6 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
         addRow: addDockShapeRow,
     }, connectSettings);
     addSliderRow(null, settings, {
-        key: 'dock-side-padding',
-        unit: 'px',
-        title: _('Side Padding'),
-        subtitle: _('Space inside both ends of the Dock'),
-        lower: 0,
-        upper: 64,
-        addRow: addDockShapeRow,
-    }, connectSettings);
-    addSliderRow(null, settings, {
         key: 'dock-highlight-edge-gap',
         unit: 'px',
         title: _('Highlight Edge Gap'),
@@ -163,6 +154,14 @@ export function addDockAppearanceGroup({
         description: _('Choose the Dock length, floating and corners'),
     });
     addDockPlacementRows(positionGroup, group, settings, connectSettings, createSettings);
+    const sidePaddingRow = addSliderRow(group, settings, {
+        key: 'dock-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the Dock'),
+        lower: 0,
+        upper: 64,
+    }, connectSettings);
 
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
         !settings.get_boolean('windows-xp-theme-enabled');
@@ -239,13 +238,15 @@ export function addDockAppearanceGroup({
         },
         connectSettings
     );
-    const syncCornerRadiusRow = () => {
-        cornerRadiusRow.sensitive = !settings.get_boolean('dock-panel-mode') ||
+    const syncLayoutControls = () => {
+        const enabled = !settings.get_boolean('dock-panel-mode') ||
             dockFloatingEnabled(settings);
+        sidePaddingRow.sensitive = enabled;
+        cornerRadiusRow.sensitive = enabled;
     };
     for (const key of DOCK_FLOATING_KEYS)
-        connectSettings(settings, `changed::${key}`, syncCornerRadiusRow);
-    syncCornerRadiusRow();
+        connectSettings(settings, `changed::${key}`, syncLayoutControls);
+    syncLayoutControls();
 
     const transparencySwitchSubtitle = _(
         'Make the Dock background transparent'

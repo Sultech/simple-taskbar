@@ -39,13 +39,15 @@ export class PanelButtonPaddingController {
         panelActor,
         panelBoxes,
         getQuickSettingsIndicators,
-        getPanelHeight
+        getPanelHeight,
+        getPanelEdgeGap
     ) {
         this._settings = settings;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._getQuickSettingsIndicators = getQuickSettingsIndicators;
         this._getPanelHeight = getPanelHeight;
+        this._getPanelEdgeGap = getPanelEdgeGap;
         this._styledActors = new Map();
         this._hoverInsetClass = null;
         this._hoverInset = MINIMUM_HOVER_INSET;
@@ -153,6 +155,7 @@ export class PanelButtonPaddingController {
         this._panelActor = null;
         this._getQuickSettingsIndicators = null;
         this._getPanelHeight = null;
+        this._getPanelEdgeGap = null;
         this._settings = null;
     }
 
@@ -376,7 +379,7 @@ export class PanelButtonPaddingController {
     syncEdgePadding() {
         const [startBox, , endBox] = this._panelBoxes;
         const [startSide, endSide] = panelEdgeSides(startBox, panelIsVertical(this._settings));
-        const sidePadding = dynamicTaskbarEnabled(this._settings)
+        const sidePadding = dynamicTaskbarEnabled(this._settings) || this._getPanelEdgeGap() > 0
             ? this._settings.get_int('taskbar-side-padding') : 0;
         const visibleChildren = box => box.get_children().filter(child => child.visible);
         this._setEdgePadding(startBox, startSide, visibleChildren(startBox)[0], sidePadding);

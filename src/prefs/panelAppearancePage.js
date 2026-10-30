@@ -17,6 +17,7 @@ import {
     TASKBAR_GEOMETRY_KEYS,
     dynamicTaskbarEnabled,
     floatingTaskbarEnabled,
+    taskbarGeometryEnabled,
 } from '../shared/taskbarPanelModes.js';
 import {
     addColorRow,
@@ -97,15 +98,6 @@ export function addPanelAppearancePage({
         upper: 90,
         addRow: addDynamicRow,
     }, connectSettings);
-    addSliderRow(null, settings, {
-        key: 'taskbar-side-padding',
-        unit: 'px',
-        title: _('Side Padding'),
-        subtitle: _('Space inside both ends of the dynamic taskbar'),
-        lower: 0,
-        upper: 64,
-        addRow: addDynamicRow,
-    }, connectSettings);
     const highlightEdgeGapRow = addSliderRow(null, settings, {
         key: 'taskbar-highlight-edge-gap',
         unit: 'px',
@@ -142,6 +134,14 @@ export function addPanelAppearancePage({
         upper: 32,
         addRow: row => floatingExpander.add_row(row),
     }, connectSettings);
+    const sidePaddingRow = addSliderRow(layoutGroup, settings, {
+        key: 'taskbar-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the dynamic or floating taskbar'),
+        lower: 0,
+        upper: 64,
+    }, connectSettings);
     const cornerRadiusRow = addSliderRow(layoutGroup, settings, {
         key: 'taskbar-corner-radius',
         title: _('Corner Radius'),
@@ -151,8 +151,9 @@ export function addPanelAppearancePage({
     }, connectSettings);
     const syncFloatingControls = () => {
         layoutGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
-        cornerRadiusRow.sensitive = dynamicTaskbarEnabled(settings) ||
-            floatingTaskbarEnabled(settings);
+        const geometryEnabled = taskbarGeometryEnabled(settings);
+        sidePaddingRow.sensitive = geometryEnabled;
+        cornerRadiusRow.sensitive = geometryEnabled;
     };
     for (const key of TASKBAR_GEOMETRY_KEYS)
         connectSettings(settings, `changed::${key}`, syncFloatingControls);
