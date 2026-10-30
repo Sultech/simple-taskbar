@@ -54,6 +54,7 @@ export class WindowPreviewController {
         this._isPointerInMagnifyBounds = isPointerInMagnifyBounds;
         this._previewItem = null;
         this._previewItemDestroyId = 0;
+        this._previewAnchor = null;
         this._previewPendingItem = null;
         this._previewOpenId = 0;
         this._previewCloseId = 0;
@@ -541,6 +542,10 @@ export class WindowPreviewController {
         this._releaseHoverItem();
         const item = this._previewItem;
         this._setPreviewItem(null);
+        if (this._previewAnchor) {
+            this._previewAnchor.destroy();
+            this._previewAnchor = null;
+        }
         if (!item)
             return;
 
@@ -565,12 +570,30 @@ export class WindowPreviewController {
     }
 
     _positionPreview(menu, item) {
-        if (dynamicTaskbarEnabled(this._settings))
+        const dynamic = dynamicTaskbarEnabled(this._settings);
+        if (dynamic)
             menu._boxPointer.setPosition(item, 0.5);
 
         const outward = this._getHoverAnimationOutwardReserve();
         if (!outward)
             return;
+
+        if (dynamic || this._settings.isDock) {
+            const source = dynamic ? item : item._taskbarButton;
+            const [x, y] = source.get_transformed_position();
+            const [width, height] = source.get_transformed_size();
+            this._previewAnchor = new St.Widget({
+                x,
+                y,
+                width,
+                height,
+                opacity: 0,
+                reactive: false,
+            });
+            Main.uiGroup.add_child(this._previewAnchor);
+            this._previewAnchor.allocate_preferred_size(x, y);
+            menu._boxPointer.setPosition(this._previewAnchor, 0.5);
+        }
 
         const position = panelPosition(this._settings);
         const property = position === 'top' || position === 'bottom'
