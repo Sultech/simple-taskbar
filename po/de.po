@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 01:56+0000\n"
+"POT-Creation-Date: 2026-10-30 03:14+0000\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -950,7 +950,8 @@ msgstr "Anwendungsanimationen"
 
 #: src/prefs/applicationInteractionGroup.js:162
 msgid "Choose how application icons animate when clicked or hovered"
-msgstr "Festlegen, wie Anwendungssymbole beim Klicken oder Hovern animiert werden"
+msgstr ""
+"Festlegen, wie Anwendungssymbole beim Klicken oder Hovern animiert werden"
 
 #: src/prefs/applicationInteractionGroup.js:173
 msgid "Click Action"
@@ -1120,8 +1121,8 @@ msgid ""
 "Keep the highlight around the icon and running indicator instead of "
 "following the panel thickness"
 msgstr ""
-"Die Hervorhebung auf das Symbol und den Aktivitätsindikator begrenzen, statt"
-" sie an die Panel-Dicke anzupassen"
+"Die Hervorhebung auf das Symbol und den Aktivitätsindikator begrenzen, statt "
+"sie an die Panel-Dicke anzupassen"
 
 #: src/prefs/classicHighlightDialog.js:142
 msgid "Custom Highlight Thickness"
@@ -1210,7 +1211,8 @@ msgstr "Deckkraft in Prozent"
 
 #: src/prefs/classicHighlightDialog.js:262
 msgid "Switch to the Classic highlight style to use this setting"
-msgstr "Zum Hervorhebungsstil „Klassisch“ wechseln, um diese Einstellung zu verwenden"
+msgstr ""
+"Zum Hervorhebungsstil „Klassisch“ wechseln, um diese Einstellung zu verwenden"
 
 #: src/prefs/clockDialog.js:21
 msgid "Clock Options"
@@ -1369,289 +1371,272 @@ msgstr "Super+Zahl-Tastenkombinationen"
 msgid "Open pinned applications with Super+1 through Super+9"
 msgstr "Angeheftete Anwendungen mit Super+1 bis Super+9 öffnen"
 
-#: src/prefs/dockAppearanceGroup.js:89
+#: src/prefs/dockAppearanceGroup.js:90
 msgid "Dynamic Dock"
 msgstr "Dynamisches Dock"
 
-#: src/prefs/dockAppearanceGroup.js:90
+#: src/prefs/dockAppearanceGroup.js:91
 msgid "Size the Dock to its contents; turn off for a full-width Dock"
 msgstr ""
 "Die Dock-Größe an den Inhalt anpassen; für ein Dock über die gesamte Breite "
 "ausschalten"
 
-#: src/prefs/dockAppearanceGroup.js:99
+#: src/prefs/dockAppearanceGroup.js:100
 msgid "Maximum Dock Length"
 msgstr "Maximale Dock-Länge"
 
-#: src/prefs/dockAppearanceGroup.js:100
+#: src/prefs/dockAppearanceGroup.js:101
 msgid "Limit the Dock to this percentage of the monitor length"
 msgstr "Dock auf diesen Prozentsatz der Monitorlänge begrenzen"
 
-#: src/prefs/dockAppearanceGroup.js:108 src/prefs/panelAppearancePage.js:103
-msgid "Side Padding"
-msgstr "Seitlicher Innenabstand"
-
-#: src/prefs/dockAppearanceGroup.js:109
-msgid "Space inside both ends of the Dock"
-msgstr "Innenabstand an beiden Enden des Docks"
-
-#: src/prefs/dockAppearanceGroup.js:117 src/prefs/panelAppearancePage.js:112
+#: src/prefs/dockAppearanceGroup.js:109 src/prefs/panelAppearancePage.js:105
 msgid "Highlight Edge Gap"
 msgstr "Randabstand der Hervorhebung"
 
-#: src/prefs/dockAppearanceGroup.js:118
+#: src/prefs/dockAppearanceGroup.js:110
 msgid "Space between the highlight and the edges of the Dock"
 msgstr "Abstand zwischen der Hervorhebung und den Dock-Rändern"
 
-#: src/prefs/dockAppearanceGroup.js:125
-msgid "Floating Dock"
-msgstr "Schwebendes Dock"
-
-#: src/prefs/dockAppearanceGroup.js:126 src/prefs/panelAppearancePage.js:129
-msgid "Add a small screen-edge gap that closes for maximized windows"
-msgstr ""
-"Einen kleinen Abstand zum Bildschirmrand hinzufügen, der bei maximierten "
-"Fenstern geschlossen wird"
-
-#: src/prefs/dockAppearanceGroup.js:136 src/prefs/panelAppearancePage.js:139
-msgid "Floating Gap"
-msgstr "Schwebeabstand"
-
-#: src/prefs/dockAppearanceGroup.js:137
-msgid "Distance between the floating Dock and the screen edge"
-msgstr "Abstand zwischen dem schwebenden Dock und dem Bildschirmrand"
-
-#: src/prefs/dockAppearanceGroup.js:154
+#: src/prefs/dockAppearanceGroup.js:129
 msgid "Dock Position"
 msgstr "Dock-Position"
 
-#: src/prefs/dockAppearanceGroup.js:155
+#: src/prefs/dockAppearanceGroup.js:130
 msgid "Place the Dock at a different screen edge from the taskbar"
 msgstr ""
 "Das Dock an einer anderen Bildschirmkante als die Taskleiste platzieren"
 
-#: src/prefs/dockAppearanceGroup.js:158 src/prefs/panelAppearancePage.js:77
+#: src/prefs/dockAppearanceGroup.js:133 src/prefs/panelAppearancePage.js:79
 #: src/prefs/progressBarDialog.js:67
 msgid "Thickness"
 msgstr "Dicke"
 
-#: src/prefs/dockAppearanceGroup.js:159
+#: src/prefs/dockAppearanceGroup.js:134
 msgid "Choose how thick the Dock is when Dynamic Dock is off"
 msgstr "Die Dock-Dicke festlegen, wenn „Dynamisches Dock“ ausgeschaltet ist"
 
-#: src/prefs/dockAppearanceGroup.js:162
+#: src/prefs/dockAppearanceGroup.js:137
 msgid "Dock Layout"
 msgstr "Dock-Layout"
 
-#: src/prefs/dockAppearanceGroup.js:163
+#: src/prefs/dockAppearanceGroup.js:138
 msgid "Choose the Dock length, floating and corners"
 msgstr "Länge, schwebende Darstellung und Ecken des Docks festlegen"
 
-#: src/prefs/dockAppearanceGroup.js:177
+#: src/prefs/dockAppearanceGroup.js:144 src/prefs/panelAppearancePage.js:124
+msgid "Side Padding"
+msgstr "Seitlicher Innenabstand"
+
+#: src/prefs/dockAppearanceGroup.js:145
+msgid "Space inside both ends of the Dock"
+msgstr "Innenabstand an beiden Enden des Docks"
+
+#: src/prefs/dockAppearanceGroup.js:160
 msgid "Keep the Dock only as thick as its icons need"
 msgstr "Das Dock nur so dick halten, wie es seine Symbole benötigen"
 
-#: src/prefs/dockAppearanceGroup.js:188
+#: src/prefs/dockAppearanceGroup.js:171
 msgid "Dock Thickness"
 msgstr "Dicke des Docks"
 
-#: src/prefs/dockAppearanceGroup.js:190
+#: src/prefs/dockAppearanceGroup.js:173
 msgid "Oversized icons shrink automatically when the Dock is made thinner"
-msgstr "Übergroße Symbole werden automatisch verkleinert, wenn das Dock dünner wird"
+msgstr ""
+"Übergroße Symbole werden automatisch verkleinert, wenn das Dock dünner wird"
 
-#: src/prefs/dockAppearanceGroup.js:200 src/prefs/panelAppearancePage.js:308
+#: src/prefs/dockAppearanceGroup.js:183 src/prefs/panelAppearancePage.js:293
 msgid "Theme and Styling"
 msgstr "Thema und Gestaltung"
 
-#: src/prefs/dockAppearanceGroup.js:202
+#: src/prefs/dockAppearanceGroup.js:185
 msgid "Choose the Dock theme, colours, gradient, and text appearance"
 msgstr "Thema, Farben, Farbverlauf und Textdarstellung des Docks auswählen"
 
-#: src/prefs/dockAppearanceGroup.js:208 src/prefs/panelAppearancePage.js:316
+#: src/prefs/dockAppearanceGroup.js:191 src/prefs/panelAppearancePage.js:301
 msgid "Follow System Theme"
 msgstr "Systemthema folgen"
 
-#: src/prefs/dockAppearanceGroup.js:209
+#: src/prefs/dockAppearanceGroup.js:192
 msgid "Match the active GNOME Shell theme"
 msgstr "An das aktive GNOME-Shell-Thema anpassen"
 
-#: src/prefs/dockAppearanceGroup.js:218
+#: src/prefs/dockAppearanceGroup.js:201
 msgid "Dock Theme"
 msgstr "Dock-Thema"
 
-#: src/prefs/dockAppearanceGroup.js:219 src/prefs/panelAppearancePage.js:327
+#: src/prefs/dockAppearanceGroup.js:202 src/prefs/panelAppearancePage.js:312
 msgid "Choose the colour scheme when system matching is off"
 msgstr "Wählen Sie das Farbschema, wenn die Systemanpassung deaktiviert ist"
 
-#: src/prefs/dockAppearanceGroup.js:221 src/prefs/panelAppearancePage.js:329
+#: src/prefs/dockAppearanceGroup.js:204 src/prefs/panelAppearancePage.js:314
 #: src/prefs/startMenuPage.js:754
 msgid "Light"
 msgstr "Hell"
 
-#: src/prefs/dockAppearanceGroup.js:222 src/prefs/panelAppearancePage.js:330
+#: src/prefs/dockAppearanceGroup.js:205 src/prefs/panelAppearancePage.js:315
 #: src/prefs/startMenuPage.js:753
 msgid "Dark"
 msgstr "Dunkel"
 
-#: src/prefs/dockAppearanceGroup.js:233
+#: src/prefs/dockAppearanceGroup.js:216
 msgid "Dock Corner Radius"
 msgstr "Dock-Eckenradius"
 
-#: src/prefs/dockAppearanceGroup.js:235
+#: src/prefs/dockAppearanceGroup.js:218
 msgid "Applies to the floating Dock, including Dynamic and Static Blur"
 msgstr ""
 "Gilt für das schwebende Dock, einschließlich dynamischer und statischer "
 "Unschärfe"
 
-#: src/prefs/dockAppearanceGroup.js:251
+#: src/prefs/dockAppearanceGroup.js:236
 msgid "Make the Dock background transparent"
 msgstr "Den Dock-Hintergrund transparent machen"
 
-#: src/prefs/dockAppearanceGroup.js:254 src/prefs/panelAppearancePage.js:348
+#: src/prefs/dockAppearanceGroup.js:239 src/prefs/panelAppearancePage.js:333
 msgid "Adjust transparency according to the selected window state"
 msgstr "Transparenz entsprechend dem ausgewählten Fensterstatus anpassen"
 
-#: src/prefs/dockAppearanceGroup.js:258
+#: src/prefs/dockAppearanceGroup.js:243
 msgid "Apply Blur My Shell panel blur to the Dock"
 msgstr "Die Panel-Unschärfe von Blur My Shell auf das Dock anwenden"
 
-#: src/prefs/dockAppearanceGroup.js:259 src/prefs/panelAppearancePage.js:351
+#: src/prefs/dockAppearanceGroup.js:244 src/prefs/panelAppearancePage.js:336
 #: src/prefs/startMenuPage.js:779
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
 "Deaktivieren Sie die Panel-Unschärfe von Blur My Shell, um diese Option zu "
 "nutzen"
 
-#: src/prefs/dockAppearanceGroup.js:262
+#: src/prefs/dockAppearanceGroup.js:247
 msgid "Apply Blur My Shell dock blur to the Dock"
 msgstr "Die Dock-Unschärfe von Blur My Shell auf das Dock anwenden"
 
-#: src/prefs/dockAppearanceGroup.js:263
+#: src/prefs/dockAppearanceGroup.js:248
 msgid "Disable Blur My Shell dock blur to use this option"
 msgstr ""
 "Deaktivieren Sie die Dock-Unschärfe von Blur My Shell, um diese Option zu "
 "nutzen"
 
-#: src/prefs/dockAppearanceGroup.js:266
+#: src/prefs/dockAppearanceGroup.js:251
 msgid "This Blur My Shell version cannot blur the Dock"
 msgstr "Diese Version von Blur My Shell kann das Dock nicht weichzeichnen"
 
-#: src/prefs/dockAppearanceGroup.js:280
+#: src/prefs/dockAppearanceGroup.js:265
 msgid "Transparency and Blur"
 msgstr "Transparenz und Unschärfe"
 
-#: src/prefs/dockAppearanceGroup.js:281
+#: src/prefs/dockAppearanceGroup.js:266
 msgid "Configure Dock transparency and Blur My Shell integration"
 msgstr "Dock-Transparenz und die Integration mit Blur My Shell konfigurieren"
 
-#: src/prefs/dockAppearanceGroup.js:286 src/prefs/panelAppearancePage.js:360
+#: src/prefs/dockAppearanceGroup.js:271 src/prefs/panelAppearancePage.js:345
 msgid "Enable Transparency"
 msgstr "Transparenz aktivieren"
 
-#: src/prefs/dockAppearanceGroup.js:292
+#: src/prefs/dockAppearanceGroup.js:277
 msgid "Blur Dock with Blur My Shell"
 msgstr "Dock mit Blur My Shell weichzeichnen"
 
-#: src/prefs/dockAppearanceGroup.js:298
+#: src/prefs/dockAppearanceGroup.js:283
 #: src/prefs/dynamicTransparencyDialog.js:101
-#: src/prefs/panelAppearancePage.js:366
+#: src/prefs/panelAppearancePage.js:351
 msgid "0% is opaque and 100% is fully transparent"
 msgstr "0 % ist undurchsichtig und 100 % ist vollständig transparent"
 
-#: src/prefs/dockAppearanceGroup.js:306 src/prefs/panelAppearancePage.js:354
-#: src/prefs/panelAppearancePage.js:374
+#: src/prefs/dockAppearanceGroup.js:291 src/prefs/panelAppearancePage.js:339
+#: src/prefs/panelAppearancePage.js:359
 msgid "Transparency"
 msgstr "Transparenz"
 
-#: src/prefs/dockAppearanceGroup.js:315
+#: src/prefs/dockAppearanceGroup.js:300
 msgid "Dock Dynamic Transparency Options"
 msgstr "Optionen für dynamische Dock-Transparenz"
 
-#: src/prefs/dockAppearanceGroup.js:326
+#: src/prefs/dockAppearanceGroup.js:311
 #: src/prefs/dynamicTransparencyDialog.js:58
-#: src/prefs/panelAppearancePage.js:394
+#: src/prefs/panelAppearancePage.js:379
 msgid "Dynamic Transparency"
 msgstr "Dynamische Transparenz"
 
-#: src/prefs/dockAppearanceGroup.js:332 src/prefs/panelAppearancePage.js:439
+#: src/prefs/dockAppearanceGroup.js:317 src/prefs/panelAppearancePage.js:424
 msgid "Use a chosen color instead of the light or dark theme color"
 msgstr ""
 "Verwendet eine gewählte Farbe anstelle der Farbe des hellen oder dunklen "
 "Themas"
 
-#: src/prefs/dockAppearanceGroup.js:336
+#: src/prefs/dockAppearanceGroup.js:321
 msgid "Custom Dock Color"
 msgstr "Benutzerdefinierte Dock-Farbe"
 
-#: src/prefs/dockAppearanceGroup.js:346
+#: src/prefs/dockAppearanceGroup.js:331
 msgid "Dock Color"
 msgstr "Dock-Farbe"
 
-#: src/prefs/dockAppearanceGroup.js:352
+#: src/prefs/dockAppearanceGroup.js:337
 msgid "Use Dock Gradient"
 msgstr "Dock-Verlauf verwenden"
 
-#: src/prefs/dockAppearanceGroup.js:353
+#: src/prefs/dockAppearanceGroup.js:338
 msgid "Blend the Dock color with a second color"
 msgstr "Dock-Farbe mit einer zweiten Farbe verblenden"
 
-#: src/prefs/dockAppearanceGroup.js:361
+#: src/prefs/dockAppearanceGroup.js:346
 msgid "Dock Gradient Color"
 msgstr "Dock-Verlaufsfarbe"
 
-#: src/prefs/dockAppearanceGroup.js:370
+#: src/prefs/dockAppearanceGroup.js:355
 msgid "Dock Gradient Direction"
 msgstr "Richtung des Dock-Verlaufs"
 
-#: src/prefs/dockAppearanceGroup.js:371 src/prefs/panelAppearancePage.js:477
+#: src/prefs/dockAppearanceGroup.js:356 src/prefs/panelAppearancePage.js:462
 msgid "Choose how the gradient flows"
 msgstr "Wählen Sie den Verlauf des Farbverlaufs"
 
-#: src/prefs/dockAppearanceGroup.js:373 src/prefs/panelAppearancePage.js:479
+#: src/prefs/dockAppearanceGroup.js:358 src/prefs/panelAppearancePage.js:464
 msgid "Vertical"
 msgstr "Vertikal"
 
-#: src/prefs/dockAppearanceGroup.js:374 src/prefs/panelAppearancePage.js:480
+#: src/prefs/dockAppearanceGroup.js:359 src/prefs/panelAppearancePage.js:465
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: src/prefs/dockAppearanceGroup.js:380
+#: src/prefs/dockAppearanceGroup.js:365
 msgid ""
 "White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr ""
 "Weißer Text verwendet das dunkle Dock-Thema; schwarzer Text verwendet das "
 "helle Dock-Thema"
 
-#: src/prefs/dockAppearanceGroup.js:387
+#: src/prefs/dockAppearanceGroup.js:372
 msgid "Dock Text Color"
 msgstr "Dock-Textfarbe"
 
-#: src/prefs/dockAppearanceGroup.js:390 src/prefs/panelAppearancePage.js:496
+#: src/prefs/dockAppearanceGroup.js:375 src/prefs/panelAppearancePage.js:481
 msgid "White"
 msgstr "Weiß"
 
-#: src/prefs/dockAppearanceGroup.js:391 src/prefs/panelAppearancePage.js:497
+#: src/prefs/dockAppearanceGroup.js:376 src/prefs/panelAppearancePage.js:482
 msgid "Black"
 msgstr "Schwarz"
 
-#: src/prefs/dockAppearanceGroup.js:398 src/prefs/panelAppearancePage.js:590
+#: src/prefs/dockAppearanceGroup.js:383 src/prefs/panelAppearancePage.js:575
 msgid "Borders"
 msgstr "Rahmen"
 
-#: src/prefs/dockAppearanceGroup.js:399 src/prefs/panelAppearancePage.js:591
+#: src/prefs/dockAppearanceGroup.js:384 src/prefs/panelAppearancePage.js:576
 msgid "Choose whether to show a border in light and dark themes"
 msgstr "Wählen Sie, ob in hellen und dunklen Themen ein Rahmen angezeigt wird"
 
-#: src/prefs/dockAppearanceGroup.js:404 src/prefs/panelAppearancePage.js:596
+#: src/prefs/dockAppearanceGroup.js:389 src/prefs/panelAppearancePage.js:581
 msgid "Show Border in Dark Mode"
 msgstr "Rahmen im dunklen Modus anzeigen"
 
-#: src/prefs/dockAppearanceGroup.js:405 src/prefs/dockAppearanceGroup.js:412
+#: src/prefs/dockAppearanceGroup.js:390 src/prefs/dockAppearanceGroup.js:397
 msgid "Display a thin border along the Dock’s workspace-facing edge"
 msgstr ""
 "Einen dünnen Rahmen an der zur Arbeitsfläche gerichteten Dock-Kante anzeigen"
 
-#: src/prefs/dockAppearanceGroup.js:411 src/prefs/panelAppearancePage.js:603
+#: src/prefs/dockAppearanceGroup.js:396 src/prefs/panelAppearancePage.js:588
 msgid "Show Border in Light Mode"
 msgstr "Rahmen im hellen Modus anzeigen"
 
@@ -1692,6 +1677,68 @@ msgstr "Dauer der Transparenzanimation"
 #: src/prefs/dynamicTransparencyDialog.js:115
 msgid "Transition time in milliseconds"
 msgstr "Übergangszeit in Millisekunden"
+
+#: src/prefs/floatingPanelGroup.js:18
+msgid "Floating Dock"
+msgstr "Schwebendes Dock"
+
+#: src/prefs/floatingPanelGroup.js:18
+msgid "Floating Panel Mode"
+msgstr "Schwebender Panelmodus"
+
+#: src/prefs/floatingPanelGroup.js:20
+msgid "Keep a gap between the Dock and the screen edge"
+msgstr "Einen Abstand zwischen dem Dock und dem Bildschirmrand beibehalten"
+
+#: src/prefs/floatingPanelGroup.js:21
+msgid "Keep a gap between the taskbar and the screen edge"
+msgstr "Einen Abstand zwischen der Taskleiste und dem Bildschirmrand beibehalten"
+
+#: src/prefs/floatingPanelGroup.js:31
+msgid "Floating Gap"
+msgstr "Schwebeabstand"
+
+#: src/prefs/floatingPanelGroup.js:33
+msgid "Distance between the floating Dock and the screen edge"
+msgstr "Abstand zwischen dem schwebenden Dock und dem Bildschirmrand"
+
+#: src/prefs/floatingPanelGroup.js:34
+msgid "Distance between the floating taskbar and the screen edge"
+msgstr "Abstand zwischen der schwebenden Taskleiste und dem Bildschirmrand"
+
+#: src/prefs/floatingPanelGroup.js:41
+msgid "Snap to Screen Edge When Maximized"
+msgstr "Bei maximierten Fenstern am Bildschirmrand andocken"
+
+#: src/prefs/floatingPanelGroup.js:45
+msgid "Distance between maximized windows and the floating Dock"
+msgstr "Abstand zwischen maximierten Fenstern und dem schwebenden Dock"
+
+#: src/prefs/floatingPanelGroup.js:46
+msgid "Distance between maximized windows and the floating taskbar"
+msgstr "Abstand zwischen maximierten Fenstern und der schwebenden Taskleiste"
+
+#: src/prefs/floatingPanelGroup.js:49
+msgid "Maximized Window Gap"
+msgstr "Abstand zu maximierten Fenstern"
+
+#: src/prefs/floatingPanelGroup.js:58
+msgid "Unavailable while auto-hide or dodge windows is enabled"
+msgstr ""
+"Nicht verfügbar, wenn automatisches Ausblenden oder Ausweichen vor Fenstern "
+"aktiviert ist"
+
+#: src/prefs/floatingPanelGroup.js:61
+msgid ""
+"Close the floating gap for maximized windows; full-length panels also expand "
+"to the screen edge"
+msgstr ""
+"Den Schwebeabstand bei maximierten Fenstern schließen; Panels voller Länge "
+"werden zusätzlich bis zum Bildschirmrand erweitert"
+
+#: src/prefs/floatingPanelGroup.js:66
+msgid "Turn off snapping to use this setting"
+msgstr "Andocken ausschalten, um diese Einstellung zu verwenden"
 
 #: src/prefs/dockBehaviorGroup.js:22
 msgid "Auto-hide Dock"
@@ -1981,93 +2028,86 @@ msgstr "Den Papierkorb zum Dock hinzufügen"
 msgid "Add mounted or connected drives to the Dock"
 msgstr "Eingehängte oder verbundene Laufwerke zum Dock hinzufügen"
 
-#: src/prefs/panelAppearancePage.js:52
+#: src/prefs/panelAppearancePage.js:54
 msgid "Taskbar Position"
 msgstr "Position der Taskleiste"
 
-#: src/prefs/panelAppearancePage.js:53
+#: src/prefs/panelAppearancePage.js:55
 msgid "Place the taskbar at a screen edge"
 msgstr "Taskleiste an einer Bildschirmkante platzieren"
 
-#: src/prefs/panelAppearancePage.js:78
+#: src/prefs/panelAppearancePage.js:80
 msgid "Choose how thick the taskbar is"
 msgstr "Die Dicke der Taskleiste festlegen"
 
-#: src/prefs/panelAppearancePage.js:81
+#: src/prefs/panelAppearancePage.js:83
 msgid "Panel Layout"
 msgstr "Panel-Layout"
 
-#: src/prefs/panelAppearancePage.js:82
+#: src/prefs/panelAppearancePage.js:84
 msgid "Choose dynamic sizing and floating independently"
 msgstr ""
 "Dynamische Größenanpassung und schwebende Darstellung unabhängig voneinander "
 "auswählen"
 
-#: src/prefs/panelAppearancePage.js:85
+#: src/prefs/panelAppearancePage.js:87
 msgid "Dynamic Panel Mode"
 msgstr "Dynamischer Panelmodus"
 
-#: src/prefs/panelAppearancePage.js:86
+#: src/prefs/panelAppearancePage.js:88
 msgid "Size the taskbar to its contents and expand as items are added"
 msgstr ""
 "Die Taskleiste an ihren Inhalt anpassen und beim Hinzufügen von Elementen "
 "erweitern"
 
-#: src/prefs/panelAppearancePage.js:94
+#: src/prefs/panelAppearancePage.js:96
 msgid "Maximum Taskbar Length"
 msgstr "Maximale Taskleistenlänge"
 
-#: src/prefs/panelAppearancePage.js:95
+#: src/prefs/panelAppearancePage.js:97
 msgid "Limit the dynamic taskbar to this percentage of the monitor length"
 msgstr ""
 "Die dynamische Taskleiste auf diesen Prozentsatz der Monitorlänge begrenzen"
 
-#: src/prefs/panelAppearancePage.js:104
-msgid "Space inside both ends of the dynamic taskbar"
-msgstr "Innenabstand an beiden Enden der dynamischen Taskleiste"
-
-#: src/prefs/panelAppearancePage.js:113 src/prefs/panelAppearancePage.js:123
+#: src/prefs/panelAppearancePage.js:106 src/prefs/panelAppearancePage.js:116
 msgid "Space between the highlight and the edges of the dynamic taskbar"
-msgstr "Abstand zwischen der Hervorhebung und den Rändern der dynamischen Taskleiste"
+msgstr ""
+"Abstand zwischen der Hervorhebung und den Rändern der dynamischen Taskleiste"
 
-#: src/prefs/panelAppearancePage.js:122
+#: src/prefs/panelAppearancePage.js:115
 msgid ""
 "Not used in Default GNOME Panel mode, where Panel Height sets the thickness"
 msgstr ""
 "Im Standard-GNOME-Panelmodus nicht verwendet; dort bestimmt die Panel-Höhe "
 "die Dicke"
 
-#: src/prefs/panelAppearancePage.js:128
-msgid "Floating Panel Mode"
-msgstr "Schwebender Panelmodus"
+#: src/prefs/panelAppearancePage.js:125
+msgid "Space inside both ends of the dynamic or floating taskbar"
+msgstr "Innenabstand an beiden Enden der dynamischen oder schwebenden Taskleiste"
 
-#: src/prefs/panelAppearancePage.js:140
-msgid "Distance between the floating taskbar and the screen edge"
-msgstr "Abstand zwischen der schwebenden Taskleiste und dem Bildschirmrand"
-
-#: src/prefs/panelAppearancePage.js:147
+#: src/prefs/panelAppearancePage.js:131
 msgid "Corner Radius"
 msgstr "Eckenradius"
 
-#: src/prefs/panelAppearancePage.js:148
+#: src/prefs/panelAppearancePage.js:132
 msgid "Round the corners of the dynamic or floating taskbar"
 msgstr "Die Ecken der dynamischen oder schwebenden Taskleiste abrunden"
 
-#: src/prefs/panelAppearancePage.js:161
+#: src/prefs/panelAppearancePage.js:146
 msgid "Keep the taskbar only as thick as its icons need"
 msgstr "Die Taskleiste nur so dick halten, wie es ihre Symbole benötigen"
 
-#: src/prefs/panelAppearancePage.js:180
+#: src/prefs/panelAppearancePage.js:165
 msgid "Taskbar Thickness"
 msgstr "Dicke der Taskleiste"
 
-#: src/prefs/panelAppearancePage.js:182
+#: src/prefs/panelAppearancePage.js:167
 msgid "Oversized icons shrink automatically when the taskbar is reduced"
 msgstr ""
 "Übergroße Symbole werden automatisch verkleinert, wenn die Taskleiste "
 "verkleinert wird"
 
-#: src/prefs/panelAppearancePage.js:220
+#: src/prefs/panelAppearancePage.js:205
 msgid ""
 "Not available with the Default GNOME Panel: set the Taskbar Thickness below "
 "and the window icons resize to fit"
@@ -2075,64 +2115,64 @@ msgstr ""
 "Mit dem Standard-GNOME-Panel nicht verfügbar: Legen Sie unten die Dicke der "
 "Taskleiste fest, die Fenstersymbole passen sich an"
 
-#: src/prefs/panelAppearancePage.js:222
+#: src/prefs/panelAppearancePage.js:207
 msgid "Dynamic Panel Mode always matches the thickness to the icon size"
 msgstr "Der dynamische Panelmodus passt die Dicke immer an die Symbolgröße an"
 
-#: src/prefs/panelAppearancePage.js:310
+#: src/prefs/panelAppearancePage.js:295
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
 msgstr ""
 "Wählen Sie das Taskleisten-Thema, die Farben, den Farbverlauf und das "
 "Erscheinungsbild des Textes"
 
-#: src/prefs/panelAppearancePage.js:317
+#: src/prefs/panelAppearancePage.js:302
 msgid ""
 "Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
 "Passt sich dem aktiven GNOME-Shell-Thema an, unabhängig von den "
 "Anwendungsfarben"
 
-#: src/prefs/panelAppearancePage.js:326
+#: src/prefs/panelAppearancePage.js:311
 msgid "Taskbar Theme"
 msgstr "Taskleisten-Thema"
 
-#: src/prefs/panelAppearancePage.js:345
+#: src/prefs/panelAppearancePage.js:330
 msgid "Make the taskbar background transparent"
 msgstr "Macht den Hintergrund der Taskleiste transparent"
 
-#: src/prefs/panelAppearancePage.js:355
+#: src/prefs/panelAppearancePage.js:340
 msgid "Control the taskbar background transparency"
 msgstr "Transparenz des Taskleisten-Hintergrunds steuern"
 
-#: src/prefs/panelAppearancePage.js:383
+#: src/prefs/panelAppearancePage.js:368
 msgid "Dynamic Transparency Options"
 msgstr "Optionen für dynamische Transparenz"
 
-#: src/prefs/panelAppearancePage.js:443
+#: src/prefs/panelAppearancePage.js:428
 msgid "Custom Taskbar Color"
 msgstr "Benutzerdefinierte Taskleistenfarbe"
 
-#: src/prefs/panelAppearancePage.js:452
+#: src/prefs/panelAppearancePage.js:437
 msgid "Taskbar Color"
 msgstr "Taskleistenfarbe"
 
-#: src/prefs/panelAppearancePage.js:458
+#: src/prefs/panelAppearancePage.js:443
 msgid "Use Taskbar Gradient"
 msgstr "Taskleistenverlauf verwenden"
 
-#: src/prefs/panelAppearancePage.js:459
+#: src/prefs/panelAppearancePage.js:444
 msgid "Blend the taskbar color with a second color"
 msgstr "Taskleistenfarbe mit einer zweiten Farbe verblenden"
 
-#: src/prefs/panelAppearancePage.js:467
+#: src/prefs/panelAppearancePage.js:452
 msgid "Taskbar Gradient Color"
 msgstr "Farbe des Taskleistenverlaufs"
 
-#: src/prefs/panelAppearancePage.js:476
+#: src/prefs/panelAppearancePage.js:461
 msgid "Taskbar Gradient Direction"
 msgstr "Richtung des Taskleistenverlaufs"
 
-#: src/prefs/panelAppearancePage.js:486
+#: src/prefs/panelAppearancePage.js:471
 msgid ""
 "White text uses the dark taskbar theme; black text uses the light taskbar "
 "theme"
@@ -2140,11 +2180,11 @@ msgstr ""
 "Weißer Text verwendet das dunkle Taskleisten-Thema; schwarzer Text verwendet "
 "das helle Taskleisten-Thema"
 
-#: src/prefs/panelAppearancePage.js:493
+#: src/prefs/panelAppearancePage.js:478
 msgid "Taskbar Text Color"
 msgstr "Textfarbe der Taskleiste"
 
-#: src/prefs/panelAppearancePage.js:597 src/prefs/panelAppearancePage.js:604
+#: src/prefs/panelAppearancePage.js:582 src/prefs/panelAppearancePage.js:589
 msgid "Display a thin border along the taskbar’s workspace-facing edge"
 msgstr ""
 "Einen dünnen Rahmen an der zur Arbeitsfläche gerichteten Kante der "
@@ -2329,7 +2369,7 @@ msgstr "GNOME-Schaltfläche für die Arbeitsflächenübersicht"
 
 #: src/prefs/panelItemsPage.js:282 src/prefs/dockItemsPage.js:81
 #: src/prefs/panelSettingsHubs.js:34
-#: src/startMenu/startButtonController.js:1076
+#: src/startMenu/startButtonController.js:1088
 msgid "Applications"
 msgstr "Anwendungen"
 
@@ -3961,21 +4001,21 @@ msgstr "Papierkorb"
 msgid "running"
 msgstr "läuft"
 
-#: src/startMenu/startButtonController.js:608
+#: src/startMenu/startButtonController.js:620
 msgid "Start Menu Settings"
 msgstr "Startmenü-Einstellungen"
 
-#: src/startMenu/startButtonController.js:613
+#: src/startMenu/startButtonController.js:625
 #: src/panel/panelInteractionController.js:161
 msgid "Dock Settings"
 msgstr "Dock-Einstellungen"
 
-#: src/startMenu/startButtonController.js:618
+#: src/startMenu/startButtonController.js:630
 #: src/panel/panelInteractionController.js:161
 msgid "Taskbar Settings"
 msgstr "Taskleisten-Einstellungen"
 
-#: src/startMenu/startButtonController.js:1076
+#: src/startMenu/startButtonController.js:1088
 msgid "Start"
 msgstr "Start"
 
@@ -4083,6 +4123,11 @@ msgstr "Anwendungslautstärke"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
+
+#~ msgid "Add a small screen-edge gap that closes for maximized windows"
+#~ msgstr ""
+#~ "Einen kleinen Abstand zum Bildschirmrand hinzufügen, der bei maximierten "
+#~ "Fenstern geschlossen wird"
 
 #~ msgid "Hovering and Animations"
 #~ msgstr "Hovern und Animationen"
