@@ -90,7 +90,13 @@ export class TaskbarHoverAnimationCloneController {
     }
 
     getStretchEntry(item) {
-        return this._stretchActors.get(item);
+        const entry = this._stretchActors.get(item);
+        if (entry && entry.lastMagnifyTranslation !== null &&
+            entry.actor[entry.property] !== entry.lastMagnifyTranslation) {
+            entry.base = entry.actor[entry.property];
+            entry.lastMagnifyTranslation = entry.base;
+        }
+        return entry;
     }
 
     getStretchItems() {
@@ -181,15 +187,17 @@ export class TaskbarHoverAnimationCloneController {
     }
 
     stretch(item, translation, duration) {
+        const magnify = this._getAnimationType() === APP_ICON_HOVER_ANIMATION.MAGNIFY;
         const property = this._getVertical()
             ? 'translation_y'
             : 'translation_x';
-        let entry = this._stretchActors.get(item);
+        let entry = this.getStretchEntry(item);
         if (!entry) {
             const actor = this._getStretchActor(item);
             entry = {
                 actor,
                 base: actor[property],
+                lastMagnifyTranslation: magnify ? actor[property] : null,
                 property,
                 destroyId: 0,
             };
@@ -204,13 +212,14 @@ export class TaskbarHoverAnimationCloneController {
         if (entry.actor[property] === target)
             return;
 
-        if (this._getAnimationType() === APP_ICON_HOVER_ANIMATION.MAGNIFY) {
+        if (magnify) {
             applySmoothedProperties(
                 entry.actor,
                 {[property]: target},
                 this._smoothing.getFactor(),
                 MAGNIFY_EPSILON
             );
+            entry.lastMagnifyTranslation = entry.actor[property];
             return;
         }
 
@@ -229,7 +238,7 @@ export class TaskbarHoverAnimationCloneController {
     }
 
     resetStretch(item) {
-        const entry = this._stretchActors.get(item);
+        const entry = this.getStretchEntry(item);
         if (!entry)
             return;
 

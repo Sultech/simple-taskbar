@@ -418,20 +418,22 @@ export class PanelButtonPaddingController {
     }
 
     _shiftEdgeActor(box, actor, side, offset) {
-        const shiftedActor = this._edgeShiftedActors.get(box);
-        if (shiftedActor && shiftedActor !== actor) {
-            shiftedActor.disconnectObject(this);
-            shiftedActor.translation_x = 0;
-            shiftedActor.translation_y = 0;
+        const state = this._edgeShiftedActors.get(box);
+        if (state && state.actor !== actor) {
+            state.actor.disconnectObject(this);
+            state.actor.translation_x = 0;
+            state.actor.translation_y = 0;
             this._edgeShiftedActors.delete(box);
         }
         if (!actor)
             return;
 
-        if (shiftedActor !== actor) {
+        if (state && state.actor === actor && state.side === side && state.offset === offset)
+            return;
+
+        if (!state || state.actor !== actor)
             actor.connectObject('destroy', () => this._edgeShiftedActors.delete(box), this);
-            this._edgeShiftedActors.set(box, actor);
-        }
+        this._edgeShiftedActors.set(box, {actor, side, offset});
         const shift = side === 'right' || side === 'bottom' ? offset : -offset;
         actor.translation_x = side === 'left' || side === 'right' ? shift : 0;
         actor.translation_y = side === 'top' || side === 'bottom' ? shift : 0;
