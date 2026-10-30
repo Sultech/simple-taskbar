@@ -113,6 +113,8 @@ export class StartButtonController {
         this._menuManager = null;
         this._positionAnimationStart = null;
         this._parityOffset = 0;
+        this._edgePaddingSide = null;
+        this._edgePadding = 0;
 
         this._windowsGIcon = new Gio.FileIcon({
             file: extensionDir
@@ -356,6 +358,16 @@ export class StartButtonController {
         this._contextMenu.close();
     }
 
+    setEdgePadding(side, padding) {
+        const edgePadding = side ? padding : 0;
+        if (side === this._edgePaddingSide && edgePadding === this._edgePadding)
+            return;
+
+        this._edgePaddingSide = side;
+        this._edgePadding = edgePadding;
+        this.applyAppearance(this._iconSize, this._settings.get_int('start-button-padding'));
+    }
+
     applyAppearance(iconSize, padding) {
         this._iconSize = iconSize;
         applyIconRenderScale(this._icon, iconSize, iconRenderScale(this._settings));
@@ -439,14 +451,14 @@ export class StartButtonController {
             ? runningIndicatorVerticalOffset(this._settings, indicatorPosition)
             : 0;
         const startButtonPosition = panelStartButtonPosition(this._settings);
-        const leadingPadding = !windowsXpTheme &&
+        const leadingPadding = (!windowsXpTheme &&
             startButtonPosition === 'left'
             ? padding
-            : 0;
-        const trailingPadding = !windowsXpTheme &&
+            : 0) + (this._edgePaddingSide === (vertical ? 'top' : 'left') ? this._edgePadding : 0);
+        const trailingPadding = (!windowsXpTheme &&
             startButtonPosition === 'right'
             ? padding
-            : 0;
+            : 0) + (this._edgePaddingSide === (vertical ? 'bottom' : 'right') ? this._edgePadding : 0);
         if (vertical) {
             this._content.set_width(-1);
             this._content.set_height(width);

@@ -33,11 +33,11 @@ import {
     dynamicTransparencyStyle,
 } from '../panel/dynamicTransparency.js';
 import {
-    panelEdgeSides,
     panelIsVertical,
     panelPosition,
     positionIsVertical,
 } from '../panel/panelPosition.js';
+import {syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
 import {prepareTaskbarIconSizeChange} from '../taskbar/taskbarIconSize.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
@@ -126,7 +126,7 @@ export class SecondaryPanelDockController {
         this._layout.enable(!this._settings.get_boolean('dock-panel-mode') ||
             dockFloatingEnabled(this._settings));
         this._connectSignals();
-        this._syncSidePadding();
+        this.syncSidePadding();
     }
 
     destroy() {
@@ -235,7 +235,7 @@ export class SecondaryPanelDockController {
     getPositionState(animateEdgeGapRequested) {
         const state = this._layout.getPositionState(animateEdgeGapRequested);
         if (state.edgeGapChanged)
-            this._syncSidePadding();
+            this.syncSidePadding();
         return state;
     }
 
@@ -243,13 +243,11 @@ export class SecondaryPanelDockController {
         this._layout.syncStrut();
     }
 
-    _syncSidePadding() {
+    syncSidePadding() {
         const padding = !this._settings.get_boolean('dock-panel-mode') || this.getPanelEdgeGap() > 0
             ? this._settings.get_int('taskbar-side-padding') : 0;
-        const [startBox, , endBox] = this._boxes;
-        const [startSide, endSide] = panelEdgeSides(startBox, panelIsVertical(this._settings));
-        startBox.set_style(`padding-${startSide}: ${padding}px;`);
-        endBox.set_style(`padding-${endSide}: ${padding}px;`);
+        syncPanelSidePadding(this._boxes, this._startButtonController, panelIsVertical(this._settings), padding,
+            (box, side, _item, sidePadding) => box.set_style(`padding-${side}: ${sidePadding}px;`));
     }
 
     updateTaskbarWidth() {
@@ -426,7 +424,7 @@ export class SecondaryPanelDockController {
         );
         this._settings.connectObject(
             'changed::taskbar-side-padding',
-            () => this._syncSidePadding(),
+            () => this.syncSidePadding(),
             'changed::dock-max-length',
             () => {
                 this._layout.resetLength();

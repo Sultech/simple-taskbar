@@ -305,7 +305,8 @@ export class SecondaryPanelController {
                 [this._leftBox, this._centerBox, this._rightBox],
                 () => this._quickSettingsIndicatorsController._indicators,
                 () => this._panelHeight,
-                () => this._geometryController ? this._geometryController.getPanelEdgeGap() : 0
+                () => this._geometryController ? this._geometryController.getPanelEdgeGap() : 0,
+                this._startButtonController
             );
         this._taskbarController.setAlignmentActor(this._centerBox);
         this._interactionController = null;
@@ -905,6 +906,8 @@ export class SecondaryPanelController {
         );
         if (this._buttonPaddingController)
             this._buttonPaddingController.syncEdgePadding();
+        else
+            this._dockController.syncSidePadding();
         this._notificationAreaController.syncRightBoxActors(
             this._rightBox,
             new Set(items.map(item => item.actor)),

@@ -74,7 +74,7 @@ export class PanelController {
         onPanelHidden,
         getHoverAnimationOutwardReserve,
         getHoverAnimationReserve,
-        startButton,
+        startButtonController,
         taskbarBin,
         taskbarActor,
         showDesktopButton,
@@ -88,7 +88,7 @@ export class PanelController {
     }) {
         this._settings = settings;
         this._panelHeight = panelHeight;
-        this._startButton = startButton;
+        this._startButton = startButtonController.panelActor;
         this._taskbarBin = taskbarBin;
         this._taskbarActor = taskbarActor;
         this._showDesktopButton = showDesktopButton;
@@ -203,7 +203,8 @@ export class PanelController {
             ],
             () => Main.panel.statusArea.quickSettings._indicators,
             () => this._panelHeight,
-            () => this.getPanelEdgeGap()
+            () => this.getPanelEdgeGap(),
+            startButtonController
         );
     }
 
