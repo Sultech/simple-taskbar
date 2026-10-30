@@ -541,10 +541,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._settings.connectObject(
             'changed::taskbar-dynamic',
             () => this._queueRebuild(),
-            'changed::taskbar-floating',
-            () => this._queueRebuild(),
-            'changed::taskbar-dynamic-floating',
-            () => this._queueRebuild(),
             'changed::default-panel-show-running-windows',
             () => this._queueRebuild(),
             this

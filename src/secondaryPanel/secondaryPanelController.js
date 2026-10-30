@@ -51,7 +51,7 @@ import {createPanelItems} from '../panel/panelItems.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
 import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
 import {floatingPanelCornerRadius} from '../panel/floatingPanelGeometry.js';
-import {TaskbarGeometryController} from '../panel/taskbarGeometryController.js';
+import {TaskbarGeometryController, syncTaskbarGeometryController} from '../panel/taskbarGeometryController.js';
 import {
     PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
@@ -412,19 +412,8 @@ export class SecondaryPanelController {
                 );
             this._quickSettingsXpIconController.enable();
         }
-        if (taskbarGeometryEnabled(this._settings)) {
-            this._geometryController = new TaskbarGeometryController({
-                settings: this._settings,
-                getMonitor: () => this._monitor,
-                panelBox: this._panelBox,
-                panel: this.actor,
-                boxes: [this._leftBox, this._centerBox, this._rightBox],
-                getPanelHeight: () => this._panelHeight,
-                onPosition: (updateWidth, animateGap) => this._position(updateWidth, animateGap),
-                onContentChanged: () => this._queueTaskbarWidth(),
-                getHoverReserve: () => this._magnifyController.reserve,
-            });
-        }
+        if (taskbarGeometryEnabled(this._settings))
+            this._geometryController = this._createGeometryController();
         Main.layoutManager.addChrome(this._panelBox, {
             affectsStruts: !this._dockController ||
                 this._settings.get_boolean('dock-panel-mode') &&
@@ -486,14 +475,14 @@ export class SecondaryPanelController {
             strutActor: geometryController ? geometryController.strutActor : null,
             getMonitor: () => this._monitor,
             getPanelHeight: () => this._panelHeight,
-            getPanelLengthPercentage: geometryController
-                ? () => geometryController.getPanelLengthPercentage() : undefined,
-            getPanelLengthOverride: geometryController
-                ? () => geometryController.getPanelLengthOverride() : undefined,
-            getPanelEdgeGap: geometryController
-                ? () => geometryController.getPanelEdgeGap() : undefined,
-            getLimitRevealToPanel: geometryController
-                ? () => geometryController.getLimitRevealToPanel() : undefined,
+            getPanelLengthPercentage: () => this._geometrySource()
+                ? this._geometrySource().getPanelLengthPercentage() : null,
+            getPanelLengthOverride: () => this._geometrySource()
+                ? this._geometrySource().getPanelLengthOverride() : null,
+            getPanelEdgeGap: () => this._geometrySource()
+                ? this._geometrySource().getPanelEdgeGap() : 0,
+            getLimitRevealToPanel: () => this._geometrySource()
+                ? this._geometrySource().getLimitRevealToPanel() : true,
             isBlocked: () => this._autoHideIsBlocked(),
         });
         this._autoHideController.enable();
@@ -652,6 +641,13 @@ export class SecondaryPanelController {
     }
 
     _connectSignals() {
+        if (!this._dockController) {
+            this._settings.connectObject(
+                'changed::taskbar-floating', () => this._syncFloatingMode(),
+                'changed::taskbar-dynamic-floating', () => this._syncFloatingMode(),
+                this
+            );
+        }
         Main.panel.connectObject('notify::style-class', () => {
             this.syncTheme();
         }, this._signalHolder);
@@ -921,6 +917,32 @@ export class SecondaryPanelController {
 
     _geometrySource() {
         return this._dockController ?? this._geometryController;
+    }
+
+    _createGeometryController() {
+        return new TaskbarGeometryController({
+            settings: this._settings,
+            getMonitor: () => this._monitor,
+            panelBox: this._panelBox,
+            panel: this.actor,
+            boxes: [this._leftBox, this._centerBox, this._rightBox],
+            getPanelHeight: () => this._panelHeight,
+            onPosition: (updateWidth, animateGap) => this._position(updateWidth, animateGap),
+            onContentChanged: () => this._queueTaskbarWidth(),
+            getHoverReserve: () => this._magnifyController.reserve,
+        });
+    }
+
+    _syncFloatingMode() {
+        const hadGeometry = Boolean(this._geometryController);
+        this._geometryController = syncTaskbarGeometryController(
+            this._geometryController, this._settings, this._autoHideController, () => this._createGeometryController()
+        );
+        if (hadGeometry && !this._geometryController)
+            syncPanelBlurCornerRadius(this.actor, 0);
+        this.syncTheme();
+        this._buttonPaddingController.syncEdgePadding();
+        this._position();
     }
 
     _appsAreCentered() {

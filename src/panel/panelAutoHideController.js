@@ -178,6 +178,7 @@ export class PanelAutoHideController {
         this._overviewEdgeRevealBlocked =
             Main.overview.animationInProgress;
         this._captureStrutTracking();
+        this._originalTrackFullscreen = this._trackedActorData.trackFullscreen;
         this._syncStrutTracking();
         this.syncPosition();
         this._syncEnabled();
@@ -324,6 +325,15 @@ export class PanelAutoHideController {
         this._strutActor = actor;
     }
 
+    updateGeometry(updateGeometry) {
+        this._restoreStrutTracking();
+        this._strutActor = updateGeometry();
+        this._strutActorData = null;
+        this._captureStrutTracking();
+        if (this._enabled() || this._dodgeEnabled)
+            this._syncStrutTracking();
+    }
+
     syncPosition(animate = false) {
         const monitor = this._getMonitor();
         const actor = this._positionActor;
@@ -454,8 +464,6 @@ export class PanelAutoHideController {
         );
         this._originalAffectsStruts =
             this._trackedActorData.affectsStruts;
-        this._originalTrackFullscreen =
-            this._trackedActorData.trackFullscreen;
         if (!this._strutActor)
             return;
 

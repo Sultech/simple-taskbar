@@ -14,7 +14,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionIsActive} from '../extensionState.js';
-import {syncBlurGeometry} from '../integration/blurMyShellRuntime.js';
+import {syncBlurGeometry, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelWindowDodgeController,
@@ -33,7 +33,7 @@ import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelGeometry} from './panelGeometry.js';
 import {PanelMagnifyController} from './panelMagnifyController.js';
 import {DynamicPanelBoxLayout} from './dynamicPanelBoxLayout.js';
-import {TaskbarGeometryController} from './taskbarGeometryController.js';
+import {TaskbarGeometryController, syncTaskbarGeometryController} from './taskbarGeometryController.js';
 import {
     PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
@@ -131,17 +131,7 @@ export class PanelController {
             () => this._buttonPaddingController.effectivePadding()
         );
         this._geometryController = taskbarGeometryEnabled(settings)
-            ? new TaskbarGeometryController({
-                settings,
-                getMonitor: () => Main.layoutManager.primaryMonitor,
-                panelBox: Main.layoutManager.panelBox,
-                panel: Main.panel,
-                boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
-                getPanelHeight: () => this._panelHeight,
-                onPosition: (updateWidth, animateGap) => this.position(updateWidth, animateGap),
-                onContentChanged: () => this.updateTaskbarWidth(),
-                getHoverReserve: () => this._magnifyController.reserve,
-            })
+            ? this._createGeometryController()
             : null;
         this._oldPanelBoxLayout = null;
         this._panelBoxLayout = null;
@@ -280,6 +270,7 @@ export class PanelController {
         this._taskbarWidthUpdater.destroy();
         this._taskbarWidthUpdater = null;
         this._settings.disconnectObject(this);
+        Main.panel.disconnectObject(this);
         this._signalHolder.destroy();
         this._signalHolder = null;
 
@@ -345,6 +336,32 @@ export class PanelController {
         this._activitiesController.sync();
         this.position();
         this._clockController.sync();
+    }
+
+    _createGeometryController() {
+        return new TaskbarGeometryController({
+            settings: this._settings,
+            getMonitor: () => Main.layoutManager.primaryMonitor,
+            panelBox: Main.layoutManager.panelBox,
+            panel: Main.panel,
+            boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
+            getPanelHeight: () => this._panelHeight,
+            onPosition: (updateWidth, animateGap) => this.position(updateWidth, animateGap),
+            onContentChanged: () => this.updateTaskbarWidth(),
+            getHoverReserve: () => this._magnifyController.reserve,
+        });
+    }
+
+    _syncFloatingMode() {
+        const hadGeometry = Boolean(this._geometryController);
+        this._geometryController = syncTaskbarGeometryController(
+            this._geometryController, this._settings, this._autoHideController, () => this._createGeometryController()
+        );
+        if (hadGeometry && !this._geometryController)
+            syncPanelBlurCornerRadius(Main.panel, 0);
+        this._themeController.applyTransparency();
+        this._buttonPaddingController.syncEdgePadding();
+        this.position();
     }
 
     setStartMenuOpen(open) {
@@ -772,10 +789,13 @@ export class PanelController {
         Main.layoutManager.connectObject('monitors-changed', () => {
             this.position();
         }, this._signalHolder);
-        if (this._geometryController) {
-            Main.panel.connectObject('notify::style',
-                () => this._syncShowDesktopPanelCorner(), this._signalHolder);
-        }
+        Main.panel.connectObject('notify::style',
+            () => this._syncShowDesktopPanelCorner(), this);
+        this._settings.connectObject(
+            'changed::taskbar-floating', () => this._syncFloatingMode(),
+            'changed::taskbar-dynamic-floating', () => this._syncFloatingMode(),
+            this
+        );
         if (Main.screenShield) {
             Main.screenShield.connectObject('locked-changed', () => {
                 if (!Main.screenShield.locked) {
