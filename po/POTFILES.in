@@ -12,6 +12,7 @@ src/prefs/applicationIconsGroup.js
 src/prefs/defaultPanelIconSizing.js
 src/prefs/applicationInteractionGroup.js
 src/prefs/classicHighlightDialog.js
+src/prefs/clockDialog.js
 src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dynamicTransparencyDialog.js
