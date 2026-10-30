@@ -10,7 +10,8 @@ export function floatingPanelEdgeGap(settings, monitor) {
     if (Main.overview.visibleTarget)
         return settings.get_int('taskbar-floating-gap');
 
-    if (!settings.get_boolean('panel-autohide-enabled') &&
+    if (settings.get_boolean('taskbar-floating-snap-to-edge') &&
+        !settings.get_boolean('panel-autohide-enabled') &&
         !settings.get_boolean('panel-dodge-windows-enabled') &&
         hasMaximizedWindowOnMonitor(monitor)) {
         return 0;

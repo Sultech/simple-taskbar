@@ -28,6 +28,7 @@ import {
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
 import {addChoiceCards, drawDockEdge, edgeChoices} from './choiceCards.js';
 import {addSliderRow} from './sliderRow.js';
+import {addFloatingPanelRow} from './floatingPanelGroup.js';
 import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
 
 const DOCK_PANEL_HEIGHT_KEY = 'dock-panel-height';
@@ -112,24 +113,7 @@ function addDockPlacementRows(positionGroup, group, settings, connectSettings, c
         addRow: addDockShapeRow,
     }, connectSettings);
 
-    const floatingExpander = createSwitchExpanderRow(settings, {
-        title: _('Floating Dock'),
-        subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
-        getKey: () => settings.get_boolean('dock-panel-mode')
-            ? 'dock-panel-mode-floating'
-            : 'dock-floating',
-        keyChangedKey: 'dock-panel-mode',
-    }, connectSettings);
-    group.add(floatingExpander);
-    addSliderRow(null, settings, {
-        key: 'dock-floating-gap',
-        unit: 'px',
-        title: _('Floating Gap'),
-        subtitle: _('Distance between the floating Dock and the screen edge'),
-        lower: 1,
-        upper: 32,
-        addRow: row => floatingExpander.add_row(row),
-    }, connectSettings);
+    addFloatingPanelRow(group, settings, connectSettings, true);
 }
 
 export function addDockAppearanceGroup({

@@ -16,6 +16,7 @@ src/prefs/clockDialog.js
 src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dynamicTransparencyDialog.js
+src/prefs/floatingPanelGroup.js
 src/prefs/dockBehaviorGroup.js
 src/prefs/bottomHotEdgeGroup.js
 src/prefs/locationsGroup.js

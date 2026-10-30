@@ -32,6 +32,7 @@ import {
 import {createPanelThicknessSizing} from './panelThicknessSizing.js';
 import {addChoiceCards, drawTaskbarEdge, edgeChoices} from './choiceCards.js';
 import {addSliderRow} from './sliderRow.js';
+import {addFloatingPanelRow} from './floatingPanelGroup.js';
 
 const PANEL_HEIGHT_FOLLOW_KEY = 'panel-height-follow-icon-size';
 
@@ -116,24 +117,7 @@ export function addPanelAppearancePage({
     };
     connectSettings(settings, 'changed::default-gnome-panel', syncHighlightEdgeGapRow);
     syncHighlightEdgeGapRow();
-    const floatingExpander = createSwitchExpanderRow(settings, {
-        title: _('Floating Panel Mode'),
-        subtitle: _('Add a small screen-edge gap that closes for maximized windows'),
-        getKey: () => settings.get_boolean('taskbar-dynamic')
-            ? 'taskbar-dynamic-floating'
-            : 'taskbar-floating',
-        keyChangedKey: 'taskbar-dynamic',
-    }, connectSettings);
-    layoutGroup.add(floatingExpander);
-    addSliderRow(null, settings, {
-        key: 'taskbar-floating-gap',
-        unit: 'px',
-        title: _('Floating Gap'),
-        subtitle: _('Distance between the floating taskbar and the screen edge'),
-        lower: 1,
-        upper: 32,
-        addRow: row => floatingExpander.add_row(row),
-    }, connectSettings);
+    addFloatingPanelRow(layoutGroup, settings, connectSettings, false);
     const sidePaddingRow = addSliderRow(layoutGroup, settings, {
         key: 'taskbar-side-padding',
         unit: 'px',

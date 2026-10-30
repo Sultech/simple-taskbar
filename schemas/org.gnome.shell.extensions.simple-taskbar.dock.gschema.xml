@@ -133,6 +133,15 @@
       <default>4</default>
       <summary>Gap between the floating Dock and the screen edge</summary>
     </key>
+    <key name="dock-floating-snap-to-edge" type="b">
+      <default>true</default>
+      <summary>Snap the floating Dock to the screen edge when a window is maximized</summary>
+    </key>
+    <key name="dock-floating-window-gap" type="i">
+      <range min="0" max="32"/>
+      <default>4</default>
+      <summary>Gap between maximized windows and the floating Dock when snapping is disabled</summary>
+    </key>
     <key name="dock-side-padding" type="i">
       <range min="0" max="64"/>
       <default>5</default>

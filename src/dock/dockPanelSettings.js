@@ -46,6 +46,8 @@ const DOCK_SETTING_KEYS = new Map([
     ['panel-autohide-enabled', 'dock-autohide-enabled'],
     ['edge-reveal-enabled', 'dock-edge-reveal-enabled'],
     ['taskbar-floating-gap', 'dock-floating-gap'],
+    ['taskbar-floating-snap-to-edge', 'dock-floating-snap-to-edge'],
+    ['taskbar-floating-window-gap', 'dock-floating-window-gap'],
     ['taskbar-side-padding', 'dock-side-padding'],
     ['taskbar-highlight-edge-gap', 'dock-highlight-edge-gap'],
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],

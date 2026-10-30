@@ -8,6 +8,7 @@ import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {panelGeometry} from './panelGeometry.js';
+import {panelIsMinimumEdge, panelIsVertical} from './panelPosition.js';
 import {FloatingPanelWindowTracker} from './floatingPanelWindowTracker.js';
 import {panelContentLength} from '../taskbar/taskbarLayout.js';
 import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
@@ -42,6 +43,8 @@ export class FloatingPanelLayout {
             'changed::panel-autohide-enabled', () => this._onPosition(),
             'changed::panel-dodge-windows-enabled', () => this._onPosition(),
             'changed::taskbar-floating-gap', () => this._onPosition(),
+            'changed::taskbar-floating-snap-to-edge', () => this._onPosition(),
+            'changed::taskbar-floating-window-gap', () => this._onPosition(),
             this
         );
         for (const box of this._boxes) {
@@ -101,8 +104,22 @@ export class FloatingPanelLayout {
         if (!this.strutActor)
             return;
 
-        const geometry = panelGeometry(this._settings, this._getMonitor(),
-            this._getPanelHeight());
+        const monitor = this._getMonitor();
+        let thickness = this._getPanelHeight();
+        if (!this._settings.get_boolean('taskbar-floating-snap-to-edge') &&
+            !this._settings.get_boolean('panel-autohide-enabled') &&
+            !this._settings.get_boolean('panel-dodge-windows-enabled') &&
+            this._getEdgeGap() > 0) {
+            const floatingGeometry = this._getGeometry();
+            const vertical = panelIsVertical(this._settings);
+            const coordinate = vertical ? 'x' : 'y';
+            const extent = vertical ? 'width' : 'height';
+            thickness = panelIsMinimumEdge(this._settings)
+                ? floatingGeometry[coordinate] + floatingGeometry[extent] - monitor[coordinate]
+                : monitor[coordinate] + monitor[extent] - floatingGeometry[coordinate];
+            thickness += this._settings.get_int('taskbar-floating-window-gap');
+        }
+        const geometry = panelGeometry(this._settings, monitor, thickness);
         this.strutActor.set_position(geometry.x, geometry.y);
         this.strutActor.set_size(geometry.width, geometry.height);
         Main.layoutManager._queueUpdateRegions();
