@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 03:14+0000\n"
+"POT-Creation-Date: 2026-10-31 22:44+0000\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -1683,7 +1683,8 @@ msgstr "Отступ от развёрнутых окон"
 
 #: src/prefs/floatingPanelGroup.js:58
 msgid "Unavailable while auto-hide or dodge windows is enabled"
-msgstr "Недоступно, когда включено автоматическое скрытие или уклонение от окон"
+msgstr ""
+"Недоступно, когда включено автоматическое скрытие или уклонение от окон"
 
 #: src/prefs/floatingPanelGroup.js:61
 msgid ""
@@ -2034,7 +2035,8 @@ msgstr ""
 
 #: src/prefs/panelAppearancePage.js:125
 msgid "Space inside both ends of the dynamic or floating taskbar"
-msgstr "Внутренние отступы на обоих концах динамической или плавающей панели задач"
+msgstr ""
+"Внутренние отступы на обоих концах динамической или плавающей панели задач"
 
 #: src/prefs/panelAppearancePage.js:131
 msgid "Corner Radius"
@@ -2222,8 +2224,8 @@ msgstr ""
 "умолчанию используйте -1"
 
 #: src/prefs/panelItemsPage.js:102
-msgid "Taskbar Item Corner Radius"
-msgstr "Радиус скругления элементов панели задач"
+msgid "Taskbar Buttons Corner Radius"
+msgstr "Радиус скругления кнопок панели задач"
 
 #: src/prefs/panelItemsPage.js:104
 msgid ""
@@ -4022,280 +4024,3 @@ msgstr "Громкость приложений"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Нет приложений, воспроизводящих звук"
-
-#~ msgid "Add a small screen-edge gap that closes for maximized windows"
-#~ msgstr ""
-#~ "Добавить небольшой отступ от края экрана, который исчезает при "
-#~ "развёрнутых окнах"
-
-#~ msgid "Hovering and Animations"
-#~ msgstr "Наведение и анимации"
-
-#~ msgid "Full-width Dock"
-#~ msgstr "Dock на всю ширину"
-
-#~ msgid "Extend the Dock fully to the monitor edge"
-#~ msgstr "Растянуть Dock до края экрана"
-
-#~ msgid "Keep the full-width Dock only as thick as its icons need"
-#~ msgstr ""
-#~ "Сохранять Dock на всю ширину только такой толщины, какая нужна значкам"
-
-#~ msgid ""
-#~ "Oversized icons shrink automatically when the full-width Dock is reduced"
-#~ msgstr ""
-#~ "Крупные значки автоматически уменьшаются при уменьшении Dock на всю ширину"
-
-#~ msgid ""
-#~ "Click and scroll actions, hover previews, magnify and other animations"
-#~ msgstr ""
-#~ "Действия по щелчку и прокрутке, эскизы при наведении, увеличение и другие "
-#~ "анимации"
-
-#~ msgid "Timing Options"
-#~ msgstr "Параметры задержек"
-
-#~ msgid "Size"
-#~ msgstr "Размер"
-
-#~ msgid ""
-#~ "Choose the Dock theme, colours, gradient, corner radius, and text "
-#~ "appearance"
-#~ msgstr ""
-#~ "Выберите тему Dock, цвета, градиент, радиус углов и внешний вид текста"
-
-#~ msgid ""
-#~ "Change the size, spacing, placement, and running indicators for Dock "
-#~ "icons."
-#~ msgstr ""
-#~ "Измените размер, интервалы, расположение и индикаторы запущенных "
-#~ "приложений на значках Dock."
-
-#~ msgid ""
-#~ "Change the size, spacing, placement, and running indicators for taskbar "
-#~ "icons."
-#~ msgstr ""
-#~ "Измените размер, интервалы, расположение и индикаторы запущенных "
-#~ "приложений на значках панели задач."
-
-#~ msgid "Configure clicks, scrolling, hovering, previews, and window effects"
-#~ msgstr "Настройте щелчки, прокрутку, наведение, эскизы и эффекты окон"
-
-#~ msgid "Dock Appearance"
-#~ msgstr "Внешний вид Dock"
-
-#~ msgid "Configure the Dock independently of the taskbar."
-#~ msgstr "Настройте Dock независимо от панели задач."
-
-#~ msgid "Configure Dock interaction independently of the taskbar."
-#~ msgstr "Настройте взаимодействие с Dock независимо от панели задач."
-
-#~ msgid ""
-#~ "Configure the bottom-edge gesture, pressure, and animation for toggling "
-#~ "Overview"
-#~ msgstr ""
-#~ "Настройте жест, давление и анимацию нижнего края для переключения режима "
-#~ "обзора"
-
-#~ msgid "Configure taskbar locations and Files menu shortcuts."
-#~ msgstr "Настройте расположения на панели задач и ярлыки меню «Файлы»."
-
-#~ msgid "Show Trash and connected drives in the Dock."
-#~ msgstr "Показывать Корзину и подключённые накопители в Dock."
-
-#~ msgid "Show common folders in the Files dock menu"
-#~ msgstr "Показывать основные папки в меню приложения «Файлы» в доке"
-
-#~ msgid "Taskbar Appearance"
-#~ msgstr "Внешний вид панели задач"
-
-#~ msgid "Change the taskbar height, colour scheme, and transparency."
-#~ msgstr "Измените высоту, цветовую схему и прозрачность панели задач."
-
-#~ msgid "Taskbar Mode"
-#~ msgstr "Режим панели задач"
-
-#~ msgid "Alternative Modes"
-#~ msgstr "Альтернативные режимы"
-
-#~ msgid "Choose the original GNOME panel or a Windows theme"
-#~ msgstr "Выберите исходную панель GNOME или тему Windows"
-
-#~ msgid "Show applications in a separate Dock instead of the taskbar"
-#~ msgstr "Показывать приложения в отдельном Dock вместо панели задач"
-
-#~ msgid "Change the size, spacing, and placement of taskbar icons."
-#~ msgstr "Измените размер, расстояние и расположение значков панели задач."
-
-#~ msgid "Configure the Start button position and appearance."
-#~ msgstr "Настройте положение и внешний вид кнопки «Пуск»."
-
-#~ msgid "Start Button Appearance and App Grid"
-#~ msgstr "Внешний вид кнопки «Пуск» и сетка приложений"
-
-#~ msgid "Hide taskbar applications and use the original Dash in Overview"
-#~ msgstr ""
-#~ "Скрыть приложения панели задач и использовать оригинальный Dash в обзоре"
-
-#~ msgid "Dock Expansion"
-#~ msgstr "Расширение док-панели"
-
-#~ msgid "Dock resize time in milliseconds"
-#~ msgstr "Время изменения размера док-панели в миллисекундах"
-
-#~ msgid "Highlight Width"
-#~ msgstr "Ширина подсветки"
-
-#~ msgid "Highlight Height"
-#~ msgstr "Высота подсветки"
-
-#~ msgid "Effect Options"
-#~ msgstr "Параметры эффекта"
-
-#~ msgid "Effect Size"
-#~ msgstr "Размер эффекта"
-
-#~ msgid "Effect Border Radius"
-#~ msgstr "Радиус скругления углов эффекта"
-
-#~ msgid "Custom Effect Size"
-#~ msgstr "Свой размер эффекта"
-
-#~ msgid "Effect Width"
-#~ msgstr "Ширина эффекта"
-
-#~ msgid "Effect Height"
-#~ msgstr "Высота эффекта"
-
-#~ msgid "Dock Mode Overview Behavior"
-#~ msgstr "Поведение обзора в режиме Dock"
-
-#~ msgid "Taskbar Mode Overview Behavior"
-#~ msgstr "Поведение обзора в режиме панели задач"
-
-#~ msgid "Default GNOME Panel Overview Behavior"
-#~ msgstr "Поведение обзора стандартной панели GNOME"
-
-#~ msgid "Reveal Options"
-#~ msgstr "Параметры показа"
-
-#~ msgid ""
-#~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
-#~ "window"
-#~ msgstr ""
-#~ "Показывать Dock, когда указатель достигает края экрана при избегании окна"
-
-#~ msgid ""
-#~ "Reveal the taskbar when the pointer reaches its screen edge while dodging "
-#~ "a window"
-#~ msgstr ""
-#~ "Показывать панель задач, когда указатель достигает края экрана при "
-#~ "избегании окна"
-
-#~ msgid "Show Original GNOME Button"
-#~ msgstr "Показать оригинальную кнопку GNOME"
-
-#~ msgid "Application Button Options"
-#~ msgstr "Параметры кнопок приложений"
-
-#~ msgid "Choose the Start button alignment"
-#~ msgstr "Выберите выравнивание кнопки «Пуск»"
-
-#~ msgid "Adjust application icon sizes and the space between them"
-#~ msgstr "Настройте размер значков приложений и расстояние между ними"
-
-#~ msgid "Configure previews, multi-window actions, and clicks"
-#~ msgstr "Настройте предпросмотр, действия с несколькими окнами и щелчки"
-
-#~ msgid ""
-#~ "Click an app with multiple windows to show only its windows in Overview, "
-#~ "across all workspaces"
-#~ msgstr ""
-#~ "Нажмите на приложение с несколькими окнами, чтобы показать только его "
-#~ "окна в обзоре, на всех рабочих столах"
-
-#~ msgid "Close all application windows instead of opening a new window"
-#~ msgstr "Закрывать все окна приложения вместо открытия нового окна"
-
-#~ msgid "Show only icons on separate window buttons"
-#~ msgstr "Показывать только значки на раздельных кнопках окон"
-
-#~ msgid "Configure indicators beneath running application icons"
-#~ msgstr "Настройте индикаторы под значками запущенных приложений"
-
-#~ msgid "Straight"
-#~ msgstr "Прямые"
-
-#~ msgid "Theme"
-#~ msgstr "Тема"
-
-#~ msgid "Control the Dock background transparency"
-#~ msgstr "Настройте прозрачность фона Dock"
-
-#~ msgid "Choose which borders appear around the Dock"
-#~ msgstr "Выберите, какие границы показывать вокруг Dock"
-
-#~ msgid "Enable Workspace Scroll"
-#~ msgstr "Включить прокрутку рабочих столов"
-
-#~ msgid "Locations shown with taskbar applications"
-#~ msgstr "Расположения, отображаемые вместе с приложениями на панели задач"
-
-#~ msgid "Locations shown with Dock applications"
-#~ msgstr "Расположения, отображаемые вместе с приложениями Dock"
-
-#~ msgid "Panel Appearance"
-#~ msgstr "Внешний вид панели"
-
-#~ msgid "Panel Thickness"
-#~ msgstr "Толщина панели"
-
-#~ msgid "Choose the taskbar colour scheme"
-#~ msgstr "Выберите цветовую схему панели задач"
-
-#~ msgid ""
-#~ "White text uses the dark panel theme; black text uses the light panel "
-#~ "theme"
-#~ msgstr ""
-#~ "Белый текст использует тёмную тему панели; чёрный текст — светлую тему "
-#~ "панели"
-
-#~ msgid "Choose which borders appear around the taskbar"
-#~ msgstr "Выберите, какие границы показывать вокруг панели задач"
-
-#~ msgid "Display a thin border along the panel’s workspace-facing edge"
-#~ msgstr ""
-#~ "Показывать тонкую границу вдоль края панели, обращённого к рабочей области"
-
-#~ msgid "Panel Items"
-#~ msgstr "Элементы панели"
-
-#~ msgid "Panel Button Padding"
-#~ msgstr "Отступ кнопок панели"
-
-#~ msgid "Panel Item Visibility"
-#~ msgstr "Видимость элементов панели"
-
-#~ msgid "Display GNOME’s workspace overview button on the taskbar"
-#~ msgstr "Показывать кнопку обзора рабочих столов GNOME на панели задач"
-
-#~ msgid "Collect Tray Icons"
-#~ msgstr "Собирать значки уведомлений"
-
-#~ msgid "Show and configure a selected folder on the taskbar"
-#~ msgstr "Показывать и настраивать выбранную папку на панели задач"
-
-#~ msgid "Show Folder Menu"
-#~ msgstr "Показать меню папки"
-
-#~ msgid "Show a selected folder on the taskbar"
-#~ msgstr "Показывать выбранную папку на панели задач"
-
-#~ msgid "Choose the order of items in the Dock."
-#~ msgstr "Выберите порядок элементов Dock."
-
-#~ msgid "Configure the Start button alignment"
-#~ msgstr "Настройте выравнивание кнопки «Пуск»"
-
-#~ msgid "Right-click Menu Shortcuts"
-#~ msgstr "Ярлыки меню правой кнопки мыши"

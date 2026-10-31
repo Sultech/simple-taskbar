@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 03:14+0000\n"
+"POT-Creation-Date: 2026-10-31 22:44+0000\n"
 "PO-Revision-Date: 2026-10-17 00:00+0200\n"
 "Last-Translator: granmajestuoso86 "
 "<granmajestuoso86@users.noreply.github.com>\n"
@@ -1688,7 +1688,8 @@ msgstr "Mantener una separación entre el Dock y el borde de la pantalla"
 
 #: src/prefs/floatingPanelGroup.js:21
 msgid "Keep a gap between the taskbar and the screen edge"
-msgstr "Mantener una separación entre la barra de tareas y el borde de la pantalla"
+msgstr ""
+"Mantener una separación entre la barra de tareas y el borde de la pantalla"
 
 #: src/prefs/floatingPanelGroup.js:31
 msgid "Floating Gap"
@@ -2079,7 +2080,8 @@ msgstr ""
 
 #: src/prefs/panelAppearancePage.js:125
 msgid "Space inside both ends of the dynamic or floating taskbar"
-msgstr "Espacio interior en ambos extremos de la barra de tareas dinámica o flotante"
+msgstr ""
+"Espacio interior en ambos extremos de la barra de tareas dinámica o flotante"
 
 #: src/prefs/panelAppearancePage.js:131
 msgid "Corner Radius"
@@ -2278,8 +2280,8 @@ msgstr ""
 "valor predeterminado de GNOME"
 
 #: src/prefs/panelItemsPage.js:102
-msgid "Taskbar Item Corner Radius"
-msgstr "Radio de las esquinas de los elementos de la barra de tareas"
+msgid "Taskbar Buttons Corner Radius"
+msgstr "Radio de las esquinas de los botones de la barra de tareas"
 
 #: src/prefs/panelItemsPage.js:104
 msgid ""
@@ -4116,46 +4118,3 @@ msgstr "Volumen de la aplicación"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Ninguna aplicación está reproduciendo audio"
-
-#~ msgid "Add a small screen-edge gap that closes for maximized windows"
-#~ msgstr ""
-#~ "Añadir un pequeño espacio junto al borde de la pantalla que se cierra con "
-#~ "las ventanas maximizadas"
-
-#~ msgid "Hovering and Animations"
-#~ msgstr "Pasar el ratón y animaciones"
-
-#~ msgid "Full-width Dock"
-#~ msgstr "Dock a todo el ancho"
-
-#~ msgid "Extend the Dock fully to the monitor edge"
-#~ msgstr "Extender el Dock por completo hasta el borde del monitor"
-
-#~ msgid "Keep the full-width Dock only as thick as its icons need"
-#~ msgstr ""
-#~ "Mantener el Dock a todo el ancho solo tan grueso como necesiten sus iconos"
-
-#~ msgid ""
-#~ "Oversized icons shrink automatically when the full-width Dock is reduced"
-#~ msgstr ""
-#~ "Los iconos demasiado grandes se reducen automáticamente al reducir el "
-#~ "Dock de ancho completo"
-
-#~ msgid ""
-#~ "Click and scroll actions, hover previews, magnify and other animations"
-#~ msgstr ""
-#~ "Acciones de clic y desplazamiento, vistas previas, ampliación y otras "
-#~ "animaciones"
-
-#~ msgid "Timing Options"
-#~ msgstr "Opciones de tiempo"
-
-#~ msgid "Size"
-#~ msgstr "Tamaño"
-
-#~ msgid ""
-#~ "Choose the Dock theme, colours, gradient, corner radius, and text "
-#~ "appearance"
-#~ msgstr ""
-#~ "Elige el tema, los colores, el degradado, el radio de las esquinas y la "
-#~ "apariencia del texto del Dock"

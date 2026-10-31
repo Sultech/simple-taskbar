@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 03:14+0000\n"
+"POT-Creation-Date: 2026-10-31 22:44+0000\n"
 "PO-Revision-Date: 2026-08-03 10:20+0200\n"
 "Last-Translator: Tahomaru <>\n"
 "Language-Team: French\n"
@@ -1735,7 +1735,8 @@ msgstr "Distance entre les fenêtres maximisées et le Dock flottant"
 
 #: src/prefs/floatingPanelGroup.js:46
 msgid "Distance between maximized windows and the floating taskbar"
-msgstr "Distance entre les fenêtres maximisées et la barre des tâches flottante"
+msgstr ""
+"Distance entre les fenêtres maximisées et la barre des tâches flottante"
 
 #: src/prefs/floatingPanelGroup.js:49
 msgid "Maximized Window Gap"
@@ -1744,8 +1745,8 @@ msgstr "Écart avec les fenêtres maximisées"
 #: src/prefs/floatingPanelGroup.js:58
 msgid "Unavailable while auto-hide or dodge windows is enabled"
 msgstr ""
-"Indisponible lorsque le masquage automatique ou l’évitement des fenêtres est"
-" activé"
+"Indisponible lorsque le masquage automatique ou l’évitement des fenêtres est "
+"activé"
 
 #: src/prefs/floatingPanelGroup.js:61
 msgid ""
@@ -2305,8 +2306,8 @@ msgstr ""
 "valeur par défaut de GNOME"
 
 #: src/prefs/panelItemsPage.js:102
-msgid "Taskbar Item Corner Radius"
-msgstr "Rayon des coins des éléments de la barre des tâches"
+msgid "Taskbar Buttons Corner Radius"
+msgstr "Rayon des coins des boutons de la barre des tâches"
 
 #: src/prefs/panelItemsPage.js:104
 msgid ""
@@ -4162,304 +4163,3 @@ msgstr "Volume de l’application"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Aucune application ne joue de l’audio"
-
-#~ msgid "Add a small screen-edge gap that closes for maximized windows"
-#~ msgstr ""
-#~ "Ajouter un petit espace au bord de l’écran qui se ferme lorsque les "
-#~ "fenêtres sont maximisées"
-
-#~ msgid "Hovering and Animations"
-#~ msgstr "Survol et animations"
-
-#~ msgid "Full-width Dock"
-#~ msgstr "Dock pleine largeur"
-
-#~ msgid "Extend the Dock fully to the monitor edge"
-#~ msgstr "Étendre le Dock jusqu’au bord de l’écran"
-
-#~ msgid "Keep the full-width Dock only as thick as its icons need"
-#~ msgstr "Conserver le Dock pleine largeur juste assez épais pour ses icônes"
-
-#~ msgid ""
-#~ "Oversized icons shrink automatically when the full-width Dock is reduced"
-#~ msgstr ""
-#~ "Les icônes trop grandes rétrécissent automatiquement lorsque le Dock "
-#~ "pleine largeur est réduit"
-
-#~ msgid ""
-#~ "Click and scroll actions, hover previews, magnify and other animations"
-#~ msgstr ""
-#~ "Actions de clic et de défilement, aperçus au survol, agrandissement et "
-#~ "autres animations"
-
-#~ msgid "Timing Options"
-#~ msgstr "Options de délai"
-
-#~ msgid "Size"
-#~ msgstr "Taille"
-
-#~ msgid ""
-#~ "Choose the Dock theme, colours, gradient, corner radius, and text "
-#~ "appearance"
-#~ msgstr ""
-#~ "Choisir le thème, les couleurs, le dégradé, le rayon des coins et "
-#~ "l’apparence du texte du Dock"
-
-#~ msgid ""
-#~ "Change the size, spacing, placement, and running indicators for Dock "
-#~ "icons."
-#~ msgstr ""
-#~ "Modifier la taille, l’espacement, le placement et les indicateurs "
-#~ "d’exécution des icônes du Dock."
-
-#~ msgid ""
-#~ "Change the size, spacing, placement, and running indicators for taskbar "
-#~ "icons."
-#~ msgstr ""
-#~ "Modifier la taille, l’espacement, le placement et les indicateurs "
-#~ "d’exécution des icônes de la barre des tâches."
-
-#~ msgid "Configure clicks, scrolling, hovering, previews, and window effects"
-#~ msgstr ""
-#~ "Configurer les clics, le défilement, le survol, les aperçus et les effets "
-#~ "de fenêtre"
-
-#~ msgid "Dock Appearance"
-#~ msgstr "Apparence du Dock"
-
-#~ msgid "Configure the Dock independently of the taskbar."
-#~ msgstr "Configurer le Dock indépendamment de la barre des tâches."
-
-#~ msgid "Configure Dock interaction independently of the taskbar."
-#~ msgstr ""
-#~ "Configurer l’interaction avec le Dock indépendamment de la barre des "
-#~ "tâches."
-
-#~ msgid ""
-#~ "Configure the bottom-edge gesture, pressure, and animation for toggling "
-#~ "Overview"
-#~ msgstr ""
-#~ "Configurer le geste, la pression et l’animation du bord inférieur pour "
-#~ "activer ou désactiver la vue d’ensemble"
-
-#~ msgid "Configure taskbar locations and Files menu shortcuts."
-#~ msgstr ""
-#~ "Configurer les emplacements de la barre des tâches et les raccourcis du "
-#~ "menu Fichiers."
-
-#~ msgid "Show Trash and connected drives in the Dock."
-#~ msgstr "Afficher la corbeille et les lecteurs connectés dans le Dock."
-
-#~ msgid "Show common folders in the Files dock menu"
-#~ msgstr "Afficher les dossiers courants dans le menu de Fichiers du dock"
-
-#~ msgid "Taskbar Appearance"
-#~ msgstr "Apparence de la barre des tâches"
-
-#~ msgid "Change the taskbar height, colour scheme, and transparency."
-#~ msgstr ""
-#~ "Changer la hauteur de la barre des tâches, le schéma des couleurs et la "
-#~ "transparence."
-
-#~ msgid "Taskbar Mode"
-#~ msgstr "Mode barre des tâches"
-
-#~ msgid "Alternative Modes"
-#~ msgstr "Modes alternatifs"
-
-#~ msgid "Choose the original GNOME panel or a Windows theme"
-#~ msgstr "Choisir le panneau GNOME d’origine ou un thème Windows"
-
-#~ msgid "Show applications in a separate Dock instead of the taskbar"
-#~ msgstr ""
-#~ "Afficher les applications dans un Dock séparé plutôt que dans la barre "
-#~ "des tâches"
-
-#~ msgid "Change the size, spacing, and placement of taskbar icons."
-#~ msgstr ""
-#~ "Changer la taille, l’espacement et le placement des icônes de la barre "
-#~ "des tâches."
-
-#~ msgid "Configure the Start button position and appearance."
-#~ msgstr "Configurer la position et l’apparence du bouton Démarrer."
-
-#~ msgid "Start Button Appearance and App Grid"
-#~ msgstr "Apparence du bouton Démarrer et grille d’applications"
-
-#~ msgid "Hide taskbar applications and use the original Dash in Overview"
-#~ msgstr ""
-#~ "Masquer les applications de la barre des tâches et utiliser le dock "
-#~ "d’origine dans l’aperçu"
-
-#~ msgid "Dock Expansion"
-#~ msgstr "Expansion du dock"
-
-#~ msgid "Dock resize time in milliseconds"
-#~ msgstr "Durée de redimensionnement du dock en millisecondes"
-
-#~ msgid "Highlight Width"
-#~ msgstr "Largeur de la surbrillance"
-
-#~ msgid "Highlight Height"
-#~ msgstr "Hauteur de la surbrillance"
-
-#~ msgid "Effect Options"
-#~ msgstr "Options d’effet"
-
-#~ msgid "Effect Size"
-#~ msgstr "Taille de l’effet"
-
-#~ msgid "Effect Border Radius"
-#~ msgstr "Rayon des coins de l’effet"
-
-#~ msgid "Custom Effect Size"
-#~ msgstr "Taille d’effet personnalisée"
-
-#~ msgid "Effect Width"
-#~ msgstr "Largeur de l’effet"
-
-#~ msgid "Effect Height"
-#~ msgstr "Hauteur de l’effet"
-
-#~ msgid "Dock Mode Overview Behavior"
-#~ msgstr "Comportement de l’aperçu en mode Dock"
-
-#~ msgid "Taskbar Mode Overview Behavior"
-#~ msgstr "Comportement de l’aperçu en mode barre des tâches"
-
-#~ msgid "Default GNOME Panel Overview Behavior"
-#~ msgstr "Comportement de l’aperçu du panneau GNOME par défaut"
-
-#~ msgid "Reveal Options"
-#~ msgstr "Options d’affichage"
-
-#~ msgid ""
-#~ "Reveal the Dock when the pointer reaches its screen edge while dodging a "
-#~ "window"
-#~ msgstr ""
-#~ "Afficher le Dock lorsque le curseur atteint le bord de l’écran pendant "
-#~ "l’évitement d’une fenêtre"
-
-#~ msgid ""
-#~ "Reveal the taskbar when the pointer reaches its screen edge while dodging "
-#~ "a window"
-#~ msgstr ""
-#~ "Afficher la barre des tâches lorsque le curseur atteint le bord de "
-#~ "l’écran pendant l’évitement d’une fenêtre"
-
-#~ msgid "Show Original GNOME Button"
-#~ msgstr "Afficher le bouton GNOME d’origine"
-
-#~ msgid "Application Button Options"
-#~ msgstr "Options des boutons d’application"
-
-#~ msgid "Choose the Start button alignment"
-#~ msgstr "Choisir l’alignement du bouton Démarrer"
-
-#~ msgid "Adjust application icon sizes and the space between them"
-#~ msgstr "Ajuster la taille des icônes d’applications et l’espace entre elles"
-
-#~ msgid "Configure previews, multi-window actions, and clicks"
-#~ msgstr ""
-#~ "Configurer les aperçus, les actions sur plusieurs fenêtres et les clics"
-
-#~ msgid ""
-#~ "Click an app with multiple windows to show only its windows in Overview, "
-#~ "across all workspaces"
-#~ msgstr ""
-#~ "Cliquer sur une application avec de multiple fenêtres afin de montrer "
-#~ "uniquement ses fenêtres en mode aperçu, sur tous les espaces de travail"
-
-#~ msgid "Close all application windows instead of opening a new window"
-#~ msgstr ""
-#~ "Fermer toutes les fenêtres d'une application au lieu d'ouvrir une "
-#~ "nouvelle fenêtre"
-
-#~ msgid "Show only icons on separate window buttons"
-#~ msgstr "Afficher seulement les icônes sur des boutons séparés de fenêtres"
-
-#~ msgid "Configure indicators beneath running application icons"
-#~ msgstr ""
-#~ "Configurer les indicateurs sous les icônes des applications en cours "
-#~ "d’exécution"
-
-#~ msgid "Straight"
-#~ msgstr "Droit"
-
-#~ msgid "Theme"
-#~ msgstr "Thème"
-
-#~ msgid "Control the Dock background transparency"
-#~ msgstr "Contrôler la transparence de l’arrière-plan du Dock"
-
-#~ msgid "Choose which borders appear around the Dock"
-#~ msgstr "Choisir les bordures à afficher autour du Dock"
-
-#~ msgid "Enable Workspace Scroll"
-#~ msgstr "Activer le défilement des espaces de travail"
-
-#~ msgid "Locations shown with taskbar applications"
-#~ msgstr "Emplacements affichés avec les applications de la barre des tâches"
-
-#~ msgid "Locations shown with Dock applications"
-#~ msgstr "Emplacements affichés avec les applications du Dock"
-
-#~ msgid "Panel Appearance"
-#~ msgstr "Apparence du panneau"
-
-#~ msgid "Panel Thickness"
-#~ msgstr "Épaisseur du panneau"
-
-#~ msgid "Choose the taskbar colour scheme"
-#~ msgstr "Choisir la palette de couleurs de la barre des tâches"
-
-#~ msgid ""
-#~ "White text uses the dark panel theme; black text uses the light panel "
-#~ "theme"
-#~ msgstr ""
-#~ "Le texte blanc utilise le thème sombre du panneau ; le texte noir utilise "
-#~ "le thème clair du panneau"
-
-#~ msgid "Choose which borders appear around the taskbar"
-#~ msgstr "Choisir les bordures à afficher autour de la barre des tâches"
-
-#~ msgid "Display a thin border along the panel’s workspace-facing edge"
-#~ msgstr ""
-#~ "Afficher une fine bordure le long du bord du panneau faisant face à "
-#~ "l’espace de travail"
-
-#~ msgid "Panel Items"
-#~ msgstr "Éléments du panneau"
-
-#~ msgid "Panel Button Padding"
-#~ msgstr "Remplissage du bouton du panneau"
-
-#~ msgid "Panel Item Visibility"
-#~ msgstr "Visibilité des éléments du panneau"
-
-#~ msgid "Display GNOME’s workspace overview button on the taskbar"
-#~ msgstr ""
-#~ "Afficher le bouton de l’aperçu des espaces de travail GNOME sur la barre "
-#~ "des tâches"
-
-#~ msgid "Collect Tray Icons"
-#~ msgstr "Regrouper les icônes de notification"
-
-#~ msgid "Show and configure a selected folder on the taskbar"
-#~ msgstr ""
-#~ "Afficher et configurer un dossier sélectionné dans la barre des tâches"
-
-#~ msgid "Show Folder Menu"
-#~ msgstr "Afficher le menu dossier"
-
-#~ msgid "Show a selected folder on the taskbar"
-#~ msgstr "Afficher un menu sélectionné sur la barre des tâches"
-
-#~ msgid "Choose the order of items in the Dock."
-#~ msgstr "Choisir l’ordre des éléments du Dock."
-
-#~ msgid "Configure the Start button alignment"
-#~ msgstr "Configurer l’alignement du bouton Démarrer"
-
-#~ msgid "Right-click Menu Shortcuts"
-#~ msgstr "Raccourcis du menu contextuel"

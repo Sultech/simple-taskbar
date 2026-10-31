@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 03:14+0000\n"
+"POT-Creation-Date: 2026-10-31 22:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2146,7 +2146,7 @@ msgid ""
 msgstr ""
 
 #: src/prefs/panelItemsPage.js:102
-msgid "Taskbar Item Corner Radius"
+msgid "Taskbar Buttons Corner Radius"
 msgstr ""
 
 #: src/prefs/panelItemsPage.js:104
