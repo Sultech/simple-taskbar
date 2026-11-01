@@ -8,6 +8,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 
 const FLUSH_EDGE_TOLERANCE = 0.5;
+const VISIBLE_EDGE_TOLERANCE = 1;
 
 export class TaskbarHoverAnimationGeometry {
     constructor({
@@ -319,10 +320,14 @@ export class TaskbarHoverAnimationGeometry {
     }
 
     _isRowItemInViewport(item, span, getStretchEntry) {
-        return this._isGeometryInViewport(
-            this._restingGeometry(item, getStretchEntry),
-            span
-        );
+        const geometry = this._restingGeometry(item, getStretchEntry);
+        if (!geometry || !span)
+            return false;
+
+        const start = this._getVertical() ? geometry.y : geometry.x;
+        const length = this._getVertical() ? geometry.height : geometry.width;
+        return start >= span.start - VISIBLE_EDGE_TOLERANCE &&
+            start + length <= span.end + VISIBLE_EDGE_TOLERANCE;
     }
 
     _restingGeometry(item, getStretchEntry) {

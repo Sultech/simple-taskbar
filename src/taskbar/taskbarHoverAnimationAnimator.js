@@ -303,8 +303,15 @@ export class TaskbarHoverAnimationAnimator {
         this._passSettled = true;
         const rowItems = new Set(entries.map(entry => entry.item));
         for (const item of [...this._clones.getItems()]) {
-            if (!rowItems.has(item))
+            if (rowItems.has(item))
+                continue;
+
+            if (item._taskbarApp) {
+                this._clones.remove(item);
+                this._clones.resetStretch(item);
+            } else {
                 this._raise(item, 0, items, 0);
+            }
         }
 
         if (!this._magnifyActive) {
