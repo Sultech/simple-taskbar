@@ -20,6 +20,7 @@ import {addDockItemsPage} from './src/prefs/dockItemsPage.js';
 import {addLocationsGroup} from './src/prefs/locationsGroup.js';
 import {addStartMenuPage} from './src/prefs/startMenuPage.js';
 import {SettingsSignalTracker} from './src/prefs/settingsSignalTracker.js';
+import {SettingsSearchController} from './src/prefs/settingsSearchController.js';
 import {addGeneralPage} from './src/prefs/generalPage.js';
 import {addDockHub, addTaskbarHub} from './src/prefs/panelSettingsHubs.js';
 import {addAboutPage} from './src/prefs/aboutPage.js';
@@ -30,12 +31,18 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             `${this.path}/icons/scalable/actions`
         );
         window.set_default_size(640, 740);
+        window.set_search_enabled(false);
+        window._settingsSearch = new SettingsSearchController(window);
         const createSettings = () => createRoutedSettings(this.getSettings(),
             this.getSettings(`${this.metadata['settings-schema']}.legacy`));
         window._settings = createSettings();
         const settings = window._settings;
         const settingsSignalTracker = new SettingsSignalTracker();
-        window.connect('close-request', () => settingsSignalTracker.destroy());
+        window.connect('close-request', () => {
+            window._settingsSearch.destroy();
+            window._settingsSearch = null;
+            settingsSignalTracker.destroy();
+        });
         const connectSettings = (object, signal, callback) =>
             settingsSignalTracker.connect(object, signal, callback);
         const blurMyShell = createBlurMyShellState(connectSettings);
@@ -47,7 +54,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             {value: 'right', label: _('Right')},
         ];
 
-        addGeneralPage({window, settings, createSettings, connectSettings});
+        const generalPage = addGeneralPage({window, settings, createSettings, connectSettings});
 
         const taskbarPage = new Adw.PreferencesPage({
             title: _('Taskbar'),
@@ -161,5 +168,12 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
         });
 
         addAboutPage(window, this.path);
+        window._settingsSearch.setPages([
+            generalPage,
+            taskbarPage,
+            dockPage,
+            startMenuPage,
+        ]);
+        window._settingsSearch.addWindowButton();
     }
 }

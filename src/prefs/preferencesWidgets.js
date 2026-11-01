@@ -50,12 +50,18 @@ export function createPreferencesDialogContent(dialog, cleanup = null) {
         vexpand: true,
     });
 
-    dialog.connect('close-request', () => {
+    const releaseSettings = () => {
         signalTracker.destroy();
         if (cleanup)
             cleanup();
         dialog._settings = null;
-    });
+    };
+    const closeRequestId = dialog.connect('close-request', releaseSettings);
+    dialog._settingsSearchDispose = () => {
+        dialog.disconnect(closeRequestId);
+        releaseSettings();
+        dialog.destroy();
+    };
 
     return {
         content,
@@ -77,12 +83,14 @@ export function createPreferencesDialogButton(
     setButtonIcon(button, 'emblem-system-symbolic');
     button.add_css_class('flat');
     button.add_css_class('circular');
-    button.connect('clicked', () => {
-        const dialog = new DialogClass({
+    button._settingsSearchCreateDialog = parent =>
+        new DialogClass({
             settings,
-            parent: button.get_root(),
+            parent,
             ...dialogOptions,
         });
+    button.connect('clicked', () => {
+        const dialog = button._settingsSearchCreateDialog(button.get_root());
         dialog.present();
     });
     return button;

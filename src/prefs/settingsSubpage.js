@@ -9,7 +9,9 @@ export class SettingsSubpage {
         this._groups = [];
         this.page = new Adw.PreferencesPage();
         const toolbarView = new Adw.ToolbarView({content: this.page});
-        toolbarView.add_top_bar(new Adw.HeaderBar());
+        const headerBar = new Adw.HeaderBar();
+        headerBar.pack_start(window._settingsSearch.createButton());
+        toolbarView.add_top_bar(headerBar);
         const navigationPage = new Adw.NavigationPage({
             title,
             child: toolbarView,
@@ -20,6 +22,12 @@ export class SettingsSubpage {
         this.row.add_suffix(new Gtk.Image({icon_name: 'go-next-symbolic'}));
         this.row.connect('activated', () => window.push_subpage(navigationPage));
         hubGroup.add(this.row);
+        window._settingsSearch.addSubpage({
+            page: this.page,
+            navigationPage,
+            row: this.row,
+            hubGroup,
+        });
     }
 
     add(group) {

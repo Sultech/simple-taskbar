@@ -43,13 +43,15 @@ function addHighlightExtentRows(group, settings, connectSettings, {
     available,
     locked,
 }) {
-    const stored = settings.get_int(keys.size);
-    const aligned = Math.max(
-        lower,
-        matchHighlightSizeParity(stored, iconSize)
-    );
-    if (!locked && aligned !== stored)
-        settings.set_int(keys.size, aligned);
+    const alignStoredSize = () => {
+        const stored = settings.get_int(keys.size);
+        const aligned = Math.max(
+            lower,
+            matchHighlightSizeParity(stored, iconSize)
+        );
+        if (!locked && aligned !== stored)
+            settings.set_int(keys.size, aligned);
+    };
 
     const toggle = createSwitchExpanderRow(settings, {
         title: switchTitle,
@@ -72,6 +74,7 @@ function addHighlightExtentRows(group, settings, connectSettings, {
         connectSettings
     );
     toggle.sensitive = available && !locked;
+    toggle.connect('map', alignStoredSize);
     return {toggle, row};
 }
 
