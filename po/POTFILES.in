@@ -67,3 +67,4 @@ src/taskbar/windowPreviewController.js
 src/integration/favoritesIntegration.js
 src/windowSwitching/gridAltTabPopup.js
 src/integration/volumeMixerController.js
+src/prefs/settingsSearchController.js

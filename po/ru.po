@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 22:44+0000\n"
+"POT-Creation-Date: 2026-11-01 17:16+0000\n"
 "PO-Revision-Date: 2026-07-20 09:00+0300\n"
 "Last-Translator: NaumovSN\n"
 "Language-Team: Russian\n"
@@ -26,30 +26,30 @@ msgstr "Показать рабочий стол"
 msgid "Application overflow"
 msgstr "Переполнение приложений"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:383
+#: prefs.js:52 src/prefs/applicationIconsGroup.js:383
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "Слева"
 
-#: prefs.js:46
+#: prefs.js:53
 msgid "Center"
 msgstr "По центру"
 
-#: prefs.js:47 src/prefs/applicationIconsGroup.js:384
+#: prefs.js:54 src/prefs/applicationIconsGroup.js:384
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "Справа"
 
-#: prefs.js:53 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
+#: prefs.js:60 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
 msgid "Taskbar"
 msgstr "Панель задач"
 
-#: prefs.js:60 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
+#: prefs.js:67 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
 #: src/prefs/panelSettingsHubs.js:98
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:67 src/prefs/dockItemsPage.js:74
+#: prefs.js:74 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "Меню «Пуск»"
 
@@ -1066,120 +1066,120 @@ msgstr "Стандартный GNOME"
 msgid "Magic Lamp"
 msgstr "Волшебная лампа"
 
-#: src/prefs/classicHighlightDialog.js:81
-#: src/prefs/classicHighlightDialog.js:90
+#: src/prefs/classicHighlightDialog.js:84
+#: src/prefs/classicHighlightDialog.js:93
 msgid "Highlight Options"
 msgstr "Параметры подсветки"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:110
 msgid "Highlight Size"
 msgstr "Размер подсветки"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:112
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Задайте, насколько далеко подсветка простирается по панели"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:123
 msgid "Highlight Border Radius"
 msgstr "Радиус скругления углов подсветки"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:124
 msgid "Border radius in pixels"
 msgstr "Радиус скругления в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:129
+#: src/prefs/classicHighlightDialog.js:132
 msgid "Fit Highlight to Icon"
 msgstr "Подгонять подсветку под значок"
 
-#: src/prefs/classicHighlightDialog.js:131
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "
 "following the panel thickness"
 msgstr ""
 "Ограничивать подсветку значком и индикатором запуска, а не толщиной панели"
 
-#: src/prefs/classicHighlightDialog.js:142
+#: src/prefs/classicHighlightDialog.js:145
 msgid "Custom Highlight Thickness"
 msgstr "Своя толщина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:144
+#: src/prefs/classicHighlightDialog.js:147
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
 msgstr "Сохранять фиксированный размер подсветки вместо толщины панели"
 
-#: src/prefs/classicHighlightDialog.js:146
+#: src/prefs/classicHighlightDialog.js:149
 msgid "Highlight Thickness"
 msgstr "Толщина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:147
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Size across the panel in pixels"
 msgstr "Размер поперёк панели в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:168
+#: src/prefs/classicHighlightDialog.js:171
 msgid "Custom Highlight Length"
 msgstr "Своя длина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:170
+#: src/prefs/classicHighlightDialog.js:173
 msgid "Grow the highlight along the panel beyond the application icon"
 msgstr "Растягивать подсветку вдоль панели за пределы значка приложения"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:175
 msgid "Highlight Length"
 msgstr "Длина подсветки"
 
-#: src/prefs/classicHighlightDialog.js:173
+#: src/prefs/classicHighlightDialog.js:176
 msgid "Size along the panel in pixels"
 msgstr "Размер вдоль панели в пикселях"
 
-#: src/prefs/classicHighlightDialog.js:183
+#: src/prefs/classicHighlightDialog.js:186
 msgid "Hover Highlight"
 msgstr "Подсветка при наведении"
 
-#: src/prefs/classicHighlightDialog.js:184
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Customize the hover and pressed highlight"
 msgstr "Настройка подсветки при наведении и нажатии"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:192
 msgid "Highlight Hovering Application Icons"
 msgstr "Подсвечивать значки приложений при наведении"
 
-#: src/prefs/classicHighlightDialog.js:199
+#: src/prefs/classicHighlightDialog.js:202
 msgid "Hover Highlight Color"
 msgstr "Цвет подсветки при наведении"
 
-#: src/prefs/classicHighlightDialog.js:208
+#: src/prefs/classicHighlightDialog.js:211
 msgid "Pressed Highlight Color"
 msgstr "Цвет подсветки при нажатии"
 
-#: src/prefs/classicHighlightDialog.js:214
+#: src/prefs/classicHighlightDialog.js:217
 msgid "Focused Application Highlight"
 msgstr "Подсветка приложения в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:218
 msgid "Customize the highlight for the focused application"
 msgstr "Настройка подсветки активного приложения"
 
-#: src/prefs/classicHighlightDialog.js:220
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Highlight the Focused Application"
 msgstr "Подсвечивать приложение в фокусе"
 
-#: src/prefs/classicHighlightDialog.js:227
+#: src/prefs/classicHighlightDialog.js:230
 msgid "Use Icon Dominant Color"
 msgstr "Использовать доминирующий цвет значка"
 
-#: src/prefs/classicHighlightDialog.js:235
+#: src/prefs/classicHighlightDialog.js:238
 msgid "Custom Focus Highlight Color"
 msgstr "Пользовательский цвет подсветки фокуса"
 
-#: src/prefs/classicHighlightDialog.js:245
+#: src/prefs/classicHighlightDialog.js:248
 msgid "Focus Highlight Opacity"
 msgstr "Непрозрачность подсветки фокуса"
 
-#: src/prefs/classicHighlightDialog.js:246
+#: src/prefs/classicHighlightDialog.js:249
 msgid "Opacity percentage"
 msgstr "Непрозрачность в процентах"
 
-#: src/prefs/classicHighlightDialog.js:262
+#: src/prefs/classicHighlightDialog.js:265
 msgid "Switch to the Classic highlight style to use this setting"
 msgstr ""
 "Для использования этого параметра выберите классический стиль подсветки"
@@ -2640,19 +2640,19 @@ msgstr "Восстановить значения по умолчанию"
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/prefs/preferencesWidgets.js:206
+#: src/prefs/preferencesWidgets.js:214
 msgid "Item Position"
 msgstr "Положение элемента"
 
-#: src/prefs/preferencesWidgets.js:258
+#: src/prefs/preferencesWidgets.js:266
 msgid "Move Up"
 msgstr "Переместить вверх"
 
-#: src/prefs/preferencesWidgets.js:262
+#: src/prefs/preferencesWidgets.js:270
 msgid "Move Down"
 msgstr "Переместить вниз"
 
-#: src/prefs/preferencesWidgets.js:286
+#: src/prefs/preferencesWidgets.js:294
 msgid "Visible"
 msgstr "Видимый"
 
@@ -4024,3 +4024,27 @@ msgstr "Громкость приложений"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Нет приложений, воспроизводящих звук"
+
+#: src/prefs/settingsSearchController.js:42
+#: src/prefs/settingsSearchController.js:75
+#: src/prefs/settingsSearchController.js:88
+#: src/prefs/settingsSearchController.js:113
+msgid "Search Settings"
+msgstr "Поиск настроек"
+
+#: src/prefs/settingsSearchController.js:60
+msgid "Search all settings"
+msgstr "Поиск по всем настройкам"
+
+#: src/prefs/settingsSearchController.js:76
+#: src/prefs/settingsSearchController.js:114
+msgid "Find settings in any page or options dialog"
+msgstr "Найдите настройки на любой странице или в любом диалоге параметров"
+
+#: src/prefs/settingsSearchController.js:140
+msgid "No Results Found"
+msgstr "Ничего не найдено"
+
+#: src/prefs/settingsSearchController.js:141
+msgid "Try a different search"
+msgstr "Попробуйте другой запрос"

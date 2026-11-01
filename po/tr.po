@@ -7,10 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 22:44+0000\n"
+"POT-Creation-Date: 2026-11-01 17:16+0000\n"
 "PO-Revision-Date: 2026-11-01 12:00+0300\n"
-"Last-Translator: resittv55 "
-"<250952342+resittv55@users.noreply.github.com>\n"
+"Last-Translator: resittv55 <250952342+resittv55@users.noreply.github.com>\n"
 "Language-Team: Turkish\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -27,30 +26,30 @@ msgstr "Masaüstünü göster"
 msgid "Application overflow"
 msgstr "Uygulama taşması"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:383
+#: prefs.js:52 src/prefs/applicationIconsGroup.js:383
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "Sol"
 
-#: prefs.js:46
+#: prefs.js:53
 msgid "Center"
 msgstr "Orta"
 
-#: prefs.js:47 src/prefs/applicationIconsGroup.js:384
+#: prefs.js:54 src/prefs/applicationIconsGroup.js:384
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "Sağ"
 
-#: prefs.js:53 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
+#: prefs.js:60 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
 msgid "Taskbar"
 msgstr "Görev çubuğu"
 
-#: prefs.js:60 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
+#: prefs.js:67 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
 #: src/prefs/panelSettingsHubs.js:98
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:67 src/prefs/dockItemsPage.js:74
+#: prefs.js:74 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "Başlat Menüsü"
 
@@ -64,9 +63,7 @@ msgstr "Simple Taskbar"
 
 #: src/prefs/aboutPage.js:71
 msgid "A configurable taskbar, GNOME panel, and Dock for GNOME Shell"
-msgstr ""
-"GNOME Shell için yapılandırılabilir görev çubuğu, GNOME paneli ve "
-"Dock"
+msgstr "GNOME Shell için yapılandırılabilir görev çubuğu, GNOME paneli ve Dock"
 
 #: src/prefs/aboutPage.js:76
 msgid "GNOME Shell 48–51 • GPL-2.0-or-later"
@@ -102,13 +99,12 @@ msgstr "Özellikler"
 
 #: src/prefs/aboutPage.js:143
 msgid ""
-"Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme"
-" modes · Live window previews · Grid Alt-Tab · Start Menu · "
-"Multi-monitor support"
+"Configurable Taskbar, Default GNOME Panel, Dock and Windows XP Theme modes · "
+"Live window previews · Grid Alt-Tab · Start Menu · Multi-monitor support"
 msgstr ""
-"Yapılandırılabilir Görev Çubuğu, Varsayılan GNOME Paneli, Dock ve "
-"Windows XP Tema modları · Canlı pencere önizlemeleri · Izgara "
-"Alt-Tab · Başlat Menüsü · Çoklu monitör desteği"
+"Yapılandırılabilir Görev Çubuğu, Varsayılan GNOME Paneli, Dock ve Windows XP "
+"Tema modları · Canlı pencere önizlemeleri · Izgara Alt-Tab · Başlat Menüsü · "
+"Çoklu monitör desteği"
 
 #: src/prefs/aboutPage.js:147
 msgid "License"
@@ -124,11 +120,9 @@ msgstr "Geliştirmeyi Destekle"
 
 #: src/prefs/aboutPage.js:156
 msgid ""
-"If Simple Taskbar is useful to you, consider supporting its "
-"development."
+"If Simple Taskbar is useful to you, consider supporting its development."
 msgstr ""
-"Simple Taskbar işinize yarıyorsa geliştirilmesini desteklemeyi "
-"düşünün."
+"Simple Taskbar işinize yarıyorsa geliştirilmesini desteklemeyi düşünün."
 
 #: src/prefs/aboutPage.js:163
 msgid "Buy Me a Coffee"
@@ -253,8 +247,7 @@ msgstr "Genel Bakış'ta Göster"
 #: src/prefs/autoHideDialog.js:62
 msgid "Show the auto-hidden taskbar or Dock while the Overview is open"
 msgstr ""
-"Genel Bakış açıkken otomatik gizlenen görev çubuğunu veya Dock'u "
-"göster"
+"Genel Bakış açıkken otomatik gizlenen görev çubuğunu veya Dock'u göster"
 
 #: src/prefs/autoHideDialog.js:68
 msgid "Reveal on Pointer"
@@ -266,11 +259,10 @@ msgstr "Tam Ekran Uygulamaların Üzerinde Göster"
 
 #: src/prefs/autoHideDialog.js:82
 msgid ""
-"Allow the pointer to reveal the taskbar or Dock over fullscreen "
-"applications"
+"Allow the pointer to reveal the taskbar or Dock over fullscreen applications"
 msgstr ""
-"İşaretçinin tam ekran uygulamaların üzerinde görev çubuğunu veya "
-"Dock'u göstermesine izin ver"
+"İşaretçinin tam ekran uygulamaların üzerinde görev çubuğunu veya Dock'u "
+"göstermesine izin ver"
 
 #: src/prefs/autoHideDialog.js:91
 msgid "Reveal Mode"
@@ -302,8 +294,8 @@ msgstr "Etkinleştirme Basıncı"
 
 #: src/prefs/autoHideDialog.js:132
 msgid ""
-"How far to push past the edge before revealing. Turns off the bottom"
-" hot edge when placed at the bottom."
+"How far to push past the edge before revealing. Turns off the bottom hot "
+"edge when placed at the bottom."
 msgstr ""
 "Göstermeden önce kenarın ne kadar ötesine bastırılacağı. Alta "
 "yerleştirildiğinde alt sıcak kenarı kapatır."
@@ -418,12 +410,10 @@ msgid "Travel"
 msgstr "Hareket"
 
 #: src/prefs/applicationHoverAnimationDialog.js:63
-msgid ""
-"Movement beyond the taskbar or Dock edge as a percentage of icon "
-"size"
+msgid "Movement beyond the taskbar or Dock edge as a percentage of icon size"
 msgstr ""
-"Görev çubuğu veya Dock kenarının ötesine hareket, simge boyutunun "
-"yüzdesi olarak"
+"Görev çubuğu veya Dock kenarının ötesine hareket, simge boyutunun yüzdesi "
+"olarak"
 
 #: src/prefs/applicationHoverAnimationDialog.js:76
 msgid "Zoom"
@@ -472,8 +462,7 @@ msgstr "Uygulama Simgesi Görünümü"
 #: src/prefs/applicationIconsGroup.js:70
 msgid "Adjust icon size, spacing, and hover/focus effects"
 msgstr ""
-"Simge boyutunu, aralığını ve üzerine gelme/odaklanma efektlerini "
-"ayarla"
+"Simge boyutunu, aralığını ve üzerine gelme/odaklanma efektlerini ayarla"
 
 #: src/prefs/applicationIconsGroup.js:82 src/prefs/defaultPanelIconSizing.js:39
 msgid "Icon Size"
@@ -482,8 +471,8 @@ msgstr "Simge Boyutu"
 #: src/prefs/applicationIconsGroup.js:83
 msgid "The panel grows automatically when larger icons need more room"
 msgstr ""
-"Daha büyük simgeler daha fazla yer gerektirdiğinde panel otomatik "
-"olarak büyür"
+"Daha büyük simgeler daha fazla yer gerektirdiğinde panel otomatik olarak "
+"büyür"
 
 #: src/prefs/applicationIconsGroup.js:96
 msgid "Minimum Icon Size"
@@ -539,12 +528,9 @@ msgid "Configure window grouping, badges, and progress bars"
 msgstr "Pencere gruplamayı, rozetleri ve ilerleme çubuklarını yapılandır"
 
 #: src/prefs/applicationIconsGroup.js:242
-msgid ""
-"Choose which applications appear and how they are grouped and "
-"indicated"
+msgid "Choose which applications appear and how they are grouped and indicated"
 msgstr ""
-"Hangi uygulamaların görüneceğini ve nasıl gruplanıp belirtileceğini "
-"seç"
+"Hangi uygulamaların görüneceğini ve nasıl gruplanıp belirtileceğini seç"
 
 #: src/prefs/applicationIconsGroup.js:249
 #: src/prefs/pinnedApplicationBehaviorDialog.js:27
@@ -609,12 +595,10 @@ msgid "Running Indicators"
 msgstr "Çalışan Uygulama Göstergeleri"
 
 #: src/prefs/applicationIconsGroup.js:376
-msgid ""
-"Configure the position, style, size, and colours of running "
-"indicators"
+msgid "Configure the position, style, size, and colours of running indicators"
 msgstr ""
-"Çalışan uygulama göstergelerinin konumunu, stilini, boyutunu ve "
-"renklerini yapılandır"
+"Çalışan uygulama göstergelerinin konumunu, stilini, boyutunu ve renklerini "
+"yapılandır"
 
 #: src/prefs/applicationIconsGroup.js:381 src/prefs/panelAxis.js:13
 #: src/prefs/choiceCards.js:126
@@ -755,12 +739,9 @@ msgid "Running Application Isolation"
 msgstr "Çalışan Uygulama Yalıtımı"
 
 #: src/prefs/applicationIconsGroup.js:601
-msgid ""
-"Limit this panel’s running windows to the current workspace or "
-"monitor"
+msgid "Limit this panel’s running windows to the current workspace or monitor"
 msgstr ""
-"Bu panelin çalışan pencerelerini geçerli çalışma alanı veya "
-"monitörle sınırla"
+"Bu panelin çalışan pencerelerini geçerli çalışma alanı veya monitörle sınırla"
 
 #: src/prefs/applicationIconsGroup.js:602
 msgid "Limit running applications to the current workspace or monitor"
@@ -768,19 +749,19 @@ msgstr "Çalışan uygulamaları geçerli çalışma alanı veya monitörle sın
 
 #: src/prefs/applicationIconsGroup.js:673
 msgid ""
-"Space between icons and the Dock edges; lower it to fit larger icons"
-" in a thinner Dock"
+"Space between icons and the Dock edges; lower it to fit larger icons in a "
+"thinner Dock"
 msgstr ""
-"Simgeler ile Dock kenarları arasındaki boşluk; daha büyük simgeleri "
-"daha ince bir Dock'a sığdırmak için azalt"
+"Simgeler ile Dock kenarları arasındaki boşluk; daha büyük simgeleri daha "
+"ince bir Dock'a sığdırmak için azalt"
 
 #: src/prefs/applicationIconsGroup.js:676
 msgid ""
-"Show applications that do not fit in an overflow popup instead of "
-"scrolling the Dock"
+"Show applications that do not fit in an overflow popup instead of scrolling "
+"the Dock"
 msgstr ""
-"Dock'u kaydırmak yerine sığmayan uygulamaları bir taşma açılır "
-"penceresinde göster"
+"Dock'u kaydırmak yerine sığmayan uygulamaları bir taşma açılır penceresinde "
+"göster"
 
 #: src/prefs/applicationIconsGroup.js:679
 msgid "Show running applications only in the Dock for their monitor"
@@ -793,11 +774,11 @@ msgstr "Pencere simgeleri ile panel kenarları arasındaki boşluk"
 
 #: src/prefs/applicationIconsGroup.js:700
 msgid ""
-"Show windows that do not fit in an overflow popup instead of "
-"scrolling the panel"
+"Show windows that do not fit in an overflow popup instead of scrolling the "
+"panel"
 msgstr ""
-"Paneli kaydırmak yerine sığmayan pencereleri bir taşma açılır "
-"penceresinde göster"
+"Paneli kaydırmak yerine sığmayan pencereleri bir taşma açılır penceresinde "
+"göster"
 
 #: src/prefs/applicationIconsGroup.js:701
 msgid "Show running windows only on the panel for their monitor"
@@ -805,19 +786,19 @@ msgstr "Çalışan pencereleri yalnızca monitörlerinin panelinde göster"
 
 #: src/prefs/applicationIconsGroup.js:735
 msgid ""
-"Space between icons and the taskbar edges; lower it to fit larger "
-"icons in a thinner taskbar"
+"Space between icons and the taskbar edges; lower it to fit larger icons in a "
+"thinner taskbar"
 msgstr ""
-"Simgeler ile görev çubuğu kenarları arasındaki boşluk; daha büyük "
-"simgeleri daha ince bir görev çubuğuna sığdırmak için azalt"
+"Simgeler ile görev çubuğu kenarları arasındaki boşluk; daha büyük simgeleri "
+"daha ince bir görev çubuğuna sığdırmak için azalt"
 
 #: src/prefs/applicationIconsGroup.js:738
 msgid ""
-"Show applications that do not fit in an overflow popup instead of "
-"scrolling the taskbar"
+"Show applications that do not fit in an overflow popup instead of scrolling "
+"the taskbar"
 msgstr ""
-"Görev çubuğunu kaydırmak yerine sığmayan uygulamaları bir taşma "
-"açılır penceresinde göster"
+"Görev çubuğunu kaydırmak yerine sığmayan uygulamaları bir taşma açılır "
+"penceresinde göster"
 
 #: src/prefs/applicationIconsGroup.js:741
 msgid "Show running applications only on the taskbar for their monitor"
@@ -947,9 +928,7 @@ msgstr "Üzerine Gelme"
 
 #: src/prefs/applicationInteractionGroup.js:158
 msgid "Choose what happens when the pointer rests on an application icon"
-msgstr ""
-"İşaretçi bir uygulama simgesinin üzerinde durduğunda ne olacağını "
-"seç"
+msgstr "İşaretçi bir uygulama simgesinin üzerinde durduğunda ne olacağını seç"
 
 #: src/prefs/applicationInteractionGroup.js:161
 msgid "Application Animations"
@@ -1016,9 +995,7 @@ msgstr "Kaydırma Gecikmesi"
 
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
-msgstr ""
-"Uygulama simgesi kaydırmaları arasındaki minimum gecikme "
-"(milisaniye)"
+msgstr "Uygulama simgesi kaydırmaları arasındaki minimum gecikme (milisaniye)"
 
 #: src/prefs/applicationInteractionGroup.js:270
 #: src/prefs/applicationInteractionGroup.js:316
@@ -1076,8 +1053,7 @@ msgstr "Pencere Efektleri"
 #: src/prefs/applicationInteractionGroup.js:407
 msgid "Choose the animation used when windows are minimized or restored"
 msgstr ""
-"Pencereler küçültüldüğünde veya geri yüklendiğinde kullanılan "
-"animasyonu seç"
+"Pencereler küçültüldüğünde veya geri yüklendiğinde kullanılan animasyonu seç"
 
 #: src/prefs/applicationInteractionGroup.js:415
 msgid "Window Minimize Effect"
@@ -1086,8 +1062,7 @@ msgstr "Pencere Küçültme Efekti"
 #: src/prefs/applicationInteractionGroup.js:417
 msgid "Choose the effect shown when a window is minimized or restored"
 msgstr ""
-"Bir pencere küçültüldüğünde veya geri yüklendiğinde gösterilen "
-"efekti seç"
+"Bir pencere küçültüldüğünde veya geri yüklendiğinde gösterilen efekti seç"
 
 #: src/prefs/applicationInteractionGroup.js:422
 msgid "GNOME Default"
@@ -1097,122 +1072,121 @@ msgstr "GNOME Varsayılanı"
 msgid "Magic Lamp"
 msgstr "Sihirli Lamba"
 
-#: src/prefs/classicHighlightDialog.js:81
-#: src/prefs/classicHighlightDialog.js:90
+#: src/prefs/classicHighlightDialog.js:84
+#: src/prefs/classicHighlightDialog.js:93
 msgid "Highlight Options"
 msgstr "Vurgulama Seçenekleri"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:110
 msgid "Highlight Size"
 msgstr "Vurgulama Boyutu"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:112
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Vurgulamanın panel boyunca ne kadar uzanacağını ayarla"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:123
 msgid "Highlight Border Radius"
 msgstr "Vurgulama Kenar Yarıçapı"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:124
 msgid "Border radius in pixels"
 msgstr "Kenar yarıçapı (piksel)"
 
-#: src/prefs/classicHighlightDialog.js:129
+#: src/prefs/classicHighlightDialog.js:132
 msgid "Fit Highlight to Icon"
 msgstr "Vurgulamayı Simgeye Sığdır"
 
-#: src/prefs/classicHighlightDialog.js:131
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "
 "following the panel thickness"
 msgstr ""
-"Vurgulamayı panel kalınlığını izlemek yerine simge ve çalışan "
-"uygulama göstergesi çevresinde tut"
+"Vurgulamayı panel kalınlığını izlemek yerine simge ve çalışan uygulama "
+"göstergesi çevresinde tut"
 
-#: src/prefs/classicHighlightDialog.js:142
+#: src/prefs/classicHighlightDialog.js:145
 msgid "Custom Highlight Thickness"
 msgstr "Özel Vurgulama Kalınlığı"
 
-#: src/prefs/classicHighlightDialog.js:144
+#: src/prefs/classicHighlightDialog.js:147
 msgid ""
-"Keep the highlight a fixed size instead of following the panel "
-"thickness"
+"Keep the highlight a fixed size instead of following the panel thickness"
 msgstr "Vurgulamayı panel kalınlığını izlemek yerine sabit boyutta tut"
 
-#: src/prefs/classicHighlightDialog.js:146
+#: src/prefs/classicHighlightDialog.js:149
 msgid "Highlight Thickness"
 msgstr "Vurgulama Kalınlığı"
 
-#: src/prefs/classicHighlightDialog.js:147
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Size across the panel in pixels"
 msgstr "Panel boyunca boyut (piksel)"
 
-#: src/prefs/classicHighlightDialog.js:168
+#: src/prefs/classicHighlightDialog.js:171
 msgid "Custom Highlight Length"
 msgstr "Özel Vurgulama Uzunluğu"
 
-#: src/prefs/classicHighlightDialog.js:170
+#: src/prefs/classicHighlightDialog.js:173
 msgid "Grow the highlight along the panel beyond the application icon"
 msgstr "Vurgulamayı uygulama simgesinin ötesinde panel boyunca büyüt"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:175
 msgid "Highlight Length"
 msgstr "Vurgulama Uzunluğu"
 
-#: src/prefs/classicHighlightDialog.js:173
+#: src/prefs/classicHighlightDialog.js:176
 msgid "Size along the panel in pixels"
 msgstr "Panel boyunca uzunluk (piksel)"
 
-#: src/prefs/classicHighlightDialog.js:183
+#: src/prefs/classicHighlightDialog.js:186
 msgid "Hover Highlight"
 msgstr "Üzerine Gelme Vurgusu"
 
-#: src/prefs/classicHighlightDialog.js:184
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Customize the hover and pressed highlight"
 msgstr "Üzerine gelme ve basılı vurgusunu özelleştir"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:192
 msgid "Highlight Hovering Application Icons"
 msgstr "Üzerine Gelinen Uygulama Simgelerini Vurgula"
 
-#: src/prefs/classicHighlightDialog.js:199
+#: src/prefs/classicHighlightDialog.js:202
 msgid "Hover Highlight Color"
 msgstr "Üzerine Gelme Vurgu Rengi"
 
-#: src/prefs/classicHighlightDialog.js:208
+#: src/prefs/classicHighlightDialog.js:211
 msgid "Pressed Highlight Color"
 msgstr "Basılı Vurgu Rengi"
 
-#: src/prefs/classicHighlightDialog.js:214
+#: src/prefs/classicHighlightDialog.js:217
 msgid "Focused Application Highlight"
 msgstr "Odaklanmış Uygulama Vurgusu"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:218
 msgid "Customize the highlight for the focused application"
 msgstr "Odaklanmış uygulama için vurguyu özelleştir"
 
-#: src/prefs/classicHighlightDialog.js:220
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Highlight the Focused Application"
 msgstr "Odaklanmış Uygulamayı Vurgula"
 
-#: src/prefs/classicHighlightDialog.js:227
+#: src/prefs/classicHighlightDialog.js:230
 msgid "Use Icon Dominant Color"
 msgstr "Baskın Simge Rengini Kullan"
 
-#: src/prefs/classicHighlightDialog.js:235
+#: src/prefs/classicHighlightDialog.js:238
 msgid "Custom Focus Highlight Color"
 msgstr "Özel Odak Vurgu Rengi"
 
-#: src/prefs/classicHighlightDialog.js:245
+#: src/prefs/classicHighlightDialog.js:248
 msgid "Focus Highlight Opacity"
 msgstr "Odak Vurgu Opaklığı"
 
-#: src/prefs/classicHighlightDialog.js:246
+#: src/prefs/classicHighlightDialog.js:249
 msgid "Opacity percentage"
 msgstr "Opaklık yüzdesi"
 
-#: src/prefs/classicHighlightDialog.js:262
+#: src/prefs/classicHighlightDialog.js:265
 msgid "Switch to the Classic highlight style to use this setting"
 msgstr "Bu ayarı kullanmak için Klasik vurgulama stiline geç"
 
@@ -1270,11 +1244,11 @@ msgstr "Stil"
 
 #: src/prefs/clockDialog.js:87
 msgid ""
-"Windows uses a lighter font and stacks the time above the date or "
-"weekday when the taskbar has room"
+"Windows uses a lighter font and stacks the time above the date or weekday "
+"when the taskbar has room"
 msgstr ""
-"Windows daha ince bir yazı tipi kullanır ve görev çubuğunda yer "
-"olduğunda saati tarihin veya haftanın gününün üstüne yerleştirir"
+"Windows daha ince bir yazı tipi kullanır ve görev çubuğunda yer olduğunda "
+"saati tarihin veya haftanın gününün üstüne yerleştirir"
 
 #: src/prefs/clockDialog.js:89 src/prefs/startIconChooser.js:80
 #: src/prefs/startIconChooser.js:203
@@ -1346,8 +1320,8 @@ msgid ""
 "Keep pinned applications as launchers and show running applications "
 "separately"
 msgstr ""
-"Sabitlenmiş uygulamaları başlatıcı olarak tut ve çalışan "
-"uygulamaları ayrı göster"
+"Sabitlenmiş uygulamaları başlatıcı olarak tut ve çalışan uygulamaları ayrı "
+"göster"
 
 #: src/prefs/pinnedApplicationBehaviorDialog.js:90
 msgid "Keep Pinned Application Windows Together"
@@ -1355,13 +1329,13 @@ msgstr "Sabitlenmiş Uygulama Pencerelerini Bir Arada Tut"
 
 #: src/prefs/pinnedApplicationBehaviorDialog.js:92
 msgid ""
-"Show every window of a pinned application beside it instead of with "
-"the running applications, when Combine Application Windows is Only "
-"When Full or Never"
+"Show every window of a pinned application beside it instead of with the "
+"running applications, when Combine Application Windows is Only When Full or "
+"Never"
 msgstr ""
-"Uygulama Pencerelerini Birleştir ayarı Yalnızca Dolduğunda veya Asla"
-" olduğunda, sabitlenmiş bir uygulamanın her penceresini çalışan "
-"uygulamalarla birlikte değil, yanında göster"
+"Uygulama Pencerelerini Birleştir ayarı Yalnızca Dolduğunda veya Asla "
+"olduğunda, sabitlenmiş bir uygulamanın her penceresini çalışan uygulamalarla "
+"birlikte değil, yanında göster"
 
 #: src/prefs/pinnedApplicationBehaviorDialog.js:98
 msgid "Super+Number Shortcuts"
@@ -1498,8 +1472,7 @@ msgstr "Blur My Shell panel bulanıklığını Dock'a uygula"
 #: src/prefs/startMenuPage.js:779
 msgid "Disable Blur My Shell panel blur to use this option"
 msgstr ""
-"Bu seçeneği kullanmak için Blur My Shell panel bulanıklığını devre "
-"dışı bırak"
+"Bu seçeneği kullanmak için Blur My Shell panel bulanıklığını devre dışı bırak"
 
 #: src/prefs/dockAppearanceGroup.js:247
 msgid "Apply Blur My Shell dock blur to the Dock"
@@ -1508,8 +1481,7 @@ msgstr "Blur My Shell dock bulanıklığını Dock'a uygula"
 #: src/prefs/dockAppearanceGroup.js:248
 msgid "Disable Blur My Shell dock blur to use this option"
 msgstr ""
-"Bu seçeneği kullanmak için Blur My Shell dock bulanıklığını devre "
-"dışı bırak"
+"Bu seçeneği kullanmak için Blur My Shell dock bulanıklığını devre dışı bırak"
 
 #: src/prefs/dockAppearanceGroup.js:251
 msgid "This Blur My Shell version cannot blur the Dock"
@@ -1594,11 +1566,9 @@ msgstr "Yatay"
 
 #: src/prefs/dockAppearanceGroup.js:365
 msgid ""
-"White text uses the dark Dock theme; black text uses the light Dock "
-"theme"
+"White text uses the dark Dock theme; black text uses the light Dock theme"
 msgstr ""
-"Beyaz metin koyu Dock temasını, siyah metin açık Dock temasını "
-"kullanır"
+"Beyaz metin koyu Dock temasını, siyah metin açık Dock temasını kullanır"
 
 #: src/prefs/dockAppearanceGroup.js:372
 msgid "Dock Text Color"
@@ -1626,9 +1596,7 @@ msgstr "Koyu Modda Kenarlığı Göster"
 
 #: src/prefs/dockAppearanceGroup.js:390 src/prefs/dockAppearanceGroup.js:397
 msgid "Display a thin border along the Dock’s workspace-facing edge"
-msgstr ""
-"Dock'un çalışma alanına bakan kenarı boyunca ince bir kenarlık "
-"göster"
+msgstr "Dock'un çalışma alanına bakan kenarı boyunca ince bir kenarlık göster"
 
 #: src/prefs/dockAppearanceGroup.js:396 src/prefs/panelAppearancePage.js:588
 msgid "Show Border in Light Mode"
@@ -1637,17 +1605,14 @@ msgstr "Açık Modda Kenarlığı Göster"
 #: src/prefs/dynamicTransparencyDialog.js:60
 msgid "Choose which windows restore the configured panel transparency"
 msgstr ""
-"Hangi pencerelerin yapılandırılmış panel saydamlığını geri "
-"yükleyeceğini seç"
+"Hangi pencerelerin yapılandırılmış panel saydamlığını geri yükleyeceğini seç"
 
 #: src/prefs/dynamicTransparencyDialog.js:70
 msgid "Windows That Restore Transparency"
 msgstr "Saydamlığı Geri Yükleyen Pencereler"
 
 #: src/prefs/dynamicTransparencyDialog.js:72
-msgid ""
-"Select the window state that returns the configured panel "
-"transparency"
+msgid "Select the window state that returns the configured panel transparency"
 msgstr "Yapılandırılmış panel saydamlığını geri getiren pencere durumunu seç"
 
 #: src/prefs/dynamicTransparencyDialog.js:84
@@ -1720,11 +1685,11 @@ msgstr "Otomatik gizleme veya pencerelerden kaçınma etkinken kullanılamaz"
 
 #: src/prefs/floatingPanelGroup.js:61
 msgid ""
-"Close the floating gap for maximized windows; full-length panels "
-"also expand to the screen edge"
+"Close the floating gap for maximized windows; full-length panels also expand "
+"to the screen edge"
 msgstr ""
-"Büyütülmüş pencereler için yüzen boşluğu kapat; tam uzunluktaki "
-"paneller de ekran kenarına genişler"
+"Büyütülmüş pencereler için yüzen boşluğu kapat; tam uzunluktaki paneller de "
+"ekran kenarına genişler"
 
 #: src/prefs/floatingPanelGroup.js:66
 msgid "Turn off snapping to use this setting"
@@ -1832,19 +1797,18 @@ msgstr "Alt Sıcak Kenarı Etkinleştir"
 
 #: src/prefs/bottomHotEdgeGroup.js:26
 msgid ""
-"Push the pointer against the bottom screen edge to toggle Overview. "
-"Turns off pressure reveal."
+"Push the pointer against the bottom screen edge to toggle Overview. Turns "
+"off pressure reveal."
 msgstr ""
-"Genel Bakış'ı açıp kapatmak için işaretçiyi alt ekran kenarına "
-"bastır. Basınçla göstermeyi kapatır."
+"Genel Bakış'ı açıp kapatmak için işaretçiyi alt ekran kenarına bastır. "
+"Basınçla göstermeyi kapatır."
 
 #: src/prefs/bottomHotEdgeGroup.js:39
 msgid ""
-"Pixels the pointer must travel past the bottom edge before Overview "
-"activates"
+"Pixels the pointer must travel past the bottom edge before Overview activates"
 msgstr ""
-"Genel Bakış etkinleşmeden önce işaretçinin alt kenarın ötesine "
-"gitmesi gereken piksel"
+"Genel Bakış etkinleşmeden önce işaretçinin alt kenarın ötesine gitmesi "
+"gereken piksel"
 
 #: src/prefs/bottomHotEdgeGroup.js:50
 msgid "Hot Edge Animation"
@@ -1965,8 +1929,7 @@ msgstr "Görev Çubuğu Konumları"
 
 #: src/prefs/locationsGroup.js:92
 msgid ""
-"Choose which folders, drives, and Trash appear with taskbar "
-"applications"
+"Choose which folders, drives, and Trash appear with taskbar applications"
 msgstr ""
 "Görev çubuğu uygulamalarıyla hangi klasörlerin, sürücülerin ve Çöp "
 "Kutusu'nun görüneceğini seç"
@@ -2000,12 +1963,10 @@ msgid "Dock Locations"
 msgstr "Dock Konumları"
 
 #: src/prefs/locationsGroup.js:122
-msgid ""
-"Choose which folders, drives, and Trash appear with Dock "
-"applications"
+msgid "Choose which folders, drives, and Trash appear with Dock applications"
 msgstr ""
-"Dock uygulamalarıyla hangi klasörlerin, sürücülerin ve Çöp "
-"Kutusu'nun görüneceğini seç"
+"Dock uygulamalarıyla hangi klasörlerin, sürücülerin ve Çöp Kutusu'nun "
+"görüneceğini seç"
 
 #: src/prefs/locationsGroup.js:128
 msgid "Display selected locations after Dock applications"
@@ -2061,11 +2022,10 @@ msgstr "Vurgu ile dinamik görev çubuğu kenarları arasındaki boşluk"
 
 #: src/prefs/panelAppearancePage.js:115
 msgid ""
-"Not used in Default GNOME Panel mode, where Panel Height sets the "
-"thickness"
+"Not used in Default GNOME Panel mode, where Panel Height sets the thickness"
 msgstr ""
-"Panel Yüksekliği'nin kalınlığı belirlediği Varsayılan GNOME Paneli "
-"modunda kullanılmaz"
+"Panel Yüksekliği'nin kalınlığı belirlediği Varsayılan GNOME Paneli modunda "
+"kullanılmaz"
 
 #: src/prefs/panelAppearancePage.js:125
 msgid "Space inside both ends of the dynamic or floating taskbar"
@@ -2090,17 +2050,15 @@ msgstr "Görev Çubuğu Kalınlığı"
 #: src/prefs/panelAppearancePage.js:167
 msgid "Oversized icons shrink automatically when the taskbar is reduced"
 msgstr ""
-"Görev çubuğu küçültüldüğünde aşırı büyük simgeler otomatik olarak "
-"küçülür"
+"Görev çubuğu küçültüldüğünde aşırı büyük simgeler otomatik olarak küçülür"
 
 #: src/prefs/panelAppearancePage.js:205
 msgid ""
-"Not available with the Default GNOME Panel: set the Taskbar "
-"Thickness below and the window icons resize to fit"
+"Not available with the Default GNOME Panel: set the Taskbar Thickness below "
+"and the window icons resize to fit"
 msgstr ""
-"Varsayılan GNOME Paneli ile kullanılamaz: aşağıdan Görev Çubuğu "
-"Kalınlığı'nı ayarla; pencere simgeleri sığacak şekilde yeniden "
-"boyutlandırılır"
+"Varsayılan GNOME Paneli ile kullanılamaz: aşağıdan Görev Çubuğu Kalınlığı'nı "
+"ayarla; pencere simgeleri sığacak şekilde yeniden boyutlandırılır"
 
 #: src/prefs/panelAppearancePage.js:207
 msgid "Dynamic Panel Mode always matches the thickness to the icon size"
@@ -2108,17 +2066,13 @@ msgstr "Dinamik Panel Modu kalınlığı her zaman simge boyutuyla eşleştirir"
 
 #: src/prefs/panelAppearancePage.js:295
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"
-msgstr ""
-"Görev çubuğu temasını, renklerini, degradesini ve metin görünümünü "
-"seç"
+msgstr "Görev çubuğu temasını, renklerini, degradesini ve metin görünümünü seç"
 
 #: src/prefs/panelAppearancePage.js:302
 msgid ""
-"Match the active GNOME Shell theme, independently of application "
-"colours"
+"Match the active GNOME Shell theme, independently of application colours"
 msgstr ""
-"Etkin GNOME Shell temasıyla, uygulama renklerinden bağımsız olarak "
-"eşleştir"
+"Etkin GNOME Shell temasıyla, uygulama renklerinden bağımsız olarak eşleştir"
 
 #: src/prefs/panelAppearancePage.js:311
 msgid "Taskbar Theme"
@@ -2162,11 +2116,11 @@ msgstr "Görev Çubuğu Degrade Yönü"
 
 #: src/prefs/panelAppearancePage.js:471
 msgid ""
-"White text uses the dark taskbar theme; black text uses the light "
-"taskbar theme"
+"White text uses the dark taskbar theme; black text uses the light taskbar "
+"theme"
 msgstr ""
-"Beyaz metin koyu görev çubuğu temasını, siyah metin açık görev "
-"çubuğu temasını kullanır"
+"Beyaz metin koyu görev çubuğu temasını, siyah metin açık görev çubuğu "
+"temasını kullanır"
 
 #: src/prefs/panelAppearancePage.js:478
 msgid "Taskbar Text Color"
@@ -2175,8 +2129,7 @@ msgstr "Görev Çubuğu Metin Rengi"
 #: src/prefs/panelAppearancePage.js:582 src/prefs/panelAppearancePage.js:589
 msgid "Display a thin border along the taskbar’s workspace-facing edge"
 msgstr ""
-"Görev çubuğunun çalışma alanına bakan kenarı boyunca ince bir "
-"kenarlık göster"
+"Görev çubuğunun çalışma alanına bakan kenarı boyunca ince bir kenarlık göster"
 
 #: src/prefs/overviewBehaviorDialog.js:63
 msgid "Overview"
@@ -2188,11 +2141,10 @@ msgstr "Dash'i Gizle"
 
 #: src/prefs/overviewBehaviorDialog.js:71
 msgid ""
-"Hide the Overview Dash while applications are shown on the taskbar "
-"or Dock"
+"Hide the Overview Dash while applications are shown on the taskbar or Dock"
 msgstr ""
-"Uygulamalar görev çubuğunda veya Dock'ta gösterilirken Genel Bakış "
-"Dash'ini gizle"
+"Uygulamalar görev çubuğunda veya Dock'ta gösterilirken Genel Bakış Dash'ini "
+"gizle"
 
 #: src/prefs/overviewBehaviorDialog.js:76
 msgid "Launch to Desktop"
@@ -2200,11 +2152,11 @@ msgstr "Masaüstünde Başlat"
 
 #: src/prefs/overviewBehaviorDialog.js:77
 msgid ""
-"Start the session on the desktop instead of the Overview; applies at"
-" the next login"
+"Start the session on the desktop instead of the Overview; applies at the "
+"next login"
 msgstr ""
-"Oturumu Genel Bakış yerine masaüstünde başlat; bir sonraki oturum "
-"açılışında geçerli olur"
+"Oturumu Genel Bakış yerine masaüstünde başlat; bir sonraki oturum açılışında "
+"geçerli olur"
 
 #: src/prefs/overviewBehaviorDialog.js:83
 msgid "Running Windows"
@@ -2248,11 +2200,11 @@ msgstr "Görev Çubuğu Düğme Dolgusu"
 
 #: src/prefs/panelItemsPage.js:71
 msgid ""
-"Space between taskbar buttons. Use -1 for automatic: Just "
-"Perfection’s value when it is configured, otherwise 3 px"
+"Space between taskbar buttons. Use -1 for automatic: Just Perfection’s value "
+"when it is configured, otherwise 3 px"
 msgstr ""
-"Görev çubuğu düğmeleri arasındaki boşluk. Otomatik için -1 kullan: "
-"Just Perfection yapılandırılmışsa onun değeri, aksi halde 3 px"
+"Görev çubuğu düğmeleri arasındaki boşluk. Otomatik için -1 kullan: Just "
+"Perfection yapılandırılmışsa onun değeri, aksi halde 3 px"
 
 #: src/prefs/panelItemsPage.js:83
 msgid "Quick Settings Icon Spacing"
@@ -2260,11 +2212,10 @@ msgstr "Hızlı Ayarlar Simge Aralığı"
 
 #: src/prefs/panelItemsPage.js:85
 msgid ""
-"Space between the Quick Settings status icons. Use -1 for the GNOME "
-"default"
+"Space between the Quick Settings status icons. Use -1 for the GNOME default"
 msgstr ""
-"Hızlı Ayarlar durum simgeleri arasındaki boşluk. GNOME varsayılanı "
-"için -1 kullan"
+"Hızlı Ayarlar durum simgeleri arasındaki boşluk. GNOME varsayılanı için -1 "
+"kullan"
 
 #: src/prefs/panelItemsPage.js:102
 msgid "Taskbar Buttons Corner Radius"
@@ -2272,11 +2223,11 @@ msgstr "Görev Çubuğu Düğmeleri Köşe Yarıçapı"
 
 #: src/prefs/panelItemsPage.js:104
 msgid ""
-"Rounding of the clock, Quick Settings and other taskbar item "
-"highlights. Use -1 for the theme default"
+"Rounding of the clock, Quick Settings and other taskbar item highlights. Use "
+"-1 for the theme default"
 msgstr ""
-"Saat, Hızlı Ayarlar ve diğer görev çubuğu öğesi vurgularının "
-"yuvarlaklığı. Tema varsayılanı için -1 kullan"
+"Saat, Hızlı Ayarlar ve diğer görev çubuğu öğesi vurgularının yuvarlaklığı. "
+"Tema varsayılanı için -1 kullan"
 
 #: src/prefs/panelItemsPage.js:126
 msgid "Application Volume Mixer"
@@ -2459,9 +2410,7 @@ msgstr "Varsayılan GNOME Paneli"
 
 #: src/prefs/panelModeGroup.js:118
 msgid "Use the original GNOME panel with optional running window buttons"
-msgstr ""
-"İsteğe bağlı çalışan pencere düğmeleriyle özgün GNOME panelini "
-"kullan"
+msgstr "İsteğe bağlı çalışan pencere düğmeleriyle özgün GNOME panelini kullan"
 
 #: src/prefs/panelModeGroup.js:119
 msgid "Default GNOME Panel Options"
@@ -2497,11 +2446,10 @@ msgstr "GNOME Paneli"
 
 #: src/prefs/panelModeGroup.js:186
 msgid ""
-"Overview and running window options for the GNOME panel used with "
-"the Dock"
+"Overview and running window options for the GNOME panel used with the Dock"
 msgstr ""
-"Dock ile birlikte kullanılan GNOME paneli için genel bakış ve "
-"çalışan pencere seçenekleri"
+"Dock ile birlikte kullanılan GNOME paneli için genel bakış ve çalışan "
+"pencere seçenekleri"
 
 #: src/prefs/panelThicknessSizing.js:35
 msgid "Match Thickness to Icon Size"
@@ -2513,13 +2461,12 @@ msgstr "Tüm ayarlar sıfırlansın mı?"
 
 #: src/prefs/preferencesDialogs.js:23
 msgid ""
-"This will restore taskbar and Start Menu settings. Pinned taskbar "
-"apps and Start Menu items, including folders and their order, will "
-"be kept."
+"This will restore taskbar and Start Menu settings. Pinned taskbar apps and "
+"Start Menu items, including folders and their order, will be kept."
 msgstr ""
-"Bu, görev çubuğu ve Başlat Menüsü ayarlarını geri yükler. "
-"Sabitlenmiş görev çubuğu uygulamaları ve klasörler ile sıralamaları "
-"dahil Başlat Menüsü öğeleri korunur."
+"Bu, görev çubuğu ve Başlat Menüsü ayarlarını geri yükler. Sabitlenmiş görev "
+"çubuğu uygulamaları ve klasörler ile sıralamaları dahil Başlat Menüsü "
+"öğeleri korunur."
 
 #: src/prefs/preferencesDialogs.js:26 src/prefs/startIconChooser.js:122
 msgid "Cancel"
@@ -2539,11 +2486,10 @@ msgstr "Tüm Ayarları Sıfırla"
 
 #: src/prefs/preferencesDialogs.js:83
 msgid ""
-"Restore defaults without changing pinned taskbar apps or Start Menu "
-"items"
+"Restore defaults without changing pinned taskbar apps or Start Menu items"
 msgstr ""
-"Sabitlenmiş görev çubuğu uygulamalarını veya Başlat Menüsü öğelerini"
-" değiştirmeden varsayılanları geri yükle"
+"Sabitlenmiş görev çubuğu uygulamalarını veya Başlat Menüsü öğelerini "
+"değiştirmeden varsayılanları geri yükle"
 
 #: src/prefs/preferencesDialogs.js:86
 msgid "Reset…"
@@ -2644,8 +2590,8 @@ msgstr "Profilleri Dışa ve İçe Aktar"
 #: src/prefs/profileTransfer.js:169
 msgid "Save Taskbar settings, Dock settings, and Start Menu pins to a file"
 msgstr ""
-"Görev çubuğu ayarlarını, Dock ayarlarını ve Başlat Menüsü "
-"sabitlemelerini bir dosyaya kaydet"
+"Görev çubuğu ayarlarını, Dock ayarlarını ve Başlat Menüsü sabitlemelerini "
+"bir dosyaya kaydet"
 
 #: src/prefs/profileTransfer.js:172
 msgid "Export…"
@@ -2684,19 +2630,19 @@ msgstr "Varsayılanlara Sıfırla"
 msgid "Close"
 msgstr "Kapat"
 
-#: src/prefs/preferencesWidgets.js:206
+#: src/prefs/preferencesWidgets.js:214
 msgid "Item Position"
 msgstr "Öğe Konumu"
 
-#: src/prefs/preferencesWidgets.js:258
+#: src/prefs/preferencesWidgets.js:266
 msgid "Move Up"
 msgstr "Yukarı Taşı"
 
-#: src/prefs/preferencesWidgets.js:262
+#: src/prefs/preferencesWidgets.js:270
 msgid "Move Down"
 msgstr "Aşağı Taşı"
 
-#: src/prefs/preferencesWidgets.js:286
+#: src/prefs/preferencesWidgets.js:294
 msgid "Visible"
 msgstr "Görünür"
 
@@ -2750,12 +2696,10 @@ msgid "Cancel Show Desktop When a Window Is Restored"
 msgstr "Pencere Geri Yüklendiğinde Masaüstünü Göstermeyi İptal Et"
 
 #: src/prefs/showDesktopButtonDialog.js:56
-msgid ""
-"The next click hides visible windows instead of restoring the "
-"others."
+msgid "The next click hides visible windows instead of restoring the others."
 msgstr ""
-"Bir sonraki tıklama diğerlerini geri yüklemek yerine görünür "
-"pencereleri gizler."
+"Bir sonraki tıklama diğerlerini geri yüklemek yerine görünür pencereleri "
+"gizler."
 
 #: src/prefs/showDesktopButtonDialog.js:60 src/prefs/panelSettingsHubs.js:21
 msgid "Appearance"
@@ -2781,11 +2725,11 @@ msgstr "Görünmez Düğme"
 
 #: src/prefs/showDesktopButtonDialog.js:84
 msgid ""
-"Leave the button undrawn while it stays clickable and still "
-"highlights on hover"
+"Leave the button undrawn while it stays clickable and still highlights on "
+"hover"
 msgstr ""
-"Düğme tıklanabilir kalırken ve üzerine gelindiğinde hâlâ "
-"vurgulanırken çizilmeden bırak"
+"Düğme tıklanabilir kalırken ve üzerine gelindiğinde hâlâ vurgulanırken "
+"çizilmeden bırak"
 
 #: src/prefs/showDesktopButtonDialog.js:91
 msgid "Custom Separator Color"
@@ -2873,17 +2817,12 @@ msgid "Panel"
 msgstr "Panel"
 
 #: src/prefs/startMenuPage.js:229
-msgid ""
-"Place the Start button in the Dock or the panel in Default Panel "
-"mode"
-msgstr ""
-"Başlat düğmesini Dock'a veya Varsayılan Panel modunda panele "
-"yerleştir"
+msgid "Place the Start button in the Dock or the panel in Default Panel mode"
+msgstr "Başlat düğmesini Dock'a veya Varsayılan Panel modunda panele yerleştir"
 
 #: src/prefs/startMenuPage.js:230
 msgid ""
-"The Dock is off, so the Start button is hidden unless it is in the "
-"panel"
+"The Dock is off, so the Start button is hidden unless it is in the panel"
 msgstr "Dock kapalı; panelde olmadıkça Başlat düğmesi gizlidir"
 
 #: src/prefs/startMenuPage.js:258
@@ -2900,11 +2839,11 @@ msgstr "Başlat Düğmesi Dolgusu"
 
 #: src/prefs/startMenuPage.js:269
 msgid ""
-"Space between the Start icon and the panel edge in pixels when "
-"positioned at either end"
+"Space between the Start icon and the panel edge in pixels when positioned at "
+"either end"
 msgstr ""
-"Her iki uçtan birine yerleştirildiğinde Başlat simgesi ile panel "
-"kenarı arasındaki boşluk (piksel)"
+"Her iki uçtan birine yerleştirildiğinde Başlat simgesi ile panel kenarı "
+"arasındaki boşluk (piksel)"
 
 #: src/prefs/startMenuPage.js:306
 msgid "Show Start Button Separator"
@@ -2956,9 +2895,7 @@ msgstr "Başlat Düğmesi Bağlam Menüsü"
 
 #: src/prefs/startMenuPage.js:397 src/prefs/startMenuPage.js:708
 msgid "Choose which shortcuts appear in the Start button’s context menu"
-msgstr ""
-"Başlat düğmesinin bağlam menüsünde hangi kısayolların görüneceğini "
-"seç"
+msgstr "Başlat düğmesinin bağlam menüsünde hangi kısayolların görüneceğini seç"
 
 #: src/prefs/startMenuPage.js:401 src/prefs/startMenuPage.js:418
 msgid "Keyboard Shortcuts"
@@ -3010,11 +2947,10 @@ msgstr "Sabitlenmiş Uygulama Başlıklarını Gizle"
 
 #: src/prefs/startMenuPage.js:480
 msgid ""
-"Hide the names below pinned icons and show them in a tooltip when "
-"hovered"
+"Hide the names below pinned icons and show them in a tooltip when hovered"
 msgstr ""
-"Sabitlenmiş simgelerin altındaki adları gizle ve üzerine "
-"gelindiğinde ipucunda göster"
+"Sabitlenmiş simgelerin altındaki adları gizle ve üzerine gelindiğinde "
+"ipucunda göster"
 
 #: src/prefs/startMenuPage.js:485
 msgid "Show Running App Indicators"
@@ -3023,8 +2959,7 @@ msgstr "Çalışan Uygulama Göstergelerini Göster"
 #: src/prefs/startMenuPage.js:486
 msgid "Show taskbar-style indicators below running application icons"
 msgstr ""
-"Çalışan uygulama simgelerinin altında görev çubuğu tarzı göstergeler"
-" göster"
+"Çalışan uygulama simgelerinin altında görev çubuğu tarzı göstergeler göster"
 
 #: src/prefs/startMenuPage.js:526
 msgid "Organize All Apps into Categories"
@@ -3040,11 +2975,11 @@ msgstr "Uygulama Izgarası Düğmesini Göster"
 
 #: src/prefs/startMenuPage.js:542
 msgid ""
-"Show a Start button that opens the GNOME app grid when the "
-"Eleven-style Start Menu is disabled"
+"Show a Start button that opens the GNOME app grid when the Eleven-style "
+"Start Menu is disabled"
 msgstr ""
-"Eleven tarzı Başlat Menüsü devre dışıyken GNOME uygulama ızgarasını "
-"açan bir Başlat düğmesi göster"
+"Eleven tarzı Başlat Menüsü devre dışıyken GNOME uygulama ızgarasını açan bir "
+"Başlat düğmesi göster"
 
 #: src/prefs/startMenuPage.js:557
 msgid "Follow Taskbar/Dock Theme"
@@ -3060,9 +2995,7 @@ msgstr "Klasör Kısayollarını Göster"
 
 #: src/prefs/startMenuPage.js:572
 msgid "Show selected folders beside the Settings icon in the Start Menu"
-msgstr ""
-"Başlat Menüsü'nde Ayarlar simgesinin yanında seçili klasörleri "
-"göster"
+msgstr "Başlat Menüsü'nde Ayarlar simgesinin yanında seçili klasörleri göster"
 
 #: src/prefs/startMenuPage.js:646
 #: src/startMenu/startButtonContextMenuController.js:76
@@ -3177,8 +3110,8 @@ msgstr "Görev çubuğunun yapılandırılmış saydamlık düzeyini kullan"
 #: src/prefs/startMenuPage.js:782
 msgid "Disable Blur My Shell popup blur to use this option"
 msgstr ""
-"Bu seçeneği kullanmak için Blur My Shell açılır pencere "
-"bulanıklığını devre dışı bırak"
+"Bu seçeneği kullanmak için Blur My Shell açılır pencere bulanıklığını devre "
+"dışı bırak"
 
 #: src/prefs/startMenuPage.js:785
 msgid "Disable Blur My Shell panel and popup blur to use this option"
@@ -3196,8 +3129,7 @@ msgstr "Başlat Menüsü'nü Monitörde Ortala"
 
 #: src/prefs/startMenuPage.js:832
 msgid ""
-"Place the menu at the true horizontal center instead of over the "
-"Start button"
+"Place the menu at the true horizontal center instead of over the Start button"
 msgstr "Menüyü Başlat düğmesinin üzeri yerine gerçek yatay merkeze yerleştir"
 
 #: src/prefs/startMenuPage.js:861
@@ -3206,11 +3138,11 @@ msgstr "Super, Başlat Menüsü'nü Açar"
 
 #: src/prefs/startMenuPage.js:862
 msgid ""
-"Use Super for the Start Menu and move the Overview to Super+Tab or "
-"your own shortcut"
+"Use Super for the Start Menu and move the Overview to Super+Tab or your own "
+"shortcut"
 msgstr ""
-"Başlat Menüsü için Super'i kullan ve Genel Bakış'ı Super+Tab veya "
-"kendi kısayolunuza taşı"
+"Başlat Menüsü için Super'i kullan ve Genel Bakış'ı Super+Tab veya kendi "
+"kısayolunuza taşı"
 
 #: src/prefs/startMenuPage.js:867
 msgid "Overview Shortcut"
@@ -3222,19 +3154,19 @@ msgstr "Super+Tab, Başlat Menüsü'nü Açar"
 
 #: src/prefs/startMenuPage.js:877
 msgid ""
-"Use GNOME’s application-switch shortcut for the Eleven-style Start "
-"Menu while it is enabled"
+"Use GNOME’s application-switch shortcut for the Eleven-style Start Menu "
+"while it is enabled"
 msgstr ""
-"Etkinken Eleven tarzı Başlat Menüsü için GNOME'un uygulama "
-"değiştirme kısayolunu kullan"
+"Etkinken Eleven tarzı Başlat Menüsü için GNOME'un uygulama değiştirme "
+"kısayolunu kullan"
 
 #: src/prefs/startMenuPage.js:890
 msgid ""
-"Opens the Overview while Super opens the Start Menu; clear it to use"
-" Super+Tab"
+"Opens the Overview while Super opens the Start Menu; clear it to use "
+"Super+Tab"
 msgstr ""
-"Super Başlat Menüsü'nü açarken Genel Bakış'ı açar; Super+Tab "
-"kullanmak için temizle"
+"Super Başlat Menüsü'nü açarken Genel Bakış'ı açar; Super+Tab kullanmak için "
+"temizle"
 
 #: src/prefs/startMenuPage.js:891
 msgid "Turn on the Super shortcut to change the Overview shortcut"
@@ -3255,16 +3187,16 @@ msgstr "Özel bir kısayol kullanmak için Super+Tab'ı kapat"
 #: src/prefs/startMenuPage.js:931
 msgid "Choose any unused keyboard shortcut; none is assigned by default"
 msgstr ""
-"Kullanılmayan herhangi bir klavye kısayolu seç; varsayılan olarak "
-"hiçbiri atanmamıştır"
+"Kullanılmayan herhangi bir klavye kısayolu seç; varsayılan olarak hiçbiri "
+"atanmamıştır"
 
 #: src/prefs/startMenuPage.js:948
 msgid ""
-"Set the Start button location to Panel to use the Start Menu in "
-"Default GNOME Panel mode."
+"Set the Start button location to Panel to use the Start Menu in Default "
+"GNOME Panel mode."
 msgstr ""
-"Varsayılan GNOME Paneli modunda Başlat Menüsü'nü kullanmak için "
-"Başlat düğmesi konumunu Panel olarak ayarla."
+"Varsayılan GNOME Paneli modunda Başlat Menüsü'nü kullanmak için Başlat "
+"düğmesi konumunu Panel olarak ayarla."
 
 #: src/prefs/taskbarBehaviorGroup.js:32
 msgid "Change Volume"
@@ -3296,9 +3228,7 @@ msgstr "Hangi pencerelerin görev çubuğunu gizleyeceğini seç"
 
 #: src/prefs/taskbarBehaviorGroup.js:75
 msgid "Let the pointer reveal the hidden taskbar at its screen edge"
-msgstr ""
-"İşaretçinin gizli görev çubuğunu ekran kenarında göstermesine izin "
-"ver"
+msgstr "İşaretçinin gizli görev çubuğunu ekran kenarında göstermesine izin ver"
 
 #: src/prefs/taskbarBehaviorGroup.js:79
 msgid "Choose how quickly the pointer brings the taskbar back"
@@ -3315,8 +3245,7 @@ msgstr "Görev çubuğunun ne kadar sonra yeniden gizleneceğini seç"
 #: src/prefs/taskbarBehaviorGroup.js:86
 msgid "How long the taskbar waits after the pointer leaves, in milliseconds"
 msgstr ""
-"İşaretçi ayrıldıktan sonra görev çubuğunun ne kadar bekleyeceği "
-"(milisaniye)"
+"İşaretçi ayrıldıktan sonra görev çubuğunun ne kadar bekleyeceği (milisaniye)"
 
 #: src/prefs/taskbarBehaviorGroup.js:91
 msgid "Limit Reveal to Taskbar Edge"
@@ -3324,11 +3253,10 @@ msgstr "Gösterimi Görev Çubuğu Kenarıyla Sınırla"
 
 #: src/prefs/taskbarBehaviorGroup.js:92
 msgid ""
-"Only reveal a dynamic or floating taskbar when the pointer reaches "
-"its edge"
+"Only reveal a dynamic or floating taskbar when the pointer reaches its edge"
 msgstr ""
-"Dinamik veya yüzen görev çubuğunu yalnızca işaretçi kenarına "
-"ulaştığında göster"
+"Dinamik veya yüzen görev çubuğunu yalnızca işaretçi kenarına ulaştığında "
+"göster"
 
 #: src/prefs/taskbarBehaviorGroup.js:101
 msgid "Taskbar Scroll"
@@ -3345,8 +3273,7 @@ msgstr "Boş görev çubuğu alanı üzerinde kaydırılırken kullanılan eylem
 #: src/prefs/taskbarBehaviorGroup.js:123
 msgid "Minimum delay between taskbar scroll actions in milliseconds"
 msgstr ""
-"Görev çubuğu kaydırma eylemleri arasındaki minimum gecikme "
-"(milisaniye)"
+"Görev çubuğu kaydırma eylemleri arasındaki minimum gecikme (milisaniye)"
 
 #: src/prefs/taskbarBehaviorGroup.js:143
 msgid "Taskbar Menus and Notifications"
@@ -3355,8 +3282,8 @@ msgstr "Görev Çubuğu Menüleri ve Bildirimler"
 #: src/prefs/taskbarBehaviorGroup.js:145
 msgid "Configure taskbar menu activation and notification banner placement"
 msgstr ""
-"Görev çubuğu menüsü etkinleştirmesini ve bildirim başlığı "
-"yerleşimini yapılandır"
+"Görev çubuğu menüsü etkinleştirmesini ve bildirim başlığı yerleşimini "
+"yapılandır"
 
 #: src/prefs/taskbarBehaviorGroup.js:150
 msgid "Taskbar Menus Require Click"
@@ -3365,8 +3292,7 @@ msgstr "Görev Çubuğu Menüleri Tıklama Gerektirir"
 #: src/prefs/taskbarBehaviorGroup.js:151
 msgid "Switch between clock, system, and tray menus only when clicked"
 msgstr ""
-"Saat, sistem ve tepsi menüleri arasında yalnızca tıklandığında geçiş"
-" yap"
+"Saat, sistem ve tepsi menüleri arasında yalnızca tıklandığında geçiş yap"
 
 #: src/prefs/taskbarBehaviorGroup.js:157
 msgid "Taskbar-aligned Notification Banners"
@@ -3383,8 +3309,7 @@ msgstr "Görev Çubuğu Davranışı"
 #: src/prefs/taskbarBehaviorGroup.js:164
 msgid "Choose the task manager and which monitors show the taskbar"
 msgstr ""
-"Görev yöneticisini ve hangi monitörlerin görev çubuğunu "
-"göstereceğini seç"
+"Görev yöneticisini ve hangi monitörlerin görev çubuğunu göstereceğini seç"
 
 #: src/prefs/taskbarBehaviorGroup.js:191
 msgid "Automatic Fallback"
@@ -3403,12 +3328,9 @@ msgid "Show Taskbar on All Monitors"
 msgstr "Görev Çubuğunu Tüm Monitörlerde Göster"
 
 #: src/prefs/taskbarBehaviorGroup.js:220
-msgid ""
-"Show Activities, applications, clock, and system menu on every "
-"monitor"
+msgid "Show Activities, applications, clock, and system menu on every monitor"
 msgstr ""
-"Etkinlikleri, uygulamaları, saati ve sistem menüsünü her monitörde "
-"göster"
+"Etkinlikleri, uygulamaları, saati ve sistem menüsünü her monitörde göster"
 
 #: src/prefs/windowPreviewDialog.js:28 src/prefs/windowPreviewDialog.js:37
 msgid "Window Preview Options"
@@ -3457,8 +3379,7 @@ msgstr "Pencere Gözetleme"
 #: src/prefs/windowPreviewDialog.js:94
 msgid "Show a window above other windows while hovering its preview"
 msgstr ""
-"Önizlemesinin üzerine gelindiğinde pencereyi diğerlerinin üstünde "
-"göster"
+"Önizlemesinin üzerine gelindiğinde pencereyi diğerlerinin üstünde göster"
 
 #: src/prefs/windowPreviewDialog.js:99
 msgid "Enable Window Peeking"
@@ -3510,11 +3431,10 @@ msgstr "Pencerelerden Kaçınma Modu"
 
 #: src/prefs/windowDodgeGroup.js:93
 msgid ""
-"Pointer reveal, timing and Overview behaviour for auto-hide and "
-"dodge windows"
+"Pointer reveal, timing and Overview behaviour for auto-hide and dodge windows"
 msgstr ""
-"Otomatik gizleme ve pencerelerden kaçınma için işaretçiyle gösterme,"
-" zamanlama ve Genel Bakış davranışı"
+"Otomatik gizleme ve pencerelerden kaçınma için işaretçiyle gösterme, "
+"zamanlama ve Genel Bakış davranışı"
 
 #: src/prefs/windowSwitchingGroup.js:13
 msgid "Grid Alt-Tab"
@@ -3523,8 +3443,7 @@ msgstr "Izgara Alt-Tab"
 #: src/prefs/windowSwitchingGroup.js:15
 msgid "Switch directly between open windows using live previews."
 msgstr ""
-"Canlı önizlemeler kullanarak açık pencereler arasında doğrudan geçiş"
-" yap."
+"Canlı önizlemeler kullanarak açık pencereler arasında doğrudan geçiş yap."
 
 #: src/prefs/windowSwitchingGroup.js:21
 msgid "Enable Grid Alt-Tab"
@@ -3533,8 +3452,7 @@ msgstr "Izgara Alt-Tab'ı Etkinleştir"
 #: src/prefs/windowSwitchingGroup.js:23
 msgid "Replace GNOME’s application switcher with a responsive window grid"
 msgstr ""
-"GNOME'un uygulama değiştiricisini duyarlı bir pencere ızgarasıyla "
-"değiştir"
+"GNOME'un uygulama değiştiricisini duyarlı bir pencere ızgarasıyla değiştir"
 
 #: src/prefs/windowSwitchingGroup.js:30
 msgid "Maximum Card Size"
@@ -3543,14 +3461,13 @@ msgstr "Maksimum Kart Boyutu"
 #: src/prefs/windowSwitchingGroup.js:32
 msgid "Largest preview height in pixels; widths follow each window’s shape"
 msgstr ""
-"En büyük önizleme yüksekliği (piksel); genişlikler her pencerenin "
-"şeklini izler"
+"En büyük önizleme yüksekliği (piksel); genişlikler her pencerenin şeklini "
+"izler"
 
 #: src/prefs/windowSwitchingGroup.js:42
 msgid "Show windows from the current workspace instead of all workspaces"
 msgstr ""
-"Tüm çalışma alanları yerine geçerli çalışma alanındaki pencereleri "
-"göster"
+"Tüm çalışma alanları yerine geçerli çalışma alanındaki pencereleri göster"
 
 #: src/prefs/windowSwitchingGroup.js:50
 msgid "Show only windows from the monitor displaying the switcher"
@@ -3578,9 +3495,7 @@ msgstr "GNOME uygulama ızgarasının sütunları ve satırları"
 
 #: src/prefs/generalPage.js:37
 msgid "Push the pointer against the bottom screen edge to toggle Overview"
-msgstr ""
-"Genel Bakış'ı açıp kapatmak için işaretçiyi alt ekran kenarına "
-"bastır"
+msgstr "Genel Bakış'ı açıp kapatmak için işaretçiyi alt ekran kenarına bastır"
 
 #: src/prefs/generalPage.js:42 src/prefs/fileManagerGroup.js:11
 msgid "File Manager"
@@ -3597,8 +3512,7 @@ msgstr "Pencere Değiştirme"
 #: src/prefs/generalPage.js:49
 msgid "Switch directly between open windows using live previews"
 msgstr ""
-"Canlı önizlemeler kullanarak açık pencereler arasında doğrudan geçiş"
-" yap"
+"Canlı önizlemeler kullanarak açık pencereler arasında doğrudan geçiş yap"
 
 #: src/prefs/generalPage.js:54
 msgid "Backup"
@@ -3654,11 +3568,10 @@ msgstr "Nautilus Klasör Kısayolları"
 
 #: src/prefs/fileManagerGroup.js:17
 msgid ""
-"Show common folders in the menu of the Files icon on the taskbar or "
-"Dock"
+"Show common folders in the menu of the Files icon on the taskbar or Dock"
 msgstr ""
-"Yaygın klasörleri görev çubuğundaki veya Dock'taki Dosyalar "
-"simgesinin menüsünde göster"
+"Yaygın klasörleri görev çubuğundaki veya Dock'taki Dosyalar simgesinin "
+"menüsünde göster"
 
 #: src/prefs/fileManagerGroup.js:22
 msgid "Super+E Opens File Manager"
@@ -3698,11 +3611,10 @@ msgstr "Tıklama, Kaydırma ve Üzerine Gelme"
 
 #: src/prefs/panelSettingsHubs.js:45
 msgid ""
-"Click, scroll and hover actions for application icons, and window "
-"previews"
+"Click, scroll and hover actions for application icons, and window previews"
 msgstr ""
-"Uygulama simgeleri ve pencere önizlemeleri için tıklama, kaydırma ve"
-" üzerine gelme eylemleri"
+"Uygulama simgeleri ve pencere önizlemeleri için tıklama, kaydırma ve üzerine "
+"gelme eylemleri"
 
 #: src/prefs/panelSettingsHubs.js:50
 msgid "Animations"
@@ -4103,3 +4015,26 @@ msgstr "Uygulama Sesi"
 msgid "No applications are playing audio"
 msgstr "Ses çalan uygulama yok"
 
+#: src/prefs/settingsSearchController.js:42
+#: src/prefs/settingsSearchController.js:75
+#: src/prefs/settingsSearchController.js:88
+#: src/prefs/settingsSearchController.js:113
+msgid "Search Settings"
+msgstr "Ayarlarda Ara"
+
+#: src/prefs/settingsSearchController.js:60
+msgid "Search all settings"
+msgstr "Tüm ayarlarda ara"
+
+#: src/prefs/settingsSearchController.js:76
+#: src/prefs/settingsSearchController.js:114
+msgid "Find settings in any page or options dialog"
+msgstr "Herhangi bir sayfadaki veya seçenekler penceresindeki ayarları bulun"
+
+#: src/prefs/settingsSearchController.js:140
+msgid "No Results Found"
+msgstr "Sonuç Bulunamadı"
+
+#: src/prefs/settingsSearchController.js:141
+msgid "Try a different search"
+msgstr "Farklı bir arama deneyin"

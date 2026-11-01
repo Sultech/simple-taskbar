@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 22:44+0000\n"
+"POT-Creation-Date: 2026-11-01 17:16+0000\n"
 "PO-Revision-Date: 2026-08-08 22:01+0800\n"
 "Last-Translator: adogecheems <adogecheems@outlook.com>\n"
 "Language-Team: Chinese (simplified) <master@mmoe.work>\n"
@@ -26,30 +26,30 @@ msgstr "展示桌面"
 msgid "Application overflow"
 msgstr "应用溢出"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:383
+#: prefs.js:52 src/prefs/applicationIconsGroup.js:383
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "左侧"
 
-#: prefs.js:46
+#: prefs.js:53
 msgid "Center"
 msgstr "居中"
 
-#: prefs.js:47 src/prefs/applicationIconsGroup.js:384
+#: prefs.js:54 src/prefs/applicationIconsGroup.js:384
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "右侧"
 
-#: prefs.js:53 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
+#: prefs.js:60 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
 msgid "Taskbar"
 msgstr "任务栏"
 
-#: prefs.js:60 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
+#: prefs.js:67 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
 #: src/prefs/panelSettingsHubs.js:98
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:67 src/prefs/dockItemsPage.js:74
+#: prefs.js:74 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "开始菜单"
 
@@ -1042,119 +1042,119 @@ msgstr "GNOME 默认"
 msgid "Magic Lamp"
 msgstr "神灯"
 
-#: src/prefs/classicHighlightDialog.js:81
-#: src/prefs/classicHighlightDialog.js:90
+#: src/prefs/classicHighlightDialog.js:84
+#: src/prefs/classicHighlightDialog.js:93
 msgid "Highlight Options"
 msgstr "高亮选项"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:110
 msgid "Highlight Size"
 msgstr "高亮大小"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:112
 msgid "Set how far the highlight reaches across the panel"
 msgstr "设置高亮在面板上延伸的范围"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:123
 msgid "Highlight Border Radius"
 msgstr "高亮圆角半径"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:124
 msgid "Border radius in pixels"
 msgstr "圆角半径（像素）"
 
-#: src/prefs/classicHighlightDialog.js:129
+#: src/prefs/classicHighlightDialog.js:132
 msgid "Fit Highlight to Icon"
 msgstr "使高亮适应图标"
 
-#: src/prefs/classicHighlightDialog.js:131
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "
 "following the panel thickness"
 msgstr "将高亮范围限制在图标和运行指示器周围，而不是跟随面板厚度"
 
-#: src/prefs/classicHighlightDialog.js:142
+#: src/prefs/classicHighlightDialog.js:145
 msgid "Custom Highlight Thickness"
 msgstr "自定义高亮厚度"
 
-#: src/prefs/classicHighlightDialog.js:144
+#: src/prefs/classicHighlightDialog.js:147
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
 msgstr "保持高亮为固定大小，而不跟随面板厚度"
 
-#: src/prefs/classicHighlightDialog.js:146
+#: src/prefs/classicHighlightDialog.js:149
 msgid "Highlight Thickness"
 msgstr "高亮厚度"
 
-#: src/prefs/classicHighlightDialog.js:147
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Size across the panel in pixels"
 msgstr "横跨面板的尺寸（像素）"
 
-#: src/prefs/classicHighlightDialog.js:168
+#: src/prefs/classicHighlightDialog.js:171
 msgid "Custom Highlight Length"
 msgstr "自定义高亮长度"
 
-#: src/prefs/classicHighlightDialog.js:170
+#: src/prefs/classicHighlightDialog.js:173
 msgid "Grow the highlight along the panel beyond the application icon"
 msgstr "沿面板将高亮延伸到应用图标之外"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:175
 msgid "Highlight Length"
 msgstr "高亮长度"
 
-#: src/prefs/classicHighlightDialog.js:173
+#: src/prefs/classicHighlightDialog.js:176
 msgid "Size along the panel in pixels"
 msgstr "沿面板方向的尺寸（像素）"
 
-#: src/prefs/classicHighlightDialog.js:183
+#: src/prefs/classicHighlightDialog.js:186
 msgid "Hover Highlight"
 msgstr "悬停高亮"
 
-#: src/prefs/classicHighlightDialog.js:184
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Customize the hover and pressed highlight"
 msgstr "自定义悬停和按下时的高亮"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:192
 msgid "Highlight Hovering Application Icons"
 msgstr "悬停时高亮应用图标"
 
-#: src/prefs/classicHighlightDialog.js:199
+#: src/prefs/classicHighlightDialog.js:202
 msgid "Hover Highlight Color"
 msgstr "悬停高亮颜色"
 
-#: src/prefs/classicHighlightDialog.js:208
+#: src/prefs/classicHighlightDialog.js:211
 msgid "Pressed Highlight Color"
 msgstr "按下高亮颜色"
 
-#: src/prefs/classicHighlightDialog.js:214
+#: src/prefs/classicHighlightDialog.js:217
 msgid "Focused Application Highlight"
 msgstr "焦点应用高亮"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:218
 msgid "Customize the highlight for the focused application"
 msgstr "自定义聚焦应用的高亮"
 
-#: src/prefs/classicHighlightDialog.js:220
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Highlight the Focused Application"
 msgstr "高亮焦点应用"
 
-#: src/prefs/classicHighlightDialog.js:227
+#: src/prefs/classicHighlightDialog.js:230
 msgid "Use Icon Dominant Color"
 msgstr "使用图标主色"
 
-#: src/prefs/classicHighlightDialog.js:235
+#: src/prefs/classicHighlightDialog.js:238
 msgid "Custom Focus Highlight Color"
 msgstr "自定义焦点高亮颜色"
 
-#: src/prefs/classicHighlightDialog.js:245
+#: src/prefs/classicHighlightDialog.js:248
 msgid "Focus Highlight Opacity"
 msgstr "焦点高亮不透明度"
 
-#: src/prefs/classicHighlightDialog.js:246
+#: src/prefs/classicHighlightDialog.js:249
 msgid "Opacity percentage"
 msgstr "不透明度百分比"
 
-#: src/prefs/classicHighlightDialog.js:262
+#: src/prefs/classicHighlightDialog.js:265
 msgid "Switch to the Classic highlight style to use this setting"
 msgstr "切换到经典高亮样式以使用此设置"
 
@@ -2558,19 +2558,19 @@ msgstr "恢复默认设置"
 msgid "Close"
 msgstr "关闭"
 
-#: src/prefs/preferencesWidgets.js:206
+#: src/prefs/preferencesWidgets.js:214
 msgid "Item Position"
 msgstr "项目位置"
 
-#: src/prefs/preferencesWidgets.js:258
+#: src/prefs/preferencesWidgets.js:266
 msgid "Move Up"
 msgstr "上移"
 
-#: src/prefs/preferencesWidgets.js:262
+#: src/prefs/preferencesWidgets.js:270
 msgid "Move Down"
 msgstr "下移"
 
-#: src/prefs/preferencesWidgets.js:286
+#: src/prefs/preferencesWidgets.js:294
 msgid "Visible"
 msgstr "可见"
 
@@ -3894,3 +3894,27 @@ msgstr "应用音量"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "没有应用正在播放音频"
+
+#: src/prefs/settingsSearchController.js:42
+#: src/prefs/settingsSearchController.js:75
+#: src/prefs/settingsSearchController.js:88
+#: src/prefs/settingsSearchController.js:113
+msgid "Search Settings"
+msgstr "搜索设置"
+
+#: src/prefs/settingsSearchController.js:60
+msgid "Search all settings"
+msgstr "搜索所有设置"
+
+#: src/prefs/settingsSearchController.js:76
+#: src/prefs/settingsSearchController.js:114
+msgid "Find settings in any page or options dialog"
+msgstr "在任意页面或选项对话框中查找设置"
+
+#: src/prefs/settingsSearchController.js:140
+msgid "No Results Found"
+msgstr "未找到结果"
+
+#: src/prefs/settingsSearchController.js:141
+msgid "Try a different search"
+msgstr "尝试其他搜索"

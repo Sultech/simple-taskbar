@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: simple-taskbar 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 22:44+0000\n"
+"POT-Creation-Date: 2026-11-01 17:16+0000\n"
 "PO-Revision-Date: 2026-08-08 06:04+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: German\n"
@@ -26,30 +26,30 @@ msgstr "Desktop anzeigen"
 msgid "Application overflow"
 msgstr "Anwendungsüberlauf"
 
-#: prefs.js:45 src/prefs/applicationIconsGroup.js:383
+#: prefs.js:52 src/prefs/applicationIconsGroup.js:383
 #: src/prefs/choiceCards.js:128
 msgid "Left"
 msgstr "Links"
 
-#: prefs.js:46
+#: prefs.js:53
 msgid "Center"
 msgstr "Mitte"
 
-#: prefs.js:47 src/prefs/applicationIconsGroup.js:384
+#: prefs.js:54 src/prefs/applicationIconsGroup.js:384
 #: src/prefs/choiceCards.js:129
 msgid "Right"
 msgstr "Rechts"
 
-#: prefs.js:53 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
+#: prefs.js:60 src/prefs/panelModeGroup.js:93 src/prefs/panelSettingsHubs.js:90
 msgid "Taskbar"
 msgstr "Taskleiste"
 
-#: prefs.js:60 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
+#: prefs.js:67 src/prefs/panelModeGroup.js:104 src/prefs/startMenuPage.js:205
 #: src/prefs/panelSettingsHubs.js:98
 msgid "Dock"
 msgstr "Dock"
 
-#: prefs.js:67 src/prefs/dockItemsPage.js:74
+#: prefs.js:74 src/prefs/dockItemsPage.js:74
 msgid "Start Menu"
 msgstr "Startmenü"
 
@@ -1091,32 +1091,32 @@ msgstr "GNOME-Standard"
 msgid "Magic Lamp"
 msgstr "Wunderlampe"
 
-#: src/prefs/classicHighlightDialog.js:81
-#: src/prefs/classicHighlightDialog.js:90
+#: src/prefs/classicHighlightDialog.js:84
+#: src/prefs/classicHighlightDialog.js:93
 msgid "Highlight Options"
 msgstr "Hervorhebungsoptionen"
 
-#: src/prefs/classicHighlightDialog.js:107
+#: src/prefs/classicHighlightDialog.js:110
 msgid "Highlight Size"
 msgstr "Größe der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:109
+#: src/prefs/classicHighlightDialog.js:112
 msgid "Set how far the highlight reaches across the panel"
 msgstr "Festlegen, wie weit die Hervorhebung über das Panel reicht"
 
-#: src/prefs/classicHighlightDialog.js:120
+#: src/prefs/classicHighlightDialog.js:123
 msgid "Highlight Border Radius"
 msgstr "Eckenradius der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:121
+#: src/prefs/classicHighlightDialog.js:124
 msgid "Border radius in pixels"
 msgstr "Eckenradius in Pixeln"
 
-#: src/prefs/classicHighlightDialog.js:129
+#: src/prefs/classicHighlightDialog.js:132
 msgid "Fit Highlight to Icon"
 msgstr "Hervorhebung an Symbol anpassen"
 
-#: src/prefs/classicHighlightDialog.js:131
+#: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "
 "following the panel thickness"
@@ -1124,92 +1124,92 @@ msgstr ""
 "Die Hervorhebung auf das Symbol und den Aktivitätsindikator begrenzen, statt "
 "sie an die Panel-Dicke anzupassen"
 
-#: src/prefs/classicHighlightDialog.js:142
+#: src/prefs/classicHighlightDialog.js:145
 msgid "Custom Highlight Thickness"
 msgstr "Eigene Hervorhebungsdicke"
 
-#: src/prefs/classicHighlightDialog.js:144
+#: src/prefs/classicHighlightDialog.js:147
 msgid ""
 "Keep the highlight a fixed size instead of following the panel thickness"
 msgstr ""
 "Die Hervorhebung auf einer festen Größe halten, statt der Panel-Dicke zu "
 "folgen"
 
-#: src/prefs/classicHighlightDialog.js:146
+#: src/prefs/classicHighlightDialog.js:149
 msgid "Highlight Thickness"
 msgstr "Dicke der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:147
+#: src/prefs/classicHighlightDialog.js:150
 msgid "Size across the panel in pixels"
 msgstr "Größe über das Panel in Pixeln"
 
-#: src/prefs/classicHighlightDialog.js:168
+#: src/prefs/classicHighlightDialog.js:171
 msgid "Custom Highlight Length"
 msgstr "Eigene Hervorhebungslänge"
 
-#: src/prefs/classicHighlightDialog.js:170
+#: src/prefs/classicHighlightDialog.js:173
 msgid "Grow the highlight along the panel beyond the application icon"
 msgstr ""
 "Die Hervorhebung entlang des Panels über das Anwendungssymbol hinaus "
 "vergrößern"
 
-#: src/prefs/classicHighlightDialog.js:172
+#: src/prefs/classicHighlightDialog.js:175
 msgid "Highlight Length"
 msgstr "Länge der Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:173
+#: src/prefs/classicHighlightDialog.js:176
 msgid "Size along the panel in pixels"
 msgstr "Größe entlang des Panels in Pixeln"
 
-#: src/prefs/classicHighlightDialog.js:183
+#: src/prefs/classicHighlightDialog.js:186
 msgid "Hover Highlight"
 msgstr "Hover-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:184
+#: src/prefs/classicHighlightDialog.js:187
 msgid "Customize the hover and pressed highlight"
 msgstr "Hervorhebung bei Mauskontakt und Klick anpassen"
 
-#: src/prefs/classicHighlightDialog.js:189
+#: src/prefs/classicHighlightDialog.js:192
 msgid "Highlight Hovering Application Icons"
 msgstr "Anwendungssymbole beim Darüberfahren hervorheben"
 
-#: src/prefs/classicHighlightDialog.js:199
+#: src/prefs/classicHighlightDialog.js:202
 msgid "Hover Highlight Color"
 msgstr "Farbe der Hover-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:208
+#: src/prefs/classicHighlightDialog.js:211
 msgid "Pressed Highlight Color"
 msgstr "Farbe der Hervorhebung beim Drücken"
 
-#: src/prefs/classicHighlightDialog.js:214
+#: src/prefs/classicHighlightDialog.js:217
 msgid "Focused Application Highlight"
 msgstr "Hervorhebung der fokussierten Anwendung"
 
-#: src/prefs/classicHighlightDialog.js:215
+#: src/prefs/classicHighlightDialog.js:218
 msgid "Customize the highlight for the focused application"
 msgstr "Hervorhebung der fokussierten Anwendung anpassen"
 
-#: src/prefs/classicHighlightDialog.js:220
+#: src/prefs/classicHighlightDialog.js:223
 msgid "Highlight the Focused Application"
 msgstr "Fokussierte Anwendung hervorheben"
 
-#: src/prefs/classicHighlightDialog.js:227
+#: src/prefs/classicHighlightDialog.js:230
 msgid "Use Icon Dominant Color"
 msgstr "Dominante Symbolfarbe verwenden"
 
-#: src/prefs/classicHighlightDialog.js:235
+#: src/prefs/classicHighlightDialog.js:238
 msgid "Custom Focus Highlight Color"
 msgstr "Benutzerdefinierte Farbe der Fokus-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:245
+#: src/prefs/classicHighlightDialog.js:248
 msgid "Focus Highlight Opacity"
 msgstr "Deckkraft der Fokus-Hervorhebung"
 
-#: src/prefs/classicHighlightDialog.js:246
+#: src/prefs/classicHighlightDialog.js:249
 msgid "Opacity percentage"
 msgstr "Deckkraft in Prozent"
 
-#: src/prefs/classicHighlightDialog.js:262
+#: src/prefs/classicHighlightDialog.js:265
 msgid "Switch to the Classic highlight style to use this setting"
 msgstr ""
 "Zum Hervorhebungsstil „Klassisch“ wechseln, um diese Einstellung zu verwenden"
@@ -2706,19 +2706,19 @@ msgstr "Auf Standardeinstellungen zurücksetzen"
 msgid "Close"
 msgstr "Schließen"
 
-#: src/prefs/preferencesWidgets.js:206
+#: src/prefs/preferencesWidgets.js:214
 msgid "Item Position"
 msgstr "Elementposition"
 
-#: src/prefs/preferencesWidgets.js:258
+#: src/prefs/preferencesWidgets.js:266
 msgid "Move Up"
 msgstr "Nach oben verschieben"
 
-#: src/prefs/preferencesWidgets.js:262
+#: src/prefs/preferencesWidgets.js:270
 msgid "Move Down"
 msgstr "Nach unten verschieben"
 
-#: src/prefs/preferencesWidgets.js:286
+#: src/prefs/preferencesWidgets.js:294
 msgid "Visible"
 msgstr "Sichtbar"
 
@@ -4125,3 +4125,27 @@ msgstr "Anwendungslautstärke"
 #: src/integration/volumeMixerController.js:459
 msgid "No applications are playing audio"
 msgstr "Keine Anwendung spielt Audio ab"
+
+#: src/prefs/settingsSearchController.js:42
+#: src/prefs/settingsSearchController.js:75
+#: src/prefs/settingsSearchController.js:88
+#: src/prefs/settingsSearchController.js:113
+msgid "Search Settings"
+msgstr "Einstellungen durchsuchen"
+
+#: src/prefs/settingsSearchController.js:60
+msgid "Search all settings"
+msgstr "Alle Einstellungen durchsuchen"
+
+#: src/prefs/settingsSearchController.js:76
+#: src/prefs/settingsSearchController.js:114
+msgid "Find settings in any page or options dialog"
+msgstr "Einstellungen auf jeder Seite und in jedem Optionsdialog finden"
+
+#: src/prefs/settingsSearchController.js:140
+msgid "No Results Found"
+msgstr "Keine Ergebnisse gefunden"
+
+#: src/prefs/settingsSearchController.js:141
+msgid "Try a different search"
+msgstr "Versuchen Sie eine andere Suche"
