@@ -28,6 +28,8 @@ import {
     TaskbarHoverAnimationSmoothing,
 } from './taskbarHoverAnimationSmoothing.js';
 
+const MAGNIFY_TIMELINE_DURATION = 1000;
+
 export class TaskbarIconHoverAnimationController {
     constructor({
         settings,
@@ -64,7 +66,7 @@ export class TaskbarIconHoverAnimationController {
         this._lastPointerX = null;
         this._lastPointerY = null;
         this._magnifyUpdateId = 0;
-        this._magnifyFrameId = 0;
+        this._magnifyTimeline = null;
         this._smoothing = new TaskbarHoverAnimationSmoothing();
         this._settingsController = new TaskbarHoverAnimationSettings({
             settings,
@@ -242,10 +244,7 @@ export class TaskbarIconHoverAnimationController {
             global.compositor.get_laters().remove(this._magnifyUpdateId);
             this._magnifyUpdateId = 0;
         }
-        if (this._magnifyFrameId) {
-            global.compositor.get_laters().remove(this._magnifyFrameId);
-            this._magnifyFrameId = 0;
-        }
+        this._stopMagnifyFrames();
     }
 
     getReserve() {
@@ -323,7 +322,7 @@ export class TaskbarIconHoverAnimationController {
     }
 
     _queueMagnifyUpdate() {
-        if (this._magnifyUpdateId || this._magnifyFrameId ||
+        if (this._magnifyUpdateId || this._magnifyTimeline ||
             !this._animator.isMagnifyActive())
             return;
 
@@ -340,34 +339,46 @@ export class TaskbarIconHoverAnimationController {
     }
 
     _startMagnifyFrames() {
-        if (this._magnifyFrameId)
+        if (this._magnifyTimeline)
             return;
 
         if (this._animator.isMagnifyActive())
             this._animator.resumeSmoothing();
-        this._magnifyFrameId = global.compositor.get_laters().add(
-            Meta.LaterType.BEFORE_REDRAW,
-            () => {
-                if (!this._animator.isMagnifyActive() &&
-                    !this._cloneController.hasClones() &&
-                    !this._cloneController.hasUnsettledStretches()) {
-                    this._magnifyFrameId = 0;
-                    return GLib.SOURCE_REMOVE;
-                }
+        this._magnifyTimeline = new Clutter.Timeline({
+            actor: this._viewport,
+            duration: MAGNIFY_TIMELINE_DURATION,
+            repeat_count: -1,
+        });
+        this._magnifyTimeline.connectObject('new-frame', () => this._onMagnifyFrame(), this);
+        this._magnifyTimeline.start();
+    }
 
-                if (this._animator.isMagnifyActive()) {
-                    this._animator.update();
-                    if (this._animator.isMagnifySettled()) {
-                        this._magnifyFrameId = 0;
-                        return GLib.SOURCE_REMOVE;
-                    }
-                } else {
-                    this._animator.settleMagnify();
-                }
+    _stopMagnifyFrames() {
+        if (!this._magnifyTimeline)
+            return;
 
-                return GLib.SOURCE_CONTINUE;
-            }
-        );
+        const timeline = this._magnifyTimeline;
+        this._magnifyTimeline = null;
+        timeline.disconnectObject(this);
+        timeline.stop();
+    }
+
+    _onMagnifyFrame() {
+        if (!this._animator.isMagnifyActive() &&
+            !this._cloneController.hasClones() &&
+            !this._cloneController.hasUnsettledStretches()) {
+            this._stopMagnifyFrames();
+            return;
+        }
+
+        if (!this._animator.isMagnifyActive()) {
+            this._animator.settleMagnify();
+            return;
+        }
+
+        this._animator.update();
+        if (this._animator.isMagnifySettled())
+            this._stopMagnifyFrames();
     }
 
     _onAnimationSettingsChanged() {
