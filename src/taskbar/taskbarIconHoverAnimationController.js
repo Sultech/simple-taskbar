@@ -477,5 +477,6 @@ export class TaskbarIconHoverAnimationController {
 
     _updateCloneGeometry(item = null) {
         this._cloneController.updateGeometry(item);
+        this._queueMagnifyUpdate();
     }
 }
