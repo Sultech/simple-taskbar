@@ -41,6 +41,8 @@ export class TaskbarHoverAnimationAnimator {
         this._queueMagnifyFrames = queueMagnifyFrames;
         this._smoothing = smoothing;
         this._magnifyActive = false;
+        this._magnifySettled = false;
+        this._passSettled = true;
         this._blocked = false;
         this._reserve = 0;
         this._extentBefore = 0;
@@ -258,6 +260,7 @@ export class TaskbarHoverAnimationAnimator {
     }
 
     _updateMagnification(items, pointerX, pointerY, profile, vertical) {
+        this._magnifySettled = false;
         const entries = [];
         const getStretchEntry = item =>
             this._clones.getStretchEntry(item);
@@ -297,6 +300,7 @@ export class TaskbarHoverAnimationAnimator {
         );
 
         this._beginSmoothingPass();
+        this._passSettled = true;
         const rowItems = new Set(entries.map(entry => entry.item));
         for (const item of [...this._clones.getItems()]) {
             if (!rowItems.has(item))
@@ -355,6 +359,15 @@ export class TaskbarHoverAnimationAnimator {
             vertical,
         });
         this._syncVisualExtents();
+        this._magnifySettled = this._passSettled;
+    }
+
+    isMagnifySettled() {
+        return this._magnifySettled;
+    }
+
+    resumeSmoothing() {
+        this._smoothing.reset();
     }
 
     _rowEntry(item, geometry, magnifies, vertical) {
@@ -627,6 +640,8 @@ export class TaskbarHoverAnimationAnimator {
                 this._smoothing.getFactor(),
                 MAGNIFY_EPSILON
             );
+            if (!settled)
+                this._passSettled = false;
             if (settled && level === 0 && !rowTranslation &&
                 this._clones.isStretchSettled(item))
                 this._clones.remove(item);
@@ -678,6 +693,7 @@ export class TaskbarHoverAnimationAnimator {
     }
 
     _stretch(item, translation, duration) {
-        this._clones.stretch(item, translation, duration);
+        if (!this._clones.stretch(item, translation, duration))
+            this._passSettled = false;
     }
 }

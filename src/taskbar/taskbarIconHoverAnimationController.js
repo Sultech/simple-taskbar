@@ -332,6 +332,8 @@ export class TaskbarIconHoverAnimationController {
             () => {
                 this._magnifyUpdateId = 0;
                 this._animator.update();
+                if (!this._animator.isMagnifySettled())
+                    this._startMagnifyFrames();
                 return GLib.SOURCE_REMOVE;
             }
         );
@@ -341,6 +343,8 @@ export class TaskbarIconHoverAnimationController {
         if (this._magnifyFrameId)
             return;
 
+        if (this._animator.isMagnifyActive())
+            this._animator.resumeSmoothing();
         this._magnifyFrameId = global.compositor.get_laters().add(
             Meta.LaterType.BEFORE_REDRAW,
             () => {
@@ -351,10 +355,15 @@ export class TaskbarIconHoverAnimationController {
                     return GLib.SOURCE_REMOVE;
                 }
 
-                if (this._animator.isMagnifyActive())
+                if (this._animator.isMagnifyActive()) {
                     this._animator.update();
-                else
+                    if (this._animator.isMagnifySettled()) {
+                        this._magnifyFrameId = 0;
+                        return GLib.SOURCE_REMOVE;
+                    }
+                } else {
                     this._animator.settleMagnify();
+                }
 
                 return GLib.SOURCE_CONTINUE;
             }

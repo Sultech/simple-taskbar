@@ -210,17 +210,17 @@ export class TaskbarHoverAnimationCloneController {
 
         const target = entry.base + translation;
         if (entry.actor[property] === target)
-            return;
+            return true;
 
         if (magnify) {
-            applySmoothedProperties(
+            const settled = applySmoothedProperties(
                 entry.actor,
                 {[property]: target},
                 this._smoothing.getFactor(),
                 MAGNIFY_EPSILON
             );
             entry.lastMagnifyTranslation = entry.actor[property];
-            return;
+            return settled;
         }
 
         entry.actor.remove_transition(property);
@@ -229,6 +229,7 @@ export class TaskbarHoverAnimationCloneController {
             duration,
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
         });
+        return true;
     }
 
     _getStretchActor(item) {
