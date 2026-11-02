@@ -3,7 +3,7 @@
 
 import GLib from 'gi://GLib';
 
-import {DOCK_AUTO_HIDE_SETTINGS} from './autoHideSettings.js';
+import {DOCK_AUTO_HIDE_SETTINGS, disablePressureRevealForHotEdge} from './autoHideSettings.js';
 import {DEFAULT_PANEL_WINDOW_SETTING_KEYS, defaultPanelWindowSettingKey} from './defaultPanelWindowSettings.js';
 import {normalizePanelItemOrder} from './panelItemOrder.js';
 import {positionIsVertical} from './panelPositionUtils.js';
@@ -157,6 +157,23 @@ const MODE_SETTING_KEYS = new Set([
     'clock-style',
     'default-panel-clock-style',
     'clock-date-order',
+    'hot-edge-overview-enabled',
+    'hot-edge-pressure-threshold',
+    'hot-edge-animation-enabled',
+    'hot-edge-open-app-grid',
+    'grid-alt-tab-enabled',
+    'grid-alt-tab-isolate-workspaces',
+    'grid-alt-tab-show-on-primary-monitor',
+    'grid-alt-tab-isolate-monitors',
+    'grid-alt-tab-max-card-size',
+    'grid-alt-tab-hotkey',
+    'grid-alt-tab-backward-hotkey',
+    'app-grid-layout',
+    'app-grid-columns',
+    'app-grid-rows',
+    'nautilus-places-enabled',
+    'super-e-file-manager-enabled',
+    'super-e-file-manager-hotkey',
     'panel-button-corner-radius',
     'default-panel-button-corner-radius',
 ]);
@@ -470,6 +487,7 @@ export function setPanelMode(settings, mode) {
     } else {
         setModeFlags(settings, mode);
     }
+    disablePressureRevealForHotEdge(settings);
     settings.set_boolean('panel-profile-transition', false);
     settings.set_boolean('panel-mode-profiles-initialized', true);
 }

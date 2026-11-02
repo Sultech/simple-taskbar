@@ -43,6 +43,19 @@ export function pressureRevealAtBottom(settings, modeKey, positionKey) {
         settings.get_string(modeKey) === AUTO_HIDE_REVEAL_MODE.PRESSURE;
 }
 
+export function disablePressureRevealForHotEdge(settings) {
+    if (!settings.get_boolean('hot-edge-overview-enabled'))
+        return;
+
+    for (const [modeKey, positionKey] of [
+        [AUTO_HIDE_SETTINGS.revealMode, 'panel-position'],
+        [DOCK_AUTO_HIDE_SETTINGS.revealMode, 'dock-position'],
+    ]) {
+        if (pressureRevealAtBottom(settings, modeKey, positionKey))
+            settings.set_string(modeKey, AUTO_HIDE_REVEAL_MODE.INSTANT);
+    }
+}
+
 export function autoHideUsesPressure(settings) {
     return settings.get_string(AUTO_HIDE_SETTINGS.revealMode) ===
         AUTO_HIDE_REVEAL_MODE.PRESSURE;
