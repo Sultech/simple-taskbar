@@ -612,6 +612,11 @@
       <default>5</default>
       <summary>Padding inside both ends of the dynamic or floating taskbar</summary>
     </key>
+    <key name="taskbar-full-width-side-padding" type="i">
+      <range min="0" max="64"/>
+      <default>0</default>
+      <summary>Padding inside both ends of the full-width taskbar</summary>
+    </key>
     <key name="taskbar-highlight-edge-gap" type="i">
       <range min="0" max="16"/>
       <default>3</default>

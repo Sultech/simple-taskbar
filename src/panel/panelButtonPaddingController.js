@@ -84,6 +84,7 @@ export class PanelButtonPaddingController {
             'changed::panel-button-padding', () => this.sync(),
             'changed::taskbar-dynamic-panel-button-padding', () => this.sync(),
             'changed::taskbar-side-padding', () => this.syncEdgePadding(),
+            'changed::taskbar-full-width-side-padding', () => this.syncEdgePadding(),
             'changed::windows-xp-theme-enabled', () => {
                 this._restoreAll();
                 this.sync();
@@ -359,8 +360,11 @@ export class PanelButtonPaddingController {
     }
 
     syncEdgePadding() {
-        const sidePadding = dynamicTaskbarEnabled(this._settings) || this._getPanelEdgeGap() > 0
-            ? this._settings.get_int('taskbar-side-padding') : 0;
+        const sidePadding = this._settings.get_int(
+            dynamicTaskbarEnabled(this._settings) || this._getPanelEdgeGap() > 0
+                ? 'taskbar-side-padding'
+                : 'taskbar-full-width-side-padding'
+        );
         syncPanelSidePadding(this._panelBoxes, this._startButtonController, panelIsVertical(this._settings), sidePadding,
             (box, side, item, padding) => this._setEdgePadding(box, side, item, padding));
     }

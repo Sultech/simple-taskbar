@@ -49,6 +49,7 @@ const DOCK_SETTING_KEYS = new Map([
     ['taskbar-floating-snap-to-edge', 'dock-floating-snap-to-edge'],
     ['taskbar-floating-window-gap', 'dock-floating-window-gap'],
     ['taskbar-side-padding', 'dock-side-padding'],
+    ['taskbar-full-width-side-padding', 'dock-full-width-side-padding'],
     ['taskbar-highlight-edge-gap', 'dock-highlight-edge-gap'],
     ['multi-monitor-panels', 'dock-multi-monitor-panels'],
     ['workspace-scroll-action', 'dock-workspace-scroll-action'],

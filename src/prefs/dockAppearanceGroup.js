@@ -146,6 +146,14 @@ export function addDockAppearanceGroup({
         lower: 0,
         upper: 64,
     }, connectSettings);
+    const fullWidthSidePaddingRow = addSliderRow(group, settings, {
+        key: 'dock-full-width-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the full-width Dock'),
+        lower: 0,
+        upper: 64,
+    }, connectSettings);
 
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
         !settings.get_boolean('windows-xp-theme-enabled');
@@ -225,7 +233,8 @@ export function addDockAppearanceGroup({
     const syncLayoutControls = () => {
         const enabled = !settings.get_boolean('dock-panel-mode') ||
             dockFloatingEnabled(settings);
-        sidePaddingRow.sensitive = enabled;
+        sidePaddingRow.visible = enabled;
+        fullWidthSidePaddingRow.visible = !enabled;
         cornerRadiusRow.sensitive = enabled;
     };
     for (const key of DOCK_FLOATING_KEYS)

@@ -256,8 +256,11 @@ export class SecondaryPanelDockController {
     }
 
     syncSidePadding() {
-        const padding = !this._settings.get_boolean('dock-panel-mode') || this.getPanelEdgeGap() > 0
-            ? this._settings.get_int('taskbar-side-padding') : 0;
+        const padding = this._settings.get_int(
+            !this._settings.get_boolean('dock-panel-mode') || this.getPanelEdgeGap() > 0
+                ? 'taskbar-side-padding'
+                : 'taskbar-full-width-side-padding'
+        );
         syncPanelSidePadding(this._boxes, this._startButtonController, panelIsVertical(this._settings), padding,
             (box, side, _item, sidePadding) => box.set_style(`padding-${side}: ${sidePadding}px;`));
     }
@@ -436,6 +439,8 @@ export class SecondaryPanelDockController {
         );
         this._settings.connectObject(
             'changed::taskbar-side-padding',
+            () => this.syncSidePadding(),
+            'changed::taskbar-full-width-side-padding',
             () => this.syncSidePadding(),
             'changed::dock-max-length',
             () => {

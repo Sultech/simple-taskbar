@@ -126,6 +126,14 @@ export function addPanelAppearancePage({
         lower: 0,
         upper: 64,
     }, connectSettings);
+    const fullWidthSidePaddingRow = addSliderRow(layoutGroup, settings, {
+        key: 'taskbar-full-width-side-padding',
+        unit: 'px',
+        title: _('Side Padding'),
+        subtitle: _('Space inside both ends of the full-width taskbar'),
+        lower: 0,
+        upper: 64,
+    }, connectSettings);
     const cornerRadiusRow = addSliderRow(layoutGroup, settings, {
         key: 'taskbar-corner-radius',
         title: _('Corner Radius'),
@@ -136,7 +144,8 @@ export function addPanelAppearancePage({
     const syncFloatingControls = () => {
         layoutGroup.sensitive = !settings.get_boolean('windows-xp-theme-enabled');
         const geometryEnabled = taskbarGeometryEnabled(settings);
-        sidePaddingRow.sensitive = geometryEnabled;
+        sidePaddingRow.visible = geometryEnabled;
+        fullWidthSidePaddingRow.visible = !geometryEnabled;
         cornerRadiusRow.sensitive = geometryEnabled;
     };
     for (const key of TASKBAR_GEOMETRY_KEYS)
