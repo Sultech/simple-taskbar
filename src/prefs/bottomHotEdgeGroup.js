@@ -51,9 +51,17 @@ export function addBottomHotEdgeGroup(page, settings, connectSettings) {
         subtitle: _('Show a ripple when the bottom hot edge activates'),
     });
     group.add(animationSwitch);
+
+    const appGridSwitch = createSwitchRow(settings, {
+        key: 'hot-edge-open-app-grid',
+        title: _('Open App Grid'),
+        subtitle: _('Open the app grid instead of the window overview'),
+    });
+    group.add(appGridSwitch);
     const syncControls = () => {
         animationSwitch.sensitive = enabledSwitch.active;
         pressureRow.sensitive = enabledSwitch.active;
+        appGridSwitch.sensitive = enabledSwitch.active;
     };
     enabledSwitch.connect('notify::active', syncControls);
     syncControls();

@@ -68,6 +68,9 @@ export class HotEdgeController {
                 showAnimation: () => this._settings.get_boolean(
                     'hot-edge-animation-enabled'
                 ),
+                openAppGrid: () => this._settings.get_boolean(
+                    'hot-edge-open-app-grid'
+                ),
             }));
         }
     }
@@ -101,12 +104,14 @@ class HotEdge {
         pressureThreshold,
         isBlocked,
         showAnimation,
+        openAppGrid,
     }) {
         this._layoutManager = layoutManager;
         this._monitor = monitor;
         this._pressureThreshold = pressureThreshold;
         this._isBlocked = isBlocked;
         this._showAnimation = showAnimation;
+        this._openAppGrid = openAppGrid;
         this._barrier = null;
         this._pressureBarrier = null;
         this._pressureTriggerId = 0;
@@ -158,6 +163,7 @@ class HotEdge {
         this._pressureThreshold = null;
         this._isBlocked = null;
         this._showAnimation = null;
+        this._openAppGrid = null;
     }
 
     _barriersAreSupported() {
@@ -236,7 +242,10 @@ class HotEdge {
         if (!Main.overview.shouldToggleByCornerOrButton())
             return;
 
-        Main.overview.toggle();
+        if (this._openAppGrid() && !Main.overview.visible)
+            Main.overview.showApps();
+        else
+            Main.overview.toggle();
         if (this._showAnimation() && Main.overview.animationInProgress) {
             const [pointerX] = global.get_pointer();
             const bottom = this._monitor.y + this._monitor.height;

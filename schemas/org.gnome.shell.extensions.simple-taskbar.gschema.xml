@@ -107,6 +107,10 @@
       <default>false</default>
       <summary>Show a ripple when the bottom hot edge activates</summary>
     </key>
+    <key name="hot-edge-open-app-grid" type="b">
+      <default>false</default>
+      <summary>Open the app grid instead of the window overview from the bottom hot edge</summary>
+    </key>
     <key name="icon-size" type="i">
       <range min="13" max="128"/>
       <default>32</default>
