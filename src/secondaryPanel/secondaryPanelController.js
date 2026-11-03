@@ -182,7 +182,7 @@ export class SecondaryPanelController {
             openNewWindow: app => this._windowController.openNewWindow(app),
             getPreviewController: () => this._windowPreviews,
             onRedisplay: () => {
-                this._updateTaskbarWidth();
+                this._taskbarWidthUpdater.update();
                 this._applicationOverflowController.sync();
             },
             locationScope: isDock ? 'dock' : 'taskbar',
@@ -275,7 +275,7 @@ export class SecondaryPanelController {
                 ? !this._settings.get_boolean('dock-panel-mode')
                 : dynamicTaskbarEnabled(this._settings),
             getBaseLength: () => (this._dockController ?? this._geometryController).getBaseLength(),
-            updateWidth: () => this._updateTaskbarWidth(),
+            updateWidth: () => this._taskbarWidthUpdater.update(),
             onGeometryChanged: (geometry, centerOffset) => {
                 this.actor.set_position(geometry.x, geometry.y);
                 this.actor.set_size(geometry.width, geometry.height);
@@ -685,11 +685,11 @@ export class SecondaryPanelController {
                     this._applicationOverflowController.sync();
                 }
                 this._verticalItemsController.sync();
-                this._updateTaskbarWidth();
+                this._taskbarWidthUpdater.update();
             }, this._signalHolder);
             this._settings.connectObject(
                 'changed::dock-min-icon-size',
-                () => this._updateTaskbarWidth(),
+                () => this._taskbarWidthUpdater.update(),
                 'changed::panel-height-follow-icon-size',
                 () => this._syncPanelHeight(),
                 this._signalHolder
@@ -724,7 +724,7 @@ export class SecondaryPanelController {
                 this._resetTaskbarIconSize();
             this._applyAppearance();
             this._syncPanelHeight();
-            this._updateTaskbarWidth();
+            this._taskbarWidthUpdater.update();
         };
         this._settings.connectObject(
             'changed::icon-spacing', syncIconMetrics,
@@ -776,7 +776,7 @@ export class SecondaryPanelController {
         }
         this._settings.connectObject('changed::activities-button-visible', () => {
             this._indicatorController.syncActivitiesVisibility();
-            this._updateTaskbarWidth();
+            this._taskbarWidthUpdater.update();
         }, this._signalHolder);
         this._settings.connectObject('changed::activities-button-position', () => {
             this._applyLayout();
@@ -802,15 +802,15 @@ export class SecondaryPanelController {
                 this._settings.get_int('start-button-padding')
             );
             this._verticalItemsController.sync();
-            this._updateTaskbarWidth();
+            this._taskbarWidthUpdater.update();
         }, this._signalHolder);
         for (const signal of ['child-added', 'child-removed']) {
             this._taskbarController.actor.connectObject(signal, () => {
-                this._updateTaskbarWidth();
+                this._taskbarWidthUpdater.update();
             }, this._signalHolder);
         }
         this._settings.connectObject('changed::hide-app-labels', () => {
-            this._updateTaskbarWidth();
+            this._taskbarWidthUpdater.update();
         }, this._signalHolder);
         if (!this._dockController) {
             for (const key of PANEL_BUTTON_PADDING_KEYS) {
@@ -818,7 +818,7 @@ export class SecondaryPanelController {
                     `changed::${key}`,
                     () => {
                         this._syncQuickSettingsIndicators();
-                        this._updateTaskbarWidth();
+                        this._taskbarWidthUpdater.update();
                     },
                     this
                 );
@@ -922,7 +922,7 @@ export class SecondaryPanelController {
         );
         this._indicatorController.syncActivitiesVisibility();
         this._applyAppearance();
-        this._updateTaskbarWidth();
+        this._taskbarWidthUpdater.update();
     }
 
     _geometrySource() {
@@ -1029,7 +1029,7 @@ export class SecondaryPanelController {
         if (this._windowDodgeController)
             this._windowDodgeController.sync();
         if (updateTaskbarWidth)
-            this._updateTaskbarWidth();
+            this._taskbarWidthUpdater.update();
     }
 
     _panelGeometry() {
