@@ -199,19 +199,21 @@ function addApplicationIconControls({
             !settings.get_boolean('windows-xp-theme-enabled') &&
             !isDefaultPanelWithoutDock(settings);
         dockMinIconSizeRow.sensitive = enabled;
-        if (!enabled)
+        if (!enabled || settings.get_boolean('panel-profile-transition'))
             return;
 
         const maximum = settings.get_int('icon-size');
         dockMinIconSizeRow.get_adjustment().set_upper(maximum);
         if (settings.get_int('dock-min-icon-size') > maximum)
             settings.set_int('dock-min-icon-size', maximum);
+        dockMinIconSizeRow.set_value(settings.get_int('dock-min-icon-size'));
     };
     for (const key of [
         'dock-mode',
         'windows-xp-theme-enabled',
         'default-gnome-panel',
         'icon-size',
+        'panel-profile-transition',
     ]) {
         connectSettings(
             settings,

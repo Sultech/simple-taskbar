@@ -325,6 +325,9 @@ function panelAxisSettingKeys(settings, mode) {
                 (key.startsWith('dock-') && !DOCK_AXIS_EXCLUDED_SETTING_KEYS.has(key));
         }
 
+        if (mode === PANEL_MODE_TASKBAR && key === 'dock-min-icon-size')
+            return true;
+
         return !MODE_SETTING_KEYS.has(key) && key !== 'panel-position' &&
             !key.startsWith('dock-');
     });
