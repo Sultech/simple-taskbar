@@ -99,12 +99,14 @@ export default class SimpleTaskbarExtension extends Extension {
                 onDefaultPanelChanged: () => this._queueRebuild(),
                 onIconSizeChanged: () => {
                     this._maximumIconSize = this._applicationSettings.get_int('icon-size');
-                    this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
-                    this._startButtonController.applyAppearance(
-                        this._iconSize,
-                        this._settings.get_int('start-button-padding')
-                    );
-                    this._taskbarController.setIconSize(this._iconSize);
+                    if (this._iconSize > this._maximumIconSize || !this._iconSizeIsAdaptive()) {
+                        this._iconSize = panelTaskbarIconSize(this._applicationSettings, this._maximumIconSize);
+                        this._startButtonController.applyAppearance(
+                            this._iconSize,
+                            this._settings.get_int('start-button-padding')
+                        );
+                        this._taskbarController.setIconSize(this._iconSize);
+                    }
                     this._panelController.syncVerticalItems();
                     this._applicationOverflowController.sync();
                     this._syncPanelHeight();
@@ -592,14 +594,17 @@ export default class SimpleTaskbarExtension extends Extension {
         this._panelController.updateTaskbarWidth();
     }
 
+    _iconSizeIsAdaptive() {
+        return !this._taskbarController.isRebuilding() &&
+            !this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('dock-mode') &&
+            !this._settings.get_boolean('windows-xp-theme-enabled');
+    }
+
     _syncTaskbarIconSize(availableLength) {
         this._taskbarController.setAvailableWidth(availableLength);
-        if (this._taskbarController.isRebuilding() ||
-            this._settings.get_boolean('default-gnome-panel') ||
-            this._settings.get_boolean('dock-mode') ||
-            this._settings.get_boolean('windows-xp-theme-enabled')) {
+        if (!this._iconSizeIsAdaptive())
             return false;
-        }
 
         const iconSize = adaptiveTaskbarIconSize({
             settings: this._settings,
