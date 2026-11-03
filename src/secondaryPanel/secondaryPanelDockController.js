@@ -40,8 +40,6 @@ import {
 import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
-import {refreshPanelBoxSizes} from '../panel/panelItems.js';
-import {prepareTaskbarIconSizeChange} from '../taskbar/taskbarIconSize.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
@@ -80,9 +78,7 @@ export class SecondaryPanelDockController {
         verticalItemsController,
         applicationOverflowController,
         getPanelHeight,
-        getIconSize,
-        setIconSize,
-        setPanelHeight,
+        iconSizer,
         onPosition,
         isCentered,
         getHoverReserve,
@@ -104,12 +100,9 @@ export class SecondaryPanelDockController {
         this._verticalItemsController = verticalItemsController;
         this._applicationOverflowController = applicationOverflowController;
         this._getPanelHeight = getPanelHeight;
-        this._getIconSize = getIconSize;
-        this._setIconSize = setIconSize;
-        this._setPanelHeight = setPanelHeight;
+        this._iconSizer = iconSizer;
         this._onPosition = onPosition;
         this._isCentered = isCentered;
-        this._configuredIconSize = settings.getConfiguredIconSize();
         this._layout = new FloatingPanelLayout({
             settings,
             getMonitor: () => this._monitor,
@@ -164,12 +157,9 @@ export class SecondaryPanelDockController {
         this._verticalItemsController = null;
         this._applicationOverflowController = null;
         this._getPanelHeight = null;
-        this._getIconSize = null;
-        this._setIconSize = null;
-        this._setPanelHeight = null;
+        this._iconSizer = null;
         this._onPosition = null;
         this._isCentered = null;
-        this._configuredIconSize = 0;
     }
 
     getPanelLengthPercentage() {
@@ -275,17 +265,7 @@ export class SecondaryPanelDockController {
     }
 
     resetIconSize() {
-        this._configuredIconSize = this._settings.getConfiguredIconSize();
-        this._settings.setRuntimeIconSize(this._configuredIconSize);
-        this._setIconSize(this._configuredIconSize);
-        this._setPanelHeight(this._settings.get_int('panel-height'));
-        this._taskbarController.setIconSize(this._configuredIconSize);
-        this._taskbarController.setPanelHeight(this._getPanelHeight());
-        this._startButtonController.applyAppearance(
-            this._configuredIconSize,
-            this._settings.get_int('start-button-padding')
-        );
-        refreshPanelBoxSizes(this._boxes);
+        this._iconSizer.reset();
         this._verticalItemsController.sync();
         this._applicationOverflowController.sync();
     }
@@ -395,11 +375,10 @@ export class SecondaryPanelDockController {
         this._settings.connectObject(
             'changed::icon-size',
             () => {
-                const configuredIconSize = this._settings.getConfiguredIconSize();
-                if (this._getIconSize() > configuredIconSize) {
-                    this.resetIconSize();
+                if (this._iconSizer.syncMaximum()) {
+                    this._verticalItemsController.sync();
+                    this._applicationOverflowController.sync();
                 } else {
-                    this._configuredIconSize = configuredIconSize;
                     this._applicationOverflowController.sync();
                     this.updateTaskbarWidth();
                 }
@@ -479,8 +458,7 @@ export class SecondaryPanelDockController {
         });
         if (availableWidth !== undefined) {
             this._taskbarController.setAvailableWidth(availableWidth);
-            if (!this._settings.get_boolean('windows-xp-theme-enabled') &&
-                this._syncIconSize(availableWidth)) {
+            if (this._syncIconSize(availableWidth)) {
                 this._onPosition(false);
                 this._layout.queueContentUpdate();
                 return;
@@ -494,33 +472,9 @@ export class SecondaryPanelDockController {
     }
 
     _syncIconSize(availableLength) {
-        const maximum = this._configuredIconSize;
-        const minimum = Math.min(
-            this._settings.get_int('dock-min-icon-size'),
-            maximum
-        );
-        const iconSize = this._taskbarController.getIconSizeForLength(
-            availableLength,
-            maximum,
-            minimum,
-            this._startButtonController.actor.visible
-                ? this._getIconSize()
-                : null
-        );
-        if (iconSize === this._getIconSize())
+        if (!this._iconSizer.solve(availableLength))
             return false;
 
-        prepareTaskbarIconSizeChange(this._taskbarController, this._startButtonController);
-        this._settings.setRuntimeIconSize(iconSize);
-        this._setIconSize(iconSize);
-        this._setPanelHeight(this._settings.get_int('panel-height'));
-        this._taskbarController.setIconSize(iconSize);
-        this._taskbarController.setPanelHeight(this._getPanelHeight());
-        this._startButtonController.applyAppearance(
-            iconSize,
-            this._settings.get_int('start-button-padding')
-        );
-        refreshPanelBoxSizes(this._boxes);
         this._verticalItemsController.sync();
         this._applicationOverflowController.syncIconSizeChange();
         return true;
