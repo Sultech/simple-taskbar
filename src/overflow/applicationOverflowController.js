@@ -201,7 +201,7 @@ export class ApplicationOverflowController {
 
         this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open) {
-                this._button.add_style_pseudo_class('active');
+                this._button.checked = true;
                 this._themeController.sync();
                 this._syncPopupGeometry();
                 this._grab = Main.pushModal(global.stage, {
@@ -211,7 +211,7 @@ export class ApplicationOverflowController {
             } else {
                 Main.popModal(this._grab);
                 this._grab = null;
-                this._button.remove_style_pseudo_class('active');
+                this._button.checked = false;
                 this._closeAuxiliaryMenus();
                 this._buttonController.sync();
             }
