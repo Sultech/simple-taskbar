@@ -688,7 +688,19 @@
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
     .simple-taskbar-app-item:hover .simple-taskbar-app-glass,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
-    .simple-taskbar-app-item.focused .simple-taskbar-app-glass {
+    .simple-taskbar-app-item.focused .simple-taskbar-app-glass,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-start:focus .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-start:hover .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-start:active .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-start:checked .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-start:active:hover .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-start:checked:hover .simple-taskbar-start-hover {
     background-gradient-direction: horizontal;
 }
 
