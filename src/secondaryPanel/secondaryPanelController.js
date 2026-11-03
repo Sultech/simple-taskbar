@@ -677,7 +677,13 @@ export class SecondaryPanelController {
         }
         if (!this._dockController) {
             this._settings.connectObject('changed::icon-size', () => {
-                this._resetTaskbarIconSize();
+                const maximumIconSize = this._settings.get_int('icon-size');
+                if (this._iconSize > maximumIconSize || !this._iconSizeIsAdaptive()) {
+                    this._resetTaskbarIconSize();
+                } else {
+                    this._maximumIconSize = maximumIconSize;
+                    this._applicationOverflowController.sync();
+                }
                 this._verticalItemsController.sync();
                 this._updateTaskbarWidth();
             }, this._signalHolder);
@@ -1107,12 +1113,15 @@ export class SecondaryPanelController {
             this._geometryController.updateLength();
     }
 
+    _iconSizeIsAdaptive() {
+        return !this._taskbarController.isRebuilding() &&
+            !this._settings.get_boolean('default-gnome-panel') &&
+            !this._settings.get_boolean('windows-xp-theme-enabled');
+    }
+
     _syncTaskbarIconSize(availableLength) {
-        if (this._taskbarController.isRebuilding() ||
-            this._settings.get_boolean('default-gnome-panel') ||
-            this._settings.get_boolean('windows-xp-theme-enabled')) {
+        if (!this._iconSizeIsAdaptive())
             return false;
-        }
 
         const iconSize = adaptiveTaskbarIconSize({
             settings: this._settings,
