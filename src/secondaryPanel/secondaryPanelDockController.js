@@ -40,6 +40,7 @@ import {
 import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
+import {refreshPanelBoxSizes} from '../panel/panelItems.js';
 import {prepareTaskbarIconSizeChange} from '../taskbar/taskbarIconSize.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
@@ -284,6 +285,7 @@ export class SecondaryPanelDockController {
             this._configuredIconSize,
             this._settings.get_int('start-button-padding')
         );
+        refreshPanelBoxSizes(this._boxes);
         this._verticalItemsController.sync();
         this._applicationOverflowController.sync();
     }
@@ -518,6 +520,7 @@ export class SecondaryPanelDockController {
             iconSize,
             this._settings.get_int('start-button-padding')
         );
+        refreshPanelBoxSizes(this._boxes);
         this._verticalItemsController.sync();
         this._applicationOverflowController.syncIconSizeChange();
         return true;
