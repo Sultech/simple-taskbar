@@ -1012,12 +1012,14 @@ export class TaskbarController {
             false,
             maximumIconSize
         );
+        const scalingItemLength = scalingIconSize === null
+            ? 0
+            : this._appearanceController.itemSlotWidth(null, false, false, false, false, scalingIconSize);
+        let closestIconSize = maximumIconSize;
+        let closestOverflow = Infinity;
         for (let iconSize = maximumIconSize;
             iconSize >= minimum;
             iconSize--) {
-            const available = scalingIconSize === null
-                ? availableLength
-                : availableLength + scalingIconSize - iconSize;
             const itemLength = this._appearanceController.itemSlotWidth(
                 null,
                 false,
@@ -1026,13 +1028,20 @@ export class TaskbarController {
                 false,
                 iconSize
             );
+            const available = scalingIconSize === null
+                ? availableLength
+                : availableLength + scalingItemLength - itemLength;
             const length = maximumLength + scalableItemCount *
                 (itemLength - maximumItemLength);
             if (length <= available)
                 return iconSize;
+            if (length - available < closestOverflow) {
+                closestOverflow = length - available;
+                closestIconSize = iconSize;
+            }
         }
 
-        return minimum;
+        return closestIconSize;
     }
 
     setStartMenuOpen(open) {
