@@ -47,7 +47,7 @@ import {
     PanelVerticalItemsController,
 } from '../panel/panelVerticalItemsController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
-import {createPanelItems} from '../panel/panelItems.js';
+import {createPanelItems, refreshPanelBoxSizes} from '../panel/panelItems.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
 import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
 import {floatingPanelCornerRadius} from '../panel/floatingPanelGeometry.js';
@@ -1169,6 +1169,7 @@ export class SecondaryPanelController {
             startButtonController: this._startButtonController,
             iconSize: this._iconSize,
         });
+        refreshPanelBoxSizes([this._leftBox, this._centerBox, this._rightBox]);
     }
 
     _queueTaskbarWidth() {

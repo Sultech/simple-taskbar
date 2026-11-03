@@ -28,7 +28,7 @@ import {
 } from './panelButtonPaddingController.js';
 import {PanelClockController} from './panelClockController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
-import {createPanelItems} from './panelItems.js';
+import {createPanelItems, refreshPanelBoxSizes} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelGeometry} from './panelGeometry.js';
 import {PanelMagnifyController} from './panelMagnifyController.js';
@@ -625,15 +625,11 @@ export class PanelController {
     }
 
     refreshPanelItemSizes() {
-        for (const box of [
+        refreshPanelBoxSizes([
             Main.panel._leftBox,
             Main.panel._centerBox,
             Main.panel._rightBox,
-        ]) {
-            for (const child of box.get_children())
-                child.queue_relayout();
-            box.queue_relayout();
-        }
+        ]);
     }
 
     appsAreCentered() {

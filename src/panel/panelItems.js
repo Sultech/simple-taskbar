@@ -5,6 +5,14 @@ import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/tas
 import {panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
 import {startButtonVisible} from '../shared/startButtonLocation.js';
 
+export function refreshPanelBoxSizes(boxes) {
+    for (const box of boxes) {
+        for (const child of box.get_children())
+            child.queue_relayout();
+        box.queue_relayout();
+    }
+}
+
 export function createPanelItems({
     settings,
     windowsXpThemeEnabled,

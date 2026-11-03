@@ -649,6 +649,7 @@ export default class SimpleTaskbarExtension extends Extension {
             startButtonController: this._startButtonController,
             iconSize: this._iconSize,
         });
+        this._panelController.refreshPanelItemSizes();
     }
 
     _panelAutoHideIsBlocked() {
