@@ -393,7 +393,14 @@ export class SecondaryPanelDockController {
         this._settings.connectObject(
             'changed::icon-size',
             () => {
-                this.resetIconSize();
+                const configuredIconSize = this._settings.getConfiguredIconSize();
+                if (this._getIconSize() > configuredIconSize) {
+                    this.resetIconSize();
+                } else {
+                    this._configuredIconSize = configuredIconSize;
+                    this._applicationOverflowController.sync();
+                    this.updateTaskbarWidth();
+                }
                 this._onPosition();
             },
             'changed::windows-xp-theme-enabled',
