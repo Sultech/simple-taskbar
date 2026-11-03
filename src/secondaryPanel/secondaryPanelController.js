@@ -105,6 +105,7 @@ import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
 import {WindowController} from '../taskbar/windowController.js';
 import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
+import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 const OWN_BLUR_CLASSES = new Set(PANEL_BLUR_CLASSES);
@@ -146,6 +147,7 @@ export class SecondaryPanelController {
         this._windowDragController = null;
         this._blurActive = false;
         this._themeSyncLaterId = 0;
+        this._taskbarWidthUpdater = new TaskbarWidthUpdater(() => this._updateTaskbarWidth());
         this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
         const configuredIconSize = isDock
@@ -513,6 +515,8 @@ export class SecondaryPanelController {
             global.compositor.get_laters().remove(this._themeSyncLaterId);
             this._themeSyncLaterId = 0;
         }
+        this._taskbarWidthUpdater.destroy();
+        this._taskbarWidthUpdater = null;
         this._taskbarController.disableHoverAnimations();
         if (this._windowDragController) {
             this._windowDragController.destroy();
@@ -1178,7 +1182,7 @@ export class SecondaryPanelController {
             return;
         }
 
-        this._updateTaskbarWidth();
+        this._taskbarWidthUpdater.queue();
     }
 
     _queueThemeSync() {
