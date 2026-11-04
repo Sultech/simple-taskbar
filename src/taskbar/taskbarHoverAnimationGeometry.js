@@ -324,6 +324,10 @@ export class TaskbarHoverAnimationGeometry {
         if (!geometry || !span)
             return false;
 
+        if (getStretchEntry(item)?.actor !== item) {
+            geometry.x -= item.translation_x;
+            geometry.y -= item.translation_y;
+        }
         const start = this._getVertical() ? geometry.y : geometry.x;
         const length = this._getVertical() ? geometry.height : geometry.width;
         return start >= span.start - VISIBLE_EDGE_TOLERANCE &&
