@@ -110,7 +110,11 @@ class PanelButtonHighlightLayer extends St.Widget {
                 item
             );
         }
-        button.connectObject('notify::pseudo-class', () => this._syncState(entry), item);
+        button.connectObject(
+            'notify::pseudo-class', () => this._syncState(entry),
+            'notify::mapped', () => this._syncState(entry),
+            item
+        );
         this._syncState(entry);
         this.queue_relayout();
     }
@@ -195,7 +199,7 @@ class PanelButtonHighlightLayer extends St.Widget {
             else
                 item.remove_style_class_name('simple-taskbar-panel-button-open');
             glass.set_style(radiusStyle);
-            item.visible = focused || (hoverEnabled && hovered);
+            item.visible = button.mapped && (focused || (hoverEnabled && hovered));
             return;
         }
 
@@ -208,6 +212,6 @@ class PanelButtonHighlightLayer extends St.Widget {
         classicFocus.opacity = focusShown
             ? Math.round(this._settings.get_int(CLASSIC_HIGHLIGHT_SETTINGS.focusOpacity) * 2.55)
             : 0;
-        item.visible = hoverShown || focusShown;
+        item.visible = button.mapped && (hoverShown || focusShown);
     }
 });
