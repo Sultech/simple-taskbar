@@ -526,9 +526,9 @@ export class SecondaryPanelController {
             global.compositor.get_laters().remove(this._themeSyncLaterId);
             this._themeSyncLaterId = 0;
         }
+        this._taskbarController.disableHoverAnimations();
         this._taskbarWidthUpdater.destroy();
         this._taskbarWidthUpdater = null;
-        this._taskbarController.disableHoverAnimations();
         if (this._windowDragController) {
             this._windowDragController.destroy();
             this._windowDragController = null;
