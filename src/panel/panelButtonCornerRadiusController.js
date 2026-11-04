@@ -14,6 +14,7 @@ const HIGHLIGHT_EXCLUDED_CLASSES = [
     'screen-sharing-indicator',
 ];
 
+const TASKBAR_ITEM_CLASS = 'simple-taskbar-app-item';
 const PANEL_BUTTON_HIGHLIGHT_CLASS = 'simple-taskbar-panel-button-highlight';
 const PANEL_BUTTON_HIGHLIGHT_CLOCK_CLASS = 'simple-taskbar-panel-button-highlight-clock';
 
@@ -94,6 +95,8 @@ export class PanelButtonCornerRadiusController {
             this._actors.set(actor, destroyId);
             this._syncClasses(actor, true);
         }
+        if (actor instanceof St.Widget && actor.has_style_class_name(TASKBAR_ITEM_CLASS))
+            return;
         for (const child of actor.get_children())
             this._addSubtree(child);
     }
