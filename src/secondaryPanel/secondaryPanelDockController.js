@@ -39,6 +39,7 @@ import {
 } from '../panel/panelPosition.js';
 import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
+import {PanelButtonHighlightLayer} from '../panel/panelButtonHighlightLayer.js';
 import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
@@ -89,10 +90,16 @@ export class SecondaryPanelDockController {
         this._actor = actor;
         this._panelBox = panelBox;
         this._boxes = [leftBox, centerBox, rightBox];
+        this._highlightLayer = new PanelButtonHighlightLayer(
+            settings, this._boxes, () => this._getPanelHeight(), () => this._iconSizer.iconSize
+        );
+        actor.insert_child_below(this._highlightLayer, null);
         this._cornerRadiusController = new PanelButtonCornerRadiusController(
             mainPanelSettings, this._boxes, () => panelButtonHoverInset(
                 panelIsVertical(this._mainPanelSettings) ? Main.panel.width : Main.panel.height
-            )
+            ),
+            (button, highlighted) => this._highlightLayer.setTracked(button, highlighted),
+            () => true
         );
         this._taskbarBin = taskbarBin;
         this._taskbarController = taskbarController;
@@ -136,6 +143,8 @@ export class SecondaryPanelDockController {
         Main.panel.disconnectObject(this);
         this._cornerRadiusController.destroy();
         this._cornerRadiusController = null;
+        this._highlightLayer.destroy();
+        this._highlightLayer = null;
         this._layout.destroy();
         this._layout = null;
         this._settings.disconnectObject(this);

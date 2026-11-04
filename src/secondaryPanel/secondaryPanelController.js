@@ -320,7 +320,8 @@ export class SecondaryPanelController {
                 () => this._quickSettingsIndicatorsController._indicators,
                 () => this._panelHeight,
                 () => this._geometryController ? this._geometryController.getPanelEdgeGap() : 0,
-                this._startButtonController
+                this._startButtonController,
+                () => this._iconSizer.iconSize
             );
         this._taskbarController.setAlignmentActor(this._centerBox);
         this._interactionController = null;

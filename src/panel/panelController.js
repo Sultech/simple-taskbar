@@ -26,6 +26,7 @@ import {PanelActivitiesController} from './panelActivitiesController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
+import {allocatePanelButtonHighlightLayers} from './panelButtonHighlightLayer.js';
 import {PanelClockController} from './panelClockController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems, refreshPanelBoxSizes} from './panelItems.js';
@@ -74,6 +75,7 @@ export class PanelController {
         onPanelHidden,
         getHoverAnimationOutwardReserve,
         getHoverAnimationReserve,
+        getIconSize,
         startButtonController,
         taskbarBin,
         taskbarActor,
@@ -194,7 +196,8 @@ export class PanelController {
             () => Main.panel.statusArea.quickSettings._indicators,
             () => this._panelHeight,
             () => this.getPanelEdgeGap(),
-            startButtonController
+            startButtonController,
+            getIconSize
         );
     }
 
@@ -660,6 +663,7 @@ export class PanelController {
                     allocateDynamicPanel(this, box, this._leftBox, this._centerBox,
                         this._rightBox, controller._magnifyController.contentStart,
                         controller._magnifyController.contentLength, vertical);
+                    allocatePanelButtonHighlightLayers(this, box);
                     return;
                 }
                 const visible = controller._taskbarBin.visible;
@@ -668,6 +672,7 @@ export class PanelController {
                     : !vertical;
                 if (skip) {
                     originalAllocate.call(this, box);
+                    allocatePanelButtonHighlightLayers(this, box);
                     return;
                 }
 
@@ -700,6 +705,7 @@ export class PanelController {
                         vertical,
                         controller._isTaskbarAdaptive()
                     );
+                    allocatePanelButtonHighlightLayers(this, box);
                     return;
                 }
 
@@ -712,6 +718,7 @@ export class PanelController {
                     centerOffset,
                     vertical
                 );
+                allocatePanelButtonHighlightLayers(this, box);
             }
         );
     }

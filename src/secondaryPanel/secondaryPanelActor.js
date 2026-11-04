@@ -10,6 +10,7 @@ import {
     allocateDynamicPanel,
     allocateExpandedSidePanel,
 } from '../taskbar/taskbarLayout.js';
+import {allocatePanelButtonHighlightLayers} from '../panel/panelButtonHighlightLayer.js';
 
 export const SecondaryPanelActor = GObject.registerClass(
 class SecondaryPanelActor extends St.Widget {
@@ -46,6 +47,11 @@ class SecondaryPanelActor extends St.Widget {
     }
 
     vfunc_allocate(box) {
+        this._allocateContent(box);
+        allocatePanelButtonHighlightLayers(this, box);
+    }
+
+    _allocateContent(box) {
         if (this.dynamicContent !== null) {
             allocateDynamicPanel(this, box, this.leftBox, this.centerBox,
                 this.rightBox, this.dynamicContent.start,

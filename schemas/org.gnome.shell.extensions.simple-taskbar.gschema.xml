@@ -39,6 +39,11 @@
       <summary>Corner radius of panel item highlights</summary>
       <description>Use -1 for the theme default or 0 through 16 for an explicit pixel value</description>
     </key>
+    <key name="panel-buttons-follow-app-highlight" type="b">
+      <default>true</default>
+      <summary>Match panel item highlights to application icons</summary>
+      <description>Give the clock, Quick Settings and extension indicators the hover highlight style, size and corner radius of application icons</description>
+    </key>
     <key name="panel-autohide-enabled" type="b">
       <default>false</default>
       <summary>Hide the panel until the pointer reaches its screen edge</summary>

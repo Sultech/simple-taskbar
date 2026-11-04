@@ -18,6 +18,7 @@ import {
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
     panelButtonCornerRadiusKey,
+    panelButtonsFollowAppHighlightKey,
     panelButtonPaddingKey,
     startButtonAlignmentKey,
     startButtonInPanel,
@@ -108,17 +109,34 @@ export function addPanelItemsPage({
         },
         connectSettings
     );
+    const followAppHighlightSwitch = createSwitchRow(settings, {
+        getKey: () => panelButtonsFollowAppHighlightKey(settings),
+        keyChangedKey: 'default-gnome-panel',
+        title: _('Match Application Highlight'),
+        subtitle: _(
+            'Give the clock, Quick Settings and extension indicators the hover highlight style, size and corner radius of application icons'
+        ),
+    }, connectSettings);
+    panelGroup.add(followAppHighlightSwitch);
     const syncPanelButtonPaddingSensitivity = () => {
         const enabled = !settings.get_boolean('windows-xp-theme-enabled');
         panelButtonPaddingRow.sensitive = enabled;
         quickSettingsIconSpacingRow.sensitive = enabled;
-        panelButtonCornerRadiusRow.sensitive = enabled;
+        followAppHighlightSwitch.sensitive = enabled;
+        panelButtonCornerRadiusRow.sensitive = enabled &&
+            !settings.get_boolean(panelButtonsFollowAppHighlightKey(settings));
     };
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
         syncPanelButtonPaddingSensitivity
     );
+    for (const key of [
+        'panel-buttons-follow-app-highlight',
+        'default-panel-buttons-follow-app-highlight',
+        'default-gnome-panel',
+    ])
+        connectSettings(settings, `changed::${key}`, syncPanelButtonPaddingSensitivity);
     syncPanelButtonPaddingSensitivity();
 
     const volumeMixerSwitch = createSwitchRow(settings, {

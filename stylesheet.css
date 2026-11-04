@@ -285,7 +285,8 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:active .simple-taskbar-start-hover,
-#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked .simple-taskbar-start-hover {
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item.simple-taskbar-panel-button-glass.simple-taskbar-panel-button-open .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
     background-gradient-start: rgba(255, 255, 255, 0.7);
     background-gradient-end: rgba(255, 255, 255, 0.7);
@@ -293,7 +294,8 @@
 }
 
 #panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:active:hover .simple-taskbar-start-hover,
-#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked:hover .simple-taskbar-start-hover {
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-start:checked:hover .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .simple-taskbar-app-item.simple-taskbar-panel-button-glass.simple-taskbar-panel-button-open:hover .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
     background-gradient-start: rgba(249, 249, 249, 0.5);
     background-gradient-end: rgba(249, 249, 249, 0.5);
@@ -387,6 +389,28 @@
     padding: 0;
     margin: 0;
     border-width: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+#panel.simple-taskbar-panel .panel-button.simple-taskbar-panel-button-highlight:hover,
+#panel.simple-taskbar-panel .panel-button.simple-taskbar-panel-button-highlight:focus,
+#panel.simple-taskbar-panel .panel-button.simple-taskbar-panel-button-highlight:active,
+#panel.simple-taskbar-panel .panel-button.simple-taskbar-panel-button-highlight:checked,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.simple-taskbar-panel-button-highlight:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.simple-taskbar-panel-button-highlight:focus,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.simple-taskbar-panel-button-highlight:active,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.simple-taskbar-panel-button-highlight:checked,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.simple-taskbar-panel-button-highlight:active:hover,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.simple-taskbar-panel-button-highlight:checked:hover,
+#panel.simple-taskbar-panel .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:hover .clock,
+#panel.simple-taskbar-panel .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:focus .clock,
+#panel.simple-taskbar-panel .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:active .clock,
+#panel.simple-taskbar-panel .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:checked .clock,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:hover .clock,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:focus .clock,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:active .clock,
+#panel.simple-taskbar-panel.simple-taskbar-theme-light .panel-button.clock-display.simple-taskbar-panel-button-highlight-clock:checked .clock {
     background-color: transparent;
     box-shadow: none;
 }
@@ -613,7 +637,9 @@
 #panel.simple-taskbar-panel .simple-taskbar-start:active .simple-taskbar-start-hover,
 #panel.simple-taskbar-panel .simple-taskbar-start:checked .simple-taskbar-start-hover,
 #panel.simple-taskbar-panel .simple-taskbar-start:active:hover .simple-taskbar-start-hover,
-#panel.simple-taskbar-panel .simple-taskbar-start:checked:hover .simple-taskbar-start-hover {
+#panel.simple-taskbar-panel .simple-taskbar-start:checked:hover .simple-taskbar-start-hover,
+#panel.simple-taskbar-panel .simple-taskbar-app-item.simple-taskbar-panel-button-glass.simple-taskbar-panel-button-open .simple-taskbar-app-glass,
+#panel.simple-taskbar-panel .simple-taskbar-app-item.simple-taskbar-panel-button-glass.simple-taskbar-panel-button-open:hover .simple-taskbar-app-glass {
     background-gradient-direction: vertical;
     background-gradient-start: rgba(255, 255, 255, 0.28);
     background-gradient-end: rgba(255, 255, 255, 0.12);
@@ -689,6 +715,10 @@
     .simple-taskbar-app-item:hover .simple-taskbar-app-glass,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
     .simple-taskbar-app-item.focused .simple-taskbar-app-glass,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-app-item.simple-taskbar-panel-button-glass.simple-taskbar-panel-button-open .simple-taskbar-app-glass,
+#panel.simple-taskbar-panel.simple-taskbar-panel-vertical
+    .simple-taskbar-app-item.simple-taskbar-panel-button-glass.simple-taskbar-panel-button-open:hover .simple-taskbar-app-glass,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical
     .simple-taskbar-start:focus .simple-taskbar-start-hover,
 #panel.simple-taskbar-panel.simple-taskbar-panel-vertical

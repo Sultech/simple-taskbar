@@ -8,6 +8,11 @@
       <summary>Default panel: Corner radius of panel item highlights</summary>
       <description>Use -1 for the theme default or 0 through 16 for an explicit pixel value</description>
     </key>
+    <key name="default-panel-buttons-follow-app-highlight" type="b">
+      <default>false</default>
+      <summary>Default panel: Match panel item highlights to application icons</summary>
+      <description>Give the clock, Quick Settings and extension indicators the hover highlight style, size and corner radius of application icons</description>
+    </key>
     <key name="default-panel-clock-style" type="s">
       <choices>
         <choice value="gnome"/>

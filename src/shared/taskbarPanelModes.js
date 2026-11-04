@@ -75,6 +75,10 @@ export function panelButtonCornerRadiusKey(settings) {
     return defaultPanelTwinKey(settings, 'panel-button-corner-radius', 'default-panel-button-corner-radius');
 }
 
+export function panelButtonsFollowAppHighlightKey(settings) {
+    return defaultPanelTwinKey(settings, 'panel-buttons-follow-app-highlight', 'default-panel-buttons-follow-app-highlight');
+}
+
 export function windowsClockEnabled(settings) {
     return !settings.get_boolean('windows-xp-theme-enabled') &&
         settings.get_string(clockStyleKey(settings)) === 'windows';

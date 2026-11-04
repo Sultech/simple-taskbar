@@ -9,6 +9,7 @@ import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 import {appendStyle} from '../shared/styleUtils.js';
 import {panelEdgeSides, panelIsVertical} from './panelPosition.js';
 import {PanelButtonCornerRadiusController} from './panelButtonCornerRadiusController.js';
+import {PanelButtonHighlightLayer} from './panelButtonHighlightLayer.js';
 import {
     dynamicTaskbarEnabled,
     panelButtonPaddingKey,
@@ -59,7 +60,8 @@ export class PanelButtonPaddingController {
         getQuickSettingsIndicators,
         getPanelHeight,
         getPanelEdgeGap,
-        startButtonController
+        startButtonController,
+        getIconSize
     ) {
         this._settings = settings;
         this._panelActor = panelActor;
@@ -71,8 +73,11 @@ export class PanelButtonPaddingController {
         this._styledActors = new Map();
         this._hoverInsetClass = null;
         this._hoverInset = MINIMUM_HOVER_INSET;
+        this._highlightLayer = new PanelButtonHighlightLayer(settings, panelBoxes, getPanelHeight, getIconSize);
+        panelActor.insert_child_below(this._highlightLayer, null);
         this._cornerRadiusController = new PanelButtonCornerRadiusController(
-            settings, panelBoxes, () => panelButtonHoverInset(this._getPanelHeight())
+            settings, panelBoxes, () => panelButtonHoverInset(this._getPanelHeight()),
+            (actor, highlighted) => this._highlightLayer.setTracked(actor, highlighted)
         );
         this._appliedVertical = null;
         this._edgeBoxStyles = new Map();
@@ -158,6 +163,8 @@ export class PanelButtonPaddingController {
         }
         this._cornerRadiusController.destroy();
         this._cornerRadiusController = null;
+        this._highlightLayer.destroy();
+        this._highlightLayer = null;
         this._restoreAll();
         for (const [box, style] of this._edgeBoxStyles)
             box.set_style(style);

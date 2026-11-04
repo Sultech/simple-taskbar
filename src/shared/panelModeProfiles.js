@@ -176,6 +176,8 @@ const MODE_SETTING_KEYS = new Set([
     'super-e-file-manager-hotkey',
     'panel-button-corner-radius',
     'default-panel-button-corner-radius',
+    'panel-buttons-follow-app-highlight',
+    'default-panel-buttons-follow-app-highlight',
 ]);
 for (const key of DEFAULT_PANEL_WINDOW_SETTING_KEYS)
     MODE_SETTING_KEYS.add(defaultPanelWindowSettingKey(key));

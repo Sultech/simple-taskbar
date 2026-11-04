@@ -106,18 +106,17 @@ export function createSwitchRow(settings, {
     key,
     title,
     subtitle = '',
-}) {
-    const row = new Adw.SwitchRow({
-        title,
-        subtitle,
-        active: settings.get_boolean(key),
-    });
-    settings.bind(
-        key,
-        row,
-        'active',
-        Gio.SettingsBindFlags.DEFAULT
-    );
+    getKey = () => key,
+    keyChangedKey = null,
+}, connectSettings = null) {
+    const row = new Adw.SwitchRow({title, subtitle});
+    const bindKey = () => {
+        Gio.Settings.unbind(row, 'active');
+        settings.bind(getKey(), row, 'active', Gio.SettingsBindFlags.DEFAULT);
+    };
+    if (keyChangedKey)
+        connectSettings(settings, `changed::${keyChangedKey}`, bindKey);
+    bindKey();
     return row;
 }
 

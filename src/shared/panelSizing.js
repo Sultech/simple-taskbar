@@ -191,6 +191,15 @@ export function taskbarGlassCrossOffset(panelHeight, glassExtent, parityOffset) 
     return Math.max(0, Math.min(centred, panelHeight - glassExtent));
 }
 
+export function taskbarGlassCrossRect(settings, panelHeight, iconSize) {
+    const visualHeight = taskbarVisualPanelHeight(settings, panelHeight, iconSize,
+        settings.isDock && !settings.get_boolean('dock-panel-mode'));
+    const extent = taskbarGlassHeight(settings, visualHeight, false, iconSize);
+    const parityOffset = panelIsVertical(settings)
+        ? taskbarCrossAxisParityOffset(settings, visualHeight, iconSize) : 0;
+    return [taskbarGlassCrossOffset(visualHeight, extent, parityOffset), extent, visualHeight];
+}
+
 export function taskbarIconButtonWidth(iconSize) {
     const minimumIconWidth = iconSize % 2 === 0 ? 22 : 21;
     return Math.max(iconSize, minimumIconWidth) + 8;

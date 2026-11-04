@@ -258,6 +258,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 this._taskbarController.getHoverAnimationReserve(),
             getHoverAnimationOutwardReserve: () =>
                 this._taskbarController.getHoverAnimationOutwardReserve(),
+            getIconSize: () => this._iconSizer.iconSize,
             startButtonController: this._startButtonController,
             taskbarBin: this._taskbarBin,
             taskbarActor: this._taskbarController.actor,
