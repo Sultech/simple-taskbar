@@ -732,7 +732,7 @@ export class TaskbarController {
         ]) {
             this._settings.connectObject(
                 `changed::${key}`,
-                () => this.syncButtonStates(false),
+                () => this.syncButtonStates(false, true),
                 this._signalHolder
             );
         }
@@ -1394,14 +1394,14 @@ export class TaskbarController {
         this._shownInitially = false;
     }
 
-    syncButtonStates(animate = true) {
+    syncButtonStates(animate = true, force = false) {
         const focusedApp = this._tracker.focus_app;
         const focusedWindow = taskbarFocusWindow();
         for (const item of this._appButtons.values())
-            this._syncButtonState(item, focusedApp, focusedWindow, animate);
+            this._syncButtonState(item, focusedApp, focusedWindow, animate, force);
     }
 
-    _syncButtonState(item, focusedApp, focusedWindow, animate) {
+    _syncButtonState(item, focusedApp, focusedWindow, animate, force = false) {
         const app = item._taskbarApp;
         const window = item._taskbarWindow;
         const button = item._taskbarButton;
@@ -1438,6 +1438,12 @@ export class TaskbarController {
             windowCount,
             MAX_RUNNING_INDICATORS
         );
+        setStylePseudoClass(button, 'selected', focused);
+        const stateKey = `${focused}|${running}|${windowCount}|${focusHighlight}|${window ? window.get_title() : ''}`;
+        if (!force && item._taskbarStateKey === stateKey)
+            return;
+
+        item._taskbarStateKey = stateKey;
         this._syncClassicHighlight(item);
         this._updateIndicatorGeometry(item, animate);
         if (item._taskbarProgressBar.visible)
@@ -1448,8 +1454,6 @@ export class TaskbarController {
                 ? `${app.get_name()}, ${_('running')}`
                 : app.get_name();
         this._syncItemLabel(item);
-
-        setStylePseudoClass(button, 'selected', focused);
     }
 
     queueIconGeometryUpdate() {
