@@ -305,7 +305,8 @@ export class SecondaryPanelController {
                 ? () => settings.getConfiguredIconSize()
                 : () => settings.get_int('icon-size'),
             isAdaptive: isDock
-                ? () => !settings.get_boolean('windows-xp-theme-enabled')
+                ? () => !this._taskbarController.isRebuilding() &&
+                    !settings.get_boolean('windows-xp-theme-enabled')
                 : () => this._iconSizeIsAdaptive(),
             prepareEveryChange: isDock,
             beforeApply: nextIconSize => this._beforeIconSizeApply(nextIconSize),
