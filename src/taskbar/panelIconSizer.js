@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {refreshPanelBoxSizes} from '../panel/panelItems.js';
 import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
 import {
     adaptiveTaskbarIconSize,
@@ -99,6 +98,8 @@ export class PanelIconSizer {
             iconSize: this.iconSize,
         });
         this._afterApply(this.iconSize);
-        refreshPanelBoxSizes(this._boxes);
+        this._startButtonController.panelActor.queue_relayout();
+        for (const box of this._boxes)
+            box.queue_relayout();
     }
 }
