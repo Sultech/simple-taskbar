@@ -356,11 +356,15 @@ function restorePanelAxisSettings(settings, mode, axis) {
 
     const values = settings.get_value(profile.settings).deepUnpack();
     const legacyDockProfile = mode === PANEL_MODE_DOCK && !values[DOCK_AXIS_PROFILE_VERSION_KEY];
+    const missingKeys = new Set();
     for (const key of panelAxisSettingKeys(settings, mode)) {
         if (legacyDockProfile && !values[key])
             continue;
+        if (!values[key])
+            missingKeys.add(key);
         restoreSettingValue(settings, key, values[key]);
     }
+    applyInitialPanelAxisSettings(settings, mode, axis, missingKeys);
     return true;
 }
 
@@ -374,26 +378,33 @@ function syncActivitiesPanelItemOrder(settings, vertical) {
     setStringArray(settings, 'panel-item-order', order);
 }
 
-function applyInitialPanelAxisSettings(settings, mode, axis) {
+function applyInitialPanelAxisSettings(settings, mode, axis, keys = null) {
     if (mode !== PANEL_MODE_TASKBAR && mode !== PANEL_MODE_DOCK)
         return;
 
     const vertical = axis === PANEL_AXIS_VERTICAL;
-    setString(settings, 'app-alignment', vertical ? 'left' : 'center');
-    setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
-    setString(
-        settings,
-        'running-indicator-position',
-        vertical ? 'left' : 'bottom'
-    );
-    setInteger(settings, 'start-button-padding', 2);
-    if (mode === PANEL_MODE_TASKBAR) {
+    const applies = key => !keys || keys.has(key);
+    if (applies('app-alignment'))
+        setString(settings, 'app-alignment', vertical ? 'left' : 'center');
+    if (applies('icon-spacing'))
+        setInteger(settings, 'icon-spacing', DEFAULT_TASKBAR_ICON_SPACING);
+    if (applies('running-indicator-position')) {
+        setString(
+            settings,
+            'running-indicator-position',
+            vertical ? 'left' : 'bottom'
+        );
+    }
+    if (applies('start-button-padding'))
+        setInteger(settings, 'start-button-padding', 2);
+    if (mode === PANEL_MODE_TASKBAR && applies('activities-button-position')) {
         setString(
             settings,
             'activities-button-position',
             vertical ? 'right' : 'left'
         );
-        syncActivitiesPanelItemOrder(settings, vertical);
+        if (applies('panel-item-order'))
+            syncActivitiesPanelItemOrder(settings, vertical);
     }
 }
 
