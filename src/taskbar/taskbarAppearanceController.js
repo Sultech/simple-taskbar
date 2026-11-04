@@ -536,10 +536,11 @@ export class TaskbarAppearanceController {
         }
 
         const iconWidth = taskbarIconButtonWidth(iconSize);
-        const actualLabelWidth = label
+        const labelShown = hasLabel && showLabels;
+        const actualLabelWidth = labelShown && label
             ? this.labelWidthForButton(window, isCombined, label)
             : labelWidth;
-        const width = hasLabel && showLabels && actualLabelWidth > 0
+        const width = labelShown && actualLabelWidth > 0
             ? iconWidth + APP_LABEL_SPACING + actualLabelWidth
             : iconWidth;
         if (panelIsVertical(this._settings))
