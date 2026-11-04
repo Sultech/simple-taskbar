@@ -578,22 +578,20 @@ export class WindowPreviewController {
         if (!outward)
             return;
 
-        if (dynamic || this._settings.isDock) {
-            const source = dynamic ? item : item._taskbarButton;
-            const [x, y] = source.get_transformed_position();
-            const [width, height] = source.get_transformed_size();
-            this._previewAnchor = new St.Widget({
-                x,
-                y,
-                width,
-                height,
-                opacity: 0,
-                reactive: false,
-            });
-            Main.uiGroup.add_child(this._previewAnchor);
-            this._previewAnchor.allocate_preferred_size(x, y);
-            menu._boxPointer.setPosition(this._previewAnchor, 0.5);
-        }
+        const source = dynamic ? item : item._taskbarButton;
+        const [x, y] = source.get_transformed_position();
+        const [width, height] = source.get_transformed_size();
+        this._previewAnchor = new St.Widget({
+            x,
+            y,
+            width,
+            height,
+            opacity: 0,
+            reactive: false,
+        });
+        Main.uiGroup.add_child(this._previewAnchor);
+        this._previewAnchor.allocate_preferred_size(x, y);
+        menu._boxPointer.setPosition(this._previewAnchor, 0.5);
 
         const position = panelPosition(this._settings);
         const property = position === 'top' || position === 'bottom'
