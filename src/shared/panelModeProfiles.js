@@ -18,16 +18,19 @@ import {
     applyWindowsXpThemeSettings,
 } from './windowsXpTheme.js';
 import {applyWindows10ThemeDefaults} from './windows10Theme.js';
+import {applyMacosDockDefaults} from './macosDockTheme.js';
 
 export const PANEL_MODE_TASKBAR = 'taskbar';
 export const PANEL_MODE_DEFAULT = 'default-panel';
 export const PANEL_MODE_DOCK = 'dock';
+export const PANEL_MODE_MACOS_DOCK = 'macos-dock';
 export const PANEL_MODE_WINDOWS_XP = 'windows-xp';
 export const PANEL_MODE_WINDOWS_10 = 'windows-10';
 
-const WINDOWS_THEME_MODES = new Set([
+const THEME_MODES = new Set([
     PANEL_MODE_WINDOWS_XP,
     PANEL_MODE_WINDOWS_10,
+    PANEL_MODE_MACOS_DOCK,
 ]);
 
 export function isDefaultPanelWithoutDock(settings) {
@@ -62,6 +65,10 @@ const PROFILE_KEYS = new Map([
     [PANEL_MODE_WINDOWS_10, {
         settings: 'windows-10-mode-settings',
         saved: 'windows-10-mode-settings-saved',
+    }],
+    [PANEL_MODE_MACOS_DOCK, {
+        settings: 'macos-dock-mode-settings',
+        saved: 'macos-dock-mode-settings-saved',
     }],
 ]);
 
@@ -100,6 +107,7 @@ const MODE_SETTING_KEYS = new Set([
     'default-panel-show-running-windows',
     'dock-item-order',
     'dock-mode',
+    'dock-layout-settings',
     'dock-mode-initialized',
     'blur-my-shell-dock-mode',
     'dock-autohide-enabled',
@@ -151,6 +159,7 @@ const MODE_SETTING_KEYS = new Set([
     'panel-profile-transition',
     'windows-xp-theme-enabled',
     'windows-10-theme-enabled',
+    'macos-dock-theme-enabled',
     'start-menu-displaced-overlay-key',
     'start-menu-pinned-apps',
     'clock-style',
@@ -198,8 +207,19 @@ export const PANEL_PROFILE_STATE_KEYS = Object.freeze([
     'panel-axis-profiles-initialized',
     'dock-axis-profiles-initialized',
     'dock-mode-initialized',
+    'dock-layout-settings',
     ...[...PROFILE_KEYS.values(), ...AXIS_PROFILE_KEYS.values()]
         .flatMap(profile => [profile.settings, profile.saved]),
+]);
+
+const DOCK_LAYOUT_SETTING_KEYS = new Set([
+    ...[...MODE_SETTING_KEYS].filter(key =>
+        key.startsWith('dock-') && key !== 'dock-mode' &&
+        !PANEL_PROFILE_STATE_KEYS.includes(key)),
+    'active-dock-axis',
+    'dock-axis-profiles-initialized',
+    'dock-mode-initialized',
+    'blur-my-shell-dock-mode',
 ]);
 
 const DOCK_AXIS_SHARED_SETTING_KEYS = new Set([
@@ -262,7 +282,7 @@ function axisProfile(mode, axis) {
 }
 
 function axisProfilesEnabled(settings, mode) {
-    return !WINDOWS_THEME_MODES.has(mode) &&
+    return !THEME_MODES.has(mode) &&
         settings.get_boolean(PANEL_AXIS_PROFILE_ENABLED_KEYS[mode]);
 }
 
@@ -271,21 +291,32 @@ function getRequestedPanelMode(settings) {
         return PANEL_MODE_WINDOWS_XP;
     if (settings.get_boolean('windows-10-theme-enabled'))
         return PANEL_MODE_WINDOWS_10;
+    if (settings.get_boolean('macos-dock-theme-enabled'))
+        return PANEL_MODE_MACOS_DOCK;
     if (settings.get_boolean('default-gnome-panel'))
         return PANEL_MODE_DEFAULT;
     return PANEL_MODE_TASKBAR;
 }
 
-function savePanelModeSettings(settings, mode) {
-    const profile = PROFILE_KEYS.get(mode);
+function panelModeSettingKeys(settings, mode) {
+    return settings.settings_schema.list_keys().filter(key =>
+        !MODE_SETTING_KEYS.has(key) ||
+        mode === PANEL_MODE_MACOS_DOCK && DOCK_LAYOUT_SETTING_KEYS.has(key));
+}
+
+function savedSettingValues(settings, keys) {
     const values = {};
-    for (const key of settings.settings_schema.list_keys()) {
-        if (MODE_SETTING_KEYS.has(key))
-            continue;
+    for (const key of keys) {
         const value = settings.get_user_value(key);
         if (value)
             values[key] = value;
     }
+    return values;
+}
+
+function savePanelModeSettings(settings, mode) {
+    const profile = PROFILE_KEYS.get(mode);
+    const values = savedSettingValues(settings, panelModeSettingKeys(settings, mode));
     settings.set_value(profile.settings, new GLib.Variant('a{sv}', values));
     settings.set_boolean(profile.saved, true);
 }
@@ -303,11 +334,8 @@ function restorePanelModeSettings(settings, mode) {
         return false;
 
     const values = settings.get_value(profile.settings).deepUnpack();
-    for (const key of settings.settings_schema.list_keys()) {
-        if (MODE_SETTING_KEYS.has(key))
-            continue;
+    for (const key of panelModeSettingKeys(settings, mode))
         restoreSettingValue(settings, key, values[key]);
-    }
     if (mode === PANEL_MODE_TASKBAR && !values['dock-min-icon-size'] && axisProfilesEnabled(settings, mode)) {
         const profile = axisProfile(mode, domainAxis(settings, PANEL_AXIS_DOMAIN));
         const axisValues = settings.get_value(profile.settings).deepUnpack();
@@ -316,11 +344,20 @@ function restorePanelModeSettings(settings, mode) {
     return true;
 }
 
-function resetPanelModeSettings(settings) {
-    for (const key of settings.settings_schema.list_keys()) {
-        if (!MODE_SETTING_KEYS.has(key))
-            settings.reset(key);
-    }
+function resetPanelModeSettings(settings, mode) {
+    for (const key of panelModeSettingKeys(settings, mode))
+        settings.reset(key);
+}
+
+function saveDockLayout(settings) {
+    const values = savedSettingValues(settings, DOCK_LAYOUT_SETTING_KEYS);
+    settings.set_value('dock-layout-settings', new GLib.Variant('a{sv}', values));
+}
+
+function restoreDockLayout(settings) {
+    const values = settings.get_value('dock-layout-settings').deepUnpack();
+    for (const key of DOCK_LAYOUT_SETTING_KEYS)
+        restoreSettingValue(settings, key, values[key]);
 }
 
 function panelAxisSettingKeys(settings, mode) {
@@ -454,6 +491,9 @@ function applyDefaultPanelSettings(settings) {
 function applyInitialPanelModeSettings(settings, mode) {
     if (mode === PANEL_MODE_DEFAULT) {
         applyDefaultPanelSettings(settings);
+    } else if (mode === PANEL_MODE_MACOS_DOCK) {
+        applyDefaultPanelSettings(settings);
+        applyMacosDockDefaults(settings);
     } else if (mode === PANEL_MODE_WINDOWS_10) {
         applyWindows10ThemeDefaults(settings);
     } else if (mode === PANEL_MODE_WINDOWS_XP) {
@@ -466,7 +506,7 @@ function applyInitialPanelModeSettings(settings, mode) {
 function setModeFlags(settings, mode) {
     settings.set_boolean(
         'default-gnome-panel',
-        mode === PANEL_MODE_DEFAULT
+        mode === PANEL_MODE_DEFAULT || mode === PANEL_MODE_MACOS_DOCK
     );
     settings.set_boolean(
         'windows-xp-theme-enabled',
@@ -476,7 +516,10 @@ function setModeFlags(settings, mode) {
         'windows-10-theme-enabled',
         mode === PANEL_MODE_WINDOWS_10
     );
-    if (mode !== PANEL_MODE_DEFAULT)
+    settings.set_boolean('macos-dock-theme-enabled', mode === PANEL_MODE_MACOS_DOCK);
+    if (mode === PANEL_MODE_MACOS_DOCK)
+        settings.set_boolean('dock-mode', true);
+    else if (mode !== PANEL_MODE_DEFAULT)
         settings.set_boolean('dock-mode', false);
 }
 
@@ -497,13 +540,19 @@ export function setPanelMode(settings, mode) {
             );
         }
         savePanelModeSettings(settings, currentMode);
+        if (mode === PANEL_MODE_MACOS_DOCK)
+            saveDockLayout(settings);
+        else if (currentMode === PANEL_MODE_MACOS_DOCK)
+            restoreDockLayout(settings);
         setModeFlags(settings, mode);
         if (!restorePanelModeSettings(settings, mode)) {
-            resetPanelModeSettings(settings);
+            resetPanelModeSettings(settings, mode);
             applyInitialPanelModeSettings(settings, mode);
         }
         settings.set_string('active-panel-mode', mode);
         activateRestoredAxis(settings, PANEL_AXIS_DOMAIN, mode);
+        if (mode === PANEL_MODE_MACOS_DOCK)
+            activateRestoredAxis(settings, DOCK_AXIS_DOMAIN, mode);
     } else {
         setModeFlags(settings, mode);
     }
@@ -556,7 +605,8 @@ export function setDockPosition(settings, position) {
     applyAxisPositionChange(
         settings,
         DOCK_AXIS_DOMAIN,
-        PANEL_MODE_DOCK,
+        settings.get_boolean('macos-dock-theme-enabled')
+            ? PANEL_MODE_MACOS_DOCK : PANEL_MODE_DOCK,
         position
     );
 }
@@ -592,7 +642,12 @@ export function initializeDockAxisProfiles(settings) {
     if (settings.get_boolean('dock-axis-profiles-initialized'))
         return;
 
-    activateRestoredAxis(settings, DOCK_AXIS_DOMAIN, PANEL_MODE_DOCK);
+    activateRestoredAxis(
+        settings,
+        DOCK_AXIS_DOMAIN,
+        settings.get_boolean('macos-dock-theme-enabled')
+            ? PANEL_MODE_MACOS_DOCK : PANEL_MODE_DOCK
+    );
 }
 
 export function synchronizePanelPosition(settings) {

@@ -138,6 +138,18 @@ export function drawDockMode(cr, width, height, palette) {
     drawDockEdge('bottom', () => 'top', () => ({short: true, floating: true}))(cr, width, height, palette);
 }
 
+export function drawMacosDockMode(cr, width, height, palette) {
+    drawScreen(cr, width, height, palette, (screen, foreground) => {
+        fillRectangle(cr, edgeRectangle(screen, 'top', PANEL_THICKNESS), foreground, 0.3);
+        const bar = barRectangle(screen, 'bottom', {short: true, floating: true});
+        fillRectangle(cr, bar, [1, 1, 1], 1, BAR_THICKNESS / 2);
+        roundedRectangle(cr, bar.x, bar.y, bar.width, bar.height, BAR_THICKNESS / 2);
+        setColor(cr, foreground, 0.3);
+        cr.setLineWidth(0.8);
+        cr.stroke();
+    });
+}
+
 export function drawDefaultPanelMode(cr, width, height, palette) {
     drawScreen(cr, width, height, palette, (screen, _foreground, accent) => {
         fillRectangle(cr, edgeRectangle(screen, 'top', PANEL_THICKNESS + 1), accent);
