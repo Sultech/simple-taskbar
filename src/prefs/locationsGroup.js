@@ -80,6 +80,14 @@ function createLocationSeparatorRow(settings) {
     });
 }
 
+function createMinimizedWindowsRow(settings, key) {
+    return createSwitchRow(settings, {
+        key,
+        title: _('Show Minimized Window Previews'),
+        subtitle: _('Show clickable window thumbnails before folders, drives, and Trash'),
+    });
+}
+
 export function addLocationsGroup({
     page,
     dockPage,
@@ -97,6 +105,9 @@ export function addLocationsGroup({
         title: _('Show Locations'),
         subtitle: _('Display selected locations after taskbar applications'),
     });
+    const taskbarMinimizedWindowsRow = createMinimizedWindowsRow(
+        settings, 'taskbar-show-minimized-windows'
+    );
     const taskbarTrashRow = createSwitchRow(settings, {
         key: 'taskbar-show-trash',
         title: _('Show Trash'),
@@ -110,6 +121,7 @@ export function addLocationsGroup({
     const taskbarSeparatorRow = createLocationSeparatorRow(settings);
     const taskbarCommonFoldersRow = createCommonFoldersRow(settings);
     taskbarLocationsGroup.add(taskbarLocationsRow);
+    taskbarLocationsGroup.add(taskbarMinimizedWindowsRow);
     taskbarLocationsGroup.add(taskbarSeparatorRow);
     taskbarLocationsGroup.add(taskbarTrashRow);
     taskbarLocationsGroup.add(taskbarMountsRow);
@@ -127,6 +139,9 @@ export function addLocationsGroup({
         title: _('Show Locations'),
         subtitle: _('Display selected locations after Dock applications'),
     });
+    const dockMinimizedWindowsRow = createMinimizedWindowsRow(
+        settings, 'dock-show-minimized-windows'
+    );
     const dockTrashRow = createSwitchRow(settings, {
         key: 'dock-show-trash',
         title: _('Show Trash'),
@@ -140,6 +155,7 @@ export function addLocationsGroup({
     const dockSeparatorRow = createLocationSeparatorRow(settings);
     const dockCommonFoldersRow = createCommonFoldersRow(settings);
     dockLocationsGroup.add(dockLocationsRow);
+    dockLocationsGroup.add(dockMinimizedWindowsRow);
     dockLocationsGroup.add(dockSeparatorRow);
     dockLocationsGroup.add(dockTrashRow);
     dockLocationsGroup.add(dockMountsRow);
@@ -161,9 +177,9 @@ export function addLocationsGroup({
         const taskbarEnabled = taskbarLocationsGroup.sensitive &&
             taskbarLocationsRow.active;
         const dockEnabled = dockLocationsGroup.sensitive && dockLocationsRow.active;
-        for (const row of [taskbarSeparatorRow, taskbarTrashRow, taskbarMountsRow, taskbarCommonFoldersRow])
+        for (const row of [taskbarMinimizedWindowsRow, taskbarSeparatorRow, taskbarTrashRow, taskbarMountsRow, taskbarCommonFoldersRow])
             row.sensitive = taskbarEnabled;
-        for (const row of [dockSeparatorRow, dockTrashRow, dockMountsRow, dockCommonFoldersRow])
+        for (const row of [dockMinimizedWindowsRow, dockSeparatorRow, dockTrashRow, dockMountsRow, dockCommonFoldersRow])
             row.sensitive = dockEnabled;
         const driveOptionsEnabled =
             (taskbarEnabled && taskbarMountsRow.active) ||

@@ -375,7 +375,8 @@ export class TaskbarAppItemFactory {
 
     sync(item) {
         const app = item._taskbarApp;
-        item._taskbarIcon.gicon = app.icon;
+        if (!app._simpleTaskbarMinimizedWindow)
+            item._taskbarIcon.gicon = app.icon;
         item._taskbarLabel.text = app.get_name();
         item._taskbarButton.accessible_name = app.get_name();
     }
