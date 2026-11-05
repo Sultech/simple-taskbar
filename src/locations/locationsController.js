@@ -7,9 +7,9 @@ import GLib from 'gi://GLib';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
-    TaskbarLocation,
+    LocationApp,
     TRASH_URI,
-} from './taskbarLocation.js';
+} from './locationApp.js';
 
 const COMMON_FOLDER_DEFINITIONS = [
     {
@@ -77,7 +77,7 @@ const COMMON_FOLDER_DEFINITIONS = [
     },
 ];
 
-export class TaskbarLocationsController {
+export class LocationsController {
     constructor({settings, scope, onChanged}) {
         this._settings = settings;
         this._onChanged = onChanged;
@@ -239,7 +239,7 @@ export class TaskbarLocationsController {
                     ? GLib.get_home_dir()
                     : GLib.get_user_special_dir(folder.directory) ||
                         `${GLib.get_home_dir()}/${folder.fallback}`;
-                app = new TaskbarLocation({
+                app = new LocationApp({
                     id,
                     name: _(folder.name),
                     type: 'folder',
@@ -386,7 +386,7 @@ export class TaskbarLocationsController {
             return;
 
         const identifier = this._getVolumeIdentifier(volume);
-        const app = new TaskbarLocation({
+        const app = new LocationApp({
             id: `location:volume:${identifier}`,
             name: volume.get_name(),
             type: 'volume',
@@ -403,7 +403,7 @@ export class TaskbarLocationsController {
     _ensureTrashApp() {
         if (this._trashApp)
             return;
-        this._trashApp = new TaskbarLocation({
+        this._trashApp = new LocationApp({
             id: `location:${TRASH_URI}`,
             name: _('Trash'),
             type: 'trash',

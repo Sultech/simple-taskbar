@@ -6,12 +6,12 @@ import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension
 
 import {panelGeometry} from './panelGeometry.js';
 import {FloatingPanelLayout} from './floatingPanelLayout.js';
-import {panelIsVertical} from './panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {floatingPanelEdgeGap} from './floatingPanelGeometry.js';
-import {dynamicTaskbarEnabled, floatingTaskbarEnabled, taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
+import {dynamicTaskbarEnabled, floatingTaskbarEnabled, taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {removePanelBlurRadiusStyle} from '../integration/blurMyShellRuntime.js';
 
-export function syncTaskbarGeometryController(controller, settings, autoHideController, createController) {
+export function syncPanelGeometryController(controller, settings, autoHideController, createController) {
     const geometryEnabled = taskbarGeometryEnabled(settings);
     if (geometryEnabled === Boolean(controller))
         return controller;
@@ -29,7 +29,7 @@ export function syncTaskbarGeometryController(controller, settings, autoHideCont
     return controller;
 }
 
-export class TaskbarGeometryController {
+export class PanelGeometryController {
     constructor({settings, getMonitor, panelBox, panel, boxes, getPanelHeight,
         onPosition, onContentChanged, getHoverReserve}) {
         this._settings = settings;

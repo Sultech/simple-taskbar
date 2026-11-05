@@ -11,7 +11,7 @@ import {
     START_BUTTON_LOCATION_KEY,
     startButtonAlignmentKey,
     startButtonInPanel,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 import {
     createPreferencesDialogButton,
     createPreferencesDialogContent,

@@ -4,7 +4,7 @@
 import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 
-export class TaskbarWidthUpdater {
+export class PanelLayoutUpdater {
     constructor(updateWidth) {
         this._updateWidth = updateWidth;
         this._updating = false;

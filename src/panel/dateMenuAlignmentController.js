@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {panelIsVertical} from './panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 export class DateMenuAlignmentController {
     constructor(settings, dateMenu, panelHeight) {

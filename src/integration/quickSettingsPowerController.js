@@ -2,7 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {startMenuAvailable} from '../shared/startButtonLocation.js';
-import {START_BUTTON_LOCATION_KEY} from '../shared/taskbarPanelModes.js';
+import {START_BUTTON_LOCATION_KEY} from '../shared/panelModeSettings.js';
 
 export class QuickSettingsPowerController {
     constructor(settings, quickSettings) {

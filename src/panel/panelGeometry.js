@@ -4,7 +4,7 @@
 import {
     panelIsMinimumEdge,
     panelIsVertical,
-} from './panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 
 export function panelGeometry(
     settings,

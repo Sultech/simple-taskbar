@@ -3,7 +3,7 @@
 
 import St from 'gi://St';
 
-import {panelButtonCornerRadiusKey, panelButtonsFollowAppHighlightKey} from '../shared/taskbarPanelModes.js';
+import {panelButtonCornerRadiusKey, panelButtonsFollowAppHighlightKey} from '../shared/panelModeSettings.js';
 
 const CORNER_RADIUS_CLASS = 'simple-taskbar-panel-button-radius';
 const THEME_CORNER_RADIUS = -1;

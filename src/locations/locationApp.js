@@ -47,12 +47,12 @@ function isCancelled(error) {
     return error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED);
 }
 
-export const TaskbarLocation = GObject.registerClass({
+export const LocationApp = GObject.registerClass({
     Signals: {
         changed: {},
         'mount-changed': {},
     },
-}, class TaskbarLocation extends GObject.Object {
+}, class LocationApp extends GObject.Object {
     _init({id, name, type, volume = null, location = null, icon = null}) {
         super._init();
         this._id = id;

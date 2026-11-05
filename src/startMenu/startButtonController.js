@@ -15,7 +15,8 @@ import {StartMenuKeybindings} from './startMenuKeybindings.js';
 import {StartMenuController} from './startMenuController.js';
 import {StartButtonContextMenuController} from './startButtonContextMenuController.js';
 import {WindowsXpStartButton} from './windowsXpStartButton.js';
-import {clickCameFromKeyboard, isPrimaryPressOrTouch, openPanelPopupMenu} from '../popupMenuUtils.js';
+import {clickCameFromKeyboard, isPrimaryPressOrTouch} from '../inputUtils.js';
+import {openPanelPopupMenu} from '../popupMenuUtils.js';
 import {TaskbarItemContainer} from '../taskbar/taskbarItemContainer.js';
 import {
     BLUR_MY_SHELL_UUID,
@@ -23,11 +24,8 @@ import {
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
 } from '../shared/blurMyShellUtils.js';
-import {
-    panelArrowSide,
-    panelIsVertical,
-    syncMenuArrowSide,
-} from '../panel/panelPosition.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {
     taskbarGlassHeight,
     taskbarHighlightLength,
@@ -73,7 +71,7 @@ import {
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
     panelStartButtonPosition,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 
 export class StartButtonController {
     constructor({

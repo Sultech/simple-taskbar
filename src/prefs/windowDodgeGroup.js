@@ -10,7 +10,7 @@ import {
     addComboRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
-import {createIntellihideOptionsButton} from './autoHideDialog.js';
+import {createIntellihideOptionsButton} from './intellihideDialog.js';
 
 export function windowDodgeModeChoices() {
     return [

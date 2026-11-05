@@ -8,7 +8,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {openSettingsPanel} from '../shared/settingsPanel.js';
+import {openSettingsPanel} from '../shared/gnomeSettingsPanel.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 
 const CONTEXT_MENU_SETTING_KEYS = Object.freeze([

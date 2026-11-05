@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
-import {panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
+import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/panelModeSettings.js';
+import {panelApplicationsVisible} from '../shared/panelApplicationVisibility.js';
 import {startButtonVisible} from '../shared/startButtonLocation.js';
 
 export function refreshPanelBoxSizes(boxes) {

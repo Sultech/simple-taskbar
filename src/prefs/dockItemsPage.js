@@ -9,9 +9,9 @@ import {
     DEFAULT_DOCK_ITEM_ORDER,
     normalizeDockItemOrder,
 } from '../shared/panelItemOrder.js';
-import {axisPanelPositions} from './panelAxis.js';
+import {axisPanelPositions} from './panelPositionChoices.js';
 import {positionIsVertical} from '../shared/panelPositionUtils.js';
-import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from '../shared/taskbarPanelModes.js';
+import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from '../shared/panelModeSettings.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
 import {
     createStartButtonOptionsButton,

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {synchronizePanelMode} from './shared/panelModeProfiles.js';
+import {synchronizePanelMode} from '../shared/panelModeProfiles.js';
 import {
     applyWindows10ThemeSettings,
     WINDOWS_10_LOCKED_SETTING_KEYS,
-} from './shared/windows10Theme.js';
+} from '../shared/windows10Theme.js';
 
-export class Windows10ModeController {
+export class Windows10ThemeController {
     constructor(settings) {
         this._settings = settings;
     }

@@ -10,7 +10,7 @@ import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension
 import {
     panelIsVertical,
     panelPosition,
-} from './panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 
 export class VerticalPanelCompatibilityController {
     constructor(settings) {

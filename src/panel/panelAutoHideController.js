@@ -14,11 +14,11 @@ import {
     panelIsMinimumEdge,
     panelIsVertical,
     panelPosition,
-} from './panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 import {
     destroyPressureBarrier,
     pointerButtonIsPressed,
-} from '../pointerUtils.js';
+} from '../inputUtils.js';
 import {
     AUTO_HIDE_SETTINGS,
     autoHideHideDelay,
@@ -26,7 +26,7 @@ import {
     autoHideRevealsInOverview,
     autoHideUsesPressure,
 } from '../shared/autoHideSettings.js';
-import {hasWindowCoveringMonitor} from '../windowVisibility.js';
+import {hasWindowCoveringMonitor} from './panelWindowQueries.js';
 
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;

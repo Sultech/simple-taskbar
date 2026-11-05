@@ -9,11 +9,11 @@ import {
     allocateAdaptivePanel,
     allocateDynamicPanel,
     allocateExpandedSidePanel,
-} from '../taskbar/taskbarLayout.js';
-import {allocatePanelButtonHighlightLayers} from '../panel/panelButtonHighlightLayer.js';
+} from './panelLayout.js';
+import {allocatePanelButtonHighlightLayers} from './panelButtonHighlightLayer.js';
 
-export const SecondaryPanelActor = GObject.registerClass(
-class SecondaryPanelActor extends St.Widget {
+export const ExtensionPanelActor = GObject.registerClass(
+class ExtensionPanelActor extends St.Widget {
     _init() {
         super._init({
             name: 'panel',

@@ -14,7 +14,7 @@ export class PanelManagerBase {
         appSystem,
         tracker,
         favorites,
-        notificationBadgeModel,
+        overlayModel,
         spreadAppWindows,
         openPreferences,
     }) {
@@ -23,7 +23,7 @@ export class PanelManagerBase {
         this._appSystem = appSystem;
         this._tracker = tracker;
         this._favorites = favorites;
-        this._notificationBadgeModel = notificationBadgeModel;
+        this._overlayModel = overlayModel;
         this._spreadAppWindows = spreadAppWindows;
         this._openPreferences = openPreferences;
         this._signalHolder = new TransientSignalHolder();
@@ -49,7 +49,7 @@ export class PanelManagerBase {
         this._appSystem = null;
         this._tracker = null;
         this._favorites = null;
-        this._notificationBadgeModel = null;
+        this._overlayModel = null;
         this._spreadAppWindows = null;
         this._openPreferences = null;
         this._panels = null;

@@ -14,19 +14,15 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {
-    panelArrowSide,
-    panelIsVertical,
-    panelPosition,
-    syncMenuArrowSide,
-} from '../panel/panelPosition.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
+import {panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
 import {
     closePopupMenu,
     openPanelPopupMenu,
     openPopupMenu,
     togglePopupMenu,
 } from '../popupMenuUtils.js';
-import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 

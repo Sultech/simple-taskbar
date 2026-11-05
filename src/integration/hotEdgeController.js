@@ -14,7 +14,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {destroyPressureBarrier} from './pointerUtils.js';
+import {destroyPressureBarrier} from '../inputUtils.js';
 
 const PRESSURE_TIMEOUT = 1000;
 const FALLBACK_TIMEOUT = 250;

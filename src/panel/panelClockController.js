@@ -7,8 +7,8 @@ import GLib from 'gi://GLib';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 
-import {panelIsVertical} from './panelPosition.js';
-import {windowsClockEnabled} from '../shared/taskbarPanelModes.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {windowsClockEnabled} from '../shared/panelModeSettings.js';
 
 const DIGITS = '0123456789';
 const CLOCK_LAYOUT_CLASS = 'simple-taskbar-clock-layout';

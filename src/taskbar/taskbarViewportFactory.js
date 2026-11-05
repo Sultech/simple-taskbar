@@ -4,7 +4,7 @@
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
-import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 
 import {
     ApplicationOverflowController,

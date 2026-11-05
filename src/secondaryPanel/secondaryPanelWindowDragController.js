@@ -11,7 +11,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelIsVertical} from '../panel/panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 

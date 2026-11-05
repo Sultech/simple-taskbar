@@ -13,7 +13,7 @@ import {
 } from '../shared/classicHighlightSettings.js';
 import {taskbarGlassCrossRect} from '../shared/panelSizing.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
-import {panelIsVertical} from './panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 const HOVER_PSEUDO_CLASSES = ['hover', 'focus'];
 const OPEN_PSEUDO_CLASSES = ['active', 'checked'];

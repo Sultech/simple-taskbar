@@ -13,7 +13,7 @@ import {
     createPreferencesDialogContent,
     createSwitchRow,
 } from './preferencesWidgets.js';
-import {clockStyleKey} from '../shared/taskbarPanelModes.js';
+import {clockStyleKey} from '../shared/panelModeSettings.js';
 
 export function createClockOptionsButton(settings) {
     return createPreferencesDialogButton(

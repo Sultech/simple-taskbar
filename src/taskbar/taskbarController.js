@@ -12,7 +12,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 import {taskbarAppLabelsVisible} from '../shared/panelSizing.js';
 
 import {TaskbarDragController} from './taskbarDragController.js';
@@ -41,8 +41,8 @@ import {
     TaskbarIconHoverAnimationController,
 } from './taskbarIconHoverAnimationController.js';
 import {
-    TaskbarLocationsController,
-} from './taskbarLocationsController.js';
+    LocationsController,
+} from '../locations/locationsController.js';
 import {
     animateTaskbarIconClick,
 } from './taskbarClickAnimation.js';
@@ -73,8 +73,8 @@ import {
     syncSeparatorGeometry,
     TASKBAR_SEPARATOR_EXTENT,
 } from './taskbarSeparator.js';
-import {panelIsVertical} from '../panel/panelPosition.js';
-import {modifierClickActionKey} from '../pointerUtils.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {modifierClickActionKey} from '../inputUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 const STARTUP_SETTLE_DELAY = 750;
@@ -110,7 +110,7 @@ export class TaskbarController {
         appSystem,
         tracker,
         favorites,
-        notificationBadgeModel,
+        overlayModel,
         iconSize,
         panelHeight,
         getInterestingWindows,
@@ -138,7 +138,7 @@ export class TaskbarController {
         this._appSystem = appSystem;
         this._tracker = tracker;
         this._favorites = favorites;
-        this._notificationBadgeModel = notificationBadgeModel;
+        this._overlayModel = overlayModel;
         this._iconSize = iconSize;
         this._panelHeight = panelHeight;
         this._getInterestingWindows = getInterestingWindows;
@@ -184,7 +184,7 @@ export class TaskbarController {
         this._appLabelWidth = APP_LABEL_WIDTH;
         this._startupSettling = Main.layoutManager._startingUp;
         this._startupSettleId = 0;
-        this._locationController = new TaskbarLocationsController({
+        this._locationController = new LocationsController({
             settings: this._settings,
             scope: locationScope,
             onChanged: () => this._queueRedisplay(),
@@ -546,7 +546,7 @@ export class TaskbarController {
         this._favorites.connectObject('changed', () => {
             this._queueRedisplay();
         }, this._signalHolder);
-        this._notificationBadgeModel.connectObject(
+        this._overlayModel.connectObject(
             'changed', () => {
                 this._syncNotificationBadges();
                 this._syncProgressBars();
@@ -824,7 +824,7 @@ export class TaskbarController {
         this._appSystem = null;
         this._tracker = null;
         this._favorites = null;
-        this._notificationBadgeModel = null;
+        this._overlayModel = null;
         this._getInterestingWindows = null;
         this._onAppClicked = null;
         this._onWindowClicked = null;
@@ -2123,7 +2123,7 @@ export class TaskbarController {
             return;
 
         for (const [appId, target] of this._launcherOverlayTargets()) {
-            const count = this._notificationBadgeModel.getCount(appId);
+            const count = this._overlayModel.getCount(appId);
             if (count <= 0)
                 continue;
 
@@ -2142,7 +2142,7 @@ export class TaskbarController {
             return;
 
         for (const [appId, target] of this._launcherOverlayTargets()) {
-            const progress = this._notificationBadgeModel.getProgress(appId);
+            const progress = this._overlayModel.getProgress(appId);
             if (progress < 0)
                 continue;
 

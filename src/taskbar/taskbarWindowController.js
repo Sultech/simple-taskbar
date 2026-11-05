@@ -6,12 +6,12 @@ import Meta from 'gi://Meta';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {CLICK_ACTION} from '../shared/applicationClickActions.js';
+import {CLICK_ACTION} from '../shared/interactionActions.js';
 import {taskbarFocusWindow} from './taskbarItemWindows.js';
 
 const CYCLE_MEMORY_TIME = 3000;
 
-export class WindowController {
+export class TaskbarWindowController {
     constructor(tracker, {
         settings,
         spreadAppWindows,

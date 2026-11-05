@@ -10,7 +10,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {cachedPanelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
-import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
+import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 
 import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
 import {
@@ -20,35 +20,35 @@ import {
     syncBlurGeometry,
     syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
-import {floatingBlurPanelStyle, panelBackgroundStyle} from '../panel/panelBackgroundStyle.js';
+import {floatingBlurPanelStyle, panelBackgroundStyle} from './panelBackgroundStyle.js';
 import {
     PANEL_BLUR_CLASSES,
     syncPanelBlurClasses,
-} from '../panel/panelBlurClasses.js';
-import {FolderMenuController} from '../folderMenuController.js';
+} from './panelBlurClasses.js';
+import {FolderMenuController} from './folderMenuController.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
-import {PanelAutoHideController} from '../panel/panelAutoHideController.js';
+import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelWindowDodgeController,
-} from '../panel/panelWindowDodgeController.js';
+} from './panelWindowDodgeController.js';
 import {
     PanelActivitiesController,
-} from '../panel/panelActivitiesController.js';
+} from './panelActivitiesController.js';
 import {
     PanelButtonPaddingController,
-} from '../panel/panelButtonPaddingController.js';
-import {PanelClockController} from '../panel/panelClockController.js';
-import {DateMenuAlignmentController} from '../panel/dateMenuAlignmentController.js';
-import {PanelInteractionController} from '../panel/panelInteractionController.js';
+} from './panelButtonPaddingController.js';
+import {PanelClockController} from './panelClockController.js';
+import {DateMenuAlignmentController} from './dateMenuAlignmentController.js';
+import {PanelInteractionController} from './panelInteractionController.js';
 import {
     PanelVerticalItemsController,
-} from '../panel/panelVerticalItemsController.js';
+} from './panelVerticalItemsController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
-import {createPanelItems} from '../panel/panelItems.js';
-import {panelGeometry} from '../panel/panelGeometry.js';
-import {PanelMagnifyController} from '../panel/panelMagnifyController.js';
-import {floatingPanelCornerRadius} from '../panel/floatingPanelGeometry.js';
-import {TaskbarGeometryController, syncTaskbarGeometryController} from '../panel/taskbarGeometryController.js';
+import {createPanelItems} from './panelItems.js';
+import {panelGeometry} from './panelGeometry.js';
+import {PanelMagnifyController} from './panelMagnifyController.js';
+import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
+import {PanelGeometryController, syncPanelGeometryController} from './panelGeometryController.js';
 import {
     PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
@@ -56,49 +56,48 @@ import {
     dynamicTaskbarEnabled,
     panelApplicationAlignment,
     taskbarGeometryEnabled,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 import {
     dynamicTransparencyStyle,
-} from '../panel/dynamicTransparency.js';
+} from './dynamicTransparency.js';
 import {
     panelIsVertical,
     panelPosition,
-} from '../panel/panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 import {
     QuickSettingsIndicatorsController,
     quickSettingsIconSpacing,
-} from '../panel/quickSettingsIndicatorsController.js';
+} from './quickSettingsIndicatorsController.js';
 import {
     QuickSettingsPowerController,
 } from '../integration/quickSettingsPowerController.js';
 import {
     QuickSettingsXpIconController,
 } from '../integration/quickSettingsXpIconController.js';
-import {SecondaryPanelActor} from './secondaryPanelActor.js';
+import {ExtensionPanelActor} from './extensionPanelActor.js';
 import {
-    SecondaryPanelDockController,
-} from './secondaryPanelDockController.js';
+    DockController,
+} from '../dock/dockController.js';
 import {
     SecondaryPanelWindowDragController,
-} from './secondaryPanelWindowDragController.js';
+} from '../secondaryPanel/secondaryPanelWindowDragController.js';
 import {
     SECONDARY_PANEL_INDICATOR_ROLES,
     SecondaryPanelIndicatorController,
-} from './secondaryPanelIndicatorController.js';
+} from '../secondaryPanel/secondaryPanelIndicatorController.js';
 import {StartButtonController} from '../startMenu/startButtonController.js';
 import {TaskbarController} from '../taskbar/taskbarController.js';
 import {
     getTaskbarHoverAnimationNeighbours,
 } from '../taskbar/taskbarHoverAnimationUtils.js';
-import {panelTaskbarIconSize} from '../taskbar/taskbarIconSize.js';
-import {PanelIconSizer} from '../taskbar/panelIconSizer.js';
-import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
+import {PanelIconSizer, panelTaskbarIconSize} from './panelIconSizer.js';
+import {constrainTaskbarSize} from './panelLayout.js';
 import {taskbarPanelHeight} from '../shared/panelSizing.js';
 import {createTaskbarViewport} from '../taskbar/taskbarViewportFactory.js';
 import {VolumeMixerController} from '../integration/volumeMixerController.js';
-import {WindowController} from '../taskbar/windowController.js';
+import {TaskbarWindowController} from '../taskbar/taskbarWindowController.js';
 import {WindowPreviewController} from '../taskbar/windowPreviewController.js';
-import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
+import {PanelLayoutUpdater} from './panelLayoutUpdater.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 const OWN_BLUR_CLASSES = new Set(PANEL_BLUR_CLASSES);
@@ -109,14 +108,14 @@ const PANEL_EDGE_CLASSES = new Set([
     'simple-taskbar-panel-right',
 ]);
 
-export class SecondaryPanelController {
+export class ExtensionPanelController {
     constructor({
         extensionDir,
         settings,
         appSystem,
         tracker,
         favorites,
-        notificationBadgeModel,
+        overlayModel,
         spreadAppWindows,
         monitor,
         openPreferences,
@@ -140,7 +139,7 @@ export class SecondaryPanelController {
         this._windowDragController = null;
         this._blurActive = false;
         this._themeSyncLaterId = 0;
-        this._taskbarWidthUpdater = new TaskbarWidthUpdater(() => this._updateTaskbarWidth());
+        this._panelLayoutUpdater = new PanelLayoutUpdater(() => this._updateTaskbarWidth());
         const isDock = settings.isDock;
         const configuredIconSize = isDock
             ? settings.getConfiguredIconSize()
@@ -148,7 +147,7 @@ export class SecondaryPanelController {
         const iconSize = panelTaskbarIconSize(settings, configuredIconSize);
         this._panelHeight = taskbarPanelHeight(settings, iconSize);
 
-        this._windowController = new WindowController(tracker, {
+        this._windowController = new TaskbarWindowController(tracker, {
             settings,
             spreadAppWindows,
             getMonitor: () => this._monitor,
@@ -160,7 +159,7 @@ export class SecondaryPanelController {
             appSystem,
             tracker,
             favorites,
-            notificationBadgeModel,
+            overlayModel,
             iconSize,
             panelHeight: this._panelHeight,
             getInterestingWindows: app =>
@@ -173,7 +172,7 @@ export class SecondaryPanelController {
             openNewWindow: app => this._windowController.openNewWindow(app),
             getPreviewController: () => this._windowPreviews,
             onRedisplay: () => {
-                this._taskbarWidthUpdater.update();
+                this._panelLayoutUpdater.update();
                 this._applicationOverflowController.sync();
             },
             locationScope: isDock ? 'dock' : 'taskbar',
@@ -253,7 +252,7 @@ export class SecondaryPanelController {
         });
         this._panelBox._simpleTaskbarPanelBox = isDock ? 'dock' : 'panel';
         this._panelBox._simpleTaskbarMonitorIndex = monitor.index;
-        this.actor = new SecondaryPanelActor();
+        this.actor = new ExtensionPanelActor();
         this._panelBox.add_child(this.actor);
         this._magnifyController = new PanelMagnifyController({
             actor: this.actor,
@@ -266,7 +265,7 @@ export class SecondaryPanelController {
                 ? !this._settings.get_boolean('dock-panel-mode')
                 : dynamicTaskbarEnabled(this._settings),
             getBaseLength: () => (this._dockController ?? this._geometryController).getBaseLength(),
-            updateWidth: () => this._taskbarWidthUpdater.update(),
+            updateWidth: () => this._panelLayoutUpdater.update(),
             onGeometryChanged: (geometry, centerOffset) => {
                 this.actor.set_position(geometry.x, geometry.y);
                 this.actor.set_size(geometry.width, geometry.height);
@@ -340,7 +339,7 @@ export class SecondaryPanelController {
             () => this._effectiveButtonPadding()
         );
         if (isDock) {
-            this._dockController = new SecondaryPanelDockController({
+            this._dockController = new DockController({
                 settings,
                 monitor,
                 mainPanelSettings,
@@ -524,8 +523,8 @@ export class SecondaryPanelController {
             this._themeSyncLaterId = 0;
         }
         this._taskbarController.disableHoverAnimations();
-        this._taskbarWidthUpdater.destroy();
-        this._taskbarWidthUpdater = null;
+        this._panelLayoutUpdater.destroy();
+        this._panelLayoutUpdater = null;
         this._settings.disconnectObject(this);
         Main.panel.disconnectObject(this);
         this.actor.disconnectObject(this);
@@ -696,11 +695,11 @@ export class SecondaryPanelController {
                 if (applied)
                     this._syncPanelHeight();
                 this._verticalItemsController.sync();
-                this._taskbarWidthUpdater.update();
+                this._panelLayoutUpdater.update();
             }, this);
             this._settings.connectObject(
                 'changed::dock-min-icon-size',
-                () => this._taskbarWidthUpdater.update(),
+                () => this._panelLayoutUpdater.update(),
                 'changed::panel-height-follow-icon-size',
                 () => this._syncPanelHeight(),
                 this
@@ -735,7 +734,7 @@ export class SecondaryPanelController {
                 this._resetTaskbarIconSize();
             this._applyAppearance();
             this._syncPanelHeight();
-            this._taskbarWidthUpdater.update();
+            this._panelLayoutUpdater.update();
         };
         this._settings.connectObject(
             'changed::icon-spacing', syncIconMetrics,
@@ -787,7 +786,7 @@ export class SecondaryPanelController {
         }
         this._settings.connectObject('changed::activities-button-visible', () => {
             this._indicatorController.syncActivitiesVisibility();
-            this._taskbarWidthUpdater.update();
+            this._panelLayoutUpdater.update();
         }, this);
         this._settings.connectObject('changed::activities-button-position', () => {
             this._applyLayout();
@@ -813,15 +812,15 @@ export class SecondaryPanelController {
                 this._settings.get_int('start-button-padding')
             );
             this._verticalItemsController.sync();
-            this._taskbarWidthUpdater.update();
+            this._panelLayoutUpdater.update();
         }, this);
         for (const signal of ['child-added', 'child-removed']) {
             this._taskbarController.actor.connectObject(signal, () => {
-                this._taskbarWidthUpdater.update();
+                this._panelLayoutUpdater.update();
             }, this);
         }
         this._settings.connectObject('changed::hide-app-labels', () => {
-            this._taskbarWidthUpdater.update();
+            this._panelLayoutUpdater.update();
         }, this);
         if (!this._dockController) {
             for (const key of PANEL_BUTTON_PADDING_KEYS) {
@@ -829,7 +828,7 @@ export class SecondaryPanelController {
                     `changed::${key}`,
                     () => {
                         this._syncQuickSettingsIndicators();
-                        this._taskbarWidthUpdater.update();
+                        this._panelLayoutUpdater.update();
                     },
                     this
                 );
@@ -933,7 +932,7 @@ export class SecondaryPanelController {
         );
         this._indicatorController.syncActivitiesVisibility();
         this._applyAppearance();
-        this._taskbarWidthUpdater.update();
+        this._panelLayoutUpdater.update();
     }
 
     _geometrySource() {
@@ -941,7 +940,7 @@ export class SecondaryPanelController {
     }
 
     _createGeometryController() {
-        return new TaskbarGeometryController({
+        return new PanelGeometryController({
             settings: this._settings,
             getMonitor: () => this._monitor,
             panelBox: this._panelBox,
@@ -956,7 +955,7 @@ export class SecondaryPanelController {
 
     _syncFloatingMode() {
         const hadGeometry = Boolean(this._geometryController);
-        this._geometryController = syncTaskbarGeometryController(
+        this._geometryController = syncPanelGeometryController(
             this._geometryController, this._settings, this._autoHideController, () => this._createGeometryController()
         );
         if (hadGeometry && !this._geometryController)
@@ -1040,7 +1039,7 @@ export class SecondaryPanelController {
         if (this._windowDodgeController)
             this._windowDodgeController.sync();
         if (updateTaskbarWidth)
-            this._taskbarWidthUpdater.update();
+            this._panelLayoutUpdater.update();
     }
 
     _panelGeometry() {
@@ -1189,7 +1188,7 @@ export class SecondaryPanelController {
             return;
         }
 
-        this._taskbarWidthUpdater.queue();
+        this._panelLayoutUpdater.queue();
     }
 
     _queueThemeSync() {

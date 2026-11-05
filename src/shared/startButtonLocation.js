@@ -2,7 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {isDefaultPanelWithoutDock} from './panelModeProfiles.js';
-import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from './taskbarPanelModes.js';
+import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from './panelModeSettings.js';
 
 function startButtonEnabled(settings) {
     return settings.get_boolean('windows-start-menu-enabled') ||

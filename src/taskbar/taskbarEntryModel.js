@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {defaultPanelWindowsEnabled} from '../shared/defaultPanelWindows.js';
-
 import {
+    defaultPanelWindowsEnabled,
     shouldHidePinnedApplications,
-} from '../shared/taskbarPinnedVisibility.js';
+} from '../shared/panelApplicationVisibility.js';
+
 
 function windowEntry(app, window, isPinnedPrimary) {
     return {

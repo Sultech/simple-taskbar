@@ -2,7 +2,6 @@
 // Copyright (C) 2026 sultech
 
 import {panelIsVertical} from './panelPositionUtils.js';
-import {shouldHidePinnedApplications} from './taskbarPinnedVisibility.js';
 
 export function defaultPanelWindowsEnabled(settings) {
     return settings.get_boolean('default-gnome-panel') &&
@@ -20,4 +19,10 @@ export function panelApplicationsVisible(settings, isSecondary) {
         (!settings.get_boolean('default-gnome-panel') &&
             !(shouldHidePinnedApplications(settings, isSecondary) &&
                 settings.get_boolean('hide-unpinned-taskbar-apps')));
+}
+
+export function shouldHidePinnedApplications(settings, isSecondary) {
+    return settings.get_boolean('hide-pinned-taskbar-apps') ||
+        (isSecondary &&
+            settings.get_boolean('hide-pinned-secondary-monitors'));
 }

@@ -13,7 +13,7 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {extensionIsActive} from '../extensionState.js';
+import {extensionIsActive} from '../integration/extensionState.js';
 import {syncBlurGeometry, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
@@ -21,8 +21,8 @@ import {
 } from './panelWindowDodgeController.js';
 import {
     ActivitiesDotWidthOverride,
-} from './activitiesDotWidthOverride.js';
-import {PanelActivitiesController} from './panelActivitiesController.js';
+    PanelActivitiesController,
+} from './panelActivitiesController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
@@ -34,21 +34,21 @@ import {PanelMenuPositioner} from './panelMenuPositioner.js';
 import {panelGeometry} from './panelGeometry.js';
 import {PanelMagnifyController} from './panelMagnifyController.js';
 import {DynamicPanelBoxLayout} from './dynamicPanelBoxLayout.js';
-import {TaskbarGeometryController, syncTaskbarGeometryController} from './taskbarGeometryController.js';
+import {PanelGeometryController, syncPanelGeometryController} from './panelGeometryController.js';
 import {
     PANEL_BUTTON_PADDING_KEYS,
     START_BUTTON_LOCATION_KEY,
     dynamicTaskbarEnabled,
     taskbarGeometryEnabled,
     panelApplicationAlignment,
-} from '../shared/taskbarPanelModes.js';
-import {panelIsVertical} from './panelPosition.js';
+} from '../shared/panelModeSettings.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {
     QuickSettingsIndicatorsController,
     quickSettingsIconSpacing,
 } from './quickSettingsIndicatorsController.js';
-import {PanelStateController} from './panelStateController.js';
-import {PanelThemeController} from './panelThemeController.js';
+import {PrimaryPanelStateController} from './primaryPanelStateController.js';
+import {PrimaryPanelThemeController} from './primaryPanelThemeController.js';
 import {
     PanelVerticalItemsController,
 } from './panelVerticalItemsController.js';
@@ -62,13 +62,13 @@ import {
     allocateDynamicPanel,
     allocateExpandedSidePanel,
     constrainTaskbarSize,
-} from '../taskbar/taskbarLayout.js';
-import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
+} from './panelLayout.js';
+import {PanelLayoutUpdater} from './panelLayoutUpdater.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const GNOME_PANEL_SIZE = 32;
 
-export class PanelController {
+export class PrimaryPanelController {
     constructor({
         settings,
         panelHeight,
@@ -104,7 +104,7 @@ export class PanelController {
         this._isAutoHideBlocked = isAutoHideBlocked;
         this._signalHolder = new TransientSignalHolder();
         this._layoutRepairId = 0;
-        this._taskbarWidthUpdater = new TaskbarWidthUpdater(
+        this._panelLayoutUpdater = new PanelLayoutUpdater(
             () => this._updateTaskbarWidthInternal()
         );
         this._applyingLayout = false;
@@ -204,7 +204,7 @@ export class PanelController {
     enable() {
         Main.layoutManager.panelBox.clip_to_allocation = true;
         this._verticalPanelCompatibilityController.enable();
-        this._stateController = new PanelStateController({
+        this._stateController = new PrimaryPanelStateController({
             settings: this._settings,
             panelHeight: this._panelHeight,
             startButton: this._startButton,
@@ -242,7 +242,7 @@ export class PanelController {
             () => this._panelHeight
         );
         this._clockController.enable();
-        this._themeController = new PanelThemeController(
+        this._themeController = new PrimaryPanelThemeController(
             this._settings,
             this._stateController.oldPanelStyle,
             monitor => this._panelGeometry(monitor)
@@ -270,8 +270,8 @@ export class PanelController {
             global.compositor.get_laters().remove(this._layoutRepairId);
             this._layoutRepairId = 0;
         }
-        this._taskbarWidthUpdater.destroy();
-        this._taskbarWidthUpdater = null;
+        this._panelLayoutUpdater.destroy();
+        this._panelLayoutUpdater = null;
         this._settings.disconnectObject(this);
         Main.panel.disconnectObject(this);
         this._signalHolder.destroy();
@@ -342,7 +342,7 @@ export class PanelController {
     }
 
     _createGeometryController() {
-        return new TaskbarGeometryController({
+        return new PanelGeometryController({
             settings: this._settings,
             getMonitor: () => Main.layoutManager.primaryMonitor,
             panelBox: Main.layoutManager.panelBox,
@@ -357,7 +357,7 @@ export class PanelController {
 
     _syncFloatingMode() {
         const hadGeometry = Boolean(this._geometryController);
-        this._geometryController = syncTaskbarGeometryController(
+        this._geometryController = syncPanelGeometryController(
             this._geometryController, this._settings, this._autoHideController, () => this._createGeometryController()
         );
         if (hadGeometry && !this._geometryController)
@@ -586,11 +586,11 @@ export class PanelController {
     }
 
     updateTaskbarWidth() {
-        this._taskbarWidthUpdater.update();
+        this._panelLayoutUpdater.update();
     }
 
     queueTaskbarWidth() {
-        this._taskbarWidthUpdater.queue();
+        this._panelLayoutUpdater.queue();
     }
 
     _updateTaskbarWidthInternal() {

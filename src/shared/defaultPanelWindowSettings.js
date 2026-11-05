@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {defaultPanelWindowsEnabled} from './defaultPanelWindows.js';
+import {defaultPanelWindowsEnabled} from './panelApplicationVisibility.js';
 import {CachedSettings, RemappedSettings} from './remappedSettings.js';
 
 export const DEFAULT_PANEL_WINDOW_SETTING_KEYS = Object.freeze([

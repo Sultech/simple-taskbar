@@ -18,7 +18,7 @@ import {
     dynamicTaskbarEnabled,
     floatingTaskbarEnabled,
     taskbarGeometryEnabled,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 import {
     addColorRow,
     addToggleChoiceRow,
@@ -32,7 +32,7 @@ import {
 import {createPanelThicknessSizing} from './panelThicknessSizing.js';
 import {addChoiceCards, drawTaskbarEdge, edgeChoices} from './choiceCards.js';
 import {addSliderRow} from './sliderRow.js';
-import {addFloatingPanelRow} from './floatingPanelGroup.js';
+import {addFloatingPanelRow} from './floatingPanelRow.js';
 
 const PANEL_HEIGHT_FOLLOW_KEY = 'panel-height-follow-icon-size';
 

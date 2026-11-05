@@ -11,7 +11,7 @@ import {
     animateReflowCrossedItems,
     reflowVisualDirection,
 } from './reflowAnimation.js';
-import {panelIsVertical} from '../panel/panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 const EXTERNAL_PLACEHOLDER_ANIMATION_TIME = 120;
 

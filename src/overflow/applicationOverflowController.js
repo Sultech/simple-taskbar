@@ -15,14 +15,11 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
-import {PANEL_BUTTON_PADDING_KEYS, dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
+import {PANEL_BUTTON_PADDING_KEYS, dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 
-import {
-    panelArrowSide,
-    panelIsVertical,
-    syncPanelMenuPosition,
-} from '../panel/panelPosition.js';
+import {panelArrowSide, syncPanelMenuPosition} from '../panel/panelMenuPositioner.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {MaximumSizeClamp} from '../taskbar/maximumSizeClamp.js';
 import {
     createTaskbarSeparator,

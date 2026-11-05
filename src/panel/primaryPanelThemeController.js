@@ -34,9 +34,9 @@ import {
     LIGHT_BLUR_OVERLAY_CLASS,
     syncPanelBlurClasses,
 } from './panelBlurClasses.js';
-import {panelPosition} from './panelPosition.js';
+import {panelPosition} from '../shared/panelPositionUtils.js';
 import {floatingBlurPanelStyle, panelBackgroundStyle} from './panelBackgroundStyle.js';
-import {taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
+import {taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {dynamicTransparencyStyle} from './dynamicTransparency.js';
@@ -58,7 +58,7 @@ const XP_PANEL_CLASS =
 const WINDOWS_10_PANEL_CLASS =
     'simple-taskbar-windows-10-theme';
 
-export class PanelThemeController {
+export class PrimaryPanelThemeController {
     constructor(settings, oldPanelStyle, getPanelGeometry) {
         this._settings = settings;
         this._oldPanelStyle = oldPanelStyle;

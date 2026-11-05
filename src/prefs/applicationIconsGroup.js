@@ -6,11 +6,11 @@ import Adw from 'gi://Adw';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DefaultPanelWindowSettings} from '../shared/defaultPanelWindowSettings.js';
-import {defaultPanelWindowsEnabled} from '../shared/defaultPanelWindows.js';
+import {defaultPanelWindowsEnabled} from '../shared/panelApplicationVisibility.js';
 import {createDefaultPanelIconSizingRows} from './defaultPanelIconSizing.js';
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
-import {panelApplicationAlignment} from '../shared/taskbarPanelModes.js';
-import {axisPanelPositions} from './panelAxis.js';
+import {panelApplicationAlignment} from '../shared/panelModeSettings.js';
+import {axisPanelPositions} from './panelPositionChoices.js';
 import {
     activePanelPosition,
     positionIsVertical,

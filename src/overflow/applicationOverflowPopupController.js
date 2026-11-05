@@ -4,8 +4,8 @@
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
-import {panelIsVertical} from '../panel/panelPosition.js';
-import {getScrollDelta} from '../scrollUtils.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {getScrollDelta} from '../inputUtils.js';
 
 const TASKBAR_CONTENT_CLASS =
     'simple-taskbar-application-overflow-taskbar-content';

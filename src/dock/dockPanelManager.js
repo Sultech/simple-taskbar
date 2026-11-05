@@ -20,7 +20,7 @@ import {
     refreshPanelBlurVisibility,
     syncDockBlurTarget,
 } from '../integration/blurMyShellRuntime.js';
-import {SecondaryPanelController} from '../secondaryPanel/secondaryPanelController.js';
+import {ExtensionPanelController} from '../panel/extensionPanelController.js';
 import {PanelManagerBase} from '../panel/panelManagerBase.js';
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
 import {setDockPosition} from '../shared/panelModeProfiles.js';
@@ -144,13 +144,13 @@ export class DockPanelManager extends PanelManagerBase {
             : [Main.layoutManager.primaryMonitor];
         for (const monitor of monitors) {
             const dockSettings = new DockPanelSettings(this._settings);
-            const panel = new SecondaryPanelController({
+            const panel = new ExtensionPanelController({
                 extensionDir: this._extensionDir,
                 settings: dockSettings,
                 appSystem: this._appSystem,
                 tracker: this._tracker,
                 favorites: this._favorites,
-                notificationBadgeModel: this._notificationBadgeModel,
+                overlayModel: this._overlayModel,
                 spreadAppWindows: this._spreadAppWindows,
                 monitor,
                 openPreferences: this._openPreferences,

@@ -24,7 +24,7 @@ function mapsEqual(left, right) {
     return true;
 }
 
-export class NotificationBadgeModel extends EventEmitter {
+export class TaskbarOverlayModel extends EventEmitter {
     constructor() {
         super();
 

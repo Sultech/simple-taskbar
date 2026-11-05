@@ -8,7 +8,7 @@ import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {panelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
-import {defaultPanelWindowsEnabled, panelApplicationsVisible} from '../shared/defaultPanelWindows.js';
+import {defaultPanelWindowsEnabled, panelApplicationsVisible} from '../shared/panelApplicationVisibility.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {startButtonVisible} from '../shared/startButtonLocation.js';
@@ -22,14 +22,14 @@ import {
     panelButtonPaddingKey,
     startButtonAlignmentKey,
     startButtonInPanel,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
 } from '../shared/panelItemOrder.js';
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {axisPanelPositions} from './panelAxis.js';
+import {axisPanelPositions} from './panelPositionChoices.js';
 import {
     createShowDesktopButtonOptionsButton,
 } from './showDesktopButtonDialog.js';

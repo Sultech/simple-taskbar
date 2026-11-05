@@ -11,6 +11,7 @@ import {
 } from '../shared/applicationHoverAnimation.js';
 import {
     MAGNIFY_MOTION_THROTTLE,
+    TaskbarHoverAnimationSmoothing,
 } from './taskbarHoverAnimationUtils.js';
 import {
     TaskbarHoverAnimationAnimator,
@@ -24,9 +25,6 @@ import {
 import {
     TaskbarHoverAnimationSettings,
 } from './taskbarHoverAnimationSettings.js';
-import {
-    TaskbarHoverAnimationSmoothing,
-} from './taskbarHoverAnimationSmoothing.js';
 
 const MAGNIFY_TIMELINE_DURATION = 1000;
 

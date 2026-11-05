@@ -10,9 +10,9 @@ import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {TaskbarLocationsController} from '../taskbar/taskbarLocationsController.js';
-import {clickCameFromKeyboard, isPrimaryPressOrTouch} from '../popupMenuUtils.js';
-import {openSettingsPanel} from '../shared/settingsPanel.js';
+import {LocationsController} from '../locations/locationsController.js';
+import {clickCameFromKeyboard, isPrimaryPressOrTouch} from '../inputUtils.js';
+import {openSettingsPanel} from '../shared/gnomeSettingsPanel.js';
 
 export class StartMenuFooterController {
     constructor({
@@ -34,7 +34,7 @@ export class StartMenuFooterController {
         this._syncButtonClasses = syncButtonClasses;
         this._onLocationsChanged = onLocationsChanged;
         this._locationButtons = [];
-        this._locationController = new TaskbarLocationsController({
+        this._locationController = new LocationsController({
             settings,
             scope: 'start-menu',
             onChanged: () => this._syncLocationButtons(),

@@ -7,7 +7,7 @@ import St from 'gi://St';
 
 import {RunningIndicator} from './runningIndicator.js';
 import {TaskbarItemContainer} from './taskbarItemContainer.js';
-import {modifierClickActionKey} from '../pointerUtils.js';
+import {modifierClickActionKey} from '../inputUtils.js';
 
 export class TaskbarAppItemFactory {
     constructor({

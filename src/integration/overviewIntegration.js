@@ -15,16 +15,16 @@ import {
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {extensionWillBeActive} from '../extensionState.js';
+import {extensionWillBeActive} from './extensionState.js';
 import {
     panelPosition,
     positionIsVertical,
-} from '../panel/panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 import {
     dockPanelModeHeight,
     panelHeightForIconSize,
 } from '../shared/panelSizing.js';
-import {dockFloatingEnabled, floatingTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {dockFloatingEnabled, floatingTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {CachedSettings} from '../shared/remappedSettings.js';
 import {DOCK_AUTO_HIDE_SETTINGS, autoHideRevealsInOverview} from '../shared/autoHideSettings.js';
 

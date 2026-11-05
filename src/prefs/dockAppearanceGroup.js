@@ -28,8 +28,8 @@ import {
 import {alternativePanelPosition} from '../shared/panelPositionUtils.js';
 import {addChoiceCards, drawDockEdge, edgeChoices} from './choiceCards.js';
 import {addSliderRow} from './sliderRow.js';
-import {addFloatingPanelRow} from './floatingPanelGroup.js';
-import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
+import {addFloatingPanelRow} from './floatingPanelRow.js';
+import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/panelModeSettings.js';
 
 const DOCK_PANEL_HEIGHT_KEY = 'dock-panel-height';
 const DOCK_PANEL_HEIGHT_FOLLOW_KEY = 'dock-panel-height-follow-icon-size';

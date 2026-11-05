@@ -5,7 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {DateMenuAlignmentController} from './dateMenuAlignmentController.js';
 
-export class PanelStateController {
+export class PrimaryPanelStateController {
     constructor({
         settings,
         panelHeight,

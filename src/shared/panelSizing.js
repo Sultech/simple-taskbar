@@ -13,7 +13,7 @@ import {
     HIGHLIGHT_SIZE_SETTINGS,
 } from './classicHighlightSettings.js';
 import {panelIsVertical} from './panelPositionUtils.js';
-import {dynamicTaskbarEnabled} from './taskbarPanelModes.js';
+import {dynamicTaskbarEnabled} from './panelModeSettings.js';
 
 export const MIN_PANEL_HEIGHT = 30;
 export const MAX_PANEL_HEIGHT = 175;

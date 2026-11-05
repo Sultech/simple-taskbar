@@ -13,12 +13,12 @@ import {
     TransientSignalHolder,
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
-import {shellMenusUseLightTheme} from './themeUtils.js';
-import {closePopupMenu} from './popupMenuUtils.js';
+import {shellMenusUseLightTheme} from '../themeUtils.js';
+import {closePopupMenu} from '../popupMenuUtils.js';
 import {
     panelArrowSide,
     syncPanelMenuPosition,
-} from './panel/panelPosition.js';
+} from './panelMenuPositioner.js';
 
 const FILE_ATTRIBUTES = [
     Gio.FILE_ATTRIBUTE_STANDARD_NAME,

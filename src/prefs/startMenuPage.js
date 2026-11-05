@@ -15,12 +15,12 @@ import {
     panelStartButtonPosition,
     startButtonAlignmentKey,
     startButtonInPanel,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 import {
     getStartIconDisplayName,
     StartIconChooserDialog,
 } from './startIconChooser.js';
-import {axisPanelPositions} from './panelAxis.js';
+import {axisPanelPositions} from './panelPositionChoices.js';
 import {activePanelPosition} from '../shared/panelPositionUtils.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
 import {SettingsSubpage} from './settingsSubpage.js';

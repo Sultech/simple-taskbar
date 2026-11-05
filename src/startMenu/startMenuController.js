@@ -15,13 +15,10 @@ import * as ShellEntry from 'resource:///org/gnome/shell/ui/shellEntry.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {
-    panelArrowSide,
-    panelIsVertical,
-    syncMenuArrowSide,
-} from '../panel/panelPosition.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
-import {panelStartButtonPosition} from '../shared/taskbarPanelModes.js';
+import {panelStartButtonPosition} from '../shared/panelModeSettings.js';
 import {
     closePopupMenu,
     openPopupMenu,

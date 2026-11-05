@@ -3,7 +3,7 @@
 
 import Cogl from 'gi://Cogl';
 
-import {panelPosition} from './panelPosition.js';
+import {panelPosition} from '../shared/panelPositionUtils.js';
 import {panelTransparencyOpacity} from './dynamicTransparency.js';
 
 const DARK_BORDER_COLOR = '255, 255, 255';

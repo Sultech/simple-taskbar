@@ -9,7 +9,7 @@ import {
 } from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
-import {extensionStateIsActive} from '../extensionState.js';
+import {extensionStateIsActive} from './extensionState.js';
 
 const ALWAYS_CONFLICTING_UUIDS = [
     'dash-to-panel@jderose9.github.com',

@@ -5,14 +5,14 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {TaskbarAppMenu} from './taskbarAppMenu.js';
-import {TaskbarLocationMenu} from './taskbarLocationMenu.js';
+import {LocationMenu} from '../locations/locationMenu.js';
 import {
     CLICK_ACTION,
+    HOVER_ACTION,
     normalizeLegacyMiddleClickAction,
-} from '../shared/applicationClickActions.js';
-import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
-import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
-import {panelArrowSide, syncMenuArrowSide} from '../panel/panelPosition.js';
+} from '../shared/interactionActions.js';
+import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
 import {openPopupMenu} from '../popupMenuUtils.js';
 
 export class TaskbarItemInteractionController {
@@ -249,7 +249,7 @@ export class TaskbarItemInteractionController {
     }
 
     _createLocationMenu(button, app, item) {
-        const menu = new TaskbarLocationMenu(
+        const menu = new LocationMenu(
             button,
             this._settings,
             app

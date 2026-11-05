@@ -27,3 +27,31 @@ export function destroyPressureBarrier(pressureBarrier, barrier) {
     barrier?.destroy();
     pressureBarrier?.destroy();
 }
+
+export function getScrollDelta(event, increment) {
+    switch (event.get_scroll_direction()) {
+    case Clutter.ScrollDirection.UP:
+    case Clutter.ScrollDirection.LEFT:
+        return -increment;
+    case Clutter.ScrollDirection.DOWN:
+    case Clutter.ScrollDirection.RIGHT:
+        return increment;
+    case Clutter.ScrollDirection.SMOOTH: {
+        const [dx, dy] = event.get_scroll_delta();
+        return (Math.abs(dx) > Math.abs(dy) ? dx : dy) * increment;
+    }
+    }
+
+    return 0;
+}
+
+export function isPrimaryPressOrTouch(event) {
+    const type = event.type();
+    return type === Clutter.EventType.TOUCH_BEGIN ||
+        (type === Clutter.EventType.BUTTON_PRESS &&
+            event.get_button() === Clutter.BUTTON_PRIMARY);
+}
+
+export function clickCameFromKeyboard() {
+    return Clutter.get_current_event().type() === Clutter.EventType.KEY_RELEASE;
+}

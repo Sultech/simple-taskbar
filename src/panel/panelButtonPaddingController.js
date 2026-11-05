@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {MIN_PANEL_HEIGHT} from '../shared/panelSizing.js';
 import {appendStyle} from '../shared/styleUtils.js';
-import {panelEdgeSides, panelIsVertical} from './panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {PanelButtonCornerRadiusController} from './panelButtonCornerRadiusController.js';
 import {PanelButtonHighlightLayer} from './panelButtonHighlightLayer.js';
 import {
     dynamicTaskbarEnabled,
     panelButtonPaddingKey,
-} from '../shared/taskbarPanelModes.js';
+} from '../shared/panelModeSettings.js';
 
 const AUTOMATIC_PADDING = -1;
 const AUTOMATIC_FALLBACK_PADDING = 3;
@@ -31,6 +32,15 @@ const ICON_HORIZONTAL_PADDING_STYLE =
 const REGULAR_PANEL_HEIGHT = 49;
 const MINIMUM_HOVER_INSET = 3;
 const REGULAR_HOVER_INSET = 6;
+
+function panelEdgeSides(box, vertical) {
+    if (vertical)
+        return ['top', 'bottom'];
+
+    return box.get_text_direction() === Clutter.TextDirection.RTL
+        ? ['right', 'left']
+        : ['left', 'right'];
+}
 
 export function panelButtonHoverInset(panelHeight) {
     const heightRange = REGULAR_PANEL_HEIGHT - MIN_PANEL_HEIGHT;

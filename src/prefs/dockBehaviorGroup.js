@@ -4,7 +4,7 @@
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DOCK_AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
-import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
+import {PANEL_SCROLL_ACTION} from '../shared/interactionActions.js';
 import {getPanelScrollActionChoices} from './taskbarBehaviorGroup.js';
 import {
     addComboRow,
@@ -12,7 +12,7 @@ import {
 } from './preferencesWidgets.js';
 import {addWindowDodgeGroup} from './windowDodgeGroup.js';
 import {addSliderRow} from './sliderRow.js';
-import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
+import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/panelModeSettings.js';
 
 export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, connectSettings}) {
     const dockAvailable = () => settings.get_boolean('dock-mode') &&

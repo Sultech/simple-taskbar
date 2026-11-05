@@ -32,3 +32,22 @@ export function normalizeLegacyMiddleClickAction(settings) {
 
     return action;
 }
+
+export const HOVER_ACTION = {
+    SHOW_PREVIEWS: 'show-previews',
+    SHOW_TOOLTIP: 'show-tooltip',
+    DO_NOTHING: 'do-nothing',
+};
+
+export const SCROLL_ACTION = {
+    SWITCH_WORKSPACE: 'switch-workspace',
+    CYCLE_WINDOWS: 'cycle-windows',
+    DO_NOTHING: 'do-nothing',
+};
+
+export const PANEL_SCROLL_ACTION = {
+    SWITCH_WORKSPACE: 'switch-workspace',
+    CYCLE_WINDOWS: 'cycle-windows',
+    CHANGE_VOLUME: 'change-volume',
+    DO_NOTHING: 'do-nothing',
+};

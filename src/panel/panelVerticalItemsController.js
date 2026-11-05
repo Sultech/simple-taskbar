@@ -4,7 +4,7 @@
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
-import {panelIsVertical} from './panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 const SELF_SIZED_BUTTON_CLASS = 'simple-taskbar-start';
 const CLOCK_BUTTON_CLASS = 'clock-display';

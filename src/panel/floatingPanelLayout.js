@@ -8,10 +8,10 @@ import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {panelGeometry} from './panelGeometry.js';
-import {panelIsMinimumEdge, panelIsVertical} from './panelPosition.js';
+import {panelIsMinimumEdge, panelIsVertical} from '../shared/panelPositionUtils.js';
 import {FloatingPanelWindowTracker} from './floatingPanelWindowTracker.js';
-import {panelContentLength} from '../taskbar/taskbarLayout.js';
-import {TaskbarWidthUpdater} from '../taskbar/taskbarWidthUpdater.js';
+import {panelContentLength} from './panelLayout.js';
+import {PanelLayoutUpdater} from './panelLayoutUpdater.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
@@ -27,7 +27,7 @@ export class FloatingPanelLayout {
         this._getGeometry = getGeometry;
         this._onPosition = onPosition;
         this._strutName = strutName;
-        this._widthUpdater = new TaskbarWidthUpdater(onContentChanged);
+        this._panelLayoutUpdater = new PanelLayoutUpdater(onContentChanged);
         this._windowTracker = new FloatingPanelWindowTracker(onPosition);
         this._lastEdgeGap = null;
         this._baseLength = null;
@@ -49,15 +49,15 @@ export class FloatingPanelLayout {
         );
         for (const box of this._boxes) {
             box.connectObject('queue-relayout', () => {
-                if (!this._widthUpdater.isUpdating)
-                    this._widthUpdater.queue();
+                if (!this._panelLayoutUpdater.isUpdating)
+                    this._panelLayoutUpdater.queue();
             }, this);
         }
     }
 
     destroy() {
-        this._widthUpdater.destroy();
-        this._widthUpdater = null;
+        this._panelLayoutUpdater.destroy();
+        this._panelLayoutUpdater = null;
         this._windowTracker.destroy();
         this._windowTracker = null;
         this._settings.disconnectObject(this);
@@ -126,11 +126,11 @@ export class FloatingPanelLayout {
     }
 
     updateContent() {
-        this._widthUpdater.update();
+        this._panelLayoutUpdater.update();
     }
 
     queueContentUpdate() {
-        this._widthUpdater.queue();
+        this._panelLayoutUpdater.queue();
     }
 
     resetLength() {
@@ -148,7 +148,7 @@ export class FloatingPanelLayout {
 
         this._panelLength = length;
         this._onPosition(false, false);
-        this._widthUpdater.queue();
+        this._panelLayoutUpdater.queue();
     }
 
     _createStrut() {

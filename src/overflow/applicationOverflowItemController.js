@@ -9,8 +9,8 @@ import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {closePopupMenu} from '../popupMenuUtils.js';
-import {panelIsVertical} from '../panel/panelPosition.js';
-import {modifierClickActionKey} from '../pointerUtils.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {modifierClickActionKey} from '../inputUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 export class ApplicationOverflowItemController {

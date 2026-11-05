@@ -13,7 +13,7 @@ import {
     windowMatchesMode,
     windowIsVisibleOnWorkspace,
     windowReachesPanel,
-} from '../windowVisibility.js';
+} from './panelWindowQueries.js';
 import {
     hasDynamicTransparencyWindow,
 } from './dynamicTransparency.js';

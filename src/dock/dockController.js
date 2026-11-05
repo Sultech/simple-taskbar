@@ -26,7 +26,7 @@ import {
     syncPanelBlurClasses,
 } from '../panel/panelBlurClasses.js';
 import {floatingPanelEdgeGap} from '../panel/floatingPanelGeometry.js';
-import {dockFloatingEnabled} from '../shared/taskbarPanelModes.js';
+import {dockFloatingEnabled} from '../shared/panelModeSettings.js';
 import {FloatingPanelLayout} from '../panel/floatingPanelLayout.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
 import {
@@ -36,11 +36,11 @@ import {
     panelIsVertical,
     panelPosition,
     positionIsVertical,
-} from '../panel/panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
 import {PanelButtonHighlightLayer} from '../panel/panelButtonHighlightLayer.js';
-import {constrainTaskbarSize} from '../taskbar/taskbarLayout.js';
+import {constrainTaskbarSize} from '../panel/panelLayout.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
 const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
@@ -63,7 +63,7 @@ const PANEL_APPEARANCE_CLASSES = new Set([
     'simple-taskbar-border-disabled',
 ]);
 
-export class SecondaryPanelDockController {
+export class DockController {
     constructor({
         settings,
         monitor,

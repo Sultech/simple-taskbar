@@ -7,7 +7,7 @@ import St from 'gi://St';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {IconDominantColorCache} from './iconDominantColor.js';
-import {panelIsVertical} from '../panel/panelPosition.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
     TASKBAR_HIGHLIGHT_STYLE,

@@ -13,7 +13,7 @@ import {
 import {
     panelPosition,
     positionIsVertical,
-} from '../panel/panelPosition.js';
+} from '../shared/panelPositionUtils.js';
 import {appendStyle} from '../shared/styleUtils.js';
 
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';

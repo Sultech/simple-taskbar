@@ -9,7 +9,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     CLICK_ACTION,
     normalizeLegacyMiddleClickAction,
-} from '../shared/applicationClickActions.js';
+} from '../shared/interactionActions.js';
 import {
     addComboRow,
     createPreferencesDialogButton,

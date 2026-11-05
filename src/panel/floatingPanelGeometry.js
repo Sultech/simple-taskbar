@@ -3,8 +3,8 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
-import {hasMaximizedWindowOnMonitor} from '../windowVisibility.js';
+import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
+import {hasMaximizedWindowOnMonitor} from './panelWindowQueries.js';
 
 export function floatingPanelEdgeGap(settings, monitor) {
     if (Main.overview.visibleTarget)

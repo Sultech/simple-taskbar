@@ -10,21 +10,16 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {
-    panelArrowSide,
-    panelIsTop,
-    panelPosition,
-    positionIsVertical,
-} from '../panel/panelPosition.js';
+import {panelArrowSide} from '../panel/panelMenuPositioner.js';
+import {panelIsTop, panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {
     closePopupMenu,
     openPopupMenu,
 } from '../popupMenuUtils.js';
-import {HOVER_ACTION} from '../shared/applicationHoverActions.js';
-import {dynamicTaskbarEnabled} from '../shared/taskbarPanelModes.js';
+import {HOVER_ACTION} from '../shared/interactionActions.js';
+import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
-import {getScrollDelta} from '../scrollUtils.js';
-import {pointerButtonIsPressed} from '../pointerUtils.js';
+import {getScrollDelta, pointerButtonIsPressed} from '../inputUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
 
 const PREVIEW_WIDTH = 260;

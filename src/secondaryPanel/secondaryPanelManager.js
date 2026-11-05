@@ -14,7 +14,7 @@ import {
     refreshPanelBlurVisibility,
 } from '../integration/blurMyShellRuntime.js';
 import {PanelManagerBase} from '../panel/panelManagerBase.js';
-import {SecondaryPanelController} from './secondaryPanelController.js';
+import {ExtensionPanelController} from '../panel/extensionPanelController.js';
 
 export class SecondaryPanelManager extends PanelManagerBase {
     enable() {
@@ -73,13 +73,13 @@ export class SecondaryPanelManager extends PanelManagerBase {
             if (monitor === primaryMonitor)
                 continue;
 
-            const panel = new SecondaryPanelController({
+            const panel = new ExtensionPanelController({
                 extensionDir: this._extensionDir,
                 settings: this._settings,
                 appSystem: this._appSystem,
                 tracker: this._tracker,
                 favorites: this._favorites,
-                notificationBadgeModel: this._notificationBadgeModel,
+                overlayModel: this._overlayModel,
                 spreadAppWindows: this._spreadAppWindows,
                 monitor,
                 openPreferences: this._openPreferences,

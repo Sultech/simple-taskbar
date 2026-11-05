@@ -8,8 +8,8 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
 import {AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
-import {PANEL_SCROLL_ACTION} from '../shared/panelScrollActions.js';
-import {TASKBAR_GEOMETRY_KEYS, taskbarGeometryEnabled} from '../shared/taskbarPanelModes.js';
+import {PANEL_SCROLL_ACTION} from '../shared/interactionActions.js';
+import {TASKBAR_GEOMETRY_KEYS, taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {
     addComboRow,
     createSwitchRow,

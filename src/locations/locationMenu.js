@@ -4,9 +4,9 @@
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide} from '../panel/panelPosition.js';
+import {panelArrowSide} from '../panel/panelMenuPositioner.js';
 
-export class TaskbarLocationMenu extends PopupMenu.PopupMenu {
+export class LocationMenu extends PopupMenu.PopupMenu {
     constructor(sourceActor, settings, location) {
         super(sourceActor, 0.5, panelArrowSide(settings));
         this._location = location;
