@@ -182,9 +182,11 @@ export function addPanelModeGroup({
             activatable_widget: optionsButton,
         });
         row.add_suffix(optionsButton);
-        optionsGroup.add(row);
+        if (mode !== PANEL_MODE_DEFAULT)
+            optionsGroup.add(row);
         optionRows.set(mode, {row, title: label, subtitle});
     }
+    optionsGroup.add(optionRows.get(PANEL_MODE_DEFAULT).row);
 
     const syncModes = () => {
         const current = activeMode(settings);

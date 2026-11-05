@@ -91,9 +91,8 @@ class OverviewBehaviorDialog extends Adw.Window {
                 addSuffix: row => row.add_suffix(labelOptionsButton),
             });
             const syncOverviewOptions = () => {
-                const available = !settings.get_boolean('dock-mode');
-                hideDashRow.sensitive = available;
-                launchToDesktopRow.sensitive = available;
+                overviewGroup.visible = !settings.get_boolean('dock-mode');
+                this.default_height = overviewGroup.visible ? 580 : 380;
             };
             connectSettings(settings, 'changed::dock-mode', syncOverviewOptions);
             syncOverviewOptions();
