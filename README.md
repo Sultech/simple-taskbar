@@ -25,7 +25,7 @@ Lamp animation when minimising and restoring windows.
 ## See it in action
 
 <div align="center">
-  <img src="docs/images/taskbar-dock2.png" alt="Simple Taskbar showing dark and light panel, Windows XP taskbar and dock styles" width="100%">
+  <img src="docs/images/simple-taskbar-banner.png" alt="Simple Taskbar — Make GNOME your own, showing Dock, taskbar and Windows XP styles" width="100%">
   <p><sub>Taskbar, Windows XP Theme and Dock modes.</sub></p>
 </div>
 
