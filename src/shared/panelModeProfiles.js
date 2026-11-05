@@ -115,7 +115,6 @@ const MODE_SETTING_KEYS = new Set([
     'dock-side-padding',
     'dock-full-width-side-padding',
     'dock-highlight-edge-gap',
-    'dock-min-icon-size',
     'dock-transparency-enabled',
     'dock-transparency-level',
     'dock-transparency-on-unmaximized',
@@ -308,6 +307,11 @@ function restorePanelModeSettings(settings, mode) {
         if (MODE_SETTING_KEYS.has(key))
             continue;
         restoreSettingValue(settings, key, values[key]);
+    }
+    if (mode === PANEL_MODE_TASKBAR && !values['dock-min-icon-size'] && axisProfilesEnabled(settings, mode)) {
+        const profile = axisProfile(mode, domainAxis(settings, PANEL_AXIS_DOMAIN));
+        const axisValues = settings.get_value(profile.settings).deepUnpack();
+        restoreSettingValue(settings, 'dock-min-icon-size', axisValues['dock-min-icon-size']);
     }
     return true;
 }
