@@ -143,9 +143,9 @@ export class PanelController {
             getMonitor: () => Main.layoutManager.primaryMonitor,
             getVertical: () => panelIsVertical(this._settings),
             getReserve: getHoverAnimationReserve,
-            isEnabled: () => dynamicTaskbarEnabled(this._settings),
+            isEnabled: () => Boolean(this._panelBoxLayout) && dynamicTaskbarEnabled(this._settings),
             isDynamic: () => dynamicTaskbarEnabled(this._settings),
-            getBaseLength: () => this._geometryController.getBaseLength(),
+            getBaseLength: () => this._geometryController ? this._geometryController.getBaseLength() : null,
             updateWidth: () => this.updateTaskbarWidth(),
             onGeometryChanged: geometry => this._panelBoxLayout.setPanelGeometry(geometry),
         });
