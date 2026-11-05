@@ -8,9 +8,6 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {cachedPanelApplicationSettings} from '../shared/defaultPanelWindowSettings.js';
 import {panelApplicationsEnabled} from '../shared/defaultPanelWindows.js';
@@ -144,7 +141,6 @@ export class SecondaryPanelController {
         this._blurActive = false;
         this._themeSyncLaterId = 0;
         this._taskbarWidthUpdater = new TaskbarWidthUpdater(() => this._updateTaskbarWidth());
-        this._signalHolder = new TransientSignalHolder();
         const isDock = settings.isDock;
         const configuredIconSize = isDock
             ? settings.getConfiguredIconSize()
@@ -446,7 +442,7 @@ export class SecondaryPanelController {
             this._panelBox.connectObject(
                 'child-added', () => this._queueThemeSync(),
                 'child-removed', () => this._queueThemeSync(),
-                this._signalHolder
+                this
             );
         }
         this._position();
@@ -530,13 +526,17 @@ export class SecondaryPanelController {
         this._taskbarController.disableHoverAnimations();
         this._taskbarWidthUpdater.destroy();
         this._taskbarWidthUpdater = null;
+        this._settings.disconnectObject(this);
+        Main.panel.disconnectObject(this);
+        this.actor.disconnectObject(this);
+        this._panelBox.disconnectObject(this);
+        for (const box of [this._leftBox, this._centerBox, this._rightBox])
+            box.disconnectObject(this);
+        this._taskbarController.actor.disconnectObject(this);
         if (this._windowDragController) {
             this._windowDragController.destroy();
             this._windowDragController = null;
         }
-        this._settings.disconnectObject(this);
-        this._signalHolder.destroy();
-        this._signalHolder = null;
 
         this._windowDodgeController.destroy();
         this._windowDodgeController = null;
@@ -668,15 +668,15 @@ export class SecondaryPanelController {
         }
         Main.panel.connectObject('notify::style-class', () => {
             this.syncTheme();
-        }, this._signalHolder);
+        }, this);
         Main.panel.connectObject('notify::style', () => {
             this.syncTheme();
-        }, this._signalHolder);
+        }, this);
         if (!this._dockController) {
             this.actor.connectObject('notify::style-class', () => {
                 if (panelBlurIsActive(this.actor) !== this._blurActive)
                     this.syncTheme();
-            }, this._signalHolder);
+            }, this);
         }
         for (const box of [
             this._leftBox,
@@ -686,7 +686,7 @@ export class SecondaryPanelController {
             box.connectObject(
                 'notify::width', () => this._queueTaskbarWidth(),
                 'notify::height', () => this._queueTaskbarWidth(),
-                this._signalHolder
+                this
             );
         }
         if (!this._dockController) {
@@ -697,13 +697,13 @@ export class SecondaryPanelController {
                     this._syncPanelHeight();
                 this._verticalItemsController.sync();
                 this._taskbarWidthUpdater.update();
-            }, this._signalHolder);
+            }, this);
             this._settings.connectObject(
                 'changed::dock-min-icon-size',
                 () => this._taskbarWidthUpdater.update(),
                 'changed::panel-height-follow-icon-size',
                 () => this._syncPanelHeight(),
-                this._signalHolder
+                this
             );
             this._settings.connectObject(
                 'changed::taskbar-highlight-edge-gap',
@@ -720,7 +720,7 @@ export class SecondaryPanelController {
                 this._settings.connectObject(
                     `changed::${key}`,
                     () => this.syncTheme(),
-                    this._signalHolder
+                    this
                 );
             }
         }
@@ -729,7 +729,7 @@ export class SecondaryPanelController {
             if (this._settings.get_boolean('default-gnome-panel'))
                 this._resetTaskbarIconSize();
             this._position();
-        }, this._signalHolder);
+        }, this);
         const syncIconMetrics = () => {
             if (this._settings.get_boolean('default-gnome-panel'))
                 this._resetTaskbarIconSize();
@@ -740,12 +740,12 @@ export class SecondaryPanelController {
         this._settings.connectObject(
             'changed::icon-spacing', syncIconMetrics,
             'changed::icon-edge-padding', syncIconMetrics,
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::default-gnome-panel', () => this._syncTaskbarVisibility(),
             'changed::default-panel-show-running-windows', () => this._syncTaskbarVisibility(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
@@ -755,12 +755,12 @@ export class SecondaryPanelController {
             },
             'changed::windows-10-theme-enabled',
             () => this.syncTheme(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject('changed::app-alignment', () => {
             this._applyAppearance();
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         for (const key of [
             'start-button-position',
             'start-button-follow-app-alignment',
@@ -769,7 +769,7 @@ export class SecondaryPanelController {
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._applyLayout();
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of [
             'windows-start-menu-enabled',
@@ -783,30 +783,30 @@ export class SecondaryPanelController {
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._applyLayout();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject('changed::activities-button-visible', () => {
             this._indicatorController.syncActivitiesVisibility();
             this._taskbarWidthUpdater.update();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::activities-button-position', () => {
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::clock-position', () => {
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::system-menu-position', () => {
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::folder-menu-enabled', () => {
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::folder-menu-position', () => {
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::panel-item-order', () => {
             this._applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::start-button-padding', () => {
             this._startButtonController.applyAppearance(
                 this._iconSizer.iconSize,
@@ -814,15 +814,15 @@ export class SecondaryPanelController {
             );
             this._verticalItemsController.sync();
             this._taskbarWidthUpdater.update();
-        }, this._signalHolder);
+        }, this);
         for (const signal of ['child-added', 'child-removed']) {
             this._taskbarController.actor.connectObject(signal, () => {
                 this._taskbarWidthUpdater.update();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject('changed::hide-app-labels', () => {
             this._taskbarWidthUpdater.update();
-        }, this._signalHolder);
+        }, this);
         if (!this._dockController) {
             for (const key of PANEL_BUTTON_PADDING_KEYS) {
                 this._settings.connectObject(
@@ -840,7 +840,7 @@ export class SecondaryPanelController {
             () => this._syncQuickSettingsIndicators(),
             'changed::windows-xp-theme-enabled',
             () => this._syncQuickSettingsIndicators(),
-            this._signalHolder
+            this
         );
     }
 
