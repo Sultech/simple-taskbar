@@ -6,6 +6,10 @@
       <default>false</default>
       <summary>Enable Dock mode</summary>
     </key>
+    <key name="dock-layout-settings" type="a{sv}">
+      <default>{}</default>
+      <summary>Regular Dock layout saved while macOS Dock mode is active</summary>
+    </key>
     <key name="dock-hide-dash-enabled" type="b">
       <default>true</default>
       <summary>Hide the Overview Dash in Dock mode</summary>

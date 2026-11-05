@@ -9,6 +9,7 @@ import {
     PANEL_AXIS_PROFILE_ENABLED_KEYS,
     PANEL_MODE_DEFAULT,
     PANEL_MODE_DOCK,
+    PANEL_MODE_MACOS_DOCK,
     PANEL_MODE_TASKBAR,
     PANEL_MODE_WINDOWS_10,
     PANEL_MODE_WINDOWS_XP,
@@ -19,6 +20,7 @@ import {
     addChoiceCards,
     drawDefaultPanelMode,
     drawDockMode,
+    drawMacosDockMode,
     drawTaskbarMode,
     drawWindows10Mode,
     drawWindowsXpMode,
@@ -33,6 +35,8 @@ const DOCK_DEFAULT_ICON_SPACING = 6;
 const DOCK_DEFAULT_START_BUTTON_PADDING = 2;
 
 function activeMode(settings) {
+    if (settings.get_boolean('macos-dock-theme-enabled'))
+        return PANEL_MODE_MACOS_DOCK;
     if (settings.get_boolean('dock-mode'))
         return PANEL_MODE_DOCK;
     if (settings.get_boolean('windows-xp-theme-enabled'))
@@ -72,7 +76,8 @@ function applyMode(settings, mode) {
     }
 
     setPanelMode(settings, mode);
-    settings.set_boolean('dock-mode', false);
+    if (mode !== PANEL_MODE_MACOS_DOCK)
+        settings.set_boolean('dock-mode', false);
 }
 
 export function addPanelModeGroup({
@@ -136,6 +141,14 @@ export function addPanelModeGroup({
             subtitle: _('Apply a Windows 10-inspired taskbar style'),
             tooltip: _('Windows 10 Theme Overview Behavior'),
         },
+        {
+            mode: PANEL_MODE_MACOS_DOCK,
+            label: _('macOS Dock'),
+            draw: drawMacosDockMode,
+            subtitle: _('Use a light Dock with magnification, Magic Lamp, and minimized window previews'),
+            tooltip: _('macOS Dock Mode Options'),
+            keys: DOCK_OVERVIEW_BEHAVIOR_KEYS,
+        },
     ];
 
     const cards = addChoiceCards(group, {
@@ -179,7 +192,7 @@ export function addPanelModeGroup({
         for (const [mode, {row}] of optionRows)
             row.visible = mode === current;
         const {row: defaultPanelRow, title, subtitle} = optionRows.get(PANEL_MODE_DEFAULT);
-        const dockPanel = current === PANEL_MODE_DOCK;
+        const dockPanel = current === PANEL_MODE_DOCK || current === PANEL_MODE_MACOS_DOCK;
         defaultPanelRow.visible ||= dockPanel;
         defaultPanelRow.title = dockPanel ? _('GNOME Panel') : title;
         defaultPanelRow.subtitle = dockPanel
@@ -189,6 +202,7 @@ export function addPanelModeGroup({
     for (const key of [
         'default-gnome-panel',
         'dock-mode',
+        'macos-dock-theme-enabled',
         'windows-xp-theme-enabled',
         'windows-10-theme-enabled',
     ])
