@@ -11,7 +11,7 @@ import {
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {MagicLampEffect} from './magicLampEffect.js';
-import {iconScreenGeometry} from './taskbarIconGeometryController.js';
+import {iconScreenGeometry, setWindowIconGeometry} from './taskbarIconGeometryController.js';
 import {
     WINDOW_MINIMIZE_EFFECT,
 } from '../shared/windowMinimizeEffect.js';
@@ -49,11 +49,16 @@ export class WindowMinimizeEffectController {
             if (!shouldAnimate || !this._isMinimizeWindowTypes(types))
                 return shouldAnimate;
 
-            const iconGeometry = this._getIconGeometry(actor);
-            if (!iconGeometry)
+            const target = this._getAnimationTarget(actor);
+            if (!target)
                 return shouldAnimate;
 
-            this._pendingActors.set(actor, iconGeometry);
+            if (this._settings.get_string('window-minimize-effect') === WINDOW_MINIMIZE_EFFECT.GNOME_DEFAULT) {
+                setWindowIconGeometry(actor.meta_window, target.geometry);
+                return shouldAnimate;
+            }
+
+            this._pendingActors.set(actor, target);
             return false;
         };
         this._shellWindowManager.completed_minimize = actor => {
@@ -83,6 +88,7 @@ export class WindowMinimizeEffectController {
     }
 
     destroy() {
+        this._shellWindowManager.disconnectObject(this._signalHolder);
         this._signalHolder.destroy();
         for (const actor of [...this._activeActors]) {
             const effect = actor.get_effect(MAGIC_LAMP_EFFECT_NAME);
@@ -91,6 +97,8 @@ export class WindowMinimizeEffectController {
         }
         this._activeActors.clear();
         this._pendingActors.clear();
+        for (const actor of global.get_window_actors())
+            actor.meta_window._simpleTaskbarRestoreTarget = null;
         this._windowManager._shouldAnimateActor =
             this._originalShouldAnimateActor;
         this._shellWindowManager.completed_minimize =
@@ -109,24 +117,25 @@ export class WindowMinimizeEffectController {
     }
 
     _onMinimize(actor) {
-        const iconGeometry = this._pendingActors.get(actor);
-        if (!iconGeometry)
+        const target = this._pendingActors.get(actor);
+        if (!target)
             return;
 
         this._pendingActors.delete(actor);
-        this._startEffect(actor, iconGeometry, false);
+        this._startEffect(actor, target, false);
     }
 
     _onUnminimize(actor) {
-        const iconGeometry = this._pendingActors.get(actor);
-        if (!iconGeometry)
+        const target = this._pendingActors.get(actor);
+        actor.meta_window._simpleTaskbarRestoreTarget = null;
+        if (!target)
             return;
 
         this._pendingActors.delete(actor);
-        this._startEffect(actor, iconGeometry, true);
+        this._startEffect(actor, target, true);
     }
 
-    _startEffect(actor, iconGeometry, restore) {
+    _startEffect(actor, target, restore) {
         const oldEffect = actor.get_effect(MAGIC_LAMP_EFFECT_NAME);
         if (oldEffect)
             oldEffect.finish();
@@ -139,16 +148,13 @@ export class WindowMinimizeEffectController {
             actor.show();
 
         const window = actor.meta_window;
-        const panelPosition = window._simpleTaskbarIconActor
-            ? window._simpleTaskbarIconPosition
-            : activePanelPosition(this._settings);
         this._activeActors.add(actor);
         actor.add_effect_with_name(
             MAGIC_LAMP_EFFECT_NAME,
             new MagicLampEffect(
-                iconGeometry,
-                () => this._liveIconGeometry(actor.meta_window),
-                panelPosition,
+                target.geometry,
+                () => restore && target.type === 'preview' ? null : this._liveIconGeometry(window, target.type),
+                target.position,
                 restore,
                 effectActor => this._onEffectDone(effectActor, restore)
             )
@@ -176,34 +182,54 @@ export class WindowMinimizeEffectController {
         }
     }
 
-    _getIconGeometry(actor) {
+    _getAnimationTarget(actor) {
         if (isDefaultPanelWithoutDock(this._settings)) {
             return null;
         }
 
-        if (this._settings.get_string('window-minimize-effect') !==
-            WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP ||
-            !St.Settings.get().enable_animations) {
+        if (!St.Settings.get().enable_animations) {
             return null;
         }
 
-        const live = this._liveIconGeometry(actor.meta_window);
-        if (live)
-            return live;
+        const window = actor.meta_window;
+        if (!window.minimized && window._simpleTaskbarRestoreTarget)
+            return {...window._simpleTaskbarRestoreTarget};
 
-        const [success, geometry] = actor.meta_window.get_icon_geometry();
+        if (window.minimized && window._simpleTaskbarMinimizePreviewTarget) {
+            const target = window._simpleTaskbarMinimizePreviewTarget();
+            if (target)
+                return {...target, type: 'locations'};
+        }
+
+        const position = window._simpleTaskbarIconActor
+            ? window._simpleTaskbarIconPosition
+            : activePanelPosition(this._settings);
+        const live = this._liveIconGeometry(window, 'app');
+        if (live)
+            return {geometry: live, position, type: 'app'};
+
+        const [success, geometry] = window.get_icon_geometry();
         if (!success || geometry.width <= 0 || geometry.height <= 0)
             return null;
 
         return {
-            x: geometry.x,
-            y: geometry.y,
-            width: geometry.width,
-            height: geometry.height,
+            geometry: {
+                x: geometry.x,
+                y: geometry.y,
+                width: geometry.width,
+                height: geometry.height,
+            },
+            position,
+            type: 'app',
         };
     }
 
-    _liveIconGeometry(window) {
+    _liveIconGeometry(window, type) {
+        if (type === 'locations') {
+            const getTarget = window._simpleTaskbarMinimizePreviewTarget;
+            const target = getTarget ? getTarget() : null;
+            return target ? target.geometry : null;
+        }
         const icon = window._simpleTaskbarIconActor;
         return icon ? iconScreenGeometry(icon) : null;
     }

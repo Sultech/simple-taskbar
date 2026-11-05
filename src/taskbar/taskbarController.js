@@ -14,6 +14,7 @@ import {
 
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 import {taskbarAppLabelsVisible} from '../shared/panelSizing.js';
+import {WINDOW_MINIMIZE_EFFECT} from '../shared/windowMinimizeEffect.js';
 
 import {TaskbarDragController} from './taskbarDragController.js';
 import {TaskbarAppItemFactory} from './taskbarAppItemFactory.js';
@@ -36,6 +37,7 @@ import {
 } from './taskbarShowDesktopController.js';
 import {
     TaskbarIconGeometryController,
+    iconScreenGeometry,
 } from './taskbarIconGeometryController.js';
 import {
     TaskbarIconHoverAnimationController,
@@ -78,6 +80,7 @@ import {modifierClickActionKey} from '../inputUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 const STARTUP_SETTLE_DELAY = 750;
+const MINIMIZED_PREVIEW_RESTORE_EXIT_TIME = 360;
 const APP_LABEL_WIDTH = 160;
 const BADGE_SINGLE_DIGIT_ICON_SIZE = 31;
 const BADGE_TWO_DIGIT_ICON_SIZE = 35;
@@ -212,6 +215,7 @@ export class TaskbarController {
             getIconTarget: item => this._overflowIconItems.has(item)
                 ? this._overflowIconButton
                 : item._taskbarIcon,
+            getMinimizeTarget: window => this._getMinimizePreviewTarget(window),
         });
         this._locationActor = new St.BoxLayout({
             style_class: 'simple-taskbar-locations',
@@ -1244,7 +1248,19 @@ export class TaskbarController {
                 if (animateMembershipChanges &&
                     (!wasPinnedPlaceholder ||
                         newlyUnpinnedAppIds.has(appId))) {
-                    animateTaskbarItemOutAndDestroy(item);
+                    const restoringPreview = item._taskbarApp._simpleTaskbarMinimizedWindow &&
+                        !item._taskbarApp.window.minimized;
+                    if (restoringPreview && item._taskbarApp.restoreSource !== 'preview') {
+                        this._iconHoverAnimationController.removeItem(item);
+                        item.child.opacity = 0;
+                        animateTaskbarItemOutAndDestroy(item);
+                    } else {
+                        const duration = restoringPreview &&
+                            this._settings.get_string('window-minimize-effect') === WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP
+                            ? MINIMIZED_PREVIEW_RESTORE_EXIT_TIME : null;
+                        animateTaskbarItemOutAndDestroy(item,
+                            duration);
+                    }
                 } else {
                     item.destroy();
                 }
@@ -1501,6 +1517,36 @@ export class TaskbarController {
 
     updateAppIconGeometry(app) {
         this._iconGeometryController.updateAppIconGeometry(app);
+    }
+
+    _getMinimizePreviewTarget(window) {
+        const entries = this._locationController.getEntries();
+        const index = entries.findIndex(entry =>
+            entry.app._simpleTaskbarMinimizedWindow && entry.app.window === window
+        );
+        if (index < 0)
+            return null;
+
+        const item = this._appButtons.get(entries[index].key);
+        const allocated = item ? iconScreenGeometry(item._taskbarIcon) : null;
+        if (allocated)
+            return {geometry: allocated, position: this._settings.get_string('panel-position')};
+
+        const [x, y] = this._locationActor.get_transformed_position();
+        const vertical = panelIsVertical(this._settings);
+        const step = this._itemSlotWidth(null);
+        const cross = this._appearanceController.visualPanelHeight();
+        const mainInset = (step - this._iconSize) / 2;
+        const crossInset = (cross - this._iconSize) / 2;
+        return {
+            geometry: {
+                x: Math.round(x + (vertical ? crossInset : index * step + mainInset)),
+                y: Math.round(y + (vertical ? index * step + mainInset : crossInset)),
+                width: this._iconSize,
+                height: this._iconSize,
+            },
+            position: this._settings.get_string('panel-position'),
+        };
     }
 
     reorderTaskbarItem(sourceItem, targetItem, insertBefore) {

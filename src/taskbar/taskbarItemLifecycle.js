@@ -1,16 +1,32 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+
 import * as IconGrid from 'resource:///org/gnome/shell/ui/iconGrid.js';
 
-export function animateTaskbarItemOutAndDestroy(item) {
+export function animateTaskbarItemOutAndDestroy(item, duration = null) {
     if (!item.get_stage()) {
         item.destroy();
         return;
     }
 
     item.reactive = false;
-    item.animateOutAndDestroy();
+    if (duration === null) {
+        item.animateOutAndDestroy();
+        return;
+    }
+
+    item.label.hide();
+    item.animatingOut = true;
+    item.ease({
+        scale_x: 0,
+        scale_y: 0,
+        opacity: 0,
+        duration,
+        mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        onComplete: () => item.destroy(),
+    });
 }
 
 export function animatePinnedLaunch(item) {

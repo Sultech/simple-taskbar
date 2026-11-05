@@ -148,14 +148,14 @@ export class TaskbarIconHoverAnimationController {
         );
         this._taskbarActor.connectObject(
             'child-added', (_actor, child) => this._trackItem(child),
-            'child-removed', (_actor, child) => this._untrackItem(child),
+            'child-removed', (_actor, child) => this.removeItem(child),
             'notify::allocation', () => this._queueMagnifyUpdate(),
             this
         );
         const locationActor = this._getLocationActor();
         locationActor.connectObject(
             'child-added', (_actor, child) => this._trackItem(child),
-            'child-removed', (_actor, child) => this._untrackItem(child),
+            'child-removed', (_actor, child) => this.removeItem(child),
             'notify::allocation', () => this._queueMagnifyUpdate(),
             this
         );
@@ -303,7 +303,7 @@ export class TaskbarIconHoverAnimationController {
         );
     }
 
-    _untrackItem(item) {
+    removeItem(item) {
         this._queueMagnifyUpdate();
         this._cloneController.remove(item);
         this._cloneController.resetStretch(item);
