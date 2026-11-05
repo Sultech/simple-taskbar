@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 import Mtk from 'gi://Mtk';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -25,6 +26,20 @@ export function iconScreenGeometry(icon) {
     };
 }
 
+export function setWindowRestoreTarget(window, icon, position, type = 'app') {
+    const geometry = iconScreenGeometry(icon);
+    window._simpleTaskbarRestoreTarget = geometry ? {geometry, position, type} : null;
+}
+
+export function setWindowIconGeometry(window, geometry) {
+    const rectangle = new Mtk.Rectangle();
+    rectangle.x = geometry.x;
+    rectangle.y = geometry.y;
+    rectangle.width = Math.max(1, geometry.width);
+    rectangle.height = Math.max(1, geometry.height);
+    window.set_icon_geometry(rectangle);
+}
+
 export class TaskbarIconGeometryController {
     constructor({
         settings,
@@ -32,14 +47,19 @@ export class TaskbarIconGeometryController {
         appButtons,
         windowsForItem,
         getIconTarget,
+        getMinimizeTarget,
     }) {
         this._settings = settings;
         this._taskbarActor = taskbarActor;
         this._appButtons = appButtons;
         this._windowsForItem = windowsForItem;
         this._getIconTarget = getIconTarget;
+        this._getMinimizeTarget = getMinimizeTarget;
         this._iconGeometryUpdateId = 0;
+        this._restoreTargetReleaseId = 0;
+        this._claimedRestoreWindows = new Set();
         this._windowIconActors = new Map();
+        this._windowPreviewActors = new Map();
     }
 
     queueIconGeometryUpdate() {
@@ -71,15 +91,43 @@ export class TaskbarIconGeometryController {
             if (item._taskbarApp === app)
                 this._updateItemIconGeometry(item, true);
         }
+        this._queueRestoreTargetRelease();
+    }
+
+    _queueRestoreTargetRelease() {
+        const laters = global.compositor.get_laters();
+        if (this._restoreTargetReleaseId)
+            laters.remove(this._restoreTargetReleaseId);
+        this._restoreTargetReleaseId = laters.add(Meta.LaterType.BEFORE_REDRAW, () => {
+            this._restoreTargetReleaseId = 0;
+            this._releaseClaimedRestoreTargets();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _releaseClaimedRestoreTargets() {
+        for (const window of this._claimedRestoreWindows) {
+            const target = window._simpleTaskbarRestoreTarget;
+            if (target && target.type === 'app')
+                window._simpleTaskbarRestoreTarget = null;
+        }
+        this._claimedRestoreWindows.clear();
     }
 
     destroy() {
         if (this._iconGeometryUpdateId)
             GLib.Source.remove(this._iconGeometryUpdateId);
         this._iconGeometryUpdateId = 0;
+        if (this._restoreTargetReleaseId)
+            global.compositor.get_laters().remove(this._restoreTargetReleaseId);
+        this._restoreTargetReleaseId = 0;
+        this._claimedRestoreWindows.clear();
+        this._claimedRestoreWindows = null;
         this._clearWindowIconActors();
         this._windowIconActors = null;
+        this._windowPreviewActors = null;
         this._getIconTarget = null;
+        this._getMinimizeTarget = null;
         this._windowsForItem = null;
         this._appButtons = null;
         this._taskbarActor = null;
@@ -87,16 +135,29 @@ export class TaskbarIconGeometryController {
     }
 
     _clearWindowIconActors(app = null) {
-        for (const [window, assignment] of this._windowIconActors) {
-            if (app && assignment.app !== app)
-                continue;
+        for (const [actors, actorKey, positionKey] of [
+            [this._windowIconActors, '_simpleTaskbarIconActor', '_simpleTaskbarIconPosition'],
+            [this._windowPreviewActors, '_simpleTaskbarPreviewActor', '_simpleTaskbarPreviewPosition'],
+        ]) {
+            for (const [window, assignment] of actors) {
+                if (app && assignment.app !== app)
+                    continue;
 
-            if (window._simpleTaskbarIconActor === assignment.icon) {
-                window._simpleTaskbarIconActor = null;
-                window._simpleTaskbarIconPosition = null;
+                this._releaseWindowIconActor(window, assignment, actors, actorKey, positionKey);
             }
-            this._windowIconActors.delete(window);
         }
+    }
+
+    _releaseWindowIconActor(window, assignment, actors, actorKey, positionKey) {
+        if (assignment.destroyId)
+            assignment.icon.disconnect(assignment.destroyId);
+        if (window[actorKey] === assignment.icon) {
+            window[actorKey] = null;
+            window[positionKey] = null;
+            if (actors === this._windowIconActors)
+                window._simpleTaskbarMinimizePreviewTarget = null;
+        }
+        actors.delete(window);
     }
 
     _updateItemIconGeometry(item, claimTarget = false) {
@@ -105,31 +166,47 @@ export class TaskbarIconGeometryController {
         if (!screenGeometry)
             return;
 
-        const geometry = new Mtk.Rectangle();
-        geometry.x = screenGeometry.x;
-        geometry.y = screenGeometry.y;
-        geometry.width = Math.max(1, screenGeometry.width);
-        geometry.height = Math.max(1, screenGeometry.height);
         const monitor = Main.layoutManager.findMonitorForActor(
             this._taskbarActor
         );
         const monitorScoped =
             this._settings.get_boolean('multi-monitor-panels') &&
             Main.layoutManager.monitors.length > 1;
-        for (const window of this._windowsForItem(item)) {
-            if (!claimTarget && window._simpleTaskbarIconActor &&
-                window._simpleTaskbarIconActor !== icon)
+        const app = item._taskbarApp;
+        const isPreview = app._simpleTaskbarMinimizedWindow;
+        const windows = isPreview ? [app.window] : this._windowsForItem(item);
+        const actors = isPreview ? this._windowPreviewActors : this._windowIconActors;
+        const actorKey = isPreview ? '_simpleTaskbarPreviewActor' : '_simpleTaskbarIconActor';
+        const positionKey = isPreview ? '_simpleTaskbarPreviewPosition' : '_simpleTaskbarIconPosition';
+        for (const window of windows) {
+            if (!claimTarget && window[actorKey] &&
+                window[actorKey] !== icon)
                 continue;
             if (monitorScoped && monitor &&
                 window.get_monitor() !== monitor.index)
                 continue;
-            window.set_icon_geometry(geometry);
-            window._simpleTaskbarIconActor = icon;
-            window._simpleTaskbarIconPosition = panelPosition(this._settings);
-            this._windowIconActors.set(window, {
-                app: item._taskbarApp,
+            setWindowIconGeometry(window, screenGeometry);
+            window[actorKey] = icon;
+            window[positionKey] = panelPosition(this._settings);
+            if (!isPreview) {
+                window._simpleTaskbarMinimizePreviewTarget = () => this._getMinimizeTarget(window);
+                if (claimTarget && window.minimized) {
+                    setWindowRestoreTarget(window, icon, window[positionKey]);
+                    this._claimedRestoreWindows.add(window);
+                }
+            }
+            const assignment = {
+                app,
                 icon,
-            });
+                destroyId: 0,
+            };
+            if (isPreview) {
+                assignment.destroyId = icon.connect('destroy', () => {
+                    assignment.destroyId = 0;
+                    this._releaseWindowIconActor(window, assignment, actors, actorKey, positionKey);
+                });
+            }
+            actors.set(window, assignment);
         }
     }
 }

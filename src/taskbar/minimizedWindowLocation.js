@@ -10,6 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {TaskbarLocation} from './taskbarLocation.js';
 import {applyIconRenderScale} from '../shared/applicationHoverAnimation.js';
+import {setWindowRestoreTarget} from './taskbarIconGeometryController.js';
 
 const MinimizedWindowThumbnail = GObject.registerClass(
 class MinimizedWindowThumbnail extends St.Widget {
@@ -106,6 +107,7 @@ class MinimizedWindowLocation extends TaskbarLocation {
         this._window = window;
         this._app = app;
         this._simpleTaskbarMinimizedWindow = true;
+        this.restoreSource = null;
         this._titleSignalId = window.connect('notify::title', () => {
             this.name = window.get_title() || _('Untitled Window');
             this.emit('changed');
@@ -116,7 +118,14 @@ class MinimizedWindowLocation extends TaskbarLocation {
         return new MinimizedWindowThumbnail(this._window, this._app, iconSize);
     }
 
+    get window() {
+        return this._window;
+    }
+
     open() {
+        const icon = this._window._simpleTaskbarPreviewActor;
+        if (icon)
+            setWindowRestoreTarget(this._window, icon, this._window._simpleTaskbarPreviewPosition, 'preview');
         Main.activateWindow(this._window);
         Main.overview.hide();
     }
@@ -126,6 +135,7 @@ class MinimizedWindowLocation extends TaskbarLocation {
         this._titleSignalId = 0;
         this._window = null;
         this._app = null;
+        this.restoreSource = null;
         super.destroy();
     }
 });

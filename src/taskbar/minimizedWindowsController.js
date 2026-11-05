@@ -67,7 +67,7 @@ export class MinimizedWindowsController {
 
     _trackWindow(window) {
         const ids = [
-            window.connect('notify::minimized', () => this._onChanged()),
+            window.connect('notify::minimized', () => this._onMinimizedChanged(window)),
             window.connect('notify::skip-taskbar', () => this._onChanged()),
             window.connect('unmanaged', () => {
                 this._removeWindow(window);
@@ -75,6 +75,15 @@ export class MinimizedWindowsController {
             }),
         ];
         this._windows.set(window, {ids, location: null});
+    }
+
+    _onMinimizedChanged(window) {
+        const location = this._windows.get(window).location;
+        if (location) {
+            const target = window._simpleTaskbarRestoreTarget;
+            location.restoreSource = !window.minimized && target ? target.type : null;
+        }
+        this._onChanged();
     }
 
     _removeWindow(window) {
