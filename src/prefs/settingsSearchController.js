@@ -242,7 +242,7 @@ export class SettingsSearchController {
                 const buttonAvailable = context.available && this._isAvailable(widget, root);
                 this._indexWidgets(dialog.get_content(), {
                     ...context,
-                    dialog: buttonAvailable ? dialog : null,
+                    dialog: buttonAvailable ? dialog : context.dialog,
                     available: buttonAvailable,
                     focusRow: buttonAvailable
                         ? context.focusRow
