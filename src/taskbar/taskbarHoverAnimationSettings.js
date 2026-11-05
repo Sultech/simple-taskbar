@@ -71,7 +71,12 @@ export class TaskbarHoverAnimationSettings {
     }
 
     syncIconResolution(item) {
-        applyIconRenderScale(item._taskbarIcon, this._getIconSize(), this.getRenderScale());
+        const icon = item._taskbarIcon;
+        if (item._taskbarApp._simpleTaskbarMinimizedWindow) {
+            icon.setIconSize(this._getIconSize(), this.getRenderScale());
+        } else {
+            applyIconRenderScale(icon, this._getIconSize(), this.getRenderScale());
+        }
         item._taskbarIndicator.setRenderScale(this.getHoverRenderScale());
     }
 

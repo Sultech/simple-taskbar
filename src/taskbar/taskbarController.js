@@ -187,7 +187,10 @@ export class TaskbarController {
         this._locationController = new TaskbarLocationsController({
             settings: this._settings,
             scope: locationScope,
+            tracker: this._tracker,
+            getInterestingWindows: app => this._interestingWindows(app),
             onChanged: () => this._queueRedisplay(),
+            onRemoving: (app, onRemoved) => this._removeMinimizedLocation(app, onRemoved),
         });
 
         this.actor = new St.BoxLayout({
@@ -782,8 +785,6 @@ export class TaskbarController {
             app.disconnect(id);
         this._appSignals.clear();
         this._appWindows.clear();
-        this._locationController.destroy();
-        this._locationController = null;
 
         this._showDesktopController.destroy();
         this._showDesktopController = null;
@@ -799,6 +800,10 @@ export class TaskbarController {
             item.destroy();
         }
         this._appButtons.clear();
+        for (const item of this._locationActor.get_children())
+            item.destroy();
+        this._locationController.destroy();
+        this._locationController = null;
         this._iconHoverAnimationController.destroy();
         this._iconHoverAnimationController = null;
         this._dragController.destroy();
@@ -1392,6 +1397,36 @@ export class TaskbarController {
         }
         this._entryModel.resetSessionOrder();
         this._shownInitially = false;
+    }
+
+    _removeMinimizedLocation(app, onRemoved) {
+        this._untrackApp(app);
+        const items = this._locationActor.get_children().filter(item =>
+            item._taskbarApp === app
+        );
+        let remaining = items.length;
+        if (remaining === 0) {
+            onRemoved();
+            return;
+        }
+
+        this._appButtons.delete(app.get_id());
+        for (const item of items) {
+            this._getPreviews().removeItem(item);
+            this._dragController.releaseDraggable(item);
+            this._destroyAppMenu(item._taskbarButton);
+            item.connect('destroy', () => {
+                item._taskbarApp = null;
+                if (--remaining === 0)
+                    onRemoved();
+            });
+            if (item.animatingOut)
+                continue;
+            if (this._shownInitially)
+                animateTaskbarItemOutAndDestroy(item);
+            else
+                item.destroy();
+        }
     }
 
     syncButtonStates(animate = true, force = false) {

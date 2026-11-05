@@ -6,6 +6,7 @@ import GLib from 'gi://GLib';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {MinimizedWindowsController} from './minimizedWindowsController.js';
 import {
     TaskbarLocation,
     TRASH_URI,
@@ -78,7 +79,7 @@ const COMMON_FOLDER_DEFINITIONS = [
 ];
 
 export class TaskbarLocationsController {
-    constructor({settings, scope, onChanged}) {
+    constructor({settings, scope, tracker, getInterestingWindows, onChanged, onRemoving}) {
         this._settings = settings;
         this._onChanged = onChanged;
         this._folderOnly = scope === 'start-menu';
@@ -107,6 +108,18 @@ export class TaskbarLocationsController {
         this._volumeFallbackIds = new WeakMap();
         this._nextVolumeFallbackId = 0;
         this._trashApp = null;
+        this._minimizedWindows = this._folderOnly ? null
+            : new MinimizedWindowsController({
+                settings,
+                key: scope === 'dock'
+                    ? 'dock-show-minimized-windows'
+                    : 'taskbar-show-minimized-windows',
+                locationsKey: this._showLocationsKey,
+                tracker,
+                getInterestingWindows,
+                onChanged,
+                onRemoving,
+            });
 
         for (const [signal, callback] of [
             [`changed::${this._showLocationsKey}`, () => this._sync()],
@@ -145,7 +158,10 @@ export class TaskbarLocationsController {
     }
 
     getEntries() {
-        const entries = this.getFolderEntries();
+        const entries = this._minimizedWindows
+            ? this._minimizedWindows.getLocations().map(app => this._createEntry(app))
+            : [];
+        entries.push(...this.getFolderEntries());
         if (this._folderOnly)
             return entries;
 
@@ -185,6 +201,10 @@ export class TaskbarLocationsController {
         for (const id of this._monitorSignalIds)
             this._monitor.disconnect(id);
         this._monitorSignalIds = [];
+        if (this._minimizedWindows) {
+            this._minimizedWindows.destroy();
+            this._minimizedWindows = null;
+        }
         this._destroyFolderApps();
         this._destroyVolumeApps();
         this._destroyTrashApp();

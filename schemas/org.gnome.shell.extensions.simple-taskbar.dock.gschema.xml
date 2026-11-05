@@ -22,6 +22,10 @@
       <default>true</default>
       <summary>Show locations in the Dock</summary>
     </key>
+    <key name="dock-show-minimized-windows" type="b">
+      <default>false</default>
+      <summary>Show minimized window thumbnails before Dock locations</summary>
+    </key>
     <key name="dock-show-trash" type="b">
       <default>true</default>
       <summary>Show Trash in the Dock</summary>

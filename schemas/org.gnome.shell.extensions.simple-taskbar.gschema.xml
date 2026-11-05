@@ -546,6 +546,10 @@
       <default>false</default>
       <summary>Show locations in the taskbar</summary>
     </key>
+    <key name="taskbar-show-minimized-windows" type="b">
+      <default>false</default>
+      <summary>Show minimized window thumbnails before taskbar locations</summary>
+    </key>
     <key name="taskbar-show-trash" type="b">
       <default>true</default>
       <summary>Show Trash in the taskbar</summary>

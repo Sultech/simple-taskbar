@@ -51,6 +51,11 @@ export class TaskbarItemInteractionController {
         const app = item._taskbarApp;
         this._animateClick(item);
         previews.hideTooltip();
+        if (app._simpleTaskbarMinimizedWindow) {
+            previews.hide();
+            app.activate();
+            return false;
+        }
         if (item._taskbarIsLauncher) {
             previews.hide();
             this._animatePinnedLaunch(item);
