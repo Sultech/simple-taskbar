@@ -264,7 +264,10 @@ export class ExtensionPanelController {
             isDynamic: () => this._dockController
                 ? !this._settings.get_boolean('dock-panel-mode')
                 : dynamicTaskbarEnabled(this._settings),
-            getBaseLength: () => (this._dockController ?? this._geometryController).getBaseLength(),
+            getBaseLength: () => {
+                const geometrySource = this._geometrySource();
+                return geometrySource ? geometrySource.getBaseLength() : null;
+            },
             updateWidth: () => this._panelLayoutUpdater.update(),
             onGeometryChanged: (geometry, centerOffset) => {
                 this.actor.set_position(geometry.x, geometry.y);
