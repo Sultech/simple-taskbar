@@ -4174,3 +4174,23 @@ msgstr "No se encontraron resultados"
 #: src/prefs/settingsSearchController.js:141
 msgid "Try a different search"
 msgstr "Prueba con otra búsqueda"
+
+#: src/prefs/panelModeGroup.js:146
+msgid "macOS Dock"
+msgstr "Dock de macOS"
+
+#: src/prefs/panelModeGroup.js:148
+msgid "Use a light Dock with magnification, Magic Lamp, and minimized window previews"
+msgstr "Usar un Dock claro con ampliación, lámpara mágica y vistas previas de ventanas minimizadas"
+
+#: src/prefs/panelModeGroup.js:149
+msgid "macOS Dock Mode Options"
+msgstr "Opciones del modo Dock de macOS"
+
+#: src/prefs/locationsGroup.js:86
+msgid "Show Minimized Window Previews"
+msgstr "Mostrar vistas previas de ventanas minimizadas"
+
+#: src/prefs/locationsGroup.js:87
+msgid "Show clickable window thumbnails before folders, drives, and Trash"
+msgstr "Mostrar miniaturas de ventanas en las que se puede hacer clic antes de las carpetas, las unidades y la papelera"

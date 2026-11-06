@@ -4110,3 +4110,23 @@ msgstr "Nincs találat"
 #: src/prefs/settingsSearchController.js:141
 msgid "Try a different search"
 msgstr "Próbáljon másik keresést"
+
+#: src/prefs/panelModeGroup.js:146
+msgid "macOS Dock"
+msgstr "macOS Dock"
+
+#: src/prefs/panelModeGroup.js:148
+msgid "Use a light Dock with magnification, Magic Lamp, and minimized window previews"
+msgstr "Világos Dock használata nagyítással, varázslámpával és a kis méretre állított ablakok előnézetével"
+
+#: src/prefs/panelModeGroup.js:149
+msgid "macOS Dock Mode Options"
+msgstr "A macOS Dock mód beállításai"
+
+#: src/prefs/locationsGroup.js:86
+msgid "Show Minimized Window Previews"
+msgstr "Kis méretre állított ablakok előnézetének megjelenítése"
+
+#: src/prefs/locationsGroup.js:87
+msgid "Show clickable window thumbnails before folders, drives, and Trash"
+msgstr "Kattintható ablakbélyegképek megjelenítése a mappák, a meghajtók és a Kuka előtt"

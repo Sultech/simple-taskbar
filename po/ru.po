@@ -4077,3 +4077,23 @@ msgstr "Ничего не найдено"
 #: src/prefs/settingsSearchController.js:141
 msgid "Try a different search"
 msgstr "Попробуйте другой запрос"
+
+#: src/prefs/panelModeGroup.js:146
+msgid "macOS Dock"
+msgstr "Dock macOS"
+
+#: src/prefs/panelModeGroup.js:148
+msgid "Use a light Dock with magnification, Magic Lamp, and minimized window previews"
+msgstr "Использовать светлый Dock с увеличением, волшебной лампой и эскизами свёрнутых окон"
+
+#: src/prefs/panelModeGroup.js:149
+msgid "macOS Dock Mode Options"
+msgstr "Параметры режима Dock macOS"
+
+#: src/prefs/locationsGroup.js:86
+msgid "Show Minimized Window Previews"
+msgstr "Показывать эскизы свёрнутых окон"
+
+#: src/prefs/locationsGroup.js:87
+msgid "Show clickable window thumbnails before folders, drives, and Trash"
+msgstr "Показывать кликабельные эскизы окон перед папками, накопителями и корзиной"

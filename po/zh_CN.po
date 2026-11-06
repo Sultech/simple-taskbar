@@ -3947,3 +3947,23 @@ msgstr "未找到结果"
 #: src/prefs/settingsSearchController.js:141
 msgid "Try a different search"
 msgstr "尝试其他搜索"
+
+#: src/prefs/panelModeGroup.js:146
+msgid "macOS Dock"
+msgstr "macOS Dock"
+
+#: src/prefs/panelModeGroup.js:148
+msgid "Use a light Dock with magnification, Magic Lamp, and minimized window previews"
+msgstr "使用带有放大、神灯效果和最小化窗口预览的浅色 Dock"
+
+#: src/prefs/panelModeGroup.js:149
+msgid "macOS Dock Mode Options"
+msgstr "macOS Dock 模式选项"
+
+#: src/prefs/locationsGroup.js:86
+msgid "Show Minimized Window Previews"
+msgstr "显示最小化窗口预览"
+
+#: src/prefs/locationsGroup.js:87
+msgid "Show clickable window thumbnails before folders, drives, and Trash"
+msgstr "在文件夹、驱动器和回收站之前显示可点击的窗口缩略图"
