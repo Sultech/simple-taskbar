@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import {APP_ICON_HOVER_ANIMATION} from './applicationHoverAnimation.js';
+import {APPLICATION_CLICK_ANIMATION} from './applicationClickAnimation.js';
 import {HOVER_ACTION} from './interactionActions.js';
 import {CLASSIC_HIGHLIGHT_SETTINGS, TASKBAR_HIGHLIGHT_STYLE} from './classicHighlightSettings.js';
 import {WINDOW_MINIMIZE_EFFECT} from './windowMinimizeEffect.js';
@@ -16,6 +17,7 @@ export function applyMacosDockDefaults(settings) {
     settings.set_boolean('show-pinned-app-separator', true);
     settings.set_string('window-minimize-effect', WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP);
     settings.set_string('animate-appicon-hover-animation-type', APP_ICON_HOVER_ANIMATION.MAGNIFY);
+    settings.set_string('application-click-animation', APPLICATION_CLICK_ANIMATION.BOUNCE);
     settings.set_string('application-hover-action', HOVER_ACTION.SHOW_TOOLTIP);
     settings.set_string('combine-app-buttons-mode', 'always');
     settings.set_string('running-indicator-style', 'dots');
