@@ -8,9 +8,6 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 import {taskbarAppLabelsVisible} from '../shared/panelSizing.js';
@@ -164,7 +161,6 @@ export class TaskbarController {
         this._ignoreTaskbarLock = ignoreTaskbarLock;
         this._isSecondary = isSecondary;
         this._alignmentActor = null;
-        this._signalHolder = new TransientSignalHolder();
         this._appSignals = new Map();
         this._appWindows = new Map();
         this._appButtons = new Map();
@@ -538,7 +534,7 @@ export class TaskbarController {
         if (this._startupSettling) {
             Main.layoutManager.connectObject('startup-complete', () => {
                 this._scheduleStartupSettle();
-            }, this._signalHolder);
+            }, this);
         }
         this._appSystem.connectObject('app-state-changed', (_system, app) => {
             if (this._combineMode() === 'always' &&
@@ -549,31 +545,31 @@ export class TaskbarController {
                 return;
             }
             this._queueRedisplay();
-        }, this._signalHolder);
+        }, this);
         this._favorites.connectObject('changed', () => {
             this._queueRedisplay();
-        }, this._signalHolder);
+        }, this);
         this._overlayModel.connectObject(
             'changed', () => {
                 this._syncNotificationBadges();
                 this._syncProgressBars();
             },
-            this._signalHolder
+            this
         );
         global.display.connectObject('notify::focus-window', () => {
             this.syncButtonStates();
-        }, this._signalHolder);
+        }, this);
         global.window_manager.connectObject('switch-workspace', () => {
             this._connectActiveWorkspaceSignals();
             this._refreshWorkspaceIsolation(
                 false,
                 this._settings.get_boolean('isolate-workspaces')
             );
-        }, this._signalHolder);
+        }, this);
         for (const signal of ['window-entered-monitor', 'window-left-monitor']) {
             global.display.connectObject(signal, () => {
                 this._refreshWorkspaceIsolation();
-            }, this._signalHolder);
+            }, this);
         }
         if (!this._settings.isDefaultPanelWindows) {
             for (const pinnedKey of [
@@ -588,7 +584,7 @@ export class TaskbarController {
                         this._queueRedisplay();
                         this._syncDragEnabled(true);
                     },
-                    this._signalHolder
+                    this
                 );
             }
             const rebuildPinnedEntries = () => {
@@ -601,17 +597,17 @@ export class TaskbarController {
             this._settings.connectObject(
                 'changed::use-pinned-apps-as-launchers', rebuildPinnedEntries,
                 'changed::keep-pinned-app-windows-together', rebuildPinnedEntries,
-                this._signalHolder
+                this
             );
             this._settings.connectObject(
                 'changed::show-pinned-app-separator',
                 () => this._queueRedisplay(),
-                this._signalHolder
+                this
             );
             this._settings.connectObject(
                 'changed::show-location-separator',
                 () => this._queueRedisplay(),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
@@ -619,17 +615,17 @@ export class TaskbarController {
             () => this._syncApplicationVisibility(),
             'changed::default-panel-show-running-windows',
             () => this._syncApplicationVisibility(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject('changed::isolate-workspaces', () => {
             this._refreshWorkspaceIsolation(true, true);
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::isolate-monitors', () => {
             this._refreshWorkspaceIsolation(true, true);
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::multi-monitor-panels', () => {
             this._refreshWorkspaceIsolation(true);
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject(
             'changed::combine-app-buttons-mode',
             () => {
@@ -640,7 +636,7 @@ export class TaskbarController {
                 this._queueRedisplay();
                 this._syncDragEnabled();
             },
-            this._signalHolder
+            this
         );
         if (!this._settings.isDefaultPanelWindows) {
             this._settings.connectObject('changed::hide-app-labels', () => {
@@ -657,7 +653,7 @@ export class TaskbarController {
                     this._updateGlassGeometry(item);
                 }
                 this.queueIconGeometryUpdate();
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of [
             'group-apps-label-font-size',
@@ -668,13 +664,13 @@ export class TaskbarController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this._syncLabelSettings(),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
             'changed::nautilus-places-enabled',
             () => this._syncFileManagerPlaces(),
-            this._signalHolder
+            this
         );
         for (const key of [
             'windows-10-theme-enabled',
@@ -689,7 +685,7 @@ export class TaskbarController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this.applyAppearance(),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
@@ -700,29 +696,29 @@ export class TaskbarController {
                     this._updateGlassGeometry(item);
                 }
             },
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::show-notification-badges',
             () => this._syncNotificationBadges(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::show-progress-bars',
             () => this._syncProgressBars(),
-            this._signalHolder
+            this
         );
         for (const key of PROGRESS_BAR_SETTING_KEYS) {
             this._settings.connectObject(`changed::${key}`, () => {
                 for (const item of this._appButtons.values())
                     this._syncProgressBarGeometry(item);
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of TASKBAR_HIGHLIGHT_SETTING_KEYS) {
             this._settings.connectObject(`changed::${key}`, () => {
                 for (const item of this._appButtons.values())
                     this._syncClassicHighlight(item);
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of [
             'taskbar-highlight-style',
@@ -731,7 +727,7 @@ export class TaskbarController {
             this._settings.connectObject(`changed::${key}`, () => {
                 for (const item of this._appButtons.values())
                     this._updateIndicatorGeometry(item);
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of [
             'taskbar-highlight-style',
@@ -740,13 +736,13 @@ export class TaskbarController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this.syncButtonStates(false, true),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => this.applyAppearance(),
-            this._signalHolder
+            this
         );
         for (const key of [
             'custom-indicator-colors-enabled',
@@ -759,36 +755,43 @@ export class TaskbarController {
                     this._syncIndicatorColor(item);
                     this._syncProgressBarGeometry(item);
                 }
-            }, this._signalHolder);
+            }, this);
         }
         if (!this._ignoreTaskbarLock) {
             this._settings.connectObject('changed::taskbar-locked', () => {
                 this._syncDragEnabled();
-            }, this._signalHolder);
+            }, this);
         }
         this.actor.connectObject('notify::allocation', () => {
             this.queueIconGeometryUpdate();
-        }, this._signalHolder);
+        }, this);
         this._connectActiveWorkspaceSignals();
         this._showDesktopController.enable();
         this._syncApplicationVisibility();
     }
 
     destroy() {
-        this._iconGeometryController.destroy();
-        this._iconGeometryController = null;
         if (this._startupSettleId)
             GLib.Source.remove(this._startupSettleId);
         this._startupSettleId = 0;
 
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        Main.layoutManager.disconnectObject(this);
+        this._appSystem.disconnectObject(this);
+        this._favorites.disconnectObject(this);
+        this._overlayModel.disconnectObject(this);
+        global.display.disconnectObject(this);
+        global.window_manager.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        this.actor.disconnectObject(this);
         this._disconnectActiveWorkspaceSignals();
 
         for (const [app, id] of this._appSignals)
             app.disconnect(id);
         this._appSignals.clear();
         this._appWindows.clear();
+
+        this._iconGeometryController.destroy();
+        this._iconGeometryController = null;
 
         this._showDesktopController.destroy();
         this._showDesktopController = null;
@@ -1572,8 +1575,6 @@ export class TaskbarController {
         return this._dragController.acceptItemDrop(item, source);
     }
 
-
-
     _queueRedisplay() {
         if (this._startupSettling && !Main.layoutManager._startingUp) {
             this._scheduleStartupSettle();
@@ -1994,7 +1995,6 @@ export class TaskbarController {
         );
     }
 
-
     _createAppButton(
         app,
         window = null,
@@ -2069,7 +2069,6 @@ export class TaskbarController {
         this._itemInteractionController.destroyButton(button);
     }
 
-
     _trackApp(app) {
         if (this._appSignals.has(app))
             return;
@@ -2094,7 +2093,6 @@ export class TaskbarController {
         });
         this._appSignals.set(app, id);
     }
-
 
     _untrackApp(app) {
         const id = this._appSignals.get(app);

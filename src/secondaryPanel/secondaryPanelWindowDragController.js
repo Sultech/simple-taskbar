@@ -7,9 +7,6 @@ import Meta from 'gi://Meta';
 
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
@@ -20,7 +17,6 @@ export class SecondaryPanelWindowDragController {
         this._settings = settings;
         this._monitor = monitor;
         this._panelActor = panelActor;
-        this._signalHolder = new TransientSignalHolder();
         this._clickGesture = null;
     }
 
@@ -31,7 +27,7 @@ export class SecondaryPanelWindowDragController {
             });
             this._clickGesture.connectObject(
                 'recognize', () => this._onWindowDragGestureRecognize(),
-                this._signalHolder
+                this
             );
             this._panelActor.add_action_full(
                 'window-drag',
@@ -46,13 +42,15 @@ export class SecondaryPanelWindowDragController {
             (_actor, event) => this._onButtonPress(event),
             'touch-event',
             (_actor, event) => this._onTouchEvent(event),
-            this._signalHolder
+            this
         );
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        if (this._clickGesture)
+            this._clickGesture.disconnectObject(this);
+        else
+            this._panelActor.disconnectObject(this);
 
         if (this._clickGesture) {
             this._panelActor.remove_action(this._clickGesture);

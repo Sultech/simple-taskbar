@@ -376,6 +376,7 @@ export default class SimpleTaskbarExtension extends Extension {
             this._closingPrefsWindow = null;
         }
         this._settings.disconnectObject(this);
+        this._applicationSettings.disconnectObject(this);
         this._appGridLayout.destroy();
         this._appGridLayout = null;
         this._taskbarController.disableHoverAnimations();

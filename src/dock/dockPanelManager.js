@@ -38,6 +38,7 @@ export class DockPanelManager extends PanelManagerBase {
         super(params);
         this._blurMyShellResetSyncId = 0;
         this._panelSettings = [];
+        this._blurMyShellSettings = [];
     }
 
     enable() {
@@ -53,17 +54,17 @@ export class DockPanelManager extends PanelManagerBase {
             () => this._queueRebuild(),
             'changed::dock-panel-blur-enabled',
             () => this._queueBlurMyShellSync(),
-            this._signalHolder
+            this
         );
         Main.layoutManager.connectObject(
             'monitors-changed', () => this._queueRebuild(),
             'startup-complete', () => this._queueBlurMyShellSync(),
-            this._signalHolder
+            this
         );
         global.display.connectObject(
             'workareas-changed',
             () => this._queueBlurMyShellSync(),
-            this._signalHolder
+            this
         );
         Main.extensionManager.connectObject(
             'extension-state-changed',
@@ -71,7 +72,7 @@ export class DockPanelManager extends PanelManagerBase {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this._queueBlurMyShellSync();
             },
-            this._signalHolder
+            this
         );
         this._connectBlurMyShellKeys(
             'panel',
@@ -95,6 +96,13 @@ export class DockPanelManager extends PanelManagerBase {
             GLib.Source.remove(this._blurMyShellResetSyncId);
             this._blurMyShellResetSyncId = 0;
         }
+        this._settings.disconnectObject(this);
+        Main.layoutManager.disconnectObject(this);
+        global.display.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
+        for (const settings of this._blurMyShellSettings)
+            settings.disconnectObject(this);
+        this._blurMyShellSettings = null;
         super.destroy();
     }
 
@@ -103,6 +111,8 @@ export class DockPanelManager extends PanelManagerBase {
             getBlurMyShellSettings(),
             childName
         );
+        if (settings)
+            this._blurMyShellSettings.push(settings);
         for (const key of keys) {
             if (!blurMyShellHasKey(settings, key))
                 continue;
@@ -115,7 +125,7 @@ export class DockPanelManager extends PanelManagerBase {
                     else
                         this._queueBlurMyShellSync();
                 },
-                this._signalHolder
+                this
             );
         }
     }

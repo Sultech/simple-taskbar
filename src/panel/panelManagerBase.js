@@ -3,10 +3,6 @@
 
 import GLib from 'gi://GLib';
 
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
-
 export class PanelManagerBase {
     constructor({
         extensionDir,
@@ -26,7 +22,6 @@ export class PanelManagerBase {
         this._overlayModel = overlayModel;
         this._spreadAppWindows = spreadAppWindows;
         this._openPreferences = openPreferences;
-        this._signalHolder = new TransientSignalHolder();
         this._panels = [];
         this._rebuildId = 0;
         this._blurMyShellSyncId = 0;
@@ -41,8 +36,6 @@ export class PanelManagerBase {
             GLib.Source.remove(this._blurMyShellSyncId);
             this._blurMyShellSyncId = 0;
         }
-        this._signalHolder.destroy();
-        this._signalHolder = null;
         this._destroyPanels();
         this._extensionDir = null;
         this._settings = null;

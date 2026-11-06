@@ -20,11 +20,11 @@ export class SecondaryPanelManager extends PanelManagerBase {
     enable() {
         this._settings.connectObject(
             'changed::multi-monitor-panels', () => this._queueRebuild(),
-            this._signalHolder
+            this
         );
         Main.layoutManager.connectObject(
             'monitors-changed', () => this._queueRebuild(),
-            this._signalHolder
+            this
         );
         Main.extensionManager.connectObject(
             'extension-state-changed',
@@ -32,22 +32,33 @@ export class SecondaryPanelManager extends PanelManagerBase {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this._queueBlurMyShellSync();
             },
-            this._signalHolder
+            this
         );
         const panelBlurSettings = getBlurMyShellChildSettings(
             getBlurMyShellSettings(),
             'panel'
         );
+        this._blurMyShellPanelSettings = panelBlurSettings;
         for (const key of ['corner-radius', 'rounded-corners']) {
             if (!blurMyShellHasKey(panelBlurSettings, key))
                 continue;
 
             panelBlurSettings.connectObject(
                 `changed::${key}`, () => this._queueBlurMyShellSync(),
-                this._signalHolder
+                this
             );
         }
         this._rebuild();
+    }
+
+    destroy() {
+        this._settings.disconnectObject(this);
+        Main.layoutManager.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
+        if (this._blurMyShellPanelSettings)
+            this._blurMyShellPanelSettings.disconnectObject(this);
+        this._blurMyShellPanelSettings = null;
+        super.destroy();
     }
 
     toggleStartMenuAt(x, y) {

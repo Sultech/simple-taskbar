@@ -5,9 +5,6 @@ import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {MagicLampEffect} from './magicLampEffect.js';
@@ -24,7 +21,6 @@ export class WindowMinimizeEffectController {
         this._settings = settings;
         this._windowManager = Main.wm;
         this._shellWindowManager = global.window_manager;
-        this._signalHolder = new TransientSignalHolder();
         this._pendingActors = new Map();
         this._activeActors = new Set();
         this._originalShouldAnimateActor = null;
@@ -83,13 +79,12 @@ export class WindowMinimizeEffectController {
         this._shellWindowManager.connectObject(
             'minimize', (_shellwm, actor) => this._onMinimize(actor),
             'unminimize', (_shellwm, actor) => this._onUnminimize(actor),
-            this._signalHolder
+            this
         );
     }
 
     destroy() {
-        this._shellWindowManager.disconnectObject(this._signalHolder);
-        this._signalHolder.destroy();
+        this._shellWindowManager.disconnectObject(this);
         for (const actor of [...this._activeActors]) {
             const effect = actor.get_effect(MAGIC_LAMP_EFFECT_NAME);
             if (effect)
@@ -108,7 +103,6 @@ export class WindowMinimizeEffectController {
         this._originalShouldAnimateActor = null;
         this._originalCompletedMinimize = null;
         this._originalCompletedUnminimize = null;
-        this._signalHolder = null;
         this._activeActors = null;
         this._pendingActors = null;
         this._shellWindowManager = null;

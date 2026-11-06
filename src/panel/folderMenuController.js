@@ -9,9 +9,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {closePopupMenu} from '../popupMenuUtils.js';
@@ -32,7 +29,6 @@ const ENUMERATION_BATCH_SIZE = 50;
 export class FolderMenuController {
     constructor(settings) {
         this._settings = settings;
-        this._signalHolder = new TransientSignalHolder();
         this._menuManager = null;
         this._menu = null;
         this._enumerationCancellable = null;
@@ -68,22 +64,22 @@ export class FolderMenuController {
                 this._reloadMenu();
             else
                 this._cancelEnumeration();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject(
             'changed::folder-menu-enabled', () => this._syncVisibility(),
             'changed::folder-menu-uri', () => {
                 if (this._menu.isOpen)
                     this._reloadMenu();
             },
-            this._signalHolder
+            this
         );
         this._themeContext.connectObject(
             'changed', () => this._syncTheme(),
-            this._signalHolder
+            this
         );
         this._stSettings.connectObject(
             'notify::color-scheme', () => this._syncTheme(),
-            this._signalHolder
+            this
         );
         this._syncTheme();
         this._syncPanelPosition();
@@ -96,8 +92,10 @@ export class FolderMenuController {
 
     destroy() {
         this._cancelEnumeration();
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._menu.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        this._themeContext.disconnectObject(this);
+        this._stSettings.disconnectObject(this);
 
         this._menuManager.removeMenu(this._menu);
         this._button.setMenu(null);

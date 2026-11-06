@@ -11,9 +11,6 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 import {PANEL_BUTTON_PADDING_KEYS, dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
@@ -104,7 +101,7 @@ export class ApplicationOverflowController {
         this._locationSeparator.visible = false;
         this._locationSeparatorVertical = null;
         this._locationSeparatorLine = locationSeparatorLine;
-        this._signalHolder = new TransientSignalHolder();
+        this._trackedItems = new Set();
         this._grab = null;
         this._menu = null;
         this._section = null;
@@ -133,7 +130,7 @@ export class ApplicationOverflowController {
         });
         this.actor.connectObject(
             'notify::parent', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         this._createButton();
         this.actor.add_child(this._viewport);
@@ -212,11 +209,11 @@ export class ApplicationOverflowController {
                 this._closeAuxiliaryMenus();
                 this._buttonController.sync();
             }
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject(
             'changed::application-overflow-enabled',
             () => this._sync(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::application-overflow-style',
@@ -224,11 +221,11 @@ export class ApplicationOverflowController {
                 this._popupController.resetStyle();
                 this._queueSync();
             },
-            this._signalHolder
+            this
         );
         this._settings.connectObject('changed::icon-spacing', () => {
             this._queueSync();
-        }, this._signalHolder);
+        }, this);
         for (const key of PANEL_BUTTON_PADDING_KEYS) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._queueSync();
@@ -236,59 +233,59 @@ export class ApplicationOverflowController {
         }
         this._settings.connectObject('changed::transparency-enabled', () => {
             this._themeController.sync();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::transparency-level', () => {
             this._themeController.sync();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject(
             'changed::panel-theme-follow-system',
             () => this._themeController.sync(),
             'changed::panel-theme',
             () => this._themeController.sync(),
-            this._signalHolder
+            this
         );
         St.ThemeContext.get_for_stage(global.stage).connectObject(
             'changed', () => this._themeController.sync(),
-            this._signalHolder
+            this
         );
         St.Settings.get().connectObject(
             'notify::color-scheme', () => this._themeController.sync(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::default-gnome-panel', () => this._sync(),
             'changed::default-panel-show-running-windows', () => this._sync(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::show-location-separator',
             () => this._queueSync(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::windows-xp-theme-enabled',
             () => this._sync(),
-            this._signalHolder
+            this
         );
         this._button.connectObject(
             'notify::hover',
             () => this._buttonController.sync(),
-            this._signalHolder
+            this
         );
         this._button.connectObject(
             'notify::pseudo-class',
             () => this._buttonController.sync(),
-            this._signalHolder
+            this
         );
         this._button.connectObject(
             'key-focus-in',
             () => this._buttonController.sync(),
-            this._signalHolder
+            this
         );
         this._button.connectObject(
             'key-focus-out',
             () => this._buttonController.sync(),
-            this._signalHolder
+            this
         );
         for (const item of this._taskbarController.getOrderedApplicationItems())
             this._connectTaskbarItem(item);
@@ -296,14 +293,14 @@ export class ApplicationOverflowController {
             (_actor, item) => {
                 this._connectTaskbarItem(item);
                 this._queueSync();
-            }, this._signalHolder);
+            }, this);
         this._taskbarController.actor.connectObject('child-removed', () => {
             this._queueSync();
-        }, this._signalHolder);
+        }, this);
         this._taskbarController.actor.connectObject(
             'notify::allocation',
             () => this._queueSync(),
-            this._signalHolder
+            this
         );
         for (const item of this._taskbarController.getLocationItems())
             this._connectTaskbarItem(item);
@@ -317,36 +314,36 @@ export class ApplicationOverflowController {
             () => this._queueSync(),
             'notify::allocation',
             () => this._queueSync(),
-            this._signalHolder
+            this
         );
         this._locationSeparator.connectObject(
             'notify::width',
             () => this._queueSync(),
             'notify::height',
             () => this._queueSync(),
-            this._signalHolder
+            this
         );
         this._viewport.connectObject('notify::allocation', () => {
             this._queueSync();
-        }, this._signalHolder);
+        }, this);
         this._viewport.hadjustment.connectObject('notify::value', () => {
             if (this._settings.get_boolean('application-overflow-enabled') &&
                 this._viewport.hadjustment.get_value() !== 0) {
                 this._viewport.hadjustment.set_value(0);
             }
-        }, this._signalHolder);
+        }, this);
         this._viewport.vadjustment.connectObject('notify::value', () => {
             if (this._settings.get_boolean('application-overflow-enabled') &&
                 this._viewport.vadjustment.get_value() !== 0) {
                 this._viewport.vadjustment.set_value(0);
             }
-        }, this._signalHolder);
+        }, this);
         Main.panel.connectObject('notify::style-class', () => {
             this._themeController.sync();
-        }, this._signalHolder);
-        Main.overview.connectObject('showing', () => this.close(), this._signalHolder);
+        }, this);
+        Main.overview.connectObject('showing', () => this.close(), this);
         global.stage.connectObject('captured-event', (_stage, event) =>
-            this._onCapturedEvent(event), this._signalHolder);
+            this._onCapturedEvent(event), this);
 
         this._syncPanelPosition();
         this._sync();
@@ -391,8 +388,24 @@ export class ApplicationOverflowController {
             this._dragEndListenerRegistered = false;
         }
         this._settings.disconnectObject(this);
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this.actor.disconnectObject(this);
+        this._menu.disconnectObject(this);
+        this._button.disconnectObject(this);
+        this._taskbarController.actor.disconnectObject(this);
+        this._locationActor.disconnectObject(this);
+        this._locationSeparator.disconnectObject(this);
+        this._viewport.disconnectObject(this);
+        this._viewport.hadjustment.disconnectObject(this);
+        this._viewport.vadjustment.disconnectObject(this);
+        Main.panel.disconnectObject(this);
+        Main.overview.disconnectObject(this);
+        global.stage.disconnectObject(this);
+        St.ThemeContext.get_for_stage(global.stage).disconnectObject(this);
+        St.Settings.get().disconnectObject(this);
+        for (const item of this._trackedItems)
+            item.disconnectObject(this);
+        this._trackedItems.clear();
+        this._trackedItems = null;
         if (this._grab) {
             Main.popModal(this._grab);
             this._grab = null;
@@ -435,10 +448,15 @@ export class ApplicationOverflowController {
     }
 
     _connectTaskbarItem(item) {
+        this._trackedItems.add(item);
         item.connectObject(
             'notify::scale-x',
             () => this._queueSync(),
-            this._signalHolder
+            'destroy', () => {
+                item.disconnectObject(this);
+                this._trackedItems.delete(item);
+            },
+            this
         );
     }
 
@@ -964,7 +982,6 @@ export class ApplicationOverflowController {
         }
         this._menu.actor.queue_relayout();
     }
-
 
     _syncPanelPosition() {
         const vertical = panelIsVertical(this._settings);

@@ -5,9 +5,6 @@ import GLib from 'gi://GLib';
 import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     windowMatchesMode,
@@ -42,8 +39,7 @@ export class PanelWindowDodgeController {
         this._dodgeModeKey = dodgeModeKey;
         this._dodgePointerRevealKey = dodgePointerRevealKey;
         this._tracker = Shell.WindowTracker.get_default();
-        this._signalHolder = new TransientSignalHolder();
-        this._trackedWindowActors = new Set();
+        this._trackedWindowActors = new Map();
         this._hasTransparencyWindow = false;
         this._syncId = 0;
         this._syncPending = false;
@@ -62,25 +58,25 @@ export class PanelWindowDodgeController {
             'notify::focus-window', () => this._queueSync(),
             'window-entered-monitor', () => this._queueSync(),
             'window-left-monitor', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         this._tracker.connectObject(
             'notify::focus-app', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         global.workspace_manager.connectObject(
             'active-workspace-changed', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         Main.layoutManager.connectObject(
             'monitors-changed', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         Main.overview.connectObject(
             'showing', () => this._sync(),
             'hiding', () => this._sync(),
             'hidden', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             `changed::${this._autohideKey}`, () => {
@@ -111,7 +107,7 @@ export class PanelWindowDodgeController {
             () => this._queueSync(),
             'changed::transparency-dynamic-distance',
             () => this._queueSync(),
-            this._signalHolder
+            this
         );
         if (this._settings.get_boolean(this._autohideKey) &&
             this._settings.get_boolean(this._dodgeEnabledKey)) {
@@ -129,8 +125,16 @@ export class PanelWindowDodgeController {
             GLib.Source.remove(this._syncId);
         this._syncId = 0;
         this._syncPending = false;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        global.display.disconnectObject(this);
+        this._tracker.disconnectObject(this);
+        global.workspace_manager.disconnectObject(this);
+        Main.layoutManager.disconnectObject(this);
+        Main.overview.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        for (const [actor, window] of this._trackedWindowActors) {
+            window.disconnectObject(this);
+            actor.disconnectObject(this);
+        }
         this._trackedWindowActors.clear();
         this._settings = null;
         this._getMonitor = null;
@@ -148,24 +152,24 @@ export class PanelWindowDodgeController {
         if (this._trackedWindowActors.has(actor))
             return;
 
-        this._trackedWindowActors.add(actor);
         const window = actor.get_meta_window();
+        this._trackedWindowActors.set(actor, window);
         window.connectObject(
             'notify::maximized-horizontally', () => this._queueSync(),
             'notify::maximized-vertically', () => this._queueSync(),
             'notify::minimized', () => this._queueSync(),
             'workspace-changed', () => this._queueSync(),
-            this._signalHolder
+            this
         );
         actor.connectObject(
             'notify::allocation', () => this._queueSync(),
             'notify::visible', () => this._queueSync(),
             'destroy', () => {
-                window.disconnectObject(this._signalHolder);
+                window.disconnectObject(this);
                 this._trackedWindowActors.delete(actor);
                 this._queueSync();
             },
-            this._signalHolder
+            this
         );
     }
 

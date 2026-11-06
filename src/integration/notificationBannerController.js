@@ -6,9 +6,6 @@ import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     panelPosition,
@@ -21,7 +18,6 @@ const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 export class NotificationBannerController {
     constructor(settings) {
         this._settings = settings;
-        this._signalHolder = new TransientSignalHolder();
         this._repairId = 0;
         this._applied = false;
         this._messageTray = null;
@@ -45,13 +41,13 @@ export class NotificationBannerController {
         this._settings.connectObject(
             'changed::notification-banner-bottom-end', () => this._sync(),
             'changed::clock-position', () => this._sync(),
-            this._signalHolder
+            this
         );
         this._bannerBin.connectObject(
             'notify::x-align', () => this._queueRepair(),
             'notify::y-align', () => this._queueRepair(),
             'child-added', () => this._syncPanelClearance(),
-            this._signalHolder
+            this
         );
         Main.extensionManager.connectObject(
             'extension-state-changed',
@@ -59,7 +55,7 @@ export class NotificationBannerController {
                 if (extension.uuid === JUST_PERFECTION_UUID)
                     this._queueRepair();
             },
-            this._signalHolder
+            this
         );
         this._sync();
     }
@@ -69,8 +65,9 @@ export class NotificationBannerController {
             GLib.Source.remove(this._repairId);
             this._repairId = 0;
         }
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        this._bannerBin.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
         this._restore();
         this._bannerBin.set_style(this._originalStyle);
 

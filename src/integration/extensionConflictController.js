@@ -4,9 +4,6 @@
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {extensionStateIsActive} from './extensionState.js';
@@ -22,7 +19,6 @@ const TASKBAR_DOCK_UUIDS = [
 export class ExtensionConflictController {
     constructor(settings) {
         this._settings = settings;
-        this._signalHolder = new TransientSignalHolder();
         this._pendingUuids = new Set();
         this._disableIdleId = 0;
         this._selfDisableIdleId = 0;
@@ -34,7 +30,7 @@ export class ExtensionConflictController {
             () => this._sync(),
             'changed::dock-mode',
             () => this._sync(),
-            this._signalHolder
+            this
         );
         Main.extensionManager.connectObject(
             'extension-state-changed',
@@ -54,15 +50,15 @@ export class ExtensionConflictController {
 
                 this._queueDisable(uuid);
             },
-            this._signalHolder
+            this
         );
         this._sync();
     }
 
     destroy() {
         this._cancelPendingDisable();
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
         this._settings = null;
     }
 

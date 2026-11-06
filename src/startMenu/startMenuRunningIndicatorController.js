@@ -6,10 +6,6 @@ import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
-
 import {RunningIndicator} from '../taskbar/runningIndicator.js';
 
 const INDICATOR_GAP = 2;
@@ -94,7 +90,6 @@ export class StartMenuRunningIndicatorController {
     constructor(settings, getInterestingWindows) {
         this._settings = settings;
         this._getInterestingWindows = getInterestingWindows;
-        this._signalHolder = new TransientSignalHolder();
         this._indicators = new Map();
 
         for (const key of [
@@ -111,17 +106,17 @@ export class StartMenuRunningIndicatorController {
             this._settings.connectObject(
                 `changed::${key}`,
                 () => this.sync(),
-                this._signalHolder
+                this
             );
         }
         global.window_manager.connectObject(
             'switch-workspace', () => this.sync(),
-            this._signalHolder
+            this
         );
         global.display.connectObject(
             'window-entered-monitor', () => this.sync(),
             'window-left-monitor', () => this.sync(),
-            this._signalHolder
+            this
         );
     }
 
@@ -153,8 +148,11 @@ export class StartMenuRunningIndicatorController {
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        global.window_manager.disconnectObject(this);
+        global.display.disconnectObject(this);
+        for (const [indicator, app] of this._indicators)
+            app.disconnectObject(indicator);
         this._indicators.clear();
         this._indicators = null;
         this._getInterestingWindows = null;

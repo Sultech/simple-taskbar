@@ -10,9 +10,6 @@ import St from 'gi://St';
 import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Ripples from 'resource:///org/gnome/shell/ui/ripples.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {destroyPressureBarrier} from '../inputUtils.js';
 
@@ -23,7 +20,6 @@ export class HotEdgeController {
     constructor(settings, {isBlocked}) {
         this._settings = settings;
         this._isBlocked = isBlocked;
-        this._signalHolder = new TransientSignalHolder();
         this._edges = [];
     }
 
@@ -31,18 +27,18 @@ export class HotEdgeController {
         this._settings.connectObject(
             'changed::hot-edge-overview-enabled', () => this._rebuild(),
             'changed::hot-edge-pressure-threshold', () => this._rebuild(),
-            this._signalHolder
+            this
         );
         Main.layoutManager.connectObject(
             'monitors-changed', () => this._rebuild(),
-            this._signalHolder
+            this
         );
         this._rebuild();
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
+        Main.layoutManager.disconnectObject(this);
         this._destroyEdges();
         this._settings = null;
         this._isBlocked = null;

@@ -10,9 +10,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
 import {panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
@@ -40,7 +37,7 @@ const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 export class TrayOverflowController {
     constructor(settings) {
         this._settings = settings;
-        this._signalHolder = new TransientSignalHolder();
+        this._outsideClickGesture = null;
         this._menuManager = null;
         this._menu = null;
         this._grid = null;
@@ -89,24 +86,24 @@ export class TrayOverflowController {
                 this._button.remove_style_pseudo_class('active');
                 this._closeStashedMenus();
             }
-        }, this._signalHolder);
+        }, this);
         this._button.menu.connectObject('open-state-changed', (menu, open) => {
             if (!open)
                 return;
 
             menu.close();
             openPanelPopupMenu(this._menu, this._button, dynamicTaskbarEnabled(this._settings));
-        }, this._signalHolder);
+        }, this);
         this._menu.actor.connectObject(
             'captured-event',
             (_actor, event) => this._switchToHoveredPanelMenu(event),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::tray-overflow-enabled', () => this._sync(),
             'changed::windows-xp-theme-enabled',
             () => this._syncPanelPosition(),
-            this._signalHolder
+            this
         );
         for (const box of [
             Main.panel._leftBox,
@@ -116,7 +113,7 @@ export class TrayOverflowController {
             box.connectObject(
                 'child-added',
                 (_box, container) => this._onPanelChildAdded(container),
-                this._signalHolder
+                this
             );
         }
 
@@ -148,8 +145,16 @@ export class TrayOverflowController {
             this._alignBeforeUpdateId = 0;
         }
         this._menuRaiseIndicator = null;
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._menu.disconnectObject(this);
+        this._button.menu.disconnectObject(this);
+        this._menu.actor.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        Main.panel._leftBox.disconnectObject(this);
+        Main.panel._centerBox.disconnectObject(this);
+        Main.panel._rightBox.disconnectObject(this);
+        if (this._outsideClickGesture)
+            this._outsideClickGesture.disconnectObject(this);
+        this._outsideClickGesture = null;
 
         this._releaseAll();
 
@@ -310,10 +315,11 @@ export class TrayOverflowController {
         const manager = this._menuManager;
         if (SHELL_VERSION >= 51) {
             const gesture = manager._clickGesture;
+            this._outsideClickGesture = gesture;
             gesture.connectObject(
                 'may-recognize',
                 () => !this._eventInStashedMenu(gesture.get_point_event(0)),
-                this._signalHolder
+                this
             );
             return;
         }

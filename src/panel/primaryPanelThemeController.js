@@ -5,9 +5,6 @@ import GLib from 'gi://GLib';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {
     BLUR_MY_SHELL_PANEL_CONTRASTED,
@@ -63,12 +60,12 @@ export class PrimaryPanelThemeController {
         this._settings = settings;
         this._oldPanelStyle = oldPanelStyle;
         this._getPanelGeometry = getPanelGeometry;
-        this._signalHolder = new TransientSignalHolder();
         this._transparencyRepairId = 0;
         this._blurMyShellSyncId = 0;
         this._applyingTransparency = false;
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
         this._stSettings = St.Settings.get();
+        this._blurMyShellPanelSettings = null;
     }
 
     connectSignals(onWindowsXpThemeChanged) {
@@ -78,7 +75,7 @@ export class PrimaryPanelThemeController {
                 if (!this._applyingTransparency)
                     this._queueTransparencyRepair();
             },
-            this._signalHolder
+            this
         );
         Main.extensionManager.connectObject(
             'extension-state-changed',
@@ -86,19 +83,20 @@ export class PrimaryPanelThemeController {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
                     this.queueBlurMyShellSync();
             },
-            this._signalHolder
+            this
         );
         const panelSettings = getBlurMyShellChildSettings(
             getBlurMyShellSettings(),
             'panel'
         );
+        this._blurMyShellPanelSettings = panelSettings;
         for (const key of BLUR_MY_SHELL_PANEL_KEYS) {
             if (!blurMyShellHasKey(panelSettings, key))
                 continue;
 
             panelSettings.connectObject(
                 `changed::${key}`, () => this.queueBlurMyShellSync(),
-                this._signalHolder
+                this
             );
         }
         this._settings.connectObject(
@@ -140,15 +138,15 @@ export class PrimaryPanelThemeController {
                 this.queueBlurMyShellSync();
             },
             'changed::windows-10-theme-enabled', () => this.applyTheme(),
-            this._signalHolder
+            this
         );
         this._themeContext.connectObject(
             'changed', () => this._applySystemTheme(),
-            this._signalHolder
+            this
         );
         this._stSettings.connectObject(
             'notify::color-scheme', () => this._applySystemTheme(),
-            this._signalHolder
+            this
         );
     }
 
@@ -288,8 +286,14 @@ export class PrimaryPanelThemeController {
             GLib.Source.remove(this._blurMyShellSyncId);
             this._blurMyShellSyncId = 0;
         }
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        Main.panel.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
+        if (this._blurMyShellPanelSettings)
+            this._blurMyShellPanelSettings.disconnectObject(this);
+        this._blurMyShellPanelSettings = null;
+        this._settings.disconnectObject(this);
+        this._themeContext.disconnectObject(this);
+        this._stSettings.disconnectObject(this);
         this.restore();
         this._themeContext = null;
         this._stSettings = null;

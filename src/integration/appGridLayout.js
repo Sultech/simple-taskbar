@@ -2,15 +2,11 @@
 // Copyright (C) 2026 sultech
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 export class AppGridLayout {
     constructor(settings) {
         this._settings = settings;
         this._applied = false;
-        this._signalHolder = new TransientSignalHolder();
     }
 
     enable() {
@@ -18,14 +14,13 @@ export class AppGridLayout {
             'changed::app-grid-layout', () => this._sync(),
             'changed::app-grid-columns', () => this._sync(),
             'changed::app-grid-rows', () => this._sync(),
-            this._signalHolder
+            this
         );
         this._sync();
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        this._settings.disconnectObject(this);
         this._restore();
         this._settings = null;
     }

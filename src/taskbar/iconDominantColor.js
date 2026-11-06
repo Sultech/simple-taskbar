@@ -5,10 +5,6 @@ import GdkPixbuf from 'gi://GdkPixbuf';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
 
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
-
 const ICON_SIZE = 48;
 const SAMPLE_STEP = 2;
 const MINIMUM_ALPHA = 30;
@@ -146,16 +142,14 @@ export class IconDominantColorCache {
     constructor() {
         this._colors = new Map();
         this._iconTheme = new St.IconTheme();
-        this._signalHolder = new TransientSignalHolder();
         St.TextureCache.get_default().connectObject(
             'icon-theme-changed', () => this._colors.clear(),
-            this._signalHolder
+            this
         );
     }
 
     destroy() {
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        St.TextureCache.get_default().disconnectObject(this);
         this._colors.clear();
         this._colors = null;
         this._iconTheme = null;

@@ -9,9 +9,6 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {
-    TransientSignalHolder,
-} from 'resource:///org/gnome/shell/misc/signalTracker.js';
 
 import {extensionIsActive} from '../integration/extensionState.js';
 import {syncBlurGeometry, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
@@ -102,7 +99,6 @@ export class PrimaryPanelController {
         this._isTaskbarAdaptive = isTaskbarAdaptive;
         this._queueOverviewRelayout = queueOverviewRelayout;
         this._isAutoHideBlocked = isAutoHideBlocked;
-        this._signalHolder = new TransientSignalHolder();
         this._layoutRepairId = 0;
         this._panelLayoutUpdater = new PanelLayoutUpdater(
             () => this._updateTaskbarWidthInternal()
@@ -274,8 +270,16 @@ export class PrimaryPanelController {
         this._panelLayoutUpdater = null;
         this._settings.disconnectObject(this);
         Main.panel.disconnectObject(this);
-        this._signalHolder.destroy();
-        this._signalHolder = null;
+        Main.layoutManager.disconnectObject(this);
+        Main.extensionManager.disconnectObject(this);
+        if (Main.screenShield)
+            Main.screenShield.disconnectObject(this);
+        Main.panel.statusArea.activities.container.disconnectObject(this);
+        Main.panel._leftBox.disconnectObject(this);
+        Main.panel._centerBox.disconnectObject(this);
+        Main.panel._rightBox.disconnectObject(this);
+        this._taskbarActor.disconnectObject(this);
+        this._startButton.disconnectObject(this);
 
         this._windowDodgeController.destroy();
         this._windowDodgeController = null;
@@ -791,7 +795,7 @@ export class PrimaryPanelController {
     _connectSignals() {
         Main.layoutManager.connectObject('monitors-changed', () => {
             this.position();
-        }, this._signalHolder);
+        }, this);
         Main.panel.connectObject('notify::style',
             () => this._syncShowDesktopPanelCorner(), this);
         this._settings.connectObject(
@@ -805,7 +809,7 @@ export class PrimaryPanelController {
                     this._stateController.syncActivitiesVisibility();
                     this.updateTaskbarWidth();
                 }
-            }, this._signalHolder);
+            }, this);
         }
         const activities = Main.panel.statusArea.activities.container;
         activities.connectObject('notify::visible', () => {
@@ -816,7 +820,7 @@ export class PrimaryPanelController {
                 this._stateController.syncActivitiesVisibility();
                 this.updateTaskbarWidth();
             }
-        }, this._signalHolder);
+        }, this);
         for (const box of [
             Main.panel._leftBox,
             Main.panel._centerBox,
@@ -825,17 +829,17 @@ export class PrimaryPanelController {
             box.connectObject(
                 'notify::width', () => this.queueTaskbarWidth(),
                 'notify::height', () => this.queueTaskbarWidth(),
-                this._signalHolder
+                this
             );
         }
         for (const signal of ['child-added', 'child-removed']) {
             this._taskbarActor.connectObject(signal, () => {
                 this.updateTaskbarWidth();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject('changed::hide-app-labels', () => {
             this.updateTaskbarWidth();
-        }, this._signalHolder);
+        }, this);
         for (const key of PANEL_BUTTON_PADDING_KEYS) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._syncPanelOrientation();
@@ -848,11 +852,11 @@ export class PrimaryPanelController {
             () => this._syncPanelOrientation(),
             'changed::windows-xp-theme-enabled',
             () => this._syncPanelOrientation(),
-            this._signalHolder
+            this
         );
         this._startButton.connectObject('notify::visible', () => {
             this.updateTaskbarWidth();
-        }, this._signalHolder);
+        }, this);
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
@@ -862,7 +866,7 @@ export class PrimaryPanelController {
                     this._queueLayoutRepair();
                 }
             },
-            this._signalHolder
+            this
         );
         for (const box of [
             Main.panel._leftBox,
@@ -871,15 +875,15 @@ export class PrimaryPanelController {
         ]) {
             box.connectObject('child-added', () => {
                 this._onPanelBoxChildChanged();
-            }, this._signalHolder);
+            }, this);
             box.connectObject('child-removed', () => {
                 this._onPanelBoxChildChanged();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject('changed::app-alignment', () => {
             this._onAppAlignmentChanged();
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         for (const key of [
             'start-button-position',
             'start-button-follow-app-alignment',
@@ -888,7 +892,7 @@ export class PrimaryPanelController {
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this.applyLayout();
-            }, this._signalHolder);
+            }, this);
         }
         for (const key of [
             'windows-start-menu-enabled',
@@ -901,46 +905,46 @@ export class PrimaryPanelController {
         ]) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this.applyLayout();
-            }, this._signalHolder);
+            }, this);
         }
         this._settings.connectObject('changed::activities-button-visible', () => {
             this._stateController.syncActivitiesVisibility();
             this.updateTaskbarWidth();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::activities-button-position', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject(
             'changed::show-desktop-button-position',
             () => this.applyLayout(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject(
             'changed::show-desktop-button-visible',
             () => this.applyLayout(),
-            this._signalHolder
+            this
         );
         this._settings.connectObject('changed::start-button-padding', () => {
             this.updateTaskbarWidth();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::clock-position', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::system-menu-position', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::folder-menu-enabled', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::folder-menu-position', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::tray-overflow-position', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
         this._settings.connectObject('changed::panel-item-order', () => {
             this.applyLayout();
-        }, this._signalHolder);
+        }, this);
     }
 
     _onPanelBoxChildChanged() {
