@@ -22,48 +22,17 @@ import {
 } from './startIconChooser.js';
 import {axisPanelPositions} from './panelPositionChoices.js';
 import {activePanelPosition} from '../shared/panelPositionUtils.js';
-import {openCustomShortcutDialog} from './preferencesDialogs.js';
 import {SettingsSubpage} from './settingsSubpage.js';
 import {
     addComboRow,
-    addToggleChoiceRow,
     createSwitchRow,
     setButtonIcon,
 } from './preferencesWidgets.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 import {addSliderRow} from './sliderRow.js';
-
-function createShortcutRow(window, settings, connectSettings, {title, key, fallbackAccelerator = ''}) {
-    const label = new Gtk.ShortcutLabel({
-        disabled_text: _('Not set'),
-        valign: Gtk.Align.CENTER,
-    });
-    const editButton = new Gtk.Button({
-        tooltip_text: _('Set custom shortcut'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(editButton, 'document-edit-symbolic');
-    const clearButton = new Gtk.Button({
-        tooltip_text: _('Clear custom shortcut'),
-        valign: Gtk.Align.CENTER,
-    });
-    setButtonIcon(clearButton, 'edit-clear-symbolic');
-    const row = new Adw.ActionRow({title, activatable_widget: editButton});
-    row.add_suffix(label);
-    row.add_suffix(clearButton);
-    row.add_suffix(editButton);
-
-    const syncShortcut = () => {
-        const [accelerator] = settings.get_strv(key);
-        label.accelerator = accelerator ?? fallbackAccelerator;
-        clearButton.visible = Boolean(accelerator);
-    };
-    editButton.connect('clicked', () => openCustomShortcutDialog(window, key));
-    clearButton.connect('clicked', () => settings.set_strv(key, []));
-    connectSettings(settings, `changed::${key}`, syncShortcut);
-    syncShortcut();
-    return row;
-}
+import {addStartMenuKeybindingsGroup} from './startMenuKeybindingsGroup.js';
+import {addStartMenuAppearanceGroup} from './startMenuAppearanceGroup.js';
+import {addStartMenuFoldersGroup} from './startMenuFoldersGroup.js';
 
 export function addStartMenuPage({
     window,
@@ -414,10 +383,7 @@ export function addStartMenuPage({
     };
     windowsStartMenuSwitch.connect('notify::active', syncStartMenuSubpages);
     syncStartMenuSubpages();
-    const startMenuKeybindingsGroup = keyboardSubpage.addGroup({
-        title: _('Keyboard Shortcuts'),
-        description: _('Configure Start menu shortcuts.'),
-    });
+    addStartMenuKeybindingsGroup({window, settings, connectSettings, keyboardSubpage, windowsStartMenuSwitch});
 
     const startMenuOptionsGroup = menuOptionsSubpage.addGroup({
         title: _('Start Menu Options'),
@@ -552,82 +518,16 @@ export function addStartMenuPage({
     );
     updateGnomeStartButtonVisibleSwitch();
 
-    const followPanelThemeSwitch = createSwitchRow(settings, {
-        key: 'start-menu-follow-panel-theme',
-        title: _('Follow Taskbar/Dock Theme'),
-        subtitle: _('Use the taskbar or Dock’s effective light or dark appearance'),
-    });
-    const startMenuAppearanceGroup = menuAppearanceSubpage.addGroup({
-        title: _('Start Menu Appearance'),
-        description: _('Configure the Start Menu theme and transparency'),
+    const syncStartMenuTransparency = addStartMenuAppearanceGroup({
+        settings,
+        connectSettings,
+        menuAppearanceSubpage,
+        windowsStartMenuSwitch,
+        blurMyShellPanelBlurEnabled,
+        blurMyShellPopupBlurEnabled,
     });
 
-    const startMenuFoldersGroup = foldersSubpage.addGroup({
-        title: _('Folder Shortcuts'),
-        description: _('Choose which folders appear beside the Settings icon'),
-    });
-    const startMenuLocationsSwitch = createSwitchRow(settings, {
-        key: 'start-menu-show-locations',
-        title: _('Show Folder Shortcuts'),
-        subtitle: _('Show selected folders beside the Settings icon in the Start Menu'),
-    });
-    startMenuFoldersGroup.add(startMenuLocationsSwitch);
-    const startMenuFolderRows = [];
-    for (const option of [
-        {
-            key: 'start-menu-show-home',
-            title: _('Home'),
-            subtitle: _('Add the Home folder'),
-        },
-        {
-            key: 'start-menu-show-desktop',
-            title: _('Desktop'),
-            subtitle: _('Add the Desktop folder'),
-        },
-        {
-            key: 'start-menu-show-documents',
-            title: _('Documents'),
-            subtitle: _('Add the Documents folder'),
-        },
-        {
-            key: 'start-menu-show-downloads',
-            title: _('Downloads'),
-            subtitle: _('Add the Downloads folder'),
-        },
-        {
-            key: 'start-menu-show-music',
-            title: _('Music'),
-            subtitle: _('Add the Music folder'),
-        },
-        {
-            key: 'start-menu-show-pictures',
-            title: _('Pictures'),
-            subtitle: _('Add the Pictures folder'),
-        },
-        {
-            key: 'start-menu-show-videos',
-            title: _('Videos'),
-            subtitle: _('Add the Videos folder'),
-        },
-    ]) {
-        const row = createSwitchRow(settings, option);
-        startMenuFoldersGroup.add(row);
-        startMenuFolderRows.push(row);
-    }
-    const updateStartMenuLocationControls = () => {
-        startMenuFoldersGroup.sensitive = windowsStartMenuSwitch.active;
-        for (const row of startMenuFolderRows)
-            row.sensitive = startMenuLocationsSwitch.active;
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuLocationControls
-    );
-    startMenuLocationsSwitch.connect(
-        'notify::active',
-        updateStartMenuLocationControls
-    );
-    updateStartMenuLocationControls();
+    addStartMenuFoldersGroup({settings, foldersSubpage, windowsStartMenuSwitch});
 
     const hasDesktopApp = appId =>
         Boolean(Gio.DesktopAppInfo.new(appId));
@@ -740,91 +640,6 @@ export function addStartMenuPage({
     );
     updateStartMenuContextMenuControls();
 
-    startMenuAppearanceGroup.add(followPanelThemeSwitch);
-
-    const startMenuThemeRow = addToggleChoiceRow(
-        startMenuAppearanceGroup,
-        settings,
-        {
-            key: 'start-menu-theme',
-            title: _('Start Menu Theme'),
-            subtitle: _('Use a custom appearance or follow the GNOME Shell theme'),
-            choices: [
-                {value: 'dark', label: _('Dark')},
-                {value: 'light', label: _('Light')},
-                {value: 'shell', label: _('GNOME Shell')},
-            ],
-        },
-        connectSettings
-    );
-    const updateStartMenuThemeRows = () => {
-        followPanelThemeSwitch.sensitive = windowsStartMenuSwitch.active;
-        startMenuThemeRow.sensitive = windowsStartMenuSwitch.active &&
-            !followPanelThemeSwitch.active;
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuThemeRows
-    );
-    followPanelThemeSwitch.connect(
-        'notify::active',
-        updateStartMenuThemeRows
-    );
-    updateStartMenuThemeRows();
-
-    const followPanelTransparencySubtitle = _(
-        'Use the taskbar’s configured transparency level'
-    );
-    const panelBlurStartMenuTransparencySubtitle = _(
-        'Disable Blur My Shell panel blur to use this option'
-    );
-    const popupBlurStartMenuTransparencySubtitle = _(
-        'Disable Blur My Shell popup blur to use this option'
-    );
-    const panelAndPopupBlurStartMenuTransparencySubtitle = _(
-        'Disable Blur My Shell panel and popup blur to use this option'
-    );
-    const followPanelTransparencySwitch = createSwitchRow(settings, {
-        key: 'start-menu-follow-panel-transparency',
-        title: _('Follow Taskbar Transparency'),
-        subtitle: followPanelTransparencySubtitle,
-    });
-    startMenuAppearanceGroup.add(followPanelTransparencySwitch);
-    const updateStartMenuTransparencyRow = () => {
-        const panelBlur = blurMyShellPanelBlurEnabled();
-        const popupBlur = blurMyShellPopupBlurEnabled();
-        const blocked = panelBlur || popupBlur;
-        const windowsXpThemeEnabled = settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        followPanelTransparencySwitch.sensitive =
-            windowsStartMenuSwitch.active && !blocked &&
-            !windowsXpThemeEnabled;
-        if (!blocked) {
-            followPanelTransparencySwitch.subtitle =
-                followPanelTransparencySubtitle;
-        } else if (panelBlur && popupBlur) {
-            followPanelTransparencySwitch.subtitle =
-                panelAndPopupBlurStartMenuTransparencySubtitle;
-        } else if (panelBlur) {
-            followPanelTransparencySwitch.subtitle =
-                panelBlurStartMenuTransparencySubtitle;
-        } else {
-            followPanelTransparencySwitch.subtitle =
-                popupBlurStartMenuTransparencySubtitle;
-        }
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuTransparencyRow
-    );
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        updateStartMenuTransparencyRow
-    );
-    updateStartMenuTransparencyRow();
-
     const centerStartMenuRow = createSwitchRow(settings, {
         key: 'start-menu-monitor-centered',
         title: _('Center Start Menu on Monitor'),
@@ -856,90 +671,6 @@ export function addStartMenuPage({
     );
     updateCenterStartMenuRow();
 
-    const superKeyRow = createSwitchRow(settings, {
-        key: 'start-menu-super-key',
-        title: _('Super Opens Start Menu'),
-        subtitle: _('Use Super for the Start Menu and move the Overview to Super+Tab or your own shortcut'),
-    });
-    startMenuKeybindingsGroup.add(superKeyRow);
-
-    const overviewShortcutRow = createShortcutRow(window, settings, connectSettings, {
-        title: _('Overview Shortcut'),
-        key: 'overview-custom-hotkey',
-        fallbackAccelerator: '<Super>Tab',
-    });
-    startMenuKeybindingsGroup.add(overviewShortcutRow);
-
-    const superTabRow = createSwitchRow(settings, {
-        key: 'start-menu-super-tab',
-        title: _('Super+Tab Opens Start Menu'),
-        subtitle: _(
-            'Use GNOME’s application-switch shortcut for the Eleven-style Start Menu while it is enabled'
-        ),
-    });
-    startMenuKeybindingsGroup.add(superTabRow);
-    const updateSuperTabRow = () => {
-        const windowsXpTheme = settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        superKeyRow.sensitive = windowsStartMenuSwitch.active &&
-            !windowsXpTheme;
-        superTabRow.sensitive = windowsStartMenuSwitch.active;
-        overviewShortcutRow.sensitive = superKeyRow.sensitive && superKeyRow.active;
-        overviewShortcutRow.subtitle = superKeyRow.active
-            ? _('Opens the Overview while Super opens the Start Menu; clear it to use Super+Tab')
-            : _('Turn on the Super shortcut to change the Overview shortcut');
-    };
-    superKeyRow.connect('notify::active', () => {
-        if (superKeyRow.active && superTabRow.active)
-            settings.set_boolean('start-menu-super-tab', false);
-        updateSuperTabRow();
-    });
-    superTabRow.connect('notify::active', () => {
-        if (superTabRow.active && superKeyRow.active)
-            settings.set_boolean('start-menu-super-key', false);
-    });
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateSuperTabRow
-    );
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        updateSuperTabRow
-    );
-    updateSuperTabRow();
-
-    const customShortcutRow = createShortcutRow(window, settings, connectSettings, {
-        title: _('Custom Start Menu Shortcut'),
-        key: 'start-menu-custom-hotkey',
-    });
-    startMenuKeybindingsGroup.add(customShortcutRow);
-
-    const updateCustomShortcutRow = () => {
-        customShortcutRow.sensitive =
-            windowsStartMenuSwitch.active && !superTabRow.active &&
-            !superKeyRow.active;
-        if (superKeyRow.active) {
-            customShortcutRow.subtitle =
-                _('Turn off the Super shortcut to use a custom shortcut');
-        } else if (superTabRow.active) {
-            customShortcutRow.subtitle =
-                _('Turn off Super+Tab to use a custom shortcut');
-        } else {
-            customShortcutRow.subtitle =
-                _('Choose any unused keyboard shortcut; none is assigned by default');
-        }
-    };
-
-    superKeyRow.connect('notify::active', updateCustomShortcutRow);
-    superTabRow.connect('notify::active', updateCustomShortcutRow);
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateCustomShortcutRow
-    );
-    updateCustomShortcutRow();
-
     const syncStartMenuAvailability = () => {
         const available = !isDefaultPanelWithoutDock(settings) || startButtonInPanel(settings);
         startMenuHubGroup.sensitive = available;
@@ -953,7 +684,7 @@ export function addStartMenuPage({
 
     return {
         followAppAlignmentSwitch,
-        syncTransparency: updateStartMenuTransparencyRow,
+        syncTransparency: syncStartMenuTransparency,
         windowsStartMenuSwitch,
     };
 }
