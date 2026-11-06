@@ -7,6 +7,19 @@ export const PANEL_BOX_ITEMS = Object.freeze([
     Object.freeze({id: 'right-box', position: 'right'}),
 ]);
 
+export function swapItemOrderNeighbour(order, positionOrder, id, offset, canSwapWith = () => true) {
+    const index = positionOrder.indexOf(id);
+    const otherId = positionOrder[index + offset];
+    if (index < 0 || !otherId || !canSwapWith(otherId))
+        return null;
+
+    const swapped = [...order];
+    const orderIndex = swapped.indexOf(id);
+    const otherOrderIndex = swapped.indexOf(otherId);
+    [swapped[orderIndex], swapped[otherOrderIndex]] = [swapped[otherOrderIndex], swapped[orderIndex]];
+    return swapped;
+}
+
 export const DEFAULT_PANEL_ITEM_ORDER = Object.freeze([
     ...PANEL_BOX_ITEMS.map(item => item.id),
     'start-button',

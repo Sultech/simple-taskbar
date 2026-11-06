@@ -26,10 +26,12 @@ import {
 import {
     DEFAULT_PANEL_ITEM_ORDER,
     normalizePanelItemOrder,
+    swapItemOrderNeighbour,
 } from '../shared/panelItemOrder.js';
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {axisPanelPositions} from './panelPositionChoices.js';
+import {syncItemOrderRows} from './panelItemOrderRows.js';
 import {
     createShowDesktopButtonOptionsButton,
 } from './showDesktopButtonDialog.js';
@@ -468,35 +470,17 @@ export function addPanelItemsPage({
         return positionOrder.filter(id => !isPanelItemLocked(id));
     };
     const syncPanelItemOrder = () => {
-        const stored = settings.get_strv('panel-item-order');
-        const order = normalizePanelItemOrder(stored);
-        if (stored.length !== order.length ||
-            stored.some((id, index) => id !== order[index])) {
-            settings.set_strv('panel-item-order', order);
+        const positionOrders = syncItemOrderRows(settings, {
+            key: 'panel-item-order',
+            normalizeOrder: normalizePanelItemOrder,
+            rows: panelOrderRows,
+            groups: panelOrderGroups,
+            getPosition: getPanelItemPosition,
+            syncPosition: (controls, position) => controls.syncPosition(position),
+        });
+        if (!positionOrders)
             return;
-        }
 
-        for (const controls of panelOrderRows.values()) {
-            if (controls.group) {
-                controls.group.remove(controls.row);
-                controls.group = null;
-            }
-        }
-
-        const positionOrders = new Map([
-            ['left', []],
-            ['center', []],
-            ['right', []],
-        ]);
-        for (const id of order) {
-            const controls = panelOrderRows.get(id);
-            const position = getPanelItemPosition(id);
-            const group = panelOrderGroups.get(position);
-            controls.syncPosition(position);
-            group.add(controls.row);
-            controls.group = group;
-            positionOrders.get(position).push(id);
-        }
         for (const positionOrder of positionOrders.values()) {
             const movablePositionOrder =
                 getMovablePositionOrder(positionOrder);
@@ -536,22 +520,10 @@ export function addPanelItemsPage({
                 candidate => getPanelItemPosition(candidate) === position
             )
         );
-        const index = positionOrder.indexOf(id);
-        const targetIndex = index + offset;
-        if (index < 0 || targetIndex < 0 ||
-            targetIndex >= positionOrder.length) {
-            return;
-        }
-
-        const otherId = positionOrder[targetIndex];
-        if (isPanelItemLocked(otherId))
-            return;
-
-        const orderIndex = order.indexOf(id);
-        const otherOrderIndex = order.indexOf(otherId);
-        [order[orderIndex], order[otherOrderIndex]] =
-            [order[otherOrderIndex], order[orderIndex]];
-        settings.set_strv('panel-item-order', order);
+        const swapped = swapItemOrderNeighbour(order, positionOrder, id, offset,
+            otherId => !isPanelItemLocked(otherId));
+        if (swapped)
+            settings.set_strv('panel-item-order', swapped);
     };
     for (const [id, controls] of panelOrderRows) {
         controls.upButton.connect('clicked', () => {

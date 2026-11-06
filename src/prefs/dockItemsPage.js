@@ -8,8 +8,10 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     DEFAULT_DOCK_ITEM_ORDER,
     normalizeDockItemOrder,
+    swapItemOrderNeighbour,
 } from '../shared/panelItemOrder.js';
 import {axisPanelPositions} from './panelPositionChoices.js';
+import {syncItemOrderRows} from './panelItemOrderRows.js';
 import {positionIsVertical} from '../shared/panelPositionUtils.js';
 import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from '../shared/panelModeSettings.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
@@ -135,33 +137,16 @@ export function addDockItemsPage({
     };
 
     const syncDockItemOrder = () => {
-        const stored = settings.get_strv('dock-item-order');
-        const order = normalizeDockItemOrder(stored);
-        if (stored.length !== order.length ||
-            stored.some((id, index) => id !== order[index])) {
-            settings.set_strv('dock-item-order', order);
+        const positionOrders = syncItemOrderRows(settings, {
+            key: 'dock-item-order',
+            normalizeOrder: normalizeDockItemOrder,
+            rows,
+            groups,
+            getPosition: itemPosition,
+        });
+        if (!positionOrders)
             return;
-        }
 
-        for (const controls of rows.values()) {
-            if (controls.group) {
-                controls.group.remove(controls.row);
-                controls.group = null;
-            }
-        }
-        const positionOrders = new Map([
-            ['left', []],
-            ['center', []],
-            ['right', []],
-        ]);
-        for (const id of order) {
-            const controls = rows.get(id);
-            const position = itemPosition(id);
-            const group = groups.get(position);
-            group.add(controls.row);
-            controls.group = group;
-            positionOrders.get(position).push(id);
-        }
         for (const positionOrder of positionOrders.values()) {
             for (const [index, id] of positionOrder.entries()) {
                 const controls = rows.get(id);
@@ -203,19 +188,9 @@ export function addDockItemsPage({
         const positionOrder = order.filter(
             candidate => itemPosition(candidate) === position
         );
-        const index = positionOrder.indexOf(id);
-        const targetIndex = index + offset;
-        if (index < 0 || targetIndex < 0 ||
-            targetIndex >= positionOrder.length) {
-            return;
-        }
-
-        const otherId = positionOrder[targetIndex];
-        const orderIndex = order.indexOf(id);
-        const otherOrderIndex = order.indexOf(otherId);
-        [order[orderIndex], order[otherOrderIndex]] =
-            [order[otherOrderIndex], order[orderIndex]];
-        settings.set_strv('dock-item-order', order);
+        const swapped = swapItemOrderNeighbour(order, positionOrder, id, offset);
+        if (swapped)
+            settings.set_strv('dock-item-order', swapped);
     };
     for (const [id, controls] of rows) {
         controls.upButton.connect('clicked', () => {
