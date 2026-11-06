@@ -7,11 +7,17 @@ import GObject from 'gi://GObject';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const MAGIC_LAMP_DURATION = 480;
-const MAGIC_LAMP_TILES = 42;
-const MAGIC_LAMP_TAIL_SIZE = 8;
+const MAGIC_LAMP_ALONG_TILES = 64;
+const MAGIC_LAMP_ACROSS_TILES = 4;
+const MAGIC_LAMP_TARGET_RATIO = 0.7;
+const MAGIC_LAMP_MIN_TARGET_SIZE = 12;
 const MAGIC_LAMP_INSET = 0.4;
-const MAGIC_LAMP_SWEEP = 0.7;
-const MAGIC_LAMP_RIPPLE = 0.2;
+const MAGIC_LAMP_BEND_END = 0.4;
+const MAGIC_LAMP_SLIDE_START = 0.18;
+
+function clampProgress(progress) {
+    return Math.max(0, Math.min(1, progress));
+}
 
 export class MagicLampEffect extends Clutter.DeformEffect {
     static {
@@ -48,7 +54,11 @@ export class MagicLampEffect extends Clutter.DeformEffect {
             height: actor.get_height(),
         };
         this._syncTarget();
-        this.set_n_tiles(MAGIC_LAMP_TILES, MAGIC_LAMP_TILES);
+        const vertical = this._panelPosition === 'bottom' || this._panelPosition === 'top';
+        this.set_n_tiles(
+            vertical ? MAGIC_LAMP_ACROSS_TILES : MAGIC_LAMP_ALONG_TILES,
+            vertical ? MAGIC_LAMP_ALONG_TILES : MAGIC_LAMP_ACROSS_TILES
+        );
 
         const timeline = new Clutter.Timeline({
             actor,
@@ -97,47 +107,38 @@ export class MagicLampEffect extends Clutter.DeformEffect {
             windowGeometry.x) * scaleX;
         const targetY = (targetGeometry.y + targetGeometry.height / 2 -
             windowGeometry.y) * scaleY;
-        const currentX = vertex.tx * width;
-        const currentY = vertex.ty * height;
-        let distanceFromDock;
-        switch (this._panelPosition) {
-        case 'bottom':
-            distanceFromDock = 1 - vertex.ty;
-            break;
-        case 'top':
-            distanceFromDock = vertex.ty;
-            break;
-        case 'left':
-            distanceFromDock = vertex.tx;
-            break;
-        default:
-            distanceFromDock = 1 - vertex.tx;
-            break;
-        }
-
-        const localProgress = Math.max(
-            0,
-            Math.min(
-                1,
-                (this._progress - distanceFromDock * MAGIC_LAMP_SWEEP) /
-                    (1 - MAGIC_LAMP_SWEEP)
-            )
+        const vertical = this._panelPosition === 'bottom' || this._panelPosition === 'top';
+        const towardEnd = this._panelPosition === 'bottom' || this._panelPosition === 'right';
+        const length = vertical ? height : width;
+        const span = vertical ? width : height;
+        const targetAlong = vertical ? targetY : targetX;
+        const targetAcross = vertical ? targetX : targetY;
+        const alongScale = vertical ? scaleY : scaleX;
+        const reach = Math.max(alongScale, towardEnd ? targetAlong : length - targetAlong);
+        const halfTarget = vertical
+            ? targetGeometry.width * scaleX / 2
+            : targetGeometry.height * scaleY / 2;
+        const alongFraction = vertical ? vertex.ty : vertex.tx;
+        const acrossFraction = vertical ? vertex.tx : vertex.ty;
+        const bendProgress = clampProgress(this._progress / MAGIC_LAMP_BEND_END);
+        const bend = (1 - Math.cos(Math.PI * bendProgress)) / 2;
+        const slideProgress = clampProgress(
+            (this._progress - MAGIC_LAMP_SLIDE_START) / (1 - MAGIC_LAMP_SLIDE_START)
         );
-        const eased = localProgress * localProgress * (3 - 2 * localProgress);
-        let newX = currentX + (targetX - currentX) * eased;
-        let newY = currentY + (targetY - currentY) * eased;
-        const ripple = Math.sin(eased * Math.PI) *
-            (1 - eased) * MAGIC_LAMP_RIPPLE;
+        const slide = slideProgress < 0.5
+            ? 4 * slideProgress ** 3
+            : 1 - (-2 * slideProgress + 2) ** 3 / 2;
+        const distance = (towardEnd ? alongFraction : 1 - alongFraction) * length;
+        const along = Math.min(reach, distance + slide * reach);
+        const funnelPosition = clampProgress(along / reach);
+        const pinch = bend * funnelPosition * funnelPosition * (3 - 2 * funnelPosition);
+        const low = (targetAcross - halfTarget) * pinch;
+        const high = span + (targetAcross + halfTarget - span) * pinch;
+        const across = low + acrossFraction * (high - low);
+        const alongPosition = towardEnd ? along : length - along;
 
-        if (this._panelPosition === 'bottom' ||
-            this._panelPosition === 'top') {
-            newX += (currentX - targetX) * ripple;
-        } else {
-            newY += (currentY - targetY) * ripple;
-        }
-
-        vertex.x = newX;
-        vertex.y = newY;
+        vertex.x = vertical ? across : alongPosition;
+        vertex.y = vertical ? alongPosition : across;
     }
 
     vfunc_modify_paint_volume(_paintVolume) {
@@ -160,31 +161,33 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         const centerY = target.y + target.height / 2;
         const insetX = target.width * MAGIC_LAMP_INSET;
         const insetY = target.height * MAGIC_LAMP_INSET;
+        const targetWidth = Math.max(MAGIC_LAMP_MIN_TARGET_SIZE, target.width * MAGIC_LAMP_TARGET_RATIO);
+        const targetHeight = Math.max(MAGIC_LAMP_MIN_TARGET_SIZE, target.height * MAGIC_LAMP_TARGET_RATIO);
 
         switch (this._panelPosition) {
         case 'bottom':
-            target.x = centerX - MAGIC_LAMP_TAIL_SIZE / 2;
+            target.x = centerX - targetWidth / 2;
             target.y += insetY;
-            target.width = MAGIC_LAMP_TAIL_SIZE;
+            target.width = targetWidth;
             target.height = 0;
             break;
         case 'top':
-            target.x = centerX - MAGIC_LAMP_TAIL_SIZE / 2;
+            target.x = centerX - targetWidth / 2;
             target.y += target.height - insetY;
-            target.width = MAGIC_LAMP_TAIL_SIZE;
+            target.width = targetWidth;
             target.height = 0;
             break;
         case 'left':
             target.x += target.width - insetX;
-            target.y = centerY - MAGIC_LAMP_TAIL_SIZE / 2;
+            target.y = centerY - targetHeight / 2;
             target.width = 0;
-            target.height = MAGIC_LAMP_TAIL_SIZE;
+            target.height = targetHeight;
             break;
         default:
             target.x += insetX;
-            target.y = centerY - MAGIC_LAMP_TAIL_SIZE / 2;
+            target.y = centerY - targetHeight / 2;
             target.width = 0;
-            target.height = MAGIC_LAMP_TAIL_SIZE;
+            target.height = targetHeight;
             break;
         }
     }
