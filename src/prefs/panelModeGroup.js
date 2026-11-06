@@ -13,6 +13,8 @@ import {
     PANEL_MODE_TASKBAR,
     PANEL_MODE_WINDOWS_10,
     PANEL_MODE_WINDOWS_XP,
+    activeDockMode,
+    getRequestedPanelMode,
     initializeDockAxisProfiles,
     setPanelMode,
 } from '../shared/panelModeProfiles.js';
@@ -35,17 +37,9 @@ const DOCK_DEFAULT_ICON_SPACING = 6;
 const DOCK_DEFAULT_START_BUTTON_PADDING = 2;
 
 function activeMode(settings) {
-    if (settings.get_boolean('macos-dock-theme-enabled'))
-        return PANEL_MODE_MACOS_DOCK;
-    if (settings.get_boolean('dock-mode'))
-        return PANEL_MODE_DOCK;
-    if (settings.get_boolean('windows-xp-theme-enabled'))
-        return PANEL_MODE_WINDOWS_XP;
-    if (settings.get_boolean('windows-10-theme-enabled'))
-        return PANEL_MODE_WINDOWS_10;
-    if (settings.get_boolean('default-gnome-panel'))
-        return PANEL_MODE_DEFAULT;
-    return PANEL_MODE_TASKBAR;
+    if (settings.get_boolean('dock-mode') || settings.get_boolean('macos-dock-theme-enabled'))
+        return activeDockMode(settings);
+    return getRequestedPanelMode(settings);
 }
 
 function enableDockMode(settings) {

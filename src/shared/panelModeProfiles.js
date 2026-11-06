@@ -286,7 +286,12 @@ function axisProfilesEnabled(settings, mode) {
         settings.get_boolean(PANEL_AXIS_PROFILE_ENABLED_KEYS[mode]);
 }
 
-function getRequestedPanelMode(settings) {
+export function activeDockMode(settings) {
+    return settings.get_boolean('macos-dock-theme-enabled')
+        ? PANEL_MODE_MACOS_DOCK : PANEL_MODE_DOCK;
+}
+
+export function getRequestedPanelMode(settings) {
     if (settings.get_boolean('windows-xp-theme-enabled'))
         return PANEL_MODE_WINDOWS_XP;
     if (settings.get_boolean('windows-10-theme-enabled'))
@@ -605,8 +610,7 @@ export function setDockPosition(settings, position) {
     applyAxisPositionChange(
         settings,
         DOCK_AXIS_DOMAIN,
-        settings.get_boolean('macos-dock-theme-enabled')
-            ? PANEL_MODE_MACOS_DOCK : PANEL_MODE_DOCK,
+        activeDockMode(settings),
         position
     );
 }
@@ -642,12 +646,7 @@ export function initializeDockAxisProfiles(settings) {
     if (settings.get_boolean('dock-axis-profiles-initialized'))
         return;
 
-    activateRestoredAxis(
-        settings,
-        DOCK_AXIS_DOMAIN,
-        settings.get_boolean('macos-dock-theme-enabled')
-            ? PANEL_MODE_MACOS_DOCK : PANEL_MODE_DOCK
-    );
+    activateRestoredAxis(settings, DOCK_AXIS_DOMAIN, activeDockMode(settings));
 }
 
 export function synchronizePanelPosition(settings) {
