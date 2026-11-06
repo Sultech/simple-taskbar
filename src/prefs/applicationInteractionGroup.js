@@ -28,7 +28,11 @@ import {
 import {
     WINDOW_MINIMIZE_EFFECT,
 } from '../shared/windowMinimizeEffect.js';
-import {HOVER_ACTION, SCROLL_ACTION} from '../shared/interactionActions.js';
+import {
+    HOVER_ACTION,
+    SCROLL_ACTION,
+} from '../shared/interactionActions.js';
+
 import {
     addComboRow,
     addToggleChoiceRow,

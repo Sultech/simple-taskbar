@@ -16,86 +16,51 @@ import {
     createPreferencesDialogContent,
 } from './preferencesWidgets.js';
 
+function clickActionLabels() {
+    return {
+        [CLICK_ACTION.CYCLE_MINIMIZE]: _('Cycle Windows + Minimize'),
+        [CLICK_ACTION.CYCLE]: _('Cycle Through Windows'),
+        [CLICK_ACTION.TOGGLE_SHOW_PREVIEW]: _('Toggle Single / Preview Multiple'),
+        [CLICK_ACTION.TOGGLE_CYCLE]: _('Toggle Single / Cycle Multiple'),
+        [CLICK_ACTION.TOGGLE_SPREAD]: _('Toggle Single / Spread Multiple'),
+        [CLICK_ACTION.TOGGLE_WINDOWS]: _('Toggle Windows'),
+        [CLICK_ACTION.RAISE_WINDOWS]: _('Raise Windows'),
+        [CLICK_ACTION.LAUNCH]: _('Launch New Instance'),
+        [CLICK_ACTION.MINIMIZE]: _('Minimize Window'),
+        [CLICK_ACTION.QUIT]: _('Quit'),
+    };
+}
+
+function clickActionChoices(actions) {
+    const labels = clickActionLabels();
+    return actions.map(value => ({value, label: labels[value]}));
+}
+
 export function getApplicationClickActionChoices() {
-    return [
-        {
-            value: CLICK_ACTION.CYCLE_MINIMIZE,
-            label: _('Cycle Windows + Minimize'),
-        },
-        {
-            value: CLICK_ACTION.CYCLE,
-            label: _('Cycle Through Windows'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
-            label: _('Toggle Single / Preview Multiple'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_CYCLE,
-            label: _('Toggle Single / Cycle Multiple'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_SPREAD,
-            label: _('Toggle Single / Spread Multiple'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_WINDOWS,
-            label: _('Toggle Windows'),
-        },
-        {
-            value: CLICK_ACTION.RAISE_WINDOWS,
-            label: _('Raise Windows'),
-        },
-        {
-            value: CLICK_ACTION.LAUNCH,
-            label: _('Launch New Instance'),
-        },
-    ];
+    return clickActionChoices([
+        CLICK_ACTION.CYCLE_MINIMIZE,
+        CLICK_ACTION.CYCLE,
+        CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
+        CLICK_ACTION.TOGGLE_CYCLE,
+        CLICK_ACTION.TOGGLE_SPREAD,
+        CLICK_ACTION.TOGGLE_WINDOWS,
+        CLICK_ACTION.RAISE_WINDOWS,
+        CLICK_ACTION.LAUNCH,
+    ]);
 }
 
 function getClickActionOptionChoices() {
-    return [
-        {
-            value: CLICK_ACTION.RAISE_WINDOWS,
-            label: _('Raise Windows'),
-        },
-        {
-            value: CLICK_ACTION.MINIMIZE,
-            label: _('Minimize Window'),
-        },
-        {
-            value: CLICK_ACTION.LAUNCH,
-            label: _('Launch New Instance'),
-        },
-        {
-            value: CLICK_ACTION.CYCLE,
-            label: _('Cycle Through Windows'),
-        },
-        {
-            value: CLICK_ACTION.CYCLE_MINIMIZE,
-            label: _('Cycle Windows + Minimize'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
-            label: _('Toggle Single / Preview Multiple'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_CYCLE,
-            label: _('Toggle Single / Cycle Multiple'),
-        },
-        {
-            value: CLICK_ACTION.TOGGLE_SPREAD,
-            label: _('Toggle Single / Spread Multiple'),
-        },
-        {
-            value: CLICK_ACTION.QUIT,
-            label: _('Quit'),
-        },
-    ];
-}
-
-function getMiddleClickActionChoices() {
-    return getClickActionOptionChoices();
+    return clickActionChoices([
+        CLICK_ACTION.RAISE_WINDOWS,
+        CLICK_ACTION.MINIMIZE,
+        CLICK_ACTION.LAUNCH,
+        CLICK_ACTION.CYCLE,
+        CLICK_ACTION.CYCLE_MINIMIZE,
+        CLICK_ACTION.TOGGLE_SHOW_PREVIEW,
+        CLICK_ACTION.TOGGLE_CYCLE,
+        CLICK_ACTION.TOGGLE_SPREAD,
+        CLICK_ACTION.QUIT,
+    ]);
 }
 
 const CLICK_ACTION_SETTINGS = [
@@ -163,7 +128,7 @@ class ApplicationClickActionOptionsDialog extends Adw.Window {
                 key: 'middle-click-action',
                 title: _('Middle-Click Action'),
                 subtitle: _('Choose what happens when middle-clicking an application'),
-                choices: getMiddleClickActionChoices(),
+                choices: getClickActionOptionChoices(),
             },
             connectSettings
         );
@@ -178,7 +143,6 @@ class ApplicationClickActionOptionsDialog extends Adw.Window {
             },
             connectSettings
         );
-
     }
 
     _reset() {

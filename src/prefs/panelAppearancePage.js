@@ -19,16 +19,13 @@ import {
     floatingTaskbarEnabled,
     taskbarGeometryEnabled,
 } from '../shared/panelModeSettings.js';
+import {createSwitchExpanderRow} from './preferencesWidgets.js';
 import {
-    addColorRow,
-    addToggleChoiceRow,
-    addSwitchRow,
-    createSwitchExpanderRow,
-    createSwitchRow,
-} from './preferencesWidgets.js';
-import {
-    createDynamicTransparencyOptionsButton,
-} from './dynamicTransparencyDialog.js';
+    addBordersGroup,
+    addCustomColorRows,
+    addThemeRows,
+    addTransparencyRows,
+} from './panelPreferenceRows.js';
 import {createPanelThicknessSizing} from './panelThicknessSizing.js';
 import {addChoiceCards, drawTaskbarEdge, edgeChoices} from './choiceCards.js';
 import {addSliderRow} from './sliderRow.js';
@@ -305,312 +302,68 @@ export function addPanelAppearancePage({
         ),
     });
 
-    const followSystemThemeSwitch = createSwitchRow(settings, {
-        key: 'panel-theme-follow-system',
-        title: _('Follow System Theme'),
-        subtitle: _('Match the active GNOME Shell theme, independently of application colours'),
-    });
-    themeGroup.add(followSystemThemeSwitch);
+    const blockedText = _('Disable Blur My Shell panel blur to use this option');
+    const windowsXpEnabled = () => settings.get_boolean('windows-xp-theme-enabled');
+    const {followSwitch: followSystemThemeSwitch, themeRow: panelThemeRow} = addThemeRows(
+        themeGroup, settings, connectSettings, {
+            keyPrefix: '',
+            followSubtitle: _('Match the active GNOME Shell theme, independently of application colours'),
+            themeTitle: _('Taskbar Theme'),
+            onFollowChanged: () => syncPanelThemeControls(),
+        });
 
-    const panelThemeRow = addToggleChoiceRow(
-        themeGroup,
-        settings,
-        {
-            key: 'panel-theme',
-            title: _('Taskbar Theme'),
-            subtitle: _('Choose the colour scheme when system matching is off'),
-            choices: [
-                {value: 'light', label: _('Light')},
-                {value: 'dark', label: _('Dark')},
-            ],
-        },
-        connectSettings
-    );
-    followSystemThemeSwitch.connect('notify::active', widget => {
-        syncPanelThemeControls();
-        if (widget.active)
-            settings.set_boolean(
-                'custom-panel-color-enabled',
-                false
-            );
-    });
-
-    const transparencySwitchSubtitle = _(
-        'Make the taskbar background transparent'
-    );
-    const dynamicTransparencySubtitle = _(
-        'Adjust transparency according to the selected window state'
-    );
-    const panelBlurTransparencySubtitle = _(
-        'Disable Blur My Shell panel blur to use this option'
-    );
     const transparencyGroup = appearancePage.addGroup({
         title: _('Transparency'),
         description: _('Control the taskbar background transparency'),
     });
-
-    const transparencySwitch = createSwitchRow(settings, {
-        key: 'transparency-enabled',
-        title: _('Enable Transparency'),
-        subtitle: transparencySwitchSubtitle,
-    });
-    transparencyGroup.add(transparencySwitch);
-
-    const transparencyRowSubtitle = _(
-        '0% is opaque and 100% is fully transparent'
-    );
-    const transparencyRow = addSliderRow(
-        transparencyGroup,
-        settings,
-        {
-            key: 'transparency-level',
-            unit: '%',
-            title: _('Transparency'),
-            subtitle: transparencyRowSubtitle,
-            lower: 0,
-            upper: 100,
-        },
-        connectSettings
-    );
-    const dynamicTransparencyOptionsButton =
-        createDynamicTransparencyOptionsButton(settings, {
-            title: _('Dynamic Transparency Options'),
-            behaviorKey: 'transparency-dynamic-behavior',
-            distanceKey: 'transparency-dynamic-distance',
-            levelKey: 'transparency-dynamic-level',
-            animationTimeKey: 'transparency-dynamic-animation-time',
-        });
-    const {
-        row: dynamicTransparencyRow,
-        toggle: dynamicTransparencyToggle,
-    } = addSwitchRow(transparencyGroup, settings, {
-        key: 'transparency-on-unmaximized',
-        title: _('Dynamic Transparency'),
-        subtitle: dynamicTransparencySubtitle,
-        addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
+    const transparency = addTransparencyRows(transparencyGroup, settings, connectSettings, {
+        keyPrefix: '',
+        switchSubtitle: _('Make the taskbar background transparent'),
+        optionsTitle: _('Dynamic Transparency Options'),
+        onChanged: () => updatePanelTransparencyControls(),
     });
     const updatePanelTransparencyControls = () => {
-        const blocked = blurMyShellPanelBlurEnabled();
-        const windowsXpThemeEnabled = settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        transparencyGroup.sensitive = !windowsXpThemeEnabled;
-        transparencySwitch.sensitive = !blocked &&
-            !windowsXpThemeEnabled;
-        transparencySwitch.subtitle = blocked
-            ? panelBlurTransparencySubtitle
-            : transparencySwitchSubtitle;
-        transparencyRow.sensitive = !blocked &&
-            !windowsXpThemeEnabled && transparencySwitch.active;
-        transparencyRow.subtitle = blocked
-            ? panelBlurTransparencySubtitle
-            : transparencyRowSubtitle;
-        dynamicTransparencyRow.sensitive = !blocked &&
-            !windowsXpThemeEnabled;
-        dynamicTransparencyRow.subtitle = blocked
-            ? panelBlurTransparencySubtitle
-            : dynamicTransparencySubtitle;
-        dynamicTransparencyOptionsButton.sensitive =
-            !blocked && !windowsXpThemeEnabled &&
-            dynamicTransparencyToggle.active;
+        transparencyGroup.sensitive = !windowsXpEnabled();
+        transparency.sync(!windowsXpEnabled(), blurMyShellPanelBlurEnabled(), blockedText);
     };
-    transparencySwitch.connect(
-        'notify::active',
-        updatePanelTransparencyControls
-    );
-    dynamicTransparencyToggle.connect(
-        'notify::active',
-        updatePanelTransparencyControls
-    );
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        updatePanelTransparencyControls
-    );
+    connectSettings(settings, 'changed::windows-xp-theme-enabled', updatePanelTransparencyControls);
     updatePanelTransparencyControls();
 
-    const customPanelColorSubtitle = _(
-        'Use a chosen color instead of the light or dark theme color'
-    );
-    const customPanelColorSwitch = createSwitchRow(settings, {
-        key: 'custom-panel-color-enabled',
-        title: _('Custom Taskbar Color'),
-        subtitle: customPanelColorSubtitle,
+    const customColor = addCustomColorRows(themeGroup, settings, connectSettings, {
+        keyPrefix: '',
+        switchTitle: _('Custom Taskbar Color'),
+        colorTitle: _('Taskbar Color'),
+        gradientTitle: _('Use Taskbar Gradient'),
+        gradientSubtitle: _('Blend the taskbar color with a second color'),
+        gradientColorTitle: _('Taskbar Gradient Color'),
+        gradientDirectionTitle: _('Taskbar Gradient Direction'),
+        textColorTitle: _('Taskbar Text Color'),
+        textColorSubtitle: _('White text uses the dark taskbar theme; black text uses the light taskbar theme'),
+        onChanged: () => updateCustomPanelColorControls(),
     });
-    themeGroup.add(customPanelColorSwitch);
-    const customPanelColorRow = addColorRow(
-        themeGroup,
-        settings,
-        {
-            key: 'custom-panel-color',
-            title: _('Taskbar Color'),
-        },
-        connectSettings
-    );
-    const customPanelGradientSwitch = createSwitchRow(settings, {
-        key: 'custom-panel-gradient-enabled',
-        title: _('Use Taskbar Gradient'),
-        subtitle: _('Blend the taskbar color with a second color'),
-    });
-    themeGroup.add(customPanelGradientSwitch);
-    const customPanelGradientColorRow = addColorRow(
-        themeGroup,
-        settings,
-        {
-            key: 'custom-panel-gradient-color',
-            title: _('Taskbar Gradient Color'),
-        },
-        connectSettings
-    );
-    const customPanelGradientDirectionRow = addToggleChoiceRow(
-        themeGroup,
-        settings,
-        {
-            key: 'custom-panel-gradient-direction',
-            title: _('Taskbar Gradient Direction'),
-            subtitle: _('Choose how the gradient flows'),
-            choices: [
-                {value: 'vertical', label: _('Vertical')},
-                {value: 'horizontal', label: _('Horizontal')},
-            ],
-        },
-        connectSettings
-    );
-    const customPanelTextColorSubtitle = _(
-        'White text uses the dark taskbar theme; black text uses the light taskbar theme'
-    );
-    const customPanelTextColorRow = addToggleChoiceRow(
-        themeGroup,
-        settings,
-        {
-            key: 'panel-theme',
-            title: _('Taskbar Text Color'),
-            subtitle: customPanelTextColorSubtitle,
-            choices: [
-                {value: 'dark', label: _('White')},
-                {value: 'light', label: _('Black')},
-            ],
-        },
-        connectSettings
-    );
-    const updateCustomPanelColorControls = () => {
-        const blocked = blurMyShellPanelBlurEnabled();
-        if (blocked && settings.get_boolean('custom-panel-color-enabled'))
-            settings.set_boolean('custom-panel-color-enabled', false);
-        const customPanelColorEnabled = settings.get_boolean(
-            'custom-panel-color-enabled'
-        );
-        const customPanelGradientEnabled = settings.get_boolean(
-            'custom-panel-gradient-enabled'
-        );
-        const windowsXpThemeEnabled = settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        customPanelColorSwitch.sensitive = !blocked &&
-            !windowsXpThemeEnabled;
-        customPanelColorSwitch.subtitle = blocked
-            ? panelBlurTransparencySubtitle
-            : customPanelColorSubtitle;
-        customPanelGradientSwitch.visible = customPanelColorEnabled;
-        customPanelGradientSwitch.sensitive = !blocked &&
-            !windowsXpThemeEnabled && customPanelColorEnabled;
-        customPanelGradientColorRow.visible = customPanelColorEnabled &&
-            customPanelGradientEnabled;
-        customPanelGradientColorRow.sensitive = !blocked &&
-            !windowsXpThemeEnabled && customPanelColorEnabled &&
-            customPanelGradientEnabled;
-        customPanelGradientDirectionRow.visible = customPanelColorEnabled &&
-            customPanelGradientEnabled;
-        customPanelGradientDirectionRow.sensitive = !blocked &&
-            !windowsXpThemeEnabled && customPanelColorEnabled &&
-            customPanelGradientEnabled;
-        customPanelColorRow.visible = customPanelColorEnabled;
-        customPanelColorRow.sensitive = !blocked &&
-            !windowsXpThemeEnabled &&
-            customPanelColorEnabled;
-        customPanelTextColorRow.visible = customPanelColorEnabled;
-        customPanelTextColorRow.sensitive = !blocked &&
-            !windowsXpThemeEnabled &&
-            customPanelColorEnabled;
-        customPanelTextColorRow.subtitle = blocked
-            ? panelBlurTransparencySubtitle
-            : customPanelTextColorSubtitle;
-    };
+    const updateCustomPanelColorControls = () =>
+        customColor.sync(!windowsXpEnabled(), blurMyShellPanelBlurEnabled(), blockedText);
     const syncPanelThemeControls = () => {
-        const windowsXpThemeEnabled = settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        themeGroup.sensitive = !windowsXpThemeEnabled;
-        followSystemThemeSwitch.sensitive = !windowsXpThemeEnabled;
-        panelThemeRow.sensitive = !windowsXpThemeEnabled &&
-            !followSystemThemeSwitch.active;
+        themeGroup.sensitive = !windowsXpEnabled();
+        followSystemThemeSwitch.sensitive = !windowsXpEnabled();
+        panelThemeRow.sensitive = !windowsXpEnabled() && !followSystemThemeSwitch.active;
     };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        () => {
-            syncPanelThemeControls();
-            updateCustomPanelColorControls();
-        }
-    );
-    connectSettings(
-        settings,
-        'changed::panel-theme-follow-system',
-        syncPanelThemeControls
-    );
+    connectSettings(settings, 'changed::windows-xp-theme-enabled', () => {
+        syncPanelThemeControls();
+        updateCustomPanelColorControls();
+    });
+    connectSettings(settings, 'changed::panel-theme-follow-system', syncPanelThemeControls);
     syncPanelThemeControls();
-    customPanelColorSwitch.connect(
-        'notify::active',
-        widget => {
-            if (widget.active &&
-                settings.get_boolean(
-                    'panel-theme-follow-system'
-                )) {
-                settings.set_boolean(
-                    'panel-theme-follow-system',
-                    false
-                );
-            }
-            updateCustomPanelColorControls();
-        }
-    );
-    customPanelGradientSwitch.connect(
-        'notify::active',
-        updateCustomPanelColorControls
-    );
     updateCustomPanelColorControls();
 
-    const bordersGroup = appearancePage.addGroup({
-        title: _('Borders'),
-        description: _('Choose whether to show a border in light and dark themes'),
-    });
-
-    const darkPanelBorderSwitch = createSwitchRow(settings, {
-        key: 'panel-border-enabled',
-        title: _('Show Border in Dark Mode'),
+    const bordersGroup = addBordersGroup(appearancePage, settings, {
+        keyPrefix: '',
         subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
     });
-    bordersGroup.add(darkPanelBorderSwitch);
-
-    const lightPanelBorderSwitch = createSwitchRow(settings, {
-        key: 'panel-border-light-enabled',
-        title: _('Show Border in Light Mode'),
-        subtitle: _('Display a thin border along the taskbar’s workspace-facing edge'),
-    });
-    bordersGroup.add(lightPanelBorderSwitch);
     const syncPanelBorderControls = () => {
-        const enabled = !settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        bordersGroup.sensitive = enabled;
-        darkPanelBorderSwitch.sensitive = enabled;
-        lightPanelBorderSwitch.sensitive = enabled;
+        bordersGroup.sensitive = !windowsXpEnabled();
     };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncPanelBorderControls
-    );
+    connectSettings(settings, 'changed::windows-xp-theme-enabled', syncPanelBorderControls);
     syncPanelBorderControls();
 
     return {

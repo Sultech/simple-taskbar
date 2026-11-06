@@ -4,15 +4,15 @@
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
-    addColorRow,
-    addToggleChoiceRow,
-    addSwitchRow,
     createSwitchExpanderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {
-    createDynamicTransparencyOptionsButton,
-} from './dynamicTransparencyDialog.js';
+    addBordersGroup,
+    addCustomColorRows,
+    addThemeRows,
+    addTransparencyRows,
+} from './panelPreferenceRows.js';
 import {
     MAX_PANEL_HEIGHT,
     MIN_PANEL_HEIGHT,
@@ -194,27 +194,16 @@ export function addDockAppearanceGroup({
         ),
     });
 
-    const followSystemThemeSwitch = createSwitchRow(settings, {
-        key: 'dock-panel-theme-follow-system',
-        title: _('Follow System Theme'),
-        subtitle: _('Match the active GNOME Shell theme'),
-    });
-    themeGroup.add(followSystemThemeSwitch);
-
-    const dockThemeRow = addToggleChoiceRow(
-        themeGroup,
-        settings,
-        {
-            key: 'dock-panel-theme',
-            title: _('Dock Theme'),
-            subtitle: _('Choose the colour scheme when system matching is off'),
-            choices: [
-                {value: 'light', label: _('Light')},
-                {value: 'dark', label: _('Dark')},
-            ],
-        },
-        connectSettings
-    );
+    const {followSwitch: followSystemThemeSwitch, themeRow: dockThemeRow} = addThemeRows(
+        themeGroup, settings, connectSettings, {
+            keyPrefix: 'dock-',
+            followSubtitle: _('Match the active GNOME Shell theme'),
+            themeTitle: _('Dock Theme'),
+            onFollowChanged: () => {
+                syncThemeControls();
+                syncCustomColorControls();
+            },
+        });
 
     const cornerRadiusRow = addSliderRow(
         group,
@@ -241,12 +230,6 @@ export function addDockAppearanceGroup({
         connectSettings(settings, `changed::${key}`, syncLayoutControls);
     syncLayoutControls();
 
-    const transparencySwitchSubtitle = _(
-        'Make the Dock background transparent'
-    );
-    const dynamicTransparencySubtitle = _(
-        'Adjust transparency according to the selected window state'
-    );
     const dockBlurSubtitles = {
         panel: {
             blur: _('Apply Blur My Shell panel blur to the Dock'),
@@ -275,137 +258,39 @@ export function addDockAppearanceGroup({
         description: _('Configure Dock transparency and Blur My Shell integration'),
     });
 
-    const transparencySwitch = createSwitchRow(settings, {
-        key: 'dock-transparency-enabled',
-        title: _('Enable Transparency'),
-        subtitle: transparencySwitchSubtitle,
-    });
-    transparencyGroup.add(transparencySwitch);
     const dockPanelBlurSwitch = createSwitchRow(settings, {
         key: 'dock-panel-blur-enabled',
         title: _('Blur Dock with Blur My Shell'),
         subtitle: dockBlurSubtitles.panel.blur,
     });
-    transparencyGroup.add(dockPanelBlurSwitch);
-
-    const transparencyRowSubtitle = _(
-        '0% is opaque and 100% is fully transparent'
-    );
-    const transparencyRow = addSliderRow(
-        transparencyGroup,
-        settings,
-        {
-            key: 'dock-transparency-level',
-            unit: '%',
-            title: _('Transparency'),
-            subtitle: transparencyRowSubtitle,
-            lower: 0,
-            upper: 100,
-        },
-        connectSettings
-    );
-    const dynamicTransparencyOptionsButton =
-        createDynamicTransparencyOptionsButton(settings, {
-            title: _('Dock Dynamic Transparency Options'),
-            behaviorKey: 'dock-transparency-dynamic-behavior',
-            distanceKey: 'dock-transparency-dynamic-distance',
-            levelKey: 'dock-transparency-dynamic-level',
-            animationTimeKey: 'dock-transparency-dynamic-animation-time',
-        });
-    const {
-        row: dynamicTransparencyRow,
-        toggle: dynamicTransparencyToggle,
-    } = addSwitchRow(transparencyGroup, settings, {
-        key: 'dock-transparency-on-unmaximized',
-        title: _('Dynamic Transparency'),
-        subtitle: dynamicTransparencySubtitle,
-        addSuffix: row => row.add_suffix(dynamicTransparencyOptionsButton),
+    const transparency = addTransparencyRows(transparencyGroup, settings, connectSettings, {
+        keyPrefix: 'dock-',
+        switchSubtitle: _('Make the Dock background transparent'),
+        optionsTitle: _('Dock Dynamic Transparency Options'),
+        addAfterSwitch: () => transparencyGroup.add(dockPanelBlurSwitch),
+        onChanged: () => syncTransparencyControls(),
     });
 
-    const customPanelColorSubtitle = _(
-        'Use a chosen color instead of the light or dark theme color'
-    );
-    const customPanelColorSwitch = createSwitchRow(settings, {
-        key: 'dock-custom-panel-color-enabled',
-        title: _('Custom Dock Color'),
-        subtitle: customPanelColorSubtitle,
-    });
-    themeGroup.add(customPanelColorSwitch);
-
-    const customPanelColorRow = addColorRow(
-        themeGroup,
-        settings,
-        {
-            key: 'dock-custom-panel-color',
-            title: _('Dock Color'),
+    const customColor = addCustomColorRows(themeGroup, settings, connectSettings, {
+        keyPrefix: 'dock-',
+        switchTitle: _('Custom Dock Color'),
+        colorTitle: _('Dock Color'),
+        gradientTitle: _('Use Dock Gradient'),
+        gradientSubtitle: _('Blend the Dock color with a second color'),
+        gradientColorTitle: _('Dock Gradient Color'),
+        gradientDirectionTitle: _('Dock Gradient Direction'),
+        textColorTitle: _('Dock Text Color'),
+        textColorSubtitle: _('White text uses the dark Dock theme; black text uses the light Dock theme'),
+        onChanged: () => {
+            syncThemeControls();
+            syncCustomColorControls();
         },
-        connectSettings
-    );
-    const customPanelGradientSwitch = createSwitchRow(settings, {
-        key: 'dock-custom-panel-gradient-enabled',
-        title: _('Use Dock Gradient'),
-        subtitle: _('Blend the Dock color with a second color'),
-    });
-    themeGroup.add(customPanelGradientSwitch);
-    const customPanelGradientColorRow = addColorRow(
-        themeGroup,
-        settings,
-        {
-            key: 'dock-custom-panel-gradient-color',
-            title: _('Dock Gradient Color'),
-        },
-        connectSettings
-    );
-    const customPanelGradientDirectionRow = addToggleChoiceRow(
-        themeGroup,
-        settings,
-        {
-            key: 'dock-custom-panel-gradient-direction',
-            title: _('Dock Gradient Direction'),
-            subtitle: _('Choose how the gradient flows'),
-            choices: [
-                {value: 'vertical', label: _('Vertical')},
-                {value: 'horizontal', label: _('Horizontal')},
-            ],
-        },
-        connectSettings
-    );
-    const customPanelTextColorSubtitle = _(
-        'White text uses the dark Dock theme; black text uses the light Dock theme'
-    );
-    const customPanelTextColorRow = addToggleChoiceRow(
-        themeGroup,
-        settings,
-        {
-            key: 'dock-panel-theme',
-            title: _('Dock Text Color'),
-            subtitle: customPanelTextColorSubtitle,
-            choices: [
-                {value: 'dark', label: _('White')},
-                {value: 'light', label: _('Black')},
-            ],
-        },
-        connectSettings
-    );
-
-    const bordersGroup = appearancePage.addGroup({
-        title: _('Borders'),
-        description: _('Choose whether to show a border in light and dark themes'),
     });
 
-    const darkPanelBorderSwitch = createSwitchRow(settings, {
-        key: 'dock-panel-border-enabled',
-        title: _('Show Border in Dark Mode'),
+    const bordersGroup = addBordersGroup(appearancePage, settings, {
+        keyPrefix: 'dock-',
         subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
     });
-    bordersGroup.add(darkPanelBorderSwitch);
-
-    const lightPanelBorderSwitch = createSwitchRow(settings, {
-        key: 'dock-panel-border-light-enabled',
-        title: _('Show Border in Light Mode'),
-        subtitle: _('Display a thin border along the Dock’s workspace-facing edge'),
-    });
-    bordersGroup.add(lightPanelBorderSwitch);
 
     const syncThemeControls = () => {
         const available = dockAvailable();
@@ -416,65 +301,16 @@ export function addDockAppearanceGroup({
     const syncTransparencyControls = () => {
         const blocked = dockBlurBlocksAppearance();
         const available = dockAvailable();
-        const {blur: blurSubtitle, blocked: blockedSubtitle} =
-            dockBlurSubtitles[dockBlurMode()];
+        const {blur: blurSubtitle, blocked: blockedText} = dockBlurSubtitles[dockBlurMode()];
         dockPanelBlurSwitch.sensitive = available && dockBlurAvailable();
         dockPanelBlurSwitch.subtitle = blurSubtitle;
-        transparencySwitch.sensitive = available && !blocked;
-        transparencySwitch.subtitle = blocked
-            ? blockedSubtitle
-            : transparencySwitchSubtitle;
-        transparencyRow.sensitive = available &&
-            !blocked && transparencySwitch.active;
-        transparencyRow.subtitle = blocked
-            ? blockedSubtitle
-            : transparencyRowSubtitle;
-        dynamicTransparencyRow.sensitive = available && !blocked;
-        dynamicTransparencyRow.subtitle = blocked
-            ? blockedSubtitle
-            : dynamicTransparencySubtitle;
-        dynamicTransparencyOptionsButton.sensitive = available &&
-            !blocked && dynamicTransparencyToggle.active;
+        transparency.sync(available, blocked, blockedText);
     };
-    const syncCustomColorControls = () => {
-        const blocked = dockBlurBlocksAppearance();
-        const {blocked: blockedSubtitle} = dockBlurSubtitles[dockBlurMode()];
-        if (blocked &&
-            settings.get_boolean('dock-custom-panel-color-enabled')) {
-            settings.set_boolean(
-                'dock-custom-panel-color-enabled',
-                false
-            );
-        }
-        const available = dockAvailable();
-        const enabled = customPanelColorSwitch.active;
-        const gradientEnabled = settings.get_boolean(
-            'dock-custom-panel-gradient-enabled'
-        );
-        customPanelColorSwitch.sensitive = available && !blocked;
-        customPanelColorSwitch.subtitle = blocked
-            ? blockedSubtitle
-            : customPanelColorSubtitle;
-        customPanelGradientSwitch.visible = enabled;
-        customPanelGradientSwitch.sensitive = available &&
-            !blocked && enabled;
-        customPanelGradientColorRow.visible = enabled && gradientEnabled;
-        customPanelGradientColorRow.sensitive = available &&
-            !blocked && enabled && gradientEnabled;
-        customPanelGradientDirectionRow.visible = enabled &&
-            gradientEnabled;
-        customPanelGradientDirectionRow.sensitive = available &&
-            !blocked && enabled && gradientEnabled;
-        customPanelColorRow.visible = enabled;
-        customPanelColorRow.sensitive = available &&
-            !blocked && enabled;
-        customPanelTextColorRow.visible = enabled;
-        customPanelTextColorRow.sensitive = available &&
-            !blocked && enabled;
-        customPanelTextColorRow.subtitle = blocked
-            ? blockedSubtitle
-            : customPanelTextColorSubtitle;
-    };
+    const syncCustomColorControls = () => customColor.sync(
+        dockAvailable(),
+        dockBlurBlocksAppearance(),
+        dockBlurSubtitles[dockBlurMode()].blocked
+    );
     const groups = [positionGroup, thicknessGroup, group, themeGroup, transparencyGroup, bordersGroup];
     const syncAvailability = () => {
         const available = dockAvailable();
@@ -488,33 +324,6 @@ export function addDockAppearanceGroup({
         syncTransparencyControls();
         syncCustomColorControls();
     };
-
-    followSystemThemeSwitch.connect('notify::active', widget => {
-        if (widget.active)
-            settings.set_boolean('dock-custom-panel-color-enabled', false);
-        syncThemeControls();
-        syncCustomColorControls();
-    });
-    transparencySwitch.connect(
-        'notify::active',
-        syncTransparencyControls
-    );
-    dynamicTransparencyToggle.connect(
-        'notify::active',
-        syncTransparencyControls
-    );
-    customPanelColorSwitch.connect('notify::active', widget => {
-        if (widget.active &&
-            settings.get_boolean('dock-panel-theme-follow-system')) {
-            settings.set_boolean('dock-panel-theme-follow-system', false);
-        }
-        syncThemeControls();
-        syncCustomColorControls();
-    });
-    customPanelGradientSwitch.connect(
-        'notify::active',
-        syncCustomColorControls
-    );
 
     for (const key of [
         'dock-mode',

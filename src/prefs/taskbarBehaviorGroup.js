@@ -8,35 +8,13 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
 import {AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
-import {PANEL_SCROLL_ACTION} from '../shared/interactionActions.js';
 import {TASKBAR_GEOMETRY_KEYS, taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {
     addComboRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addWindowDodgeGroup} from './windowDodgeGroup.js';
-import {addSliderRow} from './sliderRow.js';
-
-export function getPanelScrollActionChoices() {
-    return [
-        {
-            value: PANEL_SCROLL_ACTION.SWITCH_WORKSPACE,
-            label: _('Switch Workspace'),
-        },
-        {
-            value: PANEL_SCROLL_ACTION.CYCLE_WINDOWS,
-            label: _('Cycle Windows'),
-        },
-        {
-            value: PANEL_SCROLL_ACTION.CHANGE_VOLUME,
-            label: _('Change Volume'),
-        },
-        {
-            value: PANEL_SCROLL_ACTION.DO_NOTHING,
-            label: _('Do Nothing'),
-        },
-    ];
-}
+import {addPanelScrollGroup} from './panelPreferenceRows.js';
 
 export function addTaskbarBehaviorGroup({
     visibilityPage,
@@ -97,47 +75,14 @@ export function addTaskbarBehaviorGroup({
         }
     );
 
-    const workspaceScrollGroup = behaviorPage.addGroup({
+    addPanelScrollGroup(behaviorPage, settings, connectSettings, {
         title: _('Taskbar Scroll'),
         description: _('Configure scrolling over empty taskbar space'),
+        actionKey: 'workspace-scroll-action',
+        actionSubtitle: _('Action used when scrolling over empty taskbar space'),
+        delayKey: 'workspace-scroll-delay',
+        delaySubtitle: _('Minimum delay between taskbar scroll actions in milliseconds'),
     });
-    addComboRow(
-        workspaceScrollGroup,
-        settings,
-        {
-            key: 'workspace-scroll-action',
-            title: _('Scroll Action'),
-            subtitle: _('Action used when scrolling over empty taskbar space'),
-            choices: getPanelScrollActionChoices(),
-        },
-        connectSettings
-    );
-
-    const workspaceScrollDelayRow = addSliderRow(
-        workspaceScrollGroup,
-        settings,
-        {
-            key: 'workspace-scroll-delay',
-            unit: 'ms',
-            title: _('Scroll Delay'),
-            subtitle: _('Minimum delay between taskbar scroll actions in milliseconds'),
-            lower: 5,
-            upper: 250,
-            step: 5,
-        },
-        connectSettings
-    );
-    const syncWorkspaceScrollDelaySensitivity = () => {
-        workspaceScrollDelayRow.sensitive =
-            settings.get_string('workspace-scroll-action') !==
-            PANEL_SCROLL_ACTION.DO_NOTHING;
-    };
-    connectSettings(
-        settings,
-        'changed::workspace-scroll-action',
-        syncWorkspaceScrollDelaySensitivity
-    );
-    syncWorkspaceScrollDelaySensitivity();
 
     const panelNotificationGroup = behaviorPage.addGroup({
         title: _('Taskbar Menus and Notifications'),

@@ -21,6 +21,7 @@ src/prefs/dockBehaviorGroup.js
 src/prefs/bottomHotEdgeGroup.js
 src/prefs/locationsGroup.js
 src/prefs/panelAppearancePage.js
+src/prefs/panelPreferenceRows.js
 src/prefs/overviewBehaviorDialog.js
 src/prefs/panelPositionChoices.js
 src/prefs/panelItemsPage.js

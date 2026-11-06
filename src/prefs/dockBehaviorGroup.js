@@ -4,14 +4,9 @@
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {DOCK_AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
-import {PANEL_SCROLL_ACTION} from '../shared/interactionActions.js';
-import {getPanelScrollActionChoices} from './taskbarBehaviorGroup.js';
-import {
-    addComboRow,
-    createSwitchRow,
-} from './preferencesWidgets.js';
+import {addPanelScrollGroup} from './panelPreferenceRows.js';
+import {createSwitchRow} from './preferencesWidgets.js';
 import {addWindowDodgeGroup} from './windowDodgeGroup.js';
-import {addSliderRow} from './sliderRow.js';
 import {DOCK_FLOATING_KEYS, dockFloatingEnabled} from '../shared/panelModeSettings.js';
 
 export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, connectSettings}) {
@@ -68,36 +63,15 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
         }
     );
 
-    const workspaceScrollGroup = behaviorPage.addGroup({
+    const workspaceScroll = addPanelScrollGroup(behaviorPage, settings, connectSettings, {
         title: _('Dock Scroll'),
         description: _('Configure scrolling over empty Dock space'),
+        actionKey: 'dock-workspace-scroll-action',
+        actionSubtitle: _('Action used when scrolling over empty Dock space'),
+        delayKey: 'dock-workspace-scroll-delay',
+        delaySubtitle: _('Minimum delay between Dock scroll actions in milliseconds'),
+        isAvailable: dockAvailable,
     });
-    const workspaceScrollActionRow = addComboRow(
-        workspaceScrollGroup,
-        settings,
-        {
-            key: 'dock-workspace-scroll-action',
-            title: _('Scroll Action'),
-            subtitle: _('Action used when scrolling over empty Dock space'),
-            choices: getPanelScrollActionChoices(),
-        },
-        connectSettings
-    );
-
-    const workspaceScrollDelayRow = addSliderRow(
-        workspaceScrollGroup,
-        settings,
-        {
-            key: 'dock-workspace-scroll-delay',
-            unit: 'ms',
-            title: _('Scroll Delay'),
-            subtitle: _('Minimum delay between Dock scroll actions in milliseconds'),
-            lower: 5,
-            upper: 250,
-            step: 5,
-        },
-        connectSettings
-    );
     const behaviorGroup = behaviorPage.addGroup({
         title: _('Monitors'),
         description: _('Choose which monitors show the Dock'),
@@ -109,20 +83,13 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
     });
     behaviorGroup.add(multiMonitorSwitch);
 
-    const groups = [dodgeWindows.group, workspaceScrollGroup, behaviorGroup];
-    const syncWorkspaceScrollControls = () => {
-        const available = dockAvailable();
-        workspaceScrollActionRow.sensitive = available;
-        workspaceScrollDelayRow.sensitive = available &&
-            settings.get_string('dock-workspace-scroll-action') !==
-                PANEL_SCROLL_ACTION.DO_NOTHING;
-    };
+    const groups = [dodgeWindows.group, workspaceScroll.group, behaviorGroup];
     const syncAvailability = () => {
         const available = dockAvailable();
         for (const group of groups)
             group.sensitive = available;
         dodgeWindows.syncAvailability();
-        syncWorkspaceScrollControls();
+        workspaceScroll.sync();
     };
     for (const key of [
         'dock-mode',
@@ -131,10 +98,5 @@ export function addDockBehaviorGroup({visibilityPage, behaviorPage, settings, co
     ]) {
         connectSettings(settings, `changed::${key}`, syncAvailability);
     }
-    connectSettings(
-        settings,
-        'changed::dock-workspace-scroll-action',
-        syncWorkspaceScrollControls
-    );
     syncAvailability();
 }
