@@ -951,7 +951,7 @@ export class ExtensionPanelController {
             boxes: [this._leftBox, this._centerBox, this._rightBox],
             getPanelHeight: () => this._panelHeight,
             onPosition: (updateWidth, animateGap) => this._position(updateWidth, animateGap),
-            onContentChanged: () => this._queueTaskbarWidth(),
+            onContentChanged: () => this._panelLayoutUpdater.update(),
             getHoverReserve: () => this._magnifyController.reserve,
         });
     }
