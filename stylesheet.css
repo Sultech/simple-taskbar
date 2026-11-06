@@ -1202,7 +1202,7 @@ StEntry.simple-taskbar-windows-start-search.simple-taskbar-windows-start-search-
     color: rgba(255, 255, 255, 0.72);
 }
 
-.simple-taskbar-windows-start-dark .simple-taskbar-windows-start-search StLabel.hint-text {
+.simple-taskbar-windows-start-dark .popup-menu-content StEntry.simple-taskbar-windows-start-search StLabel.hint-text {
     color: rgba(255, 255, 255, 0.62) !important;
 }
 
@@ -1614,7 +1614,7 @@ StEntry.simple-taskbar-windows-start-search.simple-taskbar-windows-start-search-
     color: rgba(24, 28, 34, 0.68);
 }
 
-.simple-taskbar-windows-start-light .simple-taskbar-windows-start-search StLabel.hint-text {
+.simple-taskbar-windows-start-light .popup-menu-content StEntry.simple-taskbar-windows-start-search StLabel.hint-text {
     color: rgba(30, 34, 40, 0.58) !important;
 }
 
