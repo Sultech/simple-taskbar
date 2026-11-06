@@ -13,7 +13,7 @@ import {
 } from '../shared/interactionActions.js';
 import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
-import {openPopupMenu} from '../popupMenuUtils.js';
+import {openPopupMenu, pinnedPopupSource} from '../popupMenuUtils.js';
 
 export class TaskbarItemInteractionController {
     constructor({
@@ -195,8 +195,10 @@ export class TaskbarItemInteractionController {
     _openMenu(menu, item, button) {
         syncMenuArrowSide(menu, this._settings);
         openPopupMenu(menu);
-        if (dynamicTaskbarEnabled(this._settings) && button === item._taskbarButton)
-            menu._boxPointer.setPosition(item, 0.5);
+        const source = dynamicTaskbarEnabled(this._settings) && button === item._taskbarButton
+            ? item
+            : button;
+        menu._boxPointer.setPosition(pinnedPopupSource(source), 0.5);
     }
 
     syncFileManagerPlaces(items) {
