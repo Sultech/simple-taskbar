@@ -57,6 +57,7 @@ src/taskbar/taskbarAppMenu.js
 src/locations/locationApp.js
 src/locations/locationMenu.js
 src/locations/locationsController.js
+src/locations/minimizedWindowLocation.js
 src/taskbar/taskbarAppearanceController.js
 src/startMenu/startButtonController.js
 src/prefs/startIconChooser.js

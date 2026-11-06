@@ -3,10 +3,18 @@
 
 export const PINNED_FOLDER_PREFIX = 'simple-taskbar-folder:';
 
+export function decodePinnedFolder(value) {
+    return JSON.parse(value.slice(PINNED_FOLDER_PREFIX.length));
+}
+
+export function encodePinnedFolder(id, name, apps) {
+    return PINNED_FOLDER_PREFIX + JSON.stringify({id, name, apps});
+}
+
 export function pinnedFolderIsValid(value) {
     let folder;
     try {
-        folder = JSON.parse(value.slice(PINNED_FOLDER_PREFIX.length));
+        folder = decodePinnedFolder(value);
     } catch {
         return false;
     }
