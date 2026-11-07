@@ -10,8 +10,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import {panelPosition} from '../shared/panelPositionUtils.js';
 import {panelArrowSide} from '../panel/panelMenuPositioner.js';
-import {panelIsTop, panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {
     closePopupMenu,
     openPopupMenu,
@@ -21,15 +21,12 @@ import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta, pointerButtonIsPressed} from '../inputUtils.js';
 import {windowsForTaskbarItem} from './taskbarItemWindows.js';
+import {WindowPeekController} from './windowPeekController.js';
+import {TaskbarTooltipController} from './taskbarTooltipController.js';
 
 const PREVIEW_WIDTH = 260;
 const PREVIEW_HEIGHT = 146;
-const PREVIEW_PEEK_DURATION = 250;
 const PREVIEW_CLOSE_RECHECK_INTERVAL = 50;
-const APP_TOOLTIP_DELAY = 300;
-const APP_TOOLTIP_SHOW_TIME = 150;
-const APP_TOOLTIP_HIDE_TIME = 100;
-const APP_TOOLTIP_CLOSE_DELAY = 300;
 
 export class WindowPreviewController {
     constructor(
@@ -58,24 +55,15 @@ export class WindowPreviewController {
         this._previewSwitchItemDestroyId = 0;
         this._previewRefreshId = 0;
         this._previewHoverItem = null;
-        this._peekTimeoutId = 0;
-        this._peekedWindow = null;
-        this._peekedWindowStack = null;
-        this._peekWindows = new Set();
         this._closingPreviewMenus = new Set();
-        this._appTooltip = null;
-        this._tooltipItem = null;
-        this._tooltipItemDestroyId = 0;
-        this._tooltipTimeoutId = 0;
-        this._tooltipCloseId = 0;
-        this._peekModeChangedId = settings.connect(
-            'changed::peek-mode',
-            () => {
-                this._clearTimeout('_peekTimeoutId');
-                if (!settings.get_boolean('peek-mode'))
-                    this._restorePeek();
-            }
-        );
+        this._peekController = new WindowPeekController(settings, () => Boolean(this._previewItem));
+        this._tooltipController = new TaskbarTooltipController({
+            settings,
+            getItemAtPointer: () => this._taskbarItemAtPointer(),
+            getHoverAnimationOutwardReserve,
+            isPointerInMagnifyBounds,
+            raiseOverlays: () => this.raiseOverlays(),
+        });
         this._hoverActionChangedId = settings.connect(
             'changed::application-hover-action',
             () => {
@@ -113,7 +101,7 @@ export class WindowPreviewController {
     }
 
     get tooltipItem() {
-        return this._tooltipItem;
+        return this._tooltipController.item;
     }
 
     get isOpen() {
@@ -128,19 +116,16 @@ export class WindowPreviewController {
 
     destroy() {
         this._clearTimeouts();
-        this._clearTimeout('_tooltipTimeoutId');
-        this._clearTimeout('_tooltipCloseId');
         Main.overview.disconnect(this._overviewShowingId);
         this._overviewShowingId = 0;
         this._settings.disconnect(this._hoverActionChangedId);
         this._hoverActionChangedId = 0;
-        this._settings.disconnect(this._peekModeChangedId);
-        this._peekModeChangedId = 0;
-        this._hideTooltip(false);
+        this._tooltipController.hide(false);
         this._hidePreview(false);
-        this._peekWindows = null;
-        this._appTooltip?.destroy();
-        this._appTooltip = null;
+        this._peekController.destroy();
+        this._peekController = null;
+        this._tooltipController.destroy();
+        this._tooltipController = null;
 
         const closingMenus = [...this._closingPreviewMenus];
         this._closingPreviewMenus.clear();
@@ -163,7 +148,7 @@ export class WindowPreviewController {
             this._clearSwitch();
         if (this._previewHoverItem === item)
             this._previewHoverItem = null;
-        if (this._tooltipItem === item)
+        if (this._tooltipController.item === item)
             this.hideTooltip();
         if (this._previewItem === item)
             this.hide();
@@ -181,7 +166,7 @@ export class WindowPreviewController {
     windowsChanged(app) {
         if (this._previewItem?._taskbarApp === app)
             this._queueRefresh(app);
-        if (this._tooltipItem?._taskbarApp === app)
+        if (this._tooltipController.item?._taskbarApp === app)
             this.hideTooltip();
     }
 
@@ -265,57 +250,15 @@ export class WindowPreviewController {
     }
 
     scheduleTooltip(item) {
-        this._clearTimeout('_tooltipCloseId');
-        if (this._tooltipItem === item &&
-            (this._tooltipTimeoutId || this._appTooltip?.visible))
-            return;
-
-        if (this._tooltipTimeoutId)
-            GLib.Source.remove(this._tooltipTimeoutId);
-        const delay = this._appTooltip?.visible ? 0 : APP_TOOLTIP_DELAY;
-        this._setTooltipItem(item);
-        this._tooltipTimeoutId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            delay,
-            () => {
-                this._tooltipTimeoutId = 0;
-                if (this._tooltipItem === item && item.mapped)
-                    this._showTooltip(item);
-                return GLib.SOURCE_REMOVE;
-            }
-        );
+        this._tooltipController.schedule(item);
     }
 
     hideTooltip(animate = true) {
-        this._clearTimeout('_tooltipTimeoutId');
-        this._clearTimeout('_tooltipCloseId');
-        this._hideTooltip(animate);
+        this._tooltipController.hide(animate);
     }
 
     scheduleTooltipClose() {
-        if (!this._tooltipItem)
-            return;
-        if (!this._appTooltip?.visible) {
-            this.hideTooltip();
-            return;
-        }
-        if (this._tooltipCloseId)
-            return;
-
-        this._tooltipCloseId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            APP_TOOLTIP_CLOSE_DELAY,
-            () => {
-                if (!this.isPointerInMagnifyBounds() ||
-                    this._taskbarItemAtPointer() !== this._tooltipItem) {
-                    this._tooltipCloseId = 0;
-                    this.hideTooltip();
-                    return GLib.SOURCE_REMOVE;
-                }
-
-                return GLib.SOURCE_CONTINUE;
-            }
-        );
+        this._tooltipController.scheduleClose();
     }
 
     isPointerInMagnifyBounds() {
@@ -355,39 +298,6 @@ export class WindowPreviewController {
             item,
             () => this._clearSwitch()
         );
-    }
-
-    _setTooltipItem(item) {
-        this._setTrackedItem(
-            '_tooltipItem',
-            '_tooltipItemDestroyId',
-            item,
-            () => this.hideTooltip(false)
-        );
-    }
-
-    _hideTooltip(animate) {
-        this._setTooltipItem(null);
-
-        const label = this._appTooltip;
-        if (!label?.visible)
-            return;
-
-        label.remove_all_transitions();
-        if (!animate) {
-            label.hide();
-            return;
-        }
-
-        label.ease({
-            opacity: 0,
-            duration: APP_TOOLTIP_HIDE_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            onComplete: () => {
-                if (!this._tooltipItem)
-                    label.hide();
-            },
-        });
     }
 
     show(item) {
@@ -480,7 +390,7 @@ export class WindowPreviewController {
             if (actor.hover)
                 this._clearTimeout('_previewCloseId');
             else {
-                this._restorePeek();
+                this._peekController.restore();
                 this.scheduleClose();
             }
         });
@@ -533,7 +443,7 @@ export class WindowPreviewController {
     }
 
     _hidePreview(animate) {
-        this._restorePeek();
+        this._peekController.restore();
         this._releaseHoverItem();
         const item = this._previewItem;
         this._setPreviewItem(null);
@@ -623,154 +533,10 @@ export class WindowPreviewController {
             this._previewPendingItem = null;
     }
 
-    _schedulePeek(window, preview) {
-        this._clearTimeout('_peekTimeoutId');
-        if (!this._settings.get_boolean('peek-mode'))
-            return;
-        if (this._peekedWindow === window)
-            return;
-
-        this._peekTimeoutId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            this._settings.get_int('enter-peek-mode-timeout'),
-            () => {
-                this._peekTimeoutId = 0;
-                if (preview.hover)
-                    this._peekWindow(window);
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _peekWindow(window) {
-        if (!this._previewItem)
-            return;
-
-        if (this._peekedWindow === window)
-            return;
-
-        const currentWorkspace =
-            global.workspace_manager.get_active_workspace();
-
-        if (Main.sessionMode.hasWorkspaces &&
-            window.get_workspace() !== currentWorkspace)
-            return;
-
-        this._restorePeekedWindowStack();
-        this._peekedWindow = window;
-        this._focusMetaWindow(
-            this._settings.get_int('peek-mode-opacity'),
-            window
-        );
-    }
-
-    _focusMetaWindow(dimOpacity, window, ignoreFocus = false) {
-        const isAppSpread = !Main.sessionMode.hasWorkspaces;
-        const currentWorkspace =
-            global.workspace_manager.get_active_workspace();
-        const windows = ignoreFocus
-            ? this._peekWindows
-            : isAppSpread
-                ? global.get_window_actors().map(actor => actor.meta_window)
-                : currentWorkspace.list_windows();
-
-        for (const metaWindow of windows) {
-            const windowActor = metaWindow.get_compositor_private();
-            const isFocused = !ignoreFocus && metaWindow === window;
-            if (!windowActor)
-                continue;
-
-            if (!ignoreFocus)
-                this._peekWindows.add(metaWindow);
-
-            if (isFocused) {
-                const parent = windowActor.get_parent();
-                this._peekedWindowStack = {
-                    parent,
-                    index: parent.get_children().indexOf(windowActor),
-                };
-                parent.set_child_above_sibling(windowActor, null);
-            }
-
-            if (isFocused && metaWindow.minimized)
-                windowActor.show();
-
-            this._animateWindowOpacity(
-                metaWindow,
-                windowActor,
-                isFocused ? 255 : dimOpacity,
-                ignoreFocus
-            );
-        }
-    }
-
-    _animateWindowOpacity(metaWindow, windowActor, opacity, restore = false) {
-        if (metaWindow.minimized && !restore)
-            return;
-
-        const visible = opacity > 0;
-        const visual = windowActor.get_first_child() || windowActor;
-        const initialOpacity = visual.opacity;
-        let targetOpacity = opacity;
-
-        if (!windowActor.visible && visible) {
-            if (!restore) {
-                visual.opacity = 0;
-                targetOpacity = Math.min(initialOpacity, targetOpacity);
-            }
-            if (!restore ||
-                metaWindow.located_on_workspace(
-                    global.workspace_manager.get_active_workspace()
-                ) && metaWindow.showing_on_its_workspace()) {
-                windowActor.visible = visible;
-            }
-        }
-
-        const options = {
-            opacity: targetOpacity,
-            duration: PREVIEW_PEEK_DURATION,
-            mode: Clutter.AnimationMode.EASE_IN_OUT_QUAD,
-        };
-        if (!visible) {
-            options.onComplete = () => {
-                windowActor.visible = visible;
-                visual.opacity = initialOpacity;
-            };
-        }
-
-        visual.ease(options);
-    }
-
-    _restorePeekedWindowStack() {
-        if (!this._peekedWindow)
-            return;
-
-        const windowActor = this._peekedWindow.get_compositor_private();
-        if (windowActor && this._peekedWindowStack) {
-            windowActor.get_parent().set_child_at_index(
-                windowActor,
-                this._peekedWindowStack.index
-            );
-            if (this._peekedWindow.minimized)
-                windowActor.hide();
-        }
-        this._peekedWindowStack = null;
-    }
-
-    _restorePeek() {
-        if (!this._peekedWindow)
-            return;
-
-        this._restorePeekedWindowStack();
-        this._focusMetaWindow(255, this._peekedWindow, true);
-        this._peekWindows.clear();
-        this._peekedWindow = null;
-    }
-
     _clearTimeouts() {
         this._clearTimeout('_previewOpenId');
         this._clearTimeout('_previewCloseId');
-        this._clearTimeout('_peekTimeoutId');
+        this._peekController.cancel();
         this._clearSwitch();
         if (this._previewRefreshId)
             GLib.Source.remove(this._previewRefreshId);
@@ -825,8 +591,7 @@ export class WindowPreviewController {
             this._previewItem?._taskbarButton._taskbarPreviewMenu?.actor;
         if (menuActor)
             Main.uiGroup.set_child_above_sibling(menuActor, null);
-        if (this._appTooltip)
-            Main.uiGroup.set_child_above_sibling(this._appTooltip, null);
+        this._tooltipController.raise();
     }
 
     _releaseHoverItem() {
@@ -834,64 +599,6 @@ export class WindowPreviewController {
         this._previewHoverItem = null;
         if (item && item !== this._taskbarItemAtPointer())
             item.remove_style_pseudo_class('hover');
-    }
-
-    _showTooltip(item) {
-        if (!this._appTooltip) {
-            this._appTooltip = new St.Label({style_class: 'dash-label'});
-            this._appTooltip.hide();
-            Main.layoutManager.addChrome(this._appTooltip);
-        }
-
-        const label = this._appTooltip;
-        this.raiseOverlays();
-        label.remove_all_transitions();
-        label.set_text(item._taskbarApp.get_name());
-        label.opacity = 0;
-        label.show();
-
-        const [stageX, stageY] = item.get_transformed_position();
-        const [, labelWidth] = label.get_preferred_width(-1);
-        const [, labelHeight] = label.get_preferred_height(labelWidth);
-        const monitor = Main.layoutManager.findMonitorForActor(item) ??
-            Main.layoutManager.primaryMonitor;
-        const itemWidth = item.allocation.get_width();
-        const itemHeight = item.allocation.get_height();
-        const position = panelPosition(this._settings);
-        const outward = this._getHoverAnimationOutwardReserve();
-        let x;
-        let y;
-        if (positionIsVertical(position)) {
-            x = position === 'left'
-                ? Math.min(
-                    monitor.x + monitor.width - labelWidth,
-                    stageX + itemWidth + 8 + outward
-                )
-                : Math.max(monitor.x, stageX - labelWidth - 8 - outward);
-            y = Math.clamp(
-                stageY + Math.floor((itemHeight - labelHeight) / 2),
-                monitor.y,
-                monitor.y + monitor.height - labelHeight
-            );
-        } else {
-            x = Math.clamp(
-                stageX + Math.floor((itemWidth - labelWidth) / 2),
-                monitor.x,
-                monitor.x + monitor.width - labelWidth
-            );
-            y = panelIsTop(this._settings)
-                ? Math.min(
-                    monitor.y + monitor.height - labelHeight,
-                    stageY + itemHeight + 8 + outward
-                )
-                : Math.max(monitor.y, stageY - labelHeight - 8 - outward);
-        }
-        label.set_position(x, y);
-        label.ease({
-            opacity: 255,
-            duration: APP_TOOLTIP_SHOW_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
     }
 
     _queueRefresh(app) {
@@ -917,8 +624,8 @@ export class WindowPreviewController {
             return;
         }
 
-        this._clearTimeout('_peekTimeoutId');
-        this._restorePeek();
+        this._peekController.cancel();
+        this._peekController.restore();
         previewBox.destroy_all_children();
         for (const window of windows) {
             const preview = this._createWindowPreview(window);
@@ -1011,10 +718,10 @@ export class WindowPreviewController {
         preview.add_child(previewButton);
         preview.connect('notify::hover', actor => {
             if (actor.hover)
-                this._schedulePeek(window, actor);
+                this._peekController.schedule(window, actor);
             else {
-                this._clearTimeout('_peekTimeoutId');
-                this._restorePeek();
+                this._peekController.cancel();
+                this._peekController.restore();
             }
         });
 
