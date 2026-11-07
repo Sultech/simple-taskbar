@@ -15,8 +15,8 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 import {PANEL_BUTTON_PADDING_KEYS, dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 
-import {panelArrowSide, syncPanelMenuPosition} from '../panel/panelMenuPositioner.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {panelArrowSide, syncPanelMenuPosition} from '../panel/panelMenuPositioner.js';
 import {MaximumSizeClamp} from '../taskbar/maximumSizeClamp.js';
 import {
     createTaskbarSeparator,
@@ -145,6 +145,17 @@ export class ApplicationOverflowController {
             this._dragEndListener
         );
         this._dragEndListenerRegistered = true;
+        this._createMenu();
+        this._connectMenuSignals();
+        this._connectSettingsSignals();
+        this._connectItemSignals();
+        this._connectViewportSignals();
+        this._connectShellSignals();
+        this._syncPanelPosition();
+        this._sync();
+    }
+
+    _createMenu() {
         this._menu = new PopupMenu.PopupMenu(
             this._button,
             0.5,
@@ -192,7 +203,9 @@ export class ApplicationOverflowController {
             this._menu,
             () => this._popupController.style
         );
+    }
 
+    _connectMenuSignals() {
         this._menu.connectObject('open-state-changed', (_menu, open) => {
             if (open) {
                 this._button.checked = true;
@@ -210,6 +223,9 @@ export class ApplicationOverflowController {
                 this._buttonController.sync();
             }
         }, this);
+    }
+
+    _connectSettingsSignals() {
         this._settings.connectObject(
             'changed::application-overflow-enabled',
             () => this._sync(),
@@ -267,6 +283,9 @@ export class ApplicationOverflowController {
             () => this._sync(),
             this
         );
+    }
+
+    _connectItemSignals() {
         this._button.connectObject(
             'notify::hover',
             () => this._buttonController.sync(),
@@ -323,6 +342,9 @@ export class ApplicationOverflowController {
             () => this._queueSync(),
             this
         );
+    }
+
+    _connectViewportSignals() {
         this._viewport.connectObject('notify::allocation', () => {
             this._queueSync();
         }, this);
@@ -338,15 +360,15 @@ export class ApplicationOverflowController {
                 this._viewport.vadjustment.set_value(0);
             }
         }, this);
+    }
+
+    _connectShellSignals() {
         Main.panel.connectObject('notify::style-class', () => {
             this._themeController.sync();
         }, this);
         Main.overview.connectObject('showing', () => this.close(), this);
         global.stage.connectObject('captured-event', (_stage, event) =>
             this._onCapturedEvent(event), this);
-
-        this._syncPanelPosition();
-        this._sync();
     }
 
     get menuIsOpen() {
@@ -982,6 +1004,7 @@ export class ApplicationOverflowController {
         }
         this._menu.actor.queue_relayout();
     }
+
 
     _syncPanelPosition() {
         const vertical = panelIsVertical(this._settings);
