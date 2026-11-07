@@ -75,3 +75,4 @@ src/startMenu/startMenuPinnedViewController.js
 src/prefs/startMenuAppearanceGroup.js
 src/prefs/startMenuFoldersGroup.js
 src/prefs/startMenuKeybindingsGroup.js
+src/startMenu/startButtonMenuController.js
