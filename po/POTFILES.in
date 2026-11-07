@@ -70,6 +70,8 @@ src/integration/favoritesIntegration.js
 src/windowSwitching/gridAltTabPopup.js
 src/integration/volumeMixerController.js
 src/prefs/settingsSearchController.js
+src/startMenu/startMenuSearchView.js
+src/startMenu/startMenuPinnedViewController.js
 src/prefs/startMenuAppearanceGroup.js
 src/prefs/startMenuFoldersGroup.js
 src/prefs/startMenuKeybindingsGroup.js
