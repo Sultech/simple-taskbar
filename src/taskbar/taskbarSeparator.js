@@ -4,6 +4,10 @@
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {pinnedSeparatorLength} from './taskbarLengthModel.js';
+import {placeTaskbarItemAtIndex} from './taskbarItemLifecycle.js';
+
 export const TASKBAR_SEPARATOR_EXTENT = 13;
 export const TASKBAR_SEPARATOR_LINE_SIZE = 1;
 
@@ -133,4 +137,115 @@ export function animateSeparatorOut(
         },
     });
     return true;
+}
+
+export class TaskbarPinnedSeparator {
+    constructor({settings, taskbarActor, getIconSize, getParityOffset, getShowDesktopItem}) {
+        this._settings = settings;
+        this._taskbarActor = taskbarActor;
+        this._getIconSize = getIconSize;
+        this._getParityOffset = getParityOffset;
+        this._getShowDesktopItem = getShowDesktopItem;
+        this.actor = null;
+        this._line = null;
+    }
+
+    get length() {
+        return this.actor ? TASKBAR_SEPARATOR_EXTENT : 0;
+    }
+
+    target(items) {
+        if (!this.actor)
+            return null;
+
+        return items.find(item => item._taskbarApp &&
+            !item._taskbarIsLauncher &&
+            !item._taskbarIsPinnedPrimary) ?? null;
+    }
+
+    destroy() {
+        this.clear();
+        this._settings = null;
+        this._taskbarActor = null;
+        this._getIconSize = null;
+        this._getParityOffset = null;
+        this._getShowDesktopItem = null;
+    }
+
+    sync(entries, animate) {
+        if (pinnedSeparatorLength(
+            entries,
+            this._settings.get_boolean('show-pinned-app-separator'),
+            TASKBAR_SEPARATOR_EXTENT
+        ) === 0) {
+            this.clear(true);
+            return;
+        }
+
+        let created = false;
+        if (!this.actor) {
+            const {separator, line} = createTaskbarSeparator();
+            this.actor = separator;
+            this._line = line;
+            this.actor._taskbarIsPinnedSeparator = true;
+            this._taskbarActor.add_child(this.actor);
+            created = true;
+        }
+
+        this.syncGeometry();
+        if (!created) {
+            this.actor.remove_all_transitions();
+            this.actor.opacity = 255;
+        }
+        const separatorIndex = entries.findIndex(entry =>
+            !entry.isLauncher && !entry.isPinnedPrimary
+        );
+        placeTaskbarItemAtIndex(
+            this._taskbarActor,
+            this.actor,
+            separatorIndex,
+            this._getShowDesktopItem()
+        );
+        if (created && animate)
+            animateSeparatorIn(
+                this.actor,
+                panelIsVertical(this._settings)
+            );
+    }
+
+    syncGeometry() {
+        if (!this.actor)
+            return;
+
+        const vertical = panelIsVertical(this._settings);
+        syncSeparatorGeometry(
+            this.actor,
+            this._line,
+            vertical,
+            this._getIconSize(),
+            this._getParityOffset()
+        );
+        this.actor[
+            vertical ? 'height' : 'width'
+        ] = TASKBAR_SEPARATOR_EXTENT;
+    }
+
+    clear(animate = false) {
+        if (!this.actor)
+            return;
+
+        const separator = this.actor;
+        this.actor = null;
+        this._line = null;
+        separator.animatingOut = true;
+        if (animateSeparatorOut(
+            separator,
+            panelIsVertical(this._settings),
+            () => separator.destroy(),
+            animate && separator.get_stage()
+        ))
+            return;
+
+        separator.destroy();
+    }
 }

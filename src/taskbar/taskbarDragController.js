@@ -605,39 +605,19 @@ export class TaskbarDragController {
     }
 
     _runningOrder() {
-        const order = [];
-        const seen = new Set();
-        for (const group of this._groups()) {
-            const item = group.items[0];
-            if (!this._isRunningItem(item))
-                continue;
-
-            const appId = item._taskbarApp.get_id();
-            if (seen.has(appId))
-                continue;
-
-            seen.add(appId);
-            order.push(appId);
-        }
-        return order;
+        return this._appOrder(item => this._isRunningItem(item));
     }
 
     _pinnedOrder() {
-        const order = [];
-        const seen = new Set();
-        for (const group of this._groups()) {
-            const item = group.items[0];
-            if (!this.isPinnedItem(item))
-                continue;
+        return this._appOrder(item => this.isPinnedItem(item));
+    }
 
-            const appId = item._taskbarApp.get_id();
-            if (seen.has(appId))
-                continue;
-
-            seen.add(appId);
-            order.push(appId);
-        }
-        return order;
+    _appOrder(includeItem) {
+        const appIds = this._groups()
+            .map(group => group.items[0])
+            .filter(includeItem)
+            .map(item => item._taskbarApp.get_id());
+        return [...new Set(appIds)];
     }
 
     _canDropIntoPinned(source, item, position) {
