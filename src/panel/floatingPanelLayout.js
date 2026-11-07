@@ -58,11 +58,11 @@ export class FloatingPanelLayout {
     destroy() {
         this._panelLayoutUpdater.destroy();
         this._panelLayoutUpdater = null;
-        this._windowTracker.destroy();
-        this._windowTracker = null;
         this._settings.disconnectObject(this);
         for (const box of this._boxes)
             box.disconnectObject(this);
+        this._windowTracker.destroy();
+        this._windowTracker = null;
         if (this.strutActor) {
             Main.layoutManager.removeChrome(this.strutActor);
             this.strutActor.destroy();

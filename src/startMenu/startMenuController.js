@@ -664,6 +664,7 @@ export class StartMenuController {
     }
 
     destroy() {
+        this._content.remove_all_transitions();
         this._sourcePress.destroy();
         this._sourcePress = null;
         this._blurMyShellPopupSettings = null;
@@ -679,7 +680,6 @@ export class StartMenuController {
             GLib.Source.remove(this._refreshIdleId);
             this._refreshIdleId = 0;
         }
-        this._content.remove_all_transitions();
         this._appSystem.disconnect(this._installedChangedId);
         this._installedChangedId = 0;
         if (this._stageCapturedEventId) {

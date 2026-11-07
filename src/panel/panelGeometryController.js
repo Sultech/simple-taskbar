@@ -73,9 +73,9 @@ export class PanelGeometryController {
     }
 
     destroy() {
+        this._settings.disconnectObject(this);
         this._layout.destroy();
         this._layout = null;
-        this._settings.disconnectObject(this);
         this._injectionManager.clear();
         this._injectionManager = null;
         this._panelActorData.affectsStruts = this._originalAffectsStruts;

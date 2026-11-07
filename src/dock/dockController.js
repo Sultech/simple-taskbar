@@ -141,17 +141,17 @@ export class DockController {
 
     destroy() {
         Main.panel.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        St.ThemeContext.get_for_stage(global.stage).disconnectObject(this);
+        St.Settings.get().disconnectObject(this);
+        if (this._mainPanelBox)
+            this._mainPanelBox.disconnectObject(this);
         this._cornerRadiusController.destroy();
         this._cornerRadiusController = null;
         this._highlightLayer.destroy();
         this._highlightLayer = null;
         this._layout.destroy();
         this._layout = null;
-        this._settings.disconnectObject(this);
-        St.ThemeContext.get_for_stage(global.stage).disconnectObject(this);
-        St.Settings.get().disconnectObject(this);
-        if (this._mainPanelBox)
-            this._mainPanelBox.disconnectObject(this);
 
         this._settings = null;
         this._monitor = null;

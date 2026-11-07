@@ -521,11 +521,11 @@ export class ExtensionPanelController {
     }
 
     destroy() {
+        this._taskbarController.disableHoverAnimations();
         if (this._themeSyncLaterId) {
             global.compositor.get_laters().remove(this._themeSyncLaterId);
             this._themeSyncLaterId = 0;
         }
-        this._taskbarController.disableHoverAnimations();
         this._panelLayoutUpdater.destroy();
         this._panelLayoutUpdater = null;
         this._settings.disconnectObject(this);
