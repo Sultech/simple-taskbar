@@ -160,7 +160,22 @@ export class TaskbarTooltipController {
         label.set_text(item._taskbarApp.get_name());
         label.opacity = 0;
         label.show();
+        this._positionTooltip(item);
+        label.ease({
+            opacity: 255,
+            duration: APP_TOOLTIP_SHOW_TIME,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+    }
 
+    syncPosition() {
+        if (this._appTooltip && this._appTooltip.visible && this._tooltipItem &&
+            this._getHoverAnimationOutwardReserve() > 0)
+            this._positionTooltip(this._tooltipItem);
+    }
+
+    _positionTooltip(item) {
+        const label = this._appTooltip;
         const [stageX, stageY] = item.get_transformed_position();
         const [, labelWidth] = label.get_preferred_width(-1);
         const [, labelHeight] = label.get_preferred_height(labelWidth);
@@ -198,10 +213,5 @@ export class TaskbarTooltipController {
                 : Math.max(monitor.y, stageY - labelHeight - 8 - outward);
         }
         label.set_position(x, y);
-        label.ease({
-            opacity: 255,
-            duration: APP_TOOLTIP_SHOW_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-        });
     }
 }

@@ -257,6 +257,10 @@ export class WindowPreviewController {
         this._tooltipController.hide(animate);
     }
 
+    syncTooltipPosition() {
+        this._tooltipController.syncPosition();
+    }
+
     scheduleTooltipClose() {
         this._tooltipController.scheduleClose();
     }
