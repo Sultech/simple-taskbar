@@ -3,22 +3,13 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
-import Meta from 'gi://Meta';
-import Shell from 'gi://Shell';
 
-import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {panelGeometry} from './panelGeometry.js';
-import {
-    panelIsMinimumEdge,
-    panelIsVertical,
-    panelPosition,
-} from '../shared/panelPositionUtils.js';
-import {
-    destroyPressureBarrier,
-    pointerButtonIsPressed,
-} from '../inputUtils.js';
+import {PanelFullscreenRevealController} from './panelFullscreenRevealController.js';
+import {EdgePressureBarrier, panelPressureBarrierEdge, pressureBarriersSupported} from './edgePressureBarrier.js';
+import {panelIsMinimumEdge, panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
 import {
     AUTO_HIDE_SETTINGS,
     autoHideHideDelay,
@@ -31,15 +22,6 @@ import {hasWindowCoveringMonitor} from './panelWindowQueries.js';
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const REVEAL_EDGE_SIZE = 2;
-const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
-const PRESSURE_TIMEOUT = 1000;
-const BARRIER_CORNER_INSET = 1;
-const BARRIER_DIRECTIONS = {
-    top: Meta.BarrierDirection.POSITIVE_Y,
-    bottom: Meta.BarrierDirection.NEGATIVE_Y,
-    left: Meta.BarrierDirection.POSITIVE_X,
-    right: Meta.BarrierDirection.NEGATIVE_X,
-};
 export class PanelAutoHideController {
     constructor({
         settings,
@@ -75,9 +57,6 @@ export class PanelAutoHideController {
         this._cursorPositionInvalidatedId = 0;
         this._hideTimeoutId = 0;
         this._hideAfterReveal = false;
-        this._fullscreenWatchId = 0;
-        this._fullscreenReleasePending = false;
-        this._pointerButtonPressed = false;
         this._hidden = false;
         this._overviewSuspended = false;
         this._overviewEdgeRevealBlocked = false;
@@ -85,20 +64,23 @@ export class PanelAutoHideController {
         this._strutActorData = null;
         this._originalAffectsStruts = false;
         this._originalStrutAffectsStruts = false;
-        this._originalTrackFullscreen = false;
         this._unredirectDisabled = false;
-        this._fullscreenVisibilityHeld = false;
-        this._fullscreenPointerRevealHeld = false;
         this._dodgeEnabled = false;
         this._dodgeActive = false;
         this._pointerReveal = false;
         this._positionTarget = null;
         this._positionTargetProperty = null;
         this._positionAnimating = false;
+        this._fullscreenRevealController = new PanelFullscreenRevealController({
+            positionActor,
+            getActorData: () => this._trackedActorData,
+            getMonitor,
+            pointerIsInsidePanel: () => this._pointerIsInsidePanel(),
+            isBlocked,
+            onVisibilityChanged: () => this._syncUnredirect(),
+        });
         this._revealDwellTimeoutId = 0;
-        this._barrier = null;
-        this._pressureBarrier = null;
-        this._pressureTriggerId = 0;
+        this._edgePressureBarrier = null;
     }
 
     enable() {
@@ -144,9 +126,9 @@ export class PanelAutoHideController {
             'changed::panel-autohide-enabled', () => this._syncEnabled(),
             `changed::${AUTO_HIDE_SETTINGS.revealFullscreen}`, () => {
                 this._cancelRevealDwell();
-                if (this._fullscreenPointerRevealHeld &&
+                if (this._fullscreenRevealController.pointerRevealHeld &&
                     !this._settings.get_boolean(AUTO_HIDE_SETTINGS.revealFullscreen)) {
-                    this._restoreFullscreenVisibility();
+                    this._fullscreenRevealController.restore();
                 }
                 this._fullscreenChanged();
             },
@@ -178,7 +160,7 @@ export class PanelAutoHideController {
         this._overviewEdgeRevealBlocked =
             Main.overview.animationInProgress;
         this._captureStrutTracking();
-        this._originalTrackFullscreen = this._trackedActorData.trackFullscreen;
+        this._fullscreenRevealController.captureTracking(this._trackedActorData);
         this._syncStrutTracking();
         this.syncPosition();
         this._syncEnabled();
@@ -192,7 +174,7 @@ export class PanelAutoHideController {
         this._clearHideTimeout();
         this._cancelRevealDwell();
         this._destroyPressureBarrier();
-        this._stopFullscreenWatch();
+        this._fullscreenRevealController.stopWatch();
         if (this._cursorPositionInvalidatedId)
             this._cursorTracker.disconnect(this._cursorPositionInvalidatedId);
         this._cursorPositionInvalidatedId = 0;
@@ -203,7 +185,7 @@ export class PanelAutoHideController {
         Main.overview.disconnectObject(this);
         global.display.disconnectObject(this);
 
-        this._restoreFullscreenVisibilityState();
+        this._fullscreenRevealController.restoreState();
         this._hidden = false;
         this._overviewSuspended = false;
         this._overviewEdgeRevealBlocked = false;
@@ -217,6 +199,8 @@ export class PanelAutoHideController {
         this._restoreStrutTracking();
         this._restoreUnredirect();
 
+        this._fullscreenRevealController.destroy();
+        this._fullscreenRevealController = null;
         this._cursorTracker = null;
         this._settings = null;
         this._panelActor = null;
@@ -240,18 +224,18 @@ export class PanelAutoHideController {
 
     setMenuOpen(open) {
         if (open) {
-            this._fullscreenReleasePending = false;
+            this._fullscreenRevealController.cancelPendingRelease();
             this.show(false);
             const monitor = this._getMonitor();
             if (global.window_group.visible && monitor?.inFullscreen) {
-                this._holdFullscreenVisibility(false);
+                this._fullscreenRevealController.hold(false);
                 this._clearHideTimeout();
-                this._startFullscreenWatch();
+                this._fullscreenRevealController.startWatch();
             }
             return;
         }
 
-        if (this._fullscreenVisibilityHeld)
+        if (this._fullscreenRevealController.visibilityHeld)
             return;
         if (this._dodgeEnabled && this._dodgeActive) {
             if (!this._pointerReveal ||
@@ -282,7 +266,7 @@ export class PanelAutoHideController {
             this._restoreStrutTracking();
         this._syncUnredirect();
         if (this._overviewSuspended ||
-            this._fullscreenVisibilityHeld) {
+            this._fullscreenRevealController.visibilityHeld) {
             return;
         }
 
@@ -370,11 +354,11 @@ export class PanelAutoHideController {
     show(animate = true) {
         this._clearHideTimeout();
         this._cancelRevealDwell();
-        if (!this._fullscreenVisibilityHeld && this._pointerReveal &&
+        if (!this._fullscreenRevealController.visibilityHeld && this._pointerReveal &&
             (this._enabled() || this._dodgeActive) &&
             this._settings.get_boolean(AUTO_HIDE_SETTINGS.revealFullscreen) &&
             global.window_group.visible && this._getMonitor()?.inFullscreen) {
-            this._holdFullscreenVisibility(true);
+            this._fullscreenRevealController.hold(true);
         }
         if (!this._hidden) {
             if (this._shouldScheduleHide())
@@ -534,7 +518,7 @@ export class PanelAutoHideController {
     }
 
     _syncUnredirect() {
-        if (this._fullscreenVisibilityHeld || this._fullscreenPointerRevealHeld) {
+        if (this._fullscreenRevealController.visibilityHeld || this._fullscreenRevealController.pointerRevealHeld) {
             this._disableUnredirect();
             return;
         }
@@ -558,39 +542,11 @@ export class PanelAutoHideController {
             !this._positionAnimating;
     }
 
-    _restoreFullscreenVisibility() {
-        this._stopFullscreenWatch();
-        this._restoreFullscreenVisibilityState();
-    }
-
     _releaseInactiveFullscreenReveal() {
-        if (this._fullscreenPointerRevealHeld &&
+        if (this._fullscreenRevealController.pointerRevealHeld &&
             (!this._pointerReveal || !this._enabled() && !this._dodgeActive)) {
-            this._restoreFullscreenVisibility();
+            this._fullscreenRevealController.restore();
         }
-    }
-
-    _holdFullscreenVisibility(pointerReveal) {
-        this._trackedActorData.trackFullscreen = false;
-        this._positionActor.visible = true;
-        this._fullscreenVisibilityHeld = !pointerReveal;
-        this._fullscreenPointerRevealHeld = pointerReveal;
-        this._syncUnredirect();
-    }
-
-    _restoreFullscreenVisibilityState() {
-        if (!this._fullscreenVisibilityHeld && !this._fullscreenPointerRevealHeld)
-            return;
-
-        this._fullscreenVisibilityHeld = false;
-        this._fullscreenPointerRevealHeld = false;
-        const monitor = this._getMonitor();
-        this._trackedActorData.trackFullscreen =
-            this._originalTrackFullscreen;
-        this._positionActor.visible =
-            !this._originalTrackFullscreen ||
-            !(global.window_group.visible && monitor?.inFullscreen);
-        this._syncUnredirect();
     }
 
     _fullscreenChanged() {
@@ -598,57 +554,20 @@ export class PanelAutoHideController {
         this._syncUnredirect();
         this._cancelRevealDwell();
         if (this._getMonitor()?.inFullscreen) {
-            if (!this._fullscreenVisibilityHeld && !this._fullscreenPointerRevealHeld &&
+            if (!this._fullscreenRevealController.visibilityHeld && !this._fullscreenRevealController.pointerRevealHeld &&
                 (this._enabled() || this._dodgeActive) &&
                 this._settings.get_boolean(AUTO_HIDE_SETTINGS.revealFullscreen)) {
                 this._hide(false);
             }
             return;
         }
-        if (!this._fullscreenVisibilityHeld && !this._fullscreenPointerRevealHeld)
+        if (!this._fullscreenRevealController.visibilityHeld && !this._fullscreenRevealController.pointerRevealHeld)
             return;
 
-        this._restoreFullscreenVisibility();
+        this._fullscreenRevealController.restore();
         if ((this._enabled() || this._dodgeActive) &&
             !this._pointerIsInsidePanel())
             this._scheduleHide();
-    }
-
-    _startFullscreenWatch() {
-        if (this._fullscreenWatchId)
-            return;
-
-        this._fullscreenReleasePending = false;
-        this._pointerButtonPressed = pointerButtonIsPressed();
-        this._fullscreenWatchId = GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            FULLSCREEN_POINTER_POLL_INTERVAL,
-            () => {
-                const pointerPressed = pointerButtonIsPressed();
-                if (pointerPressed && !this._pointerButtonPressed) {
-                    this._fullscreenReleasePending =
-                        !this._pointerIsInsidePanel();
-                }
-                this._pointerButtonPressed = pointerPressed;
-
-                if (!this._fullscreenReleasePending ||
-                    this._isBlockedCallback()) {
-                    return GLib.SOURCE_CONTINUE;
-                }
-
-                this._fullscreenWatchId = 0;
-                this._restoreFullscreenVisibility();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
-    }
-
-    _stopFullscreenWatch() {
-        if (this._fullscreenWatchId)
-            GLib.Source.remove(this._fullscreenWatchId);
-        this._fullscreenWatchId = 0;
-        this._fullscreenReleasePending = false;
-        this._pointerButtonPressed = false;
     }
 
     _scheduleHide(delay = autoHideHideDelay(this._settings)) {
@@ -657,7 +576,7 @@ export class PanelAutoHideController {
             this._pointerReveal;
         if (!canHide ||
             this._overviewSuspended ||
-            this._fullscreenVisibilityHeld || this._hidden ||
+            this._fullscreenRevealController.visibilityHeld || this._hidden ||
             this._hideTimeoutId) {
             return;
         }
@@ -721,7 +640,7 @@ export class PanelAutoHideController {
 
     _hideForOverview() {
         this._overviewEdgeRevealBlocked = true;
-        this._restoreFullscreenVisibility();
+        this._fullscreenRevealController.restore();
         if ((this._enabled() || this._dodgeActive) && !this._isBlocked())
             this._hide();
     }
@@ -867,53 +786,9 @@ export class PanelAutoHideController {
             (this._enabled() || this._dodgeEnabled);
     }
 
-    _barriersAreSupported() {
-        return Boolean(
-            global.backend.capabilities &
-            Meta.BackendCapabilities.BARRIERS
-        );
-    }
-
     _destroyPressureBarrier() {
-        if (this._pressureTriggerId) {
-            this._pressureBarrier.disconnect(this._pressureTriggerId);
-            this._pressureTriggerId = 0;
-        }
-        destroyPressureBarrier(this._pressureBarrier, this._barrier);
-        this._barrier = null;
-        this._pressureBarrier = null;
-    }
-
-    _pressureBarrierEdge(monitor) {
-        const workArea = Main.layoutManager.getWorkAreaForMonitor(
-            monitor.index
-        );
-        const geometry = this._geometry(monitor);
-        const limit = this._getLimitRevealToPanel();
-        const position = panelPosition(this._settings);
-        if (geometry.vertical) {
-            const y1 = limit
-                ? geometry.y
-                : workArea.y + BARRIER_CORNER_INSET;
-            const y2 = limit
-                ? geometry.y + geometry.height
-                : workArea.y + workArea.height - BARRIER_CORNER_INSET;
-            const x = position === 'left'
-                ? monitor.x
-                : monitor.x + monitor.width;
-            return {x1: x, x2: x, y1, y2};
-        }
-
-        const x1 = limit
-            ? geometry.x
-            : workArea.x + BARRIER_CORNER_INSET;
-        const x2 = limit
-            ? geometry.x + geometry.width
-            : workArea.x + workArea.width - BARRIER_CORNER_INSET;
-        const y = position === 'top'
-            ? monitor.y
-            : monitor.y + monitor.height;
-        return {x1, x2, y1: y, y2: y};
+        this._edgePressureBarrier?.destroy();
+        this._edgePressureBarrier = null;
     }
 
     _syncPressureBarrier() {
@@ -921,29 +796,27 @@ export class PanelAutoHideController {
         const monitor = this._getMonitor();
         // A barrier would resist crossing between monitors even when fullscreen reveal is disabled.
         if (!monitor || !this._hidden || !this._usesPressureReveal() ||
-            !this._barriersAreSupported() || this._fullscreenBlocksReveal()) {
+            !pressureBarriersSupported() || this._fullscreenBlocksReveal()) {
             return;
         }
 
-        const edge = this._pressureBarrierEdge(monitor);
+        const position = panelPosition(this._settings);
+        const edge = panelPressureBarrierEdge({
+            monitor,
+            workArea: Main.layoutManager.getWorkAreaForMonitor(monitor.index),
+            geometry: this._geometry(monitor),
+            limit: this._getLimitRevealToPanel(),
+            position,
+        });
         if (edge.x1 >= edge.x2 && edge.y1 >= edge.y2)
             return;
 
-        this._barrier = new Meta.Barrier({
-            backend: global.backend,
-            ...edge,
-            directions: BARRIER_DIRECTIONS[panelPosition(this._settings)],
+        this._edgePressureBarrier = new EdgePressureBarrier({
+            edge,
+            position,
+            threshold: this._settings.get_int('panel-autohide-pressure-threshold'),
+            onTrigger: () => this._revealFromPressure(),
         });
-        this._pressureBarrier = new Layout.PressureBarrier(
-            this._settings.get_int('panel-autohide-pressure-threshold'),
-            PRESSURE_TIMEOUT,
-            Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW
-        );
-        this._pressureBarrier.addBarrier(this._barrier);
-        this._pressureTriggerId = this._pressureBarrier.connect(
-            'trigger',
-            () => this._revealFromPressure()
-        );
     }
 
     _fullscreenBlocksReveal() {
@@ -1051,8 +924,8 @@ export class PanelAutoHideController {
         this._syncUnredirect();
         if (!animate) {
             actor[property] = offset;
-            if (this._hidden && this._fullscreenPointerRevealHeld)
-                this._restoreFullscreenVisibility();
+            if (this._hidden && this._fullscreenRevealController.pointerRevealHeld)
+                this._fullscreenRevealController.restore();
             this._syncMonitorClip();
             Main.layoutManager._queueUpdateRegions();
             return;
@@ -1070,8 +943,8 @@ export class PanelAutoHideController {
             },
             onComplete: () => {
                 this._positionAnimating = false;
-                if (this._hidden && this._fullscreenPointerRevealHeld)
-                    this._restoreFullscreenVisibility();
+                if (this._hidden && this._fullscreenRevealController.pointerRevealHeld)
+                    this._fullscreenRevealController.restore();
                 this._syncUnredirect();
                 this._syncMonitorClip();
                 Main.layoutManager._queueUpdateRegions();

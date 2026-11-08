@@ -3,17 +3,13 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
-import Meta from 'gi://Meta';
-import Shell from 'gi://Shell';
 import St from 'gi://St';
 
-import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Ripples from 'resource:///org/gnome/shell/ui/ripples.js';
 
-import {destroyPressureBarrier} from '../inputUtils.js';
+import {EdgePressureBarrier, pressureBarriersSupported} from '../panel/edgePressureBarrier.js';
 
-const PRESSURE_TIMEOUT = 1000;
 const FALLBACK_TIMEOUT = 250;
 
 export class HotEdgeController {
@@ -108,9 +104,7 @@ class HotEdge {
         this._isBlocked = isBlocked;
         this._showAnimation = showAnimation;
         this._openAppGrid = openAppGrid;
-        this._barrier = null;
-        this._pressureBarrier = null;
-        this._pressureTriggerId = 0;
+        this._edgePressureBarrier = null;
         this._fallbackActor = null;
         this._fallbackEnterId = 0;
         this._fallbackLeaveId = 0;
@@ -123,7 +117,7 @@ class HotEdge {
         );
         this._ripples.addTo(layoutManager.uiGroup);
 
-        if (this._barriersAreSupported())
+        if (pressureBarriersSupported())
             this._createPressureBarrier();
         else
             this._createFallbackActor();
@@ -144,13 +138,8 @@ class HotEdge {
         this._fallbackEnterId = 0;
         this._fallbackLeaveId = 0;
 
-        if (this._pressureTriggerId) {
-            this._pressureBarrier.disconnect(this._pressureTriggerId);
-            this._pressureTriggerId = 0;
-        }
-        destroyPressureBarrier(this._pressureBarrier, this._barrier);
-        this._barrier = null;
-        this._pressureBarrier = null;
+        this._edgePressureBarrier?.destroy();
+        this._edgePressureBarrier = null;
 
         this._ripples.destroy();
         this._ripples = null;
@@ -162,33 +151,19 @@ class HotEdge {
         this._openAppGrid = null;
     }
 
-    _barriersAreSupported() {
-        return Boolean(
-            global.backend.capabilities &
-            Meta.BackendCapabilities.BARRIERS
-        );
-    }
-
     _createPressureBarrier() {
         const bottom = this._monitor.y + this._monitor.height;
-        this._barrier = new Meta.Barrier({
-            backend: global.backend,
-            x1: this._monitor.x,
-            x2: this._monitor.x + this._monitor.width,
-            y1: bottom,
-            y2: bottom,
-            directions: Meta.BarrierDirection.NEGATIVE_Y,
+        this._edgePressureBarrier = new EdgePressureBarrier({
+            edge: {
+                x1: this._monitor.x,
+                x2: this._monitor.x + this._monitor.width,
+                y1: bottom,
+                y2: bottom,
+            },
+            position: 'bottom',
+            threshold: this._pressureThreshold,
+            onTrigger: () => this._toggleOverview(),
         });
-        this._pressureBarrier = new Layout.PressureBarrier(
-            this._pressureThreshold,
-            PRESSURE_TIMEOUT,
-            Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW
-        );
-        this._pressureBarrier.addBarrier(this._barrier);
-        this._pressureTriggerId = this._pressureBarrier.connect(
-            'trigger',
-            () => this._toggleOverview()
-        );
     }
 
     _createFallbackActor() {

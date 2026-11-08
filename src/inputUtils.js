@@ -21,13 +21,6 @@ export function modifierClickActionKey(event) {
     return null;
 }
 
-export function destroyPressureBarrier(pressureBarrier, barrier) {
-    if (pressureBarrier && barrier)
-        pressureBarrier.removeBarrier(barrier);
-    barrier?.destroy();
-    pressureBarrier?.destroy();
-}
-
 export function getScrollDelta(event, increment) {
     switch (event.get_scroll_direction()) {
     case Clutter.ScrollDirection.UP:
