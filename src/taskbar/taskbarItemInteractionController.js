@@ -8,9 +8,10 @@ import {TaskbarAppMenu} from './taskbarAppMenu.js';
 import {LocationMenu} from '../locations/locationMenu.js';
 import {
     CLICK_ACTION,
-    HOVER_ACTION,
     normalizeLegacyMiddleClickAction,
+    HOVER_ACTION,
 } from '../shared/interactionActions.js';
+
 import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
 import {openPopupMenu, pinnedPopupSource} from '../popupMenuUtils.js';

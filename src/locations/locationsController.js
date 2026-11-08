@@ -11,72 +11,7 @@ import {
     LocationApp,
     TRASH_URI,
 } from './locationApp.js';
-
-const COMMON_FOLDER_DEFINITIONS = [
-    {
-        key: 'locations-show-home',
-        startMenuKey: 'start-menu-show-home',
-        name: 'Home',
-        iconName: 'user-home',
-        startMenuIconName: 'user-home-symbolic',
-        directory: null,
-        fallback: 'Home',
-    },
-    {
-        key: 'locations-show-desktop',
-        startMenuKey: 'start-menu-show-desktop',
-        name: 'Desktop',
-        iconName: 'user-desktop',
-        startMenuIconName: 'user-desktop-symbolic',
-        directory: GLib.UserDirectory.DIRECTORY_DESKTOP,
-        fallback: 'Desktop',
-    },
-    {
-        key: 'locations-show-documents',
-        startMenuKey: 'start-menu-show-documents',
-        name: 'Documents',
-        iconName: 'folder-documents',
-        startMenuIconName: 'folder-documents-symbolic',
-        directory: GLib.UserDirectory.DIRECTORY_DOCUMENTS,
-        fallback: 'Documents',
-    },
-    {
-        key: 'locations-show-downloads',
-        startMenuKey: 'start-menu-show-downloads',
-        name: 'Downloads',
-        iconName: 'folder-download',
-        startMenuIconName: 'folder-download-symbolic',
-        directory: GLib.UserDirectory.DIRECTORY_DOWNLOAD,
-        fallback: 'Downloads',
-    },
-    {
-        key: 'locations-show-music',
-        startMenuKey: 'start-menu-show-music',
-        name: 'Music',
-        iconName: 'folder-music',
-        startMenuIconName: 'folder-music-symbolic',
-        directory: GLib.UserDirectory.DIRECTORY_MUSIC,
-        fallback: 'Music',
-    },
-    {
-        key: 'locations-show-pictures',
-        startMenuKey: 'start-menu-show-pictures',
-        name: 'Pictures',
-        iconName: 'folder-pictures',
-        startMenuIconName: 'folder-pictures-symbolic',
-        directory: GLib.UserDirectory.DIRECTORY_PICTURES,
-        fallback: 'Pictures',
-    },
-    {
-        key: 'locations-show-videos',
-        startMenuKey: 'start-menu-show-videos',
-        name: 'Videos',
-        iconName: 'folder-videos',
-        startMenuIconName: 'folder-videos-symbolic',
-        directory: GLib.UserDirectory.DIRECTORY_VIDEOS,
-        fallback: 'Videos',
-    },
-];
+import {COMMON_FOLDERS, commonFolderKey, commonFolderPath} from '../shared/commonFolders.js';
 
 export class LocationsController {
     constructor({settings, scope, tracker, getInterestingWindows, onChanged, onRemoving}) {
@@ -127,10 +62,8 @@ export class LocationsController {
             [`changed::${this._showMountsKey}`, () => this._sync()],
             [`changed::${this._showMountedOnlyKey}`, () => this._sync()],
             [`changed::${this._showNetworkKey}`, () => this._sync()],
-            ...COMMON_FOLDER_DEFINITIONS.map(folder => [
-                `changed::${this._folderOnly
-                    ? folder.startMenuKey
-                    : folder.key}`,
+            ...COMMON_FOLDERS.map(folder => [
+                `changed::${this._folderKey(folder)}`,
                 () => this._sync(),
             ]),
         ]) {
@@ -238,27 +171,26 @@ export class LocationsController {
             this._onChanged();
     }
 
+    _folderKey(folder) {
+        return commonFolderKey(folder, this._folderOnly ? 'start-menu' : 'locations');
+    }
+
     _syncFolderApps() {
         const previousApps = new Map(
             this._folderApps.map(app => [app.get_id(), app])
         );
         this._folderApps = [];
-        for (const folder of COMMON_FOLDER_DEFINITIONS) {
-            const settingsKey = this._folderOnly
-                ? folder.startMenuKey
-                : folder.key;
-            if (!this._settings.get_boolean(settingsKey))
+        for (const folder of COMMON_FOLDERS) {
+            if (!this._settings.get_boolean(this._folderKey(folder)))
                 continue;
 
-            const id = `location:folder:${folder.key}`;
+            const id = `location:folder:${commonFolderKey(folder, 'locations')}`;
             let app = previousApps.get(id);
             if (app) {
                 previousApps.delete(id);
             } else {
-                const path = folder.directory === null
-                    ? GLib.get_home_dir()
-                    : GLib.get_user_special_dir(folder.directory) ||
-                        `${GLib.get_home_dir()}/${folder.fallback}`;
+                const path = commonFolderPath(folder) ||
+                    `${GLib.get_home_dir()}/${folder.name}`;
                 app = new LocationApp({
                     id,
                     name: _(folder.name),
@@ -266,7 +198,7 @@ export class LocationsController {
                     location: Gio.File.new_for_path(path),
                     icon: Gio.ThemedIcon.new(
                         this._folderOnly
-                            ? folder.startMenuIconName
+                            ? `${folder.iconName}-symbolic`
                             : folder.iconName
                     ),
                 });

@@ -3,7 +3,11 @@
 
 import GLib from 'gi://GLib';
 
-import {PINNED_FOLDER_PREFIX} from '../shared/pinnedItemFormat.js';
+import {
+    PINNED_FOLDER_PREFIX,
+    decodePinnedFolder,
+    encodePinnedFolder,
+} from '../shared/pinnedItemFormat.js';
 
 export function pinnedAppItemKey(appId) {
     return `app:${appId}`;
@@ -22,7 +26,7 @@ function parsePinnedItem(value) {
         };
     }
 
-    const folder = JSON.parse(value.slice(PINNED_FOLDER_PREFIX.length));
+    const folder = decodePinnedFolder(value);
     return {
         type: 'folder',
         key: pinnedFolderItemKey(folder.id),
@@ -36,11 +40,7 @@ function serializePinnedItem(item) {
     if (item.type === 'app')
         return item.appId;
 
-    return PINNED_FOLDER_PREFIX + JSON.stringify({
-        id: item.id,
-        name: item.name,
-        apps: item.appIds,
-    });
+    return encodePinnedFolder(item.id, item.name, item.appIds);
 }
 
 function appItem(appId) {
