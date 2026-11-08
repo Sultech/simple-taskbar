@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {syncBlurGeometry} from '../integration/blurMyShellRuntime.js';
-
 export class PanelMagnifyController {
     constructor({actor, panelBox, getMonitor, getVertical, getReserve, isEnabled,
         isDynamic, getBaseLength, updateWidth, onGeometryChanged}) {
@@ -17,6 +15,7 @@ export class PanelMagnifyController {
         this._updateWidth = updateWidth;
         this._onGeometryChanged = onGeometryChanged;
         this._extents = [0, 0];
+        this._geometry = null;
         this.reserve = 0;
         this.centerOffset = 0;
         this.contentStart = 0;
@@ -42,10 +41,10 @@ export class PanelMagnifyController {
             this._updateWidth();
             return;
         }
-        this.sync();
+        this.sync(false);
     }
 
-    sync() {
+    sync(force = true) {
         if (!this._isEnabled())
             return;
 
@@ -74,15 +73,24 @@ export class PanelMagnifyController {
             width: vertical ? this._panelBox.width : end - start,
             height: vertical ? end - start : this._panelBox.height,
         };
-        this.centerOffset = boxLength - start - end;
-        this.contentStart = baseStart - start;
+        const centerOffset = boxLength - start - end;
+        const contentStart = baseStart - start;
+        const previous = this._geometry;
+        const unchanged = previous && previous.x === geometry.x && previous.y === geometry.y &&
+            previous.width === geometry.width && previous.height === geometry.height &&
+            this.centerOffset === centerOffset && this.contentStart === contentStart && this.contentLength === baseLength;
+        this.centerOffset = centerOffset;
+        this.contentStart = contentStart;
         this.contentLength = baseLength;
+        if (!force && unchanged)
+            return;
+        this._geometry = geometry;
         this._onGeometryChanged(geometry, this.centerOffset);
         this._actor.queue_relayout();
-        syncBlurGeometry(this._actor);
     }
 
     destroy() {
+        this._geometry = null;
         this._actor = null;
         this._panelBox = null;
         this._getMonitor = null;

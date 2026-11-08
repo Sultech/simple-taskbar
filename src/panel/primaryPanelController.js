@@ -11,7 +11,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {extensionIsActive} from '../integration/extensionState.js';
-import {syncBlurGeometry} from '../integration/blurMyShellRuntime.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelWindowDodgeController,
@@ -141,7 +140,6 @@ export class PrimaryPanelController {
             getGeometrySource: () => this._geometryController,
             isBlocked: () => this._isAutoHideBlocked(),
             getOutwardReserve: () => core.taskbarController.getHoverAnimationOutwardReserve(),
-            onPositionFrame: () => syncBlurGeometry(Main.panel),
             onHidden: () => core.onPanelHidden(),
         });
         this._windowDodgeController = new PanelWindowDodgeController({

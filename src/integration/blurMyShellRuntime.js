@@ -189,28 +189,6 @@ export function refreshPanelBlurVisibility(panelBlur) {
     panelBlur.update_visibility();
 }
 
-function syncDockBlurGeometry(panel) {
-    for (const surface of dockBlurSurfaces(getDockBlur(), panel))
-        surface.update_size();
-}
-
-function syncPanelBlurGeometry(panel) {
-    const panelBlur = getPanelBlur();
-    if (!panelBlur)
-        return;
-
-    const actors = panelBlur.actors_list.find(
-        actors => actors.widgets.panel === panel
-    );
-    if (actors)
-        panelBlur.update_size(actors);
-}
-
-export function syncBlurGeometry(panel) {
-    syncPanelBlurGeometry(panel);
-    syncDockBlurGeometry(panel);
-}
-
 export function resetPanelBlur() {
     const panelBlur = getPanelBlur();
     if (!panelBlur)

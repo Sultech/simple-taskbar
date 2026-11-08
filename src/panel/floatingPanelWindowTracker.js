@@ -3,12 +3,6 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-function fillAppGridIfEmpty() {
-    const appDisplay = Main.overview._overview.controls._appDisplay;
-    if (appDisplay._orderedItems.length === 0)
-        appDisplay._redisplay();
-}
-
 export class FloatingPanelWindowTracker {
     constructor(onPosition) {
         this._onPosition = onPosition;
@@ -31,10 +25,7 @@ export class FloatingPanelWindowTracker {
             this
         );
         Main.overview.connectObject(
-            'showing', () => {
-                fillAppGridIfEmpty();
-                this._onPosition(true, true);
-            },
+            'showing', () => this._onPosition(true, true),
             'hiding', () => this._onPosition(true, true),
             this
         );

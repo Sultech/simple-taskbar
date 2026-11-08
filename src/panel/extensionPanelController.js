@@ -15,7 +15,6 @@ import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js'
 import {
     DOCK_BOX_NAME,
     panelBlurIsActive,
-    syncBlurGeometry,
 } from '../integration/blurMyShellRuntime.js';
 import {panelSurfaceStyle} from './panelBackgroundStyle.js';
 import {
@@ -343,7 +342,6 @@ export class ExtensionPanelController {
             onHidden: () => this._core.onPanelHidden(),
             getOutwardReserve: () =>
                 this._core.taskbarController.getHoverAnimationOutwardReserve(),
-            onPositionFrame: () => syncBlurGeometry(this.actor),
             strutActor: geometryController ? geometryController.strutActor : null,
             getMonitor: () => this._monitor,
             getPanelHeight: () => this._panelHeight,
