@@ -4,7 +4,6 @@
 import GLib from 'gi://GLib';
 
 export const MAGNIFY_SETTLE_TIME_CONSTANTS = 2;
-export const MAGNIFY_MOTION_THROTTLE = 50;
 export const MAGNIFY_EPSILON = 0.01;
 
 export function getTaskbarHoverAnimationNeighbours(

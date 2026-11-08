@@ -2,16 +2,11 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
-import GLib from 'gi://GLib';
-import Meta from 'gi://Meta';
 
 import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
 } from '../shared/applicationHoverAnimation.js';
-import {
-    MAGNIFY_MOTION_THROTTLE,
-} from './taskbarHoverAnimationUtils.js';
 import {
     TaskbarHoverAnimationAnimator,
 } from './taskbarHoverAnimationAnimator.js';
@@ -65,7 +60,8 @@ export class TaskbarIconHoverAnimationController {
         this._lastMotionTimestamp = 0;
         this._lastPointerX = null;
         this._lastPointerY = null;
-        this._magnifyUpdateId = 0;
+        this._magnifyUpdatePending = false;
+        this._cloneGeometryDirty = false;
         this._magnifyTimeline = null;
         this._smoothing = new TaskbarHoverAnimationSmoothing();
         this._settingsController = new TaskbarHoverAnimationSettings({
@@ -113,6 +109,7 @@ export class TaskbarIconHoverAnimationController {
             onReserveChanged,
             onExtentsChanged,
             queueMagnifyFrames: () => this._startMagnifyFrames(),
+            queueMagnifyUpdate: () => this._requestMagnifyUpdate(),
             smoothing: this._smoothing,
         });
     }
@@ -158,13 +155,14 @@ export class TaskbarIconHoverAnimationController {
         locationActor.connectObject(
             'child-added', (_actor, child) => this._trackItem(child),
             'child-removed', (_actor, child) => this.removeItem(child),
-            'notify::allocation', () => this._queueMagnifyUpdate(),
             this
         );
         for (const actor of [locationActor, this._getStartButton()]) {
             actor.connectObject(
                 'motion-event', (_actor, event) => this._onMotionEvent(event),
                 'leave-event', target => this._onLeaveEvent(target),
+                'notify::allocation', () => this._updateCloneGeometry(),
+                'notify::mapped', () => this._updateCloneGeometry(),
                 this
             );
         }
@@ -202,6 +200,14 @@ export class TaskbarIconHoverAnimationController {
 
     disable() {
         this._removeLaterSources();
+        this._disconnectSignals();
+        this._animator.resetAnimations();
+    }
+
+    _disconnectSignals() {
+        if (!this._viewport)
+            return;
+
         this._viewport.disconnectObject(this);
         this._cursorTracker.disconnectObject(this);
         this._viewport.hadjustment.disconnectObject(this);
@@ -213,12 +219,13 @@ export class TaskbarIconHoverAnimationController {
         this._settings.disconnectObject(this);
         for (const item of this._trackedItems)
             this._disconnectItem(item);
-        this._animator.resetAnimations();
         this._trackedItems.clear();
+        this._viewport = null;
     }
 
     destroy() {
         this._removeLaterSources();
+        this._disconnectSignals();
         this._animator.destroy();
         this._animator = null;
         this._cloneController.destroy();
@@ -240,11 +247,13 @@ export class TaskbarIconHoverAnimationController {
     }
 
     _removeLaterSources() {
-        if (this._magnifyUpdateId) {
-            global.compositor.get_laters().remove(this._magnifyUpdateId);
-            this._magnifyUpdateId = 0;
+        if (this._magnifyTimeline) {
+            this._magnifyTimeline.stop();
+            this._magnifyTimeline.disconnectObject(this);
+            this._magnifyTimeline = null;
         }
-        this._stopMagnifyFrames();
+        this._magnifyUpdatePending = false;
+        this._cloneGeometryDirty = false;
     }
 
     getReserve() {
@@ -269,6 +278,7 @@ export class TaskbarIconHoverAnimationController {
     }
 
     syncIconResolution(item) {
+        this._geometry.invalidate();
         this._settingsController.syncIconResolution(item);
     }
 
@@ -288,6 +298,7 @@ export class TaskbarIconHoverAnimationController {
         this.syncIconResolution(item);
         item.connectObject(
             'notify::hover', () => this._onItemHoverChanged(item),
+            'notify::mapped', () => this._updateCloneGeometry(item),
             'notify::allocation', () => this._updateCloneGeometry(item),
             'notify::translation-x', () => this._updateCloneGeometry(item),
             'notify::translation-y', () => this._updateCloneGeometry(item),
@@ -303,10 +314,19 @@ export class TaskbarIconHoverAnimationController {
             'notify::allocation', () => this._updateCloneGeometry(item),
             this
         );
+        item._taskbarVisual.connectObject(
+            'notify::allocation', () => this._updateCloneGeometry(item),
+            'notify::translation-x', () => this._updateCloneGeometry(item),
+            'notify::translation-y', () => this._updateCloneGeometry(item),
+            'notify::scale-x', () => this._updateCloneGeometry(item),
+            'notify::scale-y', () => this._updateCloneGeometry(item),
+            this
+        );
     }
 
     removeItem(item) {
         this._queueMagnifyUpdate();
+        this._animator.removeItem(item);
         this._cloneController.remove(item);
         this._cloneController.resetStretch(item);
         if (!this._trackedItems.delete(item))
@@ -319,69 +339,80 @@ export class TaskbarIconHoverAnimationController {
         item.disconnectObject(this);
         item._taskbarIconContainer.disconnectObject(this);
         item._taskbarSlot.disconnectObject(this);
+        item._taskbarVisual.disconnectObject(this);
     }
 
     _queueMagnifyUpdate() {
-        if (this._magnifyUpdateId || this._magnifyTimeline ||
-            !this._animator.isMagnifyActive())
+        this._geometry.invalidate();
+        if (!this._animator.isMagnifyActive())
             return;
 
-        this._magnifyUpdateId = global.compositor.get_laters().add(
-            Meta.LaterType.BEFORE_REDRAW,
-            () => {
-                this._magnifyUpdateId = 0;
-                this._animator.update();
-                if (!this._animator.isMagnifySettled())
-                    this._startMagnifyFrames();
-                return GLib.SOURCE_REMOVE;
-            }
-        );
+        this._requestMagnifyUpdate();
+    }
+
+    _requestMagnifyUpdate() {
+        this._magnifyUpdatePending = true;
+        this._startMagnifyFrames();
     }
 
     _startMagnifyFrames() {
-        if (this._magnifyTimeline)
+        if (this._magnifyTimeline && this._magnifyTimeline.is_playing())
             return;
 
         if (this._animator.isMagnifyActive())
             this._animator.resumeSmoothing();
-        this._magnifyTimeline = new Clutter.Timeline({
-            actor: this._viewport,
-            duration: MAGNIFY_TIMELINE_DURATION,
-            repeat_count: -1,
-        });
-        this._magnifyTimeline.connectObject('new-frame', () => this._onMagnifyFrame(), this);
+        if (!this._magnifyTimeline) {
+            this._magnifyTimeline = new Clutter.Timeline({
+                actor: this._viewport,
+                duration: MAGNIFY_TIMELINE_DURATION,
+                repeat_count: -1,
+            });
+            this._magnifyTimeline.connectObject('new-frame', () => this._onMagnifyFrame(), this);
+        }
         this._magnifyTimeline.start();
     }
 
     _stopMagnifyFrames() {
-        if (!this._magnifyTimeline)
-            return;
-
-        const timeline = this._magnifyTimeline;
-        this._magnifyTimeline = null;
-        timeline.disconnectObject(this);
-        timeline.stop();
+        this._magnifyTimeline.stop();
     }
 
     _onMagnifyFrame() {
-        if (!this._animator.isMagnifyActive() &&
+        const updatePending = this._magnifyUpdatePending;
+        this._magnifyUpdatePending = false;
+        if (this._cloneGeometryDirty) {
+            this._cloneGeometryDirty = false;
+            this._cloneController.updateGeometry();
+        }
+        if (!updatePending && !this._animator.isMagnifyActive() &&
             !this._cloneController.hasClones() &&
             !this._cloneController.hasUnsettledStretches()) {
             this._stopMagnifyFrames();
             return;
         }
 
-        if (!this._animator.isMagnifyActive()) {
+        if (!updatePending && !this._animator.isMagnifyActive()) {
             this._animator.settleMagnify();
             return;
         }
 
-        this._animator.update();
-        if (this._animator.isMagnifySettled())
+        const [pointerX, pointerY] = global.get_pointer();
+        if (!this._geometry.isPointerInMagnifyBounds(
+            pointerX,
+            pointerY,
+            this._animator.getOutwardReserve(),
+            this._animator.getVisualExtents()
+        )) {
+            this._animator.dropAnimations();
+            return;
+        }
+        this._animator.update(pointerX, pointerY);
+        if (this._animator.isMagnifySettled() && !this._magnifyUpdatePending && !this._cloneGeometryDirty)
             this._stopMagnifyFrames();
     }
 
     _onAnimationSettingsChanged() {
+        this._magnifyUpdatePending = false;
+        this._geometry.invalidate();
         this._settingsController.invalidate();
         this._lastMotionTimestamp = 0;
         this._animator.resetAnimations();
@@ -419,10 +450,13 @@ export class TaskbarIconHoverAnimationController {
         if (this._animator.isAnimationBlocked())
             return Clutter.EVENT_PROPAGATE;
 
+        if (type === APP_ICON_HOVER_ANIMATION.MAGNIFY) {
+            this._requestMagnifyUpdate();
+            return Clutter.EVENT_PROPAGATE;
+        }
+
         const profile = this._settingsController.getAnimationProfile(type);
-        const throttle = type === APP_ICON_HOVER_ANIMATION.MAGNIFY
-            ? MAGNIFY_MOTION_THROTTLE
-            : profile.duration / 2;
+        const throttle = profile.duration / 2;
         const timestamp = Date.now();
         if (this._lastMotionTimestamp &&
             timestamp - this._lastMotionTimestamp < throttle)
@@ -447,17 +481,7 @@ export class TaskbarIconHoverAnimationController {
         if (this._animator.isAnimationBlocked())
             return;
 
-        if (!this._geometry.isPointerInMagnifyBounds(
-            pointerX,
-            pointerY,
-            this._animator.getOutwardReserve(),
-            this._animator.getVisualExtents()
-        )) {
-            this._animator.dropAnimations();
-            return;
-        }
-
-        this._startMagnifyFrames();
+        this._requestMagnifyUpdate();
     }
 
     _onLeaveEvent(actor) {
@@ -476,6 +500,13 @@ export class TaskbarIconHoverAnimationController {
     }
 
     _updateCloneGeometry(item = null) {
+        this._geometry.invalidate();
+        if (this._settingsController.getAnimationType() === APP_ICON_HOVER_ANIMATION.MAGNIFY) {
+            this._cloneGeometryDirty = true;
+            if (this._animator.isMagnifyActive() || this._cloneController.hasClones())
+                this._startMagnifyFrames();
+            return;
+        }
         this._cloneController.updateGeometry(item);
         this._queueMagnifyUpdate();
     }

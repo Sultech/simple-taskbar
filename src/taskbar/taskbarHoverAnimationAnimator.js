@@ -24,6 +24,7 @@ export class TaskbarHoverAnimationAnimator {
         onReserveChanged,
         onExtentsChanged,
         queueMagnifyFrames,
+        queueMagnifyUpdate,
         smoothing,
     }) {
         this._settings = settings;
@@ -39,6 +40,7 @@ export class TaskbarHoverAnimationAnimator {
         this._onReserveChanged = onReserveChanged;
         this._onExtentsChanged = onExtentsChanged;
         this._queueMagnifyFrames = queueMagnifyFrames;
+        this._queueMagnifyUpdate = queueMagnifyUpdate;
         this._smoothing = smoothing;
         this._magnifyActive = false;
         this._magnifySettled = false;
@@ -47,6 +49,12 @@ export class TaskbarHoverAnimationAnimator {
         this._reserve = 0;
         this._extentBefore = 0;
         this._extentAfter = 0;
+        this._entries = [];
+        this._entryPool = [];
+        this._entryCount = 0;
+        this._rowItems = new Set();
+        this._outsideNeighbours = [];
+        this._getStretchEntry = item => this._clones.getStretchEntry(item);
     }
 
     getReserve() {
@@ -123,6 +131,8 @@ export class TaskbarHoverAnimationAnimator {
 
         if (type === APP_ICON_HOVER_ANIMATION.SIMPLE)
             this._raise(item, item.hover ? 1 : 0);
+        else if (type === APP_ICON_HOVER_ANIMATION.MAGNIFY && item.hover)
+            this._queueMagnifyUpdate();
         else if (item.hover)
             this.update();
     }
@@ -173,7 +183,6 @@ export class TaskbarHoverAnimationAnimator {
         const type = this.getAnimationType();
         if (type === APP_ICON_HOVER_ANIMATION.MAGNIFY) {
             this._setMagnifyActive(false);
-            this.settleMagnify();
             this._queueMagnifyFrames();
             return;
         }
@@ -186,8 +195,24 @@ export class TaskbarHoverAnimationAnimator {
 
     resetAnimations() {
         this._clones.reset();
+        this._geometry.invalidate();
+        this._entries.length = 0;
+        this._entryPool.length = 0;
+        this._rowItems.clear();
+        this._outsideNeighbours.length = 0;
         this._setMagnifyActive(false);
         this._syncVisualExtents();
+    }
+
+    removeItem(item) {
+        for (const entry of this._entryPool) {
+            if (entry.item === item)
+                entry.item = null;
+        }
+        this._rowItems.delete(item);
+        const index = this._outsideNeighbours.indexOf(item);
+        if (index >= 0)
+            this._outsideNeighbours.splice(index, 1);
     }
 
     settleMagnify() {
@@ -203,6 +228,7 @@ export class TaskbarHoverAnimationAnimator {
     destroy() {
         this.resetAnimations();
         this._queueMagnifyFrames = null;
+        this._queueMagnifyUpdate = null;
         this._smoothing = null;
         this._onReserveChanged = null;
         this._onExtentsChanged = null;
@@ -216,6 +242,11 @@ export class TaskbarHoverAnimationAnimator {
         this._clones = null;
         this._geometry = null;
         this._settings = null;
+        this._entries = null;
+        this._entryPool = null;
+        this._rowItems = null;
+        this._outsideNeighbours = null;
+        this._getStretchEntry = null;
     }
 
     _beginSmoothingPass() {
@@ -261,9 +292,10 @@ export class TaskbarHoverAnimationAnimator {
 
     _updateMagnification(items, pointerX, pointerY, profile, vertical) {
         this._magnifySettled = false;
-        const entries = [];
-        const getStretchEntry = item =>
-            this._clones.getStretchEntry(item);
+        const entries = this._entries;
+        entries.length = 0;
+        this._entryCount = 0;
+        const getStretchEntry = this._getStretchEntry;
         for (const item of this._geometry.getRowItems(getStretchEntry)) {
             const geometry = this._geometry.getRowItemBaseGeometry(
                 item,
@@ -301,7 +333,11 @@ export class TaskbarHoverAnimationAnimator {
 
         this._beginSmoothingPass();
         this._passSettled = true;
-        const rowItems = new Set(entries.map(entry => entry.item));
+        this._entryPool.length = this._entryCount;
+        const rowItems = this._rowItems;
+        rowItems.clear();
+        for (const entry of entries)
+            rowItems.add(entry.item);
         for (const item of [...this._clones.getItems()]) {
             if (rowItems.has(item))
                 continue;
@@ -344,9 +380,17 @@ export class TaskbarHoverAnimationAnimator {
                 (previous.growth + current.growth) / 2;
         }
 
-        const growingEntries = entries.filter(entry => !entry.pinned);
+        let firstGrowing = null;
+        let lastGrowing = null;
+        for (const entry of entries) {
+            if (!entry.pinned) {
+                firstGrowing ??= entry;
+                lastGrowing = entry;
+            }
+        }
         const offset = this._clampRowOffset(
-            growingEntries.length ? growingEntries : entries,
+            firstGrowing ?? entries[0],
+            lastGrowing ?? entries[entries.length - 1],
             cursor - this._mapCursorToMagnifiedRow(entries, cursor)
         );
         for (const entry of entries) {
@@ -378,14 +422,17 @@ export class TaskbarHoverAnimationAnimator {
     }
 
     _rowEntry(item, geometry, magnifies, vertical) {
-        return {
-            item,
-            magnifies,
-            length: vertical ? geometry.height : geometry.width,
-            center: vertical
-                ? geometry.y + geometry.height / 2
-                : geometry.x + geometry.width / 2,
-        };
+        const index = this._entryCount++;
+        const entry = this._entryPool[index] ?? {};
+        this._entryPool[index] = entry;
+        entry.item = item;
+        entry.magnifies = magnifies;
+        entry.pinned = false;
+        entry.length = vertical ? geometry.height : geometry.width;
+        entry.center = vertical
+            ? geometry.y + geometry.height / 2
+            : geometry.x + geometry.width / 2;
+        return entry;
     }
 
     _pinFlushEnds(entries) {
@@ -458,13 +505,26 @@ export class TaskbarHoverAnimationAnimator {
     }
 
     _addEnclosedNeighbours(entries, getStretchEntry, vertical) {
-        const centers = entries.map(entry => entry.center);
-        const rowStart = Math.min(...centers);
-        const rowEnd = Math.max(...centers);
-        const rowItems = entries.map(entry => entry.item);
-        const outside = [];
+        let rowStart = Infinity;
+        let rowEnd = -Infinity;
+        const rowItems = this._rowItems;
+        rowItems.clear();
+        for (const entry of entries) {
+            rowStart = Math.min(rowStart, entry.center);
+            rowEnd = Math.max(rowEnd, entry.center);
+            rowItems.add(entry.item);
+        }
+        const outside = this._outsideNeighbours;
+        outside.length = 0;
         for (const actor of this._getNeighbourActors()) {
-            if (rowItems.some(item => item === actor || actor.contains(item)))
+            let containsRowItem = rowItems.has(actor);
+            for (const item of rowItems) {
+                if (actor.contains(item)) {
+                    containsRowItem = true;
+                    break;
+                }
+            }
+            if (containsRowItem)
                 continue;
 
             const geometry = this._geometry.getRowItemBaseGeometry(
@@ -509,13 +569,11 @@ export class TaskbarHoverAnimationAnimator {
         this._onExtentsChanged(before, after);
     }
 
-    _clampRowOffset(entries, offset) {
+    _clampRowOffset(first, last, offset) {
         const bounds = this._geometry.getMagnifyBounds();
         if (!bounds)
             return offset;
 
-        const first = entries[0];
-        const last = entries[entries.length - 1];
         const rowStart = first.shifted - (first.length + first.growth) / 2;
         const rowEnd = last.shifted + (last.length + last.growth) / 2;
         const minimum = bounds.start - rowStart;
