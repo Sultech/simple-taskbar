@@ -248,7 +248,7 @@ export class PrimaryPanelController {
         Main.extensionManager.disconnectObject(this);
         if (Main.screenShield)
             Main.screenShield.disconnectObject(this);
-        Main.panel.statusArea.activities.container.disconnectObject(this);
+        Main.sessionMode.disconnectObject(this);
         Main.panel._leftBox.disconnectObject(this);
         Main.panel._centerBox.disconnectObject(this);
         Main.panel._rightBox.disconnectObject(this);
@@ -767,16 +767,8 @@ export class PrimaryPanelController {
                 }
             }, this);
         }
-        const activities = Main.panel.statusArea.activities.container;
-        activities.connectObject('notify::visible', () => {
-            if (!Main.sessionMode.isLocked &&
-                activities.visible !== this._settings.get_boolean(
-                    'activities-button-visible'
-                )) {
-                this._stateController.syncActivitiesVisibility();
-                this.updateTaskbarWidth();
-            }
-        }, this);
+        Main.sessionMode.connectObject('updated',
+            () => this._reapplyActivitiesVisibility(), this);
         connectPanelSettingsSignals({
             settings: this._settings,
             owner: this,
@@ -801,6 +793,7 @@ export class PrimaryPanelController {
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
+                this._reapplyActivitiesVisibility();
                 const uuid = extension.uuid;
                 if (uuid === JUST_PERFECTION_UUID ||
                     uuid === DASH_TO_PANEL_UUID) {
@@ -828,6 +821,16 @@ export class PrimaryPanelController {
             return;
 
         this._queueLayoutRepair();
+    }
+
+    _reapplyActivitiesVisibility() {
+        const activities = Main.panel.statusArea.activities.container;
+        if (Main.sessionMode.isLocked ||
+            activities.visible === this._settings.get_boolean('activities-button-visible'))
+            return;
+
+        this._stateController.syncActivitiesVisibility();
+        this.updateTaskbarWidth();
     }
 
     _queueLayoutRepair() {
