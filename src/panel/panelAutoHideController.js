@@ -17,7 +17,7 @@ import {
     autoHideRevealsInOverview,
     autoHideUsesPressure,
 } from '../shared/autoHideSettings.js';
-import {hasWindowCoveringMonitor} from './panelWindowQueries.js';
+import {hasWindowCoveringMonitor, monitorInFullscreen} from './panelWindowQueries.js';
 
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
@@ -218,7 +218,7 @@ export class PanelAutoHideController {
             this._fullscreenRevealController.cancelPendingRelease();
             this.show(false);
             const monitor = this._getMonitor();
-            if (global.window_group.visible && monitor?.inFullscreen) {
+            if (global.window_group.visible && monitorInFullscreen(monitor)) {
                 this._fullscreenRevealController.hold(false);
                 this._clearHideTimeout();
                 this._fullscreenRevealController.startWatch();
@@ -348,7 +348,7 @@ export class PanelAutoHideController {
         if (!this._fullscreenRevealController.visibilityHeld && this._pointerReveal &&
             (this._enabled() || this._dodgeActive) &&
             this._settings.get_boolean(AUTO_HIDE_SETTINGS.revealFullscreen) &&
-            global.window_group.visible && this._getMonitor()?.inFullscreen) {
+            global.window_group.visible && monitorInFullscreen(this._getMonitor())) {
             this._fullscreenRevealController.hold(true);
         }
         if (!this._hidden) {
@@ -515,7 +515,7 @@ export class PanelAutoHideController {
         }
 
         const monitor = this._getMonitor();
-        if (global.window_group.visible && monitor?.inFullscreen) {
+        if (global.window_group.visible && monitorInFullscreen(monitor)) {
             this._restoreUnredirect();
             return;
         }
@@ -544,7 +544,7 @@ export class PanelAutoHideController {
         this._syncPressureBarrier();
         this._syncUnredirect();
         this._cancelRevealDwell();
-        if (this._getMonitor()?.inFullscreen) {
+        if (monitorInFullscreen(this._getMonitor())) {
             if (!this._fullscreenRevealController.visibilityHeld && !this._fullscreenRevealController.pointerRevealHeld &&
                 (this._enabled() || this._dodgeActive) &&
                 this._settings.get_boolean(AUTO_HIDE_SETTINGS.revealFullscreen)) {
@@ -813,7 +813,7 @@ export class PanelAutoHideController {
     _fullscreenBlocksReveal() {
         return !this._settings.get_boolean(AUTO_HIDE_SETTINGS.revealFullscreen) &&
             global.window_group.visible &&
-            Boolean(this._getMonitor()?.inFullscreen);
+            monitorInFullscreen(this._getMonitor());
     }
 
     _revealFromPressure() {

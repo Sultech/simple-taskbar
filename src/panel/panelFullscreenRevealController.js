@@ -3,6 +3,7 @@
 
 import GLib from 'gi://GLib';
 import {pointerButtonIsPressed} from '../inputUtils.js';
+import {monitorInFullscreen} from './panelWindowQueries.js';
 
 const FULLSCREEN_POINTER_POLL_INTERVAL = 20;
 
@@ -73,7 +74,7 @@ export class PanelFullscreenRevealController {
             this._originalTrackFullscreen;
         this._positionActor.visible =
             !this._originalTrackFullscreen ||
-            !(global.window_group.visible && monitor?.inFullscreen);
+            !(global.window_group.visible && monitorInFullscreen(monitor));
         this._onVisibilityChanged();
     }
 

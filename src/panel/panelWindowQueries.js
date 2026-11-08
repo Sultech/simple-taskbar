@@ -49,6 +49,10 @@ export function windowReachesPanel(window) {
         window.fullscreen;
 }
 
+export function monitorInFullscreen(monitor) {
+    return Boolean(monitor) && monitor.index < global.display.get_n_monitors() && monitor.inFullscreen;
+}
+
 export function hasWindowCoveringMonitor(monitor) {
     return global.get_window_actors().some(actor => {
         if (!actor.visible)
