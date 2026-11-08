@@ -150,7 +150,7 @@ export function windowMatchesMode(
     return false;
 }
 
-function windowOverlapsPanel(rect, geometry, distance) {
+export function windowOverlapsPanel(rect, geometry, distance) {
     return rect.x < geometry.x + geometry.width + distance &&
         rect.x + rect.width >= geometry.x - distance &&
         rect.y < geometry.y + geometry.height + distance &&

@@ -7,10 +7,7 @@ import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
-import {
-    panelPosition,
-    positionIsVertical,
-} from '../shared/panelPositionUtils.js';
+import {panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {appendStyle} from '../shared/styleUtils.js';
 
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';

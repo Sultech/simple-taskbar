@@ -12,10 +12,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 import {closePopupMenu} from '../popupMenuUtils.js';
-import {
-    panelArrowSide,
-    syncPanelMenuPosition,
-} from './panelMenuPositioner.js';
+import {panelArrowSide, syncPanelMenuPosition} from './panelMenuPositioner.js';
 
 const FILE_ATTRIBUTES = [
     Gio.FILE_ATTRIBUTE_STANDARD_NAME,

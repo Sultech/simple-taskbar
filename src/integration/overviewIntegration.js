@@ -16,10 +16,7 @@ import {
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {extensionWillBeActive} from './extensionState.js';
-import {
-    panelPosition,
-    positionIsVertical,
-} from '../shared/panelPositionUtils.js';
+import {panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {
     dockPanelModeHeight,
     panelHeightForIconSize,

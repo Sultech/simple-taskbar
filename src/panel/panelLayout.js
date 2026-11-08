@@ -3,6 +3,8 @@
 
 import Clutter from 'gi://Clutter';
 
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
+
 export const PANEL_ITEM_GAP = 8;
 
 export function panelContentLength(boxes, crossSize, vertical) {
@@ -235,4 +237,46 @@ export function constrainTaskbarSize({
     const viewportLength = Math.max(1, Math.floor(availableLength));
     taskbarBin.setMaximumSize(viewportLength, vertical);
     return viewportLength;
+}
+
+export function fitTaskbarToAvailableLength(iconSizer, availableLength, {onIconSizeChanged, updateLength}) {
+    if (availableLength !== undefined && iconSizer.fit(availableLength)) {
+        onIconSizeChanged();
+        return;
+    }
+    updateLength();
+}
+
+export function fitPanelTaskbar(settings, core, {boxes, monitor, geometryController, layoutUpdater, panelThickness, centered}) {
+    const vertical = panelIsVertical(settings);
+    const [leftBox, centerBox, rightBox] = boxes;
+    const availableLength = constrainTaskbarSize({
+        taskbarBin: core.taskbarBin,
+        leftBox,
+        centerBox,
+        rightBox,
+        panelLength: geometryController
+            ? geometryController.getMaximumLength()
+            : vertical ? monitor.height : monitor.width,
+        panelThickness,
+        centered,
+        vertical,
+    });
+    fitTaskbarToAvailableLength(core.iconSizer, availableLength,
+        panelTaskbarFitReactions(geometryController, layoutUpdater));
+}
+
+function panelTaskbarFitReactions(geometryController, layoutUpdater) {
+    return {
+        onIconSizeChanged: () => {
+            if (geometryController)
+                geometryController.queueContentUpdate();
+            else
+                layoutUpdater.queue();
+        },
+        updateLength: () => {
+            if (geometryController)
+                geometryController.updateLength();
+        },
+    };
 }

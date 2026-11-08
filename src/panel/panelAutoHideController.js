@@ -30,10 +30,7 @@ export class PanelAutoHideController {
         strutActor = null,
         getMonitor,
         getPanelHeight,
-        getPanelLengthPercentage = () => null,
-        getPanelLengthOverride = () => null,
-        getPanelEdgeGap = () => 0,
-        getLimitRevealToPanel = () => true,
+        getGeometrySource = () => null,
         isBlocked,
         getOutwardReserve,
         onHidden,
@@ -45,10 +42,7 @@ export class PanelAutoHideController {
         this._strutActor = strutActor;
         this._getMonitor = getMonitor;
         this._getPanelHeight = getPanelHeight;
-        this._getPanelLengthPercentage = getPanelLengthPercentage;
-        this._getPanelLengthOverride = getPanelLengthOverride;
-        this._getPanelEdgeGap = getPanelEdgeGap;
-        this._getLimitRevealToPanel = getLimitRevealToPanel;
+        this._getGeometrySource = getGeometrySource;
         this._isBlockedCallback = isBlocked;
         this._getOutwardReserve = getOutwardReserve;
         this._onHidden = onHidden;
@@ -208,10 +202,7 @@ export class PanelAutoHideController {
         this._strutActor = null;
         this._getMonitor = null;
         this._getPanelHeight = null;
-        this._getPanelLengthPercentage = null;
-        this._getPanelLengthOverride = null;
-        this._getPanelEdgeGap = null;
-        this._getLimitRevealToPanel = null;
+        this._getGeometrySource = null;
         this._isBlockedCallback = null;
         this._getOutwardReserve = null;
         this._onHidden = null;
@@ -720,7 +711,7 @@ export class PanelAutoHideController {
             return false;
 
         const geometry = this._geometry(monitor);
-        const bounds = this._getLimitRevealToPanel() ? geometry : monitor;
+        const bounds = this._geometryValue('getLimitRevealToPanel', true) ? geometry : monitor;
         const minimumEdge = panelIsMinimumEdge(this._settings);
         if (geometry.vertical) {
             if (y < bounds.y || y >= bounds.y + bounds.height ||
@@ -805,7 +796,7 @@ export class PanelAutoHideController {
             monitor,
             workArea: Main.layoutManager.getWorkAreaForMonitor(monitor.index),
             geometry: this._geometry(monitor),
-            limit: this._getLimitRevealToPanel(),
+            limit: this._geometryValue('getLimitRevealToPanel', true),
             position,
         });
         if (edge.x1 >= edge.x2 && edge.y1 >= edge.y2)
@@ -859,6 +850,11 @@ export class PanelAutoHideController {
         );
     }
 
+    _geometryValue(name, fallback) {
+        const source = this._getGeometrySource();
+        return source ? source[name]() : fallback;
+    }
+
     _geometry(monitor) {
         if (monitor) {
             return panelGeometry(
@@ -866,9 +862,9 @@ export class PanelAutoHideController {
                 monitor,
                 this._getPanelHeight(),
                 0,
-                this._getPanelLengthPercentage(),
-                this._getPanelLengthOverride(),
-                this._getPanelEdgeGap()
+                this._geometryValue('getPanelLengthPercentage', null),
+                this._geometryValue('getPanelLengthOverride', null),
+                this._geometryValue('getPanelEdgeGap', 0)
             );
         }
         const vertical = panelIsVertical(this._settings);

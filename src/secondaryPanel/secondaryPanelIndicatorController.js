@@ -3,12 +3,8 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {
-    panelArrowSide,
-    removeXpPopupOffset,
-    syncXpPopupOffset,
-} from '../panel/panelMenuPositioner.js';
 import {panelPosition} from '../shared/panelPositionUtils.js';
+import {panelArrowSide, removeXpPopupOffset, syncXpPopupOffset} from '../panel/panelMenuPositioner.js';
 
 export const SECONDARY_PANEL_INDICATOR_ROLES = [
     'activities',

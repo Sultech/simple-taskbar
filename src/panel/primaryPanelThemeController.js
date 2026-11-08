@@ -20,7 +20,6 @@ import {
 import {
     getPanelBlur,
     panelBlurIsActive,
-    preservePanelBlurRadiusStyle,
     refreshPanelBlurVisibility,
     syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
@@ -29,14 +28,13 @@ import {
     BLUR_TINTED_CLASS,
     BLUR_TRANSPARENT_CLASS,
     LIGHT_BLUR_OVERLAY_CLASS,
-    syncPanelBlurClasses,
 } from './panelBlurClasses.js';
 import {panelPosition} from '../shared/panelPositionUtils.js';
-import {floatingBlurPanelStyle, panelBackgroundStyle} from './panelBackgroundStyle.js';
+import {panelSurfaceStyle} from './panelBackgroundStyle.js';
+import {connectPanelAppearanceSignals} from './panelSettingsSignals.js';
 import {taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
-import {dynamicTransparencyStyle} from './dynamicTransparency.js';
 
 const BLUR_MY_SHELL_PANEL_KEYS = [
     'blur',
@@ -60,12 +58,12 @@ export class PrimaryPanelThemeController {
         this._settings = settings;
         this._oldPanelStyle = oldPanelStyle;
         this._getPanelGeometry = getPanelGeometry;
+        this._blurMyShellPanelSettings = null;
         this._transparencyRepairId = 0;
         this._blurMyShellSyncId = 0;
         this._applyingTransparency = false;
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
         this._stSettings = St.Settings.get();
-        this._blurMyShellPanelSettings = null;
     }
 
     connectSignals(onWindowsXpThemeChanged) {
@@ -99,39 +97,18 @@ export class PrimaryPanelThemeController {
                 this
             );
         }
+        connectPanelAppearanceSignals({
+            settings: this._settings,
+            owner: this,
+            cornerRadiusKey: 'taskbar-corner-radius',
+            onBackgroundChanged: () => this.applyTransparency(),
+            onBorderChanged: () => {
+                this.syncBorder();
+                this.applyTransparency();
+            },
+            onThemeChanged: () => this.applyTheme(),
+        });
         this._settings.connectObject(
-            'changed::taskbar-corner-radius', () => this.applyTransparency(),
-            'changed::transparency-enabled', () => this.applyTransparency(),
-            'changed::transparency-level', () => this.applyTransparency(),
-            'changed::transparency-on-unmaximized',
-            () => this.applyTransparency(),
-            'changed::transparency-dynamic-behavior',
-            () => this.applyTransparency(),
-            'changed::transparency-dynamic-distance',
-            () => this.applyTransparency(),
-            'changed::transparency-dynamic-level',
-            () => this.applyTransparency(),
-            'changed::transparency-dynamic-animation-time',
-            () => this.applyTransparency(),
-            'changed::custom-panel-color-enabled',
-            () => this.applyTransparency(),
-            'changed::custom-panel-color', () => this.applyTransparency(),
-            'changed::custom-panel-gradient-enabled',
-            () => this.applyTransparency(),
-            'changed::custom-panel-gradient-color',
-            () => this.applyTransparency(),
-            'changed::custom-panel-gradient-direction',
-            () => this.applyTransparency(),
-            'changed::panel-border-enabled', () => {
-                this.syncBorder();
-                this.applyTransparency();
-            },
-            'changed::panel-border-light-enabled', () => {
-                this.syncBorder();
-                this.applyTransparency();
-            },
-            'changed::panel-theme-follow-system', () => this.applyTheme(),
-            'changed::panel-theme', () => this.applyTheme(),
             'changed::windows-xp-theme-enabled', () => {
                 this.applyTheme();
                 onWindowsXpThemeChanged();
@@ -194,52 +171,28 @@ export class PrimaryPanelThemeController {
             return;
 
         const floating = taskbarGeometryEnabled(this._settings);
-        const radius = floating
-            ? floatingPanelCornerRadius(this._settings, Main.layoutManager.primaryMonitor) : 0;
-        const cornerStyle = floating ? `border-radius: ${radius}px;` : '';
+        const monitor = Main.layoutManager.primaryMonitor;
+        const radius = floating ? floatingPanelCornerRadius(this._settings, monitor) : 0;
         const savedStyle = this._oldPanelStyle ?? '';
         const baseStyle = floating
             ? savedStyle.replace(/border-radius\s*:[^;]+;?/g, '').replace(/^[\s;]+|[\s;]+$/g, '')
             : savedStyle.trim();
-        const originalStyle = [baseStyle, cornerStyle].filter(Boolean).join('; ');
         if (floating)
             Main.panel.add_style_class_name('simple-taskbar-floating');
         else
             Main.panel.remove_style_class_name('simple-taskbar-floating');
-        const windowsXpThemeEnabled = this._settings.get_boolean(
-            'windows-xp-theme-enabled'
-        );
-        const externalPanelStyle = !windowsXpThemeEnabled &&
-            panelBlurIsActive(Main.panel);
-        const light = this._usesLightTheme();
-        syncPanelBlurClasses(Main.panel, externalPanelStyle, light);
-        if (floating)
-            syncPanelBlurCornerRadius(Main.panel, radius);
-        if (externalPanelStyle) {
-            this._setPanelStyle(floating
-                ? [baseStyle, floatingBlurPanelStyle(this._settings, light, this._panelBorderEnabled(), radius)]
-                    .filter(Boolean).join('; ')
-                : preservePanelBlurRadiusStyle(Main.panel, baseStyle));
-            return;
-        }
-        const monitor = Main.layoutManager.primaryMonitor;
-        const {dynamicOpacity, transitionDuration} = dynamicTransparencyStyle(
-            this._settings,
-            !windowsXpThemeEnabled &&
-                this._settings.get_boolean('transparency-on-unmaximized'),
+        const windowsXpThemeEnabled = this._settings.get_boolean('windows-xp-theme-enabled');
+        this._setPanelStyle(panelSurfaceStyle(Main.panel, this._settings, {
             monitor,
-            () => this._getPanelGeometry(monitor)
-        );
-
-        this._setPanelStyle(panelBackgroundStyle(
-            this._settings,
-            light,
-            this._panelBorderEnabled(),
-            originalStyle,
+            getGeometry: () => this._getPanelGeometry(monitor),
+            dynamic: !windowsXpThemeEnabled && this._settings.get_boolean('transparency-on-unmaximized'),
+            light: this._usesLightTheme(),
+            borderEnabled: this._panelBorderEnabled(),
+            blurActive: !windowsXpThemeEnabled && panelBlurIsActive(Main.panel),
             floating,
-            dynamicOpacity,
-            transitionDuration
-        ));
+            radius,
+            baseStyle,
+        }));
     }
 
     queueBlurMyShellSync() {

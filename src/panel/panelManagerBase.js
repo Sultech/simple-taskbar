@@ -48,6 +48,20 @@ export class PanelManagerBase {
         this._panels = null;
     }
 
+    _panelOptions(settings, monitor) {
+        return {
+            extensionDir: this._extensionDir,
+            settings,
+            appSystem: this._appSystem,
+            tracker: this._tracker,
+            favorites: this._favorites,
+            overlayModel: this._overlayModel,
+            spreadAppWindows: this._spreadAppWindows,
+            monitor,
+            openPreferences: this._openPreferences,
+        };
+    }
+
     hasPanelAt(x, y) {
         return this._panels.some(panel => panel.containsPoint(x, y));
     }

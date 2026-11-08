@@ -5,10 +5,10 @@ import GLib from 'gi://GLib';
 import Shell from 'gi://Shell';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-
 import {
     windowMatchesMode,
     windowIsVisibleOnWorkspace,
+    windowOverlapsPanel,
     windowReachesPanel,
 } from './panelWindowQueries.js';
 import {
@@ -17,6 +17,11 @@ import {
 
 const DODGE_CHECK_INTERVAL = 100;
 
+const AUTOHIDE_KEY = 'panel-autohide-enabled';
+const DODGE_ENABLED_KEY = 'panel-dodge-windows-enabled';
+const DODGE_MODE_KEY = 'panel-dodge-windows-mode';
+const DODGE_POINTER_REVEAL_KEY = 'panel-dodge-pointer-reveal-enabled';
+
 export class PanelWindowDodgeController {
     constructor({
         settings,
@@ -24,20 +29,12 @@ export class PanelWindowDodgeController {
         getGeometry,
         onDodgeStateChanged,
         onTransparencyStateChanged,
-        autohideKey,
-        dodgeEnabledKey,
-        dodgeModeKey,
-        dodgePointerRevealKey,
     }) {
         this._settings = settings;
         this._getMonitor = getMonitor;
         this._getGeometry = getGeometry;
         this._onDodgeStateChanged = onDodgeStateChanged;
         this._onTransparencyStateChanged = onTransparencyStateChanged;
-        this._autohideKey = autohideKey;
-        this._dodgeEnabledKey = dodgeEnabledKey;
-        this._dodgeModeKey = dodgeModeKey;
-        this._dodgePointerRevealKey = dodgePointerRevealKey;
         this._tracker = Shell.WindowTracker.get_default();
         this._trackedWindowActors = new Map();
         this._hasTransparencyWindow = false;
@@ -79,28 +76,28 @@ export class PanelWindowDodgeController {
             this
         );
         this._settings.connectObject(
-            `changed::${this._autohideKey}`, () => {
-                if (this._settings.get_boolean(this._autohideKey) &&
-                    this._settings.get_boolean(this._dodgeEnabledKey)) {
+            `changed::${AUTOHIDE_KEY}`, () => {
+                if (this._settings.get_boolean(AUTOHIDE_KEY) &&
+                    this._settings.get_boolean(DODGE_ENABLED_KEY)) {
                     this._settings.set_boolean(
-                        this._dodgeEnabledKey,
+                        DODGE_ENABLED_KEY,
                         false
                     );
                 }
                 this._queueSync();
             },
-            `changed::${this._dodgeEnabledKey}`, () => {
-                if (this._settings.get_boolean(this._dodgeEnabledKey) &&
-                    this._settings.get_boolean(this._autohideKey)) {
+            `changed::${DODGE_ENABLED_KEY}`, () => {
+                if (this._settings.get_boolean(DODGE_ENABLED_KEY) &&
+                    this._settings.get_boolean(AUTOHIDE_KEY)) {
                     this._settings.set_boolean(
-                        this._autohideKey,
+                        AUTOHIDE_KEY,
                         false
                     );
                 }
                 this._queueSync();
             },
-            `changed::${this._dodgeModeKey}`, () => this._queueSync(),
-            `changed::${this._dodgePointerRevealKey}`, () => this._queueSync(),
+            `changed::${DODGE_MODE_KEY}`, () => this._queueSync(),
+            `changed::${DODGE_POINTER_REVEAL_KEY}`, () => this._queueSync(),
             'changed::transparency-on-unmaximized',
             () => this._queueSync(),
             'changed::transparency-dynamic-behavior',
@@ -109,9 +106,9 @@ export class PanelWindowDodgeController {
             () => this._queueSync(),
             this
         );
-        if (this._settings.get_boolean(this._autohideKey) &&
-            this._settings.get_boolean(this._dodgeEnabledKey)) {
-            this._settings.set_boolean(this._autohideKey, false);
+        if (this._settings.get_boolean(AUTOHIDE_KEY) &&
+            this._settings.get_boolean(DODGE_ENABLED_KEY)) {
+            this._settings.set_boolean(AUTOHIDE_KEY, false);
         }
         this._sync();
     }
@@ -141,10 +138,6 @@ export class PanelWindowDodgeController {
         this._getGeometry = null;
         this._onDodgeStateChanged = null;
         this._onTransparencyStateChanged = null;
-        this._autohideKey = null;
-        this._dodgeEnabledKey = null;
-        this._dodgeModeKey = null;
-        this._dodgePointerRevealKey = null;
         this._tracker = null;
     }
 
@@ -211,9 +204,9 @@ export class PanelWindowDodgeController {
             this._onTransparencyStateChanged();
         }
 
-        const enabled = this._settings.get_boolean(this._dodgeEnabledKey);
+        const enabled = this._settings.get_boolean(DODGE_ENABLED_KEY);
         const pointerReveal = this._settings.get_boolean(
-            this._dodgePointerRevealKey
+            DODGE_POINTER_REVEAL_KEY
         );
         const active = enabled && !Main.overview.visibleTarget &&
             !Main.overview.animationInProgress && this._hasOverlap();
@@ -251,7 +244,7 @@ export class PanelWindowDodgeController {
             : null;
         const focusApp = this._tracker.focus_app || topApp;
         const focusWindow = global.display.get_focus_window();
-        const mode = this._settings.get_string(this._dodgeModeKey);
+        const mode = this._settings.get_string(DODGE_MODE_KEY);
 
         for (const actor of windows) {
             const window = actor.get_meta_window();
@@ -267,17 +260,10 @@ export class PanelWindowDodgeController {
                 continue;
             }
 
-            if (this._overlaps(window.get_frame_rect(), geometry))
+            if (windowOverlapsPanel(window.get_frame_rect(), geometry, 0))
                 return true;
         }
 
         return false;
-    }
-
-    _overlaps(rect, geometry) {
-        return rect.x < geometry.x + geometry.width &&
-            rect.x + rect.width >= geometry.x &&
-            rect.y < geometry.y + geometry.height &&
-            rect.y + rect.height >= geometry.y;
     }
 }

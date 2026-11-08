@@ -11,8 +11,8 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
 import {panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
+import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
 import {
     closePopupMenu,
     openPanelPopupMenu,

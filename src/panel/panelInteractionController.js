@@ -12,10 +12,14 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelArrowSide, syncMenuArrowSide} from './panelMenuPositioner.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
+import {panelArrowSide, syncMenuArrowSide} from './panelMenuPositioner.js';
 import {getScrollDelta} from '../inputUtils.js';
-import {PANEL_SCROLL_ACTION, SCROLL_ACTION} from '../shared/interactionActions.js';
+import {
+    SCROLL_ACTION,
+    PANEL_SCROLL_ACTION,
+} from '../shared/interactionActions.js';
+
 import {openPopupMenu} from '../popupMenuUtils.js';
 import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';

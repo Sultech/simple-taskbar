@@ -84,17 +84,7 @@ export class SecondaryPanelManager extends PanelManagerBase {
             if (monitor === primaryMonitor)
                 continue;
 
-            const panel = new ExtensionPanelController({
-                extensionDir: this._extensionDir,
-                settings: this._settings,
-                appSystem: this._appSystem,
-                tracker: this._tracker,
-                favorites: this._favorites,
-                overlayModel: this._overlayModel,
-                spreadAppWindows: this._spreadAppWindows,
-                monitor,
-                openPreferences: this._openPreferences,
-            });
+            const panel = new ExtensionPanelController(this._panelOptions(this._settings, monitor));
             this._panels.push(panel);
             panel.enable();
         }

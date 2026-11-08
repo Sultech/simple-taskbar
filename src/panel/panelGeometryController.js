@@ -9,9 +9,9 @@ import {FloatingPanelLayout} from './floatingPanelLayout.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {floatingPanelEdgeGap} from './floatingPanelGeometry.js';
 import {dynamicTaskbarEnabled, floatingTaskbarEnabled, taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
-import {removePanelBlurRadiusStyle} from '../integration/blurMyShellRuntime.js';
+import {removePanelBlurRadiusStyle, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
 
-export function syncPanelGeometryController(controller, settings, autoHideController, createController) {
+export function syncPanelGeometryController(controller, settings, autoHideController, panel, createController) {
     const geometryEnabled = taskbarGeometryEnabled(settings);
     if (geometryEnabled === Boolean(controller))
         return controller;
@@ -26,6 +26,8 @@ export function syncPanelGeometryController(controller, settings, autoHideContro
         }
         return controller ? controller.strutActor : null;
     });
+    if (!geometryEnabled)
+        syncPanelBlurCornerRadius(panel, 0);
     return controller;
 }
 

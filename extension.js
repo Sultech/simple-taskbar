@@ -21,42 +21,28 @@ import {GridAltTabController} from './src/windowSwitching/gridAltTabController.j
 import {HotEdgeController} from './src/integration/hotEdgeController.js';
 import {restoreOverlayKey} from './src/startMenu/overlayKeyRecovery.js';
 import {PrimaryPanelController} from './src/panel/primaryPanelController.js';
-import {PanelInteractionController} from './src/panel/panelInteractionController.js';
 import {SecondaryPanelManager} from './src/secondaryPanel/secondaryPanelManager.js';
 import {DockPanelManager} from './src/dock/dockPanelManager.js';
 import {NotificationBannerController} from './src/integration/notificationBannerController.js';
-import {
-    QuickSettingsPowerController,
-} from './src/integration/quickSettingsPowerController.js';
-import {
-    QuickSettingsXpIconController,
-} from './src/integration/quickSettingsXpIconController.js';
+import {QuickSettingsIntegrations} from './src/integration/quickSettingsIntegrations.js';
 import {
     ShowDesktopButtonController,
 } from './src/panel/showDesktopButtonController.js';
-import {StartButtonController} from './src/startMenu/startButtonController.js';
 import {
     SwitcherKeybindingRouter,
 } from './src/windowSwitching/switcherKeybindingRouter.js';
 import {
     ApplicationKeybindingRouter,
 } from './src/windowSwitching/applicationKeybindingRouter.js';
-import {TaskbarController} from './src/taskbar/taskbarController.js';
-import {PanelIconSizer, panelTaskbarIconSize} from './src/panel/panelIconSizer.js';
+import {panelIconSizeIsAdaptive, panelTaskbarIconSize} from './src/panel/panelIconSizer.js';
+import {PanelTaskbarCore} from './src/panel/panelTaskbarCore.js';
 import {dynamicTaskbarEnabled, startButtonInPanel} from './src/shared/panelModeSettings.js';
-import {
-    getTaskbarHoverAnimationNeighbours,
-} from './src/taskbar/taskbarHoverAnimationUtils.js';
 import {
     TaskbarOverlayModel,
 } from './src/taskbar/taskbarOverlayModel.js';
-import {createTaskbarViewport} from './src/taskbar/taskbarViewportFactory.js';
-import {VolumeMixerController} from './src/integration/volumeMixerController.js';
-import {TaskbarWindowController} from './src/taskbar/taskbarWindowController.js';
 import {
     WindowMinimizeEffectController,
 } from './src/taskbar/windowMinimizeEffectController.js';
-import {WindowPreviewController} from './src/taskbar/windowPreviewController.js';
 import {OverviewIntegration} from './src/integration/overviewIntegration.js';
 import {AppGridLayout} from './src/integration/appGridLayout.js';
 import {hidePanelBlur, resetPanelBlur} from './src/integration/blurMyShellRuntime.js';
@@ -64,7 +50,9 @@ import {
     clearInterruptedProfileTransition,
     synchronizePanelPosition,
 } from './src/shared/panelModeProfiles.js';
-import {WindowsXpModeController} from './src/windowsXpModeController.js';
+import {PanelModeController} from './src/panel/panelModeController.js';
+import {connectPanelSizingSignals} from './src/panel/panelSettingsSignals.js';
+import {WindowsXpThemeController} from './src/panel/windowsXpThemeController.js';
 import {Windows10ThemeController} from './src/panel/windows10ThemeController.js';
 import {CLICK_ACTION} from './src/shared/interactionActions.js';
 
@@ -88,35 +76,18 @@ export default class SimpleTaskbarExtension extends Extension {
         this._notificationBannerController =
             new NotificationBannerController(this._settings);
         this._notificationBannerController.enable();
-        this._windowsXpModeController = new WindowsXpModeController(
-            this._settings,
-            {
-                onDefaultPanelChanged: () => this._queueRebuild(),
-                onIconSizeChanged: () => {
-                    this._iconSizer.syncMaximum();
-                    this._primaryPanelController.syncVerticalItems();
-                    this._applicationOverflowController.sync();
-                    this._syncPanelHeight();
-                    this._primaryPanelController.updateTaskbarWidth();
-                },
-                onIconSpacingChanged: () => this._applyTaskbarAppearance(),
-                onIconEdgePaddingChanged: () =>
-                    this._applyTaskbarAppearance(),
-                onModeChanged: () => {
-                    this._resetTaskbarIconSize();
-                    this._applicationOverflowController.clearOverflow();
-                    this._primaryPanelController.syncVerticalItems();
-                    this._primaryPanelController.refreshPanelItemSizes();
-                    this._primaryPanelController.updateTaskbarWidth();
-                },
-                onPanelHeightChanged: () => {
-                    this._applyPanelHeight();
-                    if (this._settings.get_boolean('default-gnome-panel'))
-                        this._resetTaskbarIconSize();
-                },
-            }
-        );
-        this._windowsXpModeController.applyInitialSettings();
+        this._windowsXpThemeController = new WindowsXpThemeController(this._settings);
+        this._panelModeController = new PanelModeController(this._settings, this._windowsXpThemeController, {
+            onDefaultPanelChanged: () => this._queueRebuild(),
+            onWindowsXpModeChanged: () => {
+                this._core.iconSizer.reset();
+                this._core.overflowController.clearOverflow();
+                this._primaryPanelController.syncVerticalItems();
+                this._primaryPanelController.refreshPanelItemSizes();
+                this._primaryPanelController.updateTaskbarWidth();
+            },
+        });
+        this._panelModeController.applyInitialSettings();
         this._applicationSettings = cachedPanelApplicationSettings(this._settings);
         const maximumIconSize = this._applicationSettings.get_int('icon-size');
         const iconSize = panelTaskbarIconSize(this._applicationSettings, maximumIconSize);
@@ -126,121 +97,61 @@ export default class SimpleTaskbarExtension extends Extension {
             this._settings
         );
         this._appGridLayout = new AppGridLayout(this._settings);
-        this._windowController = new TaskbarWindowController(this._tracker, {
-            settings: this._applicationSettings,
-            spreadAppWindows: app =>
-                this._overviewIntegration.showAppWindows(app),
-            getMonitor: () => Main.layoutManager.primaryMonitor,
-            getTaskbarController: () => this._taskbarController,
-            getPreviewController: () => this._windowPreviews,
-        });
-        this._applicationKeybindings = new ApplicationKeybindingRouter(
-            this._settings,
-            app => this._windowController.activateApp(app)
-        );
-        this._applicationKeybindings.enable();
-        this._taskbarController = new TaskbarController({
+        this._core = new PanelTaskbarCore({
+            extensionDir: this.dir,
             settings: this._applicationSettings,
             appSystem: this._appSystem,
             tracker: this._tracker,
             favorites: this._favorites,
             overlayModel: this._overlayModel,
-            iconSize,
-            panelHeight: this._panelHeight,
-            getInterestingWindows: app =>
-                this._windowController.getInterestingWindows(app),
-            onAppClicked: (item, app, action) =>
-                this._windowController.handleAppClicked(item, app, action),
-            onWindowClicked: window =>
-                this._windowController.handleWindowClicked(window),
-            openNewWindow: app => this._windowController.openNewWindow(app),
+            spreadAppWindows: app => this._overviewIntegration.showAppWindows(app),
+            openPreferences: () => this.openPreferences(),
+            getMonitor: () => Main.layoutManager.primaryMonitor,
             getPositionActor: () => Main.layoutManager.panelBox,
-            getHoverAnimationMonitor: () =>
-                Main.layoutManager.primaryMonitor,
-            getPanelInteractionController: () =>
-                this._panelInteractionController,
-            getHoverAnimationNeighbours: () =>
-                getTaskbarHoverAnimationNeighbours(
-                    this._taskbarBin,
-                    this._startButtonController.panelActor,
-                    this._taskbarViewport,
-                    [
-                        Main.panel._leftBox,
-                        Main.panel._centerBox,
-                        Main.panel._rightBox,
-                    ]
-                ),
-            getHoverAnimationEdgeActor: () =>
-                dynamicTaskbarEnabled(this._settings) ? this._showDesktopButton : null,
-            getHoverAnimationStartButton: () => this._startButtonController.actor,
-            onHoverAnimationReserveChanged: () =>
-                this._primaryPanelController.onHoverAnimationReserveChanged(),
+            boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
+            getPanelEdgeGap: () => this._primaryPanelController.getPanelEdgeGap(),
+            panelHeight: this._panelHeight,
+            iconSize,
+            maximumIconSize,
+            getConfiguredIconSize: () => this._applicationSettings.get_int('icon-size'),
+            isAdaptive: () => panelIconSizeIsAdaptive(this._settings, this._core.taskbarController),
+            syncVerticalItems: () => this._primaryPanelController.syncVerticalItems(),
+            syncPanelHeight: () => this._syncPanelHeight(),
+            isPanelMenuOpen: () => this._folderMenuController.menuIsOpen ||
+                this._trayOverflowController.menuIsOpen ||
+                Main.panel.menuManager.activeMenu?.isOpen,
+            isAutoHideHidden: () => this._primaryPanelController.autoHideHidden,
+            onHoverAnimationReserveChanged: () => this._primaryPanelController.onHoverAnimationReserveChanged(),
             onHoverAnimationExtentsChanged: (before, after) =>
                 this._primaryPanelController.onHoverAnimationExtentsChanged(before, after),
-            isHoverAnimationBlocked: () =>
-                this._panelInteractionIsBlocked(false) ||
-                this._primaryPanelController.autoHideHidden,
-            onShowDesktopClicked: () =>
-                this._windowController.toggleDesktop(),
-            onShowDesktopModeChanged: () =>
-                this._primaryPanelController.applyLayout(),
-            getPreviewController: () => this._windowPreviews,
-            onRedisplay: () => {
-                this._primaryPanelController.updateTaskbarWidth();
-                this._applicationOverflowController.sync();
+            onRedisplay: () => this._primaryPanelController.updateTaskbarWidth(),
+            onStartMenuOpenChanged: open => {
+                this._primaryPanelController.setStartMenuOpen(open);
+                if (open)
+                    this._trayOverflowController.close();
             },
-            isSecondary: false,
+            taskbarOptions: {
+                getHoverAnimationEdgeActor: () =>
+                    dynamicTaskbarEnabled(this._settings) ? this._showDesktopButton : null,
+                onShowDesktopClicked: () => this._core.windowController.toggleDesktop(),
+                onShowDesktopModeChanged: () => this._primaryPanelController.applyLayout(),
+                isSecondary: false,
+            },
+            startButtonOptions: {
+                keybindingSettings: this._settings,
+                toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
+                switcherKeybindings: this._switcherKeybindings,
+            },
         });
+        this._applicationKeybindings = new ApplicationKeybindingRouter(
+            this._settings,
+            app => this._core.windowController.activateApp(app)
+        );
+        this._applicationKeybindings.enable();
         this._windowMinimizeEffectController =
             new WindowMinimizeEffectController(this._settings);
-        this._taskbarController.setAlignmentActor(Main.panel._centerBox);
-        this._windowPreviews = new WindowPreviewController(
-            () => this._taskbarController.getItems(),
-            app => this._windowController.getInterestingWindows(app),
-            this._applicationSettings,
-            () => this._applicationOverflowController.closeWithAnimation(),
-            () => this._taskbarController.getHoverAnimationOutwardReserve(),
-            () => this._taskbarController.isPointerInMagnifyBounds()
-        );
-        this._startButtonController = new StartButtonController({
-            getPanelEdgeGap: () => this._primaryPanelController.getPanelEdgeGap(),
-            extensionDir: this.dir,
-            settings: this._applicationSettings,
-            keybindingSettings: this._settings,
-            iconSize,
-            previewController: this._windowPreviews,
-            openPreferences: () => this.openPreferences(),
-            closeApp: (app, timestamp) =>
-                this._taskbarController.closeApp(app, timestamp),
-            getInterestingWindows: app =>
-                this._windowController.getInterestingWindows(app),
-            toggleDesktop: () => this._windowController.toggleDesktop(),
-            toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
-            switcherKeybindings: this._switcherKeybindings,
-            getMonitor: () => Main.layoutManager.primaryMonitor,
-            onMenuOpenStateChanged: open => {
-                this._taskbarController.setStartMenuOpen(open);
-                this._primaryPanelController.setStartMenuOpen(open);
-                if (open) {
-                    if (this._startButtonController.menuIsOpen)
-                        this._taskbarController.dropHoverAnimations();
-                    this._applicationOverflowController.close();
-                    this._trayOverflowController.close();
-                }
-            },
-        });
-        this._iconSizer = new PanelIconSizer({
-            settings: this._applicationSettings,
-            taskbarController: this._taskbarController,
-            startButtonController: this._startButtonController,
-            boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
-            maximumIconSize,
-            iconSize,
-            getConfiguredIconSize: () => this._applicationSettings.get_int('icon-size'),
-            isAdaptive: () => this._iconSizeIsAdaptive(),
-        });
 
-        this._createTaskbarActors();
+        this._createShowDesktopButton();
         this._folderMenuController = new FolderMenuController(this._settings);
         this._folderMenuController.enable();
         this._trayOverflowController = new TrayOverflowController(
@@ -249,74 +160,38 @@ export default class SimpleTaskbarExtension extends Extension {
         this._primaryPanelController = new PrimaryPanelController({
             settings: this._applicationSettings,
             panelHeight: this._panelHeight,
-            onPanelHidden: () => {
-                this._taskbarController.dropHoverAnimations();
-                this._windowPreviews.hideTooltip(false);
-            },
-            getHoverAnimationReserve: () =>
-                this._taskbarController.getHoverAnimationReserve(),
-            getHoverAnimationOutwardReserve: () =>
-                this._taskbarController.getHoverAnimationOutwardReserve(),
-            getIconSize: () => this._iconSizer.iconSize,
-            startButtonController: this._startButtonController,
-            taskbarBin: this._taskbarBin,
-            taskbarActor: this._taskbarController.actor,
+            core: this._core,
             showDesktopButton: this._showDesktopButton,
             setShowDesktopPanelCorner: corner =>
                 this._showDesktopButtonController.setPanelCorner(corner),
             folderMenuButton: this._folderMenuController.actor,
             onAppAlignmentChanged: () => this._applyTaskbarAppearance(),
-            onTaskbarAvailableWidthChanged: width =>
-                this._syncTaskbarIconSize(width),
             isTaskbarAdaptive: () =>
                 panelApplicationsEnabled(this._settings) &&
-                this._iconSizer.isShrunk,
+                this._core.iconSizer.isShrunk,
             queueOverviewRelayout: () =>
                 this._overviewIntegration.queueRelayout(),
-            isAutoHideBlocked: () => this._panelAutoHideIsBlocked(),
+            isAutoHideBlocked: () => this._core.isInteractionBlocked(true),
         });
-        this._panelInteractionController = new PanelInteractionController({
-            settings: this._applicationSettings,
-            taskbarController: this._taskbarController,
-            taskbarBin: this._taskbarViewport,
-            taskbarContainer: this._taskbarBin,
-            previewController: this._windowPreviews,
-            openPreferences: () => this.openPreferences(),
-            onAppScrolled: (item, direction) =>
-                this._windowController.handleAppScrolled(item, direction),
-            onPanelScrolled: direction =>
-                this._windowController.handlePanelScrolled(direction),
-            getVolumeIndicator: () =>
-                Main.panel.statusArea.quickSettings._volumeOutput,
+        this._core.createInteractionController({
+            getVolumeIndicator: () => Main.panel.statusArea.quickSettings._volumeOutput,
         });
-        this._applicationOverflowController.enable();
+        this._core.overflowController.enable();
         this._trayOverflowController.enable();
-        this._panelInteractionController.enable();
-        this._startButtonController.enable();
+        this._core.interactionController.enable();
+        this._core.startButtonController.enable();
         this._primaryPanelController.enable();
         this._primaryPanelController.applyLayout();
-        this._taskbarController.setShowDesktopButton(
+        this._core.taskbarController.setShowDesktopButton(
             this._showDesktopButton,
             button => this._showDesktopButtonController.replace(button)
         );
-        this._volumeMixerController = new VolumeMixerController(
+        this._quickSettingsIntegrations = new QuickSettingsIntegrations(
             this._settings,
+            this.dir,
             Main.panel.statusArea.quickSettings
         );
-        this._volumeMixerController.enable();
-        this._quickSettingsPowerController =
-            new QuickSettingsPowerController(
-                this._settings,
-                Main.panel.statusArea.quickSettings
-            );
-        this._quickSettingsPowerController.enable();
-        this._quickSettingsXpIconController =
-            new QuickSettingsXpIconController(
-                this._settings,
-                this.dir,
-                Main.panel.statusArea.quickSettings
-            );
-        this._quickSettingsXpIconController.enable();
+        this._quickSettingsIntegrations.enable();
         this._secondaryPanelManager = new SecondaryPanelManager({
             extensionDir: this.dir,
             settings: this._settings,
@@ -353,15 +228,29 @@ export default class SimpleTaskbarExtension extends Extension {
         this._gridAltTabController.enable();
         this._applyTaskbarAppearance();
         this._overviewIntegration.enable();
-        this._windowsXpModeController.enable();
+        this._panelModeController.enable();
+        connectPanelSizingSignals({
+            settings: this._settings,
+            owner: this,
+            core: this._core,
+            correctSetting: key => this._panelModeController.correctSizingSetting(key),
+            applyAppearance: () => {
+                this._core.applyAppearance();
+                this._primaryPanelController.syncVerticalItems();
+            },
+            applyPanelHeight: () => this._applyPanelHeight(),
+            syncPanelHeight: () => this._syncPanelHeight(),
+            updateWidth: () => this._primaryPanelController.updateTaskbarWidth(),
+        });
+        this._windowsXpThemeController.enable();
         this._windows10ThemeController = new Windows10ThemeController(
             this._settings
         );
         this._windows10ThemeController.enable();
         this._connectSignals();
-        this._startButtonController.syncKeybindings();
+        this._core.startButtonController.syncKeybindings();
         this._primaryPanelController.position();
-        this._taskbarController.enable();
+        this._core.taskbarController.enable();
         this._windowMinimizeEffectController.enable();
         this._appGridLayout.enable();
     }
@@ -379,11 +268,13 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applicationSettings.disconnectObject(this);
         this._appGridLayout.destroy();
         this._appGridLayout = null;
-        this._taskbarController.disableHoverAnimations();
+        this._core.taskbarController.disableHoverAnimations();
         this._windows10ThemeController.destroy();
         this._windows10ThemeController = null;
-        this._windowsXpModeController.destroy();
-        this._windowsXpModeController = null;
+        this._panelModeController.destroy();
+        this._panelModeController = null;
+        this._windowsXpThemeController.destroy();
+        this._windowsXpThemeController = null;
 
         this._gridAltTabController.destroy();
         this._gridAltTabController = null;
@@ -397,48 +288,32 @@ export default class SimpleTaskbarExtension extends Extension {
         this._secondaryPanelManager = null;
         this._dockPanelManager.destroy();
         this._dockPanelManager = null;
-        this._quickSettingsXpIconController.destroy();
-        this._quickSettingsXpIconController = null;
-        this._quickSettingsPowerController.destroy();
-        this._quickSettingsPowerController = null;
-        this._volumeMixerController.destroy();
-        this._volumeMixerController = null;
-        this._panelInteractionController.destroy();
-        this._panelInteractionController = null;
+        this._quickSettingsIntegrations.destroy();
+        this._quickSettingsIntegrations = null;
+        this._core.destroyInteractionController();
         this._primaryPanelController.destroy();
         this._primaryPanelController = null;
         this._trayOverflowController.destroy();
         this._trayOverflowController = null;
-        this._applicationOverflowController.destroy();
-        this._applicationOverflowController = null;
         this._folderMenuController.destroy();
         this._folderMenuController = null;
         this._favoritesIntegration.destroy();
         this._favoritesIntegration = null;
-        this._startButtonController.destroy();
-        this._startButtonController = null;
-        this._switcherKeybindings.destroy();
-        this._switcherKeybindings = null;
         this._applicationKeybindings.destroy();
         this._applicationKeybindings = null;
         this._windowMinimizeEffectController.destroy();
         this._windowMinimizeEffectController = null;
-        this._taskbarController.destroy();
-        this._windowController.destroy();
+        this._core.destroy();
+        this._core = null;
+        this._switcherKeybindings.destroy();
+        this._switcherKeybindings = null;
         this._overlayModel.destroy();
         this._overlayModel = null;
-        this._windowPreviews.destroy();
-        this._windowPreviews = null;
-        this._taskbarController = null;
-        this._windowController = null;
-        this._taskbarViewport.destroy();
         this._showDesktopButtonController.destroy();
         this._showDesktopButtonController = null;
         this._overviewIntegration.destroy();
         this._overviewIntegration = null;
 
-        this._taskbarBin = null;
-        this._taskbarViewport = null;
         this._showDesktopButton = null;
         this._favorites = null;
         this._tracker = null;
@@ -446,8 +321,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applicationSettings.destroy();
         this._applicationSettings = null;
         this._settings = null;
-        this._iconSizer.destroy();
-        this._iconSizer = null;
         this._panelHeight = null;
     }
 
@@ -487,36 +360,27 @@ export default class SimpleTaskbarExtension extends Extension {
         prefsWindow.delete(global.get_current_time());
     }
 
-    _createTaskbarActors() {
-        const {viewport, overflowController} = createTaskbarViewport({
-            settings: this._applicationSettings,
-            taskbarController: this._taskbarController,
-            previewController: this._windowPreviews,
-        });
-        this._taskbarViewport = viewport;
-        this._applicationOverflowController = overflowController;
-        this._taskbarBin = overflowController.actor;
-
+    _createShowDesktopButton() {
         this._showDesktopButtonController =
             new ShowDesktopButtonController(
                 this._settings,
                 this.dir,
-                () => this._windowController.toggleDesktop(),
+                () => this._core.windowController.toggleDesktop(),
                 button => {
                     this._showDesktopButton = button;
-                    this._windowController.setShowDesktopButton(button);
+                    this._core.windowController.setShowDesktopButton(button);
                     this._primaryPanelController.setShowDesktopButton(button);
                 }
             );
         this._showDesktopButtonController.enable();
         this._showDesktopButton = this._showDesktopButtonController.actor;
-        this._windowController.setShowDesktopButton(this._showDesktopButton);
+        this._core.windowController.setShowDesktopButton(this._showDesktopButton);
     }
 
     _connectSignals() {
         if (this._applicationSettings.isDefaultPanelWindows) {
             this._applicationSettings.connectObject(
-                'changed::icon-size', () => this._resetTaskbarIconSize(),
+                'changed::icon-size', () => this._core.iconSizer.reset(),
                 'changed::icon-spacing', () => this._applyTaskbarAppearance(),
                 'changed::icon-edge-padding', () => this._applyTaskbarAppearance(),
                 this
@@ -532,43 +396,11 @@ export default class SimpleTaskbarExtension extends Extension {
             },
             this
         );
-        this._settings.connectObject('changed::start-button-padding', () => {
-            this._startButtonController.applyAppearance(
-                this._iconSizer.iconSize,
-                this._settings.get_int('start-button-padding')
-            );
-            this._primaryPanelController.syncVerticalItems();
-            this._primaryPanelController.updateTaskbarWidth();
-        }, this);
         this._settings.connectObject(
             'changed::taskbar-dynamic',
             () => this._queueRebuild(),
             'changed::default-panel-show-running-windows',
             () => this._queueRebuild(),
-            this
-        );
-        this._settings.connectObject(
-            'changed::dock-min-icon-size',
-            () => {
-                if (this._settings.get_boolean('default-gnome-panel') ||
-                    this._settings.get_boolean('dock-mode') ||
-                    this._settings.get_boolean('windows-xp-theme-enabled')) {
-                    return;
-                }
-                this._primaryPanelController.updateTaskbarWidth();
-            },
-            this
-        );
-        this._settings.connectObject(
-            'changed::show-location-separator',
-            () => this._primaryPanelController.updateTaskbarWidth(),
-            this
-        );
-        this._settings.connectObject(
-            'changed::panel-height-follow-icon-size',
-            () => this._syncPanelHeight(),
-            'changed::taskbar-highlight-edge-gap',
-            () => this._syncPanelHeight(),
             this
         );
         this._settings.connectObject('changed::panel-position', () => {
@@ -581,73 +413,27 @@ export default class SimpleTaskbarExtension extends Extension {
 
     _applyTaskbarAppearance() {
         if (this._settings.get_boolean('default-gnome-panel'))
-            this._iconSizer.syncMaximum();
-        this._startButtonController.applyAppearance(
-            this._iconSizer.iconSize,
-            this._settings.get_int('start-button-padding')
-        );
-        this._taskbarController.applyAppearance();
+            this._core.iconSizer.syncMaximum();
+        this._core.applyAppearance();
         this._primaryPanelController.syncVerticalItems();
         this._syncPanelHeight();
         this._primaryPanelController.updateTaskbarWidth();
     }
 
-    _iconSizeIsAdaptive() {
-        return !this._taskbarController.isRebuilding() &&
-            !this._settings.get_boolean('default-gnome-panel') &&
-            !this._settings.get_boolean('dock-mode') &&
-            !this._settings.get_boolean('windows-xp-theme-enabled');
-    }
-
-    _syncTaskbarIconSize(availableLength) {
-        this._taskbarController.setAvailableWidth(availableLength);
-        if (!this._iconSizer.solve(availableLength))
-            return false;
-
-        this._primaryPanelController.syncVerticalItems();
-        this._applicationOverflowController.syncIconSizeChange();
-        this._syncPanelHeight();
-        return true;
-    }
-
-    _resetTaskbarIconSize() {
-        this._iconSizer.reset();
-        this._applicationOverflowController.sync();
-        this._syncPanelHeight();
-    }
-
     _applyPanelHeight() {
-        this._panelHeight = taskbarPanelHeight(this._settings, this._iconSizer.iconSize);
-        this._taskbarController.setPanelHeight(this._panelHeight);
+        this._panelHeight = taskbarPanelHeight(this._settings, this._core.iconSizer.iconSize);
+        this._core.taskbarController.setPanelHeight(this._panelHeight);
         this._overviewIntegration.setPanelHeight(this._panelHeight);
         this._primaryPanelController.setPanelHeight(this._panelHeight);
     }
 
     _syncPanelHeight() {
-        if (taskbarPanelHeight(this._settings, this._iconSizer.iconSize) !== this._panelHeight)
+        if (taskbarPanelHeight(this._settings, this._core.iconSizer.iconSize) !== this._panelHeight)
             this._applyPanelHeight();
     }
 
-    _panelAutoHideIsBlocked() {
-        return this._panelInteractionIsBlocked(true);
-    }
-
     _hotEdgeIsBlocked() {
-        return this._panelInteractionIsBlocked(false);
-    }
-
-    _panelInteractionIsBlocked(includeWindowPreviews) {
-        return Boolean(
-            this._panelInteractionController.menuIsOpen ||
-            this._startButtonController.menuIsOpen ||
-            this._folderMenuController.menuIsOpen ||
-            this._trayOverflowController.menuIsOpen ||
-            this._applicationOverflowController.menuIsOpen ||
-            (includeWindowPreviews && this._windowPreviews.isOpen) ||
-            this._taskbarController.isDragging ||
-            this._taskbarController.hasOpenMenu() ||
-            Main.panel.menuManager.activeMenu?.isOpen
-        );
+        return this._core.isInteractionBlocked(false);
     }
 
     _toggleStartMenuAtPointer() {
@@ -658,13 +444,13 @@ export default class SimpleTaskbarExtension extends Extension {
         const [x, y] = global.get_pointer();
         if (this._dockPanelManager.hasPanelAt(x, y) &&
             !startButtonInPanel(this._settings)) {
-            this._startButtonController.closeMenus();
+            this._core.startButtonController.closeMenus();
             this._secondaryPanelManager.closeStartMenus();
             this._dockPanelManager.toggleStartMenuAt(x, y);
             return;
         }
         if (this._secondaryPanelManager.hasPanelAt(x, y)) {
-            this._startButtonController.closeMenus();
+            this._core.startButtonController.closeMenus();
             this._dockPanelManager.closeStartMenus();
             this._secondaryPanelManager.toggleStartMenuAt(x, y);
             return;
@@ -672,7 +458,7 @@ export default class SimpleTaskbarExtension extends Extension {
 
         this._secondaryPanelManager.closeStartMenus();
         this._dockPanelManager.closeStartMenus();
-        this._startButtonController.toggleStartMenu();
+        this._core.startButtonController.toggleStartMenu();
     }
 
 }

@@ -3,8 +3,10 @@
 
 import Cogl from 'gi://Cogl';
 
+import {preservePanelBlurRadiusStyle, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
 import {panelPosition} from '../shared/panelPositionUtils.js';
-import {panelTransparencyOpacity} from './dynamicTransparency.js';
+import {syncPanelBlurClasses} from './panelBlurClasses.js';
+import {dynamicTransparencyStyle, panelTransparencyOpacity} from './dynamicTransparency.js';
 
 const DARK_BORDER_COLOR = '255, 255, 255';
 const LIGHT_BORDER_COLOR = '0, 0, 0';
@@ -103,4 +105,50 @@ export function panelBackgroundStyle(settings, light, borderEnabled,
     return originalStyle
         ? `${originalStyle}${separator}${transparencyStyle}`
         : transparencyStyle;
+}
+
+export function dynamicPanelBackgroundStyle(settings, {
+    monitor,
+    getGeometry,
+    dynamic,
+    light,
+    borderEnabled,
+    baseStyle,
+    fullBorder,
+    borderWidth = 1,
+}) {
+    const {dynamicOpacity, transitionDuration} = dynamicTransparencyStyle(settings, dynamic, monitor, getGeometry);
+    return panelBackgroundStyle(settings, light, borderEnabled, baseStyle, fullBorder,
+        dynamicOpacity, transitionDuration, borderWidth);
+}
+
+export function panelSurfaceStyle(actor, settings, {
+    monitor,
+    getGeometry,
+    dynamic,
+    light,
+    borderEnabled,
+    blurActive,
+    floating,
+    radius,
+    baseStyle = '',
+}) {
+    syncPanelBlurClasses(actor, blurActive, light);
+    if (floating)
+        syncPanelBlurCornerRadius(actor, radius);
+    if (blurActive) {
+        return floating
+            ? [baseStyle, floatingBlurPanelStyle(settings, light, borderEnabled, radius)].filter(Boolean).join('; ')
+            : preservePanelBlurRadiusStyle(actor, baseStyle);
+    }
+
+    return dynamicPanelBackgroundStyle(settings, {
+        monitor,
+        getGeometry,
+        dynamic,
+        light,
+        borderEnabled,
+        baseStyle: [baseStyle, floating ? `border-radius: ${radius}px;` : ''].filter(Boolean).join('; '),
+        fullBorder: floating,
+    });
 }

@@ -6,7 +6,6 @@ import {
     shouldHidePinnedApplications,
 } from '../shared/panelApplicationVisibility.js';
 
-
 function windowEntry(app, window, isPinnedPrimary) {
     return {
         key: `window:${window.get_stable_sequence()}`,

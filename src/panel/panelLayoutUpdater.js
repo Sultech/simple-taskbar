@@ -5,8 +5,8 @@ import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 
 export class PanelLayoutUpdater {
-    constructor(updateWidth) {
-        this._updateWidth = updateWidth;
+    constructor(updateLayout) {
+        this._updateLayout = updateLayout;
         this._updating = false;
         this._queuedId = 0;
     }
@@ -22,7 +22,7 @@ export class PanelLayoutUpdater {
         }
 
         this._updating = true;
-        this._updateWidth();
+        this._updateLayout();
         this._updating = false;
     }
 
@@ -47,6 +47,6 @@ export class PanelLayoutUpdater {
             this._queuedId = 0;
         }
         this._updating = false;
-        this._updateWidth = null;
+        this._updateLayout = null;
     }
 }

@@ -155,15 +155,7 @@ export class DockPanelManager extends PanelManagerBase {
         for (const monitor of monitors) {
             const dockSettings = new DockPanelSettings(this._settings);
             const panel = new ExtensionPanelController({
-                extensionDir: this._extensionDir,
-                settings: dockSettings,
-                appSystem: this._appSystem,
-                tracker: this._tracker,
-                favorites: this._favorites,
-                overlayModel: this._overlayModel,
-                spreadAppWindows: this._spreadAppWindows,
-                monitor,
-                openPreferences: this._openPreferences,
+                ...this._panelOptions(dockSettings, monitor),
                 visiblePanelItemIds: DOCK_PANEL_ITEM_IDS,
                 mainPanelSettings: this._settings,
             });

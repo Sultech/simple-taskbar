@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {
-    panelIsMinimumEdge,
-    panelIsVertical,
-} from '../shared/panelPositionUtils.js';
+import {panelIsMinimumEdge, panelIsVertical} from '../shared/panelPositionUtils.js';
 
 export function panelGeometry(
     settings,

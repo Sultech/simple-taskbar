@@ -11,15 +11,12 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {extensionIsActive} from '../integration/extensionState.js';
-import {syncBlurGeometry, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
+import {syncBlurGeometry} from '../integration/blurMyShellRuntime.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
     PanelWindowDodgeController,
 } from './panelWindowDodgeController.js';
-import {
-    ActivitiesDotWidthOverride,
-    PanelActivitiesController,
-} from './panelActivitiesController.js';
+import {ActivitiesDotWidthOverride, PanelActivitiesController} from './panelActivitiesController.js';
 import {
     PanelButtonPaddingController,
 } from './panelButtonPaddingController.js';
@@ -28,13 +25,12 @@ import {PanelClockController} from './panelClockController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems, refreshPanelBoxSizes} from './panelItems.js';
 import {PanelMenuPositioner} from './panelMenuPositioner.js';
+import {connectPanelSettingsSignals} from './panelSettingsSignals.js';
 import {panelGeometry} from './panelGeometry.js';
 import {PanelMagnifyController} from './panelMagnifyController.js';
 import {DynamicPanelBoxLayout} from './dynamicPanelBoxLayout.js';
 import {PanelGeometryController, syncPanelGeometryController} from './panelGeometryController.js';
 import {
-    PANEL_BUTTON_PADDING_KEYS,
-    START_BUTTON_LOCATION_KEY,
     dynamicTaskbarEnabled,
     taskbarGeometryEnabled,
     panelApplicationAlignment,
@@ -58,7 +54,7 @@ import {
     allocateAdaptivePanel,
     allocateDynamicPanel,
     allocateExpandedSidePanel,
-    constrainTaskbarSize,
+    fitPanelTaskbar,
 } from './panelLayout.js';
 import {PanelLayoutUpdater} from './panelLayoutUpdater.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
@@ -69,33 +65,24 @@ export class PrimaryPanelController {
     constructor({
         settings,
         panelHeight,
-        onPanelHidden,
-        getHoverAnimationOutwardReserve,
-        getHoverAnimationReserve,
-        getIconSize,
-        startButtonController,
-        taskbarBin,
-        taskbarActor,
+        core,
         showDesktopButton,
         setShowDesktopPanelCorner,
         folderMenuButton,
         onAppAlignmentChanged,
-        onTaskbarAvailableWidthChanged,
         isTaskbarAdaptive,
         queueOverviewRelayout,
         isAutoHideBlocked,
     }) {
         this._settings = settings;
         this._panelHeight = panelHeight;
-        this._startButton = startButtonController.panelActor;
-        this._taskbarBin = taskbarBin;
-        this._taskbarActor = taskbarActor;
+        this._core = core;
+        this._startButton = core.startButtonController.panelActor;
+        this._taskbarBin = core.taskbarBin;
         this._showDesktopButton = showDesktopButton;
         this._setShowDesktopPanelCorner = setShowDesktopPanelCorner;
         this._folderMenuButton = folderMenuButton;
         this._onAppAlignmentChanged = onAppAlignmentChanged;
-        this._onTaskbarAvailableWidthChanged =
-            onTaskbarAvailableWidthChanged;
         this._isTaskbarAdaptive = isTaskbarAdaptive;
         this._queueOverviewRelayout = queueOverviewRelayout;
         this._isAutoHideBlocked = isAutoHideBlocked;
@@ -138,9 +125,9 @@ export class PrimaryPanelController {
             panelBox: Main.layoutManager.panelBox,
             getMonitor: () => Main.layoutManager.primaryMonitor,
             getVertical: () => panelIsVertical(this._settings),
-            getReserve: getHoverAnimationReserve,
+            getReserve: () => core.taskbarController.getHoverAnimationReserve(),
             isEnabled: () => Boolean(this._panelBoxLayout) && dynamicTaskbarEnabled(this._settings),
-            isDynamic: () => dynamicTaskbarEnabled(this._settings),
+            isDynamic: () => Boolean(this._panelBoxLayout) && dynamicTaskbarEnabled(this._settings),
             getBaseLength: () => this._geometryController ? this._geometryController.getBaseLength() : null,
             updateWidth: () => this.updateTaskbarWidth(),
             onGeometryChanged: geometry => this._panelBoxLayout.setPanelGeometry(geometry),
@@ -151,18 +138,11 @@ export class PrimaryPanelController {
             positionActor: Main.layoutManager.panelBox,
             getMonitor: () => Main.layoutManager.primaryMonitor,
             getPanelHeight: () => this._panelHeight,
-            getPanelLengthPercentage: () => this._geometryController
-                ? this._geometryController.getPanelLengthPercentage() : null,
-            getPanelLengthOverride: () => this._geometryController
-                ? this._geometryController.getPanelLengthOverride() : null,
-            getPanelEdgeGap: () => this._geometryController
-                ? this._geometryController.getPanelEdgeGap() : 0,
-            getLimitRevealToPanel: () => this._geometryController
-                ? this._geometryController.getLimitRevealToPanel() : true,
+            getGeometrySource: () => this._geometryController,
             isBlocked: () => this._isAutoHideBlocked(),
-            getOutwardReserve: getHoverAnimationOutwardReserve,
+            getOutwardReserve: () => core.taskbarController.getHoverAnimationOutwardReserve(),
             onPositionFrame: () => syncBlurGeometry(Main.panel),
-            onHidden: onPanelHidden,
+            onHidden: () => core.onPanelHidden(),
         });
         this._windowDodgeController = new PanelWindowDodgeController({
             settings,
@@ -176,10 +156,6 @@ export class PrimaryPanelController {
                 ),
             onTransparencyStateChanged: () =>
                 this._themeController.applyTransparency(),
-            autohideKey: 'panel-autohide-enabled',
-            dodgeEnabledKey: 'panel-dodge-windows-enabled',
-            dodgeModeKey: 'panel-dodge-windows-mode',
-            dodgePointerRevealKey: 'panel-dodge-pointer-reveal-enabled',
         });
         this._buttonPaddingController = new PanelButtonPaddingController(
             settings,
@@ -192,8 +168,8 @@ export class PrimaryPanelController {
             () => Main.panel.statusArea.quickSettings._indicators,
             () => this._panelHeight,
             () => this.getPanelEdgeGap(),
-            startButtonController,
-            getIconSize
+            core.startButtonController,
+            () => core.iconSizer.iconSize
         );
     }
 
@@ -278,7 +254,7 @@ export class PrimaryPanelController {
         Main.panel._leftBox.disconnectObject(this);
         Main.panel._centerBox.disconnectObject(this);
         Main.panel._rightBox.disconnectObject(this);
-        this._taskbarActor.disconnectObject(this);
+        this._core.taskbarController.actor.disconnectObject(this);
         this._startButton.disconnectObject(this);
 
         this._windowDodgeController.destroy();
@@ -324,11 +300,10 @@ export class PrimaryPanelController {
 
         this._startButton = null;
         this._taskbarBin = null;
-        this._taskbarActor = null;
+        this._core = null;
         this._showDesktopButton = null;
         this._folderMenuButton = null;
         this._onAppAlignmentChanged = null;
-        this._onTaskbarAvailableWidthChanged = null;
         this._isTaskbarAdaptive = null;
         this._queueOverviewRelayout = null;
         this._isAutoHideBlocked = null;
@@ -360,12 +335,10 @@ export class PrimaryPanelController {
     }
 
     _syncFloatingMode() {
-        const hadGeometry = Boolean(this._geometryController);
         this._geometryController = syncPanelGeometryController(
-            this._geometryController, this._settings, this._autoHideController, () => this._createGeometryController()
+            this._geometryController, this._settings, this._autoHideController, Main.panel,
+            () => this._createGeometryController()
         );
-        if (hadGeometry && !this._geometryController)
-            syncPanelBlurCornerRadius(Main.panel, 0);
         this._themeController.applyTransparency();
         this._buttonPaddingController.syncEdgePadding();
         this.position();
@@ -599,32 +572,17 @@ export class PrimaryPanelController {
 
     _updateTaskbarWidthInternal() {
         const monitor = Main.layoutManager.primaryMonitor;
-        const leftBox = Main.panel._leftBox;
-        const centerBox = Main.panel._centerBox;
-        const rightBox = Main.panel._rightBox;
         if (!monitor)
             return;
 
-        const vertical = panelIsVertical(this._settings);
-        const availableWidth = constrainTaskbarSize({
-            taskbarBin: this._taskbarBin,
-            leftBox,
-            centerBox,
-            rightBox,
-            panelLength: this._geometryController
-                ? this._geometryController.getMaximumLength()
-                : vertical ? monitor.height : monitor.width,
+        fitPanelTaskbar(this._settings, this._core, {
+            boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
+            monitor,
+            geometryController: this._geometryController,
+            layoutUpdater: this._panelLayoutUpdater,
             panelThickness: this._panelHeight,
             centered: this.appsAreCentered(),
-            vertical,
         });
-        if (availableWidth !== undefined &&
-            this._onTaskbarAvailableWidthChanged(availableWidth)) {
-            this.updateTaskbarWidth();
-            return;
-        }
-        if (this._geometryController)
-            this._geometryController.updateLength();
     }
 
     syncVerticalItems() {
@@ -821,39 +779,24 @@ export class PrimaryPanelController {
                 this.updateTaskbarWidth();
             }
         }, this);
-        for (const box of [
-            Main.panel._leftBox,
-            Main.panel._centerBox,
-            Main.panel._rightBox,
-        ]) {
-            box.connectObject(
-                'notify::width', () => this.queueTaskbarWidth(),
-                'notify::height', () => this.queueTaskbarWidth(),
-                this
-            );
-        }
-        for (const signal of ['child-added', 'child-removed']) {
-            this._taskbarActor.connectObject(signal, () => {
-                this.updateTaskbarWidth();
-            }, this);
-        }
-        this._settings.connectObject('changed::hide-app-labels', () => {
-            this.updateTaskbarWidth();
-        }, this);
-        for (const key of PANEL_BUTTON_PADDING_KEYS) {
-            this._settings.connectObject(`changed::${key}`, () => {
+        connectPanelSettingsSignals({
+            settings: this._settings,
+            owner: this,
+            core: this._core,
+            boxes: [Main.panel._leftBox, Main.panel._centerBox, Main.panel._rightBox],
+            extraLayoutKeys: ['show-desktop-button-position', 'show-desktop-button-visible', 'tray-overflow-position'],
+            applyLayout: () => this.applyLayout(),
+            updateWidth: () => this.updateTaskbarWidth(),
+            queueWidth: () => this.queueTaskbarWidth(),
+            syncQuickSettings: () => this._syncPanelOrientation(),
+            onButtonPaddingChanged: () => {
                 this._syncPanelOrientation();
                 this._verticalItemsController.sync();
-                this.updateTaskbarWidth();
-            }, this);
-        }
-        this._settings.connectObject(
-            'changed::quick-settings-icon-spacing',
-            () => this._syncPanelOrientation(),
-            'changed::windows-xp-theme-enabled',
-            () => this._syncPanelOrientation(),
-            this
-        );
+            },
+            onAppAlignmentChanged: () => this._onAppAlignmentChanged(),
+            syncActivitiesVisibility: () => this._stateController.syncActivitiesVisibility(),
+            syncVerticalItems: () => this._verticalItemsController.sync(),
+        });
         this._startButton.connectObject('notify::visible', () => {
             this.updateTaskbarWidth();
         }, this);
@@ -880,71 +823,6 @@ export class PrimaryPanelController {
                 this._onPanelBoxChildChanged();
             }, this);
         }
-        this._settings.connectObject('changed::app-alignment', () => {
-            this._onAppAlignmentChanged();
-            this.applyLayout();
-        }, this);
-        for (const key of [
-            'start-button-position',
-            'start-button-follow-app-alignment',
-            'default-panel-start-button-position',
-            'default-panel-start-button-follow-app-alignment',
-        ]) {
-            this._settings.connectObject(`changed::${key}`, () => {
-                this.applyLayout();
-            }, this);
-        }
-        for (const key of [
-            'windows-start-menu-enabled',
-            'gnome-start-button-visible',
-            START_BUTTON_LOCATION_KEY,
-            'system-menu-visible',
-            'clock-visible',
-            'hide-pinned-taskbar-apps',
-            'hide-unpinned-taskbar-apps',
-        ]) {
-            this._settings.connectObject(`changed::${key}`, () => {
-                this.applyLayout();
-            }, this);
-        }
-        this._settings.connectObject('changed::activities-button-visible', () => {
-            this._stateController.syncActivitiesVisibility();
-            this.updateTaskbarWidth();
-        }, this);
-        this._settings.connectObject('changed::activities-button-position', () => {
-            this.applyLayout();
-        }, this);
-        this._settings.connectObject(
-            'changed::show-desktop-button-position',
-            () => this.applyLayout(),
-            this
-        );
-        this._settings.connectObject(
-            'changed::show-desktop-button-visible',
-            () => this.applyLayout(),
-            this
-        );
-        this._settings.connectObject('changed::start-button-padding', () => {
-            this.updateTaskbarWidth();
-        }, this);
-        this._settings.connectObject('changed::clock-position', () => {
-            this.applyLayout();
-        }, this);
-        this._settings.connectObject('changed::system-menu-position', () => {
-            this.applyLayout();
-        }, this);
-        this._settings.connectObject('changed::folder-menu-enabled', () => {
-            this.applyLayout();
-        }, this);
-        this._settings.connectObject('changed::folder-menu-position', () => {
-            this.applyLayout();
-        }, this);
-        this._settings.connectObject('changed::tray-overflow-position', () => {
-            this.applyLayout();
-        }, this);
-        this._settings.connectObject('changed::panel-item-order', () => {
-            this.applyLayout();
-        }, this);
     }
 
     _onPanelBoxChildChanged() {

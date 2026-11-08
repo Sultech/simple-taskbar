@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {synchronizePanelMode} from '../shared/panelModeProfiles.js';
 import {
     applyWindows10ThemeSettings,
     WINDOWS_10_LOCKED_SETTING_KEYS,
@@ -15,10 +14,7 @@ export class Windows10ThemeController {
     enable() {
         this._settings.connectObject(
             'changed::windows-10-theme-enabled',
-            () => {
-                synchronizePanelMode(this._settings);
-                this._applyLockedSettings();
-            },
+            () => this._applyLockedSettings(),
             this
         );
         for (const key of WINDOWS_10_LOCKED_SETTING_KEYS) {

@@ -11,6 +11,12 @@ export function panelTaskbarIconSize(settings, configuredIconSize) {
     return Math.min(configuredIconSize, defaultPanelWindowMaxIconSize(settings));
 }
 
+export function panelIconSizeIsAdaptive(settings, taskbarController) {
+    return !taskbarController.isRebuilding() &&
+        !settings.get_boolean('default-gnome-panel') &&
+        !settings.get_boolean('windows-xp-theme-enabled');
+}
+
 export function adaptiveTaskbarIconSize({
     settings,
     taskbarController,
@@ -54,6 +60,7 @@ export class PanelIconSizer {
         settings,
         taskbarController,
         startButtonController,
+        overflowController,
         boxes,
         maximumIconSize,
         iconSize,
@@ -62,16 +69,21 @@ export class PanelIconSizer {
         prepareEveryChange = false,
         beforeApply = () => {},
         afterApply = () => {},
+        syncVerticalItems,
+        syncPanelHeight = () => {},
     }) {
         this._settings = settings;
         this._taskbarController = taskbarController;
         this._startButtonController = startButtonController;
+        this._overflowController = overflowController;
         this._boxes = boxes;
         this._getConfiguredIconSize = getConfiguredIconSize;
         this._isAdaptive = isAdaptive;
         this._prepareEveryChange = prepareEveryChange;
         this._beforeApply = beforeApply;
         this._afterApply = afterApply;
+        this._syncVerticalItems = syncVerticalItems;
+        this._syncPanelHeight = syncPanelHeight;
         this.maximumIconSize = maximumIconSize;
         this.iconSize = iconSize;
     }
@@ -80,11 +92,14 @@ export class PanelIconSizer {
         this._settings = null;
         this._taskbarController = null;
         this._startButtonController = null;
+        this._overflowController = null;
         this._boxes = null;
         this._getConfiguredIconSize = null;
         this._isAdaptive = null;
         this._beforeApply = null;
         this._afterApply = null;
+        this._syncVerticalItems = null;
+        this._syncPanelHeight = null;
     }
 
     get isShrunk() {
@@ -95,9 +110,32 @@ export class PanelIconSizer {
         this.maximumIconSize = this._getConfiguredIconSize();
         this.iconSize = panelTaskbarIconSize(this._settings, this.maximumIconSize);
         this._apply();
+        this._syncVerticalItems();
+        this._overflowController.sync();
+        this._syncPanelHeight(false);
     }
 
     syncMaximum() {
+        const applied = this._applyMaximum();
+        this._overflowController.sync();
+        if (applied)
+            this._syncPanelHeight(false);
+        this._syncVerticalItems();
+        return applied;
+    }
+
+    fit(availableLength) {
+        this._taskbarController.setAvailableWidth(availableLength);
+        if (!this.solve(availableLength))
+            return false;
+
+        this._syncVerticalItems();
+        this._overflowController.syncIconSizeChange();
+        this._syncPanelHeight(true);
+        return true;
+    }
+
+    _applyMaximum() {
         this.maximumIconSize = this._getConfiguredIconSize();
         if (this.iconSize <= this.maximumIconSize && this._isAdaptive())
             return false;

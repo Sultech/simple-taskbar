@@ -6,7 +6,6 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
-    BLUR_MY_SHELL_PANEL_STYLES,
     BLUR_MY_SHELL_DOCK_STYLES,
     BLUR_MY_SHELL_DOCK_TRANSPARENT,
     blurMyShellDockStyle,
@@ -17,46 +16,34 @@ import {
     syncPanelBlurCornerRadius,
 } from '../integration/blurMyShellRuntime.js';
 import {
-    panelBackgroundStyle,
+    dynamicPanelBackgroundStyle,
     panelBorderStyle,
     panelBorderWidth,
 } from '../panel/panelBackgroundStyle.js';
+import {syncPanelBlurClasses} from '../panel/panelBlurClasses.js';
 import {
-    PANEL_BLUR_CLASSES,
-    syncPanelBlurClasses,
-} from '../panel/panelBlurClasses.js';
+    BLUR_MY_SHELL_PANEL_CLASSES,
+    actorStyleClasses,
+    syncSecondaryPanelClasses,
+} from '../panel/secondaryPanelClasses.js';
 import {floatingPanelEdgeGap} from '../panel/floatingPanelGeometry.js';
 import {dockFloatingEnabled} from '../shared/panelModeSettings.js';
 import {FloatingPanelLayout} from '../panel/floatingPanelLayout.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
-import {
-    dynamicTransparencyStyle,
-} from '../panel/dynamicTransparency.js';
-import {
-    panelIsVertical,
-    panelPosition,
-    positionIsVertical,
-} from '../shared/panelPositionUtils.js';
+import {panelIsVertical, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
 import {PanelButtonHighlightLayer} from '../panel/panelButtonHighlightLayer.js';
-import {constrainTaskbarSize} from '../panel/panelLayout.js';
+import {constrainTaskbarSize, fitTaskbarToAvailableLength} from '../panel/panelLayout.js';
+import {connectPanelAppearanceSignals} from '../panel/panelSettingsSignals.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 
-const EXTERNAL_PANEL_STYLES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 const EXTERNAL_DOCK_STYLES = new Set(BLUR_MY_SHELL_DOCK_STYLES);
 const DOCK_BACKGROUND_CLASS = 'dash-background';
-const OWN_BLUR_CLASSES = new Set(PANEL_BLUR_CLASSES);
 const DEFAULT_BUTTON_PADDING_CLASS =
     'simple-taskbar-default-panel-button-padding';
 const HOVER_INSET_CLASS_PREFIX =
     'simple-taskbar-panel-button-hover-inset-';
-const PANEL_EDGE_CLASSES = new Set([
-    'simple-taskbar-panel-top',
-    'simple-taskbar-panel-bottom',
-    'simple-taskbar-panel-left',
-    'simple-taskbar-panel-right',
-]);
 const PANEL_APPEARANCE_CLASSES = new Set([
     'simple-taskbar-theme-light',
     'simple-taskbar-theme-dark',
@@ -76,8 +63,6 @@ export class DockController {
         taskbarBin,
         taskbarController,
         startButtonController,
-        verticalItemsController,
-        applicationOverflowController,
         getPanelHeight,
         iconSizer,
         onPosition,
@@ -104,8 +89,6 @@ export class DockController {
         this._taskbarBin = taskbarBin;
         this._taskbarController = taskbarController;
         this._startButtonController = startButtonController;
-        this._verticalItemsController = verticalItemsController;
-        this._applicationOverflowController = applicationOverflowController;
         this._getPanelHeight = getPanelHeight;
         this._iconSizer = iconSizer;
         this._onPosition = onPosition;
@@ -163,8 +146,6 @@ export class DockController {
         this._taskbarBin = null;
         this._taskbarController = null;
         this._startButtonController = null;
-        this._verticalItemsController = null;
-        this._applicationOverflowController = null;
         this._getPanelHeight = null;
         this._iconSizer = null;
         this._onPosition = null;
@@ -275,14 +256,6 @@ export class DockController {
 
     resetIconSize() {
         this._iconSizer.reset();
-        this._verticalItemsController.sync();
-        this._applicationOverflowController.sync();
-    }
-
-    _externalStyles(styles) {
-        return this._actor.get_style_class_name()
-            .split(/\s+/)
-            .filter(style => styles.has(style));
     }
 
     syncTheme() {
@@ -293,45 +266,31 @@ export class DockController {
         const cornerRadiusStyle = dockFloating
             ? `border-radius: ${cornerRadius}px;`
             : '';
-        const vertical = panelIsVertical(this._settings);
         const light = panelUsesLightTheme(this._settings);
         const borderEnabled = this._settings.get_boolean(
             light
                 ? 'panel-border-light-enabled'
                 : 'panel-border-enabled'
         );
-        const edgeClass = `simple-taskbar-panel-${
-            panelPosition(this._settings)
-        }`;
-        const classes = Main.panel.get_style_class_name()
-            .split(/\s+/)
-            .filter(style => style &&
-                style !== DEFAULT_BUTTON_PADDING_CLASS &&
-                !style.startsWith(HOVER_INSET_CLASS_PREFIX) &&
-                !PANEL_APPEARANCE_CLASSES.has(style) &&
-                !PANEL_EDGE_CLASSES.has(style) &&
-                style !== 'simple-taskbar-panel-vertical' &&
-                !EXTERNAL_PANEL_STYLES.has(style) &&
-                !EXTERNAL_DOCK_STYLES.has(style) &&
-                style !== DOCK_BACKGROUND_CLASS &&
-                style !== 'simple-taskbar-floating' &&
-                !OWN_BLUR_CLASSES.has(style));
+        let keptClasses = [];
         if (dockBlurActive)
-            classes.push(DOCK_BACKGROUND_CLASS, ...this._externalStyles(EXTERNAL_DOCK_STYLES));
+            keptClasses = [DOCK_BACKGROUND_CLASS, ...actorStyleClasses(this._actor, EXTERNAL_DOCK_STYLES)];
         else if (panelBlurActive)
-            classes.push(...this._externalStyles(EXTERNAL_PANEL_STYLES));
-        classes.push('simple-taskbar-panel', 'simple-taskbar-secondary-panel');
-        if (dockFloating)
-            classes.push('simple-taskbar-dock-floating');
-        if (vertical)
-            classes.push('simple-taskbar-panel-vertical');
-        classes.push(light
-            ? 'simple-taskbar-theme-light'
-            : 'simple-taskbar-theme-dark');
-        if (!borderEnabled)
-            classes.push('simple-taskbar-border-disabled');
-        classes.push(edgeClass);
-        this._actor.set_style_class_name([...new Set(classes)].join(' '));
+            keptClasses = actorStyleClasses(this._actor, BLUR_MY_SHELL_PANEL_CLASSES);
+        syncSecondaryPanelClasses(this._actor, this._settings, {
+            isExcluded: style => style === DEFAULT_BUTTON_PADDING_CLASS ||
+                style.startsWith(HOVER_INSET_CLASS_PREFIX) ||
+                PANEL_APPEARANCE_CLASSES.has(style) ||
+                EXTERNAL_DOCK_STYLES.has(style) ||
+                style === DOCK_BACKGROUND_CLASS ||
+                style === 'simple-taskbar-floating',
+            keptClasses,
+            extraClasses: [
+                ...dockFloating ? ['simple-taskbar-dock-floating'] : [],
+                light ? 'simple-taskbar-theme-light' : 'simple-taskbar-theme-dark',
+                ...borderEnabled ? [] : ['simple-taskbar-border-disabled'],
+            ],
+        });
         if (this._settings.get_boolean('windows-xp-theme-enabled')) {
             this._actor.set_style(Main.panel.get_style());
             return;
@@ -362,66 +321,36 @@ export class DockController {
             );
             return;
         }
-        const {dynamicOpacity, transitionDuration} = dynamicTransparencyStyle(
-            this._settings,
-            this._settings.get_boolean('transparency-on-unmaximized'),
-            this._monitor,
-            () => this.getGeometry()
-        );
-        this._actor.set_style(panelBackgroundStyle(
-            this._settings,
+        this._actor.set_style(dynamicPanelBackgroundStyle(this._settings, {
+            monitor: this._monitor,
+            getGeometry: () => this.getGeometry(),
+            dynamic: this._settings.get_boolean('transparency-on-unmaximized'),
             light,
             borderEnabled,
-            cornerRadiusStyle,
-            dockFloating,
-            dynamicOpacity,
-            transitionDuration,
-            panelBorderWidth(this._monitor.geometry_scale)
-        ));
+            baseStyle: cornerRadiusStyle,
+            fullBorder: dockFloating,
+            borderWidth: panelBorderWidth(this._monitor.geometry_scale),
+        }));
     }
 
     _connectSignals() {
         this._settings.connectObject(
             'changed::icon-size',
             () => {
-                if (this._iconSizer.syncMaximum()) {
-                    this._verticalItemsController.sync();
-                    this._applicationOverflowController.sync();
-                } else {
-                    this._applicationOverflowController.sync();
+                if (!this._iconSizer.syncMaximum())
                     this.updateTaskbarWidth();
-                }
                 this._onPosition();
             },
             'changed::windows-xp-theme-enabled',
             () => this.resetIconSize(),
             this
         );
-        for (const key of [
-            'transparency-enabled',
-            'transparency-level',
-            'transparency-on-unmaximized',
-            'transparency-dynamic-behavior',
-            'transparency-dynamic-distance',
-            'transparency-dynamic-level',
-            'transparency-dynamic-animation-time',
-            'custom-panel-color-enabled',
-            'custom-panel-color',
-            'custom-panel-gradient-enabled',
-            'custom-panel-gradient-color',
-            'custom-panel-gradient-direction',
-            'panel-theme-follow-system',
-            'panel-theme',
-            'panel-border-enabled',
-            'panel-border-light-enabled',
-            'dock-corner-radius',
-        ]) {
-            this._settings.connectObject(
-                `changed::${key}`,
-                () => this.syncTheme(),
-                this
-            );
-        }
+        connectPanelAppearanceSignals({
+            settings: this._settings,
+            owner: this,
+            cornerRadiusKey: 'dock-corner-radius',
+            onBackgroundChanged: () => this.syncTheme(),
+        });
         const themeContext = St.ThemeContext.get_for_stage(global.stage);
         themeContext.connectObject(
             'changed',
@@ -465,28 +394,16 @@ export class DockController {
             centered: this._isCentered(),
             vertical,
         });
-        if (availableWidth !== undefined) {
-            this._taskbarController.setAvailableWidth(availableWidth);
-            if (this._syncIconSize(availableWidth)) {
+        fitTaskbarToAvailableLength(this._iconSizer, availableWidth, {
+            onIconSizeChanged: () => {
                 this._onPosition(false);
                 this._layout.queueContentUpdate();
-                return;
-            }
-        }
-
-        if (this._settings.get_boolean('dock-panel-mode'))
-            return;
-
-        this._layout.updateLength(vertical ? geometry.height : geometry.width, vertical);
-    }
-
-    _syncIconSize(availableLength) {
-        if (!this._iconSizer.solve(availableLength))
-            return false;
-
-        this._verticalItemsController.sync();
-        this._applicationOverflowController.syncIconSizeChange();
-        return true;
+            },
+            updateLength: () => {
+                if (!this._settings.get_boolean('dock-panel-mode'))
+                    this._layout.updateLength(vertical ? geometry.height : geometry.width, vertical);
+            },
+        });
     }
 
     _findMainPanelBox() {
