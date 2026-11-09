@@ -221,78 +221,29 @@ export function addPanelAppearancePage({
         combineAppButtonsRow.sensitive = true;
         syncLabelSensitivity();
     };
-    connectSettings(
-        settings,
-        'changed::windows-xp-theme-enabled',
-        syncWindowsXpTheme
-    );
-    connectSettings(settings, 'changed::taskbar-dynamic', syncWindowsXpTheme);
-    connectSettings(settings, 'changed::dock-mode', syncWindowsXpTheme);
-    connectSettings(
-        settings,
-        'changed::default-gnome-panel',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::dock-panel-mode',
-        syncWindowsXpTheme
-    );
-    connectSettings(settings, 'changed::icon-size', syncWindowsXpTheme);
-    connectSettings(settings, 'changed::icon-spacing', syncWindowsXpTheme);
-    connectSettings(
-        settings,
-        'changed::icon-edge-padding',
-        syncWindowsXpTheme
-    );
-    connectSettings(settings, 'changed::panel-height', syncWindowsXpTheme);
-    connectSettings(
-        settings,
-        `changed::${PANEL_HEIGHT_FOLLOW_KEY}`,
-        syncWindowsXpTheme
-    );
-    connectSettings(settings, 'changed::panel-position', syncWindowsXpTheme);
-    connectSettings(
-        settings,
-        'changed::panel-button-padding',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::custom-indicator-colors-enabled',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::custom-panel-color-enabled',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::activities-button-position',
-        syncWindowsXpTheme
-    );
-    connectSettings(settings, 'changed::app-alignment', syncWindowsXpTheme);
-    connectSettings(
-        settings,
-        'changed::start-button-position',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::use-pinned-apps-as-launchers',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::combine-app-buttons-mode',
-        syncWindowsXpTheme
-    );
-    connectSettings(
-        settings,
-        'changed::hide-app-labels',
-        syncWindowsXpTheme
-    );
+    for (const key of [
+        'windows-xp-theme-enabled',
+        'taskbar-dynamic',
+        'dock-mode',
+        'default-gnome-panel',
+        'dock-panel-mode',
+        'icon-size',
+        'icon-spacing',
+        'icon-edge-padding',
+        'panel-height',
+        PANEL_HEIGHT_FOLLOW_KEY,
+        'panel-position',
+        'panel-button-padding',
+        'custom-indicator-colors-enabled',
+        'custom-panel-color-enabled',
+        'activities-button-position',
+        'app-alignment',
+        'start-button-position',
+        'use-pinned-apps-as-launchers',
+        'combine-app-buttons-mode',
+        'hide-app-labels',
+    ])
+        connectSettings(settings, `changed::${key}`, syncWindowsXpTheme);
     syncWindowsXpTheme();
 
     const themeGroup = appearancePage.addGroup({
