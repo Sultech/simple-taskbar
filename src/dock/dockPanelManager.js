@@ -6,7 +6,6 @@ import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
-    BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
@@ -66,14 +65,7 @@ export class DockPanelManager extends PanelManagerBase {
             () => this._queueBlurMyShellSync(),
             this
         );
-        Main.extensionManager.connectObject(
-            'extension-state-changed',
-            (_manager, extension) => {
-                if (extension.uuid === BLUR_MY_SHELL_UUID)
-                    this._queueBlurMyShellSync();
-            },
-            this
-        );
+        this._connectBlurMyShellState();
         this._connectBlurMyShellKeys(
             'panel',
             ['blur', 'corner-radius', 'pipeline', 'static-blur'],
@@ -99,7 +91,6 @@ export class DockPanelManager extends PanelManagerBase {
         this._settings.disconnectObject(this);
         Main.layoutManager.disconnectObject(this);
         global.display.disconnectObject(this);
-        Main.extensionManager.disconnectObject(this);
         for (const settings of this._blurMyShellSettings)
             settings.disconnectObject(this);
         this._blurMyShellSettings = null;

@@ -4,7 +4,6 @@
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
-    BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
     getBlurMyShellChildSettings,
     getBlurMyShellSettings,
@@ -26,14 +25,7 @@ export class SecondaryPanelManager extends PanelManagerBase {
             'monitors-changed', () => this._queueRebuild(),
             this
         );
-        Main.extensionManager.connectObject(
-            'extension-state-changed',
-            (_manager, extension) => {
-                if (extension.uuid === BLUR_MY_SHELL_UUID)
-                    this._queueBlurMyShellSync();
-            },
-            this
-        );
+        this._connectBlurMyShellState();
         const panelBlurSettings = getBlurMyShellChildSettings(
             getBlurMyShellSettings(),
             'panel'
@@ -54,7 +46,6 @@ export class SecondaryPanelManager extends PanelManagerBase {
     destroy() {
         this._settings.disconnectObject(this);
         Main.layoutManager.disconnectObject(this);
-        Main.extensionManager.disconnectObject(this);
         if (this._blurMyShellPanelSettings)
             this._blurMyShellPanelSettings.disconnectObject(this);
         this._blurMyShellPanelSettings = null;

@@ -3,6 +3,10 @@
 
 import GLib from 'gi://GLib';
 
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
+import {BLUR_MY_SHELL_UUID} from '../shared/blurMyShellUtils.js';
+
 export class PanelManagerBase {
     constructor({
         extensionDir,
@@ -36,6 +40,7 @@ export class PanelManagerBase {
             GLib.Source.remove(this._blurMyShellSyncId);
             this._blurMyShellSyncId = 0;
         }
+        Main.extensionManager.disconnectObject(this);
         this._destroyPanels();
         this._extensionDir = null;
         this._settings = null;
@@ -87,6 +92,17 @@ export class PanelManagerBase {
                 this._rebuild();
                 return GLib.SOURCE_REMOVE;
             }
+        );
+    }
+
+    _connectBlurMyShellState() {
+        Main.extensionManager.connectObject(
+            'extension-state-changed',
+            (_manager, extension) => {
+                if (extension.uuid === BLUR_MY_SHELL_UUID)
+                    this._queueBlurMyShellSync();
+            },
+            this
         );
     }
 
