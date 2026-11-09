@@ -406,24 +406,15 @@ export class PanelInteractionController {
     }
 
     _getScrollDirection(event, previousDirection, nextDirection) {
-        switch (event.get_scroll_direction()) {
-        case Clutter.ScrollDirection.UP:
-        case Clutter.ScrollDirection.LEFT:
-            return previousDirection;
-        case Clutter.ScrollDirection.DOWN:
-        case Clutter.ScrollDirection.RIGHT:
-            return nextDirection;
-        case Clutter.ScrollDirection.SMOOTH: {
-            const [dx, dy] = event.get_scroll_delta();
-            const delta = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
-            if (delta < -0.1)
-                return previousDirection;
-            if (delta > 0.1)
-                return nextDirection;
-            break;
-        }
-        }
+        if (event.get_scroll_direction() !== Clutter.ScrollDirection.SMOOTH)
+            return this._getDiscreteScrollDirection(event, previousDirection, nextDirection);
 
+        const [dx, dy] = event.get_scroll_delta();
+        const delta = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
+        if (delta < -0.1)
+            return previousDirection;
+        if (delta > 0.1)
+            return nextDirection;
         return null;
     }
 
