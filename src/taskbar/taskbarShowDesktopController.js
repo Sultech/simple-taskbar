@@ -187,16 +187,17 @@ export class TaskbarShowDesktopController {
         const stationaryChildren = children.filter(child =>
             child !== this._item
         );
-        const target = pinnedItems[position];
-        const targetIndex = target
-            ? stationaryChildren.indexOf(target)
-            : pinnedItems.length > 0
-                ? stationaryChildren.indexOf(
-                    pinnedItems[pinnedItems.length - 1]
-                ) + 1
-                : 0;
+        const targetIndex = this._targetIndex(stationaryChildren, pinnedItems, position);
         if (children.indexOf(this._item) !== targetIndex)
             this._taskbarActor.set_child_at_index(this._item, targetIndex);
+    }
+
+    _targetIndex(stationaryChildren, pinnedItems, pinnedIndex) {
+        if (pinnedIndex < pinnedItems.length)
+            return stationaryChildren.indexOf(pinnedItems[pinnedIndex]);
+        if (pinnedItems.length > 0)
+            return stationaryChildren.indexOf(pinnedItems[pinnedItems.length - 1]) + 1;
+        return 0;
     }
 
     savePosition() {
@@ -229,14 +230,7 @@ export class TaskbarShowDesktopController {
         const pinnedIndex = targetPinnedIndex < 0
             ? pinnedItems.length
             : targetPinnedIndex;
-        const target = pinnedItems[pinnedIndex];
-        const targetIndex = target
-            ? stationaryChildren.indexOf(target)
-            : pinnedItems.length > 0
-                ? stationaryChildren.indexOf(
-                    pinnedItems[pinnedItems.length - 1]
-                ) + 1
-                : 0;
+        const targetIndex = this._targetIndex(stationaryChildren, pinnedItems, pinnedIndex);
         const sourceIndex = children.indexOf(item);
         if (sourceIndex !== targetIndex)
             this._taskbarActor.set_child_at_index(item, targetIndex);
