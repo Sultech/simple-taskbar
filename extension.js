@@ -192,7 +192,7 @@ export default class SimpleTaskbarExtension extends Extension {
             Main.panel.statusArea.quickSettings
         );
         this._quickSettingsIntegrations.enable();
-        this._secondaryPanelManager = new SecondaryPanelManager({
+        const panelManagerOptions = {
             extensionDir: this.dir,
             settings: this._settings,
             appSystem: this._appSystem,
@@ -202,19 +202,10 @@ export default class SimpleTaskbarExtension extends Extension {
             spreadAppWindows: app =>
                 this._overviewIntegration.showAppWindows(app),
             openPreferences: () => this.openPreferences(),
-        });
+        };
+        this._secondaryPanelManager = new SecondaryPanelManager(panelManagerOptions);
         this._secondaryPanelManager.enable();
-        this._dockPanelManager = new DockPanelManager({
-            extensionDir: this.dir,
-            settings: this._settings,
-            appSystem: this._appSystem,
-            tracker: this._tracker,
-            favorites: this._favorites,
-            overlayModel: this._overlayModel,
-            spreadAppWindows: app =>
-                this._overviewIntegration.showAppWindows(app),
-            openPreferences: () => this.openPreferences(),
-        });
+        this._dockPanelManager = new DockPanelManager(panelManagerOptions);
         this._dockPanelManager.enable();
         this._hotEdgeController = new HotEdgeController(this._settings, {
             isBlocked: () => this._hotEdgeIsBlocked(),
