@@ -14,7 +14,7 @@ import {
 } from '../shared/applicationHoverAnimation.js';
 import {
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
 } from './preferencesWidgets.js';
 import {createSliderRow} from './sliderRow.js';
 
@@ -112,28 +112,25 @@ export function createApplicationHoverAnimationOptionsButton(settings) {
 }
 
 export const ApplicationHoverAnimationDialog = GObject.registerClass(
-class ApplicationHoverAnimationDialog extends Adw.Window {
+class ApplicationHoverAnimationDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Application Icon Hover Animation'),
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 620,
-        });
-
-        this._settings = settings;
-        this._controlDefinitions = controlDefinitions();
-        this._sliders = new Map();
-        this._syncing = false;
-        const {content, connectSettings} = createPreferencesDialogContent(
-            this,
-            () => {
+            width: 640,
+            height: 620,
+            cleanup: () => {
                 this._sliders.clear();
                 this._sliders = null;
                 this._controlDefinitions = null;
-            }
-        );
+            },
+        });
+
+        this._controlDefinitions = controlDefinitions();
+        this._sliders = new Map();
+        this._syncing = false;
+        const {content, connectSettings} = this._dialogContent;
         const optionsGroup = new Adw.PreferencesGroup({
             title: _('Animation Profile'),
             description: _(

@@ -14,7 +14,7 @@ import {
 } from '../shared/panelModeSettings.js';
 import {
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 
@@ -27,21 +27,19 @@ export function createStartButtonOptionsButton(settings) {
 }
 
 export const StartButtonOptionsDialog = GObject.registerClass(
-class StartButtonOptionsDialog extends Adw.Window {
+class StartButtonOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Start Button'),
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: 360,
+            width: 560,
+            height: 360,
         });
 
-        this._settings = settings;
         this._followAppAlignmentKey =
             startButtonAlignmentKey(settings, 'start-button-follow-app-alignment');
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const alignmentGroup = new Adw.PreferencesGroup({
             title: _('Alignment and Menu'),
         });
@@ -80,9 +78,8 @@ class StartButtonOptionsDialog extends Adw.Window {
         syncSensitivity();
     }
 
-    _reset() {
-        for (const key of [this._followAppAlignmentKey, 'windows-start-menu-enabled'])
-            this._settings.reset(key);
+    _resetKeys() {
+        return [this._followAppAlignmentKey, 'windows-start-menu-enabled'];
     }
 }
 );

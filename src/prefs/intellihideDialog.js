@@ -11,7 +11,7 @@ import {
     addComboRow,
     createSwitchRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
 
@@ -33,22 +33,20 @@ export function createIntellihideOptionsButton(
 }
 
 export const IntellihideOptionsDialog = GObject.registerClass(
-class IntellihideOptionsDialog extends Adw.Window {
+class IntellihideOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent, pointerRevealKey, autohideKey, keys, positionKey, edgeReveal, descriptions}) {
         super._init({
+            settings,
+            parent,
             title: _('Intellihide Options'),
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 740,
+            width: 640,
+            height: 740,
         });
 
-        this._settings = settings;
         this._pointerRevealKey = pointerRevealKey;
         this._edgeRevealKey = edgeReveal.key;
         this._keys = keys;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
 
         const revealGroup = new Adw.PreferencesGroup({
             title: _('Reveal'),
@@ -196,9 +194,8 @@ class IntellihideOptionsDialog extends Adw.Window {
         syncSensitivity();
     }
 
-    _reset() {
-        for (const key of [...Object.values(this._keys), this._pointerRevealKey, this._edgeRevealKey])
-            this._settings.reset(key);
+    _resetKeys() {
+        return [...Object.values(this._keys), this._pointerRevealKey, this._edgeRevealKey];
     }
 }
 );

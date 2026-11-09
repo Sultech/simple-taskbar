@@ -25,7 +25,7 @@ import {
 import {
     addColorRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchExpanderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
@@ -87,19 +87,17 @@ export function createClassicHighlightOptionsButton(settings) {
 }
 
 export const ClassicHighlightOptionsDialog = GObject.registerClass(
-class ClassicHighlightOptionsDialog extends Adw.Window {
+class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Highlight Options'),
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 580,
+            width: 640,
+            height: 580,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const isClassic = settings.get_string('taskbar-highlight-style') ===
             TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
         const windows10Theme = settings.get_boolean(
@@ -302,12 +300,10 @@ class ClassicHighlightOptionsDialog extends Adw.Window {
         syncFocusSensitivity();
     }
 
-    _reset() {
-        for (const key of HIGHLIGHT_DIALOG_SETTING_KEYS) {
-            if (!this._settings.isDefaultPanelWindows ||
-                !HIGHLIGHT_LENGTH_SETTING_KEYS.includes(key))
-                this._settings.reset(key);
-        }
+    _resetKeys() {
+        return HIGHLIGHT_DIALOG_SETTING_KEYS.filter(key =>
+            !this._settings.isDefaultPanelWindows ||
+            !HIGHLIGHT_LENGTH_SETTING_KEYS.includes(key));
     }
 }
 );

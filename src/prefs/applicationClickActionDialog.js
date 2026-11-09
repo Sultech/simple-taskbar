@@ -13,7 +13,7 @@ import {
 import {
     addComboRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
 } from './preferencesWidgets.js';
 
 function clickActionLabels() {
@@ -80,19 +80,17 @@ export function createApplicationClickActionOptionsButton(settings) {
 }
 
 export const ApplicationClickActionOptionsDialog = GObject.registerClass(
-class ApplicationClickActionOptionsDialog extends Adw.Window {
+class ApplicationClickActionOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Click Action Options'),
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 420,
+            width: 640,
+            height: 420,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const optionsGroup = new Adw.PreferencesGroup({
             title: _('Application Click Actions'),
             description: _('Customize actions for modifier and middle clicks'),
@@ -145,9 +143,8 @@ class ApplicationClickActionOptionsDialog extends Adw.Window {
         );
     }
 
-    _reset() {
-        for (const key of CLICK_ACTION_SETTINGS)
-            this._settings.reset(key);
+    _resetKeys() {
+        return CLICK_ACTION_SETTINGS;
     }
 }
 );

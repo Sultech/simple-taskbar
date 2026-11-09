@@ -9,7 +9,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     addComboRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -32,20 +32,18 @@ export function createApplicationGroupingOptionsButton(settings, forceLabels = f
 }
 
 export const ApplicationGroupingOptionsDialog = GObject.registerClass(
-class ApplicationGroupingOptionsDialog extends Adw.Window {
+class ApplicationGroupingOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent, forceLabels = false}) {
         super._init({
+            settings,
+            parent,
             title: _('Application Label Options'),
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: 520,
+            width: 560,
+            height: 520,
         });
 
-        this._settings = settings;
         this._forceLabels = forceLabels;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
 
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Application Labels'),
@@ -138,11 +136,9 @@ class ApplicationGroupingOptionsDialog extends Adw.Window {
 
     }
 
-    _reset() {
-        for (const key of APPLICATION_GROUPING_SETTINGS) {
-            if (!this._forceLabels || key !== 'hide-app-labels')
-                this._settings.reset(key);
-        }
+    _resetKeys() {
+        return APPLICATION_GROUPING_SETTINGS.filter(key =>
+            !this._forceLabels || key !== 'hide-app-labels');
     }
 }
 );

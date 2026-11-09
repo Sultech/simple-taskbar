@@ -13,7 +13,7 @@ import {
 import {
     addColorRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -27,19 +27,17 @@ export function createProgressBarOptionsButton(settings) {
 }
 
 export const ProgressBarOptionsDialog = GObject.registerClass(
-class ProgressBarOptionsDialog extends Adw.Window {
+class ProgressBarOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Progress Bar Options'),
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 500,
+            width: 640,
+            height: 500,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
 
         const colorGroup = new Adw.PreferencesGroup({
             title: _('Color'),
@@ -109,9 +107,8 @@ class ProgressBarOptionsDialog extends Adw.Window {
         syncSensitivity();
     }
 
-    _reset() {
-        for (const key of PROGRESS_BAR_SETTING_KEYS)
-            this._settings.reset(key);
+    _resetKeys() {
+        return PROGRESS_BAR_SETTING_KEYS;
     }
 }
 );

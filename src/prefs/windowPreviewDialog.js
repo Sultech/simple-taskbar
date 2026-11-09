@@ -8,7 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -31,19 +31,17 @@ export function createWindowPreviewOptionsButton(settings) {
 }
 
 export const WindowPreviewOptionsDialog = GObject.registerClass(
-class WindowPreviewOptionsDialog extends Adw.Window {
+class WindowPreviewOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Window Preview Options'),
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 500,
+            width: 640,
+            height: 500,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
 
         const timingGroup = new Adw.PreferencesGroup({
             title: _('Preview Timing'),
@@ -130,9 +128,8 @@ class WindowPreviewOptionsDialog extends Adw.Window {
 
     }
 
-    _reset() {
-        for (const key of WINDOW_PREVIEW_SETTINGS)
-            this._settings.reset(key);
+    _resetKeys() {
+        return WINDOW_PREVIEW_SETTINGS;
     }
 }
 );

@@ -4,13 +4,14 @@
 import Adw from 'gi://Adw';
 import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {SettingsSignalTracker} from './settingsSignalTracker.js';
 
-export function createPreferencesDialogContent(dialog, cleanup = null) {
+function createPreferencesDialogContent(dialog, cleanup) {
     const signalTracker = new SettingsSignalTracker();
     const toolbarView = new Adw.ToolbarView();
     dialog.content = toolbarView;
@@ -69,6 +70,32 @@ export function createPreferencesDialogContent(dialog, cleanup = null) {
             signalTracker.connect(object, signal, callback),
     };
 }
+
+export const PreferencesOptionsDialog = GObject.registerClass(
+class PreferencesOptionsDialog extends Adw.Window {
+    _init({settings, parent, title, width, height, cleanup = null}) {
+        super._init({
+            title,
+            transient_for: parent,
+            modal: true,
+            default_width: width,
+            default_height: height,
+        });
+
+        this._settings = settings;
+        this._dialogContent = createPreferencesDialogContent(this, cleanup);
+    }
+
+    _resetKeys() {
+        return [];
+    }
+
+    _reset() {
+        for (const key of this._resetKeys())
+            this._settings.reset(key);
+    }
+}
+);
 
 export function createPreferencesDialogButton(
     settings,

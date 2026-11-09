@@ -8,7 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 
 import {
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 
@@ -30,19 +30,17 @@ export function createPinnedApplicationBehaviorOptionsButton(settings) {
 }
 
 export const PinnedApplicationBehaviorOptionsDialog = GObject.registerClass(
-class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
+class PinnedApplicationBehaviorOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Pinned Application Behavior'),
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: 580,
+            width: 560,
+            height: 580,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const applicationsGroup = new Adw.PreferencesGroup({
             title: _('Pinned and Running Applications'),
             description: _('Control which applications appear on the taskbar'),
@@ -116,9 +114,8 @@ class PinnedApplicationBehaviorOptionsDialog extends Adw.Window {
         syncApplicationBehaviorSensitivity();
     }
 
-    _reset() {
-        for (const key of PINNED_APPLICATION_BEHAVIOR_SETTINGS)
-            this._settings.reset(key);
+    _resetKeys() {
+        return PINNED_APPLICATION_BEHAVIOR_SETTINGS;
     }
 }
 );

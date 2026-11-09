@@ -14,7 +14,7 @@ import {createApplicationGroupingOptionsButton} from './applicationGroupingDialo
 import {
     addSwitchRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 
@@ -43,22 +43,20 @@ export function createOverviewBehaviorButton(
 }
 
 export const OverviewBehaviorDialog = GObject.registerClass(
-class OverviewBehaviorDialog extends Adw.Window {
+class OverviewBehaviorDialog extends PreferencesOptionsDialog {
     _init({settings, parent, keys, axisProfile, title}) {
         super._init({
+            settings,
+            parent,
             title,
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: axisProfile && axisProfile.mode === PANEL_MODE_DEFAULT
+            width: 560,
+            height: axisProfile && axisProfile.mode === PANEL_MODE_DEFAULT
                 ? 580 : axisProfile ? 430 : 300,
         });
 
-        this._settings = settings;
         this._keys = keys;
         this._axisProfile = axisProfile;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const overviewGroup = new Adw.PreferencesGroup({
             title: _('Overview'),
             description: _('These options apply to the mode that is currently active'),

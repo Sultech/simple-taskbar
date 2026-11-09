@@ -9,7 +9,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     addColorRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -31,19 +31,17 @@ export function createShowDesktopButtonOptionsButton(settings) {
 }
 
 export const ShowDesktopButtonOptionsDialog = GObject.registerClass(
-class ShowDesktopButtonOptionsDialog extends Adw.Window {
+class ShowDesktopButtonOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Show Desktop Button'),
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: 560,
+            width: 560,
+            height: 560,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const behaviorGroup = new Adw.PreferencesGroup({
             title: _('Behavior'),
             description: _('Choose what the button does after you restore a window'),
@@ -124,9 +122,8 @@ class ShowDesktopButtonOptionsDialog extends Adw.Window {
 
     }
 
-    _reset() {
-        for (const key of SHOW_DESKTOP_BUTTON_SETTINGS)
-            this._settings.reset(key);
+    _resetKeys() {
+        return SHOW_DESKTOP_BUTTON_SETTINGS;
     }
 }
 );

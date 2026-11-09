@@ -11,7 +11,7 @@ import {windowDodgeModeChoices} from './windowDodgeGroup.js';
 import {
     addComboRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
 
@@ -25,7 +25,7 @@ export function createDynamicTransparencyOptionsButton(settings, keys) {
 }
 
 export const DynamicTransparencyOptionsDialog = GObject.registerClass(
-class DynamicTransparencyOptionsDialog extends Adw.Window {
+class DynamicTransparencyOptionsDialog extends PreferencesOptionsDialog {
     _init({
         settings,
         parent,
@@ -36,23 +36,20 @@ class DynamicTransparencyOptionsDialog extends Adw.Window {
         animationTimeKey,
     }) {
         super._init({
+            settings,
+            parent,
             title,
-            transient_for: parent,
-            modal: true,
-            default_width: 640,
-            default_height: 500,
+            width: 640,
+            height: 500,
         });
 
-        this._settings = settings;
         this._keys = {
             behavior: behaviorKey,
             distance: distanceKey,
             level: levelKey,
             animationTime: animationTimeKey,
         };
-        const {content, connectSettings} = createPreferencesDialogContent(
-            this
-        );
+        const {content, connectSettings} = this._dialogContent;
 
         const optionsGroup = new Adw.PreferencesGroup({
             title: _('Dynamic Transparency'),
@@ -133,9 +130,8 @@ class DynamicTransparencyOptionsDialog extends Adw.Window {
         syncDistanceSensitivity();
     }
 
-    _reset() {
-        for (const key of Object.values(this._keys))
-            this._settings.reset(key);
+    _resetKeys() {
+        return Object.values(this._keys);
     }
 }
 );

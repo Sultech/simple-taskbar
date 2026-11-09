@@ -12,7 +12,7 @@ import {
 } from '../shared/runningIndicatorSettings.js';
 import {
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -26,19 +26,17 @@ export function createRunningIndicatorReserveOptionsButton(settings) {
 }
 
 export const RunningIndicatorReserveDialog = GObject.registerClass(
-class RunningIndicatorReserveDialog extends Adw.Window {
+class RunningIndicatorReserveDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Running Indicator Reserve'),
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: 360,
+            width: 560,
+            height: 360,
         });
 
-        this._settings = settings;
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
         const reserveGroup = new Adw.PreferencesGroup({
             title: _('Indicator Reserve'),
             description: _(
@@ -80,9 +78,8 @@ class RunningIndicatorReserveDialog extends Adw.Window {
         syncSensitivity();
     }
 
-    _reset() {
-        for (const key of RUNNING_INDICATOR_RESERVE_SETTING_KEYS)
-            this._settings.reset(key);
+    _resetKeys() {
+        return RUNNING_INDICATOR_RESERVE_SETTING_KEYS;
     }
 }
 );

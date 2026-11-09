@@ -10,7 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     addToggleChoiceRow,
     createPreferencesDialogButton,
-    createPreferencesDialogContent,
+    PreferencesOptionsDialog,
     createSwitchRow,
 } from './preferencesWidgets.js';
 import {clockStyleKey} from '../shared/panelModeSettings.js';
@@ -24,23 +24,21 @@ export function createClockOptionsButton(settings) {
 }
 
 export const ClockOptionsDialog = GObject.registerClass(
-class ClockOptionsDialog extends Adw.Window {
+class ClockOptionsDialog extends PreferencesOptionsDialog {
     _init({settings, parent}) {
         super._init({
+            settings,
+            parent,
             title: _('Clock'),
-            transient_for: parent,
-            modal: true,
-            default_width: 560,
-            default_height: 620,
+            width: 560,
+            height: 620,
         });
 
-        this._settings = settings;
         this._styleKey = clockStyleKey(settings);
         const desktopSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.interface',
         });
-        const {content, connectSettings} =
-            createPreferencesDialogContent(this);
+        const {content, connectSettings} = this._dialogContent;
 
         const gnomeGroup = new Adw.PreferencesGroup({
             title: _('GNOME Clock'),
@@ -117,9 +115,8 @@ class ClockOptionsDialog extends Adw.Window {
         syncDateOrder();
     }
 
-    _reset() {
-        for (const key of [this._styleKey, 'clock-date-order'])
-            this._settings.reset(key);
+    _resetKeys() {
+        return [this._styleKey, 'clock-date-order'];
     }
 }
 );
