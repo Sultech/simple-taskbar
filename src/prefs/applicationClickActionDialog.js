@@ -63,12 +63,30 @@ function getClickActionOptionChoices() {
     ]);
 }
 
-const CLICK_ACTION_SETTINGS = [
-    'shift-click-action',
-    'ctrl-click-action',
-    'middle-click-action',
-    'shift-middle-click-action',
-];
+function clickActionRows() {
+    return [
+        {
+            key: 'shift-click-action',
+            title: _('Shift+Click Action'),
+            subtitle: _('Choose what happens when Shift+Clicking an application'),
+        },
+        {
+            key: 'ctrl-click-action',
+            title: _('Ctrl+Click Action'),
+            subtitle: _('Choose what happens when Ctrl+Clicking an application'),
+        },
+        {
+            key: 'middle-click-action',
+            title: _('Middle-Click Action'),
+            subtitle: _('Choose what happens when middle-clicking an application'),
+        },
+        {
+            key: 'shift-middle-click-action',
+            title: _('Shift+Middle-Click Action'),
+            subtitle: _('Choose what happens when Shift+Middle-Clicking an application'),
+        },
+    ];
+}
 
 export function createApplicationClickActionOptionsButton(settings) {
     normalizeLegacyMiddleClickAction(settings);
@@ -97,54 +115,18 @@ class ApplicationClickActionOptionsDialog extends PreferencesOptionsDialog {
         });
         content.append(optionsGroup);
 
-        addComboRow(
-            optionsGroup,
-            settings,
-            {
-                key: 'shift-click-action',
-                title: _('Shift+Click Action'),
-                subtitle: _('Choose what happens when Shift+Clicking an application'),
-                choices: getClickActionOptionChoices(),
-            },
-            connectSettings
-        );
-        addComboRow(
-            optionsGroup,
-            settings,
-            {
-                key: 'ctrl-click-action',
-                title: _('Ctrl+Click Action'),
-                subtitle: _('Choose what happens when Ctrl+Clicking an application'),
-                choices: getClickActionOptionChoices(),
-            },
-            connectSettings
-        );
-        addComboRow(
-            optionsGroup,
-            settings,
-            {
-                key: 'middle-click-action',
-                title: _('Middle-Click Action'),
-                subtitle: _('Choose what happens when middle-clicking an application'),
-                choices: getClickActionOptionChoices(),
-            },
-            connectSettings
-        );
-        addComboRow(
-            optionsGroup,
-            settings,
-            {
-                key: 'shift-middle-click-action',
-                title: _('Shift+Middle-Click Action'),
-                subtitle: _('Choose what happens when Shift+Middle-Clicking an application'),
-                choices: getClickActionOptionChoices(),
-            },
-            connectSettings
-        );
+        for (const row of clickActionRows()) {
+            addComboRow(
+                optionsGroup,
+                settings,
+                {...row, choices: getClickActionOptionChoices()},
+                connectSettings
+            );
+        }
     }
 
     _resetKeys() {
-        return CLICK_ACTION_SETTINGS;
+        return clickActionRows().map(row => row.key);
     }
 }
 );
