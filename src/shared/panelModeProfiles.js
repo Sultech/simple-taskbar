@@ -383,14 +383,9 @@ function panelAxisSettingKeys(settings, mode) {
 
 function savePanelAxisSettings(settings, mode, axis) {
     const profile = axisProfile(mode, axis);
-    const values = {};
+    const values = savedSettingValues(settings, panelAxisSettingKeys(settings, mode));
     if (mode === PANEL_MODE_DOCK)
         values[DOCK_AXIS_PROFILE_VERSION_KEY] = new GLib.Variant('u', 1);
-    for (const key of panelAxisSettingKeys(settings, mode)) {
-        const value = settings.get_user_value(key);
-        if (value)
-            values[key] = value;
-    }
     settings.set_value(profile.settings, new GLib.Variant('a{sv}', values));
     settings.set_boolean(profile.saved, true);
 }
