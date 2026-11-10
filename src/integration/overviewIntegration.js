@@ -33,6 +33,17 @@ const DESKTOP_DOCK_UUIDS = [
     'ubuntu-dock@ubuntu.com',
 ];
 
+function insetBoxEdge(box, position, inset) {
+    if (position === 'top')
+        box.y1 += inset;
+    else if (position === 'bottom')
+        box.y2 -= inset;
+    else if (position === 'left')
+        box.x1 += inset;
+    else
+        box.x2 -= inset;
+}
+
 export class OverviewIntegration {
     constructor(panelHeight, settings) {
         this._panelHeight = panelHeight;
@@ -431,12 +442,7 @@ export class OverviewIntegration {
                         1
                     );
                     const inset = integration._panelOverviewInset() * progress;
-                    if (position === 'top')
-                        box.y1 += inset;
-                    else if (position === 'left')
-                        box.x1 += inset;
-                    else
-                        box.x2 -= inset;
+                    insetBoxEdge(box, position, inset);
                 }
                 integration._reserveDockSpace(
                     box,
@@ -465,14 +471,7 @@ export class OverviewIntegration {
                     );
                     const inset = integration._panelOverviewInset() * progress;
                     const position = panelPosition(integration._settings);
-                    if (position === 'top')
-                        box.y1 += inset;
-                    else if (position === 'bottom')
-                        box.y2 -= inset;
-                    else if (position === 'left')
-                        box.x1 += inset;
-                    else
-                        box.x2 -= inset;
+                    insetBoxEdge(box, position, inset);
                 }
                 integration._reserveDockSpace(
                     box,
@@ -524,14 +523,7 @@ export class OverviewIntegration {
             ? Math.clamp(overviewAdjustment.value, 0, 1)
             : 1;
         const inset = dockHeight * progress;
-        if (position === 'top')
-            box.y1 += inset;
-        else if (position === 'bottom')
-            box.y2 -= inset;
-        else if (position === 'left')
-            box.x1 += inset;
-        else
-            box.x2 -= inset;
+        insetBoxEdge(box, position, inset);
     }
 
     _beginAppSpread() {
