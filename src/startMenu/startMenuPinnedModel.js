@@ -18,22 +18,11 @@ export function pinnedFolderItemKey(folderId) {
 }
 
 function parsePinnedItem(value) {
-    if (!value.startsWith(PINNED_FOLDER_PREFIX)) {
-        return {
-            type: 'app',
-            key: pinnedAppItemKey(value),
-            appId: value,
-        };
-    }
+    if (!value.startsWith(PINNED_FOLDER_PREFIX))
+        return appItem(value);
 
     const folder = decodePinnedFolder(value);
-    return {
-        type: 'folder',
-        key: pinnedFolderItemKey(folder.id),
-        id: folder.id,
-        name: folder.name,
-        appIds: folder.apps,
-    };
+    return folderItem(folder.id, folder.name, folder.apps);
 }
 
 function serializePinnedItem(item) {
