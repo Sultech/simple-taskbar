@@ -64,16 +64,18 @@ export class ApplicationOverflowDragController {
         this._taskbarController = null;
     }
 
-    _handleDragOver(source, x, y) {
+    _dragTarget(source, x, y) {
         const item = source && source._taskbarItem;
         if (!item || item._taskbarIsShowDesktop ||
             !this._taskbarController.isTaskbarItemDraggable(item)) {
-            return DND.DragMotionResult.NO_DROP;
+            return {item, target: null};
         }
 
-        const coordinate = this._getStyle() === 'taskbar' &&
-            !this._getVertical() ? x : y;
-        const target = this._getTarget(item, coordinate);
+        return {item, target: this._getTarget(item, this._horizontal() ? x : y)};
+    }
+
+    _handleDragOver(source, x, y) {
+        const {item, target} = this._dragTarget(source, x, y);
         if (!target)
             return DND.DragMotionResult.NO_DROP;
 
@@ -95,15 +97,7 @@ export class ApplicationOverflowDragController {
     }
 
     _acceptDrop(source, x, y) {
-        const item = source && source._taskbarItem;
-        if (!item || item._taskbarIsShowDesktop ||
-            !this._taskbarController.isTaskbarItemDraggable(item)) {
-            return false;
-        }
-
-        const coordinate = this._getStyle() === 'taskbar' &&
-            !this._getVertical() ? x : y;
-        const target = this._getTarget(item, coordinate);
+        const {item, target} = this._dragTarget(source, x, y);
         if (!target)
             return false;
 
