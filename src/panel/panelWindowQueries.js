@@ -4,7 +4,7 @@
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
-import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
+import {DODGE_WINDOW_MODE} from '../shared/autoHideSettings.js';
 
 const HANDLED_WINDOW_TYPES = new Set([
     Meta.WindowType.NORMAL,

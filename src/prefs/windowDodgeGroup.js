@@ -5,7 +5,7 @@ import Adw from 'gi://Adw';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {DODGE_WINDOW_MODE} from '../shared/windowDodgeModes.js';
+import {DODGE_WINDOW_MODE} from '../shared/autoHideSettings.js';
 import {
     addComboRow,
     createSwitchRow,
