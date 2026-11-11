@@ -1135,6 +1135,10 @@ msgstr "Rayon des angles en pixels"
 msgid "Fit Highlight to Icon"
 msgstr "Adapter la surbrillance à l’icône"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "Sans effet tant que l’épaisseur du panneau suit la taille des icônes"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

@@ -1116,6 +1116,10 @@ msgstr "Radio del borde en píxeles"
 msgid "Fit Highlight to Icon"
 msgstr "Ajustar el resaltado al icono"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "No tiene efecto mientras el grosor del panel sigue el tamaño de los iconos"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

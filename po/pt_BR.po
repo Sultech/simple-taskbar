@@ -1111,6 +1111,10 @@ msgstr "Raio da borda em pixels"
 msgid "Fit Highlight to Icon"
 msgstr "Ajustar o destaque ao ícone"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "Não tem efeito enquanto a espessura do painel acompanha o tamanho dos ícones"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

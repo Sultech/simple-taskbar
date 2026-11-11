@@ -1067,6 +1067,10 @@ msgstr "圆角半径（像素）"
 msgid "Fit Highlight to Icon"
 msgstr "使高亮适应图标"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "面板厚度跟随图标尺寸时此选项无效"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

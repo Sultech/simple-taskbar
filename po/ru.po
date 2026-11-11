@@ -1091,6 +1091,10 @@ msgstr "Радиус скругления в пикселях"
 msgid "Fit Highlight to Icon"
 msgstr "Подгонять подсветку под значок"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "Не действует, пока толщина панели подстраивается под размер значков"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

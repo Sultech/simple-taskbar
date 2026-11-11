@@ -1116,6 +1116,10 @@ msgstr "Eckenradius in Pixeln"
 msgid "Fit Highlight to Icon"
 msgstr "Hervorhebung an Symbol anpassen"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "Ohne Wirkung, solange die Paneldicke der Symbolgröße folgt"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

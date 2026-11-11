@@ -1097,6 +1097,10 @@ msgstr "Kenar yarıçapı (piksel)"
 msgid "Fit Highlight to Icon"
 msgstr "Vurgulamayı Simgeye Sığdır"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "Panel kalınlığı simge boyutunu izlerken etkisi yoktur"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "

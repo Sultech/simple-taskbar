@@ -1124,6 +1124,10 @@ msgstr "Raggio degli angoli in pixel"
 msgid "Fit Highlight to Icon"
 msgstr "Adatta l’evidenziazione all’icona"
 
+#: src/prefs/classicHighlightDialog.js:161
+msgid "Has no effect while the panel thickness follows the icon size"
+msgstr "Non ha effetto mentre lo spessore del pannello segue la dimensione delle icone"
+
 #: src/prefs/classicHighlightDialog.js:134
 msgid ""
 "Keep the highlight around the icon and running indicator instead of "
