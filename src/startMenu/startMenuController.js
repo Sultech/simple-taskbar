@@ -922,9 +922,17 @@ export class StartMenuController {
             if (onShown)
                 onShown();
         };
-        if (animate && this.isOpen &&
-            (this._view === 'folder' || this._view === 'all')) {
-            animateStartMenuContentView(this._content, false, show);
+        this._transitionContent(
+            animate && this.isOpen &&
+                (this._view === 'folder' || this._view === 'all'),
+            false,
+            show
+        );
+    }
+
+    _transitionContent(animated, forward, show) {
+        if (animated) {
+            animateStartMenuContentView(this._content, forward, show);
             return;
         }
 
@@ -978,13 +986,11 @@ export class StartMenuController {
             this._content.add_child(view);
             this._updateSize();
         };
-        if (animate && this.isOpen && this._view === 'pinned') {
-            animateStartMenuContentView(this._content, true, show);
-            return;
-        }
-
-        resetStartMenuContentTransition(this._content);
-        show();
+        this._transitionContent(
+            animate && this.isOpen && this._view === 'pinned',
+            true,
+            show
+        );
     }
 
     _showAllApps(keepCategory = false, animate = false, onShown = null) {
@@ -1013,13 +1019,11 @@ export class StartMenuController {
             if (onShown)
                 onShown();
         };
-        if (animate && this.isOpen && this._view === 'pinned') {
-            animateStartMenuContentView(this._content, true, show);
-            return;
-        }
-
-        resetStartMenuContentTransition(this._content);
-        show();
+        this._transitionContent(
+            animate && this.isOpen && this._view === 'pinned',
+            true,
+            show
+        );
     }
 
     _showSearchResults(query) {
