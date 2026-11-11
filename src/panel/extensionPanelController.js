@@ -46,9 +46,8 @@ import {
 } from './panelVerticalItemsController.js';
 import {placePanelItems} from '../shared/panelItemOrder.js';
 import {createPanelItems} from './panelItems.js';
-import {panelGeometry} from './panelGeometry.js';
+import {floatingPanelCornerRadius, panelGeometry} from './panelGeometry.js';
 import {PanelMagnifyController} from './panelMagnifyController.js';
-import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
 import {PanelGeometryController, syncPanelGeometryController} from './panelGeometryController.js';
 import {
     dockFloatingEnabled,

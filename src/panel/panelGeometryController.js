@@ -4,10 +4,9 @@
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {panelGeometry} from './panelGeometry.js';
+import {floatingPanelEdgeGap, panelGeometry} from './panelGeometry.js';
 import {FloatingPanelLayout} from './floatingPanelLayout.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {floatingPanelEdgeGap} from './floatingPanelGeometry.js';
 import {dynamicTaskbarEnabled, floatingTaskbarEnabled, taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {removePanelBlurRadiusStyle, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
 

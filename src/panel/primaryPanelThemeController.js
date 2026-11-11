@@ -33,7 +33,7 @@ import {panelPosition} from '../shared/panelPositionUtils.js';
 import {panelSurfaceStyle} from './panelBackgroundStyle.js';
 import {connectPanelAppearanceSignals} from './panelSettingsSignals.js';
 import {taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
-import {floatingPanelCornerRadius} from './floatingPanelGeometry.js';
+import {floatingPanelCornerRadius} from './panelGeometry.js';
 import {shellMenusUseLightTheme} from '../themeUtils.js';
 
 const BLUR_MY_SHELL_PANEL_KEYS = [

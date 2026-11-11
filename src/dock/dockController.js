@@ -26,10 +26,9 @@ import {
     actorStyleClasses,
     syncSecondaryPanelClasses,
 } from '../panel/secondaryPanelClasses.js';
-import {floatingPanelEdgeGap} from '../panel/floatingPanelGeometry.js';
 import {dockFloatingEnabled} from '../shared/panelModeSettings.js';
 import {FloatingPanelLayout} from '../panel/floatingPanelLayout.js';
-import {panelGeometry} from '../panel/panelGeometry.js';
+import {floatingPanelEdgeGap, panelGeometry} from '../panel/panelGeometry.js';
 import {panelIsVertical, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {panelButtonHoverInset, syncPanelSidePadding} from '../panel/panelButtonPaddingController.js';
 import {PanelButtonCornerRadiusController} from '../panel/panelButtonCornerRadiusController.js';
