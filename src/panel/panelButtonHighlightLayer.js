@@ -2,7 +2,9 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import {
@@ -58,11 +60,16 @@ class PanelButtonHighlightLayer extends St.Widget {
         this._getPanelHeight = getPanelHeight;
         this._getIconSize = getIconSize;
         this._entries = new Map();
+        this._relayoutLaterId = 0;
         for (const key of WATCHED_KEYS)
             this._settings.connectObject(`changed::${key}`, () => this.sync(), this);
     }
 
     destroy() {
+        if (this._relayoutLaterId) {
+            global.compositor.get_laters().remove(this._relayoutLaterId);
+            this._relayoutLaterId = 0;
+        }
         this._settings.disconnectObject(this);
         for (const button of [...this._entries.keys()])
             this.untrack(button);
@@ -107,6 +114,7 @@ class PanelButtonHighlightLayer extends St.Widget {
             source.connectObject(
                 'notify::translation-x', () => this._syncTranslation(entry),
                 'notify::translation-y', () => this._syncTranslation(entry),
+                'notify::allocation', () => this._queueRelayoutLater(),
                 item
             );
         }
@@ -117,6 +125,16 @@ class PanelButtonHighlightLayer extends St.Widget {
         );
         this._syncState(entry);
         this.queue_relayout();
+    }
+
+    _queueRelayoutLater() {
+        if (this._relayoutLaterId)
+            global.compositor.get_laters().remove(this._relayoutLaterId);
+        this._relayoutLaterId = global.compositor.get_laters().add(Meta.LaterType.BEFORE_REDRAW, () => {
+            this._relayoutLaterId = 0;
+            this.queue_relayout();
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     setTracked(button, tracked) {
