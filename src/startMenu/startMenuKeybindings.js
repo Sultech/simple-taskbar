@@ -9,7 +9,7 @@ import Shell from 'gi://Shell';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {startMenuAvailable} from '../shared/startButtonLocation.js';
-import {normalizeAccelerator} from '../shared/keybindingUtils.js';
+import {isSuperOverlayKey, normalizeAccelerator} from '../shared/keybindingUtils.js';
 
 const SUPER_KEY_SETTING = 'start-menu-super-key';
 const SUPER_TAB_KEYBINDING = 'start-menu-super-tab-hotkey';
@@ -24,6 +24,21 @@ const ACTION_MODES = Shell.ActionMode.NORMAL |
     Shell.ActionMode.POPUP;
 const DEFAULT_OVERLAY_ACTION_MODES = Shell.ActionMode.NORMAL |
     Shell.ActionMode.OVERVIEW;
+
+export function restoreOverlayKey(settings) {
+    const [overlayKey] = settings.get_strv(DISPLACED_OVERLAY_KEY);
+    if (overlayKey !== undefined) {
+        const mutterSettings = new Gio.Settings({
+            schema_id: 'org.gnome.mutter',
+        });
+        if (isSuperOverlayKey(
+            mutterSettings.get_string('overlay-key')
+        )) {
+            mutterSettings.set_string('overlay-key', overlayKey);
+        }
+        settings.set_strv(DISPLACED_OVERLAY_KEY, []);
+    }
+}
 
 export class StartMenuKeybindings {
     constructor(

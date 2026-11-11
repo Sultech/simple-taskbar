@@ -19,7 +19,7 @@ import {TrayOverflowController} from './src/overflow/trayOverflowController.js';
 import {FavoritesIntegration} from './src/integration/favoritesIntegration.js';
 import {GridAltTabController} from './src/windowSwitching/gridAltTabController.js';
 import {HotEdgeController} from './src/integration/hotEdgeController.js';
-import {restoreOverlayKey} from './src/startMenu/overlayKeyRecovery.js';
+import {restoreOverlayKey} from './src/startMenu/startMenuKeybindings.js';
 import {PrimaryPanelController} from './src/panel/primaryPanelController.js';
 import {SecondaryPanelManager} from './src/secondaryPanel/secondaryPanelManager.js';
 import {DockPanelManager} from './src/dock/dockPanelManager.js';
