@@ -49,8 +49,12 @@ export function windowReachesPanel(window) {
         window.fullscreen;
 }
 
+export function monitorIsAttached(monitor) {
+    return Boolean(monitor) && monitor.index < global.display.get_n_monitors();
+}
+
 export function monitorInFullscreen(monitor) {
-    return Boolean(monitor) && monitor.index < global.display.get_n_monitors() && monitor.inFullscreen;
+    return monitorIsAttached(monitor) && monitor.inFullscreen;
 }
 
 export function hasWindowCoveringMonitor(monitor) {

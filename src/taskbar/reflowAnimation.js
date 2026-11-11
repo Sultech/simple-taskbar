@@ -60,7 +60,7 @@ export function animateReflowCrossedItems({
         return;
 
     for (const child of oldChildren) {
-        if (!includeChild(child) || skippedItems.has(child) ||
+        if (child.animatingOut || !includeChild(child) || skippedItems.has(child) ||
             oldChildren.indexOf(child) === newChildren.indexOf(child)) {
             continue;
         }

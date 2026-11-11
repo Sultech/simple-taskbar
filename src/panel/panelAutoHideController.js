@@ -17,7 +17,7 @@ import {
     autoHideRevealsInOverview,
     autoHideUsesPressure,
 } from '../shared/autoHideSettings.js';
-import {hasWindowCoveringMonitor, monitorInFullscreen} from './panelWindowQueries.js';
+import {hasWindowCoveringMonitor, monitorInFullscreen, monitorIsAttached} from './panelWindowQueries.js';
 
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
@@ -777,7 +777,7 @@ export class PanelAutoHideController {
         this._destroyPressureBarrier();
         const monitor = this._getMonitor();
         // A barrier would resist crossing between monitors even when fullscreen reveal is disabled.
-        if (!monitor || !this._hidden || !this._usesPressureReveal() ||
+        if (!monitorIsAttached(monitor) || !this._hidden || !this._usesPressureReveal() ||
             !pressureBarriersSupported() || this._fullscreenBlocksReveal()) {
             return;
         }
