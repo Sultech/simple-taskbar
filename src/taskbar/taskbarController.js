@@ -934,15 +934,7 @@ export class TaskbarController {
                 : item.get_preferred_width(this._panelHeight)[1];
         }
 
-        return this._appearanceController.itemSlotWidth(
-            item._taskbarWindow,
-            item._taskbarIsLauncher,
-            item._taskbarPinnedToRunningGap,
-            item._taskbarIsCombinedApp,
-            item._taskbarTrailingSpacing,
-            iconSize,
-            item._taskbarLabel
-        );
+        return this._appearanceController.itemSlotWidthFor(item, iconSize);
     }
 
     getLengthForIconSize(iconSize, items = this.getOrderedItems()) {

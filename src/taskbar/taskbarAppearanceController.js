@@ -98,23 +98,8 @@ export class TaskbarAppearanceController {
     }
 
     updateGlassGeometry(item) {
-        const glassWidth = this.buttonWidth(
-            item._taskbarWindow,
-            this._showAppLabels(),
-            this._getAppLabelWidth(),
-            item._taskbarIsCombinedApp,
-            this._getIconSize(),
-            item._taskbarLabel
-        );
-        const slotWidth = this.itemSlotWidth(
-            item._taskbarWindow,
-            item._taskbarIsLauncher,
-            item._taskbarPinnedToRunningGap,
-            item._taskbarIsCombinedApp,
-            item._taskbarTrailingSpacing,
-            this._getIconSize(),
-            item._taskbarLabel
-        );
+        const glassWidth = this.itemButtonWidth(item);
+        const slotWidth = this.itemSlotWidthFor(item);
         const panelHeight = this._getPanelHeight();
         const visualPanelHeight = this.visualPanelHeight();
         const glassHeight = this.glassHeight(visualPanelHeight);
@@ -315,14 +300,7 @@ export class TaskbarAppearanceController {
     }
 
     glassRect(item) {
-        const glassWidth = this.buttonWidth(
-            item._taskbarWindow,
-            this._showAppLabels(),
-            this._getAppLabelWidth(),
-            item._taskbarIsCombinedApp,
-            this._getIconSize(),
-            item._taskbarLabel
-        );
+        const glassWidth = this.itemButtonWidth(item);
         const vertical = panelIsVertical(this._settings);
         const visualPanelHeight = this.visualPanelHeight();
         const glassCrossOffset = this.glassY(visualPanelHeight);
@@ -519,6 +497,17 @@ export class TaskbarAppearanceController {
         ) ? 0 : 255;
     }
 
+    itemButtonWidth(item) {
+        return this.buttonWidth(
+            item._taskbarWindow,
+            this._showAppLabels(),
+            this._getAppLabelWidth(),
+            item._taskbarIsCombinedApp,
+            this._getIconSize(),
+            item._taskbarLabel
+        );
+    }
+
     buttonWidth(
         window,
         showLabels = this._showAppLabels(),
@@ -627,6 +616,18 @@ export class TaskbarAppearanceController {
                 iconSize,
                 label
             );
+    }
+
+    itemSlotWidthFor(item, iconSize = this._getIconSize()) {
+        return this.itemSlotWidth(
+            item._taskbarWindow,
+            item._taskbarIsLauncher,
+            item._taskbarPinnedToRunningGap,
+            item._taskbarIsCombinedApp,
+            item._taskbarTrailingSpacing,
+            iconSize,
+            item._taskbarLabel
+        );
     }
 
     itemSlotWidth(
