@@ -512,6 +512,106 @@ export class TaskbarController {
         this._syncApplicationVisibility();
     }
 
+    destroy() {
+        if (this._startupSettleId)
+            GLib.Source.remove(this._startupSettleId);
+        this._startupSettleId = 0;
+
+        Main.layoutManager.disconnectObject(this);
+        this._appSystem.disconnectObject(this);
+        this._favorites.disconnectObject(this);
+        global.display.disconnectObject(this);
+        global.window_manager.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        this.actor.disconnectObject(this);
+        this._disconnectActiveWorkspaceSignals();
+
+        for (const [app, id] of this._appSignals)
+            app.disconnect(id);
+        this._appSignals.clear();
+        this._appWindows.clear();
+
+        this._overlayController.destroy();
+        this._overlayController = null;
+        this._iconGeometryController.destroy();
+        this._iconGeometryController = null;
+
+        this._showDesktopController.destroy();
+        this._showDesktopController = null;
+        this._pinnedSeparatorController.clear();
+
+        for (const item of [...this._auxiliaryItems])
+            this.removeAuxiliaryItem(item);
+        this._auxiliaryItems.clear();
+
+        for (const item of this._appButtons.values()) {
+            this._getPreviews().removeItem(item);
+            this._destroyAppMenu(item._taskbarButton);
+            item.destroy();
+        }
+        this._appButtons.clear();
+        for (const item of this._locationActor.get_children())
+            item.destroy();
+        this._locationController.destroy();
+        this._locationController = null;
+        this._iconHoverAnimationController.destroy();
+        this._iconHoverAnimationController = null;
+        this._dragController.destroy();
+        this._dragController = null;
+        this._appItemFactory.destroy();
+        this._appItemFactory = null;
+        this._itemInteractionController.destroy();
+        this._itemInteractionController = null;
+        this._pinnedSeparatorController.destroy();
+        this._pinnedSeparatorController = null;
+        this._appearanceController.destroy();
+        this._appearanceController = null;
+        this._entryModel.destroy();
+        this._entryModel = null;
+        this._locationActor.destroy();
+        this._locationActor = null;
+        this.actor.destroy();
+        this.actor = null;
+        this._redisplayWorkId = 0;
+
+        this._getPreviews = null;
+        this._alignmentActor = null;
+        this._ignoreTaskbarLock = false;
+        this._settings = null;
+        this._appSystem = null;
+        this._tracker = null;
+        this._favorites = null;
+        this._getInterestingWindows = null;
+        this._onAppClicked = null;
+        this._onWindowClicked = null;
+        this._openNewWindow = null;
+        this._onShowDesktopClicked = null;
+        this._onShowDesktopModeChanged = null;
+        this._onRedisplay = null;
+        this._getPositionActor = null;
+        this._getHoverAnimationMonitor = null;
+        this._getPanelInteractionController = null;
+        this._getHoverAnimationNeighbours = null;
+        this._getHoverAnimationEdgeActor = null;
+        this._getHoverAnimationStartButton = null;
+        this._onHoverAnimationReserveChanged = null;
+        this._onHoverAnimationExtentsChanged = null;
+        this._isHoverAnimationBlocked = null;
+        this._auxiliaryItems = null;
+        this._previousPinnedAppIds = null;
+        this._preserveItemWidths = false;
+        this._overflowIconButton = null;
+        this._overflowIconItems = null;
+        this._activeWorkspace = null;
+        this._activeWorkspaceSignalIds = null;
+        this._shownInitially = false;
+        this._availableWidth = 0;
+        this._whenFullCombinedApps = null;
+        this._startMenuOpen = false;
+        this._appLabelWidth = APP_LABEL_WIDTH;
+        this._startupSettling = false;
+    }
+
     _connectApplicationSignals() {
         if (this._startupSettling) {
             Main.layoutManager.connectObject('startup-complete', () => {
@@ -725,106 +825,6 @@ export class TaskbarController {
         this.actor.connectObject('notify::allocation', () => {
             this.queueIconGeometryUpdate();
         }, this);
-    }
-
-    destroy() {
-        if (this._startupSettleId)
-            GLib.Source.remove(this._startupSettleId);
-        this._startupSettleId = 0;
-
-        Main.layoutManager.disconnectObject(this);
-        this._appSystem.disconnectObject(this);
-        this._favorites.disconnectObject(this);
-        global.display.disconnectObject(this);
-        global.window_manager.disconnectObject(this);
-        this._settings.disconnectObject(this);
-        this.actor.disconnectObject(this);
-        this._disconnectActiveWorkspaceSignals();
-
-        for (const [app, id] of this._appSignals)
-            app.disconnect(id);
-        this._appSignals.clear();
-        this._appWindows.clear();
-
-        this._overlayController.destroy();
-        this._overlayController = null;
-        this._iconGeometryController.destroy();
-        this._iconGeometryController = null;
-
-        this._showDesktopController.destroy();
-        this._showDesktopController = null;
-        this._pinnedSeparatorController.clear();
-
-        for (const item of [...this._auxiliaryItems])
-            this.removeAuxiliaryItem(item);
-        this._auxiliaryItems.clear();
-
-        for (const item of this._appButtons.values()) {
-            this._getPreviews().removeItem(item);
-            this._destroyAppMenu(item._taskbarButton);
-            item.destroy();
-        }
-        this._appButtons.clear();
-        for (const item of this._locationActor.get_children())
-            item.destroy();
-        this._locationController.destroy();
-        this._locationController = null;
-        this._iconHoverAnimationController.destroy();
-        this._iconHoverAnimationController = null;
-        this._dragController.destroy();
-        this._dragController = null;
-        this._appItemFactory.destroy();
-        this._appItemFactory = null;
-        this._itemInteractionController.destroy();
-        this._itemInteractionController = null;
-        this._pinnedSeparatorController.destroy();
-        this._pinnedSeparatorController = null;
-        this._appearanceController.destroy();
-        this._appearanceController = null;
-        this._entryModel.destroy();
-        this._entryModel = null;
-        this._locationActor.destroy();
-        this._locationActor = null;
-        this.actor.destroy();
-        this.actor = null;
-        this._redisplayWorkId = 0;
-
-        this._getPreviews = null;
-        this._alignmentActor = null;
-        this._ignoreTaskbarLock = false;
-        this._settings = null;
-        this._appSystem = null;
-        this._tracker = null;
-        this._favorites = null;
-        this._getInterestingWindows = null;
-        this._onAppClicked = null;
-        this._onWindowClicked = null;
-        this._openNewWindow = null;
-        this._onShowDesktopClicked = null;
-        this._onShowDesktopModeChanged = null;
-        this._onRedisplay = null;
-        this._getPositionActor = null;
-        this._getHoverAnimationMonitor = null;
-        this._getPanelInteractionController = null;
-        this._getHoverAnimationNeighbours = null;
-        this._getHoverAnimationEdgeActor = null;
-        this._getHoverAnimationStartButton = null;
-        this._onHoverAnimationReserveChanged = null;
-        this._onHoverAnimationExtentsChanged = null;
-        this._isHoverAnimationBlocked = null;
-        this._auxiliaryItems = null;
-        this._previousPinnedAppIds = null;
-        this._preserveItemWidths = false;
-        this._overflowIconButton = null;
-        this._overflowIconItems = null;
-        this._activeWorkspace = null;
-        this._activeWorkspaceSignalIds = null;
-        this._shownInitially = false;
-        this._availableWidth = 0;
-        this._whenFullCombinedApps = null;
-        this._startMenuOpen = false;
-        this._appLabelWidth = APP_LABEL_WIDTH;
-        this._startupSettling = false;
     }
 
     setAvailableWidth(width) {

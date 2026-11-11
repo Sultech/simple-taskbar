@@ -42,10 +42,6 @@ export class PanelModeController {
         );
     }
 
-    correctSizingSetting(key) {
-        return this._sizingCorrections[key]();
-    }
-
     destroy() {
         this._settings.disconnectObject(this);
         this._sizingCorrections = null;
@@ -53,6 +49,10 @@ export class PanelModeController {
         this._onWindowsXpModeChanged = null;
         this._windowsXpThemeController = null;
         this._settings = null;
+    }
+
+    correctSizingSetting(key) {
+        return this._sizingCorrections[key]();
     }
 
     _windowsXpEnabled() {

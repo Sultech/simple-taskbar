@@ -67,6 +67,11 @@ export class WindowsXpThemeController {
         }
     }
 
+    destroy() {
+        this._settings.disconnectObject(this);
+        this._settings = null;
+    }
+
     enforceIntegerSetting(key) {
         if (!this._settings.get_boolean('windows-xp-theme-enabled'))
             return false;
@@ -77,10 +82,5 @@ export class WindowsXpThemeController {
 
         this._settings.set_int(key, value);
         return true;
-    }
-
-    destroy() {
-        this._settings.disconnectObject(this);
-        this._settings = null;
     }
 }

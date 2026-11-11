@@ -82,6 +82,22 @@ export class PanelClockController {
         this._syncPanelPosition();
     }
 
+    destroy() {
+        if (this._clockAfterUpdateId) {
+            global.stage.disconnect(this._clockAfterUpdateId);
+            this._clockAfterUpdateId = 0;
+        }
+        this._dateMenu._clock.disconnectObject(this);
+        this._desktopSettings.disconnectObject(this);
+        this._settings.disconnectObject(this);
+        if (this._formatted)
+            this._restoreClockText();
+        this._desktopSettings = null;
+        this._settings = null;
+        this._dateMenu = null;
+        this._getPanelThickness = null;
+    }
+
     sync() {
         const clockLayout = this._chooseClockLayout();
         if (!clockLayout) {
@@ -253,22 +269,6 @@ export class PanelClockController {
                 child.margin_left + child.margin_right, 0);
         return siblingsWidth +
             box.layout_manager.spacing * (visibleChildren.length - 1);
-    }
-
-    destroy() {
-        if (this._clockAfterUpdateId) {
-            global.stage.disconnect(this._clockAfterUpdateId);
-            this._clockAfterUpdateId = 0;
-        }
-        this._dateMenu._clock.disconnectObject(this);
-        this._desktopSettings.disconnectObject(this);
-        this._settings.disconnectObject(this);
-        if (this._formatted)
-            this._restoreClockText();
-        this._desktopSettings = null;
-        this._settings = null;
-        this._dateMenu = null;
-        this._getPanelThickness = null;
     }
 
     _syncPanelPosition() {

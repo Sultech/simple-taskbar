@@ -113,10 +113,6 @@ export class PanelWindowDodgeController {
         this._sync();
     }
 
-    sync() {
-        this._queueSync();
-    }
-
     destroy() {
         if (this._syncId)
             GLib.Source.remove(this._syncId);
@@ -139,6 +135,10 @@ export class PanelWindowDodgeController {
         this._onDodgeStateChanged = null;
         this._onTransparencyStateChanged = null;
         this._tracker = null;
+    }
+
+    sync() {
+        this._queueSync();
     }
 
     _trackWindowActor(actor) {

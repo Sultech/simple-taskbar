@@ -464,13 +464,14 @@ export class TrayOverflowController {
         if (!open && this._menuRaiseIndicator !== indicator)
             return;
 
-        if (this._menuRaiseId) {
-            GLib.Source.remove(this._menuRaiseId);
-            this._menuRaiseId = 0;
-        }
         this._menuRaiseIndicator = null;
-        if (!open || indicator.menu.actor.get_parent() !== Main.uiGroup)
+        if (!open || indicator.menu.actor.get_parent() !== Main.uiGroup) {
+            if (this._menuRaiseId) {
+                GLib.Source.remove(this._menuRaiseId);
+                this._menuRaiseId = 0;
+            }
             return;
+        }
 
         const [overflowX, overflowY] =
             this._menu.actor.get_transformed_position();
@@ -485,6 +486,10 @@ export class TrayOverflowController {
         indicator.menu.setSourceAlignment(sourceAlignment);
 
         this._menuRaiseIndicator = indicator;
+        if (this._menuRaiseId) {
+            GLib.Source.remove(this._menuRaiseId);
+            this._menuRaiseId = 0;
+        }
         this._menuRaiseId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
             this._menuRaiseId = 0;
             this._menuRaiseIndicator = null;

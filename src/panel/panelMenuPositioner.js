@@ -86,24 +86,6 @@ export class PanelMenuPositioner {
             this._adjust(indicator);
     }
 
-    refresh() {
-        for (const {menu, removeTopPanelGap} of this._states.values()) {
-            const side = panelArrowSide(this._settings);
-            menu._boxPointer._userArrowSide = side;
-            menu._arrowSide = side;
-            if (removeTopPanelGap && !panelIsTop(this._settings)) {
-                menu.actor.add_style_class_name(
-                    'simple-taskbar-bottom-panel-menu'
-                );
-            } else if (removeTopPanelGap) {
-                menu.actor.remove_style_class_name(
-                    'simple-taskbar-bottom-panel-menu'
-                );
-            }
-            syncXpPopupOffset(menu, this._settings);
-        }
-    }
-
     destroy() {
         for (const {
             indicator,
@@ -135,6 +117,24 @@ export class PanelMenuPositioner {
         );
         this._injectionManager = null;
         this._settings = null;
+    }
+
+    refresh() {
+        for (const {menu, removeTopPanelGap} of this._states.values()) {
+            const side = panelArrowSide(this._settings);
+            menu._boxPointer._userArrowSide = side;
+            menu._arrowSide = side;
+            if (removeTopPanelGap && !panelIsTop(this._settings)) {
+                menu.actor.add_style_class_name(
+                    'simple-taskbar-bottom-panel-menu'
+                );
+            } else if (removeTopPanelGap) {
+                menu.actor.remove_style_class_name(
+                    'simple-taskbar-bottom-panel-menu'
+                );
+            }
+            syncXpPopupOffset(menu, this._settings);
+        }
     }
 
     _adjust(indicator) {

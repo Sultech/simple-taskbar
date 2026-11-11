@@ -131,31 +131,6 @@ export class PanelButtonPaddingController {
         this.sync();
     }
 
-    sync() {
-        const automatic =
-            this._settings.get_int(panelButtonPaddingKey(this._settings)) ===
-            AUTOMATIC_PADDING;
-        const padding = this.effectivePadding();
-        const vertical = panelIsVertical(this._settings);
-        if (this._appliedVertical !== null &&
-            this._appliedVertical !== vertical)
-            this._restoreAll();
-        this._appliedVertical = vertical;
-        this._cornerRadiusController.sync();
-        if (padding !== null && automatic && !vertical)
-            this._panelActor.add_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
-        else
-            this._panelActor.remove_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
-        this.syncEdgePadding();
-        if (padding === null) {
-            this._restoreAll();
-            return;
-        }
-
-        for (const box of this._panelBoxes)
-            this._applyToSubtree(box, padding, vertical);
-    }
-
     destroy() {
         this._settings.disconnectObject(this);
         Main.layoutManager.uiGroup.disconnectObject(this);
@@ -189,6 +164,31 @@ export class PanelButtonPaddingController {
         this._getPanelEdgeGap = null;
         this._startButtonController = null;
         this._settings = null;
+    }
+
+    sync() {
+        const automatic =
+            this._settings.get_int(panelButtonPaddingKey(this._settings)) ===
+            AUTOMATIC_PADDING;
+        const padding = this.effectivePadding();
+        const vertical = panelIsVertical(this._settings);
+        if (this._appliedVertical !== null &&
+            this._appliedVertical !== vertical)
+            this._restoreAll();
+        this._appliedVertical = vertical;
+        this._cornerRadiusController.sync();
+        if (padding !== null && automatic && !vertical)
+            this._panelActor.add_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
+        else
+            this._panelActor.remove_style_class_name(DEFAULT_BUTTON_PADDING_CLASS);
+        this.syncEdgePadding();
+        if (padding === null) {
+            this._restoreAll();
+            return;
+        }
+
+        for (const box of this._panelBoxes)
+            this._applyToSubtree(box, padding, vertical);
     }
 
     _externalPaddingIsActive() {

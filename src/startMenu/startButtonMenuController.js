@@ -50,18 +50,6 @@ export class StartButtonMenuController {
         this._connectOverviewSignals();
     }
 
-    get startMenu() {
-        return this._startMenuController;
-    }
-
-    get contextMenu() {
-        return this._contextMenu;
-    }
-
-    resetOverviewOrigin() {
-        this._startOpenedOverview = false;
-    }
-
     destroy() {
         this._cancelStartMenuAfterOverview();
         Main.overview.disconnectObject(this);
@@ -91,6 +79,18 @@ export class StartButtonMenuController {
         this._onMenuOpenStateChanged = null;
         this._powerGIcon = null;
         this._settingsGIcon = null;
+    }
+
+    get startMenu() {
+        return this._startMenuController;
+    }
+
+    get contextMenu() {
+        return this._contextMenu;
+    }
+
+    resetOverviewOrigin() {
+        this._startOpenedOverview = false;
     }
 
     _connectOverviewSignals() {

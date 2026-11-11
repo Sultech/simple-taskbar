@@ -25,6 +25,16 @@ export class PanelActivitiesController {
         this.sync();
     }
 
+    destroy() {
+        this._activities.set_style(this._originalStyle);
+        this._indicators.orientation = this._orientation;
+        this._originalStyle = null;
+        this._indicators = null;
+        this._activities = null;
+        this._getPanelHeight = null;
+        this._settings = null;
+    }
+
     sync() {
         const vertical = panelIsVertical(this._settings);
         this._indicators.orientation = vertical
@@ -52,16 +62,6 @@ export class PanelActivitiesController {
             return;
 
         this._activities.set_style(style);
-    }
-
-    destroy() {
-        this._activities.set_style(this._originalStyle);
-        this._indicators.orientation = this._orientation;
-        this._originalStyle = null;
-        this._indicators = null;
-        this._activities = null;
-        this._getPanelHeight = null;
-        this._settings = null;
     }
 }
 

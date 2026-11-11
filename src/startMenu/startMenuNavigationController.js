@@ -87,6 +87,12 @@ export class StartMenuNavigationController {
         });
     }
 
+    destroy() {
+        this._setSearchFocusVisible = null;
+        this._getView = null;
+        this._getActors = null;
+    }
+
     blockHover() {
         this._hoverBlocked = true;
         const {searchEntry} = this._getActors();
@@ -133,12 +139,6 @@ export class StartMenuNavigationController {
         const {searchEntry} = this._getActors();
         searchEntry.grab_key_focus();
         this._setSearchFocusVisible(false);
-    }
-
-    destroy() {
-        this._setSearchFocusVisible = null;
-        this._getView = null;
-        this._getActors = null;
     }
 
     _onHover(actor) {

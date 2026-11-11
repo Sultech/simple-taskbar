@@ -45,6 +45,15 @@ export class ShowDesktopButtonController {
         );
     }
 
+    destroy() {
+        this._settings.disconnectObject(this);
+        this._destroyButton();
+        this._onReplaced = null;
+        this._onClicked = null;
+        this._extensionDir = null;
+        this._settings = null;
+    }
+
     setPanelCorner(corner) {
         this._panelCorner = corner;
         this._syncIcon();
@@ -58,15 +67,6 @@ export class ShowDesktopButtonController {
         this._button.checked = checked;
         this._onReplaced(this._button);
         return this._button;
-    }
-
-    destroy() {
-        this._settings.disconnectObject(this);
-        this._destroyButton();
-        this._onReplaced = null;
-        this._onClicked = null;
-        this._extensionDir = null;
-        this._settings = null;
     }
 
     _createButton() {
