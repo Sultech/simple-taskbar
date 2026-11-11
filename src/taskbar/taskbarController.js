@@ -581,11 +581,8 @@ export class TaskbarController {
                 );
             }
             const rebuildPinnedEntries = () => {
-                this._getPreviews().hideTooltip(false);
-                this._getPreviews().hide();
-                this._shownInitially = false;
+                this._resetForGroupingChange();
                 this._queueRedisplay();
-                this._syncDragEnabled();
             };
             this._settings.connectObject(
                 'changed::use-pinned-apps-as-launchers', rebuildPinnedEntries,
@@ -635,11 +632,8 @@ export class TaskbarController {
             this._settings.connectObject('changed::hide-app-labels', () => {
                 const {combinationChanged} = this._syncCombineWhenFull();
                 if (combinationChanged) {
-                    this._shownInitially = false;
-                    this._getPreviews().hideTooltip(false);
-                    this._getPreviews().hide();
+                    this._resetForGroupingChange();
                     this._queueRedisplay();
-                    this._syncDragEnabled();
                 }
                 for (const item of this._appButtons.values()) {
                     this._syncItemLabel(item);
@@ -850,11 +844,8 @@ export class TaskbarController {
     setAvailableWidth(width) {
         this._availableWidth = Math.max(0, Math.floor(width));
         if (this._syncCombineWhenFull().combinationChanged) {
-            this._shownInitially = false;
-            this._getPreviews().hideTooltip(false);
-            this._getPreviews().hide();
+            this._resetForGroupingChange();
             this._queueRedisplay();
-            this._syncDragEnabled();
         }
     }
 
@@ -1129,12 +1120,8 @@ export class TaskbarController {
         const {combinationChanged, labelWidthChanged} =
             this._syncCombineWhenFull();
         let rebuildQueued = false;
-        if (combinationChanged) {
-            this._shownInitially = false;
-            this._getPreviews().hideTooltip(false);
-            this._getPreviews().hide();
-            rebuildQueued = this._syncDragEnabled();
-        }
+        if (combinationChanged)
+            rebuildQueued = this._resetForGroupingChange();
         const entries = this._orderedEntries(this._startupSettling);
         const applicationEntries = entries.filter(entry =>
             !entry.app._simpleTaskbarLocation
@@ -1800,6 +1787,13 @@ export class TaskbarController {
         return !item._taskbarApp._simpleTaskbarLocation;
     }
 
+    _resetForGroupingChange() {
+        this._shownInitially = false;
+        this._getPreviews().hideTooltip(false);
+        this._getPreviews().hide();
+        return this._syncDragEnabled();
+    }
+
     _syncDragEnabled(force = false) {
         const configuration = [
             this._ignoreTaskbarLock
@@ -1999,12 +1993,8 @@ export class TaskbarController {
             this._syncCombineWhenFull();
         if (!labelWidthChanged)
             this._applyCurrentButtonWidths();
-        if (combinationChanged) {
-            this._shownInitially = false;
-            this._getPreviews().hideTooltip(false);
-            this._getPreviews().hide();
-            this._syncDragEnabled();
-        }
+        if (combinationChanged)
+            this._resetForGroupingChange();
         this._queueRedisplay();
         this.queueIconGeometryUpdate();
     }
