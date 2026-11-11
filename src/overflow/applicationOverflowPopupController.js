@@ -173,15 +173,7 @@ export class ApplicationOverflowPopupController {
                         if (animationsRemaining > 0)
                             return;
 
-                        const pending = this._pendingOverflowTransition;
-                        if (!pending)
-                            return;
-                        this._pendingOverflowTransition = null;
-                        this._applyOverflowItems(
-                            pending.items,
-                            pending.style,
-                            pending.layoutSignature
-                        );
+                        this._applyPendingOverflowTransition();
                     },
                 });
             }
@@ -199,15 +191,8 @@ export class ApplicationOverflowPopupController {
                 if (!finished)
                     return;
 
-                const pending = this._pendingOverflowTransition;
-                if (!pending)
+                if (!this._applyPendingOverflowTransition())
                     return;
-                this._pendingOverflowTransition = null;
-                this._applyOverflowItems(
-                    pending.items,
-                    pending.style,
-                    pending.layoutSignature
-                );
                 const newContent =
                     this._section.actor.get_child_at_index(0);
                 if (!newContent || !this._menu.isOpen)
@@ -225,6 +210,19 @@ export class ApplicationOverflowPopupController {
                 });
             },
         });
+    }
+
+    _applyPendingOverflowTransition() {
+        const pending = this._pendingOverflowTransition;
+        if (!pending)
+            return false;
+
+        this._applyOverflowItems(
+            pending.items,
+            pending.style,
+            pending.layoutSignature
+        );
+        return true;
     }
 
     _applyOverflowItems(items, style, layoutSignature) {
