@@ -55,7 +55,7 @@ export class WindowPreviewController {
         this._previewSwitchItemDestroyId = 0;
         this._previewRefreshId = 0;
         this._previewHoverItem = null;
-        this._closingPreviewMenus = new Set();
+        this._closingPreviewMenus = new Map();
         this._peekController = new WindowPeekController(settings, () => Boolean(this._previewItem));
         this._tooltipController = new TaskbarTooltipController({
             settings,
@@ -129,8 +129,8 @@ export class WindowPreviewController {
 
         const closingMenus = [...this._closingPreviewMenus];
         this._closingPreviewMenus.clear();
-        for (const menu of closingMenus)
-            menu.destroy();
+        for (const [menu, anchor] of closingMenus)
+            this._destroyPreviewMenu(menu, anchor);
 
         this._getTaskbarItems = null;
         this._getInterestingWindows = null;
@@ -450,11 +450,9 @@ export class WindowPreviewController {
         this._peekController.restore();
         this._releaseHoverItem();
         const item = this._previewItem;
+        const anchor = this._previewAnchor;
         this._setPreviewItem(null);
-        if (this._previewAnchor) {
-            this._previewAnchor.destroy();
-            this._previewAnchor = null;
-        }
+        this._previewAnchor = null;
         if (!item)
             return;
 
@@ -466,16 +464,25 @@ export class WindowPreviewController {
             return;
 
         if (!animate || !menu.isOpen) {
-            menu.destroy();
+            this._destroyPreviewMenu(menu, anchor);
             return;
         }
 
-        this._closingPreviewMenus.add(menu);
+        this._closingPreviewMenus.set(menu, anchor);
         menu.connect('menu-closed', () => {
-            if (this._closingPreviewMenus.delete(menu))
-                menu.destroy();
+            if (!this._closingPreviewMenus.has(menu))
+                return;
+
+            this._closingPreviewMenus.delete(menu);
+            this._destroyPreviewMenu(menu, anchor);
         });
         closePopupMenu(menu);
+    }
+
+    _destroyPreviewMenu(menu, anchor) {
+        menu.destroy();
+        if (anchor)
+            anchor.destroy();
     }
 
     _positionPreview(menu, item) {
