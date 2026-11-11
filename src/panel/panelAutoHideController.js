@@ -411,9 +411,7 @@ export class PanelAutoHideController {
     }
 
     _syncPointerWatch() {
-        const shouldWatch = this._enabled() ||
-            this._dodgeEnabled && this._dodgeActive &&
-            this._pointerReveal;
+        const shouldWatch = this._canHide();
         if (shouldWatch && !this._cursorPositionInvalidatedId) {
             this._cursorPositionInvalidatedId = this._cursorTracker.connect(
                 'position-invalidated',
@@ -559,10 +557,7 @@ export class PanelAutoHideController {
     }
 
     _scheduleHide(delay = autoHideHideDelay(this._settings)) {
-        const canHide = this._enabled() ||
-            this._dodgeEnabled && this._dodgeActive &&
-            this._pointerReveal;
-        if (!canHide ||
+        if (!this._canHide() ||
             this._overviewSuspended ||
             this._fullscreenRevealController.visibilityHeld || this._hidden ||
             this._hideTimeoutId) {
@@ -581,10 +576,7 @@ export class PanelAutoHideController {
             () => {
                 this._hideTimeoutId = 0;
                 const [x, y] = global.get_pointer();
-                const canStillHide = this._enabled() ||
-                    this._dodgeEnabled && this._dodgeActive &&
-                    this._pointerReveal;
-                if (!canStillHide ||
+                if (!this._canHide() ||
                     this._overviewSuspended ||
                     this._pointerIsInsidePanel() ||
                     this._pointerIsAtRevealEdge(x, y)) {
@@ -664,12 +656,14 @@ export class PanelAutoHideController {
             this._isBlockedCallback();
     }
 
+    _canHide() {
+        return this._enabled() ||
+            this._dodgeEnabled && this._dodgeActive && this._pointerReveal;
+    }
+
     _shouldScheduleHide() {
-        const canHide = this._enabled() ||
-            this._dodgeEnabled && this._dodgeActive &&
-            this._pointerReveal;
         const [x, y] = global.get_pointer();
-        return canHide &&
+        return this._canHide() &&
             !this._pointerIsInsidePanel() &&
             !this._pointerIsAtRevealEdge(x, y);
     }
