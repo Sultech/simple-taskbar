@@ -149,8 +149,7 @@ export function taskbarVisualPanelHeight(
     if (!floatingDock)
         return panelHeight;
 
-    const reserve = iconEdgeReserve(settings);
-    return iconSize + reserve + reserve % 2 + highlightEdgeGap(settings) * 2;
+    return iconSize + dockFloatingPanelReserve(settings);
 }
 
 export function taskbarGlassHeight(
