@@ -23,6 +23,7 @@ import {
     syncSecondaryPanelClasses,
 } from './secondaryPanelClasses.js';
 import {FolderMenuController} from './folderMenuController.js';
+import {PanelHoverRepair} from './panelHoverRepair.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
 import {
@@ -166,6 +167,7 @@ export class ExtensionPanelController {
             startButtonOptions: {manageKeybindings: false},
         });
         this._folderMenuController = new FolderMenuController(settings);
+        this._hoverRepair = new PanelHoverRepair(this.actor);
         this._magnifyController = new PanelMagnifyController({
             actor: this.actor,
             panelBox: this._panelBox,
@@ -254,6 +256,7 @@ export class ExtensionPanelController {
     enable() {
         this._menuManager = new PopupMenu.PopupMenuManager(this.actor);
         this._folderMenuController.enable(this._menuManager);
+        this._hoverRepair.enable();
         this._indicatorController =
             new SecondaryPanelIndicatorController(
                 this._settings,
@@ -437,6 +440,8 @@ export class ExtensionPanelController {
         this._indicatorController = null;
         this._folderMenuController.destroy();
         this._folderMenuController = null;
+        this._hoverRepair.destroy();
+        this._hoverRepair = null;
         this._menuManager = null;
 
         Main.layoutManager.removeChrome(this._panelBox);

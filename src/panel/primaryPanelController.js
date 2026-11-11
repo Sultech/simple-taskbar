@@ -56,6 +56,7 @@ import {
     fitPanelTaskbar,
 } from './panelLayout.js';
 import {PanelLayoutUpdater} from './panelLayoutUpdater.js';
+import {PanelHoverRepair} from './panelHoverRepair.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
 const GNOME_PANEL_SIZE = 32;
@@ -98,6 +99,7 @@ export class PrimaryPanelController {
             settings
         );
         this._notificationAreaController = new NotificationAreaController();
+        this._hoverRepair = new PanelHoverRepair(Main.panel);
         this._quickSettingsIndicatorsController = null;
         this._activitiesDotWidthOverride = null;
         this._activitiesController = null;
@@ -183,6 +185,7 @@ export class PrimaryPanelController {
             showDesktopButton: this._showDesktopButton,
         });
         this._stateController.enable();
+        this._hoverRepair.enable();
         if (dynamicTaskbarEnabled(this._settings)) {
             this._oldPanelBoxLayout = Main.layoutManager.panelBox.layout_manager;
             this._panelBoxLayout = new DynamicPanelBoxLayout(Main.panel, {
@@ -280,6 +283,8 @@ export class PrimaryPanelController {
         this._activitiesDotWidthOverride = null;
         this._clockController.destroy();
         this._clockController = null;
+        this._hoverRepair.destroy();
+        this._hoverRepair = null;
         this._notificationAreaController.destroy();
         this._restoreNativeLayouts();
 
