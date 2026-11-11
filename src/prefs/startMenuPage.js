@@ -3,6 +3,7 @@
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -395,14 +396,6 @@ export function addStartMenuPage({
         title: _('Show Profile Picture'),
         subtitle: _('Use your account picture in the Start Menu'),
     });
-    const updateProfilePictureSwitch = () => {
-        profilePictureSwitch.sensitive = windowsStartMenuSwitch.active;
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateProfilePictureSwitch
-    );
-    updateProfilePictureSwitch();
 
     const powerOptionsSwitch = createSwitchRow(settings, {
         key: 'start-menu-power-options-enabled',
@@ -411,28 +404,12 @@ export function addStartMenuPage({
             'Show power actions here instead of in Quick Settings'
         ),
     });
-    const updatePowerOptionsSwitch = () => {
-        powerOptionsSwitch.sensitive = windowsStartMenuSwitch.active;
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updatePowerOptionsSwitch
-    );
-    updatePowerOptionsSwitch();
 
     const openAllAppsSwitch = createSwitchRow(settings, {
         key: 'start-menu-open-all-apps',
         title: _('Open All Apps by Default'),
         subtitle: _('Skip Pinned and open directly to applications and categories'),
     });
-    const updateOpenAllAppsSwitch = () => {
-        openAllAppsSwitch.sensitive = windowsStartMenuSwitch.active;
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateOpenAllAppsSwitch
-    );
-    updateOpenAllAppsSwitch();
 
     const recommendedAppsSwitch = createSwitchRow(settings, {
         key: 'start-menu-recommended-apps',
@@ -493,14 +470,19 @@ export function addStartMenuPage({
         subtitle: _('Browse applications by category in the Start menu'),
     });
     startMenuOptionsGroup.add(appCategoriesSwitch);
-    const updateAppCategoriesSwitch = () => {
-        appCategoriesSwitch.sensitive = windowsStartMenuSwitch.active;
-    };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateAppCategoriesSwitch
-    );
-    updateAppCategoriesSwitch();
+    for (const row of [
+        profilePictureSwitch,
+        powerOptionsSwitch,
+        openAllAppsSwitch,
+        appCategoriesSwitch,
+    ]) {
+        windowsStartMenuSwitch.bind_property(
+            'active',
+            row,
+            'sensitive',
+            GObject.BindingFlags.SYNC_CREATE
+        );
+    }
 
     const gnomeStartButtonVisibleSwitch = createSwitchRow(settings, {
         key: 'gnome-start-button-visible',
