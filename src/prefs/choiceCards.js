@@ -20,14 +20,19 @@ const WINDOWS_XP_GREEN = [0.24, 0.6, 0.24];
 const WINDOWS_10_BAR = [0.05, 0.05, 0.06];
 const WINDOWS_10_START = [1, 1, 1];
 
-export function roundedRectangle(cr, x, y, width, height, radius) {
-    const r = Math.min(radius, width / 2, height / 2);
+export function roundedSegment(cr, x, y, width, height, startRadius, endRadius) {
+    const start = Math.min(startRadius, width / 2, height / 2);
+    const end = Math.min(endRadius, width / 2, height / 2);
     cr.newSubPath();
-    cr.arc(x + width - r, y + r, r, -Math.PI / 2, 0);
-    cr.arc(x + width - r, y + height - r, r, 0, Math.PI / 2);
-    cr.arc(x + r, y + height - r, r, Math.PI / 2, Math.PI);
-    cr.arc(x + r, y + r, r, Math.PI, 1.5 * Math.PI);
+    cr.arc(x + width - end, y + end, end, -Math.PI / 2, 0);
+    cr.arc(x + width - end, y + height - end, end, 0, Math.PI / 2);
+    cr.arc(x + start, y + height - start, start, Math.PI / 2, Math.PI);
+    cr.arc(x + start, y + start, start, Math.PI, 1.5 * Math.PI);
     cr.closePath();
+}
+
+export function roundedRectangle(cr, x, y, width, height, radius) {
+    roundedSegment(cr, x, y, width, height, radius, radius);
 }
 
 export function setColor(cr, [red, green, blue], alpha = 1) {

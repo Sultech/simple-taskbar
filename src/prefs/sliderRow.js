@@ -6,7 +6,7 @@ import Gdk from 'gi://Gdk';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
-import {rgb, roundedRectangle, setColor} from './choiceCards.js';
+import {rgb, roundedRectangle, roundedSegment, setColor} from './choiceCards.js';
 
 const SLIDER_WIDTH = 160;
 const SLIDER_HEIGHT = 38;
@@ -31,17 +31,6 @@ function doubleValue(value) {
     gvalue.init(GObject.TYPE_DOUBLE);
     gvalue.set_double(value);
     return gvalue;
-}
-
-function trackSegment(cr, x, y, width, height, startRadius, endRadius) {
-    const start = Math.min(startRadius, width / 2, height / 2);
-    const end = Math.min(endRadius, width / 2, height / 2);
-    cr.newSubPath();
-    cr.arc(x + width - end, y + end, end, -Math.PI / 2, 0);
-    cr.arc(x + width - end, y + height - end, end, 0, Math.PI / 2);
-    cr.arc(x + start, y + height - start, start, Math.PI / 2, Math.PI);
-    cr.arc(x + start, y + start, start, Math.PI, 1.5 * Math.PI);
-    cr.closePath();
 }
 
 const SliderArea = GObject.registerClass({
@@ -259,14 +248,14 @@ class SliderRow extends Adw.ActionRow {
 
         const activeWidth = thumbX - THUMB_GAP - trackX;
         if (activeWidth > 0) {
-            trackSegment(cr, trackX, trackY, activeWidth, TRACK_HEIGHT, TRACK_HEIGHT / 2, INNER_RADIUS);
+            roundedSegment(cr, trackX, trackY, activeWidth, TRACK_HEIGHT, TRACK_HEIGHT / 2, INNER_RADIUS);
             setColor(cr, color, alpha);
             cr.fill();
         }
         const inactiveX = thumbX + THUMB_GAP;
         const inactiveWidth = trackX + trackWidth - inactiveX;
         if (inactiveWidth > 0) {
-            trackSegment(cr, inactiveX, trackY, inactiveWidth, TRACK_HEIGHT, INNER_RADIUS, TRACK_HEIGHT / 2);
+            roundedSegment(cr, inactiveX, trackY, inactiveWidth, TRACK_HEIGHT, INNER_RADIUS, TRACK_HEIGHT / 2);
             setColor(cr, color, alpha * INACTIVE_TRACK_ALPHA);
             cr.fill();
         }
