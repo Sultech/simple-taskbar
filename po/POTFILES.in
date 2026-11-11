@@ -24,6 +24,7 @@ src/prefs/panelAppearancePage.js
 src/prefs/panelPreferenceRows.js
 src/prefs/overviewBehaviorDialog.js
 src/prefs/panelPositionChoices.js
+src/prefs/panelItemOrderRows.js
 src/prefs/panelItemsPage.js
 src/prefs/dockItemsPage.js
 src/prefs/panelModeGroup.js

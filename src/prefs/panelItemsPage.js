@@ -31,7 +31,7 @@ import {
 import {selectFolderMenuLocation} from './preferencesDialogs.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {axisPanelPositions} from './panelPositionChoices.js';
-import {syncItemOrderRows} from './panelItemOrderRows.js';
+import {addItemOrderGroups, connectItemMoveButtons, syncItemOrderRows} from './panelItemOrderRows.js';
 import {
     createShowDesktopButtonOptionsButton,
 } from './showDesktopButtonDialog.js';
@@ -228,22 +228,10 @@ export function addPanelItemsPage({
         ],
     };
     const initialPositions = axisPanelPositions(settings.get_string('panel-position'), panelPositions);
-    const panelOrderGroups = new Map([
-        ['left', new Adw.PreferencesGroup({
-            title: _('Left Items'),
-            description: _(
-                'Move items only within their current taskbar position.'
-            ),
-        })],
-        ['center', new Adw.PreferencesGroup({
-            title: _('Center Items'),
-        })],
-        ['right', new Adw.PreferencesGroup({
-            title: _('Right Items'),
-        })],
-    ]);
-    for (const group of panelOrderGroups.values())
-        page.add(group);
+    const panelOrderGroups = addItemOrderGroups(
+        page,
+        _('Move items only within their current taskbar position.')
+    );
 
     const showDesktopOptionsButton =
         createShowDesktopButtonOptionsButton(settings);
@@ -525,14 +513,7 @@ export function addPanelItemsPage({
         if (swapped)
             settings.set_strv('panel-item-order', swapped);
     };
-    for (const [id, controls] of panelOrderRows) {
-        controls.upButton.connect('clicked', () => {
-            movePanelItem(id, -1);
-        });
-        controls.downButton.connect('clicked', () => {
-            movePanelItem(id, 1);
-        });
-    }
+    connectItemMoveButtons(panelOrderRows, movePanelItem);
     connectSettings(
         settings,
         'changed::panel-item-order',

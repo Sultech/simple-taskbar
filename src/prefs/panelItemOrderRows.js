@@ -1,6 +1,35 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Adw from 'gi://Adw';
+
+import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+
+export function addItemOrderGroups(page, description) {
+    const groups = new Map([
+        ['left', new Adw.PreferencesGroup({
+            title: _('Left Items'),
+            description,
+        })],
+        ['center', new Adw.PreferencesGroup({
+            title: _('Center Items'),
+        })],
+        ['right', new Adw.PreferencesGroup({
+            title: _('Right Items'),
+        })],
+    ]);
+    for (const group of groups.values())
+        page.add(group);
+    return groups;
+}
+
+export function connectItemMoveButtons(rows, moveItem) {
+    for (const [id, controls] of rows) {
+        controls.upButton.connect('clicked', () => moveItem(id, -1));
+        controls.downButton.connect('clicked', () => moveItem(id, 1));
+    }
+}
+
 export function syncItemOrderRows(settings, {
     key,
     normalizeOrder,

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
-
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {
@@ -11,7 +9,7 @@ import {
     swapItemOrderNeighbour,
 } from '../shared/panelItemOrder.js';
 import {axisPanelPositions} from './panelPositionChoices.js';
-import {syncItemOrderRows} from './panelItemOrderRows.js';
+import {addItemOrderGroups, connectItemMoveButtons, syncItemOrderRows} from './panelItemOrderRows.js';
 import {positionIsVertical} from '../shared/panelPositionUtils.js';
 import {START_BUTTON_LOCATION_KEY, startButtonInPanel} from '../shared/panelModeSettings.js';
 import {createPanelOrderRow} from './preferencesWidgets.js';
@@ -25,22 +23,10 @@ export function addDockItemsPage({
     connectSettings,
     panelPositions,
 }) {
-    const groups = new Map([
-        ['left', new Adw.PreferencesGroup({
-            title: _('Left Items'),
-            description: _(
-                'Move items only within their current Dock position.'
-            ),
-        })],
-        ['center', new Adw.PreferencesGroup({
-            title: _('Center Items'),
-        })],
-        ['right', new Adw.PreferencesGroup({
-            title: _('Right Items'),
-        })],
-    ]);
-    for (const group of groups.values())
-        page.add(group);
+    const groups = addItemOrderGroups(
+        page,
+        _('Move items only within their current Dock position.')
+    );
 
     const startButtonVisibility = {
         get: () => settings.get_boolean('windows-start-menu-enabled') ||
@@ -192,14 +178,7 @@ export function addDockItemsPage({
         if (swapped)
             settings.set_strv('dock-item-order', swapped);
     };
-    for (const [id, controls] of rows) {
-        controls.upButton.connect('clicked', () => {
-            moveDockItem(id, -1);
-        });
-        controls.downButton.connect('clicked', () => {
-            moveDockItem(id, 1);
-        });
-    }
+    connectItemMoveButtons(rows, moveDockItem);
     connectSettings(
         settings,
         'changed::dock-item-order',
