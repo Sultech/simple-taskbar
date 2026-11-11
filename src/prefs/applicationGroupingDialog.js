@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -43,13 +42,12 @@ class ApplicationGroupingOptionsDialog extends PreferencesOptionsDialog {
         });
 
         this._forceLabels = forceLabels;
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
 
-        const behaviorGroup = new Adw.PreferencesGroup({
+        const behaviorGroup = addGroup({
             title: _('Application Labels'),
             description: _('Customize labels on uncombined applications'),
         });
-        content.append(behaviorGroup);
 
         if (!forceLabels) {
             behaviorGroup.add(createSwitchRow(settings, {
@@ -88,11 +86,10 @@ class ApplicationGroupingOptionsDialog extends PreferencesOptionsDialog {
             connectSettings
         );
 
-        const widthGroup = new Adw.PreferencesGroup({
+        const widthGroup = addGroup({
             title: _('Application Label Width'),
             description: _('Control the width of application title labels'),
         });
-        content.append(widthGroup);
 
         const labelMaxWidthRow = addSliderRow(
             widthGroup,

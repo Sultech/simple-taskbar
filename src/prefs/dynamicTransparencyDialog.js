@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -49,15 +48,14 @@ class DynamicTransparencyOptionsDialog extends PreferencesOptionsDialog {
             level: levelKey,
             animationTime: animationTimeKey,
         };
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
 
-        const optionsGroup = new Adw.PreferencesGroup({
+        const optionsGroup = addGroup({
             title: _('Dynamic Transparency'),
             description: _(
                 'Choose which windows restore the configured panel transparency'
             ),
         });
-        content.append(optionsGroup);
 
         addComboRow(
             optionsGroup,

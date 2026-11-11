@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 
@@ -130,14 +129,13 @@ class ApplicationHoverAnimationDialog extends PreferencesOptionsDialog {
         this._controlDefinitions = controlDefinitions();
         this._sliders = new Map();
         this._syncing = false;
-        const {content, connectSettings} = this._dialogContent;
-        const optionsGroup = new Adw.PreferencesGroup({
+        const {addGroup, connectSettings} = this._dialogContent;
+        const optionsGroup = addGroup({
             title: _('Animation Profile'),
             description: _(
                 'Adjust the profile selected in the application icon settings'
             ),
         });
-        content.append(optionsGroup);
 
         for (const definition of this._controlDefinitions) {
             const slider = createSliderRow({

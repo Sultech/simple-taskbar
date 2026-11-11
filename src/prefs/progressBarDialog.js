@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -37,13 +36,12 @@ class ProgressBarOptionsDialog extends PreferencesOptionsDialog {
             height: 500,
         });
 
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
 
-        const colorGroup = new Adw.PreferencesGroup({
+        const colorGroup = addGroup({
             title: _('Color'),
             description: _('Choose the color of the progress bar fill'),
         });
-        content.append(colorGroup);
 
         const followSwitch = createSwitchRow(settings, {
             key: PROGRESS_BAR_SETTINGS.followIndicatorColors,
@@ -61,11 +59,10 @@ class ProgressBarOptionsDialog extends PreferencesOptionsDialog {
             connectSettings
         );
 
-        const thicknessGroup = new Adw.PreferencesGroup({
+        const thicknessGroup = addGroup({
             title: _('Thickness'),
             description: _('Choose how thick the progress bar fill is'),
         });
-        content.append(thicknessGroup);
 
         const automaticSwitch = createSwitchRow(settings, {
             key: PROGRESS_BAR_SETTINGS.automaticThickness,

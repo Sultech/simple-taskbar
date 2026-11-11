@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -46,13 +45,12 @@ class IntellihideOptionsDialog extends PreferencesOptionsDialog {
         this._pointerRevealKey = pointerRevealKey;
         this._edgeRevealKey = edgeReveal.key;
         this._keys = keys;
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
 
-        const revealGroup = new Adw.PreferencesGroup({
+        const revealGroup = addGroup({
             title: _('Reveal'),
             description: descriptions.reveal,
         });
-        content.append(revealGroup);
 
         const overviewRow = createSwitchRow(settings, {
             key: keys.revealOverview,
@@ -135,11 +133,10 @@ class IntellihideOptionsDialog extends PreferencesOptionsDialog {
             connectSettings
         );
 
-        const hideGroup = new Adw.PreferencesGroup({
+        const hideGroup = addGroup({
             title: _('Hide'),
             description: descriptions.hide,
         });
-        content.append(hideGroup);
 
         addSliderRow(
             hideGroup,

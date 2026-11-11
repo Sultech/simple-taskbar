@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 
@@ -38,13 +37,12 @@ class ClockOptionsDialog extends PreferencesOptionsDialog {
         const desktopSettings = new Gio.Settings({
             schema_id: 'org.gnome.desktop.interface',
         });
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
 
-        const gnomeGroup = new Adw.PreferencesGroup({
+        const gnomeGroup = addGroup({
             title: _('GNOME Clock'),
             description: _('These GNOME settings also change the clock on the lock screen'),
         });
-        content.append(gnomeGroup);
         gnomeGroup.add(createSwitchRow(desktopSettings, {
             key: 'clock-show-date',
             title: _('Show Date'),
@@ -71,11 +69,10 @@ class ClockOptionsDialog extends PreferencesOptionsDialog {
             connectSettings
         );
 
-        const styleGroup = new Adw.PreferencesGroup({
+        const styleGroup = addGroup({
             title: _('Clock Style'),
             description: _('Choose how the taskbar shows the time and date'),
         });
-        content.append(styleGroup);
         addToggleChoiceRow(
             styleGroup,
             settings,

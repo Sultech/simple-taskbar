@@ -65,7 +65,11 @@ function createPreferencesDialogContent(dialog, cleanup) {
     };
 
     return {
-        content,
+        addGroup: params => {
+            const group = new Adw.PreferencesGroup(params);
+            content.append(group);
+            return group;
+        },
         connectSettings: (object, signal, callback) =>
             signalTracker.connect(object, signal, callback),
     };

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -97,20 +96,19 @@ class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
             height: 580,
         });
 
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
         const isClassic = settings.get_string('taskbar-highlight-style') ===
             TASKBAR_HIGHLIGHT_STYLE.CLASSIC;
         const windows10Theme = settings.get_boolean(
             'windows-10-theme-enabled'
         );
 
-        const sizeGroup = new Adw.PreferencesGroup({
+        const sizeGroup = addGroup({
             title: _('Highlight Size'),
             description: _(
                 'Set how far the highlight reaches across the panel'
             ),
         });
-        content.append(sizeGroup);
 
         const iconSize = settings.get_int('icon-size');
         const borderRadiusRow = addSliderRow(
@@ -180,11 +178,10 @@ class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
             );
         }
 
-        const hoverGroup = new Adw.PreferencesGroup({
+        const hoverGroup = addGroup({
             title: _('Hover Highlight'),
             description: _('Customize the hover and pressed highlight'),
         });
-        content.append(hoverGroup);
 
         const hoverExpander = createSwitchExpanderRow(settings, {
             title: _('Highlight Hovering Application Icons'),
@@ -211,11 +208,10 @@ class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
             connectSettings
         );
 
-        const focusGroup = new Adw.PreferencesGroup({
+        const focusGroup = addGroup({
             title: _('Focused Application Highlight'),
             description: _('Customize the highlight for the focused application'),
         });
-        content.append(focusGroup);
 
         const focusExpander = createSwitchExpanderRow(settings, {
             title: _('Highlight the Focused Application'),

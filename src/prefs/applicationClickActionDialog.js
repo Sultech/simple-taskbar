@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -108,12 +107,11 @@ class ApplicationClickActionOptionsDialog extends PreferencesOptionsDialog {
             height: 420,
         });
 
-        const {content, connectSettings} = this._dialogContent;
-        const optionsGroup = new Adw.PreferencesGroup({
+        const {addGroup, connectSettings} = this._dialogContent;
+        const optionsGroup = addGroup({
             title: _('Application Click Actions'),
             description: _('Customize actions for modifier and middle clicks'),
         });
-        content.append(optionsGroup);
 
         for (const row of clickActionRows()) {
             addComboRow(

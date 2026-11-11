@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -40,12 +39,11 @@ class PinnedApplicationBehaviorOptionsDialog extends PreferencesOptionsDialog {
             height: 580,
         });
 
-        const {content, connectSettings} = this._dialogContent;
-        const applicationsGroup = new Adw.PreferencesGroup({
+        const {addGroup, connectSettings} = this._dialogContent;
+        const applicationsGroup = addGroup({
             title: _('Pinned and Running Applications'),
             description: _('Control which applications appear on the taskbar'),
         });
-        content.append(applicationsGroup);
 
         const hidePinnedAppsSwitch = createSwitchRow(settings, {
             key: 'hide-pinned-taskbar-apps',

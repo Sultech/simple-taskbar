@@ -56,12 +56,11 @@ class OverviewBehaviorDialog extends PreferencesOptionsDialog {
 
         this._keys = keys;
         this._axisProfile = axisProfile;
-        const {content, connectSettings} = this._dialogContent;
-        const overviewGroup = new Adw.PreferencesGroup({
+        const {addGroup, connectSettings} = this._dialogContent;
+        const overviewGroup = addGroup({
             title: _('Overview'),
             description: _('These options apply to the mode that is currently active'),
         });
-        content.append(overviewGroup);
 
         const hideDashRow = createSwitchRow(settings, {
             key: keys.hideDash,
@@ -77,10 +76,9 @@ class OverviewBehaviorDialog extends PreferencesOptionsDialog {
         overviewGroup.add(launchToDesktopRow);
 
         if (axisProfile && axisProfile.mode === PANEL_MODE_DEFAULT) {
-            const windowsGroup = new Adw.PreferencesGroup({
+            const windowsGroup = addGroup({
                 title: _('Running Windows'),
             });
-            content.append(windowsGroup);
             const labelOptionsButton = createApplicationGroupingOptionsButton(new DefaultPanelWindowSettings(settings), true);
             const {row: windowsRow, toggle: windowsToggle} = addSwitchRow(windowsGroup, settings, {
                 key: 'default-panel-show-running-windows',
@@ -105,10 +103,9 @@ class OverviewBehaviorDialog extends PreferencesOptionsDialog {
         }
 
         if (axisProfile) {
-            const profileGroup = new Adw.PreferencesGroup({
+            const profileGroup = addGroup({
                 title: _('Profiles'),
             });
-            content.append(profileGroup);
             const profileRow = new Adw.SwitchRow({
                 title: _('Separate Horizontal and Vertical Profiles'),
                 subtitle: _('Remember different settings for horizontal and vertical layouts'),

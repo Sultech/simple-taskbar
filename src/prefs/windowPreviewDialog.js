@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -41,13 +40,12 @@ class WindowPreviewOptionsDialog extends PreferencesOptionsDialog {
             height: 500,
         });
 
-        const {content, connectSettings} = this._dialogContent;
+        const {addGroup, connectSettings} = this._dialogContent;
 
-        const timingGroup = new Adw.PreferencesGroup({
+        const timingGroup = addGroup({
             title: _('Preview Timing'),
             description: _('Control when previews open and close'),
         });
-        content.append(timingGroup);
         addSliderRow(
             timingGroup,
             settings,
@@ -77,21 +75,19 @@ class WindowPreviewOptionsDialog extends PreferencesOptionsDialog {
             connectSettings
         );
 
-        const interactionGroup = new Adw.PreferencesGroup({
+        const interactionGroup = addGroup({
             title: _('Preview Interaction'),
         });
-        content.append(interactionGroup);
         interactionGroup.add(createSwitchRow(settings, {
             key: 'preview-middle-click-close',
             title: _('Middle-Click Closes the Window'),
             subtitle: _('Close a window by middle-clicking its preview'),
         }));
 
-        const peekGroup = new Adw.PreferencesGroup({
+        const peekGroup = addGroup({
             title: _('Window Peeking'),
             description: _('Show a window above other windows while hovering its preview'),
         });
-        content.append(peekGroup);
         peekGroup.add(createSwitchRow(settings, {
             key: 'peek-mode',
             title: _('Enable Window Peeking'),

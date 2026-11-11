@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -41,12 +40,11 @@ class ShowDesktopButtonOptionsDialog extends PreferencesOptionsDialog {
             height: 560,
         });
 
-        const {content, connectSettings} = this._dialogContent;
-        const behaviorGroup = new Adw.PreferencesGroup({
+        const {addGroup, connectSettings} = this._dialogContent;
+        const behaviorGroup = addGroup({
             title: _('Behavior'),
             description: _('Choose what the button does after you restore a window'),
         });
-        content.append(behaviorGroup);
         behaviorGroup.add(createSwitchRow(settings, {
             key: 'show-desktop-cancel-on-restore',
             title: _('Cancel Show Desktop When a Window Is Restored'),
@@ -54,11 +52,10 @@ class ShowDesktopButtonOptionsDialog extends PreferencesOptionsDialog {
                 'The next click hides visible windows instead of restoring the others.'
             ),
         }));
-        const appearanceGroup = new Adw.PreferencesGroup({
+        const appearanceGroup = addGroup({
             title: _('Appearance'),
             description: _('Customize the Show Desktop button'),
         });
-        content.append(appearanceGroup);
 
         addSliderRow(
             appearanceGroup,

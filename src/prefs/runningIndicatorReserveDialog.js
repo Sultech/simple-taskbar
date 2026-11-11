@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -36,14 +35,13 @@ class RunningIndicatorReserveDialog extends PreferencesOptionsDialog {
             height: 360,
         });
 
-        const {content, connectSettings} = this._dialogContent;
-        const reserveGroup = new Adw.PreferencesGroup({
+        const {addGroup, connectSettings} = this._dialogContent;
+        const reserveGroup = addGroup({
             title: _('Indicator Reserve'),
             description: _(
                 'Add space beside indicators for Glass and Classic effects'
             ),
         });
-        content.append(reserveGroup);
 
         const reserveSwitch = createSwitchRow(settings, {
             key: RUNNING_INDICATOR_RESERVE_SETTINGS.enabled,
