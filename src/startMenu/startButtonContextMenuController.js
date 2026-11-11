@@ -71,12 +71,11 @@ export class StartButtonContextMenuController {
             'org.gnome.Settings.desktop'
         );
         if (settingsApp) {
-            if (this._settings.get_boolean('start-menu-context-installed-apps')) {
-                this._section.addAction(
-                    _('Installed Apps'),
-                    () => this._openSettings('applications')
-                );
-            }
+            this._addToggleAction(
+                'start-menu-context-installed-apps',
+                _('Installed Apps'),
+                () => this._openSettings('applications')
+            );
         }
 
         this._addAppAction(
@@ -86,18 +85,16 @@ export class StartButtonContextMenuController {
         );
 
         if (settingsApp) {
-            if (this._settings.get_boolean('start-menu-context-system')) {
-                this._section.addAction(
-                    _('System'),
-                    () => this._openSettings('system', ['about'])
-                );
-            }
-            if (this._settings.get_boolean('start-menu-context-network')) {
-                this._section.addAction(
-                    _('Network Connections'),
-                    () => this._openSettings('network')
-                );
-            }
+            this._addToggleAction(
+                'start-menu-context-system',
+                _('System'),
+                () => this._openSettings('system', ['about'])
+            );
+            this._addToggleAction(
+                'start-menu-context-network',
+                _('Network Connections'),
+                () => this._openSettings('network')
+            );
         }
 
         this._addAppAction(
@@ -131,18 +128,16 @@ export class StartButtonContextMenuController {
             );
         }
 
-        if (this._settings.get_boolean('start-menu-context-run')) {
-            this._section.addAction(
-                _('Run'),
-                () => this._activate(() => Main.openRunDialog())
-            );
-        }
-        if (this._settings.get_boolean('start-menu-context-show-desktop')) {
-            this._section.addAction(
-                _('Desktop'),
-                () => this._activate(() => this._toggleDesktop())
-            );
-        }
+        this._addToggleAction(
+            'start-menu-context-run',
+            _('Run'),
+            () => this._activate(() => Main.openRunDialog())
+        );
+        this._addToggleAction(
+            'start-menu-context-show-desktop',
+            _('Desktop'),
+            () => this._activate(() => this._toggleDesktop())
+        );
 
         this._separator.visible = !this._section.isEmpty();
     }
@@ -157,6 +152,11 @@ export class StartButtonContextMenuController {
         this._openFileManager = null;
         this._closeMenus = null;
         this._settings = null;
+    }
+
+    _addToggleAction(key, label, callback) {
+        if (this._settings.get_boolean(key))
+            this._section.addAction(label, callback);
     }
 
     _addAppAction(key, label, appIds) {
