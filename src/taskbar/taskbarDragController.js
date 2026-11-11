@@ -9,6 +9,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {
     animateReflowCrossedItems,
+    applyChildOrder,
+    planChildGroupMove,
     reflowVisualDirection,
 } from './reflowAnimation.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
@@ -538,22 +540,12 @@ export class TaskbarDragController {
     }
 
     _reorderGroups(sourceGroup, targetGroup, insertBefore) {
-        const sourceItems = new Set(sourceGroup.items);
         const children = this._taskbarActor.get_children();
-        const remainingChildren = children.filter(child =>
-            !sourceItems.has(child)
-        );
         const target = insertBefore
             ? targetGroup.items[0]
             : targetGroup.items.at(-1);
-        const targetIndex = remainingChildren.indexOf(target);
-        const insertIndex = targetIndex + (insertBefore ? 0 : 1);
-        const desiredChildren = [...remainingChildren];
-        desiredChildren.splice(insertIndex, 0, ...sourceGroup.items);
-        const changed = desiredChildren.some((child, index) =>
-            children[index] !== child
-        );
-        if (!changed)
+        const move = planChildGroupMove(children, sourceGroup.items, target, insertBefore);
+        if (!move)
             return false;
 
         const vertical = panelIsVertical(this._settings);
@@ -561,19 +553,13 @@ export class TaskbarDragController {
             length + (vertical ? item.height : item.width), 0
         );
         const visualDirection = this._taskbarVisualDirection(children);
-        const sourceIndex = children.indexOf(sourceGroup.items[0]);
-        const destinationIndex = desiredChildren.indexOf(sourceGroup.items[0]);
-        for (let index = 0; index < desiredChildren.length; index++) {
-            const child = desiredChildren[index];
-            if (this._taskbarActor.get_child_at_index(index) !== child)
-                this._taskbarActor.set_child_at_index(child, index);
-        }
+        applyChildOrder(this._taskbarActor, move.desiredChildren);
         this._animateTaskbarCrossedItems(
             children,
-            desiredChildren,
-            sourceItems,
+            move.desiredChildren,
+            new Set(sourceGroup.items),
             sourceLength,
-            destinationIndex > sourceIndex ? visualDirection : -visualDirection
+            move.movedForward ? visualDirection : -visualDirection
         );
         return true;
     }

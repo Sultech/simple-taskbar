@@ -5,6 +5,8 @@ import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 
 import {
     animateReflowCrossedItems,
+    applyChildOrder,
+    planChildGroupMove,
     reflowVisualDirection,
 } from '../taskbar/reflowAnimation.js';
 
@@ -212,39 +214,25 @@ export class ApplicationOverflowDragController {
 
         const records = this._getRecords();
         const children = this._contentBox.get_children();
-        const sourceAuxiliaryItems = children.filter(child => {
+        const auxiliaryItemsIn = group => children.filter(child => {
             const entry = records.find(record =>
                 record.auxiliaryItem === child
             );
-            return entry && sourceGroup.has(entry.sourceItem);
+            return entry && group.has(entry.sourceItem);
         });
+        const sourceAuxiliaryItems = auxiliaryItemsIn(sourceGroup);
         if (sourceAuxiliaryItems.length === 0)
             return;
 
-        const targetAuxiliaryItems = children.filter(child => {
-            const entry = records.find(record =>
-                record.auxiliaryItem === child
-            );
-            return entry && targetGroup.has(entry.sourceItem);
-        });
+        const targetAuxiliaryItems = auxiliaryItemsIn(targetGroup);
         if (targetAuxiliaryItems.length === 0)
             return;
 
-        const sourceItems = new Set(sourceAuxiliaryItems);
-        const remainingChildren = children.filter(child =>
-            !sourceItems.has(child)
-        );
         const target = insertBefore
             ? targetAuxiliaryItems[0]
             : targetAuxiliaryItems.at(-1);
-        const targetIndex = remainingChildren.indexOf(target);
-        const insertIndex = targetIndex + (insertBefore ? 0 : 1);
-        const desiredChildren = [...remainingChildren];
-        desiredChildren.splice(insertIndex, 0, ...sourceAuxiliaryItems);
-        const changed = desiredChildren.some((child, index) =>
-            children[index] !== child
-        );
-        if (!changed)
+        const move = planChildGroupMove(children, sourceAuxiliaryItems, target, insertBefore);
+        if (!move)
             return;
 
         const horizontal = this._horizontal();
@@ -255,19 +243,13 @@ export class ApplicationOverflowDragController {
             spacing * sourceAuxiliaryItems.length
         );
         const visualDirection = reflowVisualDirection(children, !horizontal);
-        const sourceIndex = children.indexOf(sourceAuxiliaryItems[0]);
-        const destinationIndex = desiredChildren.indexOf(sourceAuxiliaryItems[0]);
-        for (let index = 0; index < desiredChildren.length; index++) {
-            const child = desiredChildren[index];
-            if (this._contentBox.get_child_at_index(index) !== child)
-                this._contentBox.set_child_at_index(child, index);
-        }
+        applyChildOrder(this._contentBox, move.desiredChildren);
         animateReflowCrossedItems({
             oldChildren: children,
-            newChildren: desiredChildren,
-            skippedItems: sourceItems,
+            newChildren: move.desiredChildren,
+            skippedItems: new Set(sourceAuxiliaryItems),
             movedLength: sourceLength,
-            direction: destinationIndex > sourceIndex
+            direction: move.movedForward
                 ? visualDirection
                 : -visualDirection,
             vertical: !horizontal,

@@ -24,6 +24,29 @@ export function reflowVisualDirection(
     return 1;
 }
 
+export function planChildGroupMove(children, groupItems, target, insertBefore) {
+    const groupSet = new Set(groupItems);
+    const remainingChildren = children.filter(child => !groupSet.has(child));
+    const insertIndex = remainingChildren.indexOf(target) + (insertBefore ? 0 : 1);
+    const desiredChildren = [...remainingChildren];
+    desiredChildren.splice(insertIndex, 0, ...groupItems);
+    if (desiredChildren.every((child, index) => children[index] === child))
+        return null;
+
+    return {
+        desiredChildren,
+        movedForward: desiredChildren.indexOf(groupItems[0]) > children.indexOf(groupItems[0]),
+    };
+}
+
+export function applyChildOrder(container, desiredChildren) {
+    for (let index = 0; index < desiredChildren.length; index++) {
+        const child = desiredChildren[index];
+        if (container.get_child_at_index(index) !== child)
+            container.set_child_at_index(child, index);
+    }
+}
+
 export function animateReflowCrossedItems({
     oldChildren,
     newChildren,
