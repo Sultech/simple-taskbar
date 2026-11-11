@@ -36,6 +36,7 @@ import {
 import {
     addComboRow,
     addToggleChoiceRow,
+    createChoiceModel,
     setButtonIcon,
 } from './preferencesWidgets.js';
 import {addSliderRow} from './sliderRow.js';
@@ -226,11 +227,8 @@ export function addApplicationInteractionGroup({
             label: _('Do Nothing'),
         },
     ];
-    const scrollActionModel = new Gtk.StringList();
-    for (const choice of scrollActionChoices)
-        scrollActionModel.append(choice.label);
     const scrollActionDropDown = new Gtk.DropDown({
-        model: scrollActionModel,
+        model: createChoiceModel(scrollActionChoices),
         valign: Gtk.Align.CENTER,
     });
     const scrollActionRow = new Adw.ActionRow({

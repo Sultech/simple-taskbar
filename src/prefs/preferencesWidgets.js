@@ -217,6 +217,13 @@ export function addSpinRow(group, settings, {
     return row;
 }
 
+export function createChoiceModel(choices) {
+    const model = new Gtk.StringList();
+    for (const choice of choices)
+        model.append(choice.label);
+    return model;
+}
+
 export function createPanelOrderRow(settings, {
     key,
     positionState = null,
@@ -229,14 +236,8 @@ export function createPanelOrderRow(settings, {
     optionsButton = null,
 }, connectSettings) {
     let currentChoices = choices;
-    const createModel = availableChoices => {
-        const model = new Gtk.StringList();
-        for (const choice of availableChoices)
-            model.append(choice.label);
-        return model;
-    };
     const positionDropDown = new Gtk.DropDown({
-        model: createModel(currentChoices),
+        model: createChoiceModel(currentChoices),
         tooltip_text: _('Item Position'),
         valign: Gtk.Align.CENTER,
     });
@@ -255,7 +256,7 @@ export function createPanelOrderRow(settings, {
     const setChoices = availableChoices => {
         currentChoices = availableChoices;
         syncingPosition = true;
-        positionDropDown.set_model(createModel(currentChoices));
+        positionDropDown.set_model(createChoiceModel(currentChoices));
         const value = fixedPosition ?? (positionState ? positionState.get() : settings.get_string(key));
         const index = currentChoices.findIndex(
             choice => choice.value === value
@@ -377,17 +378,11 @@ export function addComboRow(group, settings, {
     configureDropDown = () => {},
     addSuffix = () => {},
 }, connectSettings) {
-    const createModel = availableChoices => {
-        const model = new Gtk.StringList();
-        for (const choice of availableChoices)
-            model.append(choice.label);
-        return model;
-    };
     let currentChoices = choicesProvider();
     let syncingChoices = false;
 
     const dropDown = new Gtk.DropDown({
-        model: createModel(currentChoices),
+        model: createChoiceModel(currentChoices),
         valign: Gtk.Align.CENTER,
     });
     const row = new Adw.ActionRow({title, subtitle});
@@ -423,7 +418,7 @@ export function addComboRow(group, settings, {
         connectSettings(settings, `changed::${changedKey}`, () => {
             currentChoices = choicesProvider();
             syncingChoices = true;
-            dropDown.set_model(createModel(currentChoices));
+            dropDown.set_model(createChoiceModel(currentChoices));
             const value = getValue();
             const index = currentChoices.findIndex(
                 choice => choice.value === value
