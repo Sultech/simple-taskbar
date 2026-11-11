@@ -50,6 +50,23 @@ function folderItem(id, name, appIds) {
     };
 }
 
+function appWithId(appId) {
+    return item => item.type === 'app' && item.appId === appId;
+}
+
+function folderWithId(folderId) {
+    return item => item.type === 'folder' && item.id === folderId;
+}
+
+function replaceVisibleEntries(entries, isVisible, orderedVisibleEntries) {
+    let visibleIndex = 0;
+    return entries.map(entry =>
+        isVisible(entry)
+            ? orderedVisibleEntries[visibleIndex++]
+            : entry
+    );
+}
+
 export class StartMenuPinnedModel {
     constructor(settings) {
         this._settings = settings;
@@ -62,9 +79,7 @@ export class StartMenuPinnedModel {
     }
 
     getFolder(folderId) {
-        return this.getItems().find(item =>
-            item.type === 'folder' && item.id === folderId
-        ) ?? null;
+        return this.getItems().find(folderWithId(folderId)) ?? null;
     }
 
     isPinned(appId) {
@@ -118,12 +133,8 @@ export class StartMenuPinnedModel {
 
     createFolder(sourceAppId, targetAppId, name) {
         const items = this.getItems();
-        const sourceIndex = items.findIndex(item =>
-            item.type === 'app' && item.appId === sourceAppId
-        );
-        const targetIndex = items.findIndex(item =>
-            item.type === 'app' && item.appId === targetAppId
-        );
+        const sourceIndex = items.findIndex(appWithId(sourceAppId));
+        const targetIndex = items.findIndex(appWithId(targetAppId));
         if (sourceIndex < 0 || targetIndex < 0 || sourceIndex === targetIndex)
             return null;
 
@@ -143,16 +154,12 @@ export class StartMenuPinnedModel {
 
     moveAppToFolder(appId, folderId) {
         const items = this.getItems();
-        const sourceIndex = items.findIndex(item =>
-            item.type === 'app' && item.appId === appId
-        );
+        const sourceIndex = items.findIndex(appWithId(appId));
         if (sourceIndex < 0)
             return false;
 
         items.splice(sourceIndex, 1);
-        const folderIndex = items.findIndex(item =>
-            item.type === 'folder' && item.id === folderId
-        );
+        const folderIndex = items.findIndex(folderWithId(folderId));
         if (folderIndex < 0)
             return false;
 
@@ -168,9 +175,7 @@ export class StartMenuPinnedModel {
 
     moveAppOutOfFolder(appId, folderId) {
         const items = this.getItems();
-        const folderIndex = items.findIndex(item =>
-            item.type === 'folder' && item.id === folderId
-        );
+        const folderIndex = items.findIndex(folderWithId(folderId));
         if (folderIndex < 0)
             return false;
 
@@ -192,9 +197,7 @@ export class StartMenuPinnedModel {
 
     renameFolder(folderId, name) {
         const items = this.getItems();
-        const index = items.findIndex(item =>
-            item.type === 'folder' && item.id === folderId
-        );
+        const index = items.findIndex(folderWithId(folderId));
         if (index < 0)
             return false;
 
@@ -209,9 +212,7 @@ export class StartMenuPinnedModel {
 
     removeFolder(folderId) {
         const items = this.getItems();
-        const index = items.findIndex(item =>
-            item.type === 'folder' && item.id === folderId
-        );
+        const index = items.findIndex(folderWithId(folderId));
         if (index < 0)
             return false;
 
@@ -226,30 +227,25 @@ export class StartMenuPinnedModel {
         const visibleSet = new Set(visibleKeys);
         const itemsByKey = new Map(items.map(item => [item.key, item]));
         const orderedItems = visibleKeys.map(key => itemsByKey.get(key));
-        let visibleIndex = 0;
-        const reordered = items.map(item =>
-            visibleSet.has(item.key)
-                ? orderedItems[visibleIndex++]
-                : item
-        );
-        this._save(reordered);
+        this._save(replaceVisibleEntries(
+            items,
+            item => visibleSet.has(item.key),
+            orderedItems
+        ));
     }
 
     reorderFolderApps(folderId, visibleAppIds) {
         const items = this.getItems();
-        const folderIndex = items.findIndex(item =>
-            item.type === 'folder' && item.id === folderId
-        );
+        const folderIndex = items.findIndex(folderWithId(folderId));
         if (folderIndex < 0)
             return false;
 
         const folder = items[folderIndex];
         const visibleSet = new Set(visibleAppIds);
-        let visibleIndex = 0;
-        const appIds = folder.appIds.map(appId =>
-            visibleSet.has(appId)
-                ? visibleAppIds[visibleIndex++]
-                : appId
+        const appIds = replaceVisibleEntries(
+            folder.appIds,
+            appId => visibleSet.has(appId),
+            visibleAppIds
         );
         items[folderIndex] = folderItem(folder.id, folder.name, appIds);
         this._save(items);
