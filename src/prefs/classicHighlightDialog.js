@@ -14,6 +14,7 @@ import {
     TASKBAR_HIGHLIGHT_STYLE,
 } from '../shared/classicHighlightSettings.js';
 import {
+    highlightFitToIconHasEffect,
     highlightLengthLowerBound,
     highlightLengthUpperBound,
     highlightSizeLowerBound,
@@ -123,12 +124,13 @@ class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
             },
             connectSettings
         );
+        const followIconSubtitle = _(
+            'Keep the highlight around the icon and running indicator instead of following the panel thickness'
+        );
         const followIconSwitch = createSwitchRow(settings, {
             key: HIGHLIGHT_SIZE_SETTINGS.followIcon,
             title: _('Fit Highlight to Icon'),
-            subtitle: _(
-                'Keep the highlight around the icon and running indicator instead of following the panel thickness'
-            ),
+            subtitle: followIconSubtitle,
         });
         sizeGroup.add(followIconSwitch);
         const {toggle: customThicknessSwitch} = addHighlightExtentRows(
@@ -151,10 +153,26 @@ class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
             }
         );
         const syncFollowIconSwitch = () => {
+            const hasEffect = highlightFitToIconHasEffect(settings);
             followIconSwitch.sensitive = !windows10Theme &&
-                !customThicknessSwitch.enable_expansion;
+                !customThicknessSwitch.enable_expansion && hasEffect;
+            followIconSwitch.subtitle = hasEffect
+                ? followIconSubtitle
+                : _('Has no effect while the panel thickness follows the icon size');
         };
         customThicknessSwitch.connect('notify::enable-expansion', syncFollowIconSwitch);
+        if (!settings.isDefaultPanelWindows) {
+            for (const key of [
+                'default-gnome-panel',
+                'dock-mode',
+                'dock-panel-mode',
+                'dock-panel-height-follow-icon-size',
+                'panel-height-follow-icon-size',
+                'taskbar-dynamic',
+                'windows-xp-theme-enabled',
+            ])
+                connectSettings(settings, `changed::${key}`, syncFollowIconSwitch);
+        }
         syncFollowIconSwitch();
         if (!settings.isDefaultPanelWindows) {
             addHighlightExtentRows(

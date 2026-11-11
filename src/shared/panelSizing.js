@@ -235,6 +235,20 @@ export function taskbarPanelHeight(settings, iconSize) {
     return panelHeightForIconSize(settings, iconSize) + highlightEdgeGap(settings) * 2;
 }
 
+export function highlightFitToIconHasEffect(settings) {
+    if (settings.isDefaultPanelWindows)
+        return true;
+
+    if (settings.isDock || settings.get_boolean('dock-mode')) {
+        return settings.get_boolean('dock-panel-mode') &&
+            !settings.get_boolean('dock-panel-height-follow-icon-size');
+    }
+
+    return settings.get_boolean('default-gnome-panel') ||
+        !settings.get_boolean('panel-height-follow-icon-size') &&
+        !dynamicTaskbarEnabled(settings);
+}
+
 export function dockPanelModeHeight(settings, iconSize) {
     const derivedHeight = panelHeightForIconSize(settings, iconSize);
     if (settings.get_boolean('dock-panel-height-follow-icon-size'))
