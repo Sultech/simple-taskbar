@@ -157,7 +157,7 @@ export class TaskbarController {
             settings: this._settings,
             scope: locationScope,
             tracker: this._tracker,
-            getInterestingWindows: app => this._interestingWindows(app),
+            getInterestingWindows: app => this._getInterestingWindows(app),
             onChanged: () => this._queueRedisplay(),
             onRemoving: (app, onRemoved) => this._removeMinimizedLocation(app, onRemoved),
         });
@@ -201,7 +201,7 @@ export class TaskbarController {
             settings: this._settings,
             tracker: this._tracker,
             favorites: this._favorites,
-            getInterestingWindows: app => this._interestingWindows(app),
+            getInterestingWindows: app => this._getInterestingWindows(app),
             getLocationEntries: () => this._locationController.getEntries(),
             isSecondary: this._isSecondary,
         });
@@ -271,7 +271,7 @@ export class TaskbarController {
                 animateClick: item => this._animateClick(item),
                 animatePinnedLaunch: item => this._animatePinnedLaunch(item),
                 closeApp: (app, timestamp) => this.closeApp(app, timestamp),
-                getInterestingWindows: app => this._interestingWindows(app),
+                getInterestingWindows: app => this._getInterestingWindows(app),
                 getPreviewController: () => this._getPreviews(),
                 isDragging: () => this.isDragging,
                 onAppClicked: (item, app, action) =>
@@ -1402,7 +1402,7 @@ export class TaskbarController {
         const hasFocus = !isLauncher && !isLocation && (window
             ? window === focusedWindow
             : app === focusedApp &&
-                this._interestingWindows(app).includes(focusedWindow));
+                this._getInterestingWindows(app).includes(focusedWindow));
         const focused = hasFocus && !this._startMenuOpen;
         const focusHighlight = focused &&
             (this._settings.get_boolean('windows-xp-theme-enabled') ||
@@ -1581,10 +1581,6 @@ export class TaskbarController {
         this._queueRedisplay();
     }
 
-    _interestingWindows(app) {
-        return this._getInterestingWindows(app);
-    }
-
     closeApp(app, timestamp) {
         if (!this._settings.get_boolean('isolate-workspaces') &&
             !this._settings.get_boolean('isolate-monitors')) {
@@ -1592,7 +1588,7 @@ export class TaskbarController {
             return;
         }
 
-        for (const window of this._interestingWindows(app)) {
+        for (const window of this._getInterestingWindows(app)) {
             if (window.get_compositor_private() !== null)
                 window.delete(timestamp);
         }
@@ -1601,7 +1597,7 @@ export class TaskbarController {
     _windowsForItem(item) {
         return windowsForTaskbarItem(
             item,
-            app => this._interestingWindows(app)
+            app => this._getInterestingWindows(app)
         );
     }
 
@@ -1706,7 +1702,7 @@ export class TaskbarController {
         const combinedAppIds = combinedAppsForLength({
             appIds: apps.map(app => app.get_id()),
             availableLength: this._availableWidth,
-            getWindowCount: index => this._interestingWindows(apps[index]).length,
+            getWindowCount: index => this._getInterestingWindows(apps[index]).length,
             measureCombinedApps: appIds => this._entriesWidth([
                 ...this._entryModel.uncombinedEntries(apps, launcherCount, appIds),
                 ...locationEntries,
@@ -1839,7 +1835,7 @@ export class TaskbarController {
             ? 'changed'
             : 'windows-changed';
         if (!app._simpleTaskbarLocation)
-            this._appWindows.set(app, this._interestingWindows(app));
+            this._appWindows.set(app, this._getInterestingWindows(app));
         const id = app.connect(signal, () => {
             this._getPreviews().windowsChanged(app);
             if (!app._simpleTaskbarLocation && !this._appWindowsChanged(app))
@@ -1868,7 +1864,7 @@ export class TaskbarController {
     }
 
     _appWindowsChanged(app) {
-        const windows = this._interestingWindows(app);
+        const windows = this._getInterestingWindows(app);
         const previous = this._appWindows.get(app);
         this._appWindows.set(app, windows);
         return previous.length !== windows.length ||

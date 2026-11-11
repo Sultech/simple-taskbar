@@ -513,10 +513,6 @@ export class WindowPreviewController {
         menu.actor[property] = direction * outward;
     }
 
-    _interestingWindows(app) {
-        return this._getInterestingWindows(app);
-    }
-
     _overviewIsVisible() {
         return Main.overview.visible || Main.overview.visibleTarget;
     }
@@ -524,7 +520,7 @@ export class WindowPreviewController {
     _windowsForItem(item) {
         return windowsForTaskbarItem(
             item,
-            app => this._interestingWindows(app)
+            app => this._getInterestingWindows(app)
         );
     }
 
