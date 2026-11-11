@@ -9,6 +9,18 @@ import {RunningIndicator} from './runningIndicator.js';
 import {TaskbarItemContainer} from './taskbarItemContainer.js';
 import {dispatchItemButtonPress} from '../inputUtils.js';
 
+function createFixedHost(width, height) {
+    return new St.Widget({
+        layout_manager: new Clutter.FixedLayout(),
+        x_align: Clutter.ActorAlign.CENTER,
+        y_align: Clutter.ActorAlign.FILL,
+        y_expand: true,
+        width,
+        height,
+        clip_to_allocation: false,
+    });
+}
+
 export class TaskbarAppItemFactory {
     constructor({
         activateItem,
@@ -103,15 +115,7 @@ export class TaskbarAppItemFactory {
             clip_to_allocation: false,
         });
         visual.set_pivot_point(0.5, 0.5);
-        const glassHost = new St.Widget({
-            layout_manager: new Clutter.FixedLayout(),
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.FILL,
-            y_expand: true,
-            width: glassWidth,
-            height: panelHeight,
-            clip_to_allocation: false,
-        });
+        const glassHost = createFixedHost(glassWidth, panelHeight);
         const classicHover = new St.Widget({
             style_class: 'simple-taskbar-classic-hover',
             visible: false,
@@ -260,15 +264,7 @@ export class TaskbarAppItemFactory {
             accessible_name: app.get_name(),
             child: layout,
         });
-        const indicatorHost = new St.Widget({
-            layout_manager: new Clutter.FixedLayout(),
-            x_align: Clutter.ActorAlign.CENTER,
-            y_align: Clutter.ActorAlign.FILL,
-            y_expand: true,
-            width: glassWidth,
-            height: panelHeight,
-            clip_to_allocation: false,
-        });
+        const indicatorHost = createFixedHost(glassWidth, panelHeight);
         const indicator = new RunningIndicator(
             'simple-taskbar-running-indicator',
             glass
