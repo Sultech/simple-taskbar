@@ -4,6 +4,7 @@
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {DateMenuAlignmentController} from './dateMenuAlignmentController.js';
+import {reorderBoxChildren} from '../shared/panelItemOrder.js';
 
 export class PrimaryPanelStateController {
     constructor({
@@ -210,17 +211,7 @@ export class PrimaryPanelStateController {
                 targetChildren.push(originalChildren[index]);
             }
             targetChildren.push(...dynamicByGap[originalChildren.length]);
-
-            for (let index = 0; index < targetChildren.length; index++) {
-                const actor = targetChildren[index];
-                if (box.get_child_at_index(index) === actor)
-                    continue;
-
-                if (actor.get_parent() === box)
-                    box.set_child_at_index(actor, index);
-                else
-                    box.insert_child_at_index(actor, index);
-            }
+            reorderBoxChildren(box, targetChildren);
         }
 
         for (const {box, orientation} of this._panelBoxState)

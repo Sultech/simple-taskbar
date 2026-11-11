@@ -107,7 +107,7 @@ export function orderPanelItems(items, order) {
         .filter(item => item !== undefined);
 }
 
-function reorderBoxChildren(box, actors) {
+export function reorderBoxChildren(box, actors) {
     for (let index = 0; index < actors.length; index++) {
         const actor = actors[index];
         if (box.get_child_at_index(index) === actor)
