@@ -66,22 +66,9 @@ export class ApplicationOverflowItemController {
                 : app.get_name(),
             y_align: Clutter.ActorAlign.CENTER,
         });
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-application-overflow-list-content',
-            x_align: Clutter.ActorAlign.START,
-            x_expand: true,
-        });
-        content.add_child(icon);
-        content.add_child(label);
-        const button = new St.Button({
-            style_class: 'simple-taskbar-application-overflow-list-item',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
+        const button = this._createListButton(item, icon, label, {
             x_align: Clutter.ActorAlign.FILL,
             x_expand: true,
-            accessible_name: item._taskbarButton.accessible_name,
-            child: content,
         });
         if (window) {
             window.connectObject('notify::title', () => {
@@ -142,24 +129,30 @@ export class ApplicationOverflowItemController {
             text: _('Show desktop'),
             y_align: Clutter.ActorAlign.CENTER,
         });
+        const button = this._createListButton(item, clone, label, {
+            height: panelHeight,
+        });
+        this._configure(button, item, item, false);
+        return button;
+    }
+
+    _createListButton(item, leadingActor, label, layoutProps) {
         const content = new St.BoxLayout({
             style_class: 'simple-taskbar-application-overflow-list-content',
             x_align: Clutter.ActorAlign.START,
             x_expand: true,
         });
-        content.add_child(clone);
+        content.add_child(leadingActor);
         content.add_child(label);
-        const button = new St.Button({
+        return new St.Button({
             style_class: 'simple-taskbar-application-overflow-list-item',
             reactive: true,
             can_focus: true,
             track_hover: true,
-            height: panelHeight,
+            ...layoutProps,
             accessible_name: item._taskbarButton.accessible_name,
             child: content,
         });
-        this._configure(button, item, item, false);
-        return button;
     }
 
     _configure(auxiliaryItem, sourceItem, styleItem, previewsEnabled,
