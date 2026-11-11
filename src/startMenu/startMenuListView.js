@@ -50,32 +50,19 @@ export class StartMenuListViewBuilder {
     }
 
     createAppListButton(app, compact = false, categorized = false) {
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-app-list-content',
-            x_expand: true,
-        });
         const icon = app.create_icon_texture(compact ? 24 : 32);
-        content.add_child(
-            this._runningIndicatorController.createIconStack(app, icon)
-        );
         const label = createAppLabel(
             app.get_name(),
             compact ? 190 : categorized ? 330 : 480
         );
-        content.add_child(label);
-        const button = new St.Button({
-            style_class: compact
+        const button = this._createListButton({
+            styleClass: compact
                 ? 'simple-taskbar-windows-start-recommended'
                 : 'simple-taskbar-windows-start-app-list-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            x_expand: true,
-            x_align: Clutter.ActorAlign.FILL,
-            accessible_name: app.get_name(),
-            child: content,
+            accessibleName: app.get_name(),
+            leading: this._runningIndicatorController.createIconStack(app, icon),
+            label,
         });
-        this._navigationController.enable(button);
         this._tooltipController.add(button, app, label, !compact);
         button._startMenuAppId = app.get_id();
         button._startMenuAppIcon = icon;
@@ -94,29 +81,15 @@ export class StartMenuListViewBuilder {
     }
 
     createSearchResultButton(result) {
-        const content = new St.BoxLayout({
-            style_class: 'simple-taskbar-windows-start-app-list-content',
-            x_expand: true,
-        });
         const icon = this._createSearchResultIcon(result);
-        content.add_child(result.app
-            ? this._runningIndicatorController.createIconStack(
-                result.app,
-                icon
-            )
-            : icon);
-        content.add_child(createAppLabel(result.name, 480));
-        const button = new St.Button({
-            style_class: 'simple-taskbar-windows-start-app-list-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true,
-            x_expand: true,
-            x_align: Clutter.ActorAlign.FILL,
-            accessible_name: result.name,
-            child: content,
+        const button = this._createListButton({
+            styleClass: 'simple-taskbar-windows-start-app-list-button',
+            accessibleName: result.name,
+            leading: result.app
+                ? this._runningIndicatorController.createIconStack(result.app, icon)
+                : icon,
+            label: createAppLabel(result.name, 480),
         });
-        this._navigationController.enable(button);
         if (result.app) {
             button._startMenuAppId = result.app.get_id();
             button._startMenuAppIcon = icon;
@@ -126,6 +99,27 @@ export class StartMenuListViewBuilder {
         if (result.app)
             this._contextMenuController.addHandler(button, result.app);
         this._syncButtonClasses(button);
+        return button;
+    }
+
+    _createListButton({styleClass, accessibleName, leading, label}) {
+        const content = new St.BoxLayout({
+            style_class: 'simple-taskbar-windows-start-app-list-content',
+            x_expand: true,
+        });
+        content.add_child(leading);
+        content.add_child(label);
+        const button = new St.Button({
+            style_class: styleClass,
+            reactive: true,
+            can_focus: true,
+            track_hover: true,
+            x_expand: true,
+            x_align: Clutter.ActorAlign.FILL,
+            accessible_name: accessibleName,
+            child: content,
+        });
+        this._navigationController.enable(button);
         return button;
     }
 
