@@ -10,6 +10,14 @@ import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 const FLUSH_EDGE_TOLERANCE = 0.5;
 const VISIBLE_EDGE_TOLERANCE = 1;
 
+function removeStretchOffset(geometry, entry) {
+    const offset = entry.actor[entry.property] - entry.base;
+    if (entry.property === 'translation_x')
+        geometry.x -= offset;
+    else
+        geometry.y -= offset;
+}
+
 export class TaskbarHoverAnimationGeometry {
     constructor({
         taskbarActor,
@@ -123,13 +131,8 @@ export class TaskbarHoverAnimationGeometry {
             return null;
 
         const entry = getStretchEntry(item);
-        if (entry) {
-            const offset = entry.actor[entry.property] - entry.base;
-            if (entry.property === 'translation_x')
-                geometry.x -= offset;
-            else
-                geometry.y -= offset;
-        }
+        if (entry)
+            removeStretchOffset(geometry, entry);
 
         if (cacheable)
             this._rowGeometry.set(item, geometry);
@@ -363,13 +366,8 @@ export class TaskbarHoverAnimationGeometry {
             return null;
 
         const entry = getStretchEntry(item);
-        if (entry && entry.actor === item) {
-            const offset = entry.actor[entry.property] - entry.base;
-            if (entry.property === 'translation_x')
-                geometry.x -= offset;
-            else
-                geometry.y -= offset;
-        }
+        if (entry && entry.actor === item)
+            removeStretchOffset(geometry, entry);
 
         if (cacheable)
             this._restingGeometries.set(item, geometry);
