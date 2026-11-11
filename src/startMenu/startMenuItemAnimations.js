@@ -34,6 +34,22 @@ function easeItemIn(actor, startScale, delay) {
     });
 }
 
+function easeItemOut(actor, endScale, duration, onStopped) {
+    actor.remove_all_transitions();
+    actor.set_pivot_point(0.5, 0.5);
+    actor.ease({
+        scale_x: endScale,
+        scale_y: endScale,
+        opacity: 0,
+        duration,
+        mode: Clutter.AnimationMode.EASE_IN_QUAD,
+        onStopped: finished => {
+            if (finished)
+                onStopped();
+        },
+    });
+}
+
 export function animateStartMenuContentView(content, forward, show) {
     resetStartMenuContentTransition(content);
     if (!canAnimate(content)) {
@@ -76,19 +92,7 @@ export function animateStartMenuItemOut(actor, onStopped) {
         return;
     }
 
-    actor.remove_all_transitions();
-    actor.set_pivot_point(0.5, 0.5);
-    actor.ease({
-        scale_x: 0.72,
-        scale_y: 0.72,
-        opacity: 0,
-        duration: ITEM_EXIT_DURATION,
-        mode: Clutter.AnimationMode.EASE_IN_QUAD,
-        onStopped: finished => {
-            if (finished)
-                onStopped();
-        },
-    });
+    easeItemOut(actor, 0.72, ITEM_EXIT_DURATION, onStopped);
 }
 
 export function animateStartMenuItemIn(actor) {
@@ -121,19 +125,7 @@ export function animateStartMenuFolderAbsorb(
         });
     }
 
-    sourceActor.remove_all_transitions();
-    sourceActor.set_pivot_point(0.5, 0.5);
-    sourceActor.ease({
-        scale_x: 0.35,
-        scale_y: 0.35,
-        opacity: 0,
-        duration: FOLDER_ABSORB_DURATION,
-        mode: Clutter.AnimationMode.EASE_IN_QUAD,
-        onStopped: finished => {
-            if (finished)
-                onStopped();
-        },
-    });
+    easeItemOut(sourceActor, 0.35, FOLDER_ABSORB_DURATION, onStopped);
 }
 
 export function animateStartMenuLaunch(actor) {
