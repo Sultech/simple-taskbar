@@ -85,16 +85,20 @@ export function getBlurMyShellChildSettings(settings, childName) {
     return settings.get_child(childName);
 }
 
+function blurMyShellBoolean(settings, key) {
+    return blurMyShellHasKey(settings, key) && settings.get_boolean(key);
+}
+
+function blurMyShellInt(settings, key, fallback) {
+    return blurMyShellHasKey(settings, key) ? settings.get_int(key) : fallback;
+}
+
 function blurMyShellPanelSettings() {
     return getBlurMyShellChildSettings(getBlurMyShellSettings(), 'panel');
 }
 
 export function blurMyShellOverridesPanelBackground() {
-    const panelSettings = blurMyShellPanelSettings();
-    if (!blurMyShellHasKey(panelSettings, 'override-background'))
-        return false;
-
-    return panelSettings.get_boolean('override-background');
+    return blurMyShellBoolean(blurMyShellPanelSettings(), 'override-background');
 }
 
 export function blurMyShellBackgroundOnProximity() {
@@ -105,20 +109,14 @@ export function blurMyShellBackgroundOnProximity() {
 }
 
 export function blurMyShellPanelStyleIsTransparent() {
-    const panelSettings = blurMyShellPanelSettings();
-    if (blurMyShellHasKey(panelSettings, 'gradient-panel') &&
-        panelSettings.get_boolean('gradient-panel'))
+    if (blurMyShellBoolean(blurMyShellPanelSettings(), 'gradient-panel'))
         return false;
 
     return blurMyShellPanelStyle() === BLUR_MY_SHELL_PANEL_TRANSPARENT;
 }
 
 export function blurMyShellPanelStyle() {
-    const panelSettings = blurMyShellPanelSettings();
-    if (!blurMyShellHasKey(panelSettings, 'style-panel'))
-        return BLUR_MY_SHELL_PANEL_TRANSPARENT;
-
-    return panelSettings.get_int('style-panel');
+    return blurMyShellInt(blurMyShellPanelSettings(), 'style-panel', BLUR_MY_SHELL_PANEL_TRANSPARENT);
 }
 
 function blurMyShellDockSettings() {
@@ -126,19 +124,11 @@ function blurMyShellDockSettings() {
 }
 
 export function blurMyShellOverridesDockBackground() {
-    const dockSettings = blurMyShellDockSettings();
-    if (!blurMyShellHasKey(dockSettings, 'override-background'))
-        return false;
-
-    return dockSettings.get_boolean('override-background');
+    return blurMyShellBoolean(blurMyShellDockSettings(), 'override-background');
 }
 
 export function blurMyShellDockStyle() {
-    const dockSettings = blurMyShellDockSettings();
-    if (!blurMyShellHasKey(dockSettings, 'style-dash-to-dock'))
-        return null;
-
-    return dockSettings.get_int('style-dash-to-dock');
+    return blurMyShellInt(blurMyShellDockSettings(), 'style-dash-to-dock', null);
 }
 
 export function blurMyShellHasKey(settings, key) {
