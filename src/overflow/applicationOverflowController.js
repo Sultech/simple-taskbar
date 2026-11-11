@@ -771,11 +771,7 @@ export class ApplicationOverflowController {
         if (!this._button.visible)
             return false;
         if (!animate) {
-            this._button.hide();
-            this._button[mainProperty] = -1;
-            this._button.scale_x = 1;
-            this._button.scale_y = 1;
-            this._button.opacity = 255;
+            this._resetHiddenButton(mainProperty);
             return true;
         }
 
@@ -798,14 +794,18 @@ export class ApplicationOverflowController {
                 this._buttonSizeAnimating = false;
                 if (!finished || this._overflowButtonTargetVisible)
                     return;
-                this._button.hide();
-                this._button[mainProperty] = -1;
-                this._button.scale_x = 1;
-                this._button.scale_y = 1;
-                this._button.opacity = 255;
+                this._resetHiddenButton(mainProperty);
             },
         });
         return true;
+    }
+
+    _resetHiddenButton(mainProperty) {
+        this._button.hide();
+        this._button[mainProperty] = -1;
+        this._button.scale_x = 1;
+        this._button.scale_y = 1;
+        this._button.opacity = 255;
     }
 
     _overflowButtonSize(vertical, panelHeight) {
