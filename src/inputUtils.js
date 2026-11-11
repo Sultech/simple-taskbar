@@ -21,6 +21,24 @@ export function modifierClickActionKey(event) {
     return null;
 }
 
+export function dispatchItemButtonPress(event, {modifierClick, middleClick, secondaryClick}) {
+    const mouseButton = event.get_button();
+    const actionKey = modifierClickActionKey(event);
+    if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
+        modifierClick(actionKey);
+        return Clutter.EVENT_STOP;
+    }
+    if (mouseButton === Clutter.BUTTON_MIDDLE) {
+        middleClick(Boolean(event.get_state() & Clutter.ModifierType.SHIFT_MASK));
+        return Clutter.EVENT_STOP;
+    }
+    if (mouseButton === Clutter.BUTTON_SECONDARY) {
+        secondaryClick();
+        return Clutter.EVENT_STOP;
+    }
+    return Clutter.EVENT_PROPAGATE;
+}
+
 export function getScrollDelta(event, increment) {
     switch (event.get_scroll_direction()) {
     case Clutter.ScrollDirection.UP:

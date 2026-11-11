@@ -10,7 +10,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {closePopupMenu} from '../popupMenuUtils.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {modifierClickActionKey} from '../inputUtils.js';
+import {dispatchItemButtonPress} from '../inputUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 export class ApplicationOverflowItemController {
@@ -206,39 +206,19 @@ export class ApplicationOverflowItemController {
             if (!keepOpen)
                 closePopupMenu(this._menu);
         });
-        auxiliaryItem.connect('button-press-event', (_button, event) => {
-            const mouseButton = event.get_button();
-            const shifted = Boolean(
-                event.get_state() & Clutter.ModifierType.SHIFT_MASK
-            );
-            const actionKey = modifierClickActionKey(event);
-            if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
-                const keepOpen =
-                    this._taskbarController.handleItemModifierClick(
-                        sourceItem,
-                        actionKey
-                    );
-                if (!keepOpen)
+        auxiliaryItem.connect('button-press-event', (_button, event) =>
+            dispatchItemButtonPress(event, {
+                modifierClick: actionKey => {
+                    if (!this._taskbarController.handleItemModifierClick(sourceItem, actionKey))
+                        closePopupMenu(this._menu);
+                },
+                middleClick: shifted => {
+                    this._taskbarController.handleItemMiddleClick(sourceItem, shifted);
                     closePopupMenu(this._menu);
-                return Clutter.EVENT_STOP;
-            }
-            if (mouseButton === Clutter.BUTTON_MIDDLE) {
-                this._taskbarController.handleItemMiddleClick(
-                    sourceItem,
-                    shifted
-                );
-                closePopupMenu(this._menu);
-                return Clutter.EVENT_STOP;
-            }
-            if (mouseButton === Clutter.BUTTON_SECONDARY) {
-                this._taskbarController.popupItemMenu(
-                    sourceItem,
-                    auxiliaryItem
-                );
-                return Clutter.EVENT_STOP;
-            }
-            return Clutter.EVENT_PROPAGATE;
-        });
+                },
+                secondaryClick: () =>
+                    this._taskbarController.popupItemMenu(sourceItem, auxiliaryItem),
+            }));
         auxiliaryItem.connect('popup-menu', () => {
             this._taskbarController.popupItemMenu(sourceItem, auxiliaryItem);
             return Clutter.EVENT_STOP;

@@ -70,7 +70,7 @@ import {
     TASKBAR_SEPARATOR_EXTENT,
 } from './taskbarSeparator.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {modifierClickActionKey} from '../inputUtils.js';
+import {dispatchItemButtonPress} from '../inputUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 
 const STARTUP_SETTLE_DELAY = 750;
@@ -353,26 +353,12 @@ export class TaskbarController {
                 },
                 onExtentsChanged: (before, after) =>
                     this._onHoverAnimationExtentsChanged(before, after),
-                onCloneButtonPress: (item, event) => {
-                    const mouseButton = event.get_button();
-                    const shifted = Boolean(
-                        event.get_state() & Clutter.ModifierType.SHIFT_MASK
-                    );
-                    const actionKey = modifierClickActionKey(event);
-                    if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
-                        this.handleItemModifierClick(item, actionKey);
-                        return Clutter.EVENT_STOP;
-                    }
-                    if (mouseButton === Clutter.BUTTON_MIDDLE) {
-                        this.handleItemMiddleClick(item, shifted);
-                        return Clutter.EVENT_STOP;
-                    }
-                    if (mouseButton === Clutter.BUTTON_SECONDARY) {
-                        this.popupItemMenu(item);
-                        return Clutter.EVENT_STOP;
-                    }
-                    return Clutter.EVENT_PROPAGATE;
-                },
+                onCloneButtonPress: (item, event) =>
+                    dispatchItemButtonPress(event, {
+                        modifierClick: actionKey => this.handleItemModifierClick(item, actionKey),
+                        middleClick: shifted => this.handleItemMiddleClick(item, shifted),
+                        secondaryClick: () => this.popupItemMenu(item),
+                    }),
                 onCloneActivate: item => this.activateItem(item),
                 onCloneScroll: (item, event) => {
                     const interaction = this._getPanelInteractionController();

@@ -7,7 +7,7 @@ import St from 'gi://St';
 
 import {RunningIndicator} from './runningIndicator.js';
 import {TaskbarItemContainer} from './taskbarItemContainer.js';
-import {modifierClickActionKey} from '../inputUtils.js';
+import {dispatchItemButtonPress} from '../inputUtils.js';
 
 export class TaskbarAppItemFactory {
     constructor({
@@ -338,26 +338,12 @@ export class TaskbarAppItemFactory {
         button.connect('notify::pressed', () => {
             this._syncClassicHighlight(item);
         });
-        button.connect('button-press-event', (_actor, event) => {
-            const mouseButton = event.get_button();
-            const actionKey = modifierClickActionKey(event);
-            if (mouseButton === Clutter.BUTTON_PRIMARY && actionKey) {
-                this._handleModifierClick(item, actionKey);
-                return Clutter.EVENT_STOP;
-            }
-            if (mouseButton === Clutter.BUTTON_MIDDLE) {
-                this._handleMiddleClick(
-                    item,
-                    Boolean(event.get_state() & Clutter.ModifierType.SHIFT_MASK)
-                );
-                return Clutter.EVENT_STOP;
-            }
-            if (mouseButton === Clutter.BUTTON_SECONDARY) {
-                this._popupMenu(item, button);
-                return Clutter.EVENT_STOP;
-            }
-            return Clutter.EVENT_PROPAGATE;
-        });
+        button.connect('button-press-event', (_actor, event) =>
+            dispatchItemButtonPress(event, {
+                modifierClick: actionKey => this._handleModifierClick(item, actionKey),
+                middleClick: shifted => this._handleMiddleClick(item, shifted),
+                secondaryClick: () => this._popupMenu(item, button),
+            }));
         button.connect('popup-menu', () => {
             this._popupMenu(item, button);
             return Clutter.EVENT_STOP;
