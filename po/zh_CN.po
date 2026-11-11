@@ -3006,6 +3006,14 @@ msgstr "打开可用的终端应用"
 msgid "Task Manager"
 msgstr "任务管理器"
 
+#: src/panel/panelInteractionController.js:194
+msgid "Unable to open Task Manager"
+msgstr "无法打开任务管理器"
+
+#: src/panel/panelInteractionController.js:195
+msgid "Install a task manager such as Resources, or choose one in the Simple Taskbar settings"
+msgstr "请安装任务管理器（例如 Resources），或在 Simple Taskbar 设置中选择一个"
+
 #: src/prefs/startMenuPage.js:683
 msgid "Open the configured task manager"
 msgstr "打开已配置的任务管理器"

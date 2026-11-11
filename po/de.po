@@ -3186,6 +3186,14 @@ msgstr "Die verfügbare Terminalanwendung öffnen"
 msgid "Task Manager"
 msgstr "Task-Manager"
 
+#: src/panel/panelInteractionController.js:194
+msgid "Unable to open Task Manager"
+msgstr "Task-Manager kann nicht geöffnet werden"
+
+#: src/panel/panelInteractionController.js:195
+msgid "Install a task manager such as Resources, or choose one in the Simple Taskbar settings"
+msgstr "Installieren Sie einen Task-Manager wie Resources oder wählen Sie einen in den Einstellungen von Simple Taskbar aus"
+
 #: src/prefs/startMenuPage.js:683
 msgid "Open the configured task manager"
 msgstr "Den konfigurierten Task-Manager öffnen"

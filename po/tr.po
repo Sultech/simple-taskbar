@@ -3090,6 +3090,14 @@ msgstr "Kullanılabilir uçbirim uygulamasını aç"
 msgid "Task Manager"
 msgstr "Görev Yöneticisi"
 
+#: src/panel/panelInteractionController.js:194
+msgid "Unable to open Task Manager"
+msgstr "Görev Yöneticisi açılamıyor"
+
+#: src/panel/panelInteractionController.js:195
+msgid "Install a task manager such as Resources, or choose one in the Simple Taskbar settings"
+msgstr "Resources gibi bir görev yöneticisi yükleyin veya Simple Taskbar ayarlarından birini seçin"
+
 #: src/prefs/startMenuPage.js:683
 msgid "Open the configured task manager"
 msgstr "Yapılandırılmış görev yöneticisini aç"

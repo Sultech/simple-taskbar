@@ -3128,6 +3128,14 @@ msgstr "Az elérhető terminálalkalmazás megnyitása"
 msgid "Task Manager"
 msgstr "Feladatkezelő"
 
+#: src/panel/panelInteractionController.js:194
+msgid "Unable to open Task Manager"
+msgstr "Nem nyitható meg a Feladatkezelő"
+
+#: src/panel/panelInteractionController.js:195
+msgid "Install a task manager such as Resources, or choose one in the Simple Taskbar settings"
+msgstr "Telepítsen egy feladatkezelőt, például a Resources alkalmazást, vagy válasszon egyet a Simple Taskbar beállításaiban"
+
 #: src/prefs/startMenuPage.js:683
 msgid "Open the configured task manager"
 msgstr "A beállított feladatkezelő megnyitása"

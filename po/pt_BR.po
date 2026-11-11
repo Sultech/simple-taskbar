@@ -3147,6 +3147,14 @@ msgstr "Abrir o aplicativo de terminal disponível"
 msgid "Task Manager"
 msgstr "Gerenciador de tarefas"
 
+#: src/panel/panelInteractionController.js:194
+msgid "Unable to open Task Manager"
+msgstr "Não foi possível abrir o gerenciador de tarefas"
+
+#: src/panel/panelInteractionController.js:195
+msgid "Install a task manager such as Resources, or choose one in the Simple Taskbar settings"
+msgstr "Instale um gerenciador de tarefas como o Resources ou escolha um nas configurações do Simple Taskbar"
+
 #: src/prefs/startMenuPage.js:683
 msgid "Open the configured task manager"
 msgstr "Abrir o gerenciador de tarefas configurado"

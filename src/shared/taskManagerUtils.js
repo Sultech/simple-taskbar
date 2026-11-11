@@ -4,6 +4,7 @@
 export const DEFAULT_TASK_MANAGER_APP = 'net.nokyan.Resources.desktop';
 export const TASK_MANAGER_FALLBACK_APPS = Object.freeze([
     DEFAULT_TASK_MANAGER_APP,
+    'org.gnome.Resources.desktop',
     'org.gnome.SystemMonitor.desktop',
     'io.missioncenter.MissionCenter.desktop',
 ]);

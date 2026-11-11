@@ -190,8 +190,9 @@ export class PanelInteractionController {
             return;
         }
 
-        console.error(
-            `Simple Taskbar could not find task manager application: ${configuredApp}`
+        Main.notifyError(
+            _('Unable to open Task Manager'),
+            _('Install a task manager such as Resources, or choose one in the Simple Taskbar settings')
         );
     }
 
