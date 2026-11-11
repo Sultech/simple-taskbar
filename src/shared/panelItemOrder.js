@@ -37,15 +37,19 @@ export const DEFAULT_DOCK_ITEM_ORDER = Object.freeze([
     'applications',
 ]);
 
-export function normalizeDockItemOrder(order) {
-    const validItems = new Set(DEFAULT_DOCK_ITEM_ORDER);
+function normalizeItemOrder(order, defaultOrder, leadingItems = []) {
+    const validItems = new Set(defaultOrder);
     const normalized = [];
 
+    for (const item of leadingItems) {
+        validItems.delete(item);
+        normalized.push(item);
+    }
     for (const item of order) {
         if (validItems.delete(item))
             normalized.push(item);
     }
-    for (const item of DEFAULT_DOCK_ITEM_ORDER) {
+    for (const item of defaultOrder) {
         if (validItems.has(item))
             normalized.push(item);
     }
@@ -53,26 +57,15 @@ export function normalizeDockItemOrder(order) {
     return normalized;
 }
 
+export function normalizeDockItemOrder(order) {
+    return normalizeItemOrder(order, DEFAULT_DOCK_ITEM_ORDER);
+}
+
 export function normalizePanelItemOrder(order) {
-    const validItems = new Set(DEFAULT_PANEL_ITEM_ORDER);
-    const normalized = [];
-
-    for (const {id} of PANEL_BOX_ITEMS) {
-        if (!order.includes(id)) {
-            validItems.delete(id);
-            normalized.push(id);
-        }
-    }
-    for (const item of order) {
-        if (validItems.delete(item))
-            normalized.push(item);
-    }
-    for (const item of DEFAULT_PANEL_ITEM_ORDER) {
-        if (validItems.has(item))
-            normalized.push(item);
-    }
-
-    return normalized;
+    const missingBoxes = PANEL_BOX_ITEMS
+        .map(({id}) => id)
+        .filter(id => !order.includes(id));
+    return normalizeItemOrder(order, DEFAULT_PANEL_ITEM_ORDER, missingBoxes);
 }
 
 export function getWindowsXpPanelItemOrder(order, activitiesPosition) {
