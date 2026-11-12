@@ -42,6 +42,7 @@ import {
 } from './startButtonDialog.js';
 import {
     addSpinRow,
+    addSwitchRow,
     createPanelOrderRow,
     createSwitchRow,
 } from './preferencesWidgets.js';
@@ -142,12 +143,35 @@ export function addPanelItemsPage({
         connectSettings(settings, `changed::${key}`, syncPanelButtonPaddingSensitivity);
     syncPanelButtonPaddingSensitivity();
 
-    const volumeMixerSwitch = createSwitchRow(settings, {
-        key: 'volume-mixer-enabled',
-        title: _('Application Volume Mixer'),
-        subtitle: _('Add per-application volume controls to Quick Settings'),
+    const modulesExpander = new Adw.ExpanderRow({
+        title: _('Modules'),
+        subtitle: _('Optional features you can turn on or off'),
     });
-    panelGroup.add(volumeMixerSwitch);
+    panelGroup.add(modulesExpander);
+    const moduleRows = {add: row => modulesExpander.add_row(row)};
+    for (const module of [
+        {
+            key: 'tray-overflow-enabled',
+            title: _('Tray Icon Arrow'),
+            subtitle: _('Gather application tray icons behind a taskbar arrow'),
+        },
+        {
+            key: 'volume-mixer-enabled',
+            title: _('Application Volume Mixer'),
+            subtitle: _('Add per-application volume controls to Quick Settings'),
+        },
+    ])
+        addSwitchRow(moduleRows, settings, module);
+    const {row: focusedAppModuleRow} = addSwitchRow(moduleRows, settings, {
+        key: 'focused-app-visible',
+        title: _('Focused Application'),
+        subtitle: _('Icon and name of the application in focus'),
+    });
+    addSwitchRow(moduleRows, settings, {
+        key: 'folder-menu-enabled',
+        title: _('Folder Menu'),
+        subtitle: _('Selected folder shortcuts'),
+    });
 
     const folderMenuLocationRow = new Adw.ActionRow({
         title: _('Folder Menu Location'),
@@ -158,7 +182,7 @@ export function addPanelItemsPage({
     });
     folderMenuLocationRow.add_suffix(chooseFolderButton);
     folderMenuLocationRow.activatable_widget = chooseFolderButton;
-    panelGroup.add(folderMenuLocationRow);
+    modulesExpander.add_row(folderMenuLocationRow);
 
     const updateFolderMenuRow = () => {
         const location = settings.get_string('folder-menu-uri');
@@ -580,6 +604,7 @@ export function addPanelItemsPage({
             !windowsXpTheme && settings.get_boolean('folder-menu-enabled');
         const focusedAppAvailable = !panelIsVertical(settings);
         const focusedAppVisible = focusedAppAvailable && settings.get_boolean('focused-app-visible');
+        focusedAppModuleRow.sensitive = focusedAppAvailable;
         panelOrderRows.get('focused-app').visibleButton.sensitive = focusedAppAvailable;
         panelOrderRows.get('focused-app').positionDropDown.sensitive = focusedAppVisible;
         focusedAppOptionsButton.sensitive = focusedAppVisible;
