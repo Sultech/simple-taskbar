@@ -1014,6 +1014,14 @@ msgstr "应用/图标滚动操作"
 msgid "Scroll Delay"
 msgstr "滚动延迟"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "忽略自然滚动"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "在任务栏、Dock、窗口预览和音量图标上使用传统滚动"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr "应用图标滚动之间的最短延迟（毫秒）"

@@ -1078,6 +1078,14 @@ msgstr "Action de défilement sur l’application ou l’icône"
 msgid "Scroll Delay"
 msgstr "Délai de défilement"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "Ignorer le défilement naturel"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "Utiliser le défilement traditionnel sur la barre des tâches, le Dock, les aperçus de fenêtres et l’icône du volume"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr ""

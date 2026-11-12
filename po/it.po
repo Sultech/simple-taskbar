@@ -1064,6 +1064,14 @@ msgstr "Azione scorrimento applicazione/icona"
 msgid "Scroll Delay"
 msgstr "Ritardo scorrimento"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "Ignora lo scorrimento naturale"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "Usa lo scorrimento tradizionale sulla barra delle applicazioni, sul Dock, sulle anteprime delle finestre e sull’icona del volume"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr ""

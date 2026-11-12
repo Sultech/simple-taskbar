@@ -1055,6 +1055,14 @@ msgstr "Ação de rolagem no aplicativo/ícone"
 msgid "Scroll Delay"
 msgstr "Atraso da rolagem"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "Ignorar a rolagem natural"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "Usar a rolagem tradicional na barra de tarefas, no Dock, nas pré-visualizações de janelas e no ícone de volume"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr ""

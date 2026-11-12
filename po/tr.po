@@ -1042,6 +1042,14 @@ msgstr "Uygulama/Simge Kaydırma Eylemi"
 msgid "Scroll Delay"
 msgstr "Kaydırma Gecikmesi"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "Doğal Kaydırmayı Yok Say"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "Görev çubuğunda, Dock'ta, pencere önizlemelerinde ve ses simgesinde geleneksel kaydırmayı kullan"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr "Uygulama simgesi kaydırmaları arasındaki minimum gecikme (milisaniye)"

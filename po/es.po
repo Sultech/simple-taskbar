@@ -1060,6 +1060,14 @@ msgstr "Acción de desplazamiento sobre la aplicación/el icono"
 msgid "Scroll Delay"
 msgstr "Retardo de desplazamiento"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "Ignorar el desplazamiento natural"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "Usar el desplazamiento tradicional en la barra de tareas, el Dock, las vistas previas de ventanas y el icono de volumen"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr ""

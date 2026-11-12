@@ -1056,6 +1056,14 @@ msgstr "Scrollaktion für Anwendung/Symbol"
 msgid "Scroll Delay"
 msgstr "Scrollverzögerung"
 
+#: src/prefs/panelPreferenceRows.js:231
+msgid "Ignore Natural Scrolling"
+msgstr "Natürliches Scrollen ignorieren"
+
+#: src/prefs/panelPreferenceRows.js:232
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
+msgstr "Herkömmliches Scrollen für die Taskleiste, das Dock, Fenstervorschauen und das Lautstärkesymbol verwenden"
+
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
 msgstr ""
