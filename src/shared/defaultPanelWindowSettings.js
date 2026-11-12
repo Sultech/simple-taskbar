@@ -61,6 +61,8 @@ export const DEFAULT_PANEL_WINDOW_SETTING_KEYS = Object.freeze([
     'peek-mode-opacity',
     'preview-middle-click-close',
     'show-notification-badges',
+    'notification-badge-size',
+    'notification-badge-position',
     'show-progress-bars',
     'progress-bar-follow-indicator-colors',
     'progress-bar-color',

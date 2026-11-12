@@ -1,11 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Clutter from 'gi://Clutter';
+
 import {hoverRenderScale} from '../shared/applicationHoverAnimation.js';
 import {
     PROGRESS_BAR_SETTINGS,
     PROGRESS_BAR_SETTING_KEYS,
 } from '../shared/progressBarSettings.js';
+import {
+    NOTIFICATION_BADGE_POSITION,
+    NOTIFICATION_BADGE_SETTINGS,
+    NOTIFICATION_BADGE_SETTING_KEYS,
+} from '../shared/notificationBadgeSettings.js';
 
 const BADGE_SINGLE_DIGIT_ICON_SIZE = 31;
 const BADGE_TWO_DIGIT_ICON_SIZE = 35;
@@ -64,6 +71,12 @@ export class TaskbarOverlayController {
             this._settings.connectObject(`changed::${key}`, () => {
                 for (const item of this._appButtons.values())
                     this.syncProgressBarGeometry(item);
+            }, this);
+        }
+        for (const key of NOTIFICATION_BADGE_SETTING_KEYS) {
+            this._settings.connectObject(`changed::${key}`, () => {
+                for (const item of this._appButtons.values())
+                    this.syncNotificationBadgeGeometry(item);
             }, this);
         }
     }
@@ -223,21 +236,22 @@ export class TaskbarOverlayController {
 
     syncNotificationBadgeGeometry(item) {
         const iconSize = this._getIconSize();
+        const badgeScale = this._settings.get_int(NOTIFICATION_BADGE_SETTINGS.size) / 100;
         const fontSize = Math.max(
             BADGE_MINIMUM_FONT_SIZE,
-            Math.min(
+            Math.round(badgeScale * Math.min(
                 iconSize < BADGE_LARGE_FONT_ICON_SIZE
                     ? BADGE_FONT_SIZE
                     : BADGE_LARGE_FONT_SIZE,
                 Math.floor(iconSize * BADGE_FONT_SIZE_RATIO)
-            )
+            ))
         );
         const horizontalPadding = Math.max(
             BADGE_MINIMUM_PADDING,
-            Math.min(
+            Math.round(badgeScale * Math.min(
                 BADGE_MAXIMUM_PADDING,
                 Math.round(iconSize * BADGE_PADDING_RATIO)
-            )
+            ))
         );
         const badgeTextLength =
             item._taskbarNotificationBadgeLabel.text.length;
@@ -275,8 +289,16 @@ export class TaskbarOverlayController {
             `min-height: ${singleDigit ? singleDigitSize : 0}px;` +
             `padding: 0 ${singleDigit ? 0 : horizontalPadding}px;`
         );
-        item._taskbarNotificationBadgeBin.translation_x = cornerOffset +
+        const position = this._settings.get_string(NOTIFICATION_BADGE_SETTINGS.position);
+        const left = position === NOTIFICATION_BADGE_POSITION.TOP_LEFT ||
+            position === NOTIFICATION_BADGE_POSITION.BOTTOM_LEFT;
+        const bottom = position === NOTIFICATION_BADGE_POSITION.BOTTOM_RIGHT ||
+            position === NOTIFICATION_BADGE_POSITION.BOTTOM_LEFT;
+        const badgeBin = item._taskbarNotificationBadgeBin;
+        badgeBin.x_align = left ? Clutter.ActorAlign.START : Clutter.ActorAlign.END;
+        badgeBin.y_align = bottom ? Clutter.ActorAlign.END : Clutter.ActorAlign.START;
+        badgeBin.translation_x = (left ? -cornerOffset : cornerOffset) +
             this._appearanceController.launcherIconOffset(item);
-        item._taskbarNotificationBadgeBin.translation_y = -cornerOffset;
+        badgeBin.translation_y = bottom ? cornerOffset : -cornerOffset;
     }
 }

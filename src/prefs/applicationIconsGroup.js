@@ -27,6 +27,7 @@ import {
 import {
     createProgressBarOptionsButton,
 } from './progressBarDialog.js';
+import {createNotificationBadgeOptionsButton} from './notificationBadgeDialog.js';
 import {
     createRunningIndicatorReserveOptionsButton,
 } from './runningIndicatorReserveDialog.js';
@@ -313,12 +314,24 @@ function addApplicationLayoutControls({
     );
     syncProgressBarOptionsSensitivity();
 
-    const notificationBadgeSwitch = createSwitchRow(settings, {
+    const notificationBadgeOptionsButton =
+        createNotificationBadgeOptionsButton(settings);
+    addSwitchRow(layoutGroup, settings, {
         key: 'show-notification-badges',
         title: _('Show Notification Badges'),
         subtitle: _('Display unread counts on application icons'),
+        addSuffix: row => row.add_suffix(notificationBadgeOptionsButton),
     });
-    layoutGroup.add(notificationBadgeSwitch);
+    const syncNotificationBadgeOptionsSensitivity = () => {
+        notificationBadgeOptionsButton.sensitive =
+            settings.get_boolean('show-notification-badges');
+    };
+    connectSettings(
+        settings,
+        'changed::show-notification-badges',
+        syncNotificationBadgeOptionsSensitivity
+    );
+    syncNotificationBadgeOptionsSensitivity();
 
     const pinnedAppSeparatorSwitch = createSwitchRow(settings, {
         key: 'show-pinned-app-separator',

@@ -234,6 +234,23 @@
       <summary>Show notification badges</summary>
       <description>Show unread notification counts on application icons</description>
     </key>
+    <key name="notification-badge-size" type="i">
+      <range min="50" max="200"/>
+      <default>100</default>
+      <summary>Notification badge size</summary>
+      <description>Notification badge size as a percentage of its automatic size</description>
+    </key>
+    <key name="notification-badge-position" type="s">
+      <choices>
+        <choice value="top-right"/>
+        <choice value="top-left"/>
+        <choice value="bottom-right"/>
+        <choice value="bottom-left"/>
+      </choices>
+      <default>'top-right'</default>
+      <summary>Notification badge position</summary>
+      <description>Corner of the application icon where the notification badge is shown</description>
+    </key>
     <key name="show-progress-bars" type="b">
       <default>false</default>
       <summary>Show progress bars</summary>

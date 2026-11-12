@@ -281,6 +281,23 @@
       <summary>Default panel windows: Show notification badges</summary>
       <description>Show unread notification counts on application icons</description>
     </key>
+    <key name="default-panel-window-notification-badge-size" type="i">
+      <range min="50" max="200"/>
+      <default>100</default>
+      <summary>Default panel windows: Notification badge size</summary>
+      <description>Notification badge size as a percentage of its automatic size</description>
+    </key>
+    <key name="default-panel-window-notification-badge-position" type="s">
+      <choices>
+        <choice value="top-right"/>
+        <choice value="top-left"/>
+        <choice value="bottom-right"/>
+        <choice value="bottom-left"/>
+      </choices>
+      <default>'top-right'</default>
+      <summary>Default panel windows: Notification badge position</summary>
+      <description>Corner of the application icon where the notification badge is shown</description>
+    </key>
     <key name="default-panel-window-show-progress-bars" type="b">
       <default>false</default>
       <summary>Default panel windows: Show progress bars</summary>
