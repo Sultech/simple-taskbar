@@ -143,6 +143,20 @@ export function addPanelItemsPage({
         connectSettings(settings, `changed::${key}`, syncPanelButtonPaddingSensitivity);
     syncPanelButtonPaddingSensitivity();
 
+    const moduleLabels = {
+        'tray-overflow': {
+            title: _('Tray Icon Arrow'),
+            subtitle: _('Gather application tray icons behind a taskbar arrow'),
+        },
+        'focused-app': {
+            title: _('Focused Application'),
+            subtitle: _('Icon and name of the application in focus'),
+        },
+        'folder-menu': {
+            title: _('Folder Menu'),
+            subtitle: _('Selected folder shortcuts'),
+        },
+    };
     const modulesExpander = new Adw.ExpanderRow({
         title: _('Modules'),
         subtitle: _('Optional features you can turn on or off'),
@@ -150,11 +164,7 @@ export function addPanelItemsPage({
     panelGroup.add(modulesExpander);
     const moduleRows = {add: row => modulesExpander.add_row(row)};
     for (const module of [
-        {
-            key: 'tray-overflow-enabled',
-            title: _('Tray Icon Arrow'),
-            subtitle: _('Gather application tray icons behind a taskbar arrow'),
-        },
+        {key: 'tray-overflow-enabled', ...moduleLabels['tray-overflow']},
         {
             key: 'volume-mixer-enabled',
             title: _('Application Volume Mixer'),
@@ -164,13 +174,11 @@ export function addPanelItemsPage({
         addSwitchRow(moduleRows, settings, module);
     const {row: focusedAppModuleRow} = addSwitchRow(moduleRows, settings, {
         key: 'focused-app-visible',
-        title: _('Focused Application'),
-        subtitle: _('Icon and name of the application in focus'),
+        ...moduleLabels['focused-app'],
     });
     addSwitchRow(moduleRows, settings, {
         key: 'folder-menu-enabled',
-        title: _('Folder Menu'),
-        subtitle: _('Selected folder shortcuts'),
+        ...moduleLabels['folder-menu'],
     });
 
     const folderMenuLocationRow = new Adw.ActionRow({
@@ -320,23 +328,20 @@ export function addPanelItemsPage({
         ['focused-app', {
             key: 'focused-app-position',
             visibleKey: 'focused-app-visible',
-            title: _('Focused Application'),
-            subtitle: _('Icon and name of the application in focus'),
+            ...moduleLabels['focused-app'],
             choices: initialPositions,
             optionsButton: focusedAppOptionsButton,
         }],
         ['folder-menu', {
             key: 'folder-menu-position',
             visibleKey: 'folder-menu-enabled',
-            title: _('Folder Menu'),
-            subtitle: _('Selected folder shortcuts'),
+            ...moduleLabels['folder-menu'],
             choices: initialPositions,
         }],
         ['tray-overflow', {
             key: 'tray-overflow-position',
             visibleKey: 'tray-overflow-enabled',
-            title: _('Tray Icon Arrow'),
-            subtitle: _('Gather application tray icons behind a taskbar arrow'),
+            ...moduleLabels['tray-overflow'],
             choices: initialPositions,
         }],
         ['system-menu', {
