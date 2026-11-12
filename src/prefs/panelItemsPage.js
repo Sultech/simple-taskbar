@@ -602,7 +602,7 @@ export function addPanelItemsPage({
             settings.get_boolean('activities-button-visible');
         panelOrderRows.get('folder-menu').positionDropDown.sensitive =
             !windowsXpTheme && settings.get_boolean('folder-menu-enabled');
-        const focusedAppAvailable = !panelIsVertical(settings);
+        const focusedAppAvailable = !windowsXpTheme && !panelIsVertical(settings);
         const focusedAppVisible = focusedAppAvailable && settings.get_boolean('focused-app-visible');
         focusedAppModuleRow.sensitive = focusedAppAvailable;
         panelOrderRows.get('focused-app').visibleButton.sensitive = focusedAppAvailable;

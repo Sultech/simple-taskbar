@@ -69,6 +69,7 @@ export function applyWindowsXpThemeSettings(settings) {
     setBoolean(settings, 'use-pinned-apps-as-launchers', true);
     setBoolean(settings, 'hide-unpinned-taskbar-apps', false);
     setBoolean(settings, 'show-pinned-app-separator', false);
+    setBoolean(settings, 'focused-app-visible', false);
     setBoolean(settings, 'show-location-separator', false);
     setBoolean(settings, 'show-start-button-separator', false);
     setBoolean(settings, 'start-menu-running-indicators', false);

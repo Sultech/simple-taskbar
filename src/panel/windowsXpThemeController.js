@@ -16,6 +16,7 @@ const LOCKED_SETTING_KEYS = [
     'use-pinned-apps-as-launchers',
     'hide-unpinned-taskbar-apps',
     'show-pinned-app-separator',
+    'focused-app-visible',
     'show-location-separator',
     'show-start-button-separator',
     'start-menu-running-indicators',
