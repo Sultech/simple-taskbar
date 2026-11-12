@@ -72,6 +72,7 @@ import {
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {dispatchItemButtonPress} from '../inputUtils.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
+import {TaskbarDragHoverActivator} from './taskbarDragHoverActivator.js';
 
 const STARTUP_SETTLE_DELAY = 750;
 const MINIMIZED_PREVIEW_RESTORE_EXIT_TIME = 360;
@@ -228,6 +229,10 @@ export class TaskbarController {
             getOrderedApplicationItems: () => this.getOrderedApplicationItems(),
             getIconSize: () => this._iconSize,
             appearanceController: this._appearanceController,
+        });
+        this._dragHoverActivator = new TaskbarDragHoverActivator({
+            taskbarActor: this.actor,
+            getInterestingWindows: app => this._getInterestingWindows(app),
         });
         this._dragController = new TaskbarDragController({
             settings: this._settings,
@@ -504,6 +509,7 @@ export class TaskbarController {
     enable() {
         this._iconHoverAnimationController.enable();
         this._dragController.enable();
+        this._dragHoverActivator.enable();
         this._connectApplicationSignals();
         this._connectMembershipSettings();
         this._connectAppearanceSettings();
@@ -558,6 +564,8 @@ export class TaskbarController {
         this._iconHoverAnimationController = null;
         this._dragController.destroy();
         this._dragController = null;
+        this._dragHoverActivator.destroy();
+        this._dragHoverActivator = null;
         this._appItemFactory.destroy();
         this._appItemFactory = null;
         this._itemInteractionController.destroy();
