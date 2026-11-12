@@ -2333,6 +2333,63 @@ msgstr "任务栏应用"
 msgid "Folder Menu"
 msgstr "文件夹菜单"
 
+#: src/panel/focusedAppController.js:26
+msgid "Focused application"
+msgstr "焦点应用程序"
+
+#: src/prefs/panelItemsPage.js:299
+msgid "Focused Application"
+msgstr "焦点应用程序"
+
+#: src/prefs/panelItemsPage.js:300
+msgid "Icon and name of the application in focus"
+msgstr "焦点应用程序的图标和名称"
+
+#: src/prefs/panelItemsPage.js:146
+msgid "Modules"
+msgstr "模块"
+
+#: src/prefs/panelItemsPage.js:147
+msgid "Optional features you can turn on or off"
+msgstr "可以开启或关闭的可选功能"
+
+#: src/prefs/focusedAppDialog.js:18
+#: src/prefs/focusedAppDialog.js:29
+msgid "Focused Application Options"
+msgstr "焦点应用程序选项"
+
+#: src/prefs/focusedAppDialog.js:36
+msgid "Label"
+msgstr "标签"
+
+#: src/prefs/focusedAppDialog.js:37
+msgid "Choose what the focused application shows in the panel"
+msgstr "选择焦点应用程序在面板中显示的内容"
+
+#: src/prefs/focusedAppDialog.js:44
+msgid "Label Text"
+msgstr "标签文本"
+
+#: src/prefs/focusedAppDialog.js:46
+msgid "Application Name"
+msgstr "应用程序名称"
+
+#: src/prefs/focusedAppDialog.js:47
+msgid "Window Title"
+msgstr "窗口标题"
+
+#: src/prefs/focusedAppDialog.js:48
+msgid "Application Name and Window Title"
+msgstr "应用程序名称和窗口标题"
+
+#: src/prefs/focusedAppDialog.js:58
+msgid "Maximum Width"
+msgstr "最大宽度"
+
+#: src/prefs/focusedAppDialog.js:59
+msgid "Longer labels are shortened with an ellipsis"
+msgstr "较长的标签将以省略号缩短"
+
 #: src/prefs/panelItemsPage.js:308
 msgid "Selected folder shortcuts"
 msgstr "所选文件夹快捷方式"

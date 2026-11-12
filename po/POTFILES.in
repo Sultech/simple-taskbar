@@ -13,6 +13,7 @@ src/prefs/defaultPanelIconSizing.js
 src/prefs/applicationInteractionGroup.js
 src/prefs/classicHighlightDialog.js
 src/prefs/clockDialog.js
+src/prefs/focusedAppDialog.js
 src/prefs/pinnedApplicationBehaviorDialog.js
 src/prefs/dockAppearanceGroup.js
 src/prefs/dynamicTransparencyDialog.js
@@ -55,6 +56,7 @@ src/startMenu/startMenuFooterController.js
 src/startMenu/startMenuPowerController.js
 src/startMenu/startButtonContextMenuController.js
 src/panel/folderMenuController.js
+src/panel/focusedAppController.js
 src/integration/fileManagerPlacesSection.js
 src/taskbar/taskbarAppMenu.js
 src/locations/locationApp.js

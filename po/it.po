@@ -2491,6 +2491,63 @@ msgstr "Applicazioni nella barra delle applicazioni"
 msgid "Folder Menu"
 msgstr "Menu cartella"
 
+#: src/panel/focusedAppController.js:26
+msgid "Focused application"
+msgstr "Applicazione attiva"
+
+#: src/prefs/panelItemsPage.js:299
+msgid "Focused Application"
+msgstr "Applicazione attiva"
+
+#: src/prefs/panelItemsPage.js:300
+msgid "Icon and name of the application in focus"
+msgstr "Icona e nome dell’applicazione attiva"
+
+#: src/prefs/panelItemsPage.js:146
+msgid "Modules"
+msgstr "Moduli"
+
+#: src/prefs/panelItemsPage.js:147
+msgid "Optional features you can turn on or off"
+msgstr "Funzionalità opzionali che puoi attivare o disattivare"
+
+#: src/prefs/focusedAppDialog.js:18
+#: src/prefs/focusedAppDialog.js:29
+msgid "Focused Application Options"
+msgstr "Opzioni dell’applicazione attiva"
+
+#: src/prefs/focusedAppDialog.js:36
+msgid "Label"
+msgstr "Etichetta"
+
+#: src/prefs/focusedAppDialog.js:37
+msgid "Choose what the focused application shows in the panel"
+msgstr "Scegli cosa mostra l’applicazione attiva nel pannello"
+
+#: src/prefs/focusedAppDialog.js:44
+msgid "Label Text"
+msgstr "Testo dell’etichetta"
+
+#: src/prefs/focusedAppDialog.js:46
+msgid "Application Name"
+msgstr "Nome dell’applicazione"
+
+#: src/prefs/focusedAppDialog.js:47
+msgid "Window Title"
+msgstr "Titolo della finestra"
+
+#: src/prefs/focusedAppDialog.js:48
+msgid "Application Name and Window Title"
+msgstr "Nome dell’applicazione e titolo della finestra"
+
+#: src/prefs/focusedAppDialog.js:58
+msgid "Maximum Width"
+msgstr "Larghezza massima"
+
+#: src/prefs/focusedAppDialog.js:59
+msgid "Longer labels are shortened with an ellipsis"
+msgstr "Le etichette più lunghe vengono accorciate con i puntini di sospensione"
+
 #: src/prefs/panelItemsPage.js:308
 msgid "Selected folder shortcuts"
 msgstr "Scorciatoie della cartella selezionata"

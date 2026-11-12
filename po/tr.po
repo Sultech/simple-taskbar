@@ -2398,6 +2398,63 @@ msgstr "Görev çubuğu uygulamaları"
 msgid "Folder Menu"
 msgstr "Klasör Menüsü"
 
+#: src/panel/focusedAppController.js:26
+msgid "Focused application"
+msgstr "Odaktaki uygulama"
+
+#: src/prefs/panelItemsPage.js:299
+msgid "Focused Application"
+msgstr "Odaktaki Uygulama"
+
+#: src/prefs/panelItemsPage.js:300
+msgid "Icon and name of the application in focus"
+msgstr "Odaktaki uygulamanın simgesi ve adı"
+
+#: src/prefs/panelItemsPage.js:146
+msgid "Modules"
+msgstr "Modüller"
+
+#: src/prefs/panelItemsPage.js:147
+msgid "Optional features you can turn on or off"
+msgstr "Açıp kapatabileceğiniz isteğe bağlı özellikler"
+
+#: src/prefs/focusedAppDialog.js:18
+#: src/prefs/focusedAppDialog.js:29
+msgid "Focused Application Options"
+msgstr "Odaktaki Uygulama Seçenekleri"
+
+#: src/prefs/focusedAppDialog.js:36
+msgid "Label"
+msgstr "Etiket"
+
+#: src/prefs/focusedAppDialog.js:37
+msgid "Choose what the focused application shows in the panel"
+msgstr "Odaktaki uygulamanın panelde ne göstereceğini seçin"
+
+#: src/prefs/focusedAppDialog.js:44
+msgid "Label Text"
+msgstr "Etiket Metni"
+
+#: src/prefs/focusedAppDialog.js:46
+msgid "Application Name"
+msgstr "Uygulama Adı"
+
+#: src/prefs/focusedAppDialog.js:47
+msgid "Window Title"
+msgstr "Pencere Başlığı"
+
+#: src/prefs/focusedAppDialog.js:48
+msgid "Application Name and Window Title"
+msgstr "Uygulama Adı ve Pencere Başlığı"
+
+#: src/prefs/focusedAppDialog.js:58
+msgid "Maximum Width"
+msgstr "En Fazla Genişlik"
+
+#: src/prefs/focusedAppDialog.js:59
+msgid "Longer labels are shortened with an ellipsis"
+msgstr "Daha uzun etiketler üç noktayla kısaltılır"
+
 #: src/prefs/panelItemsPage.js:308
 msgid "Selected folder shortcuts"
 msgstr "Seçili klasör kısayolları"

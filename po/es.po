@@ -2465,6 +2465,63 @@ msgstr "Aplicaciones de la barra de tareas"
 msgid "Folder Menu"
 msgstr "Menú de carpeta"
 
+#: src/panel/focusedAppController.js:26
+msgid "Focused application"
+msgstr "Aplicación enfocada"
+
+#: src/prefs/panelItemsPage.js:299
+msgid "Focused Application"
+msgstr "Aplicación enfocada"
+
+#: src/prefs/panelItemsPage.js:300
+msgid "Icon and name of the application in focus"
+msgstr "Icono y nombre de la aplicación enfocada"
+
+#: src/prefs/panelItemsPage.js:146
+msgid "Modules"
+msgstr "Módulos"
+
+#: src/prefs/panelItemsPage.js:147
+msgid "Optional features you can turn on or off"
+msgstr "Funciones opcionales que puedes activar o desactivar"
+
+#: src/prefs/focusedAppDialog.js:18
+#: src/prefs/focusedAppDialog.js:29
+msgid "Focused Application Options"
+msgstr "Opciones de la aplicación enfocada"
+
+#: src/prefs/focusedAppDialog.js:36
+msgid "Label"
+msgstr "Etiqueta"
+
+#: src/prefs/focusedAppDialog.js:37
+msgid "Choose what the focused application shows in the panel"
+msgstr "Elige qué muestra la aplicación enfocada en el panel"
+
+#: src/prefs/focusedAppDialog.js:44
+msgid "Label Text"
+msgstr "Texto de la etiqueta"
+
+#: src/prefs/focusedAppDialog.js:46
+msgid "Application Name"
+msgstr "Nombre de la aplicación"
+
+#: src/prefs/focusedAppDialog.js:47
+msgid "Window Title"
+msgstr "Título de la ventana"
+
+#: src/prefs/focusedAppDialog.js:48
+msgid "Application Name and Window Title"
+msgstr "Nombre de la aplicación y título de la ventana"
+
+#: src/prefs/focusedAppDialog.js:58
+msgid "Maximum Width"
+msgstr "Anchura máxima"
+
+#: src/prefs/focusedAppDialog.js:59
+msgid "Longer labels are shortened with an ellipsis"
+msgstr "Las etiquetas más largas se acortan con puntos suspensivos"
+
 #: src/prefs/panelItemsPage.js:308
 msgid "Selected folder shortcuts"
 msgstr "Atajos de carpeta seleccionados"

@@ -2404,6 +2404,63 @@ msgstr "Приложения на панели задач"
 msgid "Folder Menu"
 msgstr "Меню папки"
 
+#: src/panel/focusedAppController.js:26
+msgid "Focused application"
+msgstr "Активное приложение"
+
+#: src/prefs/panelItemsPage.js:299
+msgid "Focused Application"
+msgstr "Активное приложение"
+
+#: src/prefs/panelItemsPage.js:300
+msgid "Icon and name of the application in focus"
+msgstr "Значок и название активного приложения"
+
+#: src/prefs/panelItemsPage.js:146
+msgid "Modules"
+msgstr "Модули"
+
+#: src/prefs/panelItemsPage.js:147
+msgid "Optional features you can turn on or off"
+msgstr "Дополнительные функции, которые можно включить или выключить"
+
+#: src/prefs/focusedAppDialog.js:18
+#: src/prefs/focusedAppDialog.js:29
+msgid "Focused Application Options"
+msgstr "Параметры активного приложения"
+
+#: src/prefs/focusedAppDialog.js:36
+msgid "Label"
+msgstr "Подпись"
+
+#: src/prefs/focusedAppDialog.js:37
+msgid "Choose what the focused application shows in the panel"
+msgstr "Выберите, что показывает активное приложение на панели"
+
+#: src/prefs/focusedAppDialog.js:44
+msgid "Label Text"
+msgstr "Текст подписи"
+
+#: src/prefs/focusedAppDialog.js:46
+msgid "Application Name"
+msgstr "Название приложения"
+
+#: src/prefs/focusedAppDialog.js:47
+msgid "Window Title"
+msgstr "Заголовок окна"
+
+#: src/prefs/focusedAppDialog.js:48
+msgid "Application Name and Window Title"
+msgstr "Название приложения и заголовок окна"
+
+#: src/prefs/focusedAppDialog.js:58
+msgid "Maximum Width"
+msgstr "Максимальная ширина"
+
+#: src/prefs/focusedAppDialog.js:59
+msgid "Longer labels are shortened with an ellipsis"
+msgstr "Более длинные подписи сокращаются многоточием"
+
 #: src/prefs/panelItemsPage.js:308
 msgid "Selected folder shortcuts"
 msgstr "Ярлыки выбранной папки"
