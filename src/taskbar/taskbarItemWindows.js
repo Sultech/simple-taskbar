@@ -8,6 +8,10 @@ export function taskbarFocusWindow() {
     return window;
 }
 
+export function sortWindowsByRecentUse(windows) {
+    return windows.sort((a, b) => b.get_user_time() - a.get_user_time());
+}
+
 export function windowsForTaskbarItem(item, interestingWindows) {
     if (item._taskbarIsLauncher)
         return [];

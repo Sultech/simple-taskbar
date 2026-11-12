@@ -6,6 +6,8 @@ import GLib from 'gi://GLib';
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import {sortWindowsByRecentUse} from './taskbarItemWindows.js';
+
 const DRAG_HOVER_ACTIVATION_TIMEOUT = 250;
 
 export class TaskbarDragHoverActivator {
@@ -76,8 +78,7 @@ export class TaskbarDragHoverActivator {
     }
 
     _activate({app, window}) {
-        const windows = this._getInterestingWindows(app)
-            .sort((a, b) => b.get_user_time() - a.get_user_time());
+        const windows = sortWindowsByRecentUse(this._getInterestingWindows(app));
         const target = window && windows.includes(window) ? window : windows[0];
         if (target)
             Main.activateWindow(target);

@@ -20,7 +20,7 @@ import {HOVER_ACTION} from '../shared/interactionActions.js';
 import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
 import {getScrollDelta, pointerButtonIsPressed} from '../inputUtils.js';
-import {windowsForTaskbarItem} from './taskbarItemWindows.js';
+import {sortWindowsByRecentUse, windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {WindowPeekController} from './windowPeekController.js';
 import {TaskbarTooltipController} from './taskbarTooltipController.js';
 
@@ -311,8 +311,7 @@ export class WindowPreviewController {
             this.hide();
             return;
         }
-        const windows = this._windowsForItem(item)
-            .sort((a, b) => b.get_user_time() - a.get_user_time());
+        const windows = sortWindowsByRecentUse(this._windowsForItem(item));
         if (windows.length === 0)
             return;
 
@@ -624,8 +623,7 @@ export class WindowPreviewController {
     _refresh(item) {
         const button = item._taskbarButton;
         const previewBox = button._taskbarPreviewBox;
-        const windows = this._windowsForItem(item)
-            .sort((a, b) => b.get_user_time() - a.get_user_time());
+        const windows = sortWindowsByRecentUse(this._windowsForItem(item));
         if (!previewBox || windows.length === 0) {
             this.hide(true);
             return;

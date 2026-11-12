@@ -7,7 +7,7 @@ import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {CLICK_ACTION} from '../shared/interactionActions.js';
-import {taskbarFocusWindow} from './taskbarItemWindows.js';
+import {sortWindowsByRecentUse, taskbarFocusWindow} from './taskbarItemWindows.js';
 
 const CYCLE_MEMORY_TIME = 3000;
 
@@ -97,7 +97,7 @@ export class TaskbarWindowController {
             return;
         }
 
-        windows.sort((a, b) => b.get_user_time() - a.get_user_time());
+        sortWindowsByRecentUse(windows);
         if (overviewShown) {
             Main.activateWindow(windows[0]);
             Main.overview.hide();
