@@ -14,7 +14,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
 import {panelArrowSide, syncMenuArrowSide} from './panelMenuPositioner.js';
-import {getScrollDelta} from '../inputUtils.js';
+import {getScrollDelta, PanelScrollDirection} from '../inputUtils.js';
 import {
     SCROLL_ACTION,
     PANEL_SCROLL_ACTION,
@@ -25,6 +25,7 @@ import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
+const VOLUME_SCROLL_STEP = 0.02;
 
 export class PanelInteractionController {
     constructor({
@@ -46,6 +47,7 @@ export class PanelInteractionController {
         allowTaskbarLock = true,
     }) {
         this._settings = settings;
+        this._scrollDirection = new PanelScrollDirection(settings);
         this._taskbarController = taskbarController;
         this._taskbarBin = taskbarBin;
         this._taskbarContainer = taskbarContainer;
@@ -103,6 +105,8 @@ export class PanelInteractionController {
         this._panelBoxes = null;
         this._panelActor = null;
         this._allowTaskbarLock = false;
+        this._scrollDirection.destroy();
+        this._scrollDirection = null;
         this._settings = null;
         this._openPreferences = null;
         this._onAppScrolled = null;
@@ -213,6 +217,15 @@ export class PanelInteractionController {
 
         let item = null;
         if (eventType === Clutter.EventType.SCROLL) {
+            const volumeIndicator = this._scrollDirection.ignoresNaturalScroll && target
+                ? this._getVolumeIndicator()
+                : null;
+            if (volumeIndicator && volumeIndicator.contains(target)) {
+                return this._changeVolume(event)
+                    ? Clutter.EVENT_STOP
+                    : Clutter.EVENT_PROPAGATE;
+            }
+
             if (target && this._taskbarBin.contains(target) &&
                 this._scrollTaskbar(event)) {
                 return Clutter.EVENT_STOP;
@@ -341,6 +354,11 @@ export class PanelInteractionController {
         if (!volumeIndicator)
             return false;
 
+        if (this._scrollDirection.ignoresNaturalScroll) {
+            this._stepVolume(volumeIndicator._output, event);
+            return true;
+        }
+
         if (SHELL_VERSION >= 51) {
             const direction = event.get_scroll_direction();
             let delta = 0;
@@ -367,6 +385,32 @@ export class PanelInteractionController {
         return true;
     }
 
+    _stepVolume(output, event) {
+        const direction = event.get_scroll_direction();
+        let nSteps = 0;
+        if (direction === Clutter.ScrollDirection.UP) {
+            nSteps = 1;
+        } else if (direction === Clutter.ScrollDirection.DOWN) {
+            nSteps = -1;
+        } else if (direction === Clutter.ScrollDirection.SMOOTH) {
+            const [, dy] = event.get_scroll_delta();
+            nSteps = -dy;
+        }
+        nSteps *= this._scrollDirection.sign(event);
+
+        let changed;
+        if (SHELL_VERSION >= 49) {
+            changed = output.slider.step(nSteps);
+        } else {
+            const slider = output.slider;
+            const value = slider.value;
+            slider.value = Math.min(Math.max(0, value + nSteps * VOLUME_SCROLL_STEP), slider.maximumValue);
+            changed = slider.value !== value;
+        }
+        if (output.mapped || changed)
+            output.showOSD();
+    }
+
     _scrollTaskbar(event) {
         if (this._settings.get_boolean('application-overflow-enabled'))
             return false;
@@ -378,7 +422,7 @@ export class PanelInteractionController {
             return false;
 
         const increment = Math.max(stepIncrement, 48);
-        const delta = getScrollDelta(event, increment);
+        const delta = getScrollDelta(event, increment) * this._scrollDirection.sign(event);
 
         if (delta === 0)
             return false;
@@ -411,7 +455,7 @@ export class PanelInteractionController {
             return this._getDiscreteScrollDirection(event, previousDirection, nextDirection);
 
         const [dx, dy] = event.get_scroll_delta();
-        const delta = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
+        const delta = (Math.abs(dy) >= Math.abs(dx) ? dy : dx) * this._scrollDirection.sign(event);
         if (delta < -0.1)
             return previousDirection;
         if (delta > 0.1)
@@ -420,6 +464,9 @@ export class PanelInteractionController {
     }
 
     _getDiscreteScrollDirection(event, previousDirection, nextDirection) {
+        if (this._scrollDirection.sign(event) < 0)
+            [previousDirection, nextDirection] = [nextDirection, previousDirection];
+
         switch (event.get_scroll_direction()) {
         case Clutter.ScrollDirection.UP:
         case Clutter.ScrollDirection.LEFT:

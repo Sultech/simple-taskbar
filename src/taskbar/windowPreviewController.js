@@ -19,7 +19,7 @@ import {
 import {HOVER_ACTION} from '../shared/interactionActions.js';
 import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {panelUsesLightTheme} from '../themeUtils.js';
-import {getScrollDelta, pointerButtonIsPressed} from '../inputUtils.js';
+import {getScrollDelta, PanelScrollDirection, pointerButtonIsPressed} from '../inputUtils.js';
 import {sortWindowsByRecentUse, windowsForTaskbarItem} from './taskbarItemWindows.js';
 import {WindowPeekController} from './windowPeekController.js';
 import {TaskbarTooltipController} from './taskbarTooltipController.js';
@@ -40,6 +40,7 @@ export class WindowPreviewController {
         this._getTaskbarItems = getTaskbarItems;
         this._getInterestingWindows = getInterestingWindows;
         this._settings = settings;
+        this._scrollDirection = new PanelScrollDirection(settings);
         this._onPreviewActivated = onPreviewActivated;
         this._getHoverAnimationOutwardReserve =
             getHoverAnimationOutwardReserve;
@@ -137,6 +138,8 @@ export class WindowPreviewController {
         this._onPreviewActivated = null;
         this._getHoverAnimationOutwardReserve = null;
         this._isPointerInMagnifyBounds = null;
+        this._scrollDirection.destroy();
+        this._scrollDirection = null;
         this._settings = null;
         this._previewHoverItem = null;
     }
@@ -360,7 +363,7 @@ export class WindowPreviewController {
                 adjustment.step_increment,
                 PREVIEW_WIDTH / 2
             );
-            const delta = getScrollDelta(event, increment);
+            const delta = getScrollDelta(event, increment) * this._scrollDirection.sign(event);
 
             adjustment.set_value(adjustment.get_value() + delta);
             return Clutter.EVENT_STOP;

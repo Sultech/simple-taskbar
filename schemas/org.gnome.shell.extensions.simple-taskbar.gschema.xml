@@ -421,6 +421,10 @@
       <default>'dark'</default>
       <summary>Taskbar colour scheme when not following the system</summary>
     </key>
+    <key name="panel-scroll-ignore-natural" type="b">
+      <default>false</default>
+      <summary>Scroll the taskbar and Dock the traditional way even when natural scrolling is on</summary>
+    </key>
     <key name="workspace-scroll-action" type="s">
       <choices>
         <choice value="switch-workspace"/>

@@ -5,7 +5,7 @@ import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {getScrollDelta} from '../inputUtils.js';
+import {getScrollDelta, PanelScrollDirection} from '../inputUtils.js';
 
 const TASKBAR_CONTENT_CLASS =
     'simple-taskbar-application-overflow-taskbar-content';
@@ -27,6 +27,7 @@ export class ApplicationOverflowPopupController {
         syncGeometry,
     }) {
         this._settings = settings;
+        this._scrollDirection = new PanelScrollDirection(settings);
         this._menu = menu;
         this._section = section;
         this._itemController = itemController;
@@ -141,6 +142,8 @@ export class ApplicationOverflowPopupController {
         this._overflowItems = null;
         this._style = null;
         this._layoutSignature = null;
+        this._scrollDirection.destroy();
+        this._scrollDirection = null;
         this._settings = null;
     }
 
@@ -271,7 +274,7 @@ export class ApplicationOverflowPopupController {
                 adjustment.step_increment,
                 this._getPanelHeight()
             );
-            const delta = getScrollDelta(event, increment);
+            const delta = getScrollDelta(event, increment) * this._scrollDirection.sign(event);
             adjustment.set_value(adjustment.get_value() + delta);
             return Clutter.EVENT_STOP;
         });

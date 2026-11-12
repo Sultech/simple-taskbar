@@ -2,6 +2,11 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
+
+const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 
 const POINTER_BUTTON_MASK = Clutter.ModifierType.BUTTON1_MASK |
     Clutter.ModifierType.BUTTON2_MASK |
@@ -37,6 +42,40 @@ export function dispatchItemButtonPress(event, {modifierClick, middleClick, seco
         return Clutter.EVENT_STOP;
     }
     return Clutter.EVENT_PROPAGATE;
+}
+
+export class PanelScrollDirection {
+    constructor(settings) {
+        this._settings = settings;
+        this._peripheralSettings = SHELL_VERSION < 49
+            ? {
+                touchpad: new Gio.Settings({schema_id: 'org.gnome.desktop.peripherals.touchpad'}),
+                mouse: new Gio.Settings({schema_id: 'org.gnome.desktop.peripherals.mouse'}),
+            }
+            : null;
+    }
+
+    destroy() {
+        this._peripheralSettings = null;
+        this._settings = null;
+    }
+
+    get ignoresNaturalScroll() {
+        return this._settings.get_boolean('panel-scroll-ignore-natural');
+    }
+
+    sign(event) {
+        return this.ignoresNaturalScroll && this._isInverted(event) ? -1 : 1;
+    }
+
+    _isInverted(event) {
+        if (SHELL_VERSION >= 49)
+            return Boolean(event.get_scroll_flags() & Clutter.ScrollFlags.INVERTED);
+
+        const touchpad = event.get_source_device().get_device_type() === Clutter.InputDeviceType.TOUCHPAD_DEVICE;
+        const settings = touchpad ? this._peripheralSettings.touchpad : this._peripheralSettings.mouse;
+        return settings.get_boolean('natural-scroll');
+    }
 }
 
 export function getScrollDelta(event, increment) {

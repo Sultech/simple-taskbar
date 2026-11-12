@@ -226,6 +226,11 @@ export function addPanelScrollGroup(page, settings, connectSettings, {
         upper: 250,
         step: 5,
     }, connectSettings);
+    group.add(createSwitchRow(settings, {
+        key: 'panel-scroll-ignore-natural',
+        title: _('Ignore Natural Scrolling'),
+        subtitle: _('Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon'),
+    }));
     const sync = () => {
         const available = isAvailable();
         actionRow.sensitive = available;
