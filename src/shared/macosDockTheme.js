@@ -15,6 +15,7 @@ export function applyMacosDockDefaults(settings) {
     settings.set_boolean('gnome-start-button-visible', true);
     settings.set_boolean('use-pinned-apps-as-launchers', false);
     settings.set_boolean('show-pinned-app-separator', true);
+    settings.set_boolean('focused-app-visible', true);
     settings.set_string('window-minimize-effect', WINDOW_MINIMIZE_EFFECT.MAGIC_LAMP);
     settings.set_string('animate-appicon-hover-animation-type', APP_ICON_HOVER_ANIMATION.MAGNIFY);
     settings.set_string('application-click-animation', APPLICATION_CLICK_ANIMATION.BOUNCE);
