@@ -85,12 +85,20 @@ function panelHubSections({panelTitle, itemsTitle, autoHideSubtitle}) {
     ];
 }
 
-export function addTaskbarHub({window, page}) {
-    return addSettingsHub(window, page, panelHubSections({
+export function addTaskbarHub({window, page, settings, connectSettings}) {
+    const subpages = addSettingsHub(window, page, panelHubSections({
         panelTitle: _('Taskbar'),
         itemsTitle: _('Taskbar Items'),
         autoHideSubtitle: _('Choose when the taskbar hides and how it is revealed'),
     }));
+    const syncAvailability = () => {
+        const available = !settings.get_boolean('windows-xp-theme-enabled');
+        for (const id of ['size', 'appearance', 'indicators', 'locations'])
+            subpages[id].row.sensitive = available;
+    };
+    connectSettings(settings, 'changed::windows-xp-theme-enabled', syncAvailability);
+    syncAvailability();
+    return subpages;
 }
 
 export function addDockHub({window, page, settings, connectSettings}) {

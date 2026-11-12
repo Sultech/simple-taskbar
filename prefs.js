@@ -61,7 +61,7 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             icon_name: 'preferences-desktop-appearance-symbolic',
         });
         window.add(taskbarPage);
-        const taskbar = addTaskbarHub({window, page: taskbarPage});
+        const taskbar = addTaskbarHub({window, page: taskbarPage, settings, connectSettings});
 
         const dockPage = new Adw.PreferencesPage({
             title: _('Dock'),
