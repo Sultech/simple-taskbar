@@ -24,6 +24,7 @@ export const DEFAULT_PANEL_ITEM_ORDER = Object.freeze([
     ...PANEL_BOX_ITEMS.map(item => item.id),
     'start-button',
     'activities',
+    'focused-app',
     'applications',
     'folder-menu',
     'tray-overflow',

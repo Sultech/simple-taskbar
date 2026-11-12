@@ -539,8 +539,35 @@
       <default>''</default>
       <summary>Folder displayed by the taskbar folder menu</summary>
     </key>
+    <key name="focused-app-visible" type="b">
+      <default>false</default>
+      <summary>Show the focused application in the panel</summary>
+    </key>
+    <key name="focused-app-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'left'</default>
+      <summary>Focused Application position</summary>
+    </key>
+    <key name="focused-app-label" type="s">
+      <choices>
+        <choice value="app-name"/>
+        <choice value="window-title"/>
+        <choice value="app-name-and-title"/>
+      </choices>
+      <default>'app-name-and-title'</default>
+      <summary>Text shown by the Focused Application item</summary>
+    </key>
+    <key name="focused-app-max-width" type="i">
+      <range min="80" max="800"/>
+      <default>400</default>
+      <summary>Maximum width of the Focused Application label in pixels</summary>
+    </key>
     <key name="panel-item-order" type="as">
-      <default>['left-box', 'center-box', 'right-box', 'start-button', 'activities', 'applications', 'folder-menu', 'tray-overflow', 'system-menu', 'clock', 'show-desktop']</default>
+      <default>['left-box', 'center-box', 'right-box', 'start-button', 'activities', 'focused-app', 'applications', 'folder-menu', 'tray-overflow', 'system-menu', 'clock', 'show-desktop']</default>
       <summary>Panel item order within each position</summary>
     </key>
     <key name="multi-monitor-panels" type="b">

@@ -4,6 +4,7 @@
 import {panelApplicationAlignment, panelStartButtonPosition} from '../shared/panelModeSettings.js';
 import {panelApplicationsVisible} from '../shared/panelApplicationVisibility.js';
 import {startButtonVisible} from '../shared/startButtonLocation.js';
+import {panelIsVertical} from '../shared/panelPositionUtils.js';
 
 export function refreshPanelBoxSizes(boxes) {
     for (const box of boxes) {
@@ -35,6 +36,12 @@ export function createPanelItems({
             actor: actors.activities,
             position: settings.get_string('activities-button-position'),
             visible: true,
+        },
+        {
+            id: 'focused-app',
+            actor: actors.focusedApp,
+            position: settings.get_string('focused-app-position'),
+            visible: settings.get_boolean('focused-app-visible') && !panelIsVertical(settings),
         },
         {
             id: 'applications',

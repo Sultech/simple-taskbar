@@ -20,6 +20,8 @@ const PANEL_LAYOUT_KEYS = [
     'system-menu-position',
     'folder-menu-enabled',
     'folder-menu-position',
+    'focused-app-visible',
+    'focused-app-position',
     'panel-item-order',
 ];
 

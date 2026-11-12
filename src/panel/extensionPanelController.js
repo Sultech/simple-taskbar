@@ -23,6 +23,7 @@ import {
     syncSecondaryPanelClasses,
 } from './secondaryPanelClasses.js';
 import {FolderMenuController} from './folderMenuController.js';
+import {FocusedAppController} from './focusedAppController.js';
 import {PanelHoverRepair} from './panelHoverRepair.js';
 import {NotificationAreaController} from '../integration/notificationAreaController.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
@@ -167,6 +168,7 @@ export class ExtensionPanelController {
             startButtonOptions: {manageKeybindings: false},
         });
         this._folderMenuController = new FolderMenuController(settings);
+        this._focusedAppController = new FocusedAppController(settings);
         this._hoverRepair = new PanelHoverRepair(this.actor);
         this._magnifyController = new PanelMagnifyController({
             actor: this.actor,
@@ -256,6 +258,7 @@ export class ExtensionPanelController {
     enable() {
         this._menuManager = new PopupMenu.PopupMenuManager(this.actor);
         this._folderMenuController.enable(this._menuManager);
+        this._focusedAppController.enable(this._menuManager);
         this._hoverRepair.enable();
         this._indicatorController =
             new SecondaryPanelIndicatorController(
@@ -440,6 +443,8 @@ export class ExtensionPanelController {
         this._indicatorController = null;
         this._folderMenuController.destroy();
         this._folderMenuController = null;
+        this._focusedAppController.destroy();
+        this._focusedAppController = null;
         this._hoverRepair.destroy();
         this._hoverRepair = null;
         this._menuManager = null;
@@ -617,6 +622,7 @@ export class ExtensionPanelController {
                 activities,
                 taskbar: this._core.taskbarBin,
                 folderMenu: folderMenuButton,
+                focusedApp: this._focusedAppController.actor,
                 quickSettings,
                 dateMenu,
                 notificationArea: this._notificationAreaController.actor,
@@ -640,7 +646,7 @@ export class ExtensionPanelController {
         this._notificationAreaController.syncRightBoxActors(
             this._rightBox,
             new Set(items.map(item => item.actor)),
-            new Set([folderMenuButton]),
+            new Set([folderMenuButton, this._focusedAppController.actor]),
             windowsXpThemeEnabled
         );
         this._indicatorController.syncActivitiesVisibility();

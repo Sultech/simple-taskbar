@@ -56,6 +56,7 @@ import {
     fitPanelTaskbar,
 } from './panelLayout.js';
 import {PanelLayoutUpdater} from './panelLayoutUpdater.js';
+import {FocusedAppController} from './focusedAppController.js';
 import {PanelHoverRepair} from './panelHoverRepair.js';
 const JUST_PERFECTION_UUID = 'just-perfection-desktop@just-perfection';
 const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
@@ -99,6 +100,7 @@ export class PrimaryPanelController {
             settings
         );
         this._notificationAreaController = new NotificationAreaController();
+        this._focusedAppController = new FocusedAppController(settings);
         this._hoverRepair = new PanelHoverRepair(Main.panel);
         this._quickSettingsIndicatorsController = null;
         this._activitiesDotWidthOverride = null;
@@ -185,6 +187,7 @@ export class PrimaryPanelController {
             showDesktopButton: this._showDesktopButton,
         });
         this._stateController.enable();
+        this._focusedAppController.enable();
         this._hoverRepair.enable();
         if (dynamicTaskbarEnabled(this._settings)) {
             this._oldPanelBoxLayout = Main.layoutManager.panelBox.layout_manager;
@@ -283,6 +286,8 @@ export class PrimaryPanelController {
         this._activitiesDotWidthOverride = null;
         this._clockController.destroy();
         this._clockController = null;
+        this._focusedAppController.destroy();
+        this._focusedAppController = null;
         this._hoverRepair.destroy();
         this._hoverRepair = null;
         this._notificationAreaController.destroy();
@@ -506,6 +511,7 @@ export class PrimaryPanelController {
                 activities,
                 taskbar: this._taskbarBin,
                 folderMenu: this._folderMenuButton,
+                focusedApp: this._focusedAppController.actor,
                 trayOverflow,
                 quickSettings,
                 dateMenu,
@@ -525,7 +531,7 @@ export class PrimaryPanelController {
         this._notificationAreaController.syncRightBoxActors(
             rightBox,
             new Set(items.map(item => item.actor)),
-            new Set([this._folderMenuButton]),
+            new Set([this._folderMenuButton, this._focusedAppController.actor]),
             windowsXpThemeEnabled
         );
         this._stateController.syncActivitiesVisibility();

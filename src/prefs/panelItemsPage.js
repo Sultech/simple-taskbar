@@ -36,6 +36,7 @@ import {
     createShowDesktopButtonOptionsButton,
 } from './showDesktopButtonDialog.js';
 import {createClockOptionsButton} from './clockDialog.js';
+import {createFocusedAppOptionsButton} from './focusedAppDialog.js';
 import {
     createStartButtonOptionsButton,
 } from './startButtonDialog.js';
@@ -238,6 +239,7 @@ export function addPanelItemsPage({
     const startButtonOptionsButton =
         createStartButtonOptionsButton(settings);
     const clockOptionsButton = createClockOptionsButton(settings);
+    const focusedAppOptionsButton = createFocusedAppOptionsButton(settings);
     const panelOrderDefinitions = new Map([
         ['left-box', {
             title: _('Left Box'),
@@ -290,6 +292,14 @@ export function addPanelItemsPage({
             title: _('Applications'),
             subtitle: _('Taskbar applications'),
             choices: initialPositions.slice(0, 2),
+        }],
+        ['focused-app', {
+            key: 'focused-app-position',
+            visibleKey: 'focused-app-visible',
+            title: _('Focused Application'),
+            subtitle: _('Icon and name of the application in focus'),
+            choices: initialPositions,
+            optionsButton: focusedAppOptionsButton,
         }],
         ['folder-menu', {
             key: 'folder-menu-position',
@@ -373,6 +383,7 @@ export function addPanelItemsPage({
             : positions;
         panelOrderRows.get('activities').setChoices(activitiesPositions);
         for (const id of [
+            'focused-app',
             'folder-menu',
             'tray-overflow',
             'system-menu',
@@ -567,6 +578,11 @@ export function addPanelItemsPage({
             settings.get_boolean('activities-button-visible');
         panelOrderRows.get('folder-menu').positionDropDown.sensitive =
             !windowsXpTheme && settings.get_boolean('folder-menu-enabled');
+        const focusedAppAvailable = !panelIsVertical(settings);
+        const focusedAppVisible = focusedAppAvailable && settings.get_boolean('focused-app-visible');
+        panelOrderRows.get('focused-app').visibleButton.sensitive = focusedAppAvailable;
+        panelOrderRows.get('focused-app').positionDropDown.sensitive = focusedAppVisible;
+        focusedAppOptionsButton.sensitive = focusedAppVisible;
         panelOrderRows.get('tray-overflow').positionDropDown.sensitive =
             !windowsXpTheme && settings.get_boolean('tray-overflow-enabled');
         panelOrderRows.get('show-desktop').positionDropDown.sensitive =
@@ -588,6 +604,7 @@ export function addPanelItemsPage({
     for (const key of [
         'activities-button-visible',
         'folder-menu-enabled',
+        'focused-app-visible',
         'tray-overflow-enabled',
         'show-desktop-button-visible',
         'windows-start-menu-enabled',
