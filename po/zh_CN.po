@@ -565,6 +565,55 @@ msgstr "在应用程序图标上显示文件传输和安装进度"
 msgid "Show Notification Badges"
 msgstr "显示通知徽章"
 
+#: src/prefs/notificationBadgeDialog.js:23
+#: src/prefs/notificationBadgeDialog.js:34
+msgid "Notification Badge Options"
+msgstr "通知徽章选项"
+
+#: src/prefs/notificationBadgeDialog.js:42
+msgid "Size"
+msgstr "大小"
+
+#: src/prefs/notificationBadgeDialog.js:43
+msgid "Make notification badges larger or smaller than their automatic size"
+msgstr "让通知徽章比自动大小更大或更小"
+
+#: src/prefs/notificationBadgeDialog.js:51
+msgid "Badge Size"
+msgstr "徽章大小"
+
+#: src/prefs/notificationBadgeDialog.js:52
+msgid "Percentage of the automatic badge size"
+msgstr "自动徽章大小的百分比"
+
+#: src/prefs/notificationBadgeDialog.js:61
+msgid "Position"
+msgstr "位置"
+
+#: src/prefs/notificationBadgeDialog.js:62
+msgid "Choose which corner of the application icon shows the badge"
+msgstr "选择徽章显示在应用图标的哪个角"
+
+#: src/prefs/notificationBadgeDialog.js:69
+msgid "Badge Position"
+msgstr "徽章位置"
+
+#: src/prefs/notificationBadgeDialog.js:71
+msgid "Top Right"
+msgstr "右上"
+
+#: src/prefs/notificationBadgeDialog.js:72
+msgid "Top Left"
+msgstr "左上"
+
+#: src/prefs/notificationBadgeDialog.js:73
+msgid "Bottom Right"
+msgstr "右下"
+
+#: src/prefs/notificationBadgeDialog.js:74
+msgid "Bottom Left"
+msgstr "左下"
+
 #: src/prefs/applicationIconsGroup.js:319
 msgid "Display unread counts on application icons"
 msgstr "在应用图标上显示未读通知数量"

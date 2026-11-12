@@ -585,6 +585,55 @@ msgstr ""
 msgid "Show Notification Badges"
 msgstr "Mostrar emblemas de notificação"
 
+#: src/prefs/notificationBadgeDialog.js:23
+#: src/prefs/notificationBadgeDialog.js:34
+msgid "Notification Badge Options"
+msgstr "Opções dos emblemas de notificação"
+
+#: src/prefs/notificationBadgeDialog.js:42
+msgid "Size"
+msgstr "Tamanho"
+
+#: src/prefs/notificationBadgeDialog.js:43
+msgid "Make notification badges larger or smaller than their automatic size"
+msgstr "Deixe os emblemas de notificação maiores ou menores que o tamanho automático"
+
+#: src/prefs/notificationBadgeDialog.js:51
+msgid "Badge Size"
+msgstr "Tamanho do emblema"
+
+#: src/prefs/notificationBadgeDialog.js:52
+msgid "Percentage of the automatic badge size"
+msgstr "Porcentagem do tamanho automático do emblema"
+
+#: src/prefs/notificationBadgeDialog.js:61
+msgid "Position"
+msgstr "Posição"
+
+#: src/prefs/notificationBadgeDialog.js:62
+msgid "Choose which corner of the application icon shows the badge"
+msgstr "Escolha em qual canto do ícone do aplicativo o emblema aparece"
+
+#: src/prefs/notificationBadgeDialog.js:69
+msgid "Badge Position"
+msgstr "Posição do emblema"
+
+#: src/prefs/notificationBadgeDialog.js:71
+msgid "Top Right"
+msgstr "Superior direito"
+
+#: src/prefs/notificationBadgeDialog.js:72
+msgid "Top Left"
+msgstr "Superior esquerdo"
+
+#: src/prefs/notificationBadgeDialog.js:73
+msgid "Bottom Right"
+msgstr "Inferior direito"
+
+#: src/prefs/notificationBadgeDialog.js:74
+msgid "Bottom Left"
+msgstr "Inferior esquerdo"
+
 #: src/prefs/applicationIconsGroup.js:319
 msgid "Display unread counts on application icons"
 msgstr ""

@@ -578,6 +578,55 @@ msgstr "Dosya aktarımı ve kurulum ilerlemesini uygulama simgelerinde göster"
 msgid "Show Notification Badges"
 msgstr "Bildirim Rozetlerini Göster"
 
+#: src/prefs/notificationBadgeDialog.js:23
+#: src/prefs/notificationBadgeDialog.js:34
+msgid "Notification Badge Options"
+msgstr "Bildirim Rozeti Seçenekleri"
+
+#: src/prefs/notificationBadgeDialog.js:42
+msgid "Size"
+msgstr "Boyut"
+
+#: src/prefs/notificationBadgeDialog.js:43
+msgid "Make notification badges larger or smaller than their automatic size"
+msgstr "Bildirim rozetlerini otomatik boyutlarından daha büyük veya daha küçük yapın"
+
+#: src/prefs/notificationBadgeDialog.js:51
+msgid "Badge Size"
+msgstr "Rozet Boyutu"
+
+#: src/prefs/notificationBadgeDialog.js:52
+msgid "Percentage of the automatic badge size"
+msgstr "Otomatik rozet boyutunun yüzdesi"
+
+#: src/prefs/notificationBadgeDialog.js:61
+msgid "Position"
+msgstr "Konum"
+
+#: src/prefs/notificationBadgeDialog.js:62
+msgid "Choose which corner of the application icon shows the badge"
+msgstr "Rozetin uygulama simgesinin hangi köşesinde gösterileceğini seçin"
+
+#: src/prefs/notificationBadgeDialog.js:69
+msgid "Badge Position"
+msgstr "Rozet Konumu"
+
+#: src/prefs/notificationBadgeDialog.js:71
+msgid "Top Right"
+msgstr "Sağ Üst"
+
+#: src/prefs/notificationBadgeDialog.js:72
+msgid "Top Left"
+msgstr "Sol Üst"
+
+#: src/prefs/notificationBadgeDialog.js:73
+msgid "Bottom Right"
+msgstr "Sağ Alt"
+
+#: src/prefs/notificationBadgeDialog.js:74
+msgid "Bottom Left"
+msgstr "Sol Alt"
+
 #: src/prefs/applicationIconsGroup.js:319
 msgid "Display unread counts on application icons"
 msgstr "Okunmamış sayılarını uygulama simgelerinde göster"

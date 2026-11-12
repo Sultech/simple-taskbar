@@ -578,6 +578,55 @@ msgstr ""
 msgid "Show Notification Badges"
 msgstr "Értesítési jelvények megjelenítése"
 
+#: src/prefs/notificationBadgeDialog.js:23
+#: src/prefs/notificationBadgeDialog.js:34
+msgid "Notification Badge Options"
+msgstr "Értesítési jelvény beállításai"
+
+#: src/prefs/notificationBadgeDialog.js:42
+msgid "Size"
+msgstr "Méret"
+
+#: src/prefs/notificationBadgeDialog.js:43
+msgid "Make notification badges larger or smaller than their automatic size"
+msgstr "Az értesítési jelvények nagyobbak vagy kisebbek legyenek az automatikus méretüknél"
+
+#: src/prefs/notificationBadgeDialog.js:51
+msgid "Badge Size"
+msgstr "Jelvény mérete"
+
+#: src/prefs/notificationBadgeDialog.js:52
+msgid "Percentage of the automatic badge size"
+msgstr "Az automatikus jelvényméret százaléka"
+
+#: src/prefs/notificationBadgeDialog.js:61
+msgid "Position"
+msgstr "Pozíció"
+
+#: src/prefs/notificationBadgeDialog.js:62
+msgid "Choose which corner of the application icon shows the badge"
+msgstr "Válassza ki, hogy az alkalmazásikon melyik sarkában jelenjen meg a jelvény"
+
+#: src/prefs/notificationBadgeDialog.js:69
+msgid "Badge Position"
+msgstr "Jelvény pozíciója"
+
+#: src/prefs/notificationBadgeDialog.js:71
+msgid "Top Right"
+msgstr "Jobb felső"
+
+#: src/prefs/notificationBadgeDialog.js:72
+msgid "Top Left"
+msgstr "Bal felső"
+
+#: src/prefs/notificationBadgeDialog.js:73
+msgid "Bottom Right"
+msgstr "Jobb alsó"
+
+#: src/prefs/notificationBadgeDialog.js:74
+msgid "Bottom Left"
+msgstr "Bal alsó"
+
 #: src/prefs/applicationIconsGroup.js:319
 msgid "Display unread counts on application icons"
 msgstr "Olvasatlan értesítések számának megjelenítése az alkalmazásikonokon"

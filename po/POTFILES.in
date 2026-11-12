@@ -31,6 +31,7 @@ src/prefs/panelModeGroup.js
 src/prefs/panelThicknessSizing.js
 src/prefs/preferencesDialogs.js
 src/prefs/progressBarDialog.js
+src/prefs/notificationBadgeDialog.js
 src/prefs/profileTransfer.js
 src/prefs/preferencesWidgets.js
 src/prefs/runningIndicatorReserveDialog.js
