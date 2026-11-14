@@ -334,7 +334,7 @@ export class ExtensionPanelController {
         this._core.overflowController.enable();
         this._core.taskbarController.enable();
         this._core.createInteractionController({
-            getVolumeIndicator: () => quickSettings._volumeOutput,
+            getQuickSettings: () => quickSettings,
             panelActor: this.actor,
             panelBoxes: [this._leftBox, this._centerBox, this._rightBox],
             allowTaskbarLock: !this._dockController,

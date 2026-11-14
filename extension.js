@@ -174,7 +174,7 @@ export default class SimpleTaskbarExtension extends Extension {
             isAutoHideBlocked: () => this._core.isInteractionBlocked(true),
         });
         this._core.createInteractionController({
-            getVolumeIndicator: () => Main.panel.statusArea.quickSettings._volumeOutput,
+            getQuickSettings: () => Main.panel.statusArea.quickSettings,
         });
         this._core.overflowController.enable();
         this._trayOverflowController.enable();

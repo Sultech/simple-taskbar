@@ -10,6 +10,7 @@ import St from 'gi://St';
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as Slider from 'resource:///org/gnome/shell/ui/slider.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
@@ -25,7 +26,7 @@ import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
-const VOLUME_SCROLL_STEP = 0.02;
+const SLIDER_SCROLL_STEP = 0.02;
 
 export class PanelInteractionController {
     constructor({
@@ -37,7 +38,7 @@ export class PanelInteractionController {
         openPreferences,
         onAppScrolled,
         onPanelScrolled,
-        getVolumeIndicator,
+        getQuickSettings,
         panelActor = Main.panel,
         panelBoxes = [
             Main.panel._leftBox,
@@ -55,7 +56,8 @@ export class PanelInteractionController {
         this._openPreferences = openPreferences;
         this._onAppScrolled = onAppScrolled;
         this._onPanelScrolled = onPanelScrolled;
-        this._getVolumeIndicator = getVolumeIndicator;
+        this._getQuickSettings = getQuickSettings;
+        this._quickSettingsMenu = null;
         this._panelActor = panelActor;
         this._panelBoxes = panelBoxes;
         this._allowTaskbarLock = allowTaskbarLock;
@@ -72,6 +74,11 @@ export class PanelInteractionController {
         this._capturedEventId = this._panelActor.connect(
             'captured-event',
             (_actor, event) => this._onCapturedEvent(event)
+        );
+        this._quickSettingsMenu = this._getQuickSettings().menu;
+        this._quickSettingsMenu.actor.connectObject(
+            'captured-event', (_actor, event) => this._onQuickSettingsMenuEvent(event),
+            this
         );
     }
 
@@ -90,6 +97,8 @@ export class PanelInteractionController {
         if (this._capturedEventId)
             this._panelActor.disconnect(this._capturedEventId);
         this._capturedEventId = 0;
+        this._quickSettingsMenu.actor.disconnectObject(this);
+        this._quickSettingsMenu = null;
 
         if (this._lockChangedId)
             this._settings.disconnect(this._lockChangedId);
@@ -111,7 +120,7 @@ export class PanelInteractionController {
         this._openPreferences = null;
         this._onAppScrolled = null;
         this._onPanelScrolled = null;
-        this._getVolumeIndicator = null;
+        this._getQuickSettings = null;
     }
 
     _createContextMenu() {
@@ -218,7 +227,7 @@ export class PanelInteractionController {
         let item = null;
         if (eventType === Clutter.EventType.SCROLL) {
             const volumeIndicator = this._scrollDirection.ignoresNaturalScroll && target
-                ? this._getVolumeIndicator()
+                ? this._getQuickSettings()._volumeOutput
                 : null;
             if (volumeIndicator && volumeIndicator.contains(target)) {
                 return this._changeVolume(event)
@@ -350,7 +359,7 @@ export class PanelInteractionController {
         if (event.get_flags() & Clutter.EventFlags.FLAG_POINTER_EMULATED)
             return false;
 
-        const volumeIndicator = this._getVolumeIndicator();
+        const volumeIndicator = this._getQuickSettings()._volumeOutput;
         if (!volumeIndicator)
             return false;
 
@@ -385,7 +394,33 @@ export class PanelInteractionController {
         return true;
     }
 
+    _onQuickSettingsMenuEvent(event) {
+        if (event.type() !== Clutter.EventType.SCROLL ||
+            !this._scrollDirection.ignoresNaturalScroll ||
+            event.get_flags() & Clutter.EventFlags.FLAG_POINTER_EMULATED)
+            return Clutter.EVENT_PROPAGATE;
+
+        let slider = null;
+        for (let actor = global.stage.get_event_actor(event); actor && !slider; actor = actor.get_parent()) {
+            if (actor instanceof Slider.Slider)
+                slider = actor;
+            else if (SHELL_VERSION < 51 && actor instanceof St.Bin && actor.child instanceof Slider.Slider)
+                slider = actor.child;
+        }
+        if (!slider || !slider.reactive)
+            return Clutter.EVENT_PROPAGATE;
+
+        this._stepSlider(slider, event);
+        return Clutter.EVENT_STOP;
+    }
+
     _stepVolume(output, event) {
+        const changed = this._stepSlider(output.slider, event);
+        if (output.mapped || changed)
+            output.showOSD();
+    }
+
+    _stepSlider(slider, event) {
         const direction = event.get_scroll_direction();
         let nSteps = 0;
         if (direction === Clutter.ScrollDirection.UP) {
@@ -398,17 +433,12 @@ export class PanelInteractionController {
         }
         nSteps *= this._scrollDirection.sign(event);
 
-        let changed;
-        if (SHELL_VERSION >= 49) {
-            changed = output.slider.step(nSteps);
-        } else {
-            const slider = output.slider;
-            const value = slider.value;
-            slider.value = Math.min(Math.max(0, value + nSteps * VOLUME_SCROLL_STEP), slider.maximumValue);
-            changed = slider.value !== value;
-        }
-        if (output.mapped || changed)
-            output.showOSD();
+        if (SHELL_VERSION >= 49)
+            return slider.step(nSteps);
+
+        const value = slider.value;
+        slider.value = Math.min(Math.max(0, value + nSteps * SLIDER_SCROLL_STEP), slider.maximumValue);
+        return slider.value !== value;
     }
 
     _scrollTaskbar(event) {
