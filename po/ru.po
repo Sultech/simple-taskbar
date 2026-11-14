@@ -1042,8 +1042,8 @@ msgid "Ignore Natural Scrolling"
 msgstr "Игнорировать естественную прокрутку"
 
 #: src/prefs/panelPreferenceRows.js:232
-msgid "Use traditional scrolling on the taskbar, the Dock, window previews and the volume icon"
-msgstr "Использовать обычную прокрутку на панели задач, в Dock, в превью окон и на значке громкости"
+msgid "Use traditional scrolling on the taskbar, the Dock, window previews, the volume icon and Quick Settings sliders"
+msgstr "Использовать обычную прокрутку на панели задач, в Dock, в превью окон, на значке громкости и на ползунках быстрых настроек"
 
 #: src/prefs/applicationInteractionGroup.js:254
 msgid "Minimum delay between app icon scrolls in milliseconds"
