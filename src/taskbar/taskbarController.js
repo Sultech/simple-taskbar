@@ -352,8 +352,10 @@ export class TaskbarController {
                     this._getHoverAnimationNeighbours(),
                 getEdgeActor: () => this._getHoverAnimationEdgeActor(),
                 raiseOverlays: () => this._getPreviews().raiseOverlays(),
+                getOpenPreview: () => this._getPreviews().getOpenPreview(),
                 onReserveChanged: () => {
                     this._getPreviews().syncTooltipPosition();
+                    this._getPreviews().syncPreviewPosition();
                     this._onHoverAnimationReserveChanged();
                 },
                 onExtentsChanged: (before, after) =>

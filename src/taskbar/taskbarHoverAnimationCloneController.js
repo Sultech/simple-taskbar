@@ -3,6 +3,7 @@
 
 import Clutter from 'gi://Clutter';
 import GObject from 'gi://GObject';
+import Graphene from 'gi://Graphene';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -83,6 +84,76 @@ export class TaskbarHoverAnimationCloneController {
 
     get(item) {
         return this._clones.get(item);
+    }
+
+    getIconRect(item, includeHighlight = false) {
+        const entry = this._clones.get(item);
+        if (!entry)
+            return null;
+
+        const icon = this._cloneActorRect(entry, item._taskbarIconContainer ?? entry.source);
+        const highlights = includeHighlight
+            ? [item._taskbarGlass, item._taskbarClassicHover, item._taskbarClassicFocus]
+            : [];
+        for (const highlight of highlights) {
+            if (!highlight?.mapped)
+                continue;
+
+            const rect = this._cloneActorRect(entry, highlight);
+            icon.x1 = Math.min(icon.x1, rect.x1);
+            icon.y1 = Math.min(icon.y1, rect.y1);
+            icon.x2 = Math.max(icon.x2, rect.x2);
+            icon.y2 = Math.max(icon.y2, rect.y2);
+        }
+        return icon;
+    }
+
+    _cloneActorRect(entry, actor) {
+        const [width, height] = actor.get_size();
+        const corners = [[0, 0], [width, height]].map(([x, y]) => {
+            let point = new Graphene.Point3D({x, y, z: 0});
+            if (actor !== entry.source)
+                point = actor.apply_relative_transform_to_point(entry.source, point);
+            return entry.clone.apply_transform_to_point(point);
+        });
+        return {
+            x1: Math.min(corners[0].x, corners[1].x),
+            y1: Math.min(corners[0].y, corners[1].y),
+            x2: Math.max(corners[0].x, corners[1].x),
+            y2: Math.max(corners[0].y, corners[1].y),
+        };
+    }
+
+    containsPoint(x, y, padding, isHighlighted) {
+        const vertical = this._getVertical();
+        const [along, across] = vertical ? [y, x] : [x, y];
+        const spans = [];
+        for (const [item, entry] of this._clones) {
+            const icon = this.getIconRect(item, isHighlighted(item));
+            const slot = entry.clone.get_transformed_extents();
+            spans.push(vertical
+                ? {start: slot.get_y(), end: slot.get_y() + slot.get_height(), low: icon.x1, high: icon.x2}
+                : {start: slot.get_x(), end: slot.get_x() + slot.get_width(), low: icon.y1, high: icon.y2});
+        }
+        spans.sort((left, right) => left.start - right.start);
+
+        const inside = (start, end, low, high) =>
+            along >= start - padding && along < end + padding &&
+            across >= low - padding && across < high + padding;
+        for (let index = 0; index < spans.length; index++) {
+            const span = spans[index];
+            if (inside(span.start, span.end, span.low, span.high))
+                return true;
+
+            const next = spans[index + 1];
+            if (!next ||
+                next.start - span.end > Math.min(span.end - span.start, next.end - next.start))
+                continue;
+
+            if (inside(span.end, next.start, Math.max(span.low, next.low), Math.min(span.high, next.high)))
+                return true;
+        }
+        return false;
     }
 
     getItems() {

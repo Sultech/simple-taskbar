@@ -7,6 +7,7 @@ import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
 } from '../shared/applicationHoverAnimation.js';
+import {taskbarItemHighlightShown} from '../shared/classicHighlightSettings.js';
 import {
     TaskbarHoverAnimationAnimator,
 } from './taskbarHoverAnimationAnimator.js';
@@ -24,6 +25,16 @@ import {
 } from './taskbarHoverAnimationUtils.js';
 
 const MAGNIFY_TIMELINE_DURATION = 1000;
+const MAGNIFIED_ICON_HIT_PADDING = 4;
+
+function extentsRect(extents) {
+    return {
+        x1: extents.get_x(),
+        y1: extents.get_y(),
+        x2: extents.get_x() + extents.get_width(),
+        y2: extents.get_y() + extents.get_height(),
+    };
+}
 
 export class TaskbarIconHoverAnimationController {
     constructor({
@@ -42,6 +53,7 @@ export class TaskbarIconHoverAnimationController {
         getNeighbourActors,
         getEdgeActor,
         raiseOverlays,
+        getOpenPreview,
         onReserveChanged,
         onExtentsChanged,
         onCloneButtonPress,
@@ -53,6 +65,7 @@ export class TaskbarIconHoverAnimationController {
         this._getLocationActor = getLocationActor;
         this._getStartButton = getStartButton;
         this._getPositionActor = getPositionActor;
+        this._getOpenPreview = getOpenPreview;
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._trackedItems = new Set();
         this._viewport = null;
@@ -240,6 +253,7 @@ export class TaskbarIconHoverAnimationController {
         this._viewport = null;
         this._positionActor = null;
         this._getPositionActor = null;
+        this._getOpenPreview = null;
         this._getStartButton = null;
         this._getLocationActor = null;
         this._taskbarActor = null;
@@ -396,18 +410,57 @@ export class TaskbarIconHoverAnimationController {
         }
 
         const [pointerX, pointerY] = global.get_pointer();
-        if (!this._geometry.isPointerInMagnifyBounds(
-            pointerX,
-            pointerY,
-            this._animator.getOutwardReserve(),
-            this._animator.getPointerExtents()
-        )) {
+        if (!this._isPointerInMagnifyZone(pointerX, pointerY)) {
             this._animator.dropAnimations();
             return;
         }
         this._animator.update(pointerX, pointerY);
         if (this._animator.isMagnifySettled() && !this._magnifyUpdatePending && !this._cloneGeometryDirty)
             this._stopMagnifyFrames();
+    }
+
+    _isPointerInMagnifyZone(pointerX, pointerY) {
+        const padding = MAGNIFIED_ICON_HIT_PADDING;
+        if (this._geometry.isPointerInMagnifyBounds(pointerX, pointerY, 0,
+            this._animator.getPointerExtents()) ||
+            this._cloneController.containsPoint(pointerX, pointerY, padding,
+                item => taskbarItemHighlightShown(this._settings, item)))
+            return true;
+
+        const preview = this._getOpenPreview();
+        if (!preview)
+            return false;
+
+        const bodyRect = extentsRect(preview.body.get_transformed_extents());
+        const iconRect = this._cloneController.getIconRect(preview.item,
+            taskbarItemHighlightShown(this._settings, preview.item)) ??
+            extentsRect(preview.item.get_transformed_extents());
+        const corridor = {
+            x1: Math.min(bodyRect.x1, iconRect.x1) - padding,
+            y1: Math.min(bodyRect.y1, iconRect.y1) - padding,
+            x2: Math.max(bodyRect.x2, iconRect.x2) + padding,
+            y2: Math.max(bodyRect.y2, iconRect.y2) + padding,
+        };
+        switch (this._settingsController.getPanelPosition()) {
+        case 'top':
+            corridor.y1 = iconRect.y2;
+            corridor.y2 = bodyRect.y1;
+            break;
+        case 'bottom':
+            corridor.y1 = bodyRect.y2;
+            corridor.y2 = iconRect.y1;
+            break;
+        case 'left':
+            corridor.x1 = iconRect.x2;
+            corridor.x2 = bodyRect.x1;
+            break;
+        default:
+            corridor.x1 = bodyRect.x2;
+            corridor.x2 = iconRect.x1;
+            break;
+        }
+        return pointerX >= corridor.x1 && pointerX < corridor.x2 &&
+            pointerY >= corridor.y1 && pointerY < corridor.y2;
     }
 
     _onAnimationSettingsChanged() {

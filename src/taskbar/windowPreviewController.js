@@ -27,6 +27,7 @@ import {TaskbarTooltipController} from './taskbarTooltipController.js';
 const PREVIEW_WIDTH = 260;
 const PREVIEW_HEIGHT = 146;
 const PREVIEW_CLOSE_RECHECK_INTERVAL = 50;
+const PREVIEW_REPOSITION_DURATION = 150;
 
 export class WindowPreviewController {
     constructor(
@@ -109,6 +110,12 @@ export class WindowPreviewController {
         return Boolean(
             this._previewItem || this._closingPreviewMenus.size > 0
         );
+    }
+
+    getOpenPreview() {
+        const item = this._previewItem;
+        const menu = item?._taskbarButton._taskbarPreviewMenu;
+        return menu?.box.mapped ? {item, body: menu.box} : null;
     }
 
     get hoverAction() {
@@ -262,6 +269,27 @@ export class WindowPreviewController {
 
     syncTooltipPosition() {
         this._tooltipController.syncPosition();
+    }
+
+    syncPreviewPosition() {
+        const item = this._previewItem;
+        const menu = item?._taskbarButton._taskbarPreviewMenu;
+        const outward = this._getHoverAnimationOutwardReserve();
+        if (!menu?.isOpen || !outward)
+            return;
+
+        if (!this._previewAnchor)
+            this._anchorPreview(menu, item);
+        const [property, target] = this._previewOffset(outward);
+        if (menu.actor[property] === target)
+            return;
+
+        menu.actor.remove_transition(property);
+        menu.actor.ease({
+            [property]: target,
+            duration: PREVIEW_REPOSITION_DURATION,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
     }
 
     scheduleTooltipClose() {
@@ -496,7 +524,14 @@ export class WindowPreviewController {
         if (!outward)
             return;
 
-        const source = dynamic ? item : item._taskbarButton;
+        this._anchorPreview(menu, item);
+        const [property, offset] = this._previewOffset(outward);
+        menu.actor.remove_transition(property);
+        menu.actor[property] = offset;
+    }
+
+    _anchorPreview(menu, item) {
+        const source = dynamicTaskbarEnabled(this._settings) ? item : item._taskbarButton;
         const [x, y] = source.get_transformed_position();
         const [width, height] = source.get_transformed_size();
         this._previewAnchor = new St.Widget({
@@ -510,7 +545,9 @@ export class WindowPreviewController {
         Main.uiGroup.add_child(this._previewAnchor);
         this._previewAnchor.allocate_preferred_size(x, y);
         menu._boxPointer.setPosition(this._previewAnchor, 0.5);
+    }
 
+    _previewOffset(outward) {
         const position = panelPosition(this._settings);
         const property = position === 'top' || position === 'bottom'
             ? 'translation_y'
@@ -518,8 +555,7 @@ export class WindowPreviewController {
         const direction = position === 'top' || position === 'left'
             ? 1
             : -1;
-        menu.actor.remove_transition(property);
-        menu.actor[property] = direction * outward;
+        return [property, direction * outward];
     }
 
     _overviewIsVisible() {
