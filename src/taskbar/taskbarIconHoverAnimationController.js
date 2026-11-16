@@ -273,7 +273,7 @@ export class TaskbarIconHoverAnimationController {
             pointerX,
             pointerY,
             this._animator.getOutwardReserve(),
-            this._animator.getVisualExtents()
+            this._animator.getPointerExtents()
         );
     }
 
@@ -400,7 +400,7 @@ export class TaskbarIconHoverAnimationController {
             pointerX,
             pointerY,
             this._animator.getOutwardReserve(),
-            this._animator.getVisualExtents()
+            this._animator.getPointerExtents()
         )) {
             this._animator.dropAnimations();
             return;

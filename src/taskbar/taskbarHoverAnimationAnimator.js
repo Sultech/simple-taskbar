@@ -7,7 +7,10 @@ import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
 import {
     applySmoothedProperties,
     MAGNIFY_EPSILON,
+    smoothstep,
 } from './taskbarHoverAnimationUtils.js';
+
+const ROW_END_FADE_PADDING = 0.5;
 
 export class TaskbarHoverAnimationAnimator {
     constructor({
@@ -63,6 +66,14 @@ export class TaskbarHoverAnimationAnimator {
 
     getVisualExtents() {
         return {before: this._extentBefore, after: this._extentAfter};
+    }
+
+    getPointerExtents() {
+        const padding = this._magnifyActive ? this._rowEndFadePadding() : 0;
+        return {
+            before: this._extentBefore - padding,
+            after: this._extentAfter + padding,
+        };
     }
 
     getOutwardReserve() {
@@ -359,7 +370,8 @@ export class TaskbarHoverAnimationAnimator {
 
         const radius = this._getIconSize() * profile.extent / 2;
         const cursor = vertical ? pointerY : pointerX;
-        const attenuation = this._pinnedEndAttenuation(entries, cursor);
+        const attenuation = this._pinnedEndAttenuation(entries, cursor) *
+            this._rowEndAttenuation(entries, cursor);
         for (const entry of entries) {
             const distance = Math.abs(cursor - entry.center);
             entry.level = entry.magnifies && distance < radius
@@ -462,6 +474,42 @@ export class TaskbarHoverAnimationAnimator {
             attenuation = Math.min(attenuation, 1 - Math.min(Math.max(progress, 0), 1));
         }
         return attenuation;
+    }
+
+    _rowEndFadePadding() {
+        return Math.round(this._getIconSize() * ROW_END_FADE_PADDING);
+    }
+
+    _rowEndAttenuation(entries, cursor) {
+        let first = null;
+        let last = null;
+        for (const entry of entries) {
+            if (entry.magnifies) {
+                first ??= entry;
+                last = entry;
+            }
+        }
+        if (!first)
+            return 1;
+
+        let edge;
+        let distance;
+        if (cursor < first.center) {
+            if (entries[0].pinned)
+                return 1;
+            edge = first;
+            distance = first.center - cursor;
+        } else if (cursor > last.center) {
+            if (entries[entries.length - 1].pinned)
+                return 1;
+            edge = last;
+            distance = cursor - last.center;
+        } else {
+            return 1;
+        }
+
+        const fadeLength = edge.length / 2 + this._rowEndFadePadding();
+        return smoothstep(1 - distance / fadeLength);
     }
 
     _detachedStartButton(entries, getStretchEntry, vertical) {

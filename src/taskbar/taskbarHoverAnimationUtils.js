@@ -46,6 +46,11 @@ export function applySmoothedProperties(actor, targets, smoothing, epsilon) {
     return settled;
 }
 
+export function smoothstep(value) {
+    const clamped = Math.min(Math.max(value, 0), 1);
+    return clamped * clamped * (3 - 2 * clamped);
+}
+
 export class TaskbarHoverAnimationSmoothing {
     constructor() {
         this._factor = 0;
