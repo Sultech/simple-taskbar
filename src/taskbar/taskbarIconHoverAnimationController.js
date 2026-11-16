@@ -54,6 +54,7 @@ export class TaskbarIconHoverAnimationController {
         getEdgeActor,
         raiseOverlays,
         getOpenPreview,
+        onMagnifyFrame,
         onReserveChanged,
         onExtentsChanged,
         onCloneButtonPress,
@@ -66,6 +67,7 @@ export class TaskbarIconHoverAnimationController {
         this._getStartButton = getStartButton;
         this._getPositionActor = getPositionActor;
         this._getOpenPreview = getOpenPreview;
+        this._onMagnifyFrameDone = onMagnifyFrame;
         this._cursorTracker = global.backend.get_cursor_tracker();
         this._trackedItems = new Set();
         this._viewport = null;
@@ -254,6 +256,7 @@ export class TaskbarIconHoverAnimationController {
         this._positionActor = null;
         this._getPositionActor = null;
         this._getOpenPreview = null;
+        this._onMagnifyFrameDone = null;
         this._getStartButton = null;
         this._getLocationActor = null;
         this._taskbarActor = null;
@@ -289,6 +292,13 @@ export class TaskbarIconHoverAnimationController {
             this._animator.getOutwardReserve(),
             this._animator.getPointerExtents()
         );
+    }
+
+    getTooltipRect(item, includeHighlight) {
+        if (this._settingsController.getAnimationType() !== APP_ICON_HOVER_ANIMATION.MAGNIFY)
+            return null;
+
+        return this._cloneController.getVisualRect(item, includeHighlight);
     }
 
     syncIconResolution(item) {
@@ -391,6 +401,11 @@ export class TaskbarIconHoverAnimationController {
     }
 
     _onMagnifyFrame() {
+        this._advanceMagnify();
+        this._onMagnifyFrameDone();
+    }
+
+    _advanceMagnify() {
         const updatePending = this._magnifyUpdatePending;
         this._magnifyUpdatePending = false;
         if (this._cloneGeometryDirty) {

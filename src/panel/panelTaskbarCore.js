@@ -87,7 +87,9 @@ export class PanelTaskbarCore {
             settings,
             () => this.overflowController.closeWithAnimation(),
             () => this.taskbarController.getHoverAnimationOutwardReserve(),
-            () => this.taskbarController.isPointerInMagnifyBounds()
+            () => this.taskbarController.isPointerInMagnifyBounds(),
+            (item, includeHighlight) =>
+                this.taskbarController.getHoverAnimationTooltipRect(item, includeHighlight)
         );
         this.startButtonController = new StartButtonController({
             extensionDir,

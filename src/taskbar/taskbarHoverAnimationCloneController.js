@@ -124,6 +124,34 @@ export class TaskbarHoverAnimationCloneController {
         };
     }
 
+    getVisualRect(item, includeHighlight) {
+        const entry = this._clones.get(item);
+        if (!entry)
+            return null;
+
+        const icon = this.getIconRect(item, includeHighlight);
+        const [x, y] = item.get_transformed_position();
+        const [width, height] = item.get_transformed_size();
+        const clone = entry.clone.get_transformed_extents();
+        if (this._getVertical()) {
+            const shift = clone.get_y() + clone.get_height() / 2 - (y + height / 2);
+            return {
+                x1: Math.min(x, icon.x1),
+                y1: y + shift,
+                x2: Math.max(x + width, icon.x2),
+                y2: y + height + shift,
+            };
+        }
+
+        const shift = clone.get_x() + clone.get_width() / 2 - (x + width / 2);
+        return {
+            x1: x + shift,
+            y1: Math.min(y, icon.y1),
+            x2: x + width + shift,
+            y2: Math.max(y + height, icon.y2),
+        };
+    }
+
     containsPoint(x, y, padding, isHighlighted) {
         const vertical = this._getVertical();
         const [along, across] = vertical ? [y, x] : [x, y];

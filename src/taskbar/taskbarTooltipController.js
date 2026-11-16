@@ -5,19 +5,22 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {taskbarItemHighlightShown} from '../shared/classicHighlightSettings.js';
 import {panelIsTop, panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 
 const APP_TOOLTIP_DELAY = 300;
 const APP_TOOLTIP_SHOW_TIME = 150;
 const APP_TOOLTIP_HIDE_TIME = 100;
 const APP_TOOLTIP_CLOSE_DELAY = 300;
+const APP_TOOLTIP_GAP = 8;
 
 export class TaskbarTooltipController {
     constructor({settings, getItemAtPointer, getHoverAnimationOutwardReserve,
-        isPointerInMagnifyBounds, raiseOverlays}) {
+        getHoverAnimationTooltipRect, isPointerInMagnifyBounds, raiseOverlays}) {
         this._settings = settings;
         this._getItemAtPointer = getItemAtPointer;
         this._getHoverAnimationOutwardReserve = getHoverAnimationOutwardReserve;
+        this._getHoverAnimationTooltipRect = getHoverAnimationTooltipRect;
         this._isPointerInMagnifyBounds = isPointerInMagnifyBounds;
         this._raiseOverlays = raiseOverlays;
         this._appTooltip = null;
@@ -38,6 +41,7 @@ export class TaskbarTooltipController {
         this._settings = null;
         this._getItemAtPointer = null;
         this._getHoverAnimationOutwardReserve = null;
+        this._getHoverAnimationTooltipRect = null;
         this._isPointerInMagnifyBounds = null;
         this._raiseOverlays = null;
     }
@@ -169,49 +173,70 @@ export class TaskbarTooltipController {
     }
 
     syncPosition() {
-        if (this._appTooltip && this._appTooltip.visible && this._tooltipItem &&
-            this._getHoverAnimationOutwardReserve() > 0)
-            this._positionTooltip(this._tooltipItem);
+        if (!this._appTooltip?.visible || !this._tooltipItem)
+            return;
+
+        const magnifiedAnchor = this._magnifiedAnchorRect(this._tooltipItem);
+        if (magnifiedAnchor || this._getHoverAnimationOutwardReserve() > 0)
+            this._positionTooltip(this._tooltipItem, magnifiedAnchor);
     }
 
-    _positionTooltip(item) {
+    _magnifiedAnchorRect(item) {
+        return this._getHoverAnimationTooltipRect(item, taskbarItemHighlightShown(this._settings, item));
+    }
+
+    _restingAnchorRect(item, position) {
+        const [x, y] = item.get_transformed_position();
+        const outward = this._getHoverAnimationOutwardReserve();
+        const anchor = {
+            x1: x,
+            y1: y,
+            x2: x + item.allocation.get_width(),
+            y2: y + item.allocation.get_height(),
+        };
+        if (position === 'top')
+            anchor.y2 += outward;
+        else if (position === 'bottom')
+            anchor.y1 -= outward;
+        else if (position === 'left')
+            anchor.x2 += outward;
+        else
+            anchor.x1 -= outward;
+        return anchor;
+    }
+
+    _positionTooltip(item, magnifiedAnchor = this._magnifiedAnchorRect(item)) {
         const label = this._appTooltip;
-        const [stageX, stageY] = item.get_transformed_position();
         const [, labelWidth] = label.get_preferred_width(-1);
         const [, labelHeight] = label.get_preferred_height(labelWidth);
         const monitor = Main.layoutManager.findMonitorForActor(item) ??
             Main.layoutManager.primaryMonitor;
-        const itemWidth = item.allocation.get_width();
-        const itemHeight = item.allocation.get_height();
         const position = panelPosition(this._settings);
-        const outward = this._getHoverAnimationOutwardReserve();
+        const anchor = magnifiedAnchor ?? this._restingAnchorRect(item, position);
         let x;
         let y;
         if (positionIsVertical(position)) {
             x = position === 'left'
-                ? Math.min(
-                    monitor.x + monitor.width - labelWidth,
-                    stageX + itemWidth + 8 + outward
-                )
-                : Math.max(monitor.x, stageX - labelWidth - 8 - outward);
+                ? Math.min(monitor.x + monitor.width - labelWidth, anchor.x2 + APP_TOOLTIP_GAP)
+                : Math.max(monitor.x, anchor.x1 - labelWidth - APP_TOOLTIP_GAP);
             y = Math.clamp(
-                stageY + Math.floor((itemHeight - labelHeight) / 2),
+                Math.floor((anchor.y1 + anchor.y2 - labelHeight) / 2),
                 monitor.y,
                 monitor.y + monitor.height - labelHeight
             );
         } else {
             x = Math.clamp(
-                stageX + Math.floor((itemWidth - labelWidth) / 2),
+                Math.floor((anchor.x1 + anchor.x2 - labelWidth) / 2),
                 monitor.x,
                 monitor.x + monitor.width - labelWidth
             );
             y = panelIsTop(this._settings)
-                ? Math.min(
-                    monitor.y + monitor.height - labelHeight,
-                    stageY + itemHeight + 8 + outward
-                )
-                : Math.max(monitor.y, stageY - labelHeight - 8 - outward);
+                ? Math.min(monitor.y + monitor.height - labelHeight, anchor.y2 + APP_TOOLTIP_GAP)
+                : Math.max(monitor.y, anchor.y1 - labelHeight - APP_TOOLTIP_GAP);
         }
-        label.set_position(x, y);
+        x = Math.round(x);
+        y = Math.round(y);
+        if (label.x !== x || label.y !== y)
+            label.set_position(x, y);
     }
 }

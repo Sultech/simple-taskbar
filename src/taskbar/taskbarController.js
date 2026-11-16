@@ -353,6 +353,7 @@ export class TaskbarController {
                 getEdgeActor: () => this._getHoverAnimationEdgeActor(),
                 raiseOverlays: () => this._getPreviews().raiseOverlays(),
                 getOpenPreview: () => this._getPreviews().getOpenPreview(),
+                onMagnifyFrame: () => this._getPreviews().syncTooltipPosition(),
                 onReserveChanged: () => {
                     this._getPreviews().syncTooltipPosition();
                     this._getPreviews().syncPreviewPosition();
@@ -884,6 +885,10 @@ export class TaskbarController {
 
     getHoverAnimationOutwardReserve() {
         return this._iconHoverAnimationController.getOutwardReserve();
+    }
+
+    getHoverAnimationTooltipRect(item, includeHighlight) {
+        return this._iconHoverAnimationController.getTooltipRect(item, includeHighlight);
     }
 
     isPointerInMagnifyBounds() {

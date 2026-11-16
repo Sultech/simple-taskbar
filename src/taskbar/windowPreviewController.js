@@ -36,7 +36,8 @@ export class WindowPreviewController {
         settings,
         onPreviewActivated,
         getHoverAnimationOutwardReserve,
-        isPointerInMagnifyBounds
+        isPointerInMagnifyBounds,
+        getHoverAnimationTooltipRect
     ) {
         this._getTaskbarItems = getTaskbarItems;
         this._getInterestingWindows = getInterestingWindows;
@@ -63,6 +64,7 @@ export class WindowPreviewController {
             settings,
             getItemAtPointer: () => this._taskbarItemAtPointer(),
             getHoverAnimationOutwardReserve,
+            getHoverAnimationTooltipRect,
             isPointerInMagnifyBounds,
             raiseOverlays: () => this.raiseOverlays(),
         });
