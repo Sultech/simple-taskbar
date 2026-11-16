@@ -51,10 +51,13 @@ export function smoothstep(value) {
     return clamped * clamped * (3 - 2 * clamped);
 }
 
+const MAXIMUM_PASS_INTERVAL_MS = 50;
+
 export class TaskbarHoverAnimationSmoothing {
     constructor() {
         this._factor = 0;
         this._lastPassTime = 0;
+        this._rampElapsed = null;
     }
 
     getFactor() {
@@ -71,7 +74,26 @@ export class TaskbarHoverAnimationSmoothing {
             return;
         }
 
-        this._factor = 1 - Math.exp(-(now - previous) / 1000 / timeConstant);
+        const elapsed = Math.min((now - previous) / 1000, MAXIMUM_PASS_INTERVAL_MS);
+        this._factor = 1 - Math.exp(-elapsed / timeConstant);
+        if (this._rampElapsed === null)
+            return;
+
+        this._rampElapsed += elapsed;
+        const progress = this._rampElapsed / settleDuration;
+        if (progress < 1)
+            this._factor *= smoothstep(progress);
+        else
+            this._rampElapsed = null;
+    }
+
+    easeIn() {
+        this.reset();
+        this._rampElapsed = 0;
+    }
+
+    isEasingIn() {
+        return this._rampElapsed !== null;
     }
 
     reset() {

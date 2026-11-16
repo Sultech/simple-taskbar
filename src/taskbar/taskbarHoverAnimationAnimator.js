@@ -11,6 +11,7 @@ import {
 } from './taskbarHoverAnimationUtils.js';
 
 const ROW_END_FADE_PADDING = 0.5;
+const MAGNIFY_EASE_STRENGTH = 0.5;
 
 export class TaskbarHoverAnimationAnimator {
     constructor({
@@ -48,6 +49,7 @@ export class TaskbarHoverAnimationAnimator {
         this._magnifyActive = false;
         this._magnifySettled = false;
         this._passSettled = true;
+        this._magnifyStrength = 1;
         this._blocked = false;
         this._reserve = 0;
         this._extentBefore = 0;
@@ -273,8 +275,8 @@ export class TaskbarHoverAnimationAnimator {
         const profile = this.getAnimationProfile(
             APP_ICON_HOVER_ANIMATION.MAGNIFY
         );
-        if (active)
-            this._smoothing.reset();
+        if (active || this._magnifyStrength > MAGNIFY_EASE_STRENGTH)
+            this._smoothing.easeIn();
 
         this._magnifyActive = active;
         this._reserve = active
@@ -372,6 +374,7 @@ export class TaskbarHoverAnimationAnimator {
         const cursor = vertical ? pointerY : pointerX;
         const attenuation = this._pinnedEndAttenuation(entries, cursor) *
             this._rowEndAttenuation(entries, cursor);
+        this._magnifyStrength = attenuation;
         for (const entry of entries) {
             const distance = Math.abs(cursor - entry.center);
             entry.level = entry.magnifies && distance < radius
@@ -422,7 +425,7 @@ export class TaskbarHoverAnimationAnimator {
             vertical,
         });
         this._syncVisualExtents();
-        this._magnifySettled = this._passSettled;
+        this._magnifySettled = this._passSettled && !this._smoothing.isEasingIn();
     }
 
     isMagnifySettled() {
