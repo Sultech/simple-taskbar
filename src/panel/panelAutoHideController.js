@@ -22,6 +22,7 @@ import {hasWindowCoveringMonitor, monitorInFullscreen, monitorIsAttached} from '
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
 const HIDE_ANIMATION_TIME = 250;
+const MENU_CLOSE_HIDE_DELAY = 150;
 const REVEAL_EDGE_SIZE = 2;
 export class PanelAutoHideController {
     constructor({
@@ -227,11 +228,8 @@ export class PanelAutoHideController {
         if (this._fullscreenRevealController.visibilityHeld)
             return;
         if (this._dodgeEnabled && this._dodgeActive) {
-            if (!this._pointerReveal ||
-                !this._pointerIsInsidePanel()) {
-                if (!this._hidden)
-                    this._hide();
-            }
+            if (!this._hidden)
+                this._hideAfterMenuClose();
             return;
         }
         if (this._enabled() &&
@@ -592,6 +590,17 @@ export class PanelAutoHideController {
                 return GLib.SOURCE_REMOVE;
             }
         );
+    }
+
+    _hideAfterMenuClose() {
+        this._clearHideTimeout();
+        this._hideTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, MENU_CLOSE_HIDE_DELAY, () => {
+            this._hideTimeoutId = 0;
+            if (this._dodgeEnabled && this._dodgeActive && !this._hidden &&
+                (!this._pointerReveal || !this._pointerIsInsidePanel()))
+                this._hide();
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     _clearHideTimeout() {
