@@ -400,13 +400,11 @@ export class OverviewIntegration {
         const dockPosition = this._settings.get_string('dock-position');
         const vertical = positionIsVertical(panelPositionValue) ||
             (dockMode && positionIsVertical(dockPosition));
-        const bottom = panelPositionValue === 'bottom' ||
-            (dockMode && dockPosition === 'bottom');
         if (vertical)
             dash.set_width(reserve);
         else
             dash.set_width(-1);
-        dash.set_height(vertical && !bottom ? -1 : 0);
+        dash.set_height(0);
     }
 
     _adaptAllocation() {
