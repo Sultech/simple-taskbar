@@ -21,6 +21,7 @@ import {hasWindowCoveringMonitor, monitorInFullscreen, monitorIsAttached} from '
 
 const BLOCKED_RECHECK_DELAY = 150;
 const ANIMATION_TIME = 180;
+const HIDE_ANIMATION_TIME = 250;
 const REVEAL_EDGE_SIZE = 2;
 export class PanelAutoHideController {
     constructor({
@@ -646,7 +647,11 @@ export class PanelAutoHideController {
         this._syncPressureBarrier();
         this._moveTo(
             this._geometry(this._getMonitor()).hiddenOffset,
-            animate
+            animate,
+            {
+                duration: HIDE_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_IN_QUAD,
+            }
         );
         this._onHidden();
     }
@@ -896,7 +901,10 @@ export class PanelAutoHideController {
             actor.set_clip(0, clipStart, actor.width, clipSize);
     }
 
-    _moveTo(offset, animate) {
+    _moveTo(offset, animate, {
+        duration = ANIMATION_TIME,
+        mode = Clutter.AnimationMode.EASE_OUT_QUAD,
+    } = {}) {
         const actor = this._positionActor;
         if (!actor || offset === undefined)
             return;
@@ -919,8 +927,8 @@ export class PanelAutoHideController {
         }
 
         const params = {
-            duration: ANIMATION_TIME,
-            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            duration,
+            mode,
             onComplete: () => {
                 this._positionAnimating = false;
                 if (this._hidden && this._fullscreenRevealController.pointerRevealHeld)
