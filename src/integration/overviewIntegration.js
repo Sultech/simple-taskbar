@@ -9,7 +9,7 @@ import St from 'gi://St';
 
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {Workspace} from 'resource:///org/gnome/shell/ui/workspace.js';
+import {Workspace, WorkspaceLayout} from 'resource:///org/gnome/shell/ui/workspace.js';
 import {
     SecondaryMonitorDisplay,
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
@@ -49,6 +49,7 @@ export class OverviewIntegration {
         this._panelHeight = panelHeight;
         this._settings = new CachedSettings(settings);
         this._dashState = null;
+        this._bottomInsets = new Map();
         this._dashVisibilityRepairId = 0;
         this._injectionManager = new InjectionManager();
         this._spreadInjectionManager = new InjectionManager();
@@ -160,6 +161,7 @@ export class OverviewIntegration {
         this._spreadInjectionManager = null;
         this._injectionManager.clear();
         this._injectionManager = null;
+        this._bottomInsets = null;
         this._restoreStartupOverview();
         this._restoreDash(restoreVisible);
         this.queueRelayout();
@@ -404,7 +406,7 @@ export class OverviewIntegration {
             dash.set_width(reserve);
         else
             dash.set_width(-1);
-        dash.set_height(bottom ? reserve : vertical ? -1 : 0);
+        dash.set_height(vertical && !bottom ? -1 : 0);
     }
 
     _adaptAllocation() {
@@ -417,6 +419,7 @@ export class OverviewIntegration {
             originalAllocate => box => {
                 // GNOME reserves external struts on every side except the
                 // bottom, where Overview normally expects the stock dash.
+                const bottom = box.y2;
                 const position = panelPosition(integration._settings);
                 const panelAutohide = integration._settings.get_boolean(
                     'panel-autohide-enabled'
@@ -449,6 +452,7 @@ export class OverviewIntegration {
                     controls._stateAdjustment,
                     true
                 );
+                integration._bottomInsets.set(Main.layoutManager.primaryIndex, bottom - box.y2);
                 originalAllocate.call(controls, box);
             }
         );
@@ -456,6 +460,7 @@ export class OverviewIntegration {
             SecondaryMonitorDisplay.prototype,
             'vfunc_allocate',
             originalAllocate => function (box) {
+                const bottom = box.y2;
                 const panelAutohide = integration._settings.get_boolean(
                     'panel-autohide-enabled'
                 );
@@ -478,7 +483,32 @@ export class OverviewIntegration {
                     this._overviewAdjustment,
                     false
                 );
+                integration._bottomInsets.set(this._monitorIndex, bottom - box.y2);
                 originalAllocate.call(this, box);
+            }
+        );
+        this._injectionManager.overrideMethod(
+            WorkspaceLayout.prototype,
+            '_adjustSpacingAndPadding',
+            originalAdjust => function (rowSpacing, colSpacing, containerBox) {
+                const result = originalAdjust.call(this, rowSpacing, colSpacing, containerBox);
+                if (!containerBox || this._sortedWindows.length === 0)
+                    return result;
+
+                const window = this._sortedWindows[0];
+                const [, bottomOverlap] = window.overlapHeights();
+                const oversize = Math.max(...window.chromeHeights(), ...window.chromeWidths());
+                const monitor = Main.layoutManager.monitors[this._monitorIndex];
+                const workArea = Main.layoutManager.getWorkAreaForMonitor(this._monitorIndex);
+                const inset = integration._bottomInsets.get(this._monitorIndex) ?? 0;
+                const edge = Math.min(monitor.y + monitor.height - inset, workArea.y + workArea.height);
+                let bottom = containerBox.y2;
+                for (let actor = this._container; actor; actor = actor.get_parent())
+                    bottom += actor.allocation.y1;
+                const freeSpace = edge - bottom;
+                if (bottomOverlap + oversize > freeSpace)
+                    containerBox.y2 -= bottomOverlap + oversize - freeSpace;
+                return result;
             }
         );
     }
