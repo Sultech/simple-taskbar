@@ -5,14 +5,14 @@ import Meta from 'gi://Meta';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {LookingGlass} from 'resource:///org/gnome/shell/ui/lookingGlass.js';
-import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {SafeInjectionManager} from '../injectionManager.js';
 
 import {panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
 
 export class VerticalPanelCompatibilityController {
     constructor(settings) {
         this._settings = settings;
-        this._injectionManager = new InjectionManager();
+        this._injectionManager = new SafeInjectionManager();
     }
 
     enable() {

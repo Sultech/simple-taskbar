@@ -5,15 +5,14 @@ import Shell from 'gi://Shell';
 
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as ShellAppMenu from 'resource:///org/gnome/shell/ui/appMenu.js';
-import {
-    InjectionManager,
-    gettext as _,
-} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
+import {SafeInjectionManager} from '../injectionManager.js';
 
 export class FavoritesIntegration {
     constructor(settings) {
         this._settings = settings;
-        this._injectionManager = new InjectionManager();
+        this._injectionManager = new SafeInjectionManager();
     }
 
     enable() {

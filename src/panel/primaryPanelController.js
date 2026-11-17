@@ -8,7 +8,7 @@ import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {SafeInjectionManager} from '../injectionManager.js';
 
 import {extensionIsActive} from '../integration/extensionState.js';
 import {PanelAutoHideController} from './panelAutoHideController.js';
@@ -94,7 +94,7 @@ export class PrimaryPanelController {
         this._applyingLayout = false;
         this._stateController = null;
         this._themeController = null;
-        this._injectionManager = new InjectionManager();
+        this._injectionManager = new SafeInjectionManager();
         this._menuPositioner = new PanelMenuPositioner(
             this._injectionManager,
             settings

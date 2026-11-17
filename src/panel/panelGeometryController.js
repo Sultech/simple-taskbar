@@ -2,7 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {SafeInjectionManager} from '../injectionManager.js';
 
 import {floatingPanelEdgeGap, panelGeometry} from './panelGeometry.js';
 import {FloatingPanelLayout} from './floatingPanelLayout.js';
@@ -38,7 +38,7 @@ export class PanelGeometryController {
         this._panelBox = panelBox;
         this._panel = panel;
         this._getPanelHeight = getPanelHeight;
-        this._injectionManager = new InjectionManager();
+        this._injectionManager = new SafeInjectionManager();
         this._layout = new FloatingPanelLayout({
             settings,
             getMonitor,

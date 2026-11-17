@@ -13,7 +13,7 @@ import {Workspace, WorkspaceLayout} from 'resource:///org/gnome/shell/ui/workspa
 import {
     SecondaryMonitorDisplay,
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
-import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {SafeInjectionManager} from '../injectionManager.js';
 
 import {extensionIsActive, extensionWillBeActive} from './extensionState.js';
 import {panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
@@ -52,8 +52,8 @@ export class OverviewIntegration {
         this._dashState = null;
         this._bottomInsets = new Map();
         this._dashVisibilityRepairId = 0;
-        this._injectionManager = new InjectionManager();
-        this._spreadInjectionManager = new InjectionManager();
+        this._injectionManager = new SafeInjectionManager();
+        this._spreadInjectionManager = new SafeInjectionManager();
         this._spreadApp = null;
         this._spreadHiddenId = 0;
         this._oldHasWorkspaces = null;

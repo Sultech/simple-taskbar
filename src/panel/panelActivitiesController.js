@@ -3,7 +3,7 @@
 
 import Clutter from 'gi://Clutter';
 
-import {InjectionManager} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {SafeInjectionManager} from '../injectionManager.js';
 
 import {appendStyle} from '../shared/styleUtils.js';
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
@@ -68,7 +68,7 @@ export class PanelActivitiesController {
 export class ActivitiesDotWidthOverride {
     constructor(activities) {
         const dot = activities.get_first_child().get_first_child();
-        this._injectionManager = new InjectionManager();
+        this._injectionManager = new SafeInjectionManager();
         this._injectionManager.overrideMethod(
             Object.getPrototypeOf(dot),
             'vfunc_get_preferred_width',
