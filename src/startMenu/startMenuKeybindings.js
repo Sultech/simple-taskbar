@@ -63,7 +63,7 @@ export class StartMenuKeybindings {
         this._overlayEnabled = false;
         this._overlayHandlerId = 0;
         this._overlaySettingChangedId = 0;
-        this._defaultOverlayHandlerId = 0;
+        this._blockedOverlayHandlerIds = [];
         this._startupCompleteId = 0;
     }
 
@@ -245,12 +245,21 @@ export class StartMenuKeybindings {
         }
 
         GObject.signal_handler_block(global.display, handlerId);
-        this._defaultOverlayHandlerId = handlerId;
+        this._blockedOverlayHandlerIds = [handlerId];
+        const signalId = GObject.signal_lookup(OVERLAY_KEY, Meta.Display.$gtype);
+        const unblockedMatch = GObject.SignalMatchType.ID | GObject.SignalMatchType.UNBLOCKED;
+        let otherHandlerId;
+        while ((otherHandlerId = GObject.signal_handler_find(
+            global.display, unblockedMatch, signalId, 0, null, null, null))) {
+            GObject.signal_handler_block(global.display, otherHandlerId);
+            this._blockedOverlayHandlerIds.push(otherHandlerId);
+        }
         this._overlayHandlerId = global.display.connect(
             OVERLAY_KEY,
             () => {
                 this._toggleMenu();
                 Main.wm.allowKeybinding(OVERLAY_KEY, ACTION_MODES);
+                GObject.signal_stop_emission_by_name(global.display, OVERLAY_KEY);
             }
         );
         return true;
@@ -278,7 +287,7 @@ export class StartMenuKeybindings {
             global.display.disconnect(this._overlayHandlerId);
             this._overlayHandlerId = 0;
         }
-        this._unblockDefaultOverlayHandler();
+        this._unblockOverlayHandlers();
         Main.wm.allowKeybinding(
             OVERLAY_KEY,
             DEFAULT_OVERLAY_ACTION_MODES
@@ -323,20 +332,12 @@ export class StartMenuKeybindings {
         this._settings.set_strv(DISPLACED_OVERLAY_KEY, []);
     }
 
-    _unblockDefaultOverlayHandler() {
-        if (!this._defaultOverlayHandlerId)
-            return;
-
-        if (GObject.signal_handler_is_connected(
-            global.display,
-            this._defaultOverlayHandlerId
-        )) {
-            GObject.signal_handler_unblock(
-                global.display,
-                this._defaultOverlayHandlerId
-            );
+    _unblockOverlayHandlers() {
+        for (const handlerId of this._blockedOverlayHandlerIds) {
+            if (GObject.signal_handler_is_connected(global.display, handlerId))
+                GObject.signal_handler_unblock(global.display, handlerId);
         }
-        this._defaultOverlayHandlerId = 0;
+        this._blockedOverlayHandlerIds = [];
     }
 
     _disableSuperKeySetting() {
