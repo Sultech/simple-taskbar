@@ -588,6 +588,8 @@ export class StartButtonController {
         this._settings.connectObject(
             'changed::start-menu-open-all-apps',
             () => this._menuController.startMenu?.refreshDefaultView(),
+            'changed::start-menu-layout',
+            () => this._menuController.startMenu?.syncLayout(),
             this
         );
         this._settings.connectObject(

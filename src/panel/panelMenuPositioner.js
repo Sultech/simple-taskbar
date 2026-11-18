@@ -25,10 +25,13 @@ export function panelArrowSide(settings) {
     }
 }
 
-export function syncMenuArrowSide(menu, settings) {
-    const side = panelArrowSide(settings);
+export function setMenuArrowSide(menu, side) {
     menu._boxPointer.updateArrowSide(side);
     menu._arrowSide = side;
+}
+
+export function syncMenuArrowSide(menu, settings) {
+    setMenuArrowSide(menu, panelArrowSide(settings));
 }
 
 export function syncPanelMenuPosition(menu, settings) {

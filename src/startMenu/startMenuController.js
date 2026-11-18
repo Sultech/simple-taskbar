@@ -15,7 +15,11 @@ import {showScreenshotUI} from 'resource:///org/gnome/shell/ui/screenshot.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {panelIsVertical} from '../shared/panelPositionUtils.js';
-import {panelArrowSide, syncMenuArrowSide} from '../panel/panelMenuPositioner.js';
+import {
+    panelArrowSide,
+    setMenuArrowSide,
+    syncMenuArrowSide,
+} from '../panel/panelMenuPositioner.js';
 import {panelGeometry} from '../panel/panelGeometry.js';
 import {panelStartButtonPosition} from '../shared/panelModeSettings.js';
 import {
@@ -72,6 +76,10 @@ const MENU_MIN_HEIGHT = 420;
 const MENU_BASE_HEIGHT = 610;
 const MENU_MAX_HEIGHT = 810;
 const MENU_MONITOR_MARGIN = 96;
+const SPOTLIGHT_WIDTH = 680;
+const SPOTLIGHT_HEIGHT = 480;
+const SPOTLIGHT_TOP_RATIO = 0.22;
+const SPOTLIGHT_CLASS = 'simple-taskbar-spotlight';
 const BLURRED_CLASS =
     'simple-taskbar-windows-start-blurred';
 const BLUR_MY_SHELL_POPUP_CLASSES = [
@@ -126,6 +134,7 @@ export class StartMenuController {
 
         this._createContentArea();
         this._createFooter(settings);
+        this._syncLayout();
         this._showDefaultView();
         this._updateSize();
         this.syncTheme(true);
@@ -414,7 +423,7 @@ export class StartMenuController {
         this._showDefaultView();
         this._scrollView.vadjustment.value = 0;
         this._updateSize();
-        syncMenuArrowSide(this._menu, this._settings);
+        this._syncArrowSide();
         this._syncPositionSource();
         openPopupMenu(this._menu);
         const keyboardBox = Main.layoutManager.keyboardBox;
@@ -426,7 +435,7 @@ export class StartMenuController {
         this._syncPositionSource();
         if (this.isOpen) {
             this._searchView.entry.grab_key_focus();
-            this._searchView.entry.clutter_text.set_cursor_visible(false);
+            this._searchView.setFocusVisible(this._spotlightEnabled());
         }
     }
 
@@ -445,6 +454,8 @@ export class StartMenuController {
         const query = this._searchView.entry.get_text().trim();
         if (query)
             this._showSearchResults(query);
+        else if (this._view === 'spotlight')
+            this._showSpotlightIdle();
         else if (this._view === 'all')
             this._showAllApps(true);
         else if (this._view === 'folder' && this._activeFolderId)
@@ -479,6 +490,39 @@ export class StartMenuController {
         } else {
             this._queuePrepare();
         }
+    }
+
+    syncLayout() {
+        this.close(false);
+        this._searchView.setText('');
+        this._syncLayout();
+        this._showDefaultView();
+        this._queuePrepare();
+    }
+
+    _spotlightEnabled() {
+        return this._settings.get_string('start-menu-layout') === 'spotlight';
+    }
+
+    _syncLayout() {
+        const spotlight = this._spotlightEnabled();
+        if (spotlight)
+            this._menu.actor.add_style_class_name(SPOTLIGHT_CLASS);
+        else
+            this._menu.actor.remove_style_class_name(SPOTLIGHT_CLASS);
+        this._header.visible = !spotlight;
+        this._footerController.actor.visible = !spotlight;
+        this._body.visible = !spotlight;
+        this._searchView.entry.hint_text = spotlight
+            ? _('Search')
+            : _('Type here to search');
+    }
+
+    _syncArrowSide() {
+        if (this._spotlightEnabled())
+            setMenuArrowSide(this._menu, St.Side.TOP);
+        else
+            syncMenuArrowSide(this._menu, this._settings);
     }
 
     syncTheme(force = false) {
@@ -597,6 +641,11 @@ export class StartMenuController {
     }
 
     _syncPositionSource() {
+        if (this._spotlightEnabled()) {
+            this._syncSpotlightPosition();
+            return;
+        }
+
         const centerOnMonitor =
             this._settings.get_boolean('start-menu-monitor-centered') &&
             this._startButtonIsCentered();
@@ -650,6 +699,24 @@ export class StartMenuController {
             );
         }
 
+        this._setPositionSource(sourceActor);
+    }
+
+    _syncSpotlightPosition() {
+        const monitor = this._getMonitor();
+        if (!monitor)
+            return;
+
+        Main.layoutManager.setDummyCursorGeometry(
+            Math.round(monitor.x + monitor.width / 2),
+            Math.round(monitor.y + monitor.height * SPOTLIGHT_TOP_RATIO),
+            1,
+            1
+        );
+        this._setPositionSource(Main.layoutManager.dummyCursor);
+    }
+
+    _setPositionSource(sourceActor) {
         this._menu.sourceActor = sourceActor;
         this._menu.focusActor = sourceActor;
         this._menu._arrowAlignment = 0.5;
@@ -763,6 +830,8 @@ export class StartMenuController {
         if (query) {
             this._navigationController.blockHover();
             this._showSearchResults(query);
+        } else if (this._view === 'spotlight') {
+            this._showSpotlightIdle();
         } else if (this._view === 'all') {
             this._showAllApps();
         } else if (this._view === 'folder' && this._activeFolderId) {
@@ -941,7 +1010,9 @@ export class StartMenuController {
     }
 
     _showDefaultView() {
-        if (this._settings.get_boolean('start-menu-open-all-apps'))
+        if (this._spotlightEnabled())
+            this._showSpotlightIdle();
+        else if (this._settings.get_boolean('start-menu-open-all-apps'))
             this._showAllApps();
         else
             this._showPinnedApps();
@@ -1026,7 +1097,20 @@ export class StartMenuController {
         );
     }
 
+    _showSpotlightIdle() {
+        this._searchController.cancel();
+        this._view = 'spotlight';
+        this._activeFolderId = null;
+        this._firstVisibleApp = null;
+        this._searchView.selectedResult = null;
+        this._clearContent();
+        this._body.hide();
+        this._searchView.setFocusVisible(true);
+        this._updateSize();
+    }
+
     _showSearchResults(query) {
+        this._body.show();
         this._categorySidebarController.setVisible(false);
         this._setScrollbarPolicy(false);
         this._headerTitle.text = _('Search results');
@@ -1039,6 +1123,7 @@ export class StartMenuController {
         this._searchController.search(query, (groups, complete) => {
             this._searchView.displayResults(groups, complete);
         });
+        this._updateSize();
     }
 
     _setScrollbarPolicy(visible, resetScroll = visible) {
@@ -1235,7 +1320,7 @@ export class StartMenuController {
             return;
 
         this._updateSize();
-        syncMenuArrowSide(this._menu, this._settings);
+        this._syncArrowSide();
         this._resolveThemeNodes(this._menu.actor);
         this._menu.actor.get_preferred_size();
         this._root.get_preferred_size();
@@ -1253,6 +1338,11 @@ export class StartMenuController {
         const monitor = this._getMonitor();
         if (!monitor)
             return;
+        if (this._spotlightEnabled()) {
+            this._updateSpotlightSize(monitor);
+            return;
+        }
+
         const width = Math.min(640, Math.max(420, monitor.width - 32));
         const available = Math.max(
             MENU_MIN_HEIGHT,
@@ -1266,9 +1356,28 @@ export class StartMenuController {
         if (width === this._menuWidth && height === this._menuHeight)
             return;
 
+        this._setRootSize(width, height);
+    }
+
+    _updateSpotlightSize(monitor) {
+        const width = Math.min(SPOTLIGHT_WIDTH, monitor.width - 32);
+        const available = monitor.height * (1 - SPOTLIGHT_TOP_RATIO) -
+            MENU_MONITOR_MARGIN;
+        const height = this._body.visible
+            ? Math.round(Math.min(SPOTLIGHT_HEIGHT, available))
+            : 0;
+        if (width === this._menuWidth && height === this._menuHeight)
+            return;
+
+        this._setRootSize(width, height);
+    }
+
+    _setRootSize(width, height) {
         this._menuWidth = width;
         this._menuHeight = height;
-        this._root.set_style(`width: ${width}px; height: ${height}px;`);
+        this._root.set_style(height
+            ? `width: ${width}px; height: ${height}px;`
+            : `width: ${width}px;`);
     }
 
     _preferredHeight(width) {

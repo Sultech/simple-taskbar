@@ -1274,6 +1274,14 @@
       <default>true</default>
       <summary>Organize All Apps into selectable application categories</summary>
     </key>
+    <key name="start-menu-layout" type="s">
+      <choices>
+        <choice value="eleven"/>
+        <choice value="spotlight"/>
+      </choices>
+      <default>'eleven'</default>
+      <summary>Start Menu layout</summary>
+    </key>
     <key name="start-menu-theme" type="s">
       <choices>
         <choice value="dark"/>

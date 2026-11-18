@@ -2796,3 +2796,31 @@ StEntry.simple-taskbar-windows-start-search.simple-taskbar-windows-start-search-
     padding: 0;
     box-shadow: none;
 }
+
+.simple-taskbar-windows-start-menu.simple-taskbar-spotlight .popup-menu-content {
+    border-radius: 16px;
+}
+
+.simple-taskbar-spotlight .simple-taskbar-windows-start-search {
+    height: 48px;
+    margin: 10px;
+    padding: 0 14px;
+    border-radius: 11px;
+    font-size: 18px;
+}
+
+.simple-taskbar-spotlight .simple-taskbar-windows-start-search-icon {
+    icon-size: 20px;
+}
+
+.simple-taskbar-spotlight .simple-taskbar-windows-start-scroll {
+    padding: 0 10px 10px;
+}
+
+.simple-taskbar-spotlight .simple-taskbar-windows-start-section-heading {
+    margin: 10px 12px 4px;
+}
+
+.simple-taskbar-spotlight .simple-taskbar-windows-start-empty {
+    padding: 40px 0;
+}

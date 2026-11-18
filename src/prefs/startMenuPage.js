@@ -26,6 +26,7 @@ import {activePanelPosition} from '../shared/panelPositionUtils.js';
 import {SettingsSubpage} from './settingsSubpage.js';
 import {
     addComboRow,
+    addToggleChoiceRow,
     createSwitchRow,
     setButtonIcon,
 } from './preferencesWidgets.js';
@@ -347,6 +348,20 @@ export function addStartMenuPage({
         subtitle: _('Replace the GNOME app grid with an Eleven-style menu'),
     });
     startMenuHubGroup.add(windowsStartMenuSwitch);
+    const startMenuLayoutRow = addToggleChoiceRow(
+        startMenuHubGroup,
+        settings,
+        {
+            key: 'start-menu-layout',
+            title: _('Start Menu Layout'),
+            subtitle: _('Spotlight opens a search bar in the middle of the screen'),
+            choices: [
+                {value: 'eleven', label: _('Eleven')},
+                {value: 'spotlight', label: _('Spotlight')},
+            ],
+        },
+        connectSettings
+    );
     const menuOptionsSubpage = new SettingsSubpage(window, startMenuHubGroup, {
         title: _('Start Menu Options'),
         subtitle: _('Configure Start Menu content and behavior'),
@@ -373,16 +388,20 @@ export function addStartMenuPage({
         iconName: 'preferences-desktop-keyboard-shortcuts-symbolic',
     });
     const syncStartMenuSubpages = () => {
+        const enabled = windowsStartMenuSwitch.active;
+        const eleven = settings.get_string('start-menu-layout') === 'eleven';
+        startMenuLayoutRow.sensitive = enabled;
+        menuOptionsSubpage.row.sensitive = enabled && eleven;
+        foldersSubpage.row.sensitive = enabled && eleven;
         for (const subpage of [
-            menuOptionsSubpage,
             menuAppearanceSubpage,
-            foldersSubpage,
             contextMenuSubpage,
             keyboardSubpage,
         ])
-            subpage.row.sensitive = windowsStartMenuSwitch.active;
+            subpage.row.sensitive = enabled;
     };
     windowsStartMenuSwitch.connect('notify::active', syncStartMenuSubpages);
+    connectSettings(settings, 'changed::start-menu-layout', syncStartMenuSubpages);
     syncStartMenuSubpages();
     addStartMenuKeybindingsGroup({window, settings, connectSettings, keyboardSubpage, windowsStartMenuSwitch});
 
