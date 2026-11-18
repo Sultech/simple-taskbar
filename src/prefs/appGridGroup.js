@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+import Gio from 'gi://Gio';
+
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {addSpinRow, addToggleChoiceRow} from './preferencesWidgets.js';
 
+const V_SHELL_UUID = 'vertical-workspaces@G-dH.github.com';
+
 export function addAppGridGroup(page, settings, connectSettings) {
-    const group = page.addGroup({
-        title: _('App Grid'),
-        description: _('Applies to the GNOME app grid in every mode'),
-    });
-    addToggleChoiceRow(
+    const group = page.addGroup({title: _('App Grid')});
+    const layoutRow = addToggleChoiceRow(
         group,
         settings,
         {
@@ -48,11 +49,22 @@ export function addAppGridGroup(page, settings, connectSettings) {
         },
         connectSettings
     );
+    const shellSettings = new Gio.Settings({schema_id: 'org.gnome.shell'});
+    const vShellEnabled = () =>
+        shellSettings.get_strv('enabled-extensions').includes(V_SHELL_UUID) &&
+        !shellSettings.get_strv('disabled-extensions').includes(V_SHELL_UUID);
     const syncCustomRows = () => {
+        const available = !vShellEnabled();
         const custom = settings.get_string('app-grid-layout') === 'custom';
-        columnsRow.sensitive = custom;
-        rowsRow.sensitive = custom;
+        group.description = available
+            ? _('Applies to the GNOME app grid in every mode')
+            : _('V-Shell manages the app grid while it is enabled');
+        layoutRow.sensitive = available;
+        columnsRow.sensitive = available && custom;
+        rowsRow.sensitive = available && custom;
     };
     connectSettings(settings, 'changed::app-grid-layout', syncCustomRows);
+    connectSettings(shellSettings, 'changed::enabled-extensions', syncCustomRows);
+    connectSettings(shellSettings, 'changed::disabled-extensions', syncCustomRows);
     syncCustomRows();
 }
