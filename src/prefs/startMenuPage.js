@@ -58,8 +58,8 @@ export function addStartMenuPage({
     });
 
     const startMenuHubGroup = new Adw.PreferencesGroup({
-        title: _('Eleven-style Start Menu'),
-        description: _('Configure the optional Eleven-style application menu.'),
+        title: _('Start Menu'),
+        description: _('Configure the optional Start menu.'),
     });
     startMenuPage.add(startMenuHubGroup);
 
@@ -343,8 +343,8 @@ export function addStartMenuPage({
 
     const windowsStartMenuSwitch = createSwitchRow(settings, {
         key: 'windows-start-menu-enabled',
-        title: _('Eleven-style Start Menu'),
-        subtitle: _('Replace the GNOME app grid with an Eleven-style menu'),
+        title: _('Start Menu'),
+        subtitle: _('Replace the GNOME app grid with an Eleven or Spotlight menu'),
     });
     startMenuHubGroup.add(windowsStartMenuSwitch);
     const startMenuLayoutRow = addToggleChoiceRow(
@@ -353,7 +353,6 @@ export function addStartMenuPage({
         {
             key: 'start-menu-layout',
             title: _('Start Menu Layout'),
-            subtitle: _('Spotlight opens a search bar in the middle of the screen'),
             choices: [
                 {value: 'eleven', label: _('Eleven')},
                 {value: 'spotlight', label: _('Spotlight')},
@@ -361,6 +360,13 @@ export function addStartMenuPage({
         },
         connectSettings
     );
+    const syncStartMenuLayoutSubtitle = () => {
+        startMenuLayoutRow.subtitle = settings.get_string('start-menu-layout') === 'spotlight'
+            ? _('Spotlight opens a search bar in the middle of the screen')
+            : _('Eleven opens a full menu with pinned and all apps');
+    };
+    connectSettings(settings, 'changed::start-menu-layout', syncStartMenuLayoutSubtitle);
+    syncStartMenuLayoutSubtitle();
     const menuOptionsSubpage = new SettingsSubpage(window, startMenuHubGroup, {
         title: _('Start Menu Options'),
         subtitle: _('Configure Start Menu content and behavior'),
@@ -510,7 +516,7 @@ export function addStartMenuPage({
     const gnomeStartButtonVisibleSwitch = createSwitchRow(settings, {
         key: 'gnome-start-button-visible',
         title: _('Show App Grid Button'),
-        subtitle: _('Show a Start button that opens the GNOME app grid when the Eleven-style Start Menu is disabled'),
+        subtitle: _('Show a Start button that opens the GNOME app grid when the Start Menu is disabled'),
     });
     startButtonAppearanceGroup.add(gnomeStartButtonVisibleSwitch);
     const updateGnomeStartButtonVisibleSwitch = () => {

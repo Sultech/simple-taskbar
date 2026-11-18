@@ -301,7 +301,7 @@ export function addPanelItemsPage({
             },
             visibleState: startButtonVisibility,
             title: _('Start Button'),
-            subtitle: _('Eleven-style or original GNOME Start button'),
+            subtitle: _('Opens the Start menu or the GNOME app grid'),
             choices: initialPositions,
             optionsButton: startButtonOptionsButton,
         }],

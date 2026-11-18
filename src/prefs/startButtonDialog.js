@@ -52,8 +52,8 @@ class StartButtonOptionsDialog extends PreferencesOptionsDialog {
 
         const windowsStartMenuSwitch = createSwitchRow(settings, {
             key: 'windows-start-menu-enabled',
-            title: _('Eleven-style Start Menu'),
-            subtitle: _('Replace the GNOME app grid with an Eleven-style menu'),
+            title: _('Start Menu'),
+            subtitle: _('Replace the GNOME app grid with an Eleven or Spotlight menu'),
         });
         alignmentGroup.add(windowsStartMenuSwitch);
 

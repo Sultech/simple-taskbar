@@ -60,7 +60,7 @@ export function addDockItemsPage({
         ['start-button', {
             key: 'start-button-position',
             title: _('Start Menu'),
-            subtitle: _('Eleven-style or original GNOME Start menu'),
+            subtitle: _('Opens the Start menu or the GNOME app grid'),
             visibleState: startButtonVisibility,
             optionsButton: startButtonOptionsButton,
         }],
