@@ -3,7 +3,6 @@
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
-import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -387,13 +386,14 @@ export function addStartMenuPage({
         subtitle: _('Configure Start menu shortcuts'),
         iconName: 'preferences-desktop-keyboard-shortcuts-symbolic',
     });
+    const elevenLayoutActive = () => windowsStartMenuSwitch.active &&
+        settings.get_string('start-menu-layout') === 'eleven';
     const syncStartMenuSubpages = () => {
         const enabled = windowsStartMenuSwitch.active;
-        const eleven = settings.get_string('start-menu-layout') === 'eleven';
         startMenuLayoutRow.sensitive = enabled;
-        menuOptionsSubpage.row.sensitive = enabled && eleven;
-        foldersSubpage.row.sensitive = enabled && eleven;
+        foldersSubpage.row.sensitive = elevenLayoutActive();
         for (const subpage of [
+            menuOptionsSubpage,
             menuAppearanceSubpage,
             contextMenuSubpage,
             keyboardSubpage,
@@ -454,13 +454,18 @@ export function addStartMenuPage({
     startMenuOptionsGroup.add(hidePinnedAppTitlesSwitch);
     startMenuOptionsGroup.add(runningIndicatorsSwitch);
     const updateRecommendedAppsSwitch = () => {
-        const sensitive = windowsStartMenuSwitch.active &&
+        const sensitive = elevenLayoutActive() &&
             !openAllAppsSwitch.active;
         recommendedAppsSwitch.sensitive = sensitive;
         hidePinnedAppTitlesSwitch.sensitive = sensitive;
     };
     windowsStartMenuSwitch.connect(
         'notify::active',
+        updateRecommendedAppsSwitch
+    );
+    connectSettings(
+        settings,
+        'changed::start-menu-layout',
         updateRecommendedAppsSwitch
     );
     openAllAppsSwitch.connect(
@@ -489,19 +494,18 @@ export function addStartMenuPage({
         subtitle: _('Browse applications by category in the Start menu'),
     });
     startMenuOptionsGroup.add(appCategoriesSwitch);
-    for (const row of [
-        profilePictureSwitch,
-        powerOptionsSwitch,
-        openAllAppsSwitch,
-        appCategoriesSwitch,
-    ]) {
-        windowsStartMenuSwitch.bind_property(
-            'active',
-            row,
-            'sensitive',
-            GObject.BindingFlags.SYNC_CREATE
-        );
-    }
+    const syncElevenOnlyRows = () => {
+        for (const row of [
+            profilePictureSwitch,
+            powerOptionsSwitch,
+            openAllAppsSwitch,
+            appCategoriesSwitch,
+        ])
+            row.sensitive = elevenLayoutActive();
+    };
+    windowsStartMenuSwitch.connect('notify::active', syncElevenOnlyRows);
+    connectSettings(settings, 'changed::start-menu-layout', syncElevenOnlyRows);
+    syncElevenOnlyRows();
 
     const gnomeStartButtonVisibleSwitch = createSwitchRow(settings, {
         key: 'gnome-start-button-visible',
@@ -657,10 +661,9 @@ export function addStartMenuPage({
             !startButtonInPanel(settings)) {
             centered = true;
         }
-        centerStartMenuRow.sensitive =
-            windowsStartMenuSwitch.active && centered;
+        centerStartMenuRow.sensitive = elevenLayoutActive() && centered;
     };
-    for (const key of startButtonPositionKeys)
+    for (const key of [...startButtonPositionKeys, 'start-menu-layout'])
         connectSettings(settings, `changed::${key}`, updateCenterStartMenuRow);
     followAppAlignmentSwitch.connect(
         'notify::active',
