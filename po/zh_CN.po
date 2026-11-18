@@ -2315,9 +2315,9 @@ msgstr "右侧框"
 msgid "Start Button"
 msgstr "开始按钮"
 
-#: src/prefs/panelItemsPage.js:280
-msgid "Eleven-style or original GNOME Start button"
-msgstr "11 风格或原始 GNOME 开始按钮"
+#: src/prefs/panelItemsPage.js:304 src/prefs/dockItemsPage.js:63
+msgid "Opens the Start menu or the GNOME app grid"
+msgstr "打开开始菜单或 GNOME 应用程序网格"
 
 #: src/prefs/panelItemsPage.js:287
 msgid "Activities"
@@ -2453,10 +2453,6 @@ msgstr "底部框"
 #: src/prefs/dockItemsPage.js:30
 msgid "Move items only within their current Dock position."
 msgstr "项目只能在当前 Dock 位置内移动。"
-
-#: src/prefs/dockItemsPage.js:75
-msgid "Eleven-style or original GNOME Start menu"
-msgstr "Eleven 风格或原始 GNOME 开始菜单"
 
 #: src/prefs/dockItemsPage.js:82
 msgid "Dock applications"
@@ -2828,11 +2824,6 @@ msgstr "跟随应用对齐方式"
 msgid "Move the Start button with the application icons"
 msgstr "使开始按钮与应用图标一同移动"
 
-#: src/prefs/startButtonDialog.js:59 src/prefs/startMenuPage.js:91
-#: src/prefs/startMenuPage.js:376
-msgid "Eleven-style Start Menu"
-msgstr "11 风格开始菜单"
-
 #: src/prefs/startMenuPage.js:356
 msgid "Start Menu Layout"
 msgstr "开始菜单布局"
@@ -2840,6 +2831,10 @@ msgstr "开始菜单布局"
 #: src/prefs/startMenuPage.js:357
 msgid "Spotlight opens a search bar in the middle of the screen"
 msgstr "Spotlight 会在屏幕中央打开搜索栏"
+
+#: src/prefs/startMenuPage.js:366
+msgid "Eleven opens a full menu with pinned and all apps"
+msgstr "Eleven 会打开包含已固定应用和所有应用的完整菜单"
 
 #: src/prefs/startMenuPage.js:359
 msgid "Eleven"
@@ -2850,8 +2845,8 @@ msgid "Spotlight"
 msgstr "Spotlight"
 
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven-style menu"
-msgstr "用 11 风格菜单替换 GNOME 应用网格"
+msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
+msgstr "用 Eleven 或 Spotlight 菜单替换 GNOME 应用程序网格"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"
@@ -2870,8 +2865,8 @@ msgid "Alignment, padding, icon, and separator"
 msgstr "对齐、间距、图标和分隔线"
 
 #: src/prefs/startMenuPage.js:92
-msgid "Configure the optional Eleven-style application menu."
-msgstr "配置可选的 11 风格应用程序菜单。"
+msgid "Configure the optional Start menu."
+msgstr "配置可选的开始菜单。"
 
 #: src/prefs/startMenuPage.js:118
 msgid "Start Button Alignment"
@@ -3054,11 +3049,8 @@ msgid "Show App Grid Button"
 msgstr "显示应用程序网格按钮"
 
 #: src/prefs/startMenuPage.js:542
-msgid ""
-"Show a Start button that opens the GNOME app grid when the Eleven-style "
-"Start Menu is disabled"
-msgstr ""
-"在禁用 Eleven 风格开始菜单时，显示一个可打开 GNOME 应用程序网格的开始按钮"
+msgid "Show a Start button that opens the GNOME app grid when the Start Menu is disabled"
+msgstr "禁用开始菜单时，显示一个打开 GNOME 应用程序网格的开始按钮"
 
 #: src/prefs/startMenuPage.js:557
 msgid "Follow Taskbar/Dock Theme"

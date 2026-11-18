@@ -2401,9 +2401,9 @@ msgstr "Jobb doboz"
 msgid "Start Button"
 msgstr "Start gomb"
 
-#: src/prefs/panelItemsPage.js:280
-msgid "Eleven-style or original GNOME Start button"
-msgstr "Windows 11 stílusú vagy eredeti GNOME Start gomb"
+#: src/prefs/panelItemsPage.js:304 src/prefs/dockItemsPage.js:63
+msgid "Opens the Start menu or the GNOME app grid"
+msgstr "Megnyitja a Start menüt vagy a GNOME alkalmazásrácsát"
 
 #: src/prefs/panelItemsPage.js:287
 msgid "Activities"
@@ -2540,10 +2540,6 @@ msgstr "Alsó terület"
 #: src/prefs/dockItemsPage.js:30
 msgid "Move items only within their current Dock position."
 msgstr "Az elemek csak a jelenlegi Dock-pozíciójukon belül mozgathatók."
-
-#: src/prefs/dockItemsPage.js:75
-msgid "Eleven-style or original GNOME Start menu"
-msgstr "Eleven-stílusú vagy eredeti GNOME Start menü"
 
 #: src/prefs/dockItemsPage.js:82
 msgid "Dock applications"
@@ -2934,11 +2930,6 @@ msgstr "Alkalmazások igazításának követése"
 msgid "Move the Start button with the application icons"
 msgstr "A Start gomb mozgatása az alkalmazásikonokkal együtt"
 
-#: src/prefs/startButtonDialog.js:59 src/prefs/startMenuPage.js:91
-#: src/prefs/startMenuPage.js:376
-msgid "Eleven-style Start Menu"
-msgstr "Windows 11 stílusú Start menü"
-
 #: src/prefs/startMenuPage.js:356
 msgid "Start Menu Layout"
 msgstr "Start menü elrendezése"
@@ -2946,6 +2937,10 @@ msgstr "Start menü elrendezése"
 #: src/prefs/startMenuPage.js:357
 msgid "Spotlight opens a search bar in the middle of the screen"
 msgstr "A Spotlight a képernyő közepén nyit meg egy keresősávot"
+
+#: src/prefs/startMenuPage.js:366
+msgid "Eleven opens a full menu with pinned and all apps"
+msgstr "Az Eleven teljes menüt nyit meg a rögzített és az összes alkalmazással"
 
 #: src/prefs/startMenuPage.js:359
 msgid "Eleven"
@@ -2956,8 +2951,8 @@ msgid "Spotlight"
 msgstr "Spotlight"
 
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven-style menu"
-msgstr "A GNOME alkalmazásrács lecserélése Windows 11 stílusú menüre"
+msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
+msgstr "A GNOME alkalmazásrácsát Eleven vagy Spotlight menüre cseréli"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"
@@ -2976,8 +2971,8 @@ msgid "Alignment, padding, icon, and separator"
 msgstr "Igazítás, térköz, ikon és elválasztó"
 
 #: src/prefs/startMenuPage.js:92
-msgid "Configure the optional Eleven-style application menu."
-msgstr "Az elhagyható Windows 11 stílusú alkalmazásmenü beállítása."
+msgid "Configure the optional Start menu."
+msgstr "Az opcionális Start menü beállítása."
 
 #: src/prefs/startMenuPage.js:118
 msgid "Start Button Alignment"
@@ -3172,12 +3167,8 @@ msgid "Show App Grid Button"
 msgstr "Alkalmazásrács gomb megjelenítése"
 
 #: src/prefs/startMenuPage.js:542
-msgid ""
-"Show a Start button that opens the GNOME app grid when the Eleven-style "
-"Start Menu is disabled"
-msgstr ""
-"Olyan Start gomb megjelenítése, amely a GNOME alkalmazásrácsot nyitja meg, "
-"ha az Eleven stílusú Start menü ki van kapcsolva"
+msgid "Show a Start button that opens the GNOME app grid when the Start Menu is disabled"
+msgstr "Start gomb megjelenítése, amely a GNOME alkalmazásrácsát nyitja meg, ha a Start menü ki van kapcsolva"
 
 #: src/prefs/startMenuPage.js:557
 msgid "Follow Taskbar/Dock Theme"

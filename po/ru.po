@@ -2386,9 +2386,9 @@ msgstr "Правая область"
 msgid "Start Button"
 msgstr "Кнопка «Пуск»"
 
-#: src/prefs/panelItemsPage.js:280
-msgid "Eleven-style or original GNOME Start button"
-msgstr "Кнопка «Пуск» в стиле Eleven или оригинальная кнопка GNOME"
+#: src/prefs/panelItemsPage.js:304 src/prefs/dockItemsPage.js:63
+msgid "Opens the Start menu or the GNOME app grid"
+msgstr "Открывает меню «Пуск» или сетку приложений GNOME"
 
 #: src/prefs/panelItemsPage.js:287
 msgid "Activities"
@@ -2525,10 +2525,6 @@ msgstr "Нижняя область"
 #: src/prefs/dockItemsPage.js:30
 msgid "Move items only within their current Dock position."
 msgstr "Перемещать элементы только внутри их текущей области Dock."
-
-#: src/prefs/dockItemsPage.js:75
-msgid "Eleven-style or original GNOME Start menu"
-msgstr "Меню «Пуск» в стиле Eleven или исходное меню GNOME"
 
 #: src/prefs/dockItemsPage.js:82
 msgid "Dock applications"
@@ -2917,11 +2913,6 @@ msgstr "Следовать выравниванию приложений"
 msgid "Move the Start button with the application icons"
 msgstr "Перемещать кнопку «Пуск» вместе со значками приложений"
 
-#: src/prefs/startButtonDialog.js:59 src/prefs/startMenuPage.js:91
-#: src/prefs/startMenuPage.js:376
-msgid "Eleven-style Start Menu"
-msgstr "Меню «Пуск» в стиле Eleven"
-
 #: src/prefs/startMenuPage.js:356
 msgid "Start Menu Layout"
 msgstr "Макет меню «Пуск»"
@@ -2929,6 +2920,10 @@ msgstr "Макет меню «Пуск»"
 #: src/prefs/startMenuPage.js:357
 msgid "Spotlight opens a search bar in the middle of the screen"
 msgstr "Spotlight открывает строку поиска в центре экрана"
+
+#: src/prefs/startMenuPage.js:366
+msgid "Eleven opens a full menu with pinned and all apps"
+msgstr "Eleven открывает полное меню с закреплёнными и всеми приложениями"
 
 #: src/prefs/startMenuPage.js:359
 msgid "Eleven"
@@ -2939,8 +2934,8 @@ msgid "Spotlight"
 msgstr "Spotlight"
 
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven-style menu"
-msgstr "Заменить сетку приложений GNOME меню Eleven-style"
+msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
+msgstr "Заменяет сетку приложений GNOME меню Eleven или Spotlight"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"
@@ -2959,8 +2954,8 @@ msgid "Alignment, padding, icon, and separator"
 msgstr "Выравнивание, отступ, значок и разделитель"
 
 #: src/prefs/startMenuPage.js:92
-msgid "Configure the optional Eleven-style application menu."
-msgstr "Настройте дополнительное меню приложений Eleven-style."
+msgid "Configure the optional Start menu."
+msgstr "Настройка дополнительного меню «Пуск»."
 
 #: src/prefs/startMenuPage.js:118
 msgid "Start Button Alignment"
@@ -3151,12 +3146,8 @@ msgid "Show App Grid Button"
 msgstr "Показывать кнопку сетки приложений"
 
 #: src/prefs/startMenuPage.js:542
-msgid ""
-"Show a Start button that opens the GNOME app grid when the Eleven-style "
-"Start Menu is disabled"
-msgstr ""
-"Показывать кнопку «Пуск», открывающую сетку приложений GNOME, когда меню "
-"«Пуск» в стиле Eleven отключено"
+msgid "Show a Start button that opens the GNOME app grid when the Start Menu is disabled"
+msgstr "Показывать кнопку «Пуск», открывающую сетку приложений GNOME, когда меню «Пуск» отключено"
 
 #: src/prefs/startMenuPage.js:557
 msgid "Follow Taskbar/Dock Theme"
