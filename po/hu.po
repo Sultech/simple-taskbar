@@ -3726,6 +3726,10 @@ msgstr "Minden beállítás exportálása, importálása vagy visszaállítása"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "Minden módban a GNOME alkalmazásrácsára vonatkozik"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "A V-Shell kezeli az alkalmazásrácsot, amíg engedélyezve van"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Alkalmazásrács elrendezése"

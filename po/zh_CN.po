@@ -3569,6 +3569,10 @@ msgstr "导出、导入或重置所有设置"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "在所有模式下应用于 GNOME 应用程序网格"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "启用 V-Shell 时，由它管理应用程序网格"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "应用程序网格布局"

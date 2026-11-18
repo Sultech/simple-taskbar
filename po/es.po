@@ -3788,6 +3788,10 @@ msgstr "Exporta, importa o restablece todos los ajustes"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "Se aplica a la cuadrícula de aplicaciones de GNOME en todos los modos"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "V-Shell gestiona la cuadrícula de aplicaciones mientras está activado"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Diseño de la cuadrícula de aplicaciones"

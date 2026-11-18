@@ -3751,6 +3751,10 @@ msgstr "Exportar, importar ou redefinir todas as configurações"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "Aplica-se à grade de aplicativos do GNOME em todos os modos"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "O V-Shell gerencia a grade de aplicativos enquanto estiver ativado"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Layout da grade de aplicativos"

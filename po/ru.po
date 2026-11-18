@@ -3693,6 +3693,10 @@ msgstr "Экспорт, импорт или сброс всех настроек
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "Применяется к сетке приложений GNOME во всех режимах"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "V-Shell управляет сеткой приложений, пока оно включено"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Расположение сетки приложений"

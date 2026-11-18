@@ -3685,6 +3685,10 @@ msgstr "Tüm ayarları dışa aktar, içe aktar veya sıfırla"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "Her modda GNOME uygulama ızgarası için geçerlidir"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "V-Shell etkinken uygulama ızgarasını o yönetir"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Uygulama Izgarası Düzeni"

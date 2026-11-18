@@ -3833,6 +3833,10 @@ msgstr "Exporter, importer ou réinitialiser tous les réglages"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "S’applique à la grille d’applications de GNOME dans tous les modes"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "V-Shell gère la grille d’applications tant qu’il est activé"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Disposition de la grille d’applications"

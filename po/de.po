@@ -3795,6 +3795,10 @@ msgstr "Alle Einstellungen exportieren, importieren oder zurücksetzen"
 msgid "Applies to the GNOME app grid in every mode"
 msgstr "Gilt in jedem Modus für das GNOME-Anwendungsraster"
 
+#: src/prefs/appGridGroup.js:61
+msgid "V-Shell manages the app grid while it is enabled"
+msgstr "V-Shell verwaltet das Anwendungsraster, solange es aktiviert ist"
+
 #: src/prefs/appGridGroup.js:18
 msgid "App Grid Layout"
 msgstr "Anwendungsraster-Layout"
