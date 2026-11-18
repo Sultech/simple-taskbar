@@ -2911,6 +2911,22 @@ msgstr "Başlat düğmesini uygulama simgeleriyle birlikte taşı"
 msgid "Eleven-style Start Menu"
 msgstr "Eleven Tarzı Başlat Menüsü"
 
+#: src/prefs/startMenuPage.js:356
+msgid "Start Menu Layout"
+msgstr "Başlat Menüsü Düzeni"
+
+#: src/prefs/startMenuPage.js:357
+msgid "Spotlight opens a search bar in the middle of the screen"
+msgstr "Spotlight, ekranın ortasında bir arama çubuğu açar"
+
+#: src/prefs/startMenuPage.js:359
+msgid "Eleven"
+msgstr "Eleven"
+
+#: src/prefs/startMenuPage.js:360
+msgid "Spotlight"
+msgstr "Spotlight"
+
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "GNOME uygulama ızgarasını Eleven tarzı bir menüyle değiştir"
@@ -3830,6 +3846,10 @@ msgstr "Tümünü Aç"
 #: src/startMenu/startMenuController.js:754
 msgid "Type here to search"
 msgstr "Aramak için buraya yaz"
+
+#: src/startMenu/startMenuController.js:517
+msgid "Search"
+msgstr "Ara"
 
 #: src/startMenu/startMenuController.js:848
 #: src/startMenu/startMenuController.js:956

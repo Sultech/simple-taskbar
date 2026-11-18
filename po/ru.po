@@ -2922,6 +2922,22 @@ msgstr "Перемещать кнопку «Пуск» вместе со зна�
 msgid "Eleven-style Start Menu"
 msgstr "Меню «Пуск» в стиле Eleven"
 
+#: src/prefs/startMenuPage.js:356
+msgid "Start Menu Layout"
+msgstr "Макет меню «Пуск»"
+
+#: src/prefs/startMenuPage.js:357
+msgid "Spotlight opens a search bar in the middle of the screen"
+msgstr "Spotlight открывает строку поиска в центре экрана"
+
+#: src/prefs/startMenuPage.js:359
+msgid "Eleven"
+msgstr "Eleven"
+
+#: src/prefs/startMenuPage.js:360
+msgid "Spotlight"
+msgstr "Spotlight"
+
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr "Заменить сетку приложений GNOME меню Eleven-style"
@@ -3838,6 +3854,10 @@ msgstr "Открыть все"
 #: src/startMenu/startMenuController.js:754
 msgid "Type here to search"
 msgstr "Введите текст для поиска"
+
+#: src/startMenu/startMenuController.js:517
+msgid "Search"
+msgstr "Поиск"
 
 #: src/startMenu/startMenuController.js:848
 #: src/startMenu/startMenuController.js:956

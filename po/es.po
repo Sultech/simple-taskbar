@@ -2984,6 +2984,22 @@ msgstr "Mover el botón Inicio con los iconos de aplicaciones"
 msgid "Eleven-style Start Menu"
 msgstr "Menú Inicio estilo Eleven"
 
+#: src/prefs/startMenuPage.js:356
+msgid "Start Menu Layout"
+msgstr "Diseño del menú Inicio"
+
+#: src/prefs/startMenuPage.js:357
+msgid "Spotlight opens a search bar in the middle of the screen"
+msgstr "Spotlight abre una barra de búsqueda en el centro de la pantalla"
+
+#: src/prefs/startMenuPage.js:359
+msgid "Eleven"
+msgstr "Eleven"
+
+#: src/prefs/startMenuPage.js:360
+msgid "Spotlight"
+msgstr "Spotlight"
+
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
 msgid "Replace the GNOME app grid with an Eleven-style menu"
 msgstr ""
@@ -3935,6 +3951,10 @@ msgstr "Abrir todas"
 #: src/startMenu/startMenuController.js:754
 msgid "Type here to search"
 msgstr "Escribe aquí para buscar"
+
+#: src/startMenu/startMenuController.js:517
+msgid "Search"
+msgstr "Buscar"
 
 #: src/startMenu/startMenuController.js:848
 #: src/startMenu/startMenuController.js:956
