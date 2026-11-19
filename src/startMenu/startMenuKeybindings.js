@@ -19,6 +19,11 @@ const FILE_MANAGER_SETTING = 'super-e-file-manager-enabled';
 const FILE_MANAGER_KEYBINDING = 'super-e-file-manager-hotkey';
 const DISPLACED_OVERLAY_KEY = 'start-menu-displaced-overlay-key';
 const OVERLAY_KEY = 'overlay-key';
+const SPOTLIGHT_SETTING = 'spotlight-enabled';
+const SPOTLIGHT_KEYBINDING = 'spotlight-hotkey';
+const DISPLACED_INPUT_SOURCE_KEYS = 'spotlight-displaced-input-source-keys';
+const WM_KEYBINDINGS_SCHEMA = 'org.gnome.desktop.wm.keybindings';
+const INPUT_SOURCE_KEYBINDING = 'switch-input-source';
 const ACTION_MODES = Shell.ActionMode.NORMAL |
     Shell.ActionMode.OVERVIEW |
     Shell.ActionMode.POPUP;
@@ -40,21 +45,54 @@ export function restoreOverlayKey(settings) {
     }
 }
 
+function syncInputSourceShortcut(settings, wmKeybindingSettings, accelerators) {
+    const taken = new Set(accelerators.map(normalizeAccelerator));
+    const isTaken = accelerator => taken.has(normalizeAccelerator(accelerator));
+    const displaced = settings.get_strv(DISPLACED_INPUT_SOURCE_KEYS);
+    const current = wmKeybindingSettings.get_strv(INPUT_SOURCE_KEYBINDING);
+    const returned = displaced.filter(accelerator => !isTaken(accelerator));
+    const removed = current.filter(isTaken);
+    if (returned.length === 0 && removed.length === 0)
+        return;
+
+    wmKeybindingSettings.set_strv(INPUT_SOURCE_KEYBINDING, [
+        ...returned,
+        ...current.filter(accelerator => !isTaken(accelerator)),
+    ]);
+    settings.set_strv(DISPLACED_INPUT_SOURCE_KEYS, [
+        ...displaced.filter(isTaken),
+        ...removed,
+    ]);
+}
+
+export function restoreInputSourceShortcut(settings) {
+    syncInputSourceShortcut(
+        settings,
+        new Gio.Settings({schema_id: WM_KEYBINDINGS_SCHEMA}),
+        []
+    );
+}
+
 export class StartMenuKeybindings {
     constructor(
         settings,
         toggleMenu,
         toggleOverview,
         openFileManager,
+        toggleSpotlight,
         switcherKeybindings
     ) {
         this._settings = settings;
         this._toggleMenu = toggleMenu;
         this._toggleOverview = toggleOverview;
         this._openFileManager = openFileManager;
+        this._toggleSpotlight = toggleSpotlight;
         this._switcherKeybindings = switcherKeybindings;
         this._mutterSettings = new Gio.Settings({
             schema_id: 'org.gnome.mutter',
+        });
+        this._wmKeybindingSettings = new Gio.Settings({
+            schema_id: WM_KEYBINDINGS_SCHEMA,
         });
         this._superTabMode = null;
         this._superTabAction = Meta.KeyBindingAction.NONE;
@@ -69,6 +107,7 @@ export class StartMenuKeybindings {
 
     sync() {
         this._syncFileManager();
+        this._syncSpotlight();
         if (!this._startMenuAvailable()) {
             this._disableStartMenuBindings();
             return;
@@ -116,11 +155,14 @@ export class StartMenuKeybindings {
     disable() {
         this._disableStartMenuBindings();
         this._disableFileManager();
+        this._disableSpotlight();
     }
 
     destroy() {
         this.disable();
         this._mutterSettings = null;
+        this._wmKeybindingSettings = null;
+        this._toggleSpotlight = null;
         this._switcherKeybindings = null;
         this._settings = null;
         this._toggleMenu = null;
@@ -160,6 +202,26 @@ export class StartMenuKeybindings {
                 'Super+E file manager shortcut could not be registered'
             );
         }
+    }
+
+    _syncSpotlight() {
+        const accelerators = this._settings.get_strv(SPOTLIGHT_KEYBINDING);
+        if (!this._settings.get_boolean(SPOTLIGHT_SETTING) || accelerators.length === 0) {
+            this._disableSpotlight();
+            return;
+        }
+
+        this._enableCustom(SPOTLIGHT_KEYBINDING, () => this._toggleSpotlight(), 'Spotlight');
+        syncInputSourceShortcut(
+            this._settings,
+            this._wmKeybindingSettings,
+            this._customBindings.has(SPOTLIGHT_KEYBINDING) ? accelerators : []
+        );
+    }
+
+    _disableSpotlight() {
+        this._disableCustom(SPOTLIGHT_KEYBINDING);
+        syncInputSourceShortcut(this._settings, this._wmKeybindingSettings, []);
     }
 
     _disableFileManager() {

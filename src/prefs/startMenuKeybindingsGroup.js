@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Adw from 'gi://Adw';
+import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import {openCustomShortcutDialog} from './preferencesDialogs.js';
@@ -39,7 +40,8 @@ function createShortcutRow(window, settings, connectSettings, {title, key, fallb
     return row;
 }
 
-export function addStartMenuKeybindingsGroup({window, settings, connectSettings, keyboardSubpage, windowsStartMenuSwitch}) {
+export function addStartMenuKeybindingsGroup({window, settings, connectSettings, keyboardSubpage, windowsStartMenuSwitch,
+    spotlightSwitch}) {
     const startMenuKeybindingsGroup = keyboardSubpage.addGroup({
         title: _('Keyboard Shortcuts'),
         description: _('Configure Start menu shortcuts.'),
@@ -128,4 +130,12 @@ export function addStartMenuKeybindingsGroup({window, settings, connectSettings,
         updateCustomShortcutRow
     );
     updateCustomShortcutRow();
+
+    const spotlightShortcutRow = createShortcutRow(window, settings, connectSettings, {
+        title: _('Spotlight Shortcut'),
+        key: 'spotlight-hotkey',
+    });
+    spotlightShortcutRow.subtitle = _('If GNOME’s input source switching uses the same shortcut, Spotlight takes it over while it is on');
+    startMenuKeybindingsGroup.add(spotlightShortcutRow);
+    spotlightSwitch.bind_property('active', spotlightShortcutRow, 'sensitive', GObject.BindingFlags.SYNC_CREATE);
 }

@@ -1274,13 +1274,17 @@
       <default>true</default>
       <summary>Organize All Apps into selectable application categories</summary>
     </key>
-    <key name="start-menu-layout" type="s">
-      <choices>
-        <choice value="eleven"/>
-        <choice value="spotlight"/>
-      </choices>
-      <default>'eleven'</default>
-      <summary>Start Menu layout</summary>
+    <key name="spotlight-enabled" type="b">
+      <default>false</default>
+      <summary>Open a Spotlight search bar with its own shortcut</summary>
+    </key>
+    <key name="spotlight-hotkey" type="as">
+      <default>['&lt;Super&gt;space']</default>
+      <summary>Shortcut that opens Spotlight</summary>
+    </key>
+    <key name="spotlight-displaced-input-source-keys" type="as">
+      <default>[]</default>
+      <summary>Internal input source shortcuts moved aside for Spotlight</summary>
     </key>
     <key name="start-menu-theme" type="s">
       <choices>

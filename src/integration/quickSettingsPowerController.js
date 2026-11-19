@@ -22,8 +22,6 @@ export class QuickSettingsPowerController {
             this._sync.bind(this),
             'changed::windows-start-menu-enabled',
             this._sync.bind(this),
-            'changed::start-menu-layout',
-            this._sync.bind(this),
             'changed::default-gnome-panel',
             this._sync.bind(this),
             'changed::dock-mode',
@@ -150,7 +148,6 @@ export class QuickSettingsPowerController {
         const powerOptionsEnabled = this._settings.get_boolean(
             'start-menu-power-options-enabled'
         );
-        return powerOptionsEnabled && startMenuAvailable(this._settings) &&
-            this._settings.get_string('start-menu-layout') === 'eleven';
+        return powerOptionsEnabled && startMenuAvailable(this._settings);
     }
 }

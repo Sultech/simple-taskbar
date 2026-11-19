@@ -25,6 +25,7 @@ const EXCLUDED_KEYS = new Set([
     'blur-my-shell-dock-mode',
     'panel-profile-transition',
     'start-menu-displaced-overlay-key',
+    'spotlight-displaced-input-source-keys',
     'target-prefs-page',
 ]);
 

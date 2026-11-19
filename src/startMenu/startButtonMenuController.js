@@ -35,6 +35,7 @@ export class StartButtonMenuController {
         this._settingsGIcon = settingsGIcon;
         this._startOpenedOverview = false;
         this._startMenuController = null;
+        this._spotlightController = null;
         this._openAfterOverviewIdleId = 0;
         this._openAfterOverviewHiddenId = 0;
         this._openAfterOverviewShowingId = 0;
@@ -51,7 +52,7 @@ export class StartButtonMenuController {
     }
 
     destroy() {
-        this._cancelStartMenuAfterOverview();
+        this._cancelOpenAfterOverview();
         Main.overview.disconnectObject(this);
         this.actor.disconnectObject(this);
         this._contextMenu.disconnectObject(this);
@@ -63,6 +64,8 @@ export class StartButtonMenuController {
         this._contextMenu = null;
         this._startMenuController?.destroy();
         this._startMenuController = null;
+        this._spotlightController?.destroy();
+        this._spotlightController = null;
         this._menuManager = null;
         this._settings = null;
         this.actor = null;
@@ -83,6 +86,10 @@ export class StartButtonMenuController {
 
     get startMenu() {
         return this._startMenuController;
+    }
+
+    get menus() {
+        return [this._startMenuController, this._spotlightController].filter(Boolean);
     }
 
     get contextMenu() {
@@ -126,33 +133,47 @@ export class StartButtonMenuController {
         this._previews.hideTooltip(false);
         this._previews.hide();
         if (Main.overview.visible) {
-            this._openStartMenuAfterOverview();
+            this._openAfterOverview(() => {
+                if (this.windowsModeEnabled)
+                    this.ensureStartMenuController().open();
+            });
             Main.overview.hide();
             return;
         }
         this.ensureStartMenuController().toggle();
     }
 
-    _openStartMenuAfterOverview() {
-        this._cancelStartMenuAfterOverview();
+    toggleSpotlight() {
+        this._startMenuController?.close();
+        this._previews.hideTooltip(false);
+        this._previews.hide();
+        if (Main.overview.visible) {
+            this._openAfterOverview(() => this.ensureSpotlightController().open());
+            Main.overview.hide();
+            return;
+        }
+        this.ensureSpotlightController().toggle();
+    }
+
+    _openAfterOverview(open) {
+        this._cancelOpenAfterOverview();
         this._openAfterOverviewHiddenId = Main.overview.connect('hidden', () => {
-            this._cancelStartMenuAfterOverview();
+            this._cancelOpenAfterOverview();
             this._openAfterOverviewIdleId = GLib.idle_add(
                 GLib.PRIORITY_DEFAULT,
                 () => {
                     this._openAfterOverviewIdleId = 0;
-                    if (this.windowsModeEnabled)
-                        this.ensureStartMenuController().open();
+                    open();
                     return GLib.SOURCE_REMOVE;
                 }
             );
         });
         this._openAfterOverviewShowingId = Main.overview.connect(
-            'showing', () => this._cancelStartMenuAfterOverview()
+            'showing', () => this._cancelOpenAfterOverview()
         );
     }
 
-    _cancelStartMenuAfterOverview() {
+    _cancelOpenAfterOverview() {
         if (this._openAfterOverviewIdleId) {
             GLib.Source.remove(this._openAfterOverviewIdleId);
             this._openAfterOverviewIdleId = 0;
@@ -168,7 +189,8 @@ export class StartButtonMenuController {
     }
 
     closeMenus() {
-        this._startMenuController?.close();
+        for (const menu of this.menus)
+            menu.close();
         this._contextMenu.close();
     }
 
@@ -182,33 +204,39 @@ export class StartButtonMenuController {
     }
 
     ensureStartMenuController() {
-        if (this._startMenuController)
-            return this._startMenuController;
-
-        this._ensureMenuManager();
-        this._startMenuController = new StartMenuController(
-            this.actor,
-            this._settings,
-            {
-                onOpenStateChanged: open => {
-                    if (this.windowsModeEnabled)
-                        this.actor.checked = open;
-                    this.notifyMenuOpenStateChanged();
-                },
-                menuManager: this._menuManager,
-                onSourceContextMenu: () => this.openContextMenu(),
-                closeApp: (app, timestamp) =>
-                    this._closeApp(app, timestamp),
-                getInterestingWindows: app =>
-                    this._getInterestingWindows(app),
-                powerGIcon: this._powerGIcon,
-                settingsGIcon: this._settingsGIcon,
-                getPanelEdgeGap: this._getPanelEdgeGap,
-                getMonitor: this._getMonitor,
-                getPanelHeight: this._getPanelHeight,
-            }
-        );
+        this._startMenuController ??= this._createStartMenuController({
+            onOpenStateChanged: open => {
+                if (this.windowsModeEnabled)
+                    this.actor.checked = open;
+                this.notifyMenuOpenStateChanged();
+            },
+            getMonitor: this._getMonitor,
+        });
         return this._startMenuController;
+    }
+
+    ensureSpotlightController() {
+        this._spotlightController ??= this._createStartMenuController({
+            spotlight: true,
+            onOpenStateChanged: () => this.notifyMenuOpenStateChanged(),
+            getMonitor: () => Main.layoutManager.currentMonitor,
+        });
+        return this._spotlightController;
+    }
+
+    _createStartMenuController(params) {
+        this._ensureMenuManager();
+        return new StartMenuController(this.actor, this._settings, {
+            ...params,
+            menuManager: this._menuManager,
+            onSourceContextMenu: () => this.openContextMenu(),
+            closeApp: (app, timestamp) => this._closeApp(app, timestamp),
+            getInterestingWindows: app => this._getInterestingWindows(app),
+            powerGIcon: this._powerGIcon,
+            settingsGIcon: this._settingsGIcon,
+            getPanelEdgeGap: this._getPanelEdgeGap,
+            getPanelHeight: this._getPanelHeight,
+        });
     }
 
     _createContextMenu() {
@@ -263,7 +291,8 @@ export class StartButtonMenuController {
     }
 
     openContextMenu() {
-        this._startMenuController?.close();
+        for (const menu of this.menus)
+            menu.close();
         this._previews.hideTooltip(false);
         this._previews.hide();
         syncMenuArrowSide(this._contextMenu, this._settings);
@@ -313,7 +342,8 @@ export class StartButtonMenuController {
     }
 
     toggleOverviewFromShortcut() {
-        this._startMenuController?.close();
+        for (const menu of this.menus)
+            menu.close();
         this._contextMenu.close();
         this._previews.hideTooltip(false);
         this._previews.hide();

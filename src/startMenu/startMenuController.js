@@ -95,6 +95,7 @@ export class StartMenuController {
         this._getMonitor = params.getMonitor;
         this._getPanelHeight = params.getPanelHeight;
         this._settings = settings;
+        this._spotlight = Boolean(params.spotlight);
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
         this._powerGIcon = params.powerGIcon;
@@ -134,7 +135,8 @@ export class StartMenuController {
 
         this._createContentArea();
         this._createFooter(settings);
-        this._syncLayout();
+        if (this._spotlight)
+            this._applySpotlightLayout();
         this._showDefaultView();
         this._updateSize();
         this.syncTheme(true);
@@ -435,7 +437,7 @@ export class StartMenuController {
         this._syncPositionSource();
         if (this.isOpen) {
             this._searchView.entry.grab_key_focus();
-            this._searchView.setFocusVisible(this._spotlightEnabled());
+            this._searchView.setFocusVisible(this._spotlight);
         }
     }
 
@@ -492,34 +494,16 @@ export class StartMenuController {
         }
     }
 
-    syncLayout() {
-        this.close(false);
-        this._searchView.setText('');
-        this._syncLayout();
-        this._showDefaultView();
-        this._queuePrepare();
-    }
-
-    _spotlightEnabled() {
-        return this._settings.get_string('start-menu-layout') === 'spotlight';
-    }
-
-    _syncLayout() {
-        const spotlight = this._spotlightEnabled();
-        if (spotlight)
-            this._menu.actor.add_style_class_name(SPOTLIGHT_CLASS);
-        else
-            this._menu.actor.remove_style_class_name(SPOTLIGHT_CLASS);
-        this._header.visible = !spotlight;
-        this._footerController.actor.visible = !spotlight;
-        this._body.visible = !spotlight;
-        this._searchView.entry.hint_text = spotlight
-            ? _('Search')
-            : _('Type here to search');
+    _applySpotlightLayout() {
+        this._menu.actor.add_style_class_name(SPOTLIGHT_CLASS);
+        this._header.hide();
+        this._footerController.actor.hide();
+        this._body.hide();
+        this._searchView.entry.hint_text = _('Search');
     }
 
     _syncArrowSide() {
-        if (this._spotlightEnabled())
+        if (this._spotlight)
             setMenuArrowSide(this._menu, St.Side.TOP);
         else
             syncMenuArrowSide(this._menu, this._settings);
@@ -641,7 +625,7 @@ export class StartMenuController {
     }
 
     _syncPositionSource() {
-        if (this._spotlightEnabled()) {
+        if (this._spotlight) {
             this._syncSpotlightPosition();
             return;
         }
@@ -1010,7 +994,7 @@ export class StartMenuController {
     }
 
     _showDefaultView() {
-        if (this._spotlightEnabled())
+        if (this._spotlight)
             this._showSpotlightIdle();
         else if (this._settings.get_boolean('start-menu-open-all-apps'))
             this._showAllApps();
@@ -1338,7 +1322,7 @@ export class StartMenuController {
         const monitor = this._getMonitor();
         if (!monitor)
             return;
-        if (this._spotlightEnabled()) {
+        if (this._spotlight) {
             this._updateSpotlightSize(monitor);
             return;
         }

@@ -38,6 +38,7 @@ export function confirmReset(window, createSettings) {
         const resetSettings = createSettings();
         const keptKeys = new Set([
             'start-menu-displaced-overlay-key',
+            'spotlight-displaced-input-source-keys',
             'start-menu-pinned-apps',
             'panel-profile-transition',
         ]);

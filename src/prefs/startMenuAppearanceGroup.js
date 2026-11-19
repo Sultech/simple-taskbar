@@ -5,7 +5,12 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {createSwitchRow, addToggleChoiceRow} from './preferencesWidgets.js';
 
 export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppearanceSubpage,
-    windowsStartMenuSwitch, blurMyShellPanelBlurEnabled, blurMyShellPopupBlurEnabled}) {
+    menuSwitches, blurMyShellPanelBlurEnabled, blurMyShellPopupBlurEnabled}) {
+    const menuEnabled = () => menuSwitches.some(row => row.active);
+    const connectMenuSwitches = callback => {
+        for (const row of menuSwitches)
+            row.connect('notify::active', callback);
+    };
     const followPanelThemeSwitch = createSwitchRow(settings, {
         key: 'start-menu-follow-panel-theme',
         title: _('Follow Taskbar/Dock Theme'),
@@ -34,14 +39,11 @@ export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppe
         connectSettings
     );
     const updateStartMenuThemeRows = () => {
-        followPanelThemeSwitch.sensitive = windowsStartMenuSwitch.active;
-        startMenuThemeRow.sensitive = windowsStartMenuSwitch.active &&
+        followPanelThemeSwitch.sensitive = menuEnabled();
+        startMenuThemeRow.sensitive = menuEnabled() &&
             !followPanelThemeSwitch.active;
     };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuThemeRows
-    );
+    connectMenuSwitches(updateStartMenuThemeRows);
     followPanelThemeSwitch.connect(
         'notify::active',
         updateStartMenuThemeRows
@@ -74,7 +76,7 @@ export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppe
             'windows-xp-theme-enabled'
         );
         followPanelTransparencySwitch.sensitive =
-            windowsStartMenuSwitch.active && !blocked &&
+            menuEnabled() && !blocked &&
             !windowsXpThemeEnabled;
         if (!blocked) {
             followPanelTransparencySwitch.subtitle =
@@ -90,10 +92,7 @@ export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppe
                 popupBlurStartMenuTransparencySubtitle;
         }
     };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuTransparencyRow
-    );
+    connectMenuSwitches(updateStartMenuTransparencyRow);
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',

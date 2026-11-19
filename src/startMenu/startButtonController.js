@@ -221,6 +221,7 @@ export class StartButtonController {
                 () => this._menuController.toggleApplicationsFromShortcut(),
                 () => this._menuController.toggleOverviewFromShortcut(),
                 () => this._openFileManager(),
+                () => this._menuController.toggleSpotlight(),
                 switcherKeybindings
             )
             : null;
@@ -457,15 +458,20 @@ export class StartButtonController {
         });
     }
 
+    _forEachMenu(callback) {
+        for (const menu of this._menuController.menus)
+            callback(menu);
+    }
+
     _connectBlurMyShellSignals() {
         Main.uiGroup.connectObject('notify::style-class', () => {
-            this._menuController.startMenu?.queueTransparencySync();
+            this._forEachMenu(menu => menu.queueTransparencySync());
         }, this);
         Main.extensionManager.connectObject(
             'extension-state-changed',
             (_manager, extension) => {
                 if (extension.uuid === BLUR_MY_SHELL_UUID)
-                    this._menuController.startMenu?.queueTransparencySync();
+                    this._forEachMenu(menu => menu.queueTransparencySync());
             },
             this
         );
@@ -491,7 +497,7 @@ export class StartButtonController {
             }
             componentSettings.connectObject(
                 `changed::${key}`,
-                () => this._menuController.startMenu?.queueTransparencySync(),
+                () => this._forEachMenu(menu => menu.queueTransparencySync()),
                 this
             );
         }
@@ -512,8 +518,7 @@ export class StartButtonController {
             this._keybindings?.sync();
         }, this);
         this._settings.connectObject('changed::windows-xp-theme-enabled', () => {
-            this._menuController.startMenu?.close();
-            this._menuController.contextMenu.close();
+            this._menuController.closeMenus();
             this._syncWindowsXpStartButton();
             this.applyAppearance(
                 this._iconSize,
@@ -588,8 +593,6 @@ export class StartButtonController {
         this._settings.connectObject(
             'changed::start-menu-open-all-apps',
             () => this._menuController.startMenu?.refreshDefaultView(),
-            'changed::start-menu-layout',
-            () => this._menuController.startMenu?.syncLayout(),
             this
         );
         this._settings.connectObject(
@@ -605,8 +608,7 @@ export class StartButtonController {
         }, this);
         for (const key of ['default-gnome-panel', START_BUTTON_LOCATION_KEY]) {
             this._settings.connectObject(`changed::${key}`, () => {
-                this._menuController.startMenu?.close();
-                this._menuController.contextMenu.close();
+                this._menuController.closeMenus();
                 this._syncVisibility();
                 this._keybindings?.sync();
             }, this);
@@ -616,6 +618,7 @@ export class StartButtonController {
             'start-menu-super-key',
             'start-menu-super-tab',
             'super-e-file-manager-enabled',
+            'spotlight-enabled',
             'grid-alt-tab-enabled',
         ]) {
             this._settings.connectObject(
@@ -624,13 +627,13 @@ export class StartButtonController {
                 this
             );
         }
-        for (const key of ['start-menu-custom-hotkey', 'overview-custom-hotkey']) {
+        for (const key of ['start-menu-custom-hotkey', 'overview-custom-hotkey', 'spotlight-hotkey']) {
             this._settings.connectObject(`changed::${key}`, () => {
                 this._keybindings?.customAcceleratorChanged(key);
             }, this);
         }
         const syncStartMenuTheme = () => {
-            this._menuController.startMenu?.syncTheme();
+            this._forEachMenu(menu => menu.syncTheme());
         };
         this._settings.connectObject(
             'changed::start-menu-theme', syncStartMenuTheme,
@@ -639,7 +642,7 @@ export class StartButtonController {
             'changed::panel-theme-follow-system', syncStartMenuTheme,
             'changed::panel-theme', syncStartMenuTheme,
             'changed::windows-10-theme-enabled',
-            () => this._menuController.startMenu?.syncTheme(true),
+            () => this._forEachMenu(menu => menu.syncTheme(true)),
             this
         );
         for (const key of [
@@ -649,7 +652,7 @@ export class StartButtonController {
         ]) {
             this._settings.connectObject(
                 `changed::${key}`,
-                () => this._menuController.startMenu?.syncTransparency(),
+                () => this._forEachMenu(menu => menu.syncTransparency()),
                 this
             );
         }

@@ -129,7 +129,8 @@ Log out and back in if GNOME Shell does not discover a newly installed extension
 - **Find the right window:** use previews, hover to peek inside a window, or switch with a live Alt+Tab grid.
 - **Make it yours:** choose colours, light or dark themes, icon sizes, running indicators and animations.
 - **Make room:** place the taskbar or Dock on any screen edge and hide it automatically when you need space.
-- **Use a Start Menu:** search for apps, organise pins into folders and add shortcuts to common locations, or switch to a Spotlight-style search bar.
+- **Use a Start Menu:** search for apps, organise pins into folders and add shortcuts to common locations.
+- **Search from anywhere:** press Super+Space for a Spotlight-style search bar.
 - **Work across monitors:** choose where panels appear and which apps each one shows.
 - **Add useful extras:** Show Desktop, app volume controls, notification badges, progress bars and folder shortcuts.
 
@@ -144,7 +145,7 @@ cogwheels reveal additional options.
 | **General** | Choose a mode, set up the app grid, hot edge, Alt+Tab grid and file manager, and back up your settings. |
 | **Taskbar** | Adjust the panel's appearance, apps, items and hiding behaviour. |
 | **Dock** | Customise the Dock when Dock or macOS Dock mode is selected. |
-| **Start Menu** | Choose the button, the Eleven or Spotlight layout, menu appearance, pinned-app options and shortcuts. |
+| **Start Menu** | Choose the button, menu appearance, pinned-app options and shortcuts, and turn on Spotlight Search. |
 | **About** | Find project information, links, credits and support. |
 
 <table>
@@ -164,7 +165,7 @@ cogwheels reveal additional options.
       <br><br><sub><b>Dock</b></sub>
     </td>
     <td align="center" width="50%">
-      <img src="docs/images/settings-start-menu-2026-11.png" alt="Start Menu settings with the Start Menu switch, Eleven and Spotlight layouts, and menu options" width="100%">
+      <img src="docs/images/settings-start-menu-2026-11c.png" alt="Start Menu settings with the Start Menu and Spotlight Search switches and menu options" width="100%">
       <br><br><sub><b>Start Menu</b></sub>
     </td>
   </tr>
@@ -195,6 +196,7 @@ there too and preserves taskbar favourites and Start Menu pins.
 | --- | --- |
 | **Super** | Opens the Start Menu, moving Overview to **Super+Tab** or a shortcut of your choice |
 | **Super+Tab** | Opens the Start Menu instead, when the Super shortcut is off |
+| **Super+Space** | Opens Spotlight Search, when it is turned on |
 | **Super+E** | Opens the home folder in the default file manager |
 | **Super+1** … **Super+9** | Activates that pinned application; pressing it again on the focused one minimises it |
 
@@ -350,12 +352,7 @@ animation, Magic Lamp and minimized window previews, and keeps its own settings.
 
 ### Start Menu
 
-The Start Menu is enabled by default and offers two layouts:
-
-- **Eleven** — a full menu with pinned applications, All Apps and a footer
-- **Spotlight** — a search bar in the middle of the screen that shows results from every GNOME search provider as you type, with the same themes, transparency and shortcuts
-
-The rest of this section describes the Eleven layout.
+The Eleven-style Start Menu is enabled by default.
 
 - **Pinned grid** with drag-and-drop ordering and optional titles under icons
 - **Folders** created by dragging one pinned application onto another, with renaming, a
@@ -380,6 +377,16 @@ either button can be hidden, and right-clicking the Eleven-style button
 opens its settings. Its context menu can offer Installed Apps, Event Viewer,
 System, Network Connections, Disk Management, Terminal, Task Manager, File
 Explorer, Run and Desktop.
+
+### Spotlight Search
+
+Spotlight Search is an optional search bar that opens in the middle of the
+screen with Super+Space, alongside the Start Menu or the GNOME app grid. Turn it
+on under **Start Menu → Spotlight Search**. It shows results from every GNOME
+search provider as you type and follows the Start Menu's theme, transparency and
+running indicator settings. While it is on, it takes Super+Space over from
+GNOME's input source switching and gives it back when turned off. The shortcut
+can be changed under **Start Menu → Keyboard Shortcuts**.
 
 ### Window Switching
 

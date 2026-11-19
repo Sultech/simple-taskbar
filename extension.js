@@ -19,7 +19,10 @@ import {TrayOverflowController} from './src/overflow/trayOverflowController.js';
 import {FavoritesIntegration} from './src/integration/favoritesIntegration.js';
 import {GridAltTabController} from './src/windowSwitching/gridAltTabController.js';
 import {HotEdgeController} from './src/integration/hotEdgeController.js';
-import {restoreOverlayKey} from './src/startMenu/startMenuKeybindings.js';
+import {
+    restoreInputSourceShortcut,
+    restoreOverlayKey,
+} from './src/startMenu/startMenuKeybindings.js';
 import {PrimaryPanelController} from './src/panel/primaryPanelController.js';
 import {SecondaryPanelManager} from './src/secondaryPanel/secondaryPanelManager.js';
 import {DockPanelManager} from './src/dock/dockPanelManager.js';
@@ -65,6 +68,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._settings = createRoutedSettings(this.getSettings(),
             this.getSettings(`${this.metadata['settings-schema']}.legacy`));
         restoreOverlayKey(this._settings);
+        restoreInputSourceShortcut(this._settings);
         clearInterruptedProfileTransition(this._settings);
         this._switcherKeybindings = new SwitcherKeybindingRouter();
         this._extensionConflictController =
