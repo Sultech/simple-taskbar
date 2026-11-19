@@ -3,14 +3,28 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
-import {panelIsTop, panelPosition} from '../shared/panelPositionUtils.js';
+import {panelIsTop, panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
 import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
 import {pinnedPopupSource} from '../popupMenuUtils.js';
 
 const XP_POPUP_OFFSET_CLASS = 'simple-taskbar-xp-popup-offset';
 const BOTTOM_PANEL_MENU_CLASS = 'simple-taskbar-bottom-panel-menu';
+
+export function quickSettingsAlignment(sourceActor, monitor, vertical) {
+    const [x, y] = sourceActor.get_transformed_position();
+    const [width, height] = sourceActor.get_transformed_size();
+    let center = vertical
+        ? (y + height / 2 - monitor.y) / monitor.height
+        : (x + width / 2 - monitor.x) / monitor.width;
+    if (!vertical && Clutter.get_default_text_direction() === Clutter.TextDirection.RTL)
+        center = 1 - center;
+    if (center < 1 / 3)
+        return 1;
+    return center > 2 / 3 ? 0 : 0.5;
+}
 
 export function panelArrowSide(settings) {
     switch (panelPosition(settings)) {
@@ -149,7 +163,8 @@ export class PanelMenuPositioner {
         // Quick Settings already accounts for its bottom-panel position.
         // Other menus retain GNOME's top-panel margin, including tray icons
         // registered after Simple Taskbar has been enabled.
-        const removeTopPanelGap = indicator !== Main.panel.statusArea.quickSettings;
+        const quickSettings = indicator === Main.panel.statusArea.quickSettings;
+        const removeTopPanelGap = !quickSettings;
         const state = {
             indicator,
             menu,
@@ -169,11 +184,22 @@ export class PanelMenuPositioner {
         const side = panelArrowSide(this._settings);
         boxPointer._userArrowSide = side;
         menu._arrowSide = side;
-        if (dynamicTaskbarEnabled(this._settings)) {
+        const dynamic = dynamicTaskbarEnabled(this._settings);
+        if (dynamic)
             menu._arrowAlignment = 0.5;
+        if (dynamic || quickSettings) {
+            const settings = this._settings;
             this._injectionManager.overrideMethod(boxPointer, 'setPosition', original => function (sourceActor, alignment) {
-                const pinned = sourceActor === menu.sourceActor && Main.panel.contains(sourceActor);
-                original.call(this, pinned ? pinnedPopupSource(sourceActor) : sourceActor, alignment);
+                const pinned = dynamic && sourceActor === menu.sourceActor && Main.panel.contains(sourceActor);
+                const source = pinned ? pinnedPopupSource(sourceActor) : sourceActor;
+                const menuAlignment = quickSettings && !dynamic
+                    ? quickSettingsAlignment(
+                        source,
+                        Main.layoutManager.primaryMonitor,
+                        panelIsVertical(settings)
+                    )
+                    : alignment;
+                original.call(this, source, menuAlignment);
             });
         }
         if (removeTopPanelGap && !panelIsTop(this._settings)) {

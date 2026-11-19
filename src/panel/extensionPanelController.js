@@ -264,7 +264,8 @@ export class ExtensionPanelController {
             new SecondaryPanelIndicatorController(
                 this._settings,
                 this._menuManager,
-                this._dockController ? [] : SECONDARY_PANEL_INDICATOR_ROLES
+                this._dockController ? [] : SECONDARY_PANEL_INDICATOR_ROLES,
+                this._monitor
             );
         this._indicatorController.acquire();
         const quickSettings = this._dockController

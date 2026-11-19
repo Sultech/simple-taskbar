@@ -3,8 +3,15 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {panelPosition} from '../shared/panelPositionUtils.js';
-import {panelArrowSide, removeXpPopupOffset, syncXpPopupOffset} from '../panel/panelMenuPositioner.js';
+import {SafeInjectionManager} from '../injectionManager.js';
+import {panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
+import {dynamicTaskbarEnabled} from '../shared/panelModeSettings.js';
+import {
+    panelArrowSide,
+    quickSettingsAlignment,
+    removeXpPopupOffset,
+    syncXpPopupOffset,
+} from '../panel/panelMenuPositioner.js';
 
 export const SECONDARY_PANEL_INDICATOR_ROLES = [
     'activities',
@@ -24,10 +31,12 @@ const INDICATOR_POOL = new Map(
 );
 
 export class SecondaryPanelIndicatorController {
-    constructor(settings, menuManager, roles) {
+    constructor(settings, menuManager, roles, monitor) {
         this._settings = settings;
         this._menuManager = menuManager;
         this._roles = roles;
+        this._monitor = monitor;
+        this._injectionManager = new SafeInjectionManager();
         this._originalChangeMenu = null;
         this._indicators = new Map();
     }
@@ -47,6 +56,8 @@ export class SecondaryPanelIndicatorController {
                 boxPointer._userArrowSide = side;
             if ('_arrowSide' in menu)
                 menu._arrowSide = side;
+            if (role === 'quickSettings')
+                this._alignQuickSettingsMenu(boxPointer);
             if (role !== 'quickSettings' &&
                 panelPosition(this._settings) !== 'top') {
                 menu.actor.add_style_class_name(
@@ -62,6 +73,17 @@ export class SecondaryPanelIndicatorController {
             if (!settings.get_boolean('panel-menu-click-only'))
                 originalChangeMenu.call(this, menu);
         };
+    }
+
+    _alignQuickSettingsMenu(boxPointer) {
+        const settings = this._settings;
+        const monitor = this._monitor;
+        this._injectionManager.overrideMethod(boxPointer, 'setPosition', original => function (sourceActor) {
+            const alignment = dynamicTaskbarEnabled(settings)
+                ? 0.5
+                : quickSettingsAlignment(sourceActor, monitor, panelIsVertical(settings));
+            original.call(this, sourceActor, alignment);
+        });
     }
 
     get(role) {
@@ -91,6 +113,8 @@ export class SecondaryPanelIndicatorController {
     }
 
     destroy() {
+        this._injectionManager.clear();
+        this._injectionManager = null;
         this._menuManager._changeMenu = this._originalChangeMenu;
         this._originalChangeMenu = null;
         for (const [role, indicator] of this._indicators) {
@@ -111,6 +135,7 @@ export class SecondaryPanelIndicatorController {
         this._indicators = null;
         this._menuManager = null;
         this._roles = null;
+        this._monitor = null;
         this._settings = null;
     }
 }
