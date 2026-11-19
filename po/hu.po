@@ -2930,29 +2930,25 @@ msgstr "Alkalmazások igazításának követése"
 msgid "Move the Start button with the application icons"
 msgstr "A Start gomb mozgatása az alkalmazásikonokkal együtt"
 
-#: src/prefs/startMenuPage.js:356
-msgid "Start Menu Layout"
-msgstr "Start menü elrendezése"
-
-#: src/prefs/startMenuPage.js:357
-msgid "Spotlight opens a search bar in the middle of the screen"
-msgstr "A Spotlight a képernyő közepén nyit meg egy keresősávot"
-
-#: src/prefs/startMenuPage.js:366
-msgid "Eleven opens a full menu with pinned and all apps"
-msgstr "Az Eleven teljes menüt nyit meg a rögzített és az összes alkalmazással"
-
-#: src/prefs/startMenuPage.js:359
-msgid "Eleven"
-msgstr "Eleven"
-
-#: src/prefs/startMenuPage.js:360
-msgid "Spotlight"
-msgstr "Spotlight"
-
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
-msgstr "A GNOME alkalmazásrácsát Eleven vagy Spotlight menüre cseréli"
+msgid "Replace the GNOME app grid with an Eleven-style menu"
+msgstr "A GNOME alkalmazásrács lecserélése Windows 11 stílusú menüre"
+
+#: src/prefs/startMenuPage.js:352
+msgid "Spotlight Search"
+msgstr "Spotlight keresés"
+
+#: src/prefs/startMenuPage.js:353
+msgid "Search apps, files, settings and more from anywhere with a keyboard shortcut"
+msgstr "Alkalmazások, fájlok, beállítások és egyebek keresése bárhonnan billentyűparanccsal"
+
+#: src/prefs/startMenuKeybindingsGroup.js:135
+msgid "Spotlight Shortcut"
+msgstr "Spotlight billentyűparancs"
+
+#: src/prefs/startMenuKeybindingsGroup.js:138
+msgid "If GNOME’s input source switching uses the same shortcut, Spotlight takes it over while it is on"
+msgstr "Ha a GNOME beviteli forrás váltása ugyanezt a billentyűparancsot használja, a Spotlight átveszi, amíg be van kapcsolva"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"

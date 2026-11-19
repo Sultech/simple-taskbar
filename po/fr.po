@@ -3006,29 +3006,25 @@ msgstr "Suivre l’alignement de l’application"
 msgid "Move the Start button with the application icons"
 msgstr "Déplacer le bouton démarrer avec les icônes d’applications"
 
-#: src/prefs/startMenuPage.js:356
-msgid "Start Menu Layout"
-msgstr "Disposition du menu démarrer"
-
-#: src/prefs/startMenuPage.js:357
-msgid "Spotlight opens a search bar in the middle of the screen"
-msgstr "Spotlight ouvre une barre de recherche au centre de l’écran"
-
-#: src/prefs/startMenuPage.js:366
-msgid "Eleven opens a full menu with pinned and all apps"
-msgstr "Eleven ouvre un menu complet avec les applications épinglées et toutes les applications"
-
-#: src/prefs/startMenuPage.js:359
-msgid "Eleven"
-msgstr "Eleven"
-
-#: src/prefs/startMenuPage.js:360
-msgid "Spotlight"
-msgstr "Spotlight"
-
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
-msgstr "Remplace la grille d’applications de GNOME par un menu Eleven ou Spotlight"
+msgid "Replace the GNOME app grid with an Eleven-style menu"
+msgstr "Remplacer la grille d’applications GNOME par un menu de style Eleven"
+
+#: src/prefs/startMenuPage.js:352
+msgid "Spotlight Search"
+msgstr "Recherche Spotlight"
+
+#: src/prefs/startMenuPage.js:353
+msgid "Search apps, files, settings and more from anywhere with a keyboard shortcut"
+msgstr "Rechercher des applications, des fichiers, des paramètres et plus encore depuis n’importe où avec un raccourci clavier"
+
+#: src/prefs/startMenuKeybindingsGroup.js:135
+msgid "Spotlight Shortcut"
+msgstr "Raccourci Spotlight"
+
+#: src/prefs/startMenuKeybindingsGroup.js:138
+msgid "If GNOME’s input source switching uses the same shortcut, Spotlight takes it over while it is on"
+msgstr "Si le changement de source de saisie de GNOME utilise le même raccourci, Spotlight le reprend tant qu’il est activé"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"

@@ -2902,29 +2902,25 @@ msgstr "Uygulama Hizalamasını İzle"
 msgid "Move the Start button with the application icons"
 msgstr "Başlat düğmesini uygulama simgeleriyle birlikte taşı"
 
-#: src/prefs/startMenuPage.js:356
-msgid "Start Menu Layout"
-msgstr "Başlat Menüsü Düzeni"
-
-#: src/prefs/startMenuPage.js:357
-msgid "Spotlight opens a search bar in the middle of the screen"
-msgstr "Spotlight, ekranın ortasında bir arama çubuğu açar"
-
-#: src/prefs/startMenuPage.js:366
-msgid "Eleven opens a full menu with pinned and all apps"
-msgstr "Eleven, sabitlenmiş ve tüm uygulamaları içeren tam bir menü açar"
-
-#: src/prefs/startMenuPage.js:359
-msgid "Eleven"
-msgstr "Eleven"
-
-#: src/prefs/startMenuPage.js:360
-msgid "Spotlight"
-msgstr "Spotlight"
-
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
-msgstr "GNOME uygulama ızgarasını Eleven veya Spotlight menüsüyle değiştirir"
+msgid "Replace the GNOME app grid with an Eleven-style menu"
+msgstr "GNOME uygulama ızgarasını Eleven tarzı bir menüyle değiştir"
+
+#: src/prefs/startMenuPage.js:352
+msgid "Spotlight Search"
+msgstr "Spotlight Araması"
+
+#: src/prefs/startMenuPage.js:353
+msgid "Search apps, files, settings and more from anywhere with a keyboard shortcut"
+msgstr "Uygulamaları, dosyaları, ayarları ve daha fazlasını her yerden bir klavye kısayoluyla arayın"
+
+#: src/prefs/startMenuKeybindingsGroup.js:135
+msgid "Spotlight Shortcut"
+msgstr "Spotlight Kısayolu"
+
+#: src/prefs/startMenuKeybindingsGroup.js:138
+msgid "If GNOME’s input source switching uses the same shortcut, Spotlight takes it over while it is on"
+msgstr "GNOME giriş kaynağı değiştirme aynı kısayolu kullanıyorsa, Spotlight açıkken bu kısayolu devralır"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"

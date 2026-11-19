@@ -2913,29 +2913,25 @@ msgstr "Следовать выравниванию приложений"
 msgid "Move the Start button with the application icons"
 msgstr "Перемещать кнопку «Пуск» вместе со значками приложений"
 
-#: src/prefs/startMenuPage.js:356
-msgid "Start Menu Layout"
-msgstr "Макет меню «Пуск»"
-
-#: src/prefs/startMenuPage.js:357
-msgid "Spotlight opens a search bar in the middle of the screen"
-msgstr "Spotlight открывает строку поиска в центре экрана"
-
-#: src/prefs/startMenuPage.js:366
-msgid "Eleven opens a full menu with pinned and all apps"
-msgstr "Eleven открывает полное меню с закреплёнными и всеми приложениями"
-
-#: src/prefs/startMenuPage.js:359
-msgid "Eleven"
-msgstr "Eleven"
-
-#: src/prefs/startMenuPage.js:360
-msgid "Spotlight"
-msgstr "Spotlight"
-
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
-msgstr "Заменяет сетку приложений GNOME меню Eleven или Spotlight"
+msgid "Replace the GNOME app grid with an Eleven-style menu"
+msgstr "Заменить сетку приложений GNOME меню Eleven-style"
+
+#: src/prefs/startMenuPage.js:352
+msgid "Spotlight Search"
+msgstr "Поиск Spotlight"
+
+#: src/prefs/startMenuPage.js:353
+msgid "Search apps, files, settings and more from anywhere with a keyboard shortcut"
+msgstr "Ищите приложения, файлы, настройки и многое другое откуда угодно с помощью сочетания клавиш"
+
+#: src/prefs/startMenuKeybindingsGroup.js:135
+msgid "Spotlight Shortcut"
+msgstr "Сочетание клавиш Spotlight"
+
+#: src/prefs/startMenuKeybindingsGroup.js:138
+msgid "If GNOME’s input source switching uses the same shortcut, Spotlight takes it over while it is on"
+msgstr "Если переключение источника ввода GNOME использует то же сочетание, Spotlight забирает его, пока включён"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"

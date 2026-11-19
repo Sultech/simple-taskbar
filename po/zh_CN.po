@@ -2824,29 +2824,25 @@ msgstr "跟随应用对齐方式"
 msgid "Move the Start button with the application icons"
 msgstr "使开始按钮与应用图标一同移动"
 
-#: src/prefs/startMenuPage.js:356
-msgid "Start Menu Layout"
-msgstr "开始菜单布局"
-
-#: src/prefs/startMenuPage.js:357
-msgid "Spotlight opens a search bar in the middle of the screen"
-msgstr "Spotlight 会在屏幕中央打开搜索栏"
-
-#: src/prefs/startMenuPage.js:366
-msgid "Eleven opens a full menu with pinned and all apps"
-msgstr "Eleven 会打开包含已固定应用和所有应用的完整菜单"
-
-#: src/prefs/startMenuPage.js:359
-msgid "Eleven"
-msgstr "11 风格"
-
-#: src/prefs/startMenuPage.js:360
-msgid "Spotlight"
-msgstr "Spotlight"
-
 #: src/prefs/startButtonDialog.js:60 src/prefs/startMenuPage.js:377
-msgid "Replace the GNOME app grid with an Eleven or Spotlight menu"
-msgstr "用 Eleven 或 Spotlight 菜单替换 GNOME 应用程序网格"
+msgid "Replace the GNOME app grid with an Eleven-style menu"
+msgstr "用 11 风格菜单替换 GNOME 应用网格"
+
+#: src/prefs/startMenuPage.js:352
+msgid "Spotlight Search"
+msgstr "Spotlight 搜索"
+
+#: src/prefs/startMenuPage.js:353
+msgid "Search apps, files, settings and more from anywhere with a keyboard shortcut"
+msgstr "随时随地使用键盘快捷键搜索应用、文件、设置等"
+
+#: src/prefs/startMenuKeybindingsGroup.js:135
+msgid "Spotlight Shortcut"
+msgstr "Spotlight 快捷键"
+
+#: src/prefs/startMenuKeybindingsGroup.js:138
+msgid "If GNOME’s input source switching uses the same shortcut, Spotlight takes it over while it is on"
+msgstr "如果 GNOME 的输入源切换使用相同的快捷键，Spotlight 开启时会接管它"
 
 #: src/prefs/startMenuPage.js:38
 msgid "Not set"
