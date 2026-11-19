@@ -79,6 +79,7 @@ export class StartButtonController {
         getInterestingWindows,
         manageKeybindings = true,
         toggleFromShortcut = null,
+        toggleSpotlightFromShortcut = null,
         switcherKeybindings = null,
         toggleDesktop,
         onMenuOpenStateChanged,
@@ -221,7 +222,7 @@ export class StartButtonController {
                 () => this._menuController.toggleApplicationsFromShortcut(),
                 () => this._menuController.toggleOverviewFromShortcut(),
                 () => this._openFileManager(),
-                () => this._menuController.toggleSpotlight(),
+                toggleSpotlightFromShortcut ?? (() => this.toggleSpotlight()),
                 switcherKeybindings
             )
             : null;
@@ -456,6 +457,10 @@ export class StartButtonController {
             duration: REFLOW_ANIMATION_TIME,
             mode: Clutter.AnimationMode.EASE_OUT_CUBIC,
         });
+    }
+
+    toggleSpotlight() {
+        this._menuController.toggleSpotlight();
     }
 
     _forEachMenu(callback) {
