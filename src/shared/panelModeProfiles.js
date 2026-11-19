@@ -182,7 +182,6 @@ const MODE_SETTING_KEYS = new Set([
     'nautilus-places-enabled',
     'super-e-file-manager-enabled',
     'super-e-file-manager-hotkey',
-    'spotlight-enabled',
     'spotlight-hotkey',
     'spotlight-displaced-input-source-keys',
     'panel-button-corner-radius',
@@ -379,7 +378,8 @@ function panelAxisSettingKeys(settings, mode) {
         if (mode === PANEL_MODE_TASKBAR && key === 'dock-min-icon-size')
             return true;
 
-        return !MODE_SETTING_KEYS.has(key) && key !== 'panel-position' &&
+        return !MODE_SETTING_KEYS.has(key) &&
+            !['panel-position', 'spotlight-enabled'].includes(key) &&
             !key.startsWith('dock-');
     });
 }
