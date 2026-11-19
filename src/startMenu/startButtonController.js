@@ -80,6 +80,7 @@ export class StartButtonController {
         manageKeybindings = true,
         toggleFromShortcut = null,
         toggleSpotlightFromShortcut = null,
+        toggleOverviewFromShortcut = null,
         switcherKeybindings = null,
         toggleDesktop,
         onMenuOpenStateChanged,
@@ -220,7 +221,7 @@ export class StartButtonController {
             ? new StartMenuKeybindings(
                 keybindingSettings,
                 () => this._menuController.toggleApplicationsFromShortcut(),
-                () => this._menuController.toggleOverviewFromShortcut(),
+                toggleOverviewFromShortcut ?? (() => this.toggleOverview()),
                 () => this._openFileManager(),
                 toggleSpotlightFromShortcut ?? (() => this.toggleSpotlight()),
                 switcherKeybindings
@@ -461,6 +462,10 @@ export class StartButtonController {
 
     toggleSpotlight() {
         this._menuController.toggleSpotlight();
+    }
+
+    toggleOverview() {
+        this._menuController.toggleOverviewFromShortcut();
     }
 
     _forEachMenu(callback) {

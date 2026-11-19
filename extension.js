@@ -145,6 +145,7 @@ export default class SimpleTaskbarExtension extends Extension {
                 keybindingSettings: this._settings,
                 toggleFromShortcut: () => this._toggleStartMenuAtPointer(),
                 toggleSpotlightFromShortcut: () => this._toggleSpotlight(),
+                toggleOverviewFromShortcut: () => this._toggleOverview(),
                 switcherKeybindings: this._switcherKeybindings,
             },
         });
@@ -438,11 +439,21 @@ export default class SimpleTaskbarExtension extends Extension {
         this._dockPanelManager.closePanelMenus();
     }
 
-    _toggleSpotlight() {
-        this._closePanelMenus();
+    _closeOtherStartMenus() {
         this._secondaryPanelManager.closeStartMenus();
         this._dockPanelManager.closeStartMenus();
+    }
+
+    _toggleSpotlight() {
+        this._closePanelMenus();
+        this._closeOtherStartMenus();
         this._core.startButtonController.toggleSpotlight();
+    }
+
+    _toggleOverview() {
+        this._closePanelMenus();
+        this._closeOtherStartMenus();
+        this._core.startButtonController.toggleOverview();
     }
 
     _toggleStartMenuAtPointer() {
@@ -463,8 +474,7 @@ export default class SimpleTaskbarExtension extends Extension {
             return;
         }
 
-        this._secondaryPanelManager.closeStartMenus();
-        this._dockPanelManager.closeStartMenus();
+        this._closeOtherStartMenus();
         this._core.startButtonController.toggleStartMenu();
     }
 
