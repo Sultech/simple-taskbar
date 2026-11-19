@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
+export function extensionEnabled(shellSettings, uuid) {
+    return shellSettings.get_strv('enabled-extensions').includes(uuid) &&
+        !shellSettings.get_strv('disabled-extensions').includes(uuid);
+}
+
 export function setInteger(settings, key, value) {
     if (settings.get_int(key) !== value)
         settings.set_int(key, value);

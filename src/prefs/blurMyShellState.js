@@ -3,6 +3,8 @@
 
 import Gio from 'gi://Gio';
 
+import {extensionEnabled} from '../shared/settingsUtils.js';
+
 import {
     BLUR_MY_SHELL_UUID,
     blurMyShellHasKey,
@@ -34,16 +36,8 @@ export function createBlurMyShellState(connectSettings) {
             'dash-to-dock'
         );
     }
-    const blurMyShellExtensionEnabled = () => {
-        const enabledExtensions = shellSettings.get_strv(
-            'enabled-extensions'
-        );
-        const disabledExtensions = shellSettings.get_strv(
-            'disabled-extensions'
-        );
-        return enabledExtensions.includes(BLUR_MY_SHELL_UUID) &&
-            !disabledExtensions.includes(BLUR_MY_SHELL_UUID);
-    };
+    const blurMyShellExtensionEnabled = () =>
+        extensionEnabled(shellSettings, BLUR_MY_SHELL_UUID);
     const blurMyShellBlurEnabled = settings => {
         if (!settings ||
             !blurMyShellHasKey(settings, 'blur') ||

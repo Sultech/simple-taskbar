@@ -3,9 +3,7 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {extensionIsActive} from './extensionState.js';
-
-const V_SHELL_UUID = 'vertical-workspaces@G-dH.github.com';
+import {V_SHELL_UUID, extensionIsActive} from './extensionState.js';
 
 export class AppGridLayout {
     constructor(settings) {

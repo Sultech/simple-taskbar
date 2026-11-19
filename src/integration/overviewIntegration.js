@@ -15,7 +15,7 @@ import {
 } from 'resource:///org/gnome/shell/ui/workspacesView.js';
 import {SafeInjectionManager} from '../injectionManager.js';
 
-import {extensionIsActive, extensionWillBeActive} from './extensionState.js';
+import {V_SHELL_UUID, extensionIsActive, extensionWillBeActive} from './extensionState.js';
 import {panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 import {
     dockPanelModeHeight,
@@ -28,7 +28,6 @@ import {DOCK_AUTO_HIDE_SETTINGS, autoHideRevealsInOverview} from '../shared/auto
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
 const OVERVIEW_LABEL_MARGIN = 60;
 const STARTUP_OVERVIEW_DELAY = 600;
-const V_SHELL_UUID = 'vertical-workspaces@G-dH.github.com';
 const DESKTOP_DOCK_UUIDS = [
     'dash-to-dock@micxgx.gmail.com',
     'ubuntu-dock@ubuntu.com',

@@ -6,6 +6,7 @@ import Gio from 'gi://Gio';
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {addSpinRow, addToggleChoiceRow} from './preferencesWidgets.js';
+import {extensionEnabled} from '../shared/settingsUtils.js';
 
 const V_SHELL_UUID = 'vertical-workspaces@G-dH.github.com';
 
@@ -50,11 +51,8 @@ export function addAppGridGroup(page, settings, connectSettings) {
         connectSettings
     );
     const shellSettings = new Gio.Settings({schema_id: 'org.gnome.shell'});
-    const vShellEnabled = () =>
-        shellSettings.get_strv('enabled-extensions').includes(V_SHELL_UUID) &&
-        !shellSettings.get_strv('disabled-extensions').includes(V_SHELL_UUID);
     const syncCustomRows = () => {
-        const available = !vShellEnabled();
+        const available = !extensionEnabled(shellSettings, V_SHELL_UUID);
         const custom = settings.get_string('app-grid-layout') === 'custom';
         group.description = available
             ? _('Applies to the GNOME app grid in every mode')

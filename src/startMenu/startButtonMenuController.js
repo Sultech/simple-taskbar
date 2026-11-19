@@ -130,29 +130,36 @@ export class StartButtonMenuController {
         if (!this.windowsModeEnabled)
             return;
 
-        this._previews.hideTooltip(false);
-        this._previews.hide();
-        if (Main.overview.visible) {
-            this._openAfterOverview(() => {
-                if (this.windowsModeEnabled)
-                    this.ensureStartMenuController().open();
-            });
-            Main.overview.hide();
-            return;
-        }
-        this.ensureStartMenuController().toggle();
+        this._toggleMenu(() => this.ensureStartMenuController(), () => this.windowsModeEnabled);
     }
 
     toggleSpotlight() {
         this._startMenuController?.close();
-        this._previews.hideTooltip(false);
-        this._previews.hide();
-        if (Main.overview.visible) {
-            this._openAfterOverview(() => this.ensureSpotlightController().open());
-            Main.overview.hide();
+        this._toggleMenu(() => this.ensureSpotlightController());
+    }
+
+    _toggleMenu(ensureMenu, canOpen = () => true) {
+        this._hidePreviews();
+        if (!Main.overview.visible) {
+            ensureMenu().toggle();
             return;
         }
-        this.ensureSpotlightController().toggle();
+
+        this._openAfterOverview(() => {
+            if (canOpen())
+                ensureMenu().open();
+        });
+        Main.overview.hide();
+    }
+
+    _hidePreviews() {
+        this._previews.hideTooltip(false);
+        this._previews.hide();
+    }
+
+    _closeStartMenus() {
+        for (const menu of this.menus)
+            menu.close();
     }
 
     _openAfterOverview(open) {
@@ -189,8 +196,7 @@ export class StartButtonMenuController {
     }
 
     closeMenus() {
-        for (const menu of this.menus)
-            menu.close();
+        this._closeStartMenus();
         this._contextMenu.close();
     }
 
@@ -291,10 +297,8 @@ export class StartButtonMenuController {
     }
 
     openContextMenu() {
-        for (const menu of this.menus)
-            menu.close();
-        this._previews.hideTooltip(false);
-        this._previews.hide();
+        this._closeStartMenus();
+        this._hidePreviews();
         syncMenuArrowSide(this._contextMenu, this._settings);
         this._contextMenuController.sync();
         openPanelPopupMenu(this._contextMenu, this.actor, dynamicTaskbarEnabled(this._settings));
@@ -342,11 +346,8 @@ export class StartButtonMenuController {
     }
 
     toggleOverviewFromShortcut() {
-        for (const menu of this.menus)
-            menu.close();
-        this._contextMenu.close();
-        this._previews.hideTooltip(false);
-        this._previews.hide();
+        this.closeMenus();
+        this._hidePreviews();
         Main.overview.toggle();
     }
 

@@ -4,6 +4,8 @@
 import * as ExtensionUtils from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+export const V_SHELL_UUID = 'vertical-workspaces@G-dH.github.com';
+
 export function extensionStateIsActive(extension) {
     return extension?.state === ExtensionUtils.ExtensionState.ACTIVE;
 }
