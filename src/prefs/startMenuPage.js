@@ -3,7 +3,6 @@
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
-import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -24,6 +23,7 @@ import {
 import {axisPanelPositions} from './panelPositionChoices.js';
 import {activePanelPosition} from '../shared/panelPositionUtils.js';
 import {SettingsSubpage} from './settingsSubpage.js';
+import {startButtonPlaced} from '../shared/startButtonLocation.js';
 import {
     addComboRow,
     createSwitchRow,
@@ -353,8 +353,17 @@ export function addStartMenuPage({
         subtitle: _('Search apps, files, settings and more from anywhere with a keyboard shortcut'),
     });
     startMenuHubGroup.add(spotlightSwitch);
-    const menuSwitches = [windowsStartMenuSwitch, spotlightSwitch];
-    const anyMenuEnabled = () => menuSwitches.some(row => row.active);
+    const elevenEnabled = () => windowsStartMenuSwitch.active && startButtonPlaced(settings);
+    const onElevenChanged = callback => {
+        windowsStartMenuSwitch.connect('notify::active', callback);
+        for (const key of ['default-gnome-panel', 'dock-mode', START_BUTTON_LOCATION_KEY])
+            connectSettings(settings, `changed::${key}`, callback);
+    };
+    const anyMenuEnabled = () => elevenEnabled() || spotlightSwitch.active;
+    const onMenuChanged = callback => {
+        onElevenChanged(callback);
+        spotlightSwitch.connect('notify::active', callback);
+    };
     const menuOptionsSubpage = new SettingsSubpage(window, startMenuHubGroup, {
         title: _('Start Menu Options'),
         subtitle: _('Configure Start Menu content and behavior'),
@@ -384,17 +393,17 @@ export function addStartMenuPage({
         for (const subpage of [menuOptionsSubpage, menuAppearanceSubpage, keyboardSubpage])
             subpage.row.sensitive = anyMenuEnabled();
         for (const subpage of [foldersSubpage, contextMenuSubpage])
-            subpage.row.sensitive = windowsStartMenuSwitch.active;
+            subpage.row.sensitive = elevenEnabled();
     };
-    for (const row of menuSwitches)
-        row.connect('notify::active', syncStartMenuSubpages);
+    onMenuChanged(syncStartMenuSubpages);
     syncStartMenuSubpages();
     addStartMenuKeybindingsGroup({
         window,
         settings,
         connectSettings,
         keyboardSubpage,
-        windowsStartMenuSwitch,
+        elevenEnabled,
+        onElevenChanged,
         spotlightSwitch,
     });
 
@@ -447,15 +456,12 @@ export function addStartMenuPage({
     startMenuOptionsGroup.add(hidePinnedAppTitlesSwitch);
     startMenuOptionsGroup.add(runningIndicatorsSwitch);
     const updateRecommendedAppsSwitch = () => {
-        const sensitive = windowsStartMenuSwitch.active &&
+        const sensitive = elevenEnabled() &&
             !openAllAppsSwitch.active;
         recommendedAppsSwitch.sensitive = sensitive;
         hidePinnedAppTitlesSwitch.sensitive = sensitive;
     };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateRecommendedAppsSwitch
-    );
+    onElevenChanged(updateRecommendedAppsSwitch);
     openAllAppsSwitch.connect(
         'notify::active',
         updateRecommendedAppsSwitch
@@ -465,8 +471,7 @@ export function addStartMenuPage({
         runningIndicatorsSwitch.sensitive = anyMenuEnabled() &&
             !settings.get_boolean('windows-xp-theme-enabled');
     };
-    for (const row of menuSwitches)
-        row.connect('notify::active', updateRunningIndicatorsSwitch);
+    onMenuChanged(updateRunningIndicatorsSwitch);
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
@@ -480,19 +485,17 @@ export function addStartMenuPage({
         subtitle: _('Browse applications by category in the Start menu'),
     });
     startMenuOptionsGroup.add(appCategoriesSwitch);
-    for (const row of [
-        profilePictureSwitch,
-        powerOptionsSwitch,
-        openAllAppsSwitch,
-        appCategoriesSwitch,
-    ]) {
-        windowsStartMenuSwitch.bind_property(
-            'active',
-            row,
-            'sensitive',
-            GObject.BindingFlags.SYNC_CREATE
-        );
-    }
+    const syncElevenOnlyRows = () => {
+        for (const row of [
+            profilePictureSwitch,
+            powerOptionsSwitch,
+            openAllAppsSwitch,
+            appCategoriesSwitch,
+        ])
+            row.sensitive = elevenEnabled();
+    };
+    onElevenChanged(syncElevenOnlyRows);
+    syncElevenOnlyRows();
 
     const gnomeStartButtonVisibleSwitch = createSwitchRow(settings, {
         key: 'gnome-start-button-visible',
@@ -514,12 +517,13 @@ export function addStartMenuPage({
         settings,
         connectSettings,
         menuAppearanceSubpage,
-        menuSwitches,
+        menuEnabled: anyMenuEnabled,
+        onMenuChanged,
         blurMyShellPanelBlurEnabled,
         blurMyShellPopupBlurEnabled,
     });
 
-    addStartMenuFoldersGroup({settings, foldersSubpage, windowsStartMenuSwitch});
+    addStartMenuFoldersGroup({settings, foldersSubpage, elevenEnabled, onElevenChanged});
 
     const hasDesktopApp = appId =>
         Boolean(Gio.DesktopAppInfo.new(appId));
@@ -616,16 +620,13 @@ export function addStartMenuPage({
         startMenuContextMenuRows.push(row);
     }
     const updateStartMenuContextMenuControls = () => {
-        startMenuContextMenuGroup.sensitive = windowsStartMenuSwitch.active;
-        const sensitive = windowsStartMenuSwitch.active &&
+        startMenuContextMenuGroup.sensitive = elevenEnabled();
+        const sensitive = elevenEnabled() &&
             startMenuContextMenuSwitch.active;
         for (const row of startMenuContextMenuRows)
             row.sensitive = sensitive;
     };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuContextMenuControls
-    );
+    onElevenChanged(updateStartMenuContextMenuControls);
     startMenuContextMenuSwitch.connect(
         'notify::active',
         updateStartMenuContextMenuControls
@@ -649,7 +650,7 @@ export function addStartMenuPage({
             centered = true;
         }
         centerStartMenuRow.sensitive =
-            windowsStartMenuSwitch.active && centered;
+            elevenEnabled() && centered;
     };
     for (const key of startButtonPositionKeys)
         connectSettings(settings, `changed::${key}`, updateCenterStartMenuRow);
@@ -657,26 +658,23 @@ export function addStartMenuPage({
         'notify::active',
         updateCenterStartMenuRow
     );
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateCenterStartMenuRow
-    );
+    onElevenChanged(updateCenterStartMenuRow);
     updateCenterStartMenuRow();
 
     const syncStartMenuAvailability = () => {
-        const available = !isDefaultPanelWithoutDock(settings) || startButtonInPanel(settings);
-        startMenuHubGroup.sensitive = available;
+        const available = startButtonPlaced(settings);
+        windowsStartMenuSwitch.sensitive = available &&
+            !settings.get_boolean('windows-xp-theme-enabled');
         startMenuPage.description = available
             ? ''
             : _('Set the Start button location to Panel to use the Start Menu in Default GNOME Panel mode.');
     };
-    for (const key of ['default-gnome-panel', 'dock-mode', START_BUTTON_LOCATION_KEY])
-        connectSettings(settings, `changed::${key}`, syncStartMenuAvailability);
+    onElevenChanged(syncStartMenuAvailability);
+    connectSettings(settings, 'changed::windows-xp-theme-enabled', syncStartMenuAvailability);
     syncStartMenuAvailability();
 
     return {
         followAppAlignmentSwitch,
         syncTransparency: syncStartMenuTransparency,
-        windowsStartMenuSwitch,
     };
 }

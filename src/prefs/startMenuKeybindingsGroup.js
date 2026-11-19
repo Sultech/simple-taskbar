@@ -40,8 +40,8 @@ function createShortcutRow(window, settings, connectSettings, {title, key, fallb
     return row;
 }
 
-export function addStartMenuKeybindingsGroup({window, settings, connectSettings, keyboardSubpage, windowsStartMenuSwitch,
-    spotlightSwitch}) {
+export function addStartMenuKeybindingsGroup({window, settings, connectSettings, keyboardSubpage, elevenEnabled,
+    onElevenChanged, spotlightSwitch}) {
     const startMenuKeybindingsGroup = keyboardSubpage.addGroup({
         title: _('Keyboard Shortcuts'),
         description: _('Configure Start menu shortcuts.'),
@@ -73,9 +73,9 @@ export function addStartMenuKeybindingsGroup({window, settings, connectSettings,
         const windowsXpTheme = settings.get_boolean(
             'windows-xp-theme-enabled'
         );
-        superKeyRow.sensitive = windowsStartMenuSwitch.active &&
+        superKeyRow.sensitive = elevenEnabled() &&
             !windowsXpTheme;
-        superTabRow.sensitive = windowsStartMenuSwitch.active;
+        superTabRow.sensitive = elevenEnabled();
         overviewShortcutRow.sensitive = superKeyRow.sensitive && superKeyRow.active;
         overviewShortcutRow.subtitle = superKeyRow.active
             ? _('Opens the Overview while Super opens the Start Menu; clear it to use Super+Tab')
@@ -90,10 +90,7 @@ export function addStartMenuKeybindingsGroup({window, settings, connectSettings,
         if (superTabRow.active && superKeyRow.active)
             settings.set_boolean('start-menu-super-key', false);
     });
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateSuperTabRow
-    );
+    onElevenChanged(updateSuperTabRow);
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',
@@ -109,7 +106,7 @@ export function addStartMenuKeybindingsGroup({window, settings, connectSettings,
 
     const updateCustomShortcutRow = () => {
         customShortcutRow.sensitive =
-            windowsStartMenuSwitch.active && !superTabRow.active &&
+            elevenEnabled() && !superTabRow.active &&
             !superKeyRow.active;
         if (superKeyRow.active) {
             customShortcutRow.subtitle =
@@ -125,10 +122,7 @@ export function addStartMenuKeybindingsGroup({window, settings, connectSettings,
 
     superKeyRow.connect('notify::active', updateCustomShortcutRow);
     superTabRow.connect('notify::active', updateCustomShortcutRow);
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateCustomShortcutRow
-    );
+    onElevenChanged(updateCustomShortcutRow);
     updateCustomShortcutRow();
 
     const spotlightShortcutRow = createShortcutRow(window, settings, connectSettings, {

@@ -5,7 +5,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {createSwitchRow} from './preferencesWidgets.js';
 import {commonFolderSwitchOptions} from './locationsGroup.js';
 
-export function addStartMenuFoldersGroup({settings, foldersSubpage, windowsStartMenuSwitch}) {
+export function addStartMenuFoldersGroup({settings, foldersSubpage, elevenEnabled, onElevenChanged}) {
     const startMenuFoldersGroup = foldersSubpage.addGroup({
         title: _('Folder Shortcuts'),
         description: _('Choose which folders appear beside the Settings icon'),
@@ -23,14 +23,11 @@ export function addStartMenuFoldersGroup({settings, foldersSubpage, windowsStart
         startMenuFolderRows.push(row);
     }
     const updateStartMenuLocationControls = () => {
-        startMenuFoldersGroup.sensitive = windowsStartMenuSwitch.active;
+        startMenuFoldersGroup.sensitive = elevenEnabled();
         for (const row of startMenuFolderRows)
             row.sensitive = startMenuLocationsSwitch.active;
     };
-    windowsStartMenuSwitch.connect(
-        'notify::active',
-        updateStartMenuLocationControls
-    );
+    onElevenChanged(updateStartMenuLocationControls);
     startMenuLocationsSwitch.connect(
         'notify::active',
         updateStartMenuLocationControls

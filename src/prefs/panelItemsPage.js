@@ -53,7 +53,6 @@ export function addPanelItemsPage({
     connectSettings,
     page,
     panelPositions,
-    windowsStartMenuSwitch,
     followAppAlignmentSwitch,
 }) {
     const panelGroup = new Adw.PreferencesGroup({
@@ -578,7 +577,6 @@ export function addPanelItemsPage({
         const dockMode = settings.get_boolean('dock-mode');
         const runningWindows = defaultPanelWindowsEnabled(settings);
         const startInPanel = startButtonInPanel(settings);
-        windowsStartMenuSwitch.sensitive = !windowsXpTheme;
         panelOrderRows.get('start-button').row.sensitive = !dockMode || startInPanel;
         panelOrderRows.get('applications').row.sensitive = !dockMode || runningWindows;
         panelOrderRows.get('start-button').positionDropDown.sensitive =

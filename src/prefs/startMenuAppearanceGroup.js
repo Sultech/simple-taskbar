@@ -5,12 +5,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {createSwitchRow, addToggleChoiceRow} from './preferencesWidgets.js';
 
 export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppearanceSubpage,
-    menuSwitches, blurMyShellPanelBlurEnabled, blurMyShellPopupBlurEnabled}) {
-    const menuEnabled = () => menuSwitches.some(row => row.active);
-    const connectMenuSwitches = callback => {
-        for (const row of menuSwitches)
-            row.connect('notify::active', callback);
-    };
+    menuEnabled, onMenuChanged, blurMyShellPanelBlurEnabled, blurMyShellPopupBlurEnabled}) {
     const followPanelThemeSwitch = createSwitchRow(settings, {
         key: 'start-menu-follow-panel-theme',
         title: _('Follow Taskbar/Dock Theme'),
@@ -43,7 +38,7 @@ export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppe
         startMenuThemeRow.sensitive = menuEnabled() &&
             !followPanelThemeSwitch.active;
     };
-    connectMenuSwitches(updateStartMenuThemeRows);
+    onMenuChanged(updateStartMenuThemeRows);
     followPanelThemeSwitch.connect(
         'notify::active',
         updateStartMenuThemeRows
@@ -92,7 +87,7 @@ export function addStartMenuAppearanceGroup({settings, connectSettings, menuAppe
                 popupBlurStartMenuTransparencySubtitle;
         }
     };
-    connectMenuSwitches(updateStartMenuTransparencyRow);
+    onMenuChanged(updateStartMenuTransparencyRow);
     connectSettings(
         settings,
         'changed::windows-xp-theme-enabled',

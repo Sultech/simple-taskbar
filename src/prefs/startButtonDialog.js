@@ -5,12 +5,11 @@ import GObject from 'gi://GObject';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {isDefaultPanelWithoutDock} from '../shared/panelModeProfiles.js';
 import {
     START_BUTTON_LOCATION_KEY,
     startButtonAlignmentKey,
-    startButtonInPanel,
 } from '../shared/panelModeSettings.js';
+import {startButtonPlaced} from '../shared/startButtonLocation.js';
 import {
     createPreferencesDialogButton,
     PreferencesOptionsDialog,
@@ -58,13 +57,10 @@ class StartButtonOptionsDialog extends PreferencesOptionsDialog {
         alignmentGroup.add(windowsStartMenuSwitch);
 
         const syncSensitivity = () => {
-            const defaultPanel = isDefaultPanelWithoutDock(settings);
-            const windowsXpTheme = settings.get_boolean(
-                'windows-xp-theme-enabled'
-            );
-            followAppAlignmentSwitch.sensitive =
-                (startButtonInPanel(settings) || !defaultPanel) && !windowsXpTheme;
-            windowsStartMenuSwitch.sensitive = !windowsXpTheme;
+            const sensitive = startButtonPlaced(settings) &&
+                !settings.get_boolean('windows-xp-theme-enabled');
+            followAppAlignmentSwitch.sensitive = sensitive;
+            windowsStartMenuSwitch.sensitive = sensitive;
         };
         for (const key of [
             'default-gnome-panel',

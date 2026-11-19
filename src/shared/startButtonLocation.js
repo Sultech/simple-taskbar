@@ -19,7 +19,11 @@ export function startButtonVisible(settings) {
     return startButtonEnabled(settings);
 }
 
+export function startButtonPlaced(settings) {
+    return !isDefaultPanelWithoutDock(settings) || startButtonInPanel(settings);
+}
+
 export function startMenuAvailable(settings) {
     return settings.get_boolean('windows-start-menu-enabled') &&
-        (!isDefaultPanelWithoutDock(settings) || startButtonInPanel(settings));
+        startButtonPlaced(settings);
 }

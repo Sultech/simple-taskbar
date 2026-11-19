@@ -150,7 +150,6 @@ export default class SimpleTaskbarPreferences extends ExtensionPreferences {
             connectSettings,
             page: taskbar.items,
             panelPositions,
-            windowsStartMenuSwitch: startMenu.windowsStartMenuSwitch,
             followAppAlignmentSwitch: startMenu.followAppAlignmentSwitch,
         });
         addDockItemsPage({
