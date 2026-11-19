@@ -96,6 +96,7 @@ export class StartMenuController {
         this._getPanelHeight = params.getPanelHeight;
         this._settings = settings;
         this._spotlight = Boolean(params.spotlight);
+        this._spotlightAnchor = null;
         this._onOpenStateChanged = params.onOpenStateChanged;
         this._onSourceContextMenu = params.onSourceContextMenu;
         this._powerGIcon = params.powerGIcon;
@@ -495,6 +496,8 @@ export class StartMenuController {
     }
 
     _applySpotlightLayout() {
+        this._spotlightAnchor = new St.Widget({width: 0, height: 0, opacity: 0});
+        Main.uiGroup.add_child(this._spotlightAnchor);
         this._menu.actor.add_style_class_name(SPOTLIGHT_CLASS);
         this._header.hide();
         this._footerController.actor.hide();
@@ -691,13 +694,12 @@ export class StartMenuController {
         if (!monitor)
             return;
 
-        Main.layoutManager.setDummyCursorGeometry(
+        this._spotlightAnchor.set_position(
             Math.round(monitor.x + monitor.width / 2),
-            Math.round(monitor.y + monitor.height * SPOTLIGHT_TOP_RATIO),
-            1,
-            1
+            Math.round(monitor.y + monitor.height * SPOTLIGHT_TOP_RATIO)
         );
-        this._setPositionSource(Main.layoutManager.dummyCursor);
+        this._spotlightAnchor.set_size(1, 1);
+        this._setPositionSource(this._spotlightAnchor);
     }
 
     _setPositionSource(sourceActor) {
@@ -781,6 +783,10 @@ export class StartMenuController {
         this._footerController = null;
         this._menu.destroy();
         this._menu = null;
+        if (this._spotlight) {
+            this._spotlightAnchor.destroy();
+            this._spotlightAnchor = null;
+        }
         this._runningIndicatorController.destroy();
         this._runningIndicatorController = null;
         this._navigationController.destroy();
