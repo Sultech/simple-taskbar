@@ -38,14 +38,9 @@ Lamp animation when minimising and restoring windows.
         src="https://raw.githubusercontent.com/Andbal23/dynamic-music-pill/main/screenshots/logo.png"
         alt="Dynamic Music Pill logo"
         width="56"
-        align="absmiddle"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <h3>
-        <a href="https://github.com/Sultech/simple-taskbar">Simple Taskbar</a>
-        ×
-        <a href="https://github.com/Andbal23/dynamic-music-pill">Dynamic Music Pill</a>
-      </h3>
+        align="absmiddle"></a>
       <p>
-        Recommended companion — adaptive media pill with visualizer and lyrics built to glide smoothly inside Simple Taskbar.
+        Recommended companion: <a href="https://github.com/Andbal23/dynamic-music-pill"><b>Dynamic Music Pill</b></a> — an adaptive media pill with visualizer and lyrics built to glide smoothly inside Simple Taskbar.
       </p>
       <p>
         <a href="https://extensions.gnome.org/extension/9334/dynamic-music-pill/"><img
