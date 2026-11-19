@@ -1,18 +1,22 @@
-# <img src="icons/simple-taskbar-logo.png" alt="Simple Taskbar logo" width="52" align="absmiddle"> Simple Taskbar
+<div align="center">
 
-<p>
-  <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/"><img
-    src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"
-    alt="Get it on GNOME Extensions"
-    width="180"
-    align="middle"></a>
-  <a href="https://www.buymeacoffee.com/sultech"><img
-    src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
-    alt="Buy Me a Coffee"
-    width="174"
-    height="41"
-    align="middle"></a>
+<img src="docs/images/simple-taskbar-banner.png" alt="Simple Taskbar — Make GNOME your own, showing Dock, taskbar and Windows XP styles" width="100%">
+
+# Simple Taskbar
+
+**Make GNOME your own — taskbar, Dock and Start Menu layouts for GNOME Shell.**
+
+<p align="center">
+  <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/"><img src="https://img.shields.io/badge/Install%20on-GNOME%20Extensions-blue?style=for-the-badge&logo=gnome&logoColor=white" alt="Install on GNOME Extensions"></a>
+  <a href="https://www.buymeacoffee.com/sultech"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black" alt="Buy Me a Coffee"></a>
 </p>
+
+[![Downloads](https://img.shields.io/gnome-extensions/dt/simple-taskbar@sultech?style=flat-square&color=38bdf8)](https://extensions.gnome.org/extension/10448/simple-taskbar/)
+[![GNOME Shell](https://img.shields.io/badge/GNOME-48%20--%2051-a855f7?style=flat-square&logo=gnome&logoColor=white)](https://extensions.gnome.org/extension/10448/simple-taskbar/)
+[![Stars](https://img.shields.io/github/stars/Sultech/simple-taskbar?style=flat-square&color=eab308)](https://github.com/Sultech/simple-taskbar/stargazers)
+[![License: GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-10b981?style=flat-square)](COPYING)
+
+</div>
 
 Simple Taskbar gives GNOME a familiar taskbar, an optional Dock and a Start Menu.
 Pin your favourite apps, preview open windows and choose a layout that suits you,
@@ -20,14 +24,45 @@ while keeping GNOME's clock, calendar, Quick Settings and extension icons.
 Bring your desktop to life with macOS-style icon magnification and the Magic
 Lamp animation when minimising and restoring windows.
 
-**Supports GNOME Shell 48, 49, 50 and 51.**
+<div align="center">
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://extensions.gnome.org/extension/10448/simple-taskbar/"><img
+        src="docs/images/readme-card-logo.png"
+        alt="Simple Taskbar logo"
+        width="56"
+        align="absmiddle"></a>
+      &nbsp;&nbsp;×&nbsp;&nbsp;
+      <a href="https://extensions.gnome.org/extension/9334/dynamic-music-pill/"><img
+        src="https://raw.githubusercontent.com/Andbal23/dynamic-music-pill/main/screenshots/logo.png"
+        alt="Dynamic Music Pill logo"
+        width="56"
+        align="absmiddle"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h3>
+        <a href="https://github.com/Sultech/simple-taskbar">Simple Taskbar</a>
+        ×
+        <a href="https://github.com/Andbal23/dynamic-music-pill">Dynamic Music Pill</a>
+      </h3>
+      <p>
+        Recommended companion — adaptive media pill with visualizer and lyrics built to glide smoothly inside Simple Taskbar.
+      </p>
+      <p>
+        <a href="https://extensions.gnome.org/extension/9334/dynamic-music-pill/"><img
+          src="https://img.shields.io/badge/GNOME%20Extensions-Install-0a72d6?style=flat-square&logo=gnome&logoColor=white"
+          alt="Install Dynamic Music Pill on GNOME Extensions"></a>
+        <a href="https://github.com/Andbal23/dynamic-music-pill"><img
+          src="https://img.shields.io/badge/GitHub-Repository-24292f?style=flat-square&logo=github&logoColor=white"
+          alt="Dynamic Music Pill on GitHub"></a>
+      </p>
+    </td>
+  </tr>
+</table>
+</div>
+
+---
 
 ## See it in action
-
-<div align="center">
-  <img src="docs/images/simple-taskbar-banner.png" alt="Simple Taskbar — Make GNOME your own, showing Dock, taskbar and Windows XP styles" width="100%">
-  <p><sub>Taskbar, Windows XP Theme and Dock modes.</sub></p>
-</div>
 
 <table>
   <tr>
@@ -70,6 +105,7 @@ Lamp animation when minimising and restoring windows.
 | **Dock** | A separate app Dock alongside the GNOME panel. |
 | **Windows XP** | A classic taskbar with Windows XP-inspired artwork and styling. |
 | **Windows 10** | A Windows 10-inspired taskbar with rectangular highlights. |
+| **macOS Dock** | A light Dock with magnification, Magic Lamp and minimized window previews. |
 | **Default GNOME Panel** | GNOME's familiar panel, with optional window buttons. |
 
 Choose your mode in **General**. Your settings are remembered when you switch
@@ -98,7 +134,7 @@ Log out and back in if GNOME Shell does not discover a newly installed extension
 - **Find the right window:** use previews, hover to peek inside a window, or switch with a live Alt+Tab grid.
 - **Make it yours:** choose colours, light or dark themes, icon sizes, running indicators and animations.
 - **Make room:** place the taskbar or Dock on any screen edge and hide it automatically when you need space.
-- **Use a Start Menu:** search for apps, organise pins into folders and add shortcuts to common locations.
+- **Use a Start Menu:** search for apps, organise pins into folders and add shortcuts to common locations, or switch to a Spotlight-style search bar.
 - **Work across monitors:** choose where panels appear and which apps each one shows.
 - **Add useful extras:** Show Desktop, app volume controls, notification badges, progress bars and folder shortcuts.
 
@@ -112,28 +148,28 @@ cogwheels reveal additional options.
 | --- | --- |
 | **General** | Choose a mode, set up the app grid, hot edge, Alt+Tab grid and file manager, and back up your settings. |
 | **Taskbar** | Adjust the panel's appearance, apps, items and hiding behaviour. |
-| **Dock** | Customise the Dock when Dock mode is selected. |
-| **Start Menu** | Choose the button, menu appearance, pinned-app options and shortcuts. |
+| **Dock** | Customise the Dock when Dock or macOS Dock mode is selected. |
+| **Start Menu** | Choose the button, the Eleven or Spotlight layout, menu appearance, pinned-app options and shortcuts. |
 | **About** | Find project information, links, credits and support. |
 
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="docs/images/settings-general-2026-10.png" alt="General settings with mode selection, shared features and backup options" width="100%">
+      <img src="docs/images/settings-general-2026-11.png" alt="General settings with mode selection, features and backup options" width="100%">
       <br><br><sub><b>General</b></sub>
     </td>
     <td align="center" width="50%">
-      <img src="docs/images/settings-taskbar-2026-10.png" alt="Taskbar settings categories for appearance, applications and behavior" width="100%">
+      <img src="docs/images/settings-taskbar-2026-11.png" alt="Taskbar settings categories for appearance, applications and behavior" width="100%">
       <br><br><sub><b>Taskbar</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
-      <img src="docs/images/settings-dock-2026-10.png" alt="Dock settings categories for appearance, applications and behavior" width="100%">
+      <img src="docs/images/settings-dock-2026-11.png" alt="Dock settings categories for appearance, applications and behavior" width="100%">
       <br><br><sub><b>Dock</b></sub>
     </td>
     <td align="center" width="50%">
-      <img src="docs/images/settings-start-menu-2026-10.png" alt="Start Menu settings with button, menu, folder and shortcut options" width="100%">
+      <img src="docs/images/settings-start-menu-2026-11.png" alt="Start Menu settings with the Start Menu switch, Eleven and Spotlight layouts, and menu options" width="100%">
       <br><br><sub><b>Start Menu</b></sub>
     </td>
   </tr>
@@ -197,9 +233,10 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 - **Spread windows** — one click spreads just that application's windows in Overview, including windows on other workspaces
 - **Scroll over an icon** to switch workspace or cycle that application's windows, with an adjustable delay
 - **Drag to reorder** pinned applications and move running groups
+- **Drag a file over an icon** to bring that application's window forward, ready to drop the file into it
 - **Grouping** — *Always* (one icon per application), *Only When Full* (split until space runs out) or *Never* (one per window)
 - **Window titles** beside split icons, with adjustable font size, weight, a 30–1000px maximum width and an optional fixed width, or hidden entirely
-- **Notification badges** showing unread counts on application icons
+- **Notification badges** showing unread counts on application icons, with adjustable size and a choice of corner
 - **Progress bars** for file transfers and installations reported by supported applications,
   with running-indicator or custom colours and automatic or manual thickness; disabled by default
 - **Overflow** — a *Taskbar Flyout* or *Application List* popup for what does not fit. Dragging works across visible and overflow entries, and the popup stays open while dragging
@@ -259,6 +296,7 @@ pinning anywhere updates the taskbar, the Dock and GNOME's own Dash together.
 - **App Grid layout** — automatic sizing or custom dimensions of 2–12 columns and 2–10 rows,
   available under **General → App Grid**
 - **Scroll over empty space** to switch workspace, cycle windows or change volume, with an adjustable delay
+- **Ignore natural scrolling** on the taskbar, the Dock, window previews, the volume icon and Quick Settings sliders
 - **Application volume mixer** in Quick Settings for individual streams, going above 100% when GNOME's over-amplification is on
 - **Tray icons** gathered behind a panel arrow, positioned where you want it
 - **Task Manager** entry in the panel menu — any installed application, defaulting to
@@ -275,6 +313,8 @@ Three item groups — **Left**, **Center** and **Right** on horizontal panels, o
 Activities buttons, Applications, Folder Menu, the tray icon arrow, the System
 Menu (Quick Settings, volume, network and power), Clock and Show Desktop.
 
+- **Modules** — turn the tray icon arrow, application volume mixer, focused application and Folder Menu on or off in one place
+- **Focused application** shows the active application's icon with its name, its window title or both
 - **Item ordering** with Move Up and Move Down inside each group, around a fixed box row for other GNOME Shell and extension items
 - **Button padding** — Automatic follows Just Perfection when present and 3px otherwise,
   while an explicit 0–20px value takes precedence. Default GNOME Panel mode starts
@@ -291,13 +331,16 @@ Menu (Quick Settings, volume, network and power), Clock and Show Desktop.
 ### Locations
 
 - Common folders, Trash, and connected drives and volumes, in the taskbar and the Dock independently
+- **Minimized window previews** — clickable thumbnails of minimized windows before folders, drives and Trash, with Magic Lamp minimizing into them
 - Drive entries can be limited to mounted drives, or include network volumes
 - Home, Desktop, Documents, Downloads, Music, Pictures and Videos shortcuts in the Nautilus application menu
 
 ### Dock
 
 Dock mode moves applications out of the panel into a separate Dock, with its own
-copy of the icon, effect, indicator, overflow and isolation settings.
+copy of the icon, effect, indicator, overflow and isolation settings. **macOS Dock**
+mode starts from a light, floating Dock with magnification, the Bounce click
+animation, Magic Lamp and minimized window previews, and keeps its own settings.
 
 - Placement on any edge, independent of the taskbar's own position
 - **Maximum length** from 1–90% of the monitor, or a full-width Dock reaching the edges
@@ -312,7 +355,12 @@ copy of the icon, effect, indicator, overflow and isolation settings.
 
 ### Start Menu
 
-The Eleven-style Start Menu is enabled by default.
+The Start Menu is enabled by default and offers two layouts:
+
+- **Eleven** — a full menu with pinned applications, All Apps and a footer
+- **Spotlight** — a search bar in the middle of the screen that shows results from every GNOME search provider as you type, with the same themes, transparency and shortcuts
+
+The rest of this section describes the Eleven layout.
 
 - **Pinned grid** with drag-and-drop ordering and optional titles under icons
 - **Folders** created by dragging one pinned application onto another, with renaming, a
@@ -356,6 +404,9 @@ the selected window when Alt is released.
 
 Simple Taskbar supports Blur My Shell styling and blur. Compatible desktop-icon
 extensions also let you add desktop shortcuts from the Start Menu.
+
+When V-Shell is enabled, Simple Taskbar leaves the app grid layout and Overview
+window caption spacing to V-Shell, and keeps Super for the Start Menu.
 
 Dash to Panel is disabled while Simple Taskbar is active. Dash to Dock and
 Ubuntu Dock remain available in Default GNOME Panel mode, but are disabled in
