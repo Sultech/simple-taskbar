@@ -50,7 +50,7 @@ export class AppGridLayout {
     }
 
     _apply(mode) {
-        const grid = Main.overview._overview.controls._appDisplay._grid;
+        const grid = this._grid();
         // Ubuntu patches iconGrid.js to replace GNOME's fixed grid modes with
         // an adaptive solver, so setGridModes() is present only on a stock
         // Shell and _fixedCols only on a patched one.
@@ -68,7 +68,7 @@ export class AppGridLayout {
         if (!this._gridModesApplied && !this._fixedSizeApplied)
             return;
 
-        const grid = Main.overview._overview.controls._appDisplay._grid;
+        const grid = this._grid();
         if (this._gridModesApplied)
             this._writeGridModes(grid, null);
         if (this._fixedSizeApplied)
@@ -76,6 +76,10 @@ export class AppGridLayout {
         this._gridModesApplied = false;
         this._fixedSizeApplied = false;
         grid.queue_relayout();
+    }
+
+    _grid() {
+        return Main.overview._overview.controls._appDisplay._grid;
     }
 
     _writeGridModes(grid, modes) {

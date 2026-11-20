@@ -1343,9 +1343,6 @@ export class StartMenuController {
             MENU_MAX_HEIGHT,
             available
         );
-        if (width === this._menuWidth && height === this._menuHeight)
-            return;
-
         this._setRootSize(width, height);
     }
 
@@ -1356,13 +1353,13 @@ export class StartMenuController {
         const height = this._body.visible
             ? Math.round(Math.min(SPOTLIGHT_HEIGHT, available))
             : 0;
-        if (width === this._menuWidth && height === this._menuHeight)
-            return;
-
         this._setRootSize(width, height);
     }
 
     _setRootSize(width, height) {
+        if (width === this._menuWidth && height === this._menuHeight)
+            return;
+
         this._menuWidth = width;
         this._menuHeight = height;
         this._root.set_style(height
