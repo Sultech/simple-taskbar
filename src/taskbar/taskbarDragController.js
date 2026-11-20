@@ -2,6 +2,7 @@
 // Copyright (C) 2026 sultech
 
 import Clutter from 'gi://Clutter';
+import Shell from 'gi://Shell';
 import St from 'gi://St';
 
 import * as DND from 'resource:///org/gnome/shell/ui/dnd.js';
@@ -117,9 +118,7 @@ export class TaskbarDragController {
         }
         this._clearExternalPlaceholder(false);
         this._listeners.clear();
-        this._dragging = false;
-        this._draggingItem = null;
-        this._pinnedDropActive = false;
+        this.cancel();
         this._externalPlaceholderSize = 0;
         this._externalPlaceholderTargetIndex = -1;
         this._externalFavoriteIndex = -1;
@@ -155,15 +154,14 @@ export class TaskbarDragController {
         this._dragging = true;
         this._draggingItem = item;
         this._pinnedDropActive = false;
+        Shell.util_set_hidden_from_pick(Main.messageTray, true);
         item.opacity = 96;
         this._hidePreviews();
     }
 
     finish(item) {
         item.opacity = 255;
-        this._dragging = false;
-        this._draggingItem = null;
-        this._pinnedDropActive = false;
+        this.cancel();
         this._queueRedisplay();
         for (const listener of [...this._listeners])
             listener();
@@ -173,6 +171,7 @@ export class TaskbarDragController {
         this._dragging = false;
         this._draggingItem = null;
         this._pinnedDropActive = false;
+        Shell.util_set_hidden_from_pick(Main.messageTray, false);
     }
 
     makeDraggable(item, button, icon, app) {
