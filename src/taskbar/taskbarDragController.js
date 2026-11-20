@@ -798,7 +798,8 @@ export class TaskbarDragController {
         if (!source || !source._startMenuTaskbarApp)
             return DND.DragMotionResult.CONTINUE;
 
-        if (!this._stagePointIsInPanel(event.x, event.y)) {
+        if (!this._stagePointIsInPanel(event.x, event.y) ||
+            !this._canAcceptStartMenuDrop(source)) {
             if (source._taskbarDropTarget === this._dropTarget)
                 source._clearTaskbarDropTarget();
             return DND.DragMotionResult.CONTINUE;
@@ -837,6 +838,9 @@ export class TaskbarDragController {
     }
 
     _stagePointIsInPanel(x, y) {
+        if (!this._taskbarActor.mapped)
+            return false;
+
         const monitor = Main.layoutManager.findMonitorForActor(
             this._taskbarActor
         );
