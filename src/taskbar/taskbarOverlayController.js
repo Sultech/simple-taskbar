@@ -3,7 +3,7 @@
 
 import Clutter from 'gi://Clutter';
 
-import {hoverRenderScale} from '../shared/applicationHoverAnimation.js';
+import {hoverRenderScale, iconRenderScale} from '../shared/applicationHoverAnimation.js';
 import {
     PROGRESS_BAR_SETTINGS,
     PROGRESS_BAR_SETTING_KEYS,
@@ -65,6 +65,10 @@ export class TaskbarOverlayController {
             () => this._syncNotificationBadges(),
             'changed::show-progress-bars',
             () => this._syncProgressBars(),
+            'changed::animate-appicon-hover-animation-type',
+            () => this._syncOverlayGeometry(),
+            'changed::application-click-animation',
+            () => this._syncOverlayGeometry(),
             this
         );
         for (const key of PROGRESS_BAR_SETTING_KEYS) {
@@ -124,6 +128,13 @@ export class TaskbarOverlayController {
         }
 
         return targets;
+    }
+
+    _syncOverlayGeometry() {
+        for (const item of this._appButtons.values()) {
+            this.syncNotificationBadgeGeometry(item);
+            this.syncProgressBarGeometry(item);
+        }
     }
 
     _syncNotificationBadges() {
@@ -283,11 +294,13 @@ export class TaskbarOverlayController {
             iconSize,
             iconSize
         );
+        const renderScale = iconRenderScale(this._settings);
         item._taskbarNotificationBadge.set_style(
-            `font-size: ${fontSize}px;` +
-            `min-width: ${singleDigit ? singleDigitSize : 0}px;` +
-            `min-height: ${singleDigit ? singleDigitSize : 0}px;` +
-            `padding: 0 ${singleDigit ? 0 : horizontalPadding}px;`
+            `font-size: ${fontSize * renderScale}px;` +
+            `min-width: ${singleDigit ? singleDigitSize * renderScale : 0}px;` +
+            `min-height: ${singleDigit ? singleDigitSize * renderScale : 0}px;` +
+            `padding: 0 ${singleDigit ? 0 : horizontalPadding * renderScale}px;` +
+            `box-shadow: 0 ${renderScale}px ${2 * renderScale}px rgba(0, 0, 0, 0.45);`
         );
         const position = this._settings.get_string(NOTIFICATION_BADGE_SETTINGS.position);
         const left = position === NOTIFICATION_BADGE_POSITION.TOP_LEFT ||
@@ -297,6 +310,8 @@ export class TaskbarOverlayController {
         const badgeBin = item._taskbarNotificationBadgeBin;
         badgeBin.x_align = left ? Clutter.ActorAlign.START : Clutter.ActorAlign.END;
         badgeBin.y_align = bottom ? Clutter.ActorAlign.END : Clutter.ActorAlign.START;
+        badgeBin.set_pivot_point(left ? 0 : 1, bottom ? 1 : 0);
+        badgeBin.set_scale(1 / renderScale, 1 / renderScale);
         badgeBin.translation_x = (left ? -cornerOffset : cornerOffset) +
             this._appearanceController.launcherIconOffset(item);
         badgeBin.translation_y = bottom ? cornerOffset : -cornerOffset;
