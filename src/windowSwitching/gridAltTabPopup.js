@@ -3,7 +3,6 @@
 
 import Clutter from 'gi://Clutter';
 import GObject from 'gi://GObject';
-import Meta from 'gi://Meta';
 import Pango from 'gi://Pango';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
@@ -613,15 +612,13 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
         windows,
         monitor,
         maxPreviewHeight,
-        forwardAction,
-        backwardAction,
+        switchActions,
         focusedWindowFirst
     ) {
         super._init();
 
         this._monitor = monitor;
-        this._forwardAction = forwardAction;
-        this._backwardAction = backwardAction;
+        this._switchActions = switchActions;
         this._focusedWindowFirst = focusedWindowFirst;
         this._switcherList = new GridAltTabList(
             windows,
@@ -657,8 +654,7 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
 
     destroy() {
         this._monitor = null;
-        this._forwardAction = Meta.KeyBindingAction.NONE;
-        this._backwardAction = Meta.KeyBindingAction.NONE;
+        this._switchActions = null;
         this._focusedWindowFirst = false;
         super.destroy();
     }
@@ -677,9 +673,9 @@ class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
         const rtl = Clutter.get_default_text_direction() ===
             Clutter.TextDirection.RTL;
 
-        if (action === this._forwardAction) {
+        if (this._switchActions.forward.has(action)) {
             this._select(this._next());
-        } else if (action === this._backwardAction) {
+        } else if (this._switchActions.backward.has(action)) {
             this._select(this._previous());
         } else if (keysym === Clutter.KEY_Left) {
             this._select(rtl ? this._next() : this._previous());

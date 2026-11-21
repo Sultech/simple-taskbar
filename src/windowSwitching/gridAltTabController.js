@@ -10,32 +10,21 @@ import {GridAltTabPopup} from './gridAltTabPopup.js';
 
 const FORWARD_BINDING = 'grid-alt-tab-hotkey';
 const BACKWARD_BINDING = 'grid-alt-tab-backward-hotkey';
-const SYSTEM_ACTIONS = new Map([
-    ['switch-applications', [
-        Meta.KeyBindingAction.SWITCH_APPLICATIONS,
-        Meta.KeyBindingAction.SWITCH_APPLICATIONS_BACKWARD,
-    ]],
-    ['switch-applications-backward', [
-        Meta.KeyBindingAction.SWITCH_APPLICATIONS,
-        Meta.KeyBindingAction.SWITCH_APPLICATIONS_BACKWARD,
-    ]],
-    ['switch-windows', [
-        Meta.KeyBindingAction.SWITCH_WINDOWS,
-        Meta.KeyBindingAction.SWITCH_WINDOWS_BACKWARD,
-    ]],
-    ['switch-windows-backward', [
-        Meta.KeyBindingAction.SWITCH_WINDOWS,
-        Meta.KeyBindingAction.SWITCH_WINDOWS_BACKWARD,
-    ]],
-    ['switch-group', [
-        Meta.KeyBindingAction.SWITCH_GROUP,
-        Meta.KeyBindingAction.SWITCH_GROUP_BACKWARD,
-    ]],
-    ['switch-group-backward', [
-        Meta.KeyBindingAction.SWITCH_GROUP,
-        Meta.KeyBindingAction.SWITCH_GROUP_BACKWARD,
-    ]],
-]);
+const SYSTEM_FORWARD_ACTIONS = [
+    Meta.KeyBindingAction.SWITCH_APPLICATIONS,
+    Meta.KeyBindingAction.SWITCH_WINDOWS,
+    Meta.KeyBindingAction.SWITCH_GROUP,
+];
+const SYSTEM_BACKWARD_ACTIONS = [
+    Meta.KeyBindingAction.SWITCH_APPLICATIONS_BACKWARD,
+    Meta.KeyBindingAction.SWITCH_WINDOWS_BACKWARD,
+    Meta.KeyBindingAction.SWITCH_GROUP_BACKWARD,
+];
+
+function switchActionSet(customAction, systemActions) {
+    return new Set([customAction, ...systemActions].filter(action =>
+        action !== Meta.KeyBindingAction.NONE));
+}
 
 export class GridAltTabController {
     constructor(settings, switcherKeybindings) {
@@ -117,31 +106,14 @@ export class GridAltTabController {
     }
 
     _startSwitcher(backward, _display, _window, _event, binding) {
-        this._showSwitcher(
-            backward,
-            binding,
-            this._forwardAction,
-            this._backwardAction
-        );
+        this._showSwitcher(backward, binding);
     }
 
     _startSystemSwitcher(_display, _window, _event, binding) {
-        const [forwardAction, backwardAction] =
-            SYSTEM_ACTIONS.get(binding.get_name());
-        this._showSwitcher(
-            binding.is_reversed(),
-            binding,
-            forwardAction,
-            backwardAction
-        );
+        this._showSwitcher(binding.is_reversed(), binding);
     }
 
-    _showSwitcher(
-        backward,
-        binding,
-        forwardAction,
-        backwardAction
-    ) {
+    _showSwitcher(backward, binding) {
         this._closePopup();
 
         const monitor = this._getSwitcherMonitor();
@@ -150,8 +122,10 @@ export class GridAltTabController {
             windows,
             monitor,
             this._settings.get_int('grid-alt-tab-max-card-size'),
-            forwardAction,
-            backwardAction,
+            {
+                forward: switchActionSet(this._forwardAction, SYSTEM_FORWARD_ACTIONS),
+                backward: switchActionSet(this._backwardAction, SYSTEM_BACKWARD_ACTIONS),
+            },
             windows[0] === this._getFocusedWindow()
         );
         this._popup = popup;
