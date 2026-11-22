@@ -2017,8 +2017,20 @@ msgid ""
 "and the window icons resize to fit"
 msgstr ""
 
-#: src/prefs/panelAppearancePage.js:216
-msgid "Dynamic Panel Mode always matches the thickness to the icon size"
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode, which always matches the thickness to the icon size"
+msgstr ""
+
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode: change the Icon Size to make the taskbar bigger"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode, which always matches the thickness to the icon size"
+msgstr ""
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode: change the Icon Size to make the Dock bigger"
 msgstr ""
 
 #: src/prefs/panelAppearancePage.js:304

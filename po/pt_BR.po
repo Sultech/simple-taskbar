@@ -2177,10 +2177,21 @@ msgstr ""
 "Indisponível com o painel padrão do GNOME: defina a espessura da barra de "
 "tarefas abaixo e os ícones das janelas se ajustam"
 
-#: src/prefs/panelAppearancePage.js:216
-msgid "Dynamic Panel Mode always matches the thickness to the icon size"
-msgstr ""
-"O modo de painel dinâmico sempre ajusta a espessura ao tamanho dos ícones"
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode, which always matches the thickness to the icon size"
+msgstr "Indisponível no modo de painel dinâmico, que sempre ajusta a espessura ao tamanho do ícone"
+
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode: change the Icon Size to make the taskbar bigger"
+msgstr "Indisponível no modo de painel dinâmico: altere o tamanho do ícone para aumentar a barra de tarefas"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode, which always matches the thickness to the icon size"
+msgstr "Indisponível no modo Dock dinâmico, que sempre ajusta a espessura ao tamanho do ícone"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode: change the Icon Size to make the Dock bigger"
+msgstr "Indisponível no modo Dock dinâmico: altere o tamanho do ícone para aumentar o Dock"
 
 #: src/prefs/panelAppearancePage.js:304
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"

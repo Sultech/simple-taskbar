@@ -2155,9 +2155,21 @@ msgstr ""
 "Az alapértelmezett GNOME panellel nem érhető el: állítsa be alább a tálca "
 "vastagságát, és az ablakikonok ahhoz igazodnak"
 
-#: src/prefs/panelAppearancePage.js:216
-msgid "Dynamic Panel Mode always matches the thickness to the icon size"
-msgstr "A dinamikus panelmód mindig az ikonmérethez igazítja a vastagságot"
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode, which always matches the thickness to the icon size"
+msgstr "Dinamikus panelmódban nem érhető el, mert az mindig az ikonmérethez igazítja a vastagságot"
+
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode: change the Icon Size to make the taskbar bigger"
+msgstr "Dinamikus panelmódban nem érhető el: a tálca nagyításához módosítsa az ikonméretet"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode, which always matches the thickness to the icon size"
+msgstr "Dinamikus Dock módban nem érhető el, mert az mindig az ikonmérethez igazítja a vastagságot"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode: change the Icon Size to make the Dock bigger"
+msgstr "Dinamikus Dock módban nem érhető el: a Dock nagyításához módosítsa az ikonméretet"
 
 #: src/prefs/panelAppearancePage.js:304
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"

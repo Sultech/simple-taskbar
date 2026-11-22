@@ -2138,9 +2138,21 @@ msgstr ""
 "Varsayılan GNOME Paneli ile kullanılamaz: aşağıdan Görev Çubuğu Kalınlığı'nı "
 "ayarla; pencere simgeleri sığacak şekilde yeniden boyutlandırılır"
 
-#: src/prefs/panelAppearancePage.js:216
-msgid "Dynamic Panel Mode always matches the thickness to the icon size"
-msgstr "Dinamik Panel Modu kalınlığı her zaman simge boyutuyla eşleştirir"
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode, which always matches the thickness to the icon size"
+msgstr "Dinamik Panel Modunda kullanılamaz; bu mod kalınlığı her zaman simge boyutuyla eşleştirir"
+
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode: change the Icon Size to make the taskbar bigger"
+msgstr "Dinamik Panel Modunda kullanılamaz: görev çubuğunu büyütmek için Simge Boyutunu değiştirin"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode, which always matches the thickness to the icon size"
+msgstr "Dinamik Dock modunda kullanılamaz; bu mod kalınlığı her zaman simge boyutuyla eşleştirir"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode: change the Icon Size to make the Dock bigger"
+msgstr "Dinamik Dock modunda kullanılamaz: Dock'u büyütmek için Simge Boyutunu değiştirin"
 
 #: src/prefs/panelAppearancePage.js:304
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"

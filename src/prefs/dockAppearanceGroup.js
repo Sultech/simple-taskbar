@@ -158,28 +158,26 @@ export function addDockAppearanceGroup({
     const dockAvailable = () => settings.get_boolean('dock-mode') &&
         !settings.get_boolean('windows-xp-theme-enabled');
 
+    const dockPanelHeightFollowSubtitle = _('Keep the Dock only as thick as its icons need');
     const {
         followSwitch: dockPanelHeightFollowSwitch,
         followsIcons: dockPanelHeightFollowsIcons,
     } = createPanelThicknessSizing(settings, connectSettings, {
         heightKey: DOCK_PANEL_HEIGHT_KEY,
         followKey: DOCK_PANEL_HEIGHT_FOLLOW_KEY,
-        followSubtitle: _(
-            'Keep the Dock only as thick as its icons need'
-        ),
+        followSubtitle: dockPanelHeightFollowSubtitle,
         isActive: () => settings.get_boolean('dock-mode'),
     });
     thicknessGroup.add(dockPanelHeightFollowSwitch);
 
+    const dockPanelHeightSubtitle = _('Oversized icons shrink automatically when the Dock is made thinner');
     const dockPanelHeightRow = addSliderRow(
         thicknessGroup,
         settings,
         {
             key: DOCK_PANEL_HEIGHT_KEY,
             title: _('Dock Thickness'),
-            subtitle: _(
-                'Oversized icons shrink automatically when the Dock is made thinner'
-            ),
+            subtitle: dockPanelHeightSubtitle,
             lower: MIN_PANEL_HEIGHT,
             upper: MAX_PANEL_HEIGHT,
         },
@@ -320,6 +318,12 @@ export function addDockAppearanceGroup({
         dockPanelHeightFollowSwitch.sensitive = fullWidthDock;
         dockPanelHeightRow.sensitive = fullWidthDock &&
             !dockPanelHeightFollowsIcons();
+        dockPanelHeightFollowSwitch.subtitle = fullWidthDock
+            ? dockPanelHeightFollowSubtitle
+            : _('Unavailable in Dynamic Dock mode, which always matches the thickness to the icon size');
+        dockPanelHeightRow.subtitle = fullWidthDock
+            ? dockPanelHeightSubtitle
+            : _('Unavailable in Dynamic Dock mode: change the Icon Size to make the Dock bigger');
         syncThemeControls();
         syncTransparencyControls();
         syncCustomColorControls();

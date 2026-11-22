@@ -2144,9 +2144,21 @@ msgstr ""
 "Недоступно со стандартной панелью GNOME: задайте толщину панели задач ниже, "
 "и значки окон подстроятся под неё"
 
-#: src/prefs/panelAppearancePage.js:216
-msgid "Dynamic Panel Mode always matches the thickness to the icon size"
-msgstr "Динамический режим панели всегда подгоняет толщину под размер значков"
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode, which always matches the thickness to the icon size"
+msgstr "Недоступно в динамическом режиме панели, который всегда подгоняет толщину под размер значков"
+
+#: src/prefs/panelAppearancePage.js
+msgid "Unavailable in Dynamic Panel Mode: change the Icon Size to make the taskbar bigger"
+msgstr "Недоступно в динамическом режиме панели: измените размер значков, чтобы увеличить панель задач"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode, which always matches the thickness to the icon size"
+msgstr "Недоступно в режиме «Динамический Dock», который всегда подгоняет толщину под размер значков"
+
+#: src/prefs/dockAppearanceGroup.js
+msgid "Unavailable in Dynamic Dock mode: change the Icon Size to make the Dock bigger"
+msgstr "Недоступно в режиме «Динамический Dock»: измените размер значков, чтобы увеличить Dock"
 
 #: src/prefs/panelAppearancePage.js:304
 msgid "Choose the taskbar theme, colours, gradient, and text appearance"

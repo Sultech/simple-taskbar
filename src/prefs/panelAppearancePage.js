@@ -163,15 +163,14 @@ export function addPanelAppearancePage({
     });
     panelAppearanceGroup.add(panelHeightFollowSwitch);
 
+    const panelHeightSubtitle = _('Oversized icons shrink automatically when the taskbar is reduced');
     const panelHeightRow = addSliderRow(
         panelAppearanceGroup,
         settings,
         {
             key: 'panel-height',
             title: _('Taskbar Thickness'),
-            subtitle: _(
-                'Oversized icons shrink automatically when the taskbar is reduced'
-            ),
+            subtitle: panelHeightSubtitle,
             lower: MIN_PANEL_HEIGHT,
             upper: MAX_PANEL_HEIGHT,
         },
@@ -210,9 +209,12 @@ export function addPanelAppearancePage({
         if (defaultPanel)
             panelHeightFollowSwitch.subtitle = _('Not available with the Default GNOME Panel: set the Taskbar Thickness below and the window icons resize to fit');
         else if (dynamic)
-            panelHeightFollowSwitch.subtitle = _('Dynamic Panel Mode always matches the thickness to the icon size');
+            panelHeightFollowSwitch.subtitle = _('Unavailable in Dynamic Panel Mode, which always matches the thickness to the icon size');
         else
             panelHeightFollowSwitch.subtitle = panelHeightFollowSubtitle;
+        panelHeightRow.subtitle = dynamic && !enabled && !defaultPanel
+            ? _('Unavailable in Dynamic Panel Mode: change the Icon Size to make the taskbar bigger')
+            : panelHeightSubtitle;
         panelHeightRow.sensitive = !enabled && !dynamic && !panelHeightFollowsIcons();
         panelPositionGroup.sensitive = !enabled;
         appAlignmentRow.sensitive = !enabled && !dynamicTaskbarEnabled(settings) &&
