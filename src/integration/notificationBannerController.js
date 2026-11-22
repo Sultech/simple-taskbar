@@ -146,11 +146,28 @@ export class NotificationBannerController {
                 clearance.right = Math.max(clearance.right, workArea.x + workArea.width - left);
             }
         }
+        if (this._settings.get_boolean('notification-banner-bottom-end') &&
+            !positionIsVertical(panelPosition(this._settings)))
+            this._alignWithPanelEdge(clearance, workArea);
         const {top, right, bottom, left} = clearance;
         this._bannerBin.set_style(appendStyle(
             this._originalStyle,
             `margin: ${Math.round(top)}px ${Math.round(right)}px ${Math.round(bottom)}px ${Math.round(left)}px;`
         ));
+    }
+
+    _alignWithPanelEdge(clearance, workArea) {
+        const alignment = this._getClockAlignment();
+        if (alignment === Clutter.ActorAlign.CENTER || !Main.panel.visible)
+            return;
+
+        const [x] = Main.panel.get_transformed_position();
+        const [width] = Main.panel.get_transformed_size();
+        const rtl = Main.panel.get_text_direction() === Clutter.TextDirection.RTL;
+        if ((alignment === Clutter.ActorAlign.END) !== rtl)
+            clearance.right = Math.max(clearance.right, workArea.x + workArea.width - x - width);
+        else
+            clearance.left = Math.max(clearance.left, x - workArea.x);
     }
 
     _getClockAlignment() {
