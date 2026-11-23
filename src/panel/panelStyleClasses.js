@@ -3,9 +3,41 @@
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {BLUR_MY_SHELL_PANEL_STYLES} from '../shared/blurMyShellUtils.js';
+import {
+    BLUR_MY_SHELL_PANEL_STYLES,
+    blurMyShellPanelStyleIsTransparent,
+} from '../shared/blurMyShellUtils.js';
 import {panelIsVertical, panelPosition} from '../shared/panelPositionUtils.js';
-import {PANEL_BLUR_CLASSES} from './panelBlurClasses.js';
+import {setStyleClass} from '../shared/styleUtils.js';
+
+export const BLUR_MY_SHELL_ACTIVE_CLASS =
+    'simple-taskbar-blur-my-shell-active';
+export const BLUR_TRANSPARENT_CLASS =
+    'simple-taskbar-blur-transparent';
+export const BLUR_TINTED_CLASS =
+    'simple-taskbar-blur-tinted';
+export const LIGHT_BLUR_OVERLAY_CLASS =
+    'simple-taskbar-light-blur-overlay';
+
+export const PANEL_BLUR_CLASSES = [
+    BLUR_MY_SHELL_ACTIVE_CLASS,
+    BLUR_TRANSPARENT_CLASS,
+    BLUR_TINTED_CLASS,
+    LIGHT_BLUR_OVERLAY_CLASS,
+];
+
+export function syncPanelBlurClasses(
+    panel,
+    active,
+    light,
+    styleIsTransparent = blurMyShellPanelStyleIsTransparent()
+) {
+    const transparent = active && styleIsTransparent;
+    setStyleClass(panel, BLUR_MY_SHELL_ACTIVE_CLASS, active);
+    setStyleClass(panel, BLUR_TRANSPARENT_CLASS, transparent);
+    setStyleClass(panel, BLUR_TINTED_CLASS, active && !transparent);
+    setStyleClass(panel, LIGHT_BLUR_OVERLAY_CLASS, transparent && light);
+}
 
 export const BLUR_MY_SHELL_PANEL_CLASSES = new Set(BLUR_MY_SHELL_PANEL_STYLES);
 

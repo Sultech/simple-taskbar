@@ -20,12 +20,12 @@ import {
     panelBorderStyle,
     panelBorderWidth,
 } from '../panel/panelBackgroundStyle.js';
-import {syncPanelBlurClasses} from '../panel/panelBlurClasses.js';
 import {
     BLUR_MY_SHELL_PANEL_CLASSES,
     actorStyleClasses,
+    syncPanelBlurClasses,
     syncSecondaryPanelClasses,
-} from '../panel/secondaryPanelClasses.js';
+} from '../panel/panelStyleClasses.js';
 import {dockFloatingEnabled} from '../shared/panelModeSettings.js';
 import {FloatingPanelLayout} from '../panel/floatingPanelLayout.js';
 import {floatingPanelEdgeGap, panelGeometry} from '../panel/panelGeometry.js';

@@ -17,3 +17,13 @@ export function setStylePseudoClass(actor, pseudoClass, enabled) {
     else
         actor.remove_style_pseudo_class(pseudoClass);
 }
+
+export function setStyleClass(actor, styleClass, present) {
+    if (present === actor.has_style_class_name(styleClass))
+        return;
+
+    if (present)
+        actor.add_style_class_name(styleClass);
+    else
+        actor.remove_style_class_name(styleClass);
+}

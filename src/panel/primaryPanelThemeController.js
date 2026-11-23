@@ -28,7 +28,7 @@ import {
     BLUR_TINTED_CLASS,
     BLUR_TRANSPARENT_CLASS,
     LIGHT_BLUR_OVERLAY_CLASS,
-} from './panelBlurClasses.js';
+} from './panelStyleClasses.js';
 import {panelPosition} from '../shared/panelPositionUtils.js';
 import {panelSurfaceStyle} from './panelBackgroundStyle.js';
 import {connectPanelAppearanceSignals} from './panelSettingsSignals.js';

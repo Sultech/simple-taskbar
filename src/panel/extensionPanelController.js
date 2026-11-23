@@ -21,7 +21,7 @@ import {
     BLUR_MY_SHELL_PANEL_CLASSES,
     actorStyleClasses,
     syncSecondaryPanelClasses,
-} from './secondaryPanelClasses.js';
+} from './panelStyleClasses.js';
 import {FolderMenuController} from './folderMenuController.js';
 import {FocusedAppController} from './focusedAppController.js';
 import {PanelHoverRepair} from './panelHoverRepair.js';

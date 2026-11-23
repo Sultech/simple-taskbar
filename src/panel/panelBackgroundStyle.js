@@ -5,7 +5,7 @@ import Cogl from 'gi://Cogl';
 
 import {preservePanelBlurRadiusStyle, syncPanelBlurCornerRadius} from '../integration/blurMyShellRuntime.js';
 import {panelPosition} from '../shared/panelPositionUtils.js';
-import {syncPanelBlurClasses} from './panelBlurClasses.js';
+import {syncPanelBlurClasses} from './panelStyleClasses.js';
 import {dynamicTransparencyStyle, panelTransparencyOpacity} from './dynamicTransparency.js';
 
 const DARK_BORDER_COLOR = '255, 255, 255';
