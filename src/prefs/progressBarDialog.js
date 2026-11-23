@@ -8,7 +8,7 @@ import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions
 import {
     PROGRESS_BAR_SETTINGS,
     PROGRESS_BAR_SETTING_KEYS,
-} from '../shared/progressBarSettings.js';
+} from '../shared/iconOverlaySettings.js';
 import {
     addColorRow,
     createPreferencesDialogButton,

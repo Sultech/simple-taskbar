@@ -9,7 +9,7 @@ import {
     NOTIFICATION_BADGE_POSITION,
     NOTIFICATION_BADGE_SETTINGS,
     NOTIFICATION_BADGE_SETTING_KEYS,
-} from '../shared/notificationBadgeSettings.js';
+} from '../shared/iconOverlaySettings.js';
 import {
     addComboRow,
     createPreferencesDialogButton,

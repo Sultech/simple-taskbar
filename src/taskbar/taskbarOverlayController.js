@@ -5,14 +5,12 @@ import Clutter from 'gi://Clutter';
 
 import {hoverRenderScale, iconRenderScale} from '../shared/applicationHoverAnimation.js';
 import {
-    PROGRESS_BAR_SETTINGS,
-    PROGRESS_BAR_SETTING_KEYS,
-} from '../shared/progressBarSettings.js';
-import {
     NOTIFICATION_BADGE_POSITION,
     NOTIFICATION_BADGE_SETTINGS,
     NOTIFICATION_BADGE_SETTING_KEYS,
-} from '../shared/notificationBadgeSettings.js';
+    PROGRESS_BAR_SETTINGS,
+    PROGRESS_BAR_SETTING_KEYS,
+} from '../shared/iconOverlaySettings.js';
 
 const BADGE_SINGLE_DIGIT_ICON_SIZE = 31;
 const BADGE_TWO_DIGIT_ICON_SIZE = 35;
