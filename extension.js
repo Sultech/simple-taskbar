@@ -261,6 +261,7 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     disable() {
+        activeExtension = null;
         if (this._rebuildId) {
             GLib.Source.remove(this._rebuildId);
             this._rebuildId = 0;
@@ -327,7 +328,6 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applicationSettings = null;
         this._settings = null;
         this._panelHeight = null;
-        activeExtension = null;
     }
 
     _queueRebuild() {
