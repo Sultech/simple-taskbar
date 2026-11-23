@@ -96,8 +96,8 @@ export function getStartIconDisplayName(location) {
 
 export const StartIconChooserDialog = GObject.registerClass(
 class StartIconChooserDialog extends Adw.Window {
-    _init({extensionPath, settings, parent}) {
-        super._init({
+    constructor({extensionPath, settings, parent}) {
+        super({
             title: _('Choose a Start Button Icon'),
             transient_for: parent,
             modal: true,

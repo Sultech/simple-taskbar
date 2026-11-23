@@ -27,8 +27,8 @@ export function createProgressBarOptionsButton(settings) {
 
 export const ProgressBarOptionsDialog = GObject.registerClass(
 class ProgressBarOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Progress Bar Options'),

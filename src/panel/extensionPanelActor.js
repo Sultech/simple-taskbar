@@ -14,8 +14,8 @@ import {allocatePanelButtonHighlightLayers} from './panelButtonHighlightLayer.js
 
 export const ExtensionPanelActor = GObject.registerClass(
 class ExtensionPanelActor extends St.Widget {
-    _init() {
-        super._init({
+    constructor() {
+        super({
             name: 'panel',
             style_class:
                 'simple-taskbar-panel simple-taskbar-secondary-panel',

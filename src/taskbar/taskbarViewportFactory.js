@@ -13,8 +13,8 @@ import {MaximumSizeClamp} from './maximumSizeClamp.js';
 
 export const TaskbarViewport = GObject.registerClass(
 class TaskbarViewport extends St.ScrollView {
-    _init(params = {}) {
-        super._init(params);
+    constructor(params = {}) {
+        super(params);
         this._clamp = new MaximumSizeClamp();
     }
 

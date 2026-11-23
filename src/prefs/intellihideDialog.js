@@ -33,8 +33,8 @@ export function createIntellihideOptionsButton(
 
 export const IntellihideOptionsDialog = GObject.registerClass(
 class IntellihideOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent, pointerRevealKey, autohideKey, keys, positionKey, edgeReveal, descriptions}) {
-        super._init({
+    constructor({settings, parent, pointerRevealKey, autohideKey, keys, positionKey, edgeReveal, descriptions}) {
+        super({
             settings,
             parent,
             title: _('Intellihide Options'),

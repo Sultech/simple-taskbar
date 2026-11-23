@@ -10,8 +10,8 @@ import {REFLOW_ANIMATION_TIME} from './reflowAnimation.js';
 
 export const TaskbarItemContainer = GObject.registerClass(
 class TaskbarItemContainer extends Dash.DashItemContainer {
-    _init() {
-        super._init();
+    constructor() {
+        super();
         this._preserveNaturalWidth = false;
         this._snapChildAllocation = false;
         this._vertical = false;

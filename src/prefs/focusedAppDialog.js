@@ -22,8 +22,8 @@ export function createFocusedAppOptionsButton(settings) {
 
 const FocusedAppOptionsDialog = GObject.registerClass(
 class FocusedAppOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Focused Application Options'),

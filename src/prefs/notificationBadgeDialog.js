@@ -27,8 +27,8 @@ export function createNotificationBadgeOptionsButton(settings) {
 
 const NotificationBadgeOptionsDialog = GObject.registerClass(
 class NotificationBadgeOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Notification Badge Options'),

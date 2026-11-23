@@ -24,8 +24,8 @@ export function createClockOptionsButton(settings) {
 
 export const ClockOptionsDialog = GObject.registerClass(
 class ClockOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Clock'),

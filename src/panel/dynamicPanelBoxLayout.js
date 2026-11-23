@@ -6,8 +6,8 @@ import GObject from 'gi://GObject';
 
 export const DynamicPanelBoxLayout = GObject.registerClass(
 class DynamicPanelBoxLayout extends Clutter.BoxLayout {
-    _init(panel, geometry) {
-        super._init();
+    constructor(panel, geometry) {
+        super();
         this._panel = panel;
         this._panelGeometry = geometry;
     }

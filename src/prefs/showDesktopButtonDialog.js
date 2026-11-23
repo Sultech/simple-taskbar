@@ -31,8 +31,8 @@ export function createShowDesktopButtonOptionsButton(settings) {
 
 export const ShowDesktopButtonOptionsDialog = GObject.registerClass(
 class ShowDesktopButtonOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Show Desktop Button'),

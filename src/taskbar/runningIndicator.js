@@ -221,8 +221,8 @@ function drawKey(style, count, focused) {
 
 export const RunningIndicator = GObject.registerClass(
 class RunningIndicator extends St.Widget {
-    _init(styleClass, radiusSource = null) {
-        super._init({
+    constructor(styleClass, radiusSource = null) {
+        super({
             style_class: styleClass,
             layout_manager: new Clutter.FixedLayout(),
             clip_to_allocation: false,

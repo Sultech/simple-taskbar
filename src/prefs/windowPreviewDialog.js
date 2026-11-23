@@ -31,8 +31,8 @@ export function createWindowPreviewOptionsButton(settings) {
 
 export const WindowPreviewOptionsDialog = GObject.registerClass(
 class WindowPreviewOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Window Preview Options'),

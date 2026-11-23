@@ -112,8 +112,8 @@ export function createApplicationHoverAnimationOptionsButton(settings) {
 
 export const ApplicationHoverAnimationDialog = GObject.registerClass(
 class ApplicationHoverAnimationDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Application Icon Hover Animation'),

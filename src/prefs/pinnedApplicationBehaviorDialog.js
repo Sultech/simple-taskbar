@@ -30,8 +30,8 @@ export function createPinnedApplicationBehaviorOptionsButton(settings) {
 
 export const PinnedApplicationBehaviorOptionsDialog = GObject.registerClass(
 class PinnedApplicationBehaviorOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Pinned Application Behavior'),

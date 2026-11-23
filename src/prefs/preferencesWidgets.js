@@ -77,8 +77,8 @@ function createPreferencesDialogContent(dialog, cleanup) {
 
 export const PreferencesOptionsDialog = GObject.registerClass(
 class PreferencesOptionsDialog extends Adw.Window {
-    _init({settings, parent, title, width, height, cleanup = null}) {
-        super._init({
+    constructor({settings, parent, title, width, height, cleanup = null}) {
+        super({
             title,
             transient_for: parent,
             modal: true,

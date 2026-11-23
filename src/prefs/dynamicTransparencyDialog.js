@@ -25,7 +25,7 @@ export function createDynamicTransparencyOptionsButton(settings, keys) {
 
 export const DynamicTransparencyOptionsDialog = GObject.registerClass(
 class DynamicTransparencyOptionsDialog extends PreferencesOptionsDialog {
-    _init({
+    constructor({
         settings,
         parent,
         title,
@@ -34,7 +34,7 @@ class DynamicTransparencyOptionsDialog extends PreferencesOptionsDialog {
         levelKey,
         animationTimeKey,
     }) {
-        super._init({
+        super({
             settings,
             parent,
             title,

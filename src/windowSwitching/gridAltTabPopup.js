@@ -217,9 +217,9 @@ function calculateLayout(
 
 const GridAltTabCard = GObject.registerClass(
 class GridAltTabCard extends St.Button {
-    _init(window, tracker, width, previewHeight) {
+    constructor(window, tracker, width, previewHeight) {
         const title = window.get_title() || _('Untitled Window');
-        super._init({
+        super({
             style_class: 'item-box simple-taskbar-grid-alt-tab-card',
             reactive: true,
             can_focus: true,
@@ -324,7 +324,7 @@ const GridAltTabList = GObject.registerClass({
         'item-removed': {param_types: [GObject.TYPE_INT]},
     },
 }, class GridAltTabList extends St.ScrollView {
-    _init(windows, monitor, maxPreviewHeight) {
+    constructor(windows, monitor, maxPreviewHeight) {
         const availableWidth = Math.floor(
             monitor.width * POPUP_WIDTH_RATIO
         );
@@ -366,7 +366,7 @@ const GridAltTabList = GObject.registerClass({
             ? 'simple-taskbar-grid-alt-tab-light'
             : 'simple-taskbar-grid-alt-tab-dark';
 
-        super._init({
+        super({
             style_class:
                 `switcher-list simple-taskbar-grid-alt-tab-list ${themeClass}`,
             reactive: true,
@@ -608,14 +608,14 @@ const GridAltTabList = GObject.registerClass({
 
 export const GridAltTabPopup = GObject.registerClass(
 class GridAltTabPopup extends SwitcherPopup.SwitcherPopup {
-    _init(
+    constructor(
         windows,
         monitor,
         maxPreviewHeight,
         switchActions,
         focusedWindowFirst
     ) {
-        super._init();
+        super();
 
         this._monitor = monitor;
         this._switchActions = switchActions;

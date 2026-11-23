@@ -32,8 +32,8 @@ export function createApplicationGroupingOptionsButton(settings, forceLabels = f
 
 export const ApplicationGroupingOptionsDialog = GObject.registerClass(
 class ApplicationGroupingOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent, forceLabels = false}) {
-        super._init({
+    constructor({settings, parent, forceLabels = false}) {
+        super({
             settings,
             parent,
             title: _('Application Label Options'),

@@ -53,8 +53,8 @@ export function allocatePanelButtonHighlightLayers(panel, box) {
 
 export const PanelButtonHighlightLayer = GObject.registerClass(
 class PanelButtonHighlightLayer extends St.Widget {
-    _init(settings, boxes, getPanelHeight, getIconSize) {
-        super._init({reactive: false});
+    constructor(settings, boxes, getPanelHeight, getIconSize) {
+        super({reactive: false});
         this._settings = settings;
         this._boxes = boxes;
         this._getPanelHeight = getPanelHeight;

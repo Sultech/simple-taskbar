@@ -26,8 +26,8 @@ export function createStartButtonOptionsButton(settings) {
 
 export const StartButtonOptionsDialog = GObject.registerClass(
 class StartButtonOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Start Button'),

@@ -36,8 +36,8 @@ function doubleValue(value) {
 const SliderArea = GObject.registerClass({
     Implements: [Gtk.AccessibleRange],
 }, class SliderArea extends Gtk.DrawingArea {
-    _init({setCurrentValue, ...params}) {
-        super._init(params);
+    constructor({setCurrentValue, ...params}) {
+        super(params);
         this._setCurrentValue = setCurrentValue;
     }
 
@@ -54,8 +54,8 @@ const SliderArea = GObject.registerClass({
 
 export const SliderRow = GObject.registerClass(
 class SliderRow extends Adw.ActionRow {
-    _init({title, subtitle, lower, upper, step = 1, digits = 0, unit = '', format = null, width = SLIDER_WIDTH}) {
-        super._init({title, subtitle});
+    constructor({title, subtitle, lower, upper, step = 1, digits = 0, unit = '', format = null, width = SLIDER_WIDTH}) {
+        super({title, subtitle});
         this._step = step;
         this._digits = digits;
         this._unit = unit;

@@ -14,8 +14,8 @@ import {setWindowRestoreTarget} from '../taskbar/taskbarIconGeometryController.j
 
 const MinimizedWindowThumbnail = GObject.registerClass(
 class MinimizedWindowThumbnail extends St.Widget {
-    _init(window, app, iconSize) {
-        super._init({
+    constructor(window, app, iconSize) {
+        super({
             layout_manager: new Clutter.BinLayout(),
             width: iconSize,
             height: iconSize,
@@ -98,8 +98,8 @@ class MinimizedWindowThumbnail extends St.Widget {
 
 export const MinimizedWindowLocation = GObject.registerClass(
 class MinimizedWindowLocation extends LocationApp {
-    _init(window, app) {
-        super._init({
+    constructor(window, app) {
+        super({
             id: `location:minimized:${window.get_stable_sequence()}`,
             name: window.get_title() || _('Untitled Window'),
             type: 'window',

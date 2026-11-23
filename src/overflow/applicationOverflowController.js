@@ -49,8 +49,8 @@ const OVERFLOW_BUTTON_ANIMATION_TIME = 150;
 
 const ApplicationOverflowContainer = GObject.registerClass(
 class ApplicationOverflowContainer extends St.BoxLayout {
-    _init(onMaximumSizeChanged) {
-        super._init({
+    constructor(onMaximumSizeChanged) {
+        super({
             style_class: 'simple-taskbar-application-overflow-container',
             x_align: Clutter.ActorAlign.START,
             y_align: Clutter.ActorAlign.FILL,

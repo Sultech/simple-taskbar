@@ -24,8 +24,8 @@ export class MagicLampEffect extends Clutter.DeformEffect {
         GObject.registerClass(this);
     }
 
-    _init(iconGeometry, getIconGeometry, panelPosition, restore, onDone) {
-        super._init();
+    constructor(iconGeometry, getIconGeometry, panelPosition, restore, onDone) {
+        super();
         this._iconGeometry = {...iconGeometry};
         this._getIconGeometry = getIconGeometry;
         this._panelPosition = panelPosition;

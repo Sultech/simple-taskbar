@@ -76,8 +76,8 @@ function findStreamApp(stream, appSystem) {
 
 const ApplicationVolumeRow = GObject.registerClass(
 class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
-    _init(stream, control, appSystem, maximumLevel) {
-        super._init({
+    constructor(stream, control, appSystem, maximumLevel) {
+        super({
             reactive: false,
             can_focus: false,
             style_class: 'simple-taskbar-volume-mixer-row',
@@ -340,8 +340,8 @@ class ApplicationVolumeRow extends PopupMenu.PopupBaseMenuItem {
 
 const VolumeMixerToggle = GObject.registerClass(
 class VolumeMixerToggle extends QuickMenuToggle {
-    _init(control, appSystem, openSoundSettings) {
-        super._init({
+    constructor(control, appSystem, openSoundSettings) {
+        super({
             title: _('Mixer'),
             iconName: 'audio-volume-high-symbolic',
             toggleMode: false,
@@ -492,8 +492,8 @@ class VolumeMixerToggle extends QuickMenuToggle {
 
 const VolumeMixerIndicator = GObject.registerClass(
 class VolumeMixerIndicator extends SystemIndicator {
-    _init(control, appSystem, openSoundSettings) {
-        super._init();
+    constructor(control, appSystem, openSoundSettings) {
+        super();
 
         this.quickSettingsItems.push(
             new VolumeMixerToggle(control, appSystem, openSoundSettings)

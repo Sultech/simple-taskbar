@@ -53,8 +53,8 @@ export const LocationApp = GObject.registerClass({
         'mount-changed': {},
     },
 }, class LocationApp extends GObject.Object {
-    _init({id, name, type, volume = null, location = null, icon = null}) {
-        super._init();
+    constructor({id, name, type, volume = null, location = null, icon = null}) {
+        super();
         this._id = id;
         this._type = type;
         this._volume = volume;

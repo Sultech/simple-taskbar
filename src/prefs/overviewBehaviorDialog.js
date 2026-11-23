@@ -44,8 +44,8 @@ export function createOverviewBehaviorButton(
 
 export const OverviewBehaviorDialog = GObject.registerClass(
 class OverviewBehaviorDialog extends PreferencesOptionsDialog {
-    _init({settings, parent, keys, axisProfile, title}) {
-        super._init({
+    constructor({settings, parent, keys, axisProfile, title}) {
+        super({
             settings,
             parent,
             title,

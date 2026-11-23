@@ -13,8 +13,8 @@ const INDICATOR_LENGTH = 24;
 
 const StartMenuIconStack = GObject.registerClass(
 class StartMenuIconStack extends St.Widget {
-    _init(icon, indicator) {
-        super._init({
+    constructor(icon, indicator) {
+        super({
             x_align: Clutter.ActorAlign.CENTER,
             clip_to_allocation: false,
         });

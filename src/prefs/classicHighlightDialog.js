@@ -88,8 +88,8 @@ export function createClassicHighlightOptionsButton(settings) {
 
 export const ClassicHighlightOptionsDialog = GObject.registerClass(
 class ClassicHighlightOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Highlight Options'),

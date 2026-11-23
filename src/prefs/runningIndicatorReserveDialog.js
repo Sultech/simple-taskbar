@@ -26,8 +26,8 @@ export function createRunningIndicatorReserveOptionsButton(settings) {
 
 export const RunningIndicatorReserveDialog = GObject.registerClass(
 class RunningIndicatorReserveDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Running Indicator Reserve'),

@@ -98,8 +98,8 @@ export function createApplicationClickActionOptionsButton(settings) {
 
 export const ApplicationClickActionOptionsDialog = GObject.registerClass(
 class ApplicationClickActionOptionsDialog extends PreferencesOptionsDialog {
-    _init({settings, parent}) {
-        super._init({
+    constructor({settings, parent}) {
+        super({
             settings,
             parent,
             title: _('Click Action Options'),
