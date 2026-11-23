@@ -59,8 +59,16 @@ import {WindowsXpThemeController} from './src/panel/windowsXpThemeController.js'
 import {Windows10ThemeController} from './src/panel/windows10ThemeController.js';
 import {CLICK_ACTION} from './src/shared/interactionActions.js';
 
+let activeExtension = null;
+
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
+        if (Main.extensionManager.lookup(this.uuid)?.stateObj !== this)
+            return;
+        if (activeExtension !== this)
+            activeExtension?.disable();
+        activeExtension = this;
+
         this._rebuildId = 0;
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
@@ -319,6 +327,7 @@ export default class SimpleTaskbarExtension extends Extension {
         this._applicationSettings = null;
         this._settings = null;
         this._panelHeight = null;
+        activeExtension = null;
     }
 
     _queueRebuild() {
