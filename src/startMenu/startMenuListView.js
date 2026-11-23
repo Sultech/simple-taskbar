@@ -88,7 +88,7 @@ export class StartMenuListViewBuilder {
             leading: result.app
                 ? this._runningIndicatorController.createIconStack(result.app, icon)
                 : icon,
-            label: createAppLabel(result.name, 480),
+            label: this._createSearchResultLabel(result),
         });
         if (result.app) {
             button._startMenuAppId = result.app.get_id();
@@ -100,6 +100,23 @@ export class StartMenuListViewBuilder {
             this._contextMenuController.addHandler(button, result.app);
         this._syncButtonClasses(button);
         return button;
+    }
+
+    _createSearchResultLabel(result) {
+        const name = createAppLabel(result.name, 480);
+        const description = result.description?.replace(/\s+/g, ' ').trim();
+        if (!description)
+            return name;
+
+        const labels = new St.BoxLayout({
+            orientation: Clutter.Orientation.VERTICAL,
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        const descriptionLabel = createAppLabel(description, 480);
+        descriptionLabel.add_style_class_name('simple-taskbar-windows-start-search-description');
+        labels.add_child(name);
+        labels.add_child(descriptionLabel);
+        return labels;
     }
 
     _createListButton({styleClass, accessibleName, leading, label}) {
