@@ -10,7 +10,7 @@ import {
 
 import {
     APP_ICON_HOVER_ANIMATION_SETTINGS,
-} from '../shared/applicationHoverAnimation.js';
+} from '../shared/applicationAnimations.js';
 import {
     createPreferencesDialogButton,
     PreferencesOptionsDialog,

@@ -35,7 +35,7 @@ import {
 } from '../shared/panelSizing.js';
 import {
     hoverRenderScale,
-} from '../shared/applicationHoverAnimation.js';
+} from '../shared/applicationAnimations.js';
 import {windows10IndicatorInset} from '../shared/windows10Theme.js';
 import {setStylePseudoClass} from '../shared/styleUtils.js';
 

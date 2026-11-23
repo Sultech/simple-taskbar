@@ -3,7 +3,10 @@
 
 import Clutter from 'gi://Clutter';
 
-import {hoverRenderScale, iconRenderScale} from '../shared/applicationHoverAnimation.js';
+import {
+    hoverRenderScale,
+    iconRenderScale,
+} from '../shared/applicationAnimations.js';
 import {
     NOTIFICATION_BADGE_POSITION,
     NOTIFICATION_BADGE_SETTINGS,

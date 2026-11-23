@@ -4,7 +4,9 @@
 import {
     getWindowsXpPanelItemOrder,
 } from './panelItemOrder.js';
-import {APP_ICON_HOVER_ANIMATION} from './applicationHoverAnimation.js';
+import {
+    APP_ICON_HOVER_ANIMATION,
+} from './applicationAnimations.js';
 import {
     setBoolean,
     setInteger,

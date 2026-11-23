@@ -6,7 +6,7 @@ import St from 'gi://St';
 
 import {
     APPLICATION_CLICK_ANIMATION,
-} from '../shared/applicationClickAnimation.js';
+} from '../shared/applicationAnimations.js';
 
 const EFFECT_FRAMES = {
     [APPLICATION_CLICK_ANIMATION.BOUNCE]: [

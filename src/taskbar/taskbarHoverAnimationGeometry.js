@@ -5,7 +5,9 @@ import Graphene from 'gi://Graphene';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
+import {
+    APP_ICON_HOVER_ANIMATION,
+} from '../shared/applicationAnimations.js';
 
 const FLUSH_EDGE_TOLERANCE = 0.5;
 const VISIBLE_EDGE_TOLERANCE = 1;

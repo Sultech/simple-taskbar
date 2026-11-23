@@ -8,7 +8,9 @@ import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {APP_ICON_HOVER_ANIMATION} from '../shared/applicationHoverAnimation.js';
+import {
+    APP_ICON_HOVER_ANIMATION,
+} from '../shared/applicationAnimations.js';
 import {
     applySmoothedProperties,
     MAGNIFY_EPSILON,

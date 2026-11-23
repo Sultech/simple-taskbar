@@ -11,7 +11,7 @@ import {MagicLampEffect} from './magicLampEffect.js';
 import {iconScreenGeometry, setWindowIconGeometry} from './taskbarIconGeometryController.js';
 import {
     WINDOW_MINIMIZE_EFFECT,
-} from '../shared/windowMinimizeEffect.js';
+} from '../shared/applicationAnimations.js';
 import {activePanelPosition} from '../shared/panelPositionUtils.js';
 
 const MAGIC_LAMP_EFFECT_NAME = 'simple-taskbar-magic-lamp';

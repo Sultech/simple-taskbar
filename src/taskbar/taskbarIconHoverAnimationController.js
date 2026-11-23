@@ -6,7 +6,7 @@ import Clutter from 'gi://Clutter';
 import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
-} from '../shared/applicationHoverAnimation.js';
+} from '../shared/applicationAnimations.js';
 import {taskbarItemHighlightShown} from '../shared/classicHighlightSettings.js';
 import {
     TaskbarHoverAnimationAnimator,

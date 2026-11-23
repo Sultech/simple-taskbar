@@ -18,16 +18,12 @@ import {
     createWindowPreviewOptionsButton,
 } from './windowPreviewDialog.js';
 import {
+    APPLICATION_CLICK_ANIMATION,
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_MAGNIFY_SETTING_KEYS,
-    appIconMagnifyAllowed,
-} from '../shared/applicationHoverAnimation.js';
-import {
-    APPLICATION_CLICK_ANIMATION,
-} from '../shared/applicationClickAnimation.js';
-import {
     WINDOW_MINIMIZE_EFFECT,
-} from '../shared/windowMinimizeEffect.js';
+    appIconMagnifyAllowed,
+} from '../shared/applicationAnimations.js';
 import {
     HOVER_ACTION,
     SCROLL_ACTION,

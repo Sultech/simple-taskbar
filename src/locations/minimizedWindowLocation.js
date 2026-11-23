@@ -9,7 +9,9 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {LocationApp} from './locationApp.js';
-import {applyIconRenderScale} from '../shared/applicationHoverAnimation.js';
+import {
+    applyIconRenderScale,
+} from '../shared/applicationAnimations.js';
 import {setWindowRestoreTarget} from '../taskbar/taskbarIconGeometryController.js';
 
 const MinimizedWindowThumbnail = GObject.registerClass(

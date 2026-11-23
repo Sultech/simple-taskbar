@@ -60,7 +60,7 @@ import {
     applyIconRenderScale,
     hoverRenderScale,
     iconRenderScale,
-} from '../shared/applicationHoverAnimation.js';
+} from '../shared/applicationAnimations.js';
 import {
     START_BUTTON_LOCATION_KEY,
     panelApplicationAlignment,

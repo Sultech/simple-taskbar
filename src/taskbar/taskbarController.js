@@ -11,7 +11,10 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 import {taskbarAppLabelsVisible} from '../shared/panelSizing.js';
-import {WINDOW_MINIMIZE_EFFECT} from '../shared/windowMinimizeEffect.js';
+import {
+    APPLICATION_CLICK_ANIMATION,
+    WINDOW_MINIMIZE_EFFECT,
+} from '../shared/applicationAnimations.js';
 
 import {TaskbarDragController} from './taskbarDragController.js';
 import {TaskbarAppItemFactory} from './taskbarAppItemFactory.js';
@@ -56,9 +59,6 @@ import {
     MAX_RUNNING_INDICATORS,
     RUNNING_INDICATOR_RESERVE_SETTING_KEYS,
 } from '../shared/runningIndicatorSettings.js';
-import {
-    APPLICATION_CLICK_ANIMATION,
-} from '../shared/applicationClickAnimation.js';
 import {
     CLASSIC_HIGHLIGHT_SETTINGS,
     HIGHLIGHT_LENGTH_SETTING_KEYS,

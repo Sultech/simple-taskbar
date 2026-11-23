@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Copyright (C) 2026 sultech
 
-import {APP_ICON_HOVER_ANIMATION} from './applicationHoverAnimation.js';
-import {APPLICATION_CLICK_ANIMATION} from './applicationClickAnimation.js';
+import {
+    APPLICATION_CLICK_ANIMATION,
+    APP_ICON_HOVER_ANIMATION,
+    WINDOW_MINIMIZE_EFFECT,
+} from './applicationAnimations.js';
 import {HOVER_ACTION} from './interactionActions.js';
 import {CLASSIC_HIGHLIGHT_SETTINGS, TASKBAR_HIGHLIGHT_STYLE} from './classicHighlightSettings.js';
-import {WINDOW_MINIMIZE_EFFECT} from './windowMinimizeEffect.js';
 
 export function applyMacosDockDefaults(settings) {
     settings.set_int('icon-size', 48);

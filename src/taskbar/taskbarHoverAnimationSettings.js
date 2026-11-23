@@ -8,7 +8,7 @@ import {
     applyIconRenderScale,
     hoverRenderScale,
     iconRenderScale,
-} from '../shared/applicationHoverAnimation.js';
+} from '../shared/applicationAnimations.js';
 
 export class TaskbarHoverAnimationSettings {
     constructor({settings, getIconSize}) {
