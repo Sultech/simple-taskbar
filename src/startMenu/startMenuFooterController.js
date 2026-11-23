@@ -12,8 +12,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import {LocationsController} from '../locations/locationsController.js';
 import {clickCameFromKeyboard, isPrimaryPressOrTouch} from '../inputUtils.js';
-import {openSettingsPanel} from '../shared/gnomeSettingsPanel.js';
-import {SETTINGS_APP_ID} from '../shared/systemApps.js';
+import {SETTINGS_APP_ID, openSettingsPanel} from '../shared/systemApps.js';
 
 export class StartMenuFooterController {
     constructor({

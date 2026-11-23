@@ -8,13 +8,13 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {openSettingsPanel} from '../shared/gnomeSettingsPanel.js';
 import {
     DISKS_APP_ID,
     LOGS_APP_ID,
     SETTINGS_APP_ID,
     TERMINAL_APP_IDS,
     findInstalledApp,
+    openSettingsPanel,
     taskManagerCandidates,
 } from '../shared/systemApps.js';
 
