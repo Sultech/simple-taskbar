@@ -178,7 +178,7 @@ export class StartMenuFooterController {
     }
 
     _openSettings() {
-        this._appSystem.lookup_app('org.gnome.Settings.desktop').activate();
+        this._appSystem.lookup_app('org.gnome.Settings.desktop')?.activate();
     }
 
     _createIconButton(iconSource, accessibleName, callback, params = {}) {
