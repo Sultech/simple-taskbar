@@ -3,6 +3,7 @@
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
+import GioUnix from 'gi://GioUnix';
 import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -526,7 +527,7 @@ export function addStartMenuPage({
     addStartMenuFoldersGroup({settings, foldersSubpage, elevenEnabled, onElevenChanged});
 
     const hasDesktopApp = appId =>
-        Boolean(Gio.DesktopAppInfo.new(appId));
+        Boolean(GioUnix.DesktopAppInfo.new(appId));
     const hasSettingsApp = hasDesktopApp('org.gnome.Settings.desktop');
     const hasTerminalApp = hasDesktopApp('org.gnome.Console.desktop') ||
         hasDesktopApp('org.gnome.Terminal.desktop');
