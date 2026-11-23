@@ -9,7 +9,14 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {openSettingsPanel} from '../shared/gnomeSettingsPanel.js';
-import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+import {
+    DISKS_APP_ID,
+    LOGS_APP_ID,
+    SETTINGS_APP_ID,
+    TERMINAL_APP_IDS,
+    findInstalledApp,
+    taskManagerCandidates,
+} from '../shared/systemApps.js';
 
 const CONTEXT_MENU_SETTING_KEYS = Object.freeze([
     'windows-start-menu-enabled',
@@ -25,11 +32,6 @@ const CONTEXT_MENU_SETTING_KEYS = Object.freeze([
     'start-menu-context-run',
     'start-menu-context-show-desktop',
     'task-manager-app',
-]);
-
-const TERMINAL_APP_IDS = Object.freeze([
-    'org.gnome.Console.desktop',
-    'org.gnome.Terminal.desktop',
 ]);
 
 export class StartButtonContextMenuController {
@@ -67,9 +69,7 @@ export class StartButtonContextMenuController {
             return;
         }
 
-        const settingsApp = this._appSystem.lookup_app(
-            'org.gnome.Settings.desktop'
-        );
+        const settingsApp = this._appSystem.lookup_app(SETTINGS_APP_ID);
         if (settingsApp) {
             this._addToggleAction(
                 'start-menu-context-installed-apps',
@@ -81,7 +81,7 @@ export class StartButtonContextMenuController {
         this._addAppAction(
             'start-menu-context-event-viewer',
             _('Event Viewer'),
-            ['org.gnome.Logs.desktop']
+            [LOGS_APP_ID]
         );
 
         if (settingsApp) {
@@ -100,7 +100,7 @@ export class StartButtonContextMenuController {
         this._addAppAction(
             'start-menu-context-disk-management',
             _('Disk Management'),
-            ['org.gnome.DiskUtility.desktop']
+            [DISKS_APP_ID]
         );
         this._addAppAction(
             'start-menu-context-terminal',
@@ -171,15 +171,7 @@ export class StartButtonContextMenuController {
     }
 
     _findApp(appIds) {
-        for (const appId of appIds) {
-            if (!appId)
-                continue;
-
-            const app = this._appSystem.lookup_app(appId);
-            if (app)
-                return app;
-        }
-        return null;
+        return findInstalledApp(appIds, appId => this._appSystem.lookup_app(appId));
     }
 
     _activateApp(app) {

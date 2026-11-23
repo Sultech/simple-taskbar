@@ -6,7 +6,7 @@ import Gtk from 'gi://Gtk';
 
 import {gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {resolveTaskManagerAppId} from '../shared/taskManagerUtils.js';
+import {resolveTaskManagerAppId} from '../shared/systemApps.js';
 import {AUTO_HIDE_SETTINGS} from '../shared/autoHideSettings.js';
 import {TASKBAR_GEOMETRY_KEYS, taskbarGeometryEnabled} from '../shared/panelModeSettings.js';
 import {

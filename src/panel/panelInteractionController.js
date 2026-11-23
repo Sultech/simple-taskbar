@@ -22,7 +22,7 @@ import {
 } from '../shared/interactionActions.js';
 
 import {openPopupMenu} from '../popupMenuUtils.js';
-import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+import {findInstalledApp, taskManagerCandidates} from '../shared/systemApps.js';
 import {panelApplicationsEnabled} from '../shared/panelApplicationVisibility.js';
 
 const SHELL_VERSION = parseInt(Config.PACKAGE_VERSION);
@@ -189,16 +189,12 @@ export class PanelInteractionController {
     }
 
     _openTaskManager() {
-        const configuredApp = this._settings.get_string('task-manager-app');
         const appSystem = Shell.AppSystem.get_default();
-        for (const appId of taskManagerCandidates(configuredApp)) {
-            if (!appId)
-                continue;
-
-            const app = appSystem.lookup_app(appId);
-            if (!app)
-                continue;
-
+        const app = findInstalledApp(
+            taskManagerCandidates(this._settings.get_string('task-manager-app')),
+            appId => appSystem.lookup_app(appId)
+        );
+        if (app) {
             app.activate();
             return;
         }

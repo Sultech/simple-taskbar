@@ -30,7 +30,14 @@ import {
     createSwitchRow,
     setButtonIcon,
 } from './preferencesWidgets.js';
-import {taskManagerCandidates} from '../shared/taskManagerUtils.js';
+import {
+    DISKS_APP_ID,
+    LOGS_APP_ID,
+    SETTINGS_APP_ID,
+    TERMINAL_APP_IDS,
+    findInstalledApp,
+    taskManagerCandidates,
+} from '../shared/systemApps.js';
 import {addSliderRow} from './sliderRow.js';
 import {addStartMenuKeybindingsGroup} from './startMenuKeybindingsGroup.js';
 import {addStartMenuAppearanceGroup} from './startMenuAppearanceGroup.js';
@@ -526,14 +533,13 @@ export function addStartMenuPage({
 
     addStartMenuFoldersGroup({settings, foldersSubpage, elevenEnabled, onElevenChanged});
 
-    const hasDesktopApp = appId =>
-        Boolean(GioUnix.DesktopAppInfo.new(appId));
-    const hasSettingsApp = hasDesktopApp('org.gnome.Settings.desktop');
-    const hasTerminalApp = hasDesktopApp('org.gnome.Console.desktop') ||
-        hasDesktopApp('org.gnome.Terminal.desktop');
-    const hasTaskManagerApp = taskManagerCandidates(
-        settings.get_string('task-manager-app')
-    ).some(appId => appId && hasDesktopApp(appId));
+    const hasInstalledApp = appIds =>
+        Boolean(findInstalledApp(appIds, appId => GioUnix.DesktopAppInfo.new(appId)));
+    const hasSettingsApp = hasInstalledApp([SETTINGS_APP_ID]);
+    const hasTerminalApp = hasInstalledApp(TERMINAL_APP_IDS);
+    const hasTaskManagerApp = hasInstalledApp(
+        taskManagerCandidates(settings.get_string('task-manager-app'))
+    );
     const hasFileManager = Boolean(
         Gio.app_info_get_default_for_type('inode/directory', false)
     );
@@ -548,7 +554,7 @@ export function addStartMenuPage({
             key: 'start-menu-context-event-viewer',
             title: _('Event Viewer'),
             subtitle: _('Open system logs'),
-            available: hasDesktopApp('org.gnome.Logs.desktop'),
+            available: hasInstalledApp([LOGS_APP_ID]),
         },
         {
             key: 'start-menu-context-system',
@@ -566,7 +572,7 @@ export function addStartMenuPage({
             key: 'start-menu-context-disk-management',
             title: _('Disk Management'),
             subtitle: _('Open GNOME Disks'),
-            available: hasDesktopApp('org.gnome.DiskUtility.desktop'),
+            available: hasInstalledApp([DISKS_APP_ID]),
         },
         {
             key: 'start-menu-context-terminal',

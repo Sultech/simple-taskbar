@@ -13,6 +13,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {LocationsController} from '../locations/locationsController.js';
 import {clickCameFromKeyboard, isPrimaryPressOrTouch} from '../inputUtils.js';
 import {openSettingsPanel} from '../shared/gnomeSettingsPanel.js';
+import {SETTINGS_APP_ID} from '../shared/systemApps.js';
 
 export class StartMenuFooterController {
     constructor({
@@ -178,7 +179,7 @@ export class StartMenuFooterController {
     }
 
     _openSettings() {
-        this._appSystem.lookup_app('org.gnome.Settings.desktop')?.activate();
+        this._appSystem.lookup_app(SETTINGS_APP_ID)?.activate();
     }
 
     _createIconButton(iconSource, accessibleName, callback, params = {}) {
