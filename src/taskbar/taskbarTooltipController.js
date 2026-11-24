@@ -5,7 +5,7 @@ import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {taskbarItemHighlightShown} from '../shared/classicHighlightSettings.js';
+import {taskbarItemHighlightTest} from '../shared/classicHighlightSettings.js';
 import {panelIsTop, panelPosition, positionIsVertical} from '../shared/panelPositionUtils.js';
 
 const APP_TOOLTIP_DELAY = 300;
@@ -182,7 +182,7 @@ export class TaskbarTooltipController {
     }
 
     _magnifiedAnchorRect(item) {
-        return this._getHoverAnimationTooltipRect(item, taskbarItemHighlightShown(this._settings, item));
+        return this._getHoverAnimationTooltipRect(item, taskbarItemHighlightTest(this._settings)(item));
     }
 
     _restingAnchorRect(item, position) {

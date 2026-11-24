@@ -36,9 +36,10 @@ export const CLASSIC_HIGHLIGHT_SETTINGS = Object.freeze({
     focusOpacity: 'classic-focus-highlight-opacity',
 });
 
-export function taskbarItemHighlightShown(settings, item) {
-    return settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled) ||
-        Boolean(item._taskbarFocused) && settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled);
+export function taskbarItemHighlightTest(settings) {
+    const hover = settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.hoverEnabled);
+    const focus = settings.get_boolean(CLASSIC_HIGHLIGHT_SETTINGS.focusEnabled);
+    return item => hover || focus && Boolean(item._taskbarFocused);
 }
 
 export function customClassicHighlightColorStyle(settings, key) {

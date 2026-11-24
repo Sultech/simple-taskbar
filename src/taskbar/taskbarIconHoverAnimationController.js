@@ -7,7 +7,7 @@ import {
     APP_ICON_HOVER_ANIMATION,
     APP_ICON_HOVER_ANIMATION_SETTINGS,
 } from '../shared/applicationAnimations.js';
-import {taskbarItemHighlightShown} from '../shared/classicHighlightSettings.js';
+import {taskbarItemHighlightTest} from '../shared/classicHighlightSettings.js';
 import {
     TaskbarHoverAnimationAnimator,
 } from './taskbarHoverAnimationAnimator.js';
@@ -437,9 +437,11 @@ export class TaskbarIconHoverAnimationController {
     _isPointerInMagnifyZone(pointerX, pointerY) {
         const padding = MAGNIFIED_ICON_HIT_PADDING;
         if (this._geometry.isPointerInMagnifyBounds(pointerX, pointerY, 0,
-            this._animator.getPointerExtents()) ||
-            this._cloneController.containsPoint(pointerX, pointerY, padding,
-                item => taskbarItemHighlightShown(this._settings, item)))
+            this._animator.getPointerExtents()))
+            return true;
+
+        const highlightShown = taskbarItemHighlightTest(this._settings);
+        if (this._cloneController.containsPoint(pointerX, pointerY, padding, highlightShown))
             return true;
 
         const preview = this._getOpenPreview();
@@ -448,7 +450,7 @@ export class TaskbarIconHoverAnimationController {
 
         const bodyRect = extentsRect(preview.body.get_transformed_extents());
         const iconRect = this._cloneController.getIconRect(preview.item,
-            taskbarItemHighlightShown(this._settings, preview.item)) ??
+            highlightShown(preview.item)) ??
             extentsRect(preview.item.get_transformed_extents());
         const corridor = {
             x1: Math.min(bodyRect.x1, iconRect.x1) - padding,
