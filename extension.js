@@ -7,6 +7,7 @@ import Shell from 'gi://Shell';
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {ExtensionState} from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 
 import {cachedPanelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
 import {panelApplicationsEnabled} from './src/shared/panelApplicationVisibility.js';
@@ -63,10 +64,13 @@ let activeExtension = null;
 
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
-        if (Main.extensionManager.lookup(this.uuid)?.stateObj !== this)
+        const extension = Main.extensionManager.lookup(this.uuid);
+        if (extension?.stateObj !== this || activeExtension === this)
             return;
-        if (activeExtension !== this)
-            activeExtension?.disable();
+        if (extension.state !== ExtensionState.ACTIVATING &&
+            extension.state !== ExtensionState.ACTIVE)
+            return;
+        activeExtension?.disable();
         activeExtension = this;
 
         this._rebuildId = 0;
@@ -261,6 +265,8 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     disable() {
+        if (activeExtension !== this)
+            return;
         activeExtension = null;
         if (this._rebuildId) {
             GLib.Source.remove(this._rebuildId);
