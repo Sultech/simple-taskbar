@@ -7,7 +7,6 @@ import Shell from 'gi://Shell';
 import * as AppFavorites from 'resource:///org/gnome/shell/ui/appFavorites.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
-import {ExtensionState} from 'resource:///org/gnome/shell/misc/extensionUtils.js';
 
 import {cachedPanelApplicationSettings} from './src/shared/defaultPanelWindowSettings.js';
 import {panelApplicationsEnabled} from './src/shared/panelApplicationVisibility.js';
@@ -60,20 +59,8 @@ import {WindowsXpThemeController} from './src/panel/windowsXpThemeController.js'
 import {Windows10ThemeController} from './src/panel/windows10ThemeController.js';
 import {CLICK_ACTION} from './src/shared/interactionActions.js';
 
-let activeExtension = null;
-
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
-        const extension = Main.extensionManager.lookup(this.uuid);
-        // A stale copy can run after reloadExtension() unregisters it (gnome-shell#9548).
-        if (extension?.stateObj !== this || activeExtension === this)
-            return;
-        if (extension.state !== ExtensionState.ACTIVATING &&
-            extension.state !== ExtensionState.ACTIVE)
-            return;
-        activeExtension?.disable();
-        activeExtension = this;
-
         this._rebuildId = 0;
         this._appSystem = Shell.AppSystem.get_default();
         this._tracker = Shell.WindowTracker.get_default();
@@ -266,9 +253,6 @@ export default class SimpleTaskbarExtension extends Extension {
     }
 
     disable() {
-        if (activeExtension !== this)
-            return;
-        activeExtension = null;
         if (this._rebuildId) {
             GLib.Source.remove(this._rebuildId);
             this._rebuildId = 0;
