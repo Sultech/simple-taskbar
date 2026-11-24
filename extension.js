@@ -65,6 +65,7 @@ let activeExtension = null;
 export default class SimpleTaskbarExtension extends Extension {
     enable() {
         const extension = Main.extensionManager.lookup(this.uuid);
+        // A stale copy can run after reloadExtension() unregisters it (gnome-shell#9548).
         if (extension?.stateObj !== this || activeExtension === this)
             return;
         if (extension.state !== ExtensionState.ACTIVATING &&
